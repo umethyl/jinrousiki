@@ -106,6 +106,9 @@
 <p>
 <?php InfoHTML::OutputCategory(['dummy_boy', 'gm_login', 'gm_logout', 'gerd', 'disable_gerd']); ?>
 </p>
+<p>
+<?php InfoHTML::OutputCategory(['dummy_boy_cast_limit']); ?>
+</p>
 
 <h3 id="dummy_boy"><?php OptionManager::OutputCaption('dummy_boy'); ?></h3>
 <ul>
@@ -141,10 +144,22 @@
 <h3 id="disable_gerd"><?php OptionManager::OutputCaption('disable_gerd'); ?> [Ver. 4.1.0 α3～]</h3>
 <ul>
 <li><?php OptionManager::OutputExplain('disable_gerd'); ?></li>
-<li>ゲーム開始時の参加人数が設定された人数以下だった場合に適用されます</li>
+<li>ゲーム開始時の参加人数が設定された人数以上だった場合に適用されます</li>
 <li>適用された場合は、<a href="#gerd"><?php OptionManager::OutputCaption('gerd'); ?></a>オプションの機能が全て無効化されます</li>
 <li>適用の有効・無効の状態に関わらず、アイコンは共に表示されます</li>
 <li><a href="#gerd"><?php OptionManager::OutputCaption('gerd'); ?></a>オプションを設定しないと設定できません</li>
+</ul>
+<h4>Ver. 4.1.0 α4～</h4>
+<ul>
+<li>仕様変更：設定された人数以下 -> 設定された人数以上</li>
+</ul>
+
+<h3 id="dummy_boy_cast_limit"><?php OptionManager::OutputCaption('dummy_boy_cast_limit'); ?> [Ver. 4.1.0 α4～]</h3>
+<ul>
+<li><?php OptionManager::OutputExplain('dummy_boy_cast_limit'); ?></li>
+<li>対象は、<a href="#add_role_option">追加役職</a>オプション群と<a href="chaos.php">闇鍋モード</a>の<a href="chaos.php#topping">固定配役追加モード</a>群で追加されるメイン役職です</li>
+<li>複数出現した対象役職は制限対象から除外されます</li>
+<li>身代わり君の役職を決定できなかった場合は対象を全てリセットして再抽選を行います</li>
 </ul>
 
 

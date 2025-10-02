@@ -4,7 +4,7 @@
 */
 class Option_close_room extends OptionCheckbox {
   protected function Ingore() {
-    return ! OptionManager::IsChange();
+    return false === OptionManager::IsChange();
   }
 
   protected function LoadValue() {

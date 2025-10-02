@@ -6,7 +6,7 @@ class Option_necessary_name extends OptionCheckbox {
   public $group = OptionGroup::GAME;
 
   protected function Ignore() {
-    return ! GameConfig::TRIP;
+    return false === GameConfig::TRIP;
   }
 
   protected function IgnorePost() {

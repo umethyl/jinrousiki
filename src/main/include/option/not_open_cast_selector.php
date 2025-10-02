@@ -9,7 +9,9 @@ class Option_not_open_cast_selector extends OptionSelector {
 
   protected function LoadValue() {
     $this->value = GameOptionConfig::$default_not_open_cast;
-    if (OptionManager::IsChange()) $this->SetFormValue('value');
+    if (OptionManager::IsChange()) {
+      $this->SetFormValue('value');
+    }
   }
 
   public function GetItem() {

@@ -7,17 +7,14 @@ class Option_gm_login extends OptionCheckbox {
   public $type  = OptionFormType::RADIO;
 
   protected function FilterEnable() {
-    $enable = GameOptionConfig::$gm_login_enable;
-    if (OptionManager::IsChange()) {
-      $this->enable = $enable && DB::$ROOM->IsOption($this->name);
-    } else {
-      $this->enable = $enable;
+    if (true === $this->enable && OptionManager::IsChange()) {
+      $this->enable = DB::$ROOM->IsOption($this->name);
     }
   }
 
   public function LoadPost() {
     if (OptionManager::IsChange()) { //GM ログアウト判定 (クイズ村は無効)
-      if (RQ::Get()->dummy_boy_selector == 'gm_logout' && ! DB::$ROOM->IsQuiz()) {
+      if (RQ::Get()->dummy_boy_selector == 'gm_logout' && false === DB::$ROOM->IsQuiz()) {
 	RQ::Get()->gm_logout = true;
 	return;
       }

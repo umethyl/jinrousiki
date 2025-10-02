@@ -166,7 +166,7 @@ final class RoomManagerController extends JinrouController {
 	  $dummy_boy_handle_name = Message::DUMMY_BOY;
 	  $dummy_boy_password    = ServerConfig::PASSWORD;
 	}
-	RoomOption::LoadPost('gerd');
+	RoomOption::LoadPost('gerd', 'dummy_boy_cast_limit');
       } elseif (RQ::Get()->gm_login) {
 	if (false === RQ::Get()->change_room) {
 	  RQ::Get()->ParsePostStr('gm_password'); //GM ログインパスワードをチェック
@@ -177,7 +177,7 @@ final class RoomManagerController extends JinrouController {
 	  $dummy_boy_password    = RQ::Get()->gm_password;
 	}
 	RoomOption::Set(OptionGroup::GAME, 'dummy_boy');
-	RoomOption::LoadPost('gerd');
+	RoomOption::LoadPost('gerd', 'dummy_boy_cast_limit');
       }
 
       //ゲルト君モード無効はゲルト君モードと連動させる

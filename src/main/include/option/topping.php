@@ -78,12 +78,14 @@ class Option_topping extends OptionSelector {
     if (ArrayFilter::IsAssoc($stack, 'fix')) { //固定枠
       foreach ($stack['fix'] as $role => $count) {
 	ArrayFilter::Add($list, $role, $count);
+	OptionManager::StoreDummyBoyCastLimit([$role]);
       }
     }
 
     if (ArrayFilter::IsAssoc($stack, 'random')) { //ランダム枠
       foreach ($stack['random'] as $key => $rate) {
-	Lottery::Add($list, Lottery::Generate($rate), $stack['count'][$key]);
+	$result_list = Lottery::Add($list, Lottery::Generate($rate), $stack['count'][$key]);
+	OptionManager::StoreDummyBoyCastLimit($result_list);
       }
     }
     //Text::p($list, sprintf('◆topping(%d)', array_sum($list)));

@@ -17,6 +17,7 @@ final class Cast {
   const RAND      = 'rand';      //サブ役職配役用乱数
   const DELETE    = 'delete';    //ランダム配布除外リスト
   const DETECTIVE = 'detective'; //探偵候補
+  const DUMMY     = 'dummy';     //身代わり君配役制限候補
   const SUM       = 'sum';       //役職別人数
 
   //スタック取得
@@ -41,10 +42,11 @@ final class Cast {
   //人数とゲームオプションに応じた役職テーブルを返す
   public static function Get($user_count) {
     //人数に応じた配役リストを取得
-    if (false === isset(CastConfig::$role_list[$user_count])) { //配役リスト存在判定
+    $role_list = ArrayFilter::Get(CastConfig::$role_list, $user_count);
+    if (is_null($role_list)) { //配役リスト存在判定
       self::OutputError(sprintf(VoteMessage::NO_CAST_LIST, $user_count));
     }
-    $role_list = CastConfig::$role_list[$user_count];
+    //Text::p($role_list, '◆RoleList [CastConfig]');
     //Text::p(DB::$ROOM->option_list, '◆OptionList');
 
     //お祭り村
@@ -65,6 +67,7 @@ final class Cast {
 	OptionManager::SetRole($role_list, $user_count);
       }
       //Text::p($role_list, '◆RoleList [normal]');
+      //Text::p(Cast::Stack()->Get(self::DUMMY), '◆DummyBoyCastLimit');
       self::ReplaceRole($role_list); //村人置換村
     }
 
@@ -190,6 +193,7 @@ final class Cast {
     $stack->Init(self::UNAME);
     $stack->Init(self::CAST);
     $stack->Init(self::REMAIN);
+    $stack->Init(self::DUMMY);
     $stack->Set(self::USER, DB::$USER->SearchLive());
     $stack->Set(self::ROLE, self::Get($stack->Get(self::COUNT)));
     //$stack->p(self::USER, '◆Uname');
@@ -232,19 +236,18 @@ final class Cast {
       }
     }
 
+    //対象外役職セット
+    $disable_role_list = self::GetDummyBoyRoleList(); //身代わり君の対象外役職リスト
+    $option = 'dummy_boy_cast_limit';
+    if (DB::$ROOM->IsOption($option)) { //身代わり君配役制限の調整
+      OptionLoader::Load($option)->UpdateDummyBoyCastLimit($disable_role_list);
+    }
+
     shuffle($role_list); //配列をシャッフル
-    $stack = self::GetDummyBoyRoleList(); //身代わり君の対象外役職リスト
-    for ($i = count($role_list); $i > 0; $i--) {
-      $role = array_shift($role_list); //配役リストから先頭を抜き出す
-      foreach ($stack as $disable_role) {
-	if (Text::Search($role, $disable_role)) {
-	  $role_list[] = $role; //配役リストの末尾に戻す
-	  continue 2;
-	}
-      }
-      self::Stack()->Add(self::CAST, $role);
-      self::Stack()->Set(self::ROLE, $role_list);
-      break;
+    if (false === self::FixDummyBoyRole($role_list, $disable_role_list)) {
+      //配役に失敗した場合は配役制限をリセットして再実施
+      self::Stack()->Init(self::DUMMY);
+      self::FixDummyBoyRole($role_list, $disable_role_list);
     }
   }
 
@@ -253,12 +256,31 @@ final class Cast {
     $stack = CastConfig::$disable_dummy_boy_role_list; //サーバ個別設定を取得
     array_push($stack, 'wolf', 'fox'); //常時対象外の役職を追加
 
-    //探偵村対応
-    $role = 'detective_common';
-    if (DB::$ROOM->IsOption('detective') && false === in_array($role, $stack)) {
-      $stack[] = $role;
-    }
     return $stack;
+  }
+
+  //身代わり君の役職抽選処理
+  private static function FixDummyBoyRole(array $role_list, array $disable_role_list) {
+    $cast_limit_list = self::Stack()->Get(self::DUMMY);
+    for ($i = count($role_list); $i > 0; $i--) {
+      $role = array_shift($role_list); //配役リストから先頭を抜き出す
+      if (true === in_array($role, $cast_limit_list)) {
+	$role_list[] = $role; //配役リストの末尾に戻す
+	continue;
+      }
+
+      foreach ($disable_role_list as $disable_role) {
+	if (Text::Search($role, $disable_role)) {
+	  $role_list[] = $role; //配役リストの末尾に戻す
+	  continue 2;
+	}
+      }
+
+      self::Stack()->Add(self::CAST, $role);
+      self::Stack()->Set(self::ROLE, $role_list);
+      return true;
+    }
+    return false;
   }
 
   //一次配役

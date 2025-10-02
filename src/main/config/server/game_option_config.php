@@ -45,6 +45,10 @@ class GameOptionConfig {
   public static $disable_gerd_enable  = true;
   public static $default_disable_gerd = false;
 
+  //身代わり君配役制限
+  public static $dummy_boy_cast_limit_enable  = true;
+  public static $default_dummy_boy_cast_limit = false;
+
   //-- 会話設定 --//
   public static $wait_morning_enable  = true; //早朝待機制 (待機時間設定は TimeConfig::WAIT_MORNING 参照)
   public static $default_wait_morning = false;

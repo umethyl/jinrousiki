@@ -81,6 +81,17 @@ class OptionManager {
     return DB::$ROOM->IsOption($option) && OptionLoader::Load($option)->EnableGerd($role);
   }
 
+  //身代わり君配役制限役職登録
+  public static function StoreDummyBoyCastLimit(array $role_list, $force = false) {
+    $option = 'dummy_boy_cast_limit';
+    if (true === $force || DB::$ROOM->IsOption($option)) {
+      foreach ($role_list as $role) {
+	Cast::Stack()->Register(Cast::DUMMY, $role);
+      }
+      //Cast::Stack()->p(Cast::DUMMY, '◆Store');
+    }
+  }
+
   //オプション名生成
   public static function GenerateCaption($name) {
     return OptionLoader::LoadFile($name) ? OptionLoader::Load($name)->GetName() : '';
@@ -129,16 +140,16 @@ class OptionParser {
 
 //-- オプションの基底クラス --//
 abstract class Option {
-  public $name;
-  public $class;
-  public $enable;
-  public $value;
-  public $type;
-  public $form_name;
-  public $form_value;
+  public $name;		//オプション名
+  public $enable;	//有効判定 (サーバ設定)
+  public $value;	//設定値
+  public $group;	//オプショングループ
+  public $type;		//オプション設定種別
+  public $form_name;	//フォーム表示名
+  public $form_value;	//フォーム表示設定値
 
   public function __construct() {
-    if ($this->Ignore()) {
+    if (true === $this->Ignore()) {
       return false;
     }
 
@@ -311,7 +322,7 @@ abstract class OptionCheckbox extends Option {
   public $form_value = Switcher::ON;
 
   public function LoadPost() {
-    if ($this->IgnorePost()) {
+    if (true === $this->IgnorePost()) {
       return false;
     }
 
@@ -335,6 +346,10 @@ abstract class OptionLimitedCheckbox extends OptionCheckbox {
   public $type = OptionFormType::LIMITED_CHECKBOX;
 
   public function LoadPost() {
+    if (true === $this->IgnorePost()) {
+      return false;
+    }
+
     RQ::Get()->ParsePostOn($this->name);
     if (false === RQ::Get()->{$this->name}) {
       return false;
@@ -408,7 +423,7 @@ abstract class OptionText extends Option {
   public $type  = OptionFormType::TEXT;
 
   public function LoadPost() {
-    if ($this->IgnorePost()) {
+    if (true === $this->IgnorePost()) {
       return false;
     }
 
@@ -421,8 +436,8 @@ abstract class OptionSelector extends Option {
   public $group = OptionGroup::ROLE;
   public $type  = OptionFormType::SELECTOR;
   public $label = 'モード名';
-  public $conf_name;
   public $source;
+  public $conf_name;
   public $item_list;
   public $form_list = [];
   public $on_change = '';
@@ -432,7 +447,7 @@ abstract class OptionSelector extends Option {
   }
 
   public function LoadPost() {
-    if ($this->IgnorePost()) {
+    if (true === $this->IgnorePost()) {
       return false;
     }
 
@@ -443,7 +458,7 @@ abstract class OptionSelector extends Option {
 
     $post = RQ::Get()->{$this->name};
     $flag = in_array($post, $this->form_list);
-    if ($flag) {
+    if (true === $flag) {
       RQ::Set($post, $flag);
       $this->Set($post);
     }

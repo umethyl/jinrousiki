@@ -2,7 +2,7 @@
 /*
   ◆探偵村 (detective)
   ○仕様
-  ・配役：探偵 (神話マニア ＞ 共有者 ＞ 村人)
+  ・配役：探偵 (神話マニア > 共有者 > 村人)
 */
 class Option_detective extends OptionCheckbox {
   public $group = OptionGroup::GAME;
@@ -19,6 +19,7 @@ class Option_detective extends OptionCheckbox {
     $target_role = $this->GetTargetRole();
     foreach (['mania', 'common', 'human'] as $role) {
       if (OptionManager::Replace($list, $role, $target_role)) {
+	OptionManager::StoreDummyBoyCastLimit([$target_role], true); //強制登録
 	break;
       }
     }
@@ -26,7 +27,9 @@ class Option_detective extends OptionCheckbox {
 
   //闇鍋固定枠追加
   public function FilterChaosFixRole(array &$list) {
-    ArrayFilter::Initialize($list, $this->GetTargetRole(), 1);
+    $role = $this->GetTargetRole();
+    ArrayFilter::Initialize($list, $role, 1);
+    OptionManager::StoreDummyBoyCastLimit([$role], true); //強制登録
   }
 
   //指名処理

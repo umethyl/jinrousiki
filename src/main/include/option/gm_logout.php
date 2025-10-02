@@ -7,9 +7,8 @@ class Option_gm_logout extends OptionCheckbox {
   public $type  = OptionFormType::RADIO;
 
   protected function FilterEnable() {
-    if (OptionManager::IsChange()) {
-      $enable = GameOptionConfig::$gm_logout_enable;
-      $this->enable = $enable && DB::$ROOM->IsOption('gm_login') && ! DB::$ROOM->IsQuiz();
+    if (true === $this->enable && OptionManager::IsChange()) {
+      $this->enable = DB::$ROOM->IsOption('gm_login') && false === DB::$ROOM->IsQuiz();
     } else {
       $this->enable = false;
     }

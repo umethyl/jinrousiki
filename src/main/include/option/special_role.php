@@ -14,7 +14,9 @@ class Option_special_role extends OptionSelector {
   }
 
   protected function LoadValue() {
-    if (OptionManager::IsChange()) $this->SetFormValue('int');
+    if (OptionManager::IsChange()) {
+      $this->SetFormValue('int');
+    }
   }
 
   public function GetCaption() {

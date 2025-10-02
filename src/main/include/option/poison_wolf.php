@@ -19,6 +19,7 @@ class Option_poison_wolf extends OptionCheckbox {
 	ArrayFilter::GetInt($list, 'wolf') > 0 && ArrayFilter::GetInt($list, 'human') > 0) {
       OptionManager::Replace($list, 'wolf', $this->name);
       OptionManager::Replace($list, 'human', 'pharmacist');
+      OptionManager::StoreDummyBoyCastLimit(['pharmacist']);
     }
   }
 

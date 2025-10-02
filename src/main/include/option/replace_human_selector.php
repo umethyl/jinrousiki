@@ -10,7 +10,9 @@ class Option_replace_human_selector extends OptionSelector {
   }
 
   protected function LoadValue() {
-    if (OptionManager::IsChange()) $this->SetFormValue('int');
+    if (OptionManager::IsChange()) {
+      $this->SetFormValue('int');
+    }
   }
 
   public function GetCaption() {

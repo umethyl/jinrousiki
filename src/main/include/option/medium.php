@@ -18,6 +18,7 @@ class Option_medium extends OptionCheckbox {
     if ($count >= CastConfig::${$this->name} && ArrayFilter::GetInt($list, $role) > 1) {
       OptionManager::Replace($list, $role, $this->name);
       OptionManager::Replace($list, $role, 'mind_cupid');
+      OptionManager::StoreDummyBoyCastLimit([$this->name, 'mind_cupid']);
     }
   }
 

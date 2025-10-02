@@ -48,7 +48,7 @@ class GameConfig {
   //狼が毒能力者を襲撃した際に巻き込まれる対象 (true:投票者固定 / false:ランダム)
   const POISON_ONLY_EATER = true;
 
-  const DISABLE_GERD_COUNT =  7; //ゲルト君モード無効が適用される参加人数の初期入力設定 (～人以下)
+  const DISABLE_GERD_COUNT = 17; //ゲルト君モード無効が適用される参加人数の初期入力設定 (～人以上)
   const CUPID_SELF_SHOOT   = 18; //キューピッドが他人撃ち可能となる参加人数
   const CUTE_WOLF_RATE     =  1; //萌狼の発動率 (%)
   const GENTLEMAN_RATE     = 13; //紳士・淑女の発動率 (%)

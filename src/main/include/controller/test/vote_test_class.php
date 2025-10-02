@@ -53,6 +53,7 @@ final class VoteTestController extends JinrouController {
 	RQ::GetTest()->talk_count[$user->id] = $user->id;
       }
     }
+
     if (DB::$ROOM->IsDay()) {
       include('data/vote_talk_count.php'); //沈黙禁止
     }
@@ -147,16 +148,19 @@ final class VoteTestController extends JinrouController {
 	ImageManager::Role()->OutputExists($role);
       }
     }
+
     if ($list['sub']) {
       foreach (RoleDataManager::GetList(true) as $role) {
 	ImageManager::Role()->OutputExists($role);
       }
     }
+
     if ($list['result']) {
       foreach (RoleDataManager::GetList() as $role) {
 	ImageManager::Role()->Output('result_' . $role);
       }
     }
+
     if ($list['weather']) {
       foreach (WeatherData::$list as $stack) {
 	ImageManager::Role()->Output('prediction_weather_' . $stack[WeatherData::EVENT]);
@@ -239,7 +243,7 @@ final class VoteTestController extends JinrouController {
     DB::LoadSelf($self_id);
   }
 
-  //役職判定情報
+  //役職判定情報 (占い)
   private static function OutputDistinguishMage() {
     $user   = new User();
     $filter = RoleLoader::Load('mage');

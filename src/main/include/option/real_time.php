@@ -8,7 +8,7 @@ class Option_real_time extends OptionLimitedCheckbox {
 
   public function LoadPost() {
     RQ::Get()->ParsePostOn($this->name);
-    if (! RQ::Get()->{$this->name}) {
+    if (false === RQ::Get()->{$this->name}) {
       return false;
     }
 

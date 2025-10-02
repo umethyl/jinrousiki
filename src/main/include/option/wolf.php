@@ -16,6 +16,7 @@ class Option_wolf extends OptionCheckbox {
   public function SetRole(array &$list, $count) {
     if ($count >= CastConfig::${$this->name}) {
       OptionManager::Replace($list, 'human', $this->name);
+      OptionManager::StoreDummyBoyCastLimit([$this->name]);
     }
   }
 

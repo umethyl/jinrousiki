@@ -7,7 +7,7 @@ class OptionForm {
     'wish_role', 'real_time', 'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name',
     'necessary_trip', 'close_room',
     'dummy_boy' => null,
-    'dummy_boy_selector', 'gm_password', 'gerd', 'disable_gerd',
+    'dummy_boy_selector', 'gm_password', 'gerd', 'disable_gerd', 'dummy_boy_cast_limit',
     'talk' => null,
     'wait_morning', 'limit_last_words', 'limit_talk', 'secret_talk', 'no_silence',
     'open_cast' => null,
@@ -47,7 +47,7 @@ class OptionForm {
   //フォーム出力 (振り分け処理用)
   private static function OutputForm($name, $class) {
     $filter = OptionLoader::Load($name);
-    if (! $filter->enable || false === isset($filter->type)) {
+    if (false === $filter->enable || false === isset($filter->type)) {
       return;
     }
 

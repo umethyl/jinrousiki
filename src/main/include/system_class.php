@@ -74,6 +74,18 @@ class Stack {
     $this->$name = $data;
   }
 
+  //登録
+  public function Register($name, $data) {
+    //Text::p($data, "◆Stack/Register[{$name}]");
+    $stack = $this->GetArray($name);
+    if (is_null($stack)) {
+      return;
+    }
+
+    ArrayFilter::Register($stack, $data);
+    $this->Set($name, $stack);
+  }
+
   //追加
   public function Add($name, $data) {
     //Text::p($data, "◆Stack/Add[{$name}]");

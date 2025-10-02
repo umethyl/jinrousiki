@@ -10,10 +10,11 @@ class Option_sub_role_limit extends OptionSelector {
     foreach (['easy', 'normal', 'hard'] as $name) {
       $stack[$name] = sprintf('%s_%s', $this->name, $name);
     }
-    foreach ($stack as $name => $class) {
-      $filter = OptionLoader::Load($class);
+
+    foreach ($stack as $name => $option) {
+      $filter = OptionLoader::Load($option);
       if (isset($filter) && $filter->enable) {
-	$this->form_list[$class] = $name;
+	$this->form_list[$option] = $name;
       }
     }
   }

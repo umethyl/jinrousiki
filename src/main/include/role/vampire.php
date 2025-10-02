@@ -114,7 +114,7 @@ class Role_vampire extends Role {
 
   //吸血失敗判定
   protected function InfectFailed(User $user) {
-    return true;
+    return false;
   }
 
   //吸血失敗追加処理

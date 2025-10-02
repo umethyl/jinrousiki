@@ -5,9 +5,9 @@ class RoomOption {
   public static $game_option = [];
   public static $role_option = [];
   public static $icon_order  = [
-    'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'gerd', 'disable_gerd', 'open_vote',
-    'settle', 'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
-    'wait_morning', 'limit_last_words', 'limit_talk', 'secret_talk', 'no_silence',
+    'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'gerd', 'disable_gerd',
+    'dummy_boy_cast_limit', 'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name',
+    'necessary_trip', 'wait_morning', 'limit_last_words', 'limit_talk', 'secret_talk', 'no_silence',
     'not_open_cast', 'auto_open_cast',
     'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf', 'possessed_wolf',
     'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'cupid', 'medium', 'mania',

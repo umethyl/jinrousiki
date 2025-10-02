@@ -15,8 +15,10 @@ class Option_cupid extends OptionCheckbox {
   }
 
   public function SetRole(array &$list, $count) {
-    if ($count >= CastConfig::${$this->name} && ! DB::$ROOM->IsOption('full_' . $this->name)) {
+    $option = 'full_' . $this->name;
+    if ($count >= CastConfig::${$this->name} && false === DB::$ROOM->IsOption($option)) {
       OptionManager::Replace($list, 'human', $this->name);
+      OptionManager::StoreDummyBoyCastLimit([$this->name]);
     }
   }
 

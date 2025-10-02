@@ -7,7 +7,9 @@ class Option_no_dummy_boy extends OptionCheckbox {
   public $type  = OptionFormType::RADIO;
 
   protected function FilterEnable() {
-    $this->enable = ! OptionManager::IsChange();
+    if (OptionManager::IsChange()) {
+      $this->enable = false;
+    }
   }
 
   public function GetCaption() {

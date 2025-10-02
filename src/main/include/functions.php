@@ -865,9 +865,13 @@ final class Lottery {
 
   //「福引き」を一定回数行ってリストに追加する
   public static function Add(array &$list, array $random_list, $count) {
+    $stack = []; //抽選結果
     for (; $count > 0; $count--) {
-      ArrayFilter::Add($list, self::Get($random_list));
+      $data = self::Get($random_list);
+      ArrayFilter::Add($list, $data);
+      $stack[] = $data;
     }
+    return $stack;
   }
 
   //「比」から「確率」に変換する (テスト用)

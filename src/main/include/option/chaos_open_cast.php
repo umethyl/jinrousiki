@@ -7,16 +7,18 @@ class Option_chaos_open_cast extends OptionSelector {
 
   protected function LoadFormList() {
     foreach (['camp', 'role', 'full'] as $name) {
-      $class  = sprintf('%s_%s', $this->name, $name);
-      $filter = OptionLoader::Load($class);
+      $option = sprintf('%s_%s', $this->name, $name);
+      $filter = OptionLoader::Load($option);
       if (isset($filter) && $filter->enable) {
-	$this->form_list[$class] = $name;
+	$this->form_list[$option] = $name;
       }
     }
   }
 
   protected function LoadValue() {
-    if (OptionManager::IsChange()) $this->SetFormValue('key');
+    if (OptionManager::IsChange()) {
+      $this->SetFormValue('key');
+    }
   }
 
   public function LoadPost() {

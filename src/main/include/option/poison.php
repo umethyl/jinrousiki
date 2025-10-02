@@ -18,6 +18,7 @@ class Option_poison extends OptionCheckbox {
     if ($count >= CastConfig::${$this->name} && ArrayFilter::GetInt($list, $role) > 1) {
       OptionManager::Replace($list, $role, $this->name);
       OptionManager::Replace($list, $role, 'wolf');
+      OptionManager::StoreDummyBoyCastLimit([$this->name]);
     }
   }
 
