@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------
-  人狼式 ～汝は人狼なりや？式神エディション Version 2.0.6 README 2013/04/23
+  人狼式 ～汝は人狼なりや？式神エディション Version 2.1.1 README 2013/05/19
 -----------------------------------------------------------------------------
 
 人狼式 ～汝は人狼なりや？式神エディション (以下本スクリプト) は、
@@ -42,12 +42,13 @@ Ver. 1.5 以降は PHP5 環境が必要です。
 ------------
 1. MySQL サーバ内に専用データベースとアカウントを作成
    文字コード、照合順序は utf8_unicode_ci (注) を使用すること
-2. config/server_config.php を編集し、データベースサーバやユーザ名、パスワードを設定
-3. パッケージをサーバにアップロード (コード無変換、またはバイナリモード)
-4. サーバ上の user_icon/、rss/ ディレクトリに書き込み属性を付与
-5. admin/ ディレクトリにアクセス制限を設定
-6. 初期セットアップ作業 (自動) のために admin/setup.php にアクセス
-7. index.php にアクセスし、動作を確認
+2. config/server/database_config.php を編集し、データベースを設定
+3. config/server/server_config.php を編集し、サーバを設定
+4. パッケージをサーバにアップロード (コード無変換、またはバイナリモード)
+5. サーバ上の user_icon/、rss/ ディレクトリに書き込み属性を付与
+6. admin/ ディレクトリにアクセス制限を設定
+7. 初期セットアップ作業 (自動) のために admin/setup.php にアクセス
+8. index.php にアクセスし、動作を確認
 
 注：
 Ver. 1.4.0 β16 より、文字コードを ujis_japanese_ci から utf8_unicode_ci に変更しています
@@ -57,16 +58,17 @@ Ver. 1.4.0 β16 より、文字コードを ujis_japanese_ci から utf8_unicode
 ------------------------
 本スクリプトの設定ファイルは以下の通りです。
 全て config/ ディレクトリ内に存在します。
-1. game/   : 主にゲーム内の設定ファイル置き場
-2. server/ : 主にサーバ側の設定ファイル置き場
+1. server/ : 主にサーバ側の設定ファイル置き場
+2. game/   : 主にゲーム内の設定ファイル置き場
 3. system/ : 主にシステム関連の設定ファイル置き場
 
 主な設定ファイルは以下になります
-1-1. game/game_config.php       : 村立て、制限時間など、ゲームプレイパラメータの設定ファイル
-1-2. game/cast_config.php       : 配役設定ファイル
-1-3. game/message.php           : ゲーム中で表示されるシステムメッセージの設定ファイル
-2-2. server/database_config.php : データベース関連の設定ファイル
-2-1. server/server_config.php   : 本スクリプトをサーバ上で動作させるための設定ファイル
+1-1. server/database_config.php : データベース関連の設定ファイル
+1-2. server/server_config.php   : 本スクリプトをサーバ上で動作させるための設定ファイル
+1-3. server/room_config.php     : 村作成時の制限設定ファイル
+2-1. game/game_config.php       : ゲーム内の設定ファイル
+2-2. game/cast_config.php       : 配役設定ファイル
+2-3. game/message.php           : ゲーム中で表示されるシステムメッセージの設定ファイル
 3-1. system/version.php         : トップページで表示されるバージョン情報の設定ファイル
 
 このうち、必ず設定が必要になるのは database_config, server_config.php のみです。
@@ -78,19 +80,22 @@ Ver. 1.4.0 β16 より、文字コードを ujis_japanese_ci から utf8_unicode
 ----------------------
 改変、再配布は自由です。
 しかし、植物の背景画像、左上にある文字の入ったタイトル画像は天の欠片さんの素材を使用しています。
-この画像をそのまま使う場合は config/server_config.php の素材情報設定の中にある、天の欠片さんへの
-リンクを削除しないようにお願いします。
-http://keppen.web.infoseek.co.jp/
+この画像をそのまま使う場合は config/system/copyright_config.php の素材情報設定の中にある、
+天の欠片さんへのリンクを削除しないようにお願いします。
+http://photozou.jp/photo/list/2066445/5445429
+
 またこの画像の著作権は天の欠片さんの物なので、自分で撮影したとか自分で作ったとか言わないようにしてください。
 Version 1.2.0 以降で追加した画像については、 あずきふぉんとさんのフォントを利用させていただいています。
-この画像をそのまま使う場合は config/server_config.php の素材情報設定の中にある、あずきふぉんとさんへ
-のリンクを削除しないようにお願いします。
+この画像をそのまま使う場合は config/system/copyright_config.php の素材情報設定の中にある、
+あずきふぉんとさんへのリンクを削除しないようにお願いします。
 http://azukifont.mints.ne.jp/
+
 module フォルダの中は mbstring エミュレータが入っています。
-http://www.matsubarafamily.com/blog/mbemu.php
 これは mbstring が使えない環境でも文字コード関連の処理をするためです。
 著作権は mbstring の作者さんのものです。
-config/server_config.php の素材情報設定の中にあるリンクを削除しないようにお願いします。
+config/system/copyright_config.php の素材情報設定の中にあるリンクを削除しないようにお願いします。
+http://www.matsubarafamily.com/blog/mbemu.php
+
 
 --------------
   クレジット
@@ -116,6 +121,7 @@ atari
 みこ
 九鳥
 雨栗
+八木
 
 ◆Special Thanks
 多数のテストプレイヤー、協力していただいた方々
