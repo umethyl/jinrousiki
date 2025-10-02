@@ -87,7 +87,7 @@ function GetRoleList($user_count){
     if($is_detective && is_null($target =& $chaos_fix_role_list['detective_common'])) $target = 1;
 
     foreach($chaos_fix_role_list as $key => $value){ //最小補正用リスト
-      $fix_role_group_list[$ROLE_DATA->DistinguishRoleGroup($key)] = $value;
+      $fix_role_group_list[$ROLE_DATA->DistinguishRoleGroup($key)] += $value;
     }
     //PrintData($fix_role_group_list, 'FixRole');
 

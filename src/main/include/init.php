@@ -16,6 +16,7 @@ define('JINRO_MOD',  JINRO_ROOT . '/module');
 
 //-- デバッグモードのオン/オフ --//
 $DEBUG_MODE = false;
+#$DEBUG_MODE = true;
 
 //-- クラスを定義 --//
 class InitializeConfig{
