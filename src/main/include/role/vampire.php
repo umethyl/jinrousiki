@@ -63,7 +63,7 @@ class Role_vampire extends Role {
   //吸血リスト登録
   final protected function SetInfectTarget($id) {
     $stack = $this->GetStack('vampire');
-    $stack[$this->GetID()][] = $id;
+    $stack[$this->GetVoter()->id][] = $id;
     $this->SetStack($stack, 'vampire');
   }
 

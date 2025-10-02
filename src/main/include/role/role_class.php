@@ -696,10 +696,10 @@ abstract class Role {
     case 'reporter':
       if ($uniq) $stack = array();
       foreach ($result_list as $result) {
-	if ($uniq && in_array($result['target'], $stack)) continue;
+	if ($uniq && in_array($result['result'], $stack)) continue;
 	$target = $result['target'] . ' さんは ' . $result['result'];
 	RoleHTML::OutputAbilityResult($header, $target, $footer);
-	if ($uniq) $stack[] = $result['target'];
+	if ($uniq) $stack[] = $result['result'];
       }
       break;
 

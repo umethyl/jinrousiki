@@ -438,7 +438,11 @@ EOF;
 
     if ($flag_border_game && RQ::Get()->reverse_log) {
       //突然死で勝敗が決定したケース
-      if ($date == DB::$ROOM->last_date && DB::$ROOM->IsDay()) $str .= GameHTML::GenerateVote();
+      if ($date == DB::$ROOM->last_date && DB::$ROOM->IsDay()) {
+	$str .= GameHTML::GenerateVote();
+	DB::$ROOM->scene = 'night';
+	$str .= GameHTML::GenerateDead();
+      }
 
       DB::$ROOM->date  = $date + 1;
       DB::$ROOM->scene = 'day';

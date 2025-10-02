@@ -115,9 +115,9 @@ class Role_wolf extends Role {
       DB::$USER->Kill($id, 'WOLF_KILLED'); //死亡処理
     }
 
-    //護衛判定
-    if (DB::$ROOM->date > 1 && ! $actor->IsSiriusWolf() &&
-	RoleManager::GetClass('guard')->Guard($target)) {
+    //護衛判定 (護衛能力判定を天狼判定の前に行うこと)
+    if (DB::$ROOM->date > 1 && RoleManager::GetClass('guard')->Guard($target) &&
+	! $actor->IsSiriusWolf()) {
       //RoleManager::p('guard_success', 'GuardSuccess');
       RoleManager::LoadMain($actor)->GuardCounter();
       return;

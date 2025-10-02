@@ -531,9 +531,11 @@ class Vote {
       $vote   = @(int)$list['vote_number']; //投票数
       $poll   = @(int)$vote_count_list[$user->uname]; //得票数
 
-      RoleManager::SetActor($user); //得票者をセット
       //得票補正 (メイン役職)
+      RoleManager::SetActor(DB::$USER->ByReal($user->id));
       foreach (RoleManager::Load('vote_poll_main') as $filter) $filter->FilterVotePoll($poll);
+
+      RoleManager::SetActor($user);
       if (! DB::$ROOM->IsEvent('no_authority')) { //得票補正 (サブ役職 / 蜃気楼ならスキップ)
 	foreach (RoleManager::Load('vote_poll_sub') as $filter) $filter->FilterVotePoll($poll);
       }
