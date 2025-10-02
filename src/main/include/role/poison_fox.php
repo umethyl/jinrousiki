@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_poison_fox extends Role_fox {
-  public $mix_in = array('poison');
+  public $mix_in = ['poison'];
 
   protected function IsPoisonTarget(User $user) {
     return ! RoleUser::IsFoxCount($user);

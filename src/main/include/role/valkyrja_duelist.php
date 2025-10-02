@@ -14,13 +14,13 @@ class Role_valkyrja_duelist extends Role {
   protected function GetPartner() {
     $id    = $this->GetID();
     $role  = $this->GetPartnerRole();
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->GetRoleUser($role) as $user) {
       if ($user->IsPartner($role, $id)) {
 	$stack[] = $user->handle_name;
       }
     }
-    return array($this->GetPartnerHeader() => $stack);
+    return [$this->GetPartnerHeader() => $stack];
   }
 
   //勝利条件対象役職取得
@@ -77,13 +77,13 @@ class Role_valkyrja_duelist extends Role {
     return 2;
   }
 
-  public function SetVoteNightUserList(array $list) {
+  public function SetVoteNightTargetList(array $list) {
     $self_shoot = false; //自分撃ちフラグ
-    $user_list  = array();
+    $user_list  = [];
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id); //投票先のユーザ情報を取得
-      $str  = $this->IgnoreVoteNight($user, $user->IsLive()); //例外判定
+      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
       if (! is_null($str)) return $str;
       $user_list[$id] = $user;
       $self_shoot |= $this->IsActor($user); //自分撃ち判定
@@ -103,7 +103,7 @@ class Role_valkyrja_duelist extends Role {
   public function VoteNightAction() {
     $role  = $this->GetActor()->GetID($this->GetPartnerRole());
     $list  = $this->GetStack('target_list');
-    $stack = array();
+    $stack = [];
     foreach ($list as $user) {
       $stack[] = $user->handle_name;
       $user->AddRole($role); //対象役職セット

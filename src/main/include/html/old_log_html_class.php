@@ -4,16 +4,18 @@ class OldLogHTML {
   //指定の部屋番号のログを生成する
   public static function Generate() {
     $base_title = ServerConfig::TITLE . OldLogMessage::TITLE;
-    if (! DB::$ROOM->IsFinished() || ! DB::$ROOM->IsAfterGame()) { //閲覧判定
+    if (false === DB::$ROOM->IsFinished() || false === DB::$ROOM->IsAfterGame()) { //閲覧判定
       $url  = RQ::Get()->generate_index ? 'index.html' : 'old_log.php';
       $back = HTML::GenerateLink($url, Message::BACK);
-      $str  = Text::Concat(OldLogMessage::NOT_FINISHED, $back);
+      $str  = Text::Join(OldLogMessage::NOT_FINISHED, $back);
       HTML::OutputResult($base_title, $str);
     }
 
     if (JinrouCacheManager::Enable(JinrouCacheManager::LOG)) { //キャッシュ取得判定
       $str = JinrouCacheManager::Get(JinrouCacheManager::LOG);
-      if (isset($str)) return $str;
+      if (true === isset($str)) {
+	return $str;
+      }
     }
 
     if (DB::$ROOM->IsOn(RoomMode::WATCH)) { //観戦モード判定
@@ -22,7 +24,7 @@ class OldLogHTML {
     }
 
     if (RQ::Get()->auto_play) { //自動再生モード判定
-      if (! RQ::Get()->reverse_log && RQ::Get()->time && DB::$ROOM->IsOn(RoomMode::WATCH)) {
+      if (false === RQ::Get()->reverse_log && RQ::Get()->time && DB::$ROOM->IsOn(RoomMode::WATCH)) {
 	DB::$ROOM->Flag()->Set(RoomMode::AUTO_PLAY, true);
 	Loader::LoadFile('auto_play_talk_class');
 	AutoPlayTalk::InitStack();
@@ -31,11 +33,11 @@ class OldLogHTML {
       }
     }
 
-    $list = array(
+    $list = [
       'game_option' => DB::$ROOM->game_option->row,
       'option_role' => DB::$ROOM->option_role->row,
       'max_user'    => 0
-    );
+    ];
     RoomOption::Load($list);
 
     $title = sprintf('[%d%s] %s - %s',
@@ -49,24 +51,30 @@ class OldLogHTML {
     } else {
       $str = HTML::GenerateHeader($title, 'old_log', true);
     }
-    $str .= Text::Concat(
-      HTML::GenerateLink('old_log.php' . URL::GetBackLink(), Message::BACK),
-      DB::$ROOM->GenerateTitle(true), RoomOption::GenerateImage(),
-      Text::Add(HTML::GenerateLink('#beforegame', OldLogMessage::BEFORE))
+    $str .= Text::Join(
+      HTML::GenerateLink(URL::GetHeaderDB('old_log'), Message::BACK),
+      RoomHTML::GenerateLogTitle(), RoomOption::GenerateImage(),
+      Text::LineFeed(HTML::GenerateLink('#beforegame', OldLogMessage::BEFORE))
     );
     for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
-      $str .= Text::Add(HTML::GenerateLink('#date' . $i, $i));
+      $str .= Text::LineFeed(HTML::GenerateLink('#date' . $i, $i));
     }
     $str .= HTML::GenerateLink('#aftergame', OldLogMessage::AFTER) . Message::SPACER;
-    $str .= Text::Add(RQ::Get()->GetURL());
+    $str .= Text::LineFeed(RQ::Get()->GetURL());
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $str .= Text::Format('<a href="#game_top" onClick="start_auto_play();">%s</a>', '開始');
     }
     $str .= GameHTML::GeneratePlayer();
-    if (RQ::Get()->role_list) $str .= self::GenerateRoleLink();
+    if (RQ::Get()->role_list) {
+      $str .= self::GenerateRoleLink();
+    }
     $str .= RQ::Get()->heaven_only ? self::GenerateHeavenLog() : self::GenerateLog();
-    if (JinrouCacheManager::Enable(JinrouCacheManager::LOG)) JinrouCacheManager::Save($str);
-    if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) $str .= AutoPlayTalk::GenerateFooter();
+    if (JinrouCacheManager::Enable(JinrouCacheManager::LOG)) {
+      JinrouCacheManager::Store($str);
+    }
+    if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
+      $str .= AutoPlayTalk::GenerateFooter();
+    }
     return $str;
   }
 
@@ -82,15 +90,17 @@ class OldLogHTML {
     if ($room_count < 1) {
       $title = ServerConfig::TITLE . OldLogMessage::TITLE;
       $back  = HTML::GenerateLink('./', Message::BACK);
-      HTML::OutputResult($title, Text::Concat(OldLogMessage::NO_LOG, $back));
+      HTML::OutputResult($title, Text::Join(OldLogMessage::NO_LOG, $back));
     }
 
     $cache_flag = false; //キャッシュ取得判定
     if (JinrouCacheManager::Enable(JinrouCacheManager::LOG_LIST)) {
       $cache_flag = self::IsCache();
-      if ($cache_flag) {
+      if (true === $cache_flag) {
 	$str = JinrouCacheManager::Get(JinrouCacheManager::LOG_LIST);
-	if (isset($str)) return $str;
+	if (true === isset($str)) {
+	  return $str;
+	}
       }
     }
 
@@ -103,7 +113,9 @@ class OldLogHTML {
 
     if (RQ::Get()->generate_index) {
       $max = RQ::Get()->max_room_no;
-      if (is_int($max) && $max > 0 && $room_count > $max) $room_count = $max;
+      if (is_int($max) && $max > 0 && $room_count > $max) {
+	$room_count = $max;
+      }
       $builder = new PageLinkBuilder('index', RQ::Get()->page, $room_count);
       $builder->set_reverse = $is_reverse;
       $builder->url = '<a href="index';
@@ -112,10 +124,15 @@ class OldLogHTML {
       $builder->set_reverse = $is_reverse;
       $builder->AddOption('reverse', Switcher::Get($is_reverse));
       $builder->AddOption('watch',   Switcher::Get(RQ::Get()->watch));
-      foreach (array('name', 'room_name', 'winner', 'role') as $option) {
-	if (RQ::Get()->$option) $builder->AddOption($option, RQ::Get()->$option);
+      foreach (['name', 'room_name', 'winner', 'role'] as $option) {
+	if (RQ::Get()->$option) {
+	  $builder->AddOption($option, RQ::Get()->$option);
+	}
       }
-      if (URL::ExistsDB()) $builder->AddOption(RequestDataGame::DB, RQ::Get()->db_no);
+
+      if (URL::ExistsDB()) {
+	$builder->AddOption(RequestDataGame::DB, RQ::Get()->db_no);
+      }
     }
 
     $str = self::GenerateListHeader($builder);
@@ -140,13 +157,13 @@ class OldLogHTML {
 	  $view_url  = '';
 	}
 	if (RQ::Get()->watch) {
-	  $base_url .= URL::GetAdd(RequestDataLogRoom::WATCH);
+	  $base_url .= URL::GetSwitch(RequestDataLogRoom::WATCH);
 	}
 
 	if ($current_time - strtotime(DB::$ROOM->finish_datetime) > RoomConfig::KEEP_SESSION) {
 	  $login = '';
 	} else {
-	  $login = Text::Add(HTML::GenerateLink(URL::GetRoom('login'), OldLogMessage::LOGIN));
+	  $login = Text::LineFeed(HTML::GenerateLink(URL::GetRoom('login'), OldLogMessage::LOGIN));
 	}
 
 	if (RQ::Get()->watch) {
@@ -154,7 +171,7 @@ class OldLogHTML {
 	} else {
 	  $log_link  = HTML::GenerateLogLink($base_url, true, '(', '', ' )');
 
-	  $url       = $base_url . URL::GetAdd(RequestDataLogRoom::ROLE);
+	  $url       = $base_url . URL::GetSwitch(RequestDataLogRoom::ROLE);
 	  $header    = Text::LF . OldLogMessage::ADD_ROLE . ' (';
 	  $log_link .= HTML::GenerateLogLink($url, false, $header, $vanish, ' )');
 	}
@@ -166,11 +183,11 @@ class OldLogHTML {
 	$establish = Time::ConvertTimeStamp(DB::$ROOM->establish_datetime);
       }
 
-      $list = array(
+      $list = [
 	'game_option' => DB::$ROOM->game_option,
 	'option_role' => DB::$ROOM->option_role,
 	'max_user'    => DB::$ROOM->max_user
-      );
+      ];
       RoomOption::Load($list);
       RoomOption::SetStack();
 
@@ -185,8 +202,10 @@ class OldLogHTML {
       );
     }
 
-    $str .= Text::Add(self::GetListFooter());
-    if ($cache_flag) JinrouCacheManager::Save($str);
+    $str .= Text::LineFeed(self::GetListFooter());
+    if (true === $cache_flag) {
+      JinrouCacheManager::Store($str);
+    }
     return $str;
   }
 
@@ -194,8 +213,9 @@ class OldLogHTML {
   public static function GenerateIndex() {
     RQ::Set('reverse', Switcher::OFF);
     if (RQ::Get()->max_room_no < 1) return false;
+
     $header = sprintf('../log/%sindex', RQ::Get()->prefix);
-    $footer = Text::Add('</body></html>');
+    $footer = Text::LineFeed('</body></html>');
     $end_page = ceil((RQ::Get()->max_room_no - RQ::Get()->min_room_no + 1) / OldLogConfig::VIEW);
     for ($i = 1; $i <= $end_page; $i++) {
       RQ::Set('page', $i);
@@ -239,9 +259,11 @@ EOF;
 
   //通常ログ出力
   private static function GenerateLog() {
-    if (RQ::Get()->reverse_log) {
+    if (true === RQ::Get()->reverse_log) {
       $str = self::GenerateTalk(0, RoomScene::BEFORE);
-      if (DB::$ROOM->IsOption('open_day')) $str .= self::GenerateTalk(0, RoomScene::DAY);
+      if (DB::$ROOM->IsOption('open_day')) {
+	$str .= self::GenerateTalk(0, RoomScene::DAY);
+      }
       for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
 	$str .= self::GenerateTalk($i, '');
       }
@@ -272,7 +294,7 @@ EOF;
   //霊界ログ出力
   private static function GenerateHeavenLog() {
     $str = '';
-    if (RQ::Get()->reverse_log) {
+    if (true === RQ::Get()->reverse_log) {
       for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
 	$str .= self::GenerateTalk($i, RoomScene::HEAVEN_ONLY);
       }
@@ -286,7 +308,7 @@ EOF;
 
   //指定の日付の会話ログを生成
   private static function GenerateTalk($date, $scene) {
-    $flag_border_game = false;
+    $border_game_flag = false;
     switch ($scene) { //シーンに合わせたデータをセット
     case RoomScene::BEFORE:
       $table_class = $scene;
@@ -294,7 +316,9 @@ EOF;
 	DB::$USER->ResetRoleList();
 	DB::$ROOM->ResetEvent();
       }
-      if (! RQ::Get()->reverse_log) DB::$USER->ResetPlayer(); //player 復元処理
+      if (false === RQ::Get()->reverse_log) {
+	DB::$USER->ResetPlayer(); //player 復元処理
+      }
       break;
 
     case RoomScene::AFTER:
@@ -303,11 +327,13 @@ EOF;
 	DB::$USER->ResetRoleList();
 	DB::$ROOM->ResetEvent();
       }
-      if (RQ::Get()->reverse_log) DB::$USER->ResetPlayer(); //player 復元処理
+      if (true === RQ::Get()->reverse_log) {
+	DB::$USER->ResetPlayer(); //player 復元処理
+      }
       break;
 
     case RoomScene::HEAVEN_ONLY:
-      if (RQ::Get()->reverse_log && $date != 1) {
+      if (true === RQ::Get()->reverse_log && $date != 1) {
 	$table_class = RoomScene::DAY; //2日目以降は昼から
       } else {
 	$table_class = RoomScene::NIGHT;
@@ -315,8 +341,8 @@ EOF;
       break;
 
     default:
-      $flag_border_game = true;
-      if (RQ::Get()->reverse_log && $date != 1) {
+      $border_game_flag = true;
+      if (true === RQ::Get()->reverse_log && $date != 1) {
 	$table_class = RoomScene::DAY; //2日目以降は昼から
       } else {
 	$table_class = RoomScene::NIGHT;
@@ -331,7 +357,7 @@ EOF;
 
     //出力
     $str = '';
-    if ($flag_border_game && ! RQ::Get()->reverse_log) {
+    if (true === $border_game_flag && false === RQ::Get()->reverse_log) {
       DB::$ROOM->date = $date + 1;
       DB::$ROOM->SetScene(RoomScene::DAY);
       $str .= self::GenerateLastWords() . self::GenerateDead(); //死亡者を出力
@@ -339,34 +365,48 @@ EOF;
 
     DB::$ROOM->date = $date;
     DB::$ROOM->SetScene($table_class);
-    if ($scene != RoomScene::HEAVEN_ONLY) DB::$ROOM->SetWeather();
-    if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) AutoPlayTalk::InitScene();
+    if ($scene != RoomScene::HEAVEN_ONLY) {
+      DB::$ROOM->SetWeather();
+    }
+    if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
+      AutoPlayTalk::InitScene();
+    }
 
     $id = DB::$ROOM->IsPlaying() ? 'date' . DB::$ROOM->date : DB::$ROOM->scene;
     $builder = new TalkBuilder('talk ' . $table_class, $id);
-    if (ServerConfig::DEBUG_MODE) Talk::SetBuilder($builder); //デバッグ発言出力用
-    if (RQ::Get()->reverse_log) $builder->GenerateTimeStamp();
+    if (ServerConfig::DEBUG_MODE) {
+      Talk::SetBuilder($builder); //デバッグ発言出力用
+    }
+    if (true === RQ::Get()->reverse_log) {
+      $builder->GenerateTimeStamp();
+    }
 
     foreach (TalkDB::GetLog($date, $scene) as $talk) {
       switch ($talk->scene) {
       case RoomScene::DAY:
       case RoomScene::NIGHT:
-	if ($talk->scene == DB::$ROOM->scene || $talk->location == TalkLocation::DUMMY_BOY) break;
+	if ($talk->scene == DB::$ROOM->scene || $talk->location == TalkLocation::DUMMY_BOY) {
+	  break;
+	}
 
 	$str .= $builder->Refresh() . self::GenerateSceneChange($date);
 	DB::$ROOM->SetScene($talk->scene);
 	$id = 'date' . DB::$ROOM->date . '_' . DB::$ROOM->scene;
 	$builder->Begin('talk ' . $talk->scene, $id);
-	if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) AutoPlayTalk::SetScene(true);
+	if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
+	  AutoPlayTalk::SetScene(true);
+	}
 	break;
       }
       $builder->Generate($talk); //会話生成
     }
 
-    if (! RQ::Get()->reverse_log) $builder->GenerateTimeStamp();
+    if (false === RQ::Get()->reverse_log) {
+      $builder->GenerateTimeStamp();
+    }
     $str .= $builder->Refresh();
 
-    if ($flag_border_game && RQ::Get()->reverse_log) {
+    if (true === $border_game_flag && true === RQ::Get()->reverse_log) {
       //突然死で勝敗が決定したケース
       if ($date == DB::$ROOM->last_date && DB::$ROOM->IsDay()) {
 	$str .= self::GenerateVote();
@@ -384,9 +424,12 @@ EOF;
   //シーン切り替え処理
   private static function GenerateSceneChange($date) {
     $str = '';
-    if (RQ::Get()->heaven_only) return $str;
+    if (RQ::Get()->heaven_only) {
+      return $str;
+    }
+
     DB::$ROOM->date = $date;
-    if (RQ::Get()->reverse_log) {
+    if (true === RQ::Get()->reverse_log) {
       DB::$ROOM->SetScene(RoomScene::NIGHT);
       $str .= self::GenerateVote() . self::GenerateDead();
     } else {
@@ -397,29 +440,31 @@ EOF;
 
   //役職リンク生成
   private static function GenerateRoleLink() {
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->GetRole() as $role => $list) {
       $stack[] = $role;
     }
 
-    $str_stack  = array();
-    $role_stack = array();
+    $str_stack  = [];
+    $role_stack = [];
     foreach (array_intersect(RoleDataManager::GetList(), $stack) as $role) {
-      if (! isset($camp)) $camp = RoleDataManager::GetCamp($role);
+      if (false === isset($camp)) {
+	$camp = RoleDataManager::GetCamp($role);
+      }
       if ($camp != RoleDataManager::GetCamp($role) || count($role_stack) > 9) {
 	$str_stack[] = ArrayFilter::Concat($role_stack, ' / ');
-	$role_stack = array();
+	$role_stack = [];
 	$camp = RoleDataManager::GetCamp($role);
       }
       $role_stack[] = RoleDataHTML::GenerateMain($role) . DB::$USER->CountRole($role);
     }
     $str_stack[] = ArrayFilter::Concat($role_stack, ' / ');
 
-    $role_stack = array();
+    $role_stack = [];
     foreach (array_intersect(RoleDataManager::GetList(true), $stack) as $role) {
       if (count($role_stack) > 9) {
 	$str_stack[] = ArrayFilter::Concat($role_stack, ' / ');
-	$role_stack = array();
+	$role_stack = [];
       }
       $role_stack[] = RoleDataHTML::GenerateSub($role) . DB::$USER->CountRole($role);
     }
@@ -432,11 +477,15 @@ EOF;
     foreach (RQ::Get() as $key => $value) { //何か値がセットされていたら無効
       switch ($key) {
       case 'page':
-	if ($value != 1) return false;
+	if ($value != 1) {
+	  return false;
+	}
 	break;
 
       default:
-	if (! empty($value)) return false;
+	if (false === empty($value)) {
+	  return false;
+	}
 	break;
       }
     }
@@ -483,7 +532,7 @@ EOF;
       $url  = '';
     }
     $str = Text::Format(self::GetListHeader(),
-      $back, $url, $builder->Generate(),
+      $back, $url, OldLogMessage::TITLE, OldLogMessage::TITLE, $builder->Generate(),
       OldLogMessage::NUMBER, OldLogMessage::NAME, OldLogMessage::COUNT,
       OldLogMessage::DATE, OldLogMessage::WIN
     );
@@ -496,7 +545,7 @@ EOF;
   private static function GetListHeader() {
     return <<<EOF
 <p>%s</p>
-<img src="%simg/title/old_log.jpg"><br>
+<img src="%simg/title/old_log.jpg" alt="%s" title="%s"><br>
 <div>
 <table>
 <caption>%s</caption>

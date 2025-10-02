@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('child_fox');
 class Role_critical_fox extends Role_child_fox {
-  public $mix_in = array('critical_mad');
+  public $mix_in = ['critical_mad'];
   public $action = null;
   public $result = null;
 

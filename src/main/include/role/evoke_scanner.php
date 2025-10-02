@@ -14,7 +14,7 @@ class Role_evoke_scanner extends Role_mind_scanner {
     return 'mind_evoke';
   }
 
-  protected function GetIgnoreAddVoteMessage() {
+  protected function GetDisabledAddVoteMessage() {
     return VoteRoleMessage::OPEN_CAST;
   }
 }

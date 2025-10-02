@@ -1,6 +1,6 @@
 <?php
 //-- 定数リスト (Room/Scene) --//
-class RoomScene {
+final class RoomScene {
   const BEFORE      = 'beforegame';
   const DAY         = 'day';
   const NIGHT       = 'night';
@@ -10,7 +10,7 @@ class RoomScene {
 }
 
 //-- 定数リスト (Room/Status) --//
-class RoomStatus {
+final class RoomStatus {
   const WAITING  = 'waiting';
   const CLOSING  = 'closing';
   const PLAYING  = 'playing';
@@ -18,7 +18,7 @@ class RoomStatus {
 }
 
 //-- 定数リスト (Room/Mode) --//
-class RoomMode {
+final class RoomMode {
   const VIEW      = 'view';
   const DEAD      = 'dead';
   const HEAVEN    = 'heaven';

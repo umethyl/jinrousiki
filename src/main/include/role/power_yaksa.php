@@ -35,8 +35,8 @@ class Role_power_yaksa extends Role_yaksa {
   }
 
   protected function OgreWin() {
-    $camp_list = array();
-    $live_list = array();
+    $camp_list = [];
+    $live_list = [];
     foreach (DB::$USER->Get() as $user) {
       $camp = $user->GetWinCamp();
       $camp_list[$camp] = true;

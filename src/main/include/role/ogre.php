@@ -18,7 +18,7 @@ class Role_ogre extends Role {
     RoleHTML::OutputVote(VoteCSS::OGRE, $str, $this->action, $this->not_action);
   }
 
-  protected function IgnoreNotAction() {
+  protected function DisableNotAction() {
     return DB::$ROOM->IsEvent('force_assassin_do');
   }
 

@@ -15,7 +15,7 @@ class Role_assassin extends Role {
     RoleHTML::OutputVote(VoteCSS::ASSASSIN, $str, $this->action, $this->not_action);
   }
 
-  protected function IgnoreNotAction() {
+  protected function DisableNotAction() {
     return DB::$ROOM->IsEvent('force_assassin_do');
   }
 

@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('assassin');
 class Role_sweep_assassin extends Role_assassin {
-  protected function IgnoreNotAction() {
+  protected function DisableNotAction() {
     return true;
   }
 }

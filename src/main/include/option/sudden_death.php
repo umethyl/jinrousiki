@@ -5,9 +5,9 @@
   ・配役：全員に小心者系のどれか
 */
 class Option_sudden_death extends OptionCheckbox {
-  public $disable_list = array(
+  public $disable_list = [
     'febris', 'chill_febris', 'frostbite', 'death_warrant', 'panelist', 'infatuated', 'thorn_cross'
-  );
+  ];
 
   public function GetCaption() {
     return '虚弱体質村';
@@ -27,7 +27,7 @@ class Option_sudden_death extends OptionCheckbox {
 
     $role = Lottery::Get($stack);
     if ($role == 'impatience') { //短気は一人だけ
-      Cast::Stack()->DeleteDiff($this->name, array($role));
+      Cast::Stack()->DeleteDiff($this->name, [$role]);
     }
     return $role;
   }

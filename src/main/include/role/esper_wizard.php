@@ -8,14 +8,14 @@
 */
 RoleLoader::LoadFile('wizard');
 class Role_esper_wizard extends Role_wizard {
-  public $mix_in = array('fairy');
+  public $mix_in = ['fairy'];
 
   protected function GetWizardResultList() {
-    return array();
+    return [];
   }
 
   protected function GetWizardList() {
-    return array(1 => VoteAction::FAIRY);
+    return [1 => VoteAction::FAIRY];
   }
 
   protected function FairyAction(User $user) {
@@ -42,9 +42,9 @@ class Role_esper_wizard extends Role_wizard {
 
   //悪戯魔法対象役職取得
   private function GetFairyActionWizardList() {
-    return array(
+    return [
       'death_warrant', 'critical_voter', 'critical_luck', 'sweet_ringing', 'deep_sleep',
       'spell_wisp', 'levitation'
-    );
+    ];
   }
 }

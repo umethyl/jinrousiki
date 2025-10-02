@@ -34,7 +34,7 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
 
       //結界師 > 足音能力者/本人起点型 > 足音能力者/直線型 > その他
       if ($user->IsRole('barrier_wizard')) {
-	$result_stack = array();
+	$result_stack = [];
 	foreach (Text::Parse($target_stack) as $id) { //憑依を追跡する
 	  $target = DB::$USER->ByVirtual($id);
 	  $result_stack[$target->id] = $target->handle_name;
@@ -42,17 +42,17 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
       } elseif ($user->IsRole('step_mage', 'step_guard', 'step_wolf', 'step_vampire')) {
 	$id_stack = Text::Parse($target_stack);
 	$target   = DB::$USER->ByVirtual(array_pop($id_stack)); //最終到達点は憑依を追跡する
-	$result_stack = array($target->id => $target->handle_name);
+	$result_stack = [$target->id => $target->handle_name];
 	foreach ($id_stack as $id) {
 	  $result_stack[$id] = DB::$USER->ByID($id)->handle_name;
 	}
       } elseif ($user->IsRole('step_assassin', 'step_scanner', 'step_mad', 'step_fox')) {
-	$result_stack = array();
+	$result_stack = [];
 	foreach (Text::Parse($target_stack) as $id) { //憑依を追跡しない
 	  $result_stack[$id] = DB::$USER->ByID($id)->handle_name;
 	}
       } else {
-	$result_stack = array(DB::$USER->ByVirtual($target_stack)->handle_name);
+	$result_stack = [DB::$USER->ByVirtual($target_stack)->handle_name];
       }
 
       ksort($result_stack);

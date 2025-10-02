@@ -6,5 +6,5 @@
 */
 RoleLoader::LoadFile('passion');
 class Role_mower extends Role_passion {
-  public $convert_say_list = array('w' => '', 'ｗ' => '', 'W' => '', 'Ｗ' => '');
+  public $convert_say_list = ['w' => '', 'ｗ' => '', 'W' => '', 'Ｗ' => ''];
 }

@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('jealousy');
 class Role_miasma_jealousy extends Role_jealousy {
-  public $mix_in = array('critical_mad');
+  public $mix_in = ['critical_mad'];
 
   protected function IsVoteKillActionTarget(User $user) {
     return $user->IsRole('lovers') && Lottery::Percent(70);

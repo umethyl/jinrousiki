@@ -1,0 +1,11 @@
+@charset "utf-8";
+@import url(develop_common.css);
+body {
+  background-image: url("../../img/bg/develop_top.png");
+}
+th, td, li {
+  filter: Alpha(opacity=60);
+  -moz-opacity: 0.6;
+  opacity: 0.6;
+  background-color: #FCFCF6;
+}

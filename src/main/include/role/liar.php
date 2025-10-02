@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('passion');
 class Role_liar extends Role_passion {
-  public $convert_say_list = array(
+  public $convert_say_list = [
     '村人' => '人狼', '人狼' => '村人',
     'むらびと' => 'おおかみ', 'おおかみ' => 'むらびと',
     'ムラビト' => 'オオカミ', 'オオカミ' => 'ムラビト',
@@ -20,7 +20,8 @@ class Role_liar extends Role_passion {
     'グレラン' => 'ローラー', 'ローラー'  => 'グレラン',
     '少年' => '少女', '少女' => '少年',
     'しょうねん' => 'しょうじょ', 'しょうじょ' => 'しょうねん',
-    'おはよう' => 'おやすみ', 'おやすみ' => 'おはよう');
+    'おはよう' => 'おやすみ', 'おやすみ' => 'おはよう'
+  ];
 
   protected function GetConvertSayList() {
     return Lottery::Percent(GameConfig::LIAR_RATE) ? $this->convert_say_list : null;

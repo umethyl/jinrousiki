@@ -1,19 +1,12 @@
 <?php
-//-- 関連サーバ村情報出力クラス --//
-class SharedRoomInfo {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//◆文字化け抑制◆//
+//-- 関連サーバ村情報コントローラー --//
+final class SharedRoomInfoController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('shared_room');
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     if (0 < RQ::Get()->id && RQ::Get()->id <= count(SharedServerConfig::$server_list)) {
       InfoHTML::OutputSharedRoom(RQ::Get()->id);
     } else {

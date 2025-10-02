@@ -12,10 +12,10 @@ class Option_step extends OptionCheckbox {
   }
 
   public function SetFilterRole($count) {
-    $stack = array(
+    $stack = [
       'step_mage' => 'mage', 'necromancer', 'step_guard' => 'guard',
       'step_wolf' => 'wolf', 'step_mad' => 'mad', 'step_fox' => 'fox'
-    );
+    ];
     return Cast::FilterRole($count, $stack);
   }
 }

@@ -26,7 +26,7 @@ class Role_collector_ogre extends Role_ogre {
   }
 
   protected function OgreWin() {
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->SearchLive() as $id => $uname) {
       $role = RoleDataManager::GetGroup(DB::$USER->ByID($id)->GetMainRole());
       if (in_array($role, $stack)) {

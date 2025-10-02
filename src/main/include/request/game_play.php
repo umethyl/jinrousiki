@@ -12,9 +12,9 @@ class Request_game_play extends RequestGamePlay {
     Text::EncodePost();
     parent::__construct();
     $this->ParseGetOn(RequestDataRoom::DEAD, RequestDataRoom::HEAVEN);
-    $this->ParsePostOn('set_objection');
-    $this->ParsePostStr('font_type');
-    $this->ParsePostData('say');
-    $this->last_words = ($this->font_type == 'last_words');
+    $this->ParsePostOn(RequestDataTalk::OBJECTION);
+    $this->ParsePostStr(RequestDataTalk::VOICE);
+    $this->ParsePostData(RequestDataTalk::SENTENCE);
+    $this->last_words = (TalkVoice::LAST_WORDS == $this->font_type);
   }
 }

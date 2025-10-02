@@ -6,7 +6,7 @@
 */
 class Event_hyper_random_voter extends Event {
   public function FilterVoteDo() {
-    $vote_number = RoleManager::Stack()->Get('vote_number') + Lottery::GetRange(0, 5);
-    RoleManager::Stack()->Set('vote_number', $vote_number);
+    $count = RoleManager::Stack()->Get(VoteDayElement::VOTE_NUMBER) + Lottery::GetRange(0, 5);
+    RoleManager::Stack()->Set(VoteDayElement::VOTE_NUMBER, $count);
   }
 }

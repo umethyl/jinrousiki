@@ -22,12 +22,12 @@ class Role_sweet_fairy extends Role_fairy {
     return OptionFormType::CHECKBOX;
   }
 
-  public function SetVoteNightUserList(array $list) {
-    $stack = array();
+  public function SetVoteNightTargetList(array $list) {
+    $stack = [];
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      $str  = $this->IgnoreVoteNight($user, $user->IsLive()); //例外判定
+      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
       if (! is_null($str)) return $str;
       $stack[$id] = $user;
     }
@@ -37,7 +37,7 @@ class Role_sweet_fairy extends Role_fairy {
 
   public function VoteNightAction() {
     $list  = $this->GetStack('target_list');
-    $stack = array();
+    $stack = [];
     foreach ($list as $user) {
       $stack[] = $user->handle_name;
       $user->AddRole($this->GetActor()->GetID('sweet_status'));

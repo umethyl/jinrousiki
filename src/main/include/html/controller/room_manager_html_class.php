@@ -69,11 +69,11 @@ class RoomManagerHTML {
   //部屋説明出力
   public static function OutputDescribe() {
     //表示情報取得
-    $stack = array(
+    $stack = [
       'game_option' => DB::$ROOM->game_option,
       'option_role' => DB::$ROOM->option_role,
       'max_user'    => DB::$ROOM->max_user
-    );
+    ];
     RoomOption::Load($stack);
 
     HTML::OutputHeader(RoomManagerMessage::TITLE_DESCRIBE, 'info/info', true);
@@ -88,22 +88,22 @@ class RoomManagerHTML {
   //結果出力
   public static function OutputResult($type, $str = '') {
     $title  = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_INPUT);
-    $header = Text::Concat(
+    $header = Text::Join(
       RoomManagerMessage::ERROR_HEADER, RoomManagerMessage::ERROR_CHECK_LIST
     );
 
     switch ($type) {
     case 'empty':
-      $stack = array($str . RoomManagerMessage::ERROR_INPUT_EMPTY);
-      HTML::OutputResult($title, Text::Concat($header, self::GenerateErrorList($stack)));
+      $stack = [$str . RoomManagerMessage::ERROR_INPUT_EMPTY];
+      HTML::OutputResult($title, Text::Join($header, self::GenerateErrorList($stack)));
       break;
 
     case 'comment':
-      $stack = array(
+      $stack = [
 	$str . RoomManagerMessage::ERROR_INPUT_LIMIT,
 	$str . RoomManagerMessage::ERROR_INPUT_NG_WORD
-      );
-      HTML::OutputResult($title, Text::Concat($header, self::GenerateErrorList($stack)));
+      ];
+      HTML::OutputResult($title, Text::Join($header, self::GenerateErrorList($stack)));
       break;
 
     case 'no_password':
@@ -111,22 +111,22 @@ class RoomManagerHTML {
       break;
 
     case 'limit_over':
-      $stack = array(
+      $stack = [
 	$str . RoomManagerMessage::ERROR_INPUT_EMPTY,
 	$str . RoomManagerMessage::ERROR_INPUT_LIMIT_OVER
-      );
-      HTML::OutputResult($title, Text::Concat($header, self::GenerateErrorList($stack)));
+      ];
+      HTML::OutputResult($title, Text::Join($header, self::GenerateErrorList($stack)));
       break;
 
     case 'time':
       $error_header = RoomManagerMessage::ERROR_INPUT_REAL_TIME_HEADER;
-      $stack = array(
+      $stack = [
 	$error_header . RoomManagerMessage::ERROR_INPUT_EMPTY,
 	$error_header . RoomManagerMessage::ERROR_INPUT_LIMIT_OVER,
 	$error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_EM,
 	$error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_NUMBER
-      );
-      HTML::OutputResult($title, Text::Concat($header, self::GenerateErrorList($stack)));
+      ];
+      HTML::OutputResult($title, Text::Join($header, self::GenerateErrorList($stack)));
       break;
 
     case 'gm_logout':
@@ -142,11 +142,11 @@ class RoomManagerHTML {
 
   //エラーの説明リストを生成
   private static function GenerateErrorList(array $list) {
-    $result = Text::Add('<ul>');
+    $result = Text::LineFeed('<ul>');
     foreach ($list as $str) {
       $result .= Text::Format('<li>%s</li>', $str);
     }
-    return Text::Add($result . '</ul>');
+    return Text::LineFeed($result . '</ul>');
   }
 
   //村作成画面パスワードタグ

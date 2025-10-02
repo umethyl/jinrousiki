@@ -10,7 +10,7 @@
 */
 RoleLoader::LoadFile('ogre');
 class Role_poison_ogre extends Role_ogre {
-  public $mix_in = array('poison');
+  public $mix_in = ['poison'];
 
   protected function IsPoisonTarget(User $user) {
     return RoleUser::IsInhuman($user) || $user->IsMainCamp(Camp::OGRE);

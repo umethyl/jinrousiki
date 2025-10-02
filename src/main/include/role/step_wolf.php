@@ -5,12 +5,12 @@
 */
 RoleLoader::LoadFile('wolf');
 class Role_step_wolf extends Role_wolf {
-  public $mix_in = array('step_mage');
+  public $mix_in = ['step_mage'];
   public $action     = VoteAction::STEP_WOLF;
   public $add_action = VoteAction::SILENT_WOLF;
   public $submit     = VoteAction::WOLF;
 
-  protected function IgnoreAddAction() {
+  protected function DisableAddAction() {
     return DB::$ROOM->IsEvent('no_step') || $this->IsFixDummyBoy() || ! $this->IsActorActive();
   }
 
@@ -26,8 +26,8 @@ class Role_step_wolf extends Role_wolf {
     return OptionFormType::CHECKBOX;
   }
 
-  public function CheckVoteNightTarget(array $list) {
-    $root_list = array();
+  public function ValidateVoteNightTargetList(array $list) {
+    $root_list = [];
     if ($this->IsFixDummyBoy()) { //身代わり君襲撃固定モード
       $id = array_shift($list);
       if (! DB::$USER->ByID($id)->IsDummyBoy()) { //身代わり君判定
@@ -64,11 +64,11 @@ class Role_step_wolf extends Role_wolf {
 
     $target = DB::$USER->ByID($id);
     $live   = DB::$USER->IsVirtualLive($target->id); //生死判定は仮想を使う
-    $str    = $this->IgnoreVoteNight($target, $live);
+    $str    = $this->ValidateVoteNightTarget($target, $live);
     if (! is_null($str)) return $str;
 
-    $target_stack = array();
-    $handle_stack = array();
+    $target_stack = [];
+    $handle_stack = [];
     foreach ($root_list as $id) { //投票順に意味があるので sort しない
       //対象者のみ憑依追跡する
       $target_stack[] = $id == $target->id ? DB::$USER->ByReal($id)->id : $id;
@@ -80,7 +80,7 @@ class Role_step_wolf extends Role_wolf {
     return null;
   }
 
-  protected function IgnoreVoteNightLive($live) {
+  protected function IsInvalidVoteNightTargetLive($live) {
     return ! $live;
   }
 }

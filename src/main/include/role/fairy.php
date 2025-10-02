@@ -6,7 +6,7 @@
   ・発言変換：悪戯
 */
 class Role_fairy extends Role {
-  public $mix_in = array('mage');
+  public $mix_in = ['mage'];
   public $action = VoteAction::FAIRY;
 
   protected function IsAddVote() {
@@ -22,12 +22,12 @@ class Role_fairy extends Role {
     RoleHTML::OutputVote(VoteCSS::FAIRY, RoleAbilityMessage::FAIRY, $this->action);
   }
 
-  protected function GetIgnoreAddVoteMessage() {
-    return $this->CallParent('GetIgnoreFairyVoteMessage');
+  protected function GetDisabledAddVoteMessage() {
+    return $this->CallParent('GetDisabledFairyVoteMessage');
   }
 
   //投票無効メッセージ取得 (悪戯能力者専用)
-  protected function GetIgnoreFairyVoteMessage() {
+  protected function GetDisabledFairyVoteMessage() {
     return null;
   }
 

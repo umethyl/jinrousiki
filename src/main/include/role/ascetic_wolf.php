@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('wolf');
 class Role_ascetic_wolf extends Role_wolf {
-  public $mix_in = array('authority');
+  public $mix_in = ['authority'];
 
   protected function OutputAddResult() {
     RoleHTML::OutputAbilityResult('ability_ascetic_' . $this->CountAscetic(), null);

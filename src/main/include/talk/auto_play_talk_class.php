@@ -1,6 +1,6 @@
 <?php
 //-- 発言処理クラス (AutoPlay 拡張) --//
-class AutoPlayTalk {
+final class AutoPlayTalk {
   /* フラグ */
   const ID	= 'talk_id';	//ID
   const DATE	= 'date';	//日数
@@ -56,7 +56,7 @@ class AutoPlayTalk {
   //データ隠蔽
   public static function Hide($str, $class) {
     $scene  = self::Stack()->Get(self::DATE);
-    $header = Text::Add(HTML::GenerateDivHeader('hide', $class . '_' . $scene));
+    $header = Text::LineFeed(HTML::GenerateDivHeader('hide', $class . '_' . $scene));
     return $header . $str . HTML::GenerateDivFooter(true);
   }
 
@@ -74,15 +74,15 @@ class AutoPlayTalk {
     //self::Stack()->p(null, '◆GenerateFooter');
     $count = 0;
     $speed = RQ::Get()->scroll_time < 1 ? 1 : RQ::Get()->scroll_time;
-    $scene_stack = array();
-    $talk_stack  = array();
+    $scene_stack = [];
+    $talk_stack  = [];
     foreach (array_reverse(self::Stack()->Get(self::SCENE)) as $scene) {
       $scene_stack[] = sprintf("'%s'", $scene);
-      foreach (array($scene . '_' . RoomScene::DAY, $scene) as $strict_scene) {
+      foreach ([$scene . '_' . RoomScene::DAY, $scene] as $strict_scene) {
 	if (! self::Stack()->Exists($strict_scene)) continue;
 
 	$stack = self::Stack()->Get($strict_scene);
-	$time_stack = array();
+	$time_stack = [];
 	foreach (array_reverse($stack) as $key => $time) {
 	  $delay = $time - self::Stack()->Get(self::TIME);
 	  if ($count < 1) {
@@ -104,7 +104,7 @@ class AutoPlayTalk {
     $str .= Text::Format(self::GetJavaScriptHeader(),
       ArrayFilter::ConcatReverse($scene_stack, ',')
     );
-    $str .= Text::Add(ArrayFilter::Concat($talk_stack, Text::LF));
+    $str .= Text::LineFeed(ArrayFilter::Concat($talk_stack, Text::LF));
     $str .= HTML::GenerateJavaScriptFooter();
     return $str;
   }

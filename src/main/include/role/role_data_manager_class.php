@@ -106,7 +106,7 @@ class RoleDataManager {
 
   //役職グループリスト取得
   public static function GetGroupList() {
-    $stack = array_merge(array(CampGroup::HUMAN), RoleGroupData::$list); //村人は含まれていない
+    $stack = array_merge([CampGroup::HUMAN], RoleGroupData::$list); //村人は含まれていない
     return array_intersect(self::GetList(), $stack);
   }
 
@@ -122,11 +122,13 @@ class RoleDataManager {
 
   //表示対象サブ役職取得
   public static function GetDisplayList(array $list) {
-    $stack = array();
-    if (count($list) < 1) return $stack;
+    $stack = [];
+    if (count($list) < 1) {
+      return $stack;
+    }
 
-    foreach (array('real', 'virtual') as $name) {
-      ArrayFilter::Merge($stack, RoleFilterData::${'display_' . $name});
+    foreach (['real', 'virtual'] as $name) {
+      ArrayFilter::AddMerge($stack, RoleFilterData::${'display_' . $name});
     }
     //Text::p($stack, '◆SubRole');
 
@@ -157,7 +159,7 @@ class RoleDataManager {
   //役職情報検索
   public static function Search($name) {
     /* 初期化 */
-    $stack = array();
+    $stack = [];
 
     /* 完全一致 */
     $stack['fix']['main'] = array_search($name, RoleData::$list);

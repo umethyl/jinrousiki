@@ -1,7 +1,7 @@
 <?php
 //-- オプション入力画面表示クラス --//
 class OptionForm {
-  private static $order = array(
+  private static $order = [
     'room_name', 'room_comment', 'max_user',
     'base' => null,
     'wish_role', 'real_time', 'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name',
@@ -25,9 +25,9 @@ class OptionForm {
     'special_role',
     'chaos' => null,
     'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit', 'secret_sub_role'
-  );
+  ];
 
-  private static $javascript = array();
+  private static $javascript = [];
 
   //出力
   public static function Output() {
@@ -110,7 +110,7 @@ class OptionForm {
   //チェックボックス生成
   private static function GenerateCheckbox(OptionCheckbox $filter) {
     $footer = isset($filter->footer) ? $filter->footer : Text::Quote($filter->GetExplain());
-    return OptionFormHTML::GenerateCheckbox($filter, $filter->type, Text::Line($footer));
+    return OptionFormHTML::GenerateCheckbox($filter, $filter->type, Text::ConvertLine($footer));
   }
 
   //チェックボックス生成 (リアルタイム制専用)

@@ -6,7 +6,7 @@
 */
 class Role_brownie extends Role {
   public function VoteKillCounter(array $list) {
-    $stack = array();
+    $stack = [];
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       if (! RoleUser::IsAvoid($user)) {

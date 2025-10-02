@@ -1,24 +1,18 @@
 <?php
-//-- 検索出力クラス (新役職情報) --//
-class SearchRoleInfo {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load(){
+//-- 検索情報コントローラー (新役職情報) --//
+final class SearchRoleInfoController extends JinrouController {
+  protected static function Load(){
     Loader::LoadRequest();
     RQ::Get()->ParsePostOn('execute');
     RQ::Get()->ParsePostData('role');
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     InfoHTML::OutputRoleHeader(SearchRoleInfoMessage::TITLE);
     SearchRoleInfoHTML::OutputForm();
-    if (self::IsExecute()) self::RunSearch();
+    if (self::IsExecute()) {
+      self::RunSearch();
+    }
     HTML::OutputFooter();
   }
 
@@ -30,7 +24,7 @@ class SearchRoleInfo {
   //検索実行
   private static function RunSearch() {
     Loader::LoadFile('role_data_manager_class');
-    $stack = array();
+    $stack = [];
     $search_list = RoleDataManager::Search(RQ::Get()->role);
     foreach ($search_list as $category => $list) {
       switch ($category) {

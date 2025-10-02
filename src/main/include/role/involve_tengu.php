@@ -23,7 +23,7 @@ class Role_involve_tengu extends Role_meteor_tengu {
   //巻き添え神隠し処理
   public function InvolveTenguKill($start = false) {
     //陣営情報収集
-    $camp_list = array();
+    $camp_list = [];
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsDead()) continue;
       $camp_list[$user->GetMainCamp($start)][] = $user->id; //キャッシュを参照しない
@@ -31,7 +31,7 @@ class Role_involve_tengu extends Role_meteor_tengu {
     //Text::p($camp_list, "◆Camp/Base [{$this->role}]");
 
     //陣営人数を収集
-    $count_list = array();
+    $count_list = [];
     foreach ($camp_list as $camp => $list) {
       $count_list[$camp] = count($list);
     }
@@ -39,7 +39,7 @@ class Role_involve_tengu extends Role_meteor_tengu {
 
     //最大人数陣営を決定
     $max   = max($count_list);
-    $stack = array();
+    $stack = [];
     foreach ($camp_list as $camp => $list) {
       if (count($list) == $max) {
 	$stack[] = $camp;
@@ -49,7 +49,7 @@ class Role_involve_tengu extends Role_meteor_tengu {
     //Text::p($camp, "◆Camp [{$this->role}]");
 
     //対象者を収集
-    $stack = array();
+    $stack = [];
     foreach ($camp_list[$camp] as $id) {
       $user = DB::$USER->ByID($id);
       if ($user->IsRole('lovers') || RoleUser::IsAvoid($user)) continue; //対象外判定

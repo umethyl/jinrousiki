@@ -11,14 +11,14 @@ class Role_spiritism_wizard extends Role_wizard {
   public $action = null;
 
   protected function GetWizardResultList() {
-    return array(RoleAbility::SPIRITISM_WIZARD);
+    return [RoleAbility::SPIRITISM_WIZARD];
   }
 
   protected function GetWizardList() {
-    return array(
+    return [
       'soul_necromancer', 'necromancer', 'psycho_necromancer', 'embalm_necromancer',
       'sex_necromancer'
-    );
+    ];
   }
 
   public function NecromancerWizard(User $user, $flag) {

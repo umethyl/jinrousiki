@@ -8,7 +8,7 @@
   ・蘇生後：なし
 */
 class Role_poison_cat extends Role {
-  public $mix_in = array('poison');
+  public $mix_in = ['poison'];
   public $action      = VoteAction::REVIVE;
   public $not_action  = VoteAction::NOT_REVIVE;
   public $result      = RoleAbility::REVIVE;
@@ -38,10 +38,10 @@ class Role_poison_cat extends Role {
     RoleHTML::OutputVote(VoteCSS::REVIVE, $str, $this->action, $this->not_action);
   }
 
-  protected function GetIgnoreAddVoteMessage() {
+  protected function GetDisabledAddVoteMessage() {
     //生存者に自動公開判定の結果を見せないために先に個別能力判定を行う
     if (! $this->CallParent('IsReviveVote')) {
-      return $this->CallParent('GetIgnoreReviveVoteMessage');
+      return $this->CallParent('GetDisabledReviveVoteMessage');
     } elseif (DB::$ROOM->IsOpenCast()) {
       return VoteRoleMessage::OPEN_CAST;
     } else {
@@ -50,7 +50,7 @@ class Role_poison_cat extends Role {
   }
 
   //投票無効メッセージ取得 (蘇生能力者専用)
-  protected function GetIgnoreReviveVoteMessage() {
+  protected function GetDisabledReviveVoteMessage() {
     return null;
   }
 
@@ -110,7 +110,7 @@ class Role_poison_cat extends Role {
 
     if ($rand > $revive) return null; //蘇生失敗
     if ($rand <= $missfire) { //誤爆蘇生
-      $stack = array();
+      $stack = [];
       //現時点の身代わり君と蘇生能力者が選んだ人以外の死者と憑依者を検出
       foreach (DB::$USER->Get() as $target) {
 	if ($target->IsDummyBoy() || $target->IsOn(UserMode::REVIVE) || $user->IsSame($target) ||

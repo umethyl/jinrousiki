@@ -1,22 +1,17 @@
 <?php
 //-- ユーザ登録コントローラー --//
-class UserManager {
-  //実行
-  public static function Execute() {
-    self::Load();
-    RQ::Get()->entry ? self::Entry() : self::Output();
-    DB::Disconnect();
-  }
-
-  //データロード
-  private static function Load() {
+final class UserManagerController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('user_manager');
     DB::Connect();
     Session::Start();
   }
 
-  //ユーザ登録
-  private static function Entry() {
+  protected static function EnableCommand() {
+    return RQ::Get()->entry;
+  }
+
+  protected static function RunCommand() {
     extract(RQ::ToArray()); //引数を展開
     $url = URL::GetRoom('user_manager', $room_no); //ベースバックリンク
     if ($user_no > 0) {
@@ -50,17 +45,17 @@ class UserManager {
 
     //文字数制限チェック
     $format = UserManagerMessage::ERROR_TEXT_LIMIT . $back_url;
-    $limit_list = array(
-      array('str'    => $uname,
-	    'name'   => UserManagerMessage::UNAME,
-	    'config' => GameConfig::LIMIT_UNAME),
-      array('str'    => $handle_name,
-	    'name'   => UserManagerMessage::HANDLE_NAME,
-	    'config' => GameConfig::LIMIT_UNAME),
-      array('str'    => $profile,
-	    'name'   => UserManagerMessage::PROFILE,
-	    'config' => GameConfig::LIMIT_PROFILE)
-    );
+    $limit_list = [
+      ['str'    => $uname,
+       'name'   => UserManagerMessage::UNAME,
+       'config' => GameConfig::LIMIT_UNAME],
+      ['str'    => $handle_name,
+       'name'   => UserManagerMessage::HANDLE_NAME,
+       'config' => GameConfig::LIMIT_UNAME],
+      ['str'    => $profile,
+       'name'   => UserManagerMessage::PROFILE,
+       'config' => GameConfig::LIMIT_PROFILE]
+    ];
     foreach ($limit_list as $limit) {
       if (Text::Over($limit['str'], $limit['config'])) {
 	self::OutputError($title, sprintf($format, $limit['name'], $limit['config']));
@@ -98,7 +93,7 @@ class UserManager {
     DB::$ROOM->ParseOption(true);
 
     //DB から現在のユーザ情報を取得 (ロック付き)
-    RQ::Load('Request', true);
+    RQ::LoadRequest('Request', true);
     RQ::Set(RequestDataGame::ID, $room_no);
     RQ::Get('retrieve_type', 'entry_user');
     DB::LoadUser();
@@ -134,7 +129,7 @@ class UserManager {
       }
 
       $str   = sprintf(UserManagerMessage::CHANGE_HEADER, $target->handle_name);
-      $stack = array();
+      $stack = [];
       if ($target->handle_name != $handle_name) {
 	$stack[RequestDataUser::HN] = $handle_name;
 	$format = Text::LF . UserManagerMessage::CHANGE_NAME;
@@ -149,7 +144,7 @@ class UserManager {
 	$icon_name = IconDB::GetName($icon_no);
 	$str .= sprintf($format, $target->icon_no, $target->icon_name, $icon_no, $icon_name);
       }
-      $value_list = array(RequestDataUser::SEX, RequestDataUser::PROFILE, RequestDataUser::ROLE);
+      $value_list = [RequestDataUser::SEX, RequestDataUser::PROFILE, RequestDataUser::ROLE];
       foreach ($value_list as $value) {
 	if ($target->$value != $$value) {
 	  $stack[$value] = $$value;
@@ -159,7 +154,7 @@ class UserManager {
       if (count($stack) < 1) {
 	self::OutputError($title, UserManagerMessage::CHANGE_NONE . $back_url);
       }
-      DB::$ROOM->TalkBeforeGame($str, $target->uname, $target->handle_name, $target->color);
+      RoomTalk::StoreBeforeGame($str, $target);
 
       if ($target->UpdateList($stack) && DB::Commit()) {
 	self::OutputError($title, HTML::GenerateCloseWindow(UserManagerMessage::CHANGE_SUCCESS));
@@ -191,7 +186,7 @@ class UserManager {
     }
 
     //DB にユーザデータを登録
-    $list = array(
+    $list = [
       'room_no'     => $room_no,
       'user_no'     => DB::$USER->CountAll() + 1, //KICK された住人も含めた新しい番号を振る
       'uname'       => $uname,
@@ -201,24 +196,23 @@ class UserManager {
       'sex'         => $sex,
       'password'    => $password,
       'role'        => $role
-    );
+    ];
 
     if (UserDB::Insert($list)) {
       JinrouCookie::Initialize(); //クッキーの初期化
-      DB::$ROOM->Talk(sprintf(TalkMessage::ENTRY_USER, $handle_name)); //入村メッセージ
+      RoomTalk::StoreSystem(sprintf(TalkMessage::ENTRY_USER, $handle_name)); //入村メッセージ
       RoomDB::UpdateTime();
       DB::Commit();
 
       $url = URL::GetRoom('game_frame', $room_no);
-      $str = Text::Concat(sprintf(UserManagerMessage::ENTRY, ++$user_count), URL::GetJump($url));
+      $str = Text::Join(sprintf(UserManagerMessage::ENTRY, ++$user_count), URL::GetJump($url));
       HTML::OutputResult(UserManagerMessage::TITLE, $str, $url);
     } else {
       self::OutputError(Message::DB_ERROR, Message::DB_ERROR_LOAD);
     }
   }
 
-  //ユーザ登録画面表示
-  private static function Output() {
+  protected static function Output() {
     if (RQ::Get()->user_no > 0) { //登録情報変更モード
       $stack = UserDB::Get();
       if ($stack['session_id'] != Session::GetID()) {
@@ -243,6 +237,10 @@ class UserManager {
     DB::$ROOM->ParseOption(true);
 
     UserManagerHTML::Output();
+  }
+
+  protected static function Finish() {
+    DB::Disconnect();
   }
 
   //エラー出力

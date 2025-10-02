@@ -1,6 +1,6 @@
 <?php
 //-- 個別村クラス --//
-class Room extends StackManager {
+final class Room extends StackManager {
   public $id;
   public $name;
   public $comment;
@@ -59,7 +59,7 @@ class Room extends StackManager {
       $option_role = RoomDB::Get('option_role');
     }
     $this->option_role = new OptionParser($option_role);
-    ArrayFilter::Merge($this->option_list, array_keys($this->option_role->list));
+    ArrayFilter::AddMerge($this->option_list, array_keys($this->option_role->list));
   }
 
   //ゲームオプションの展開処理
@@ -82,7 +82,7 @@ class Room extends StackManager {
     if ($this->IsOption($option)) {
       return ChaosConfig::${$option . '_list'}[$this->option_role->list[$option][0]];
     } else {
-      return array();
+      return [];
     }
   }
 
@@ -169,7 +169,7 @@ class Room extends StackManager {
 
   //イベント情報取得
   public function GetEvent($force = false) {
-    if (! $this->IsPlaying()) return array();
+    if (! $this->IsPlaying()) return [];
 
     if ($force || $this->Stack()->IsEmpty('event_row')) {
       $this->LoadEvent();
@@ -289,20 +289,11 @@ class Room extends StackManager {
   }
 
   //発言登録
-  public function Talk($sentence, $action = null, $uname = '', $scene = '', $location = null,
-		       $font_type = null, $role_id = null, $spend_time = 0) {
-    if ($uname == '') {
-      $uname = GM::SYSTEM;
-    }
-    if ($scene == '') {
-      $scene = $this->scene;
-      if (is_null($location)) {
-	$location = TalkLocation::SYSTEM;
-      }
-    }
+  public function Talk(TalkStruct $talk) {
+    extract($talk->GetStruct());
     if ($this->IsTest()) {
       $str = sprintf('★Talk: %s: %s: %s: %s: %s', $uname, $scene, $location, $action, $font_type);
-      Text::p(Text::Line($sentence), $str);
+      Text::p(Text::ConvertLine($sentence), $str);
       return true;
     }
 
@@ -340,10 +331,11 @@ class Room extends StackManager {
   }
 
   //発言登録 (ゲーム開始前専用)
-  public function TalkBeforeGame($sentence, $uname, $handle_name, $color, $font_type = null) {
+  public function TalkBeforeGame(RoomTalkBeforeGameStruct $talk) {
+    extract($talk->GetStruct());
     if ($this->IsTest()) {
       $str = sprintf('★Talk: %s: %s: %s: %s', $uname, $handle_name, $color, $font_type);
-      Text::p(Text::Line($sentence), $str);
+      Text::p(Text::ConvertLine($sentence), $str);
       return true;
     }
 
@@ -366,7 +358,7 @@ class Room extends StackManager {
   //超過警告メッセージ登録
   public function OvertimeAlert($str) {
     if (RoomDB::IsOvertimeAlert()) return true;
-    $this->Talk($str);
+    RoomTalk::StoreSystem($str);
     return RoomDB::UpdateOvertimeAlert(true);
   }
 
@@ -381,7 +373,7 @@ class Room extends StackManager {
     }
     //Text::p($vote_list, '◆vote_list');
 
-    $stack = array();
+    $stack = [];
     switch ($this->scene) {
     case RoomScene::BEFORE:
       $type = $kick ? VoteAction::KICK : VoteAction::GAME_START;
@@ -418,7 +410,7 @@ class Room extends StackManager {
 
   //投票情報をコマンド毎に分割する
   public function ParseVote() {
-    $stack = array();
+    $stack = [];
     foreach ($this->Stack()->Get('vote') as $id => $vote_stack) {
       if ($this->IsDay()) {
 	$stack[$vote_stack['type']][$id] = $vote_stack['target_no'];
@@ -454,7 +446,7 @@ class Room extends StackManager {
     if ($this->IsTest()) {
       Text::p("{$name}: {$type} ({$date}): {$result}", '★ResultDead');
       if (is_array(RQ::GetTest()->result_dead)) {
-	$stack = array('type' => $type, 'handle_name' => $name, 'result' => $result);
+	$stack = ['type' => $type, 'handle_name' => $name, 'result' => $result];
 	RQ::GetTest()->result_dead[] = $stack;
       }
       return true;
@@ -479,7 +471,7 @@ class Room extends StackManager {
     if ($this->IsTest()) {
       Text::p("{$type}: {$result}: {$target}: {$user_no}", '★ResultAbility');
       if (is_array(RQ::GetTest()->result_ability)) {
-	$stack = array('user_no' => $user_no, 'target' => $target, 'result' => $result);
+	$stack = ['user_no' => $user_no, 'target' => $target, 'result' => $result];
 	RQ::GetTest()->result_ability[$date][$type][] = $stack;
       }
       return true;
@@ -487,7 +479,7 @@ class Room extends StackManager {
 
     $items  = 'room_no, date, type';
     $values = "{$this->id}, {$date}, '{$type}'";
-    foreach (array('result', 'target', 'user_no') as $data) {
+    foreach (['result', 'target', 'user_no'] as $data) {
       if (isset($$data)) {
 	$items  .= ", {$data}";
 	$values .= ", '{$$data}'";
@@ -528,7 +520,9 @@ class Room extends StackManager {
     if ($this->IsTest()) return true;
 
     RoomDB::UpdateScene();
-    return $this->Talk('', TalkAction::NIGHT); //夜がきた通知
+    $talk = new RoomTalkStruct('');
+    $talk->Set(TalkStruct::ACTION, TalkAction::NIGHT); //夜がきた通知
+    return $this->Talk($talk);
   }
 
   //次の日にする
@@ -537,16 +531,18 @@ class Room extends StackManager {
     if ($this->IsTest()) return true;
 
     RoomDB::UpdateScene(true);
-    $this->Talk($this->date, TalkAction::MORNING); //夜が明けた通知
+    $talk = new RoomTalkStruct($this->date);
+    $talk->Set(TalkStruct::ACTION, TalkAction::MORNING); //夜が明けた通知
+    $this->Talk($talk);
     RoomDB::UpdateTime(); //最終書き込みを更新
-    return Winner::Check(); //勝敗のチェック
+    return Winner::Judge(); //勝敗判定
   }
 
   //夜を飛ばす
   public function SkipNight() {
     if ($this->IsEvent('skip_night')) {
       VoteNight::Aggregate(true);
-      $this->talk(TalkMessage::SKIP_NIGHT);
+      RoomTalk::StoreSystem(TalkMessage::SKIP_NIGHT);
     }
   }
 
@@ -565,28 +561,23 @@ class Room extends StackManager {
     } else {
       $str = Cast::GenerateMessage(Cast::Stack()->Get(Cast::SUM));
     }
-    $this->Talk($str);
-    if ($this->IsOption('detective')) OptionLoader::Load('detective')->Designate(); //探偵指名
+    RoomTalk::StoreSystem($str);
+    if ($this->IsOption('detective')) { //探偵指名
+      OptionLoader::Load('detective')->Designate();
+    }
 
     if (! $this->IsTest()) {
       RoomDB::UpdateTime(); //最終書き込み時刻を更新
-      Winner::Check(); //配役時に勝敗が決定している可能性があるので勝敗判定を行う
+      Winner::Judge(); //配役時に勝敗が決定している可能性があるので勝敗判定を行う
     }
   }
 
   //-- 表示関連 --//
-  //背景設定 CSS 生成
-  public function GenerateCSS() {
-    if (isset($this->scene)) return HTML::LoadCSS(sprintf('%s/game_%s', JINROU_CSS, $this->scene));
-  }
-
-  //タイトル生成
-  public function GenerateTitle($log = false) {
-    $tag = $log ? 'span' : 'td';
-    return Text::Format($this->GetTitle(),
-      $tag, $this->GenerateName(), $this->GenerateNumber(), Text::BR,
-      $this->GenerateComment(), $tag
-    );
+  //背景設定 CSS 出力
+  public function OutputCSS() {
+    if (isset($this->scene)) {
+      HTML::OutputCSS(sprintf('%s/game_%s', JINROU_CSS, $this->scene));
+    }
   }
 
   //村名生成
@@ -603,11 +594,88 @@ class Room extends StackManager {
   public function GenerateComment() {
     return GameMessage::ROOM_COMMENT_HEADER . $this->comment . GameMessage::ROOM_COMMENT_FOOTER;
   }
+}
 
-  //タイトルタグ
-  private function GetTitle() {
-    return <<<EOF
-<%s class="room"><span class="room-name">%s</span> [%s]%s<span class="room-comment">%s</span></%s>
-EOF;
+//-- 発言処理クラス (Room 拡張) --//
+final class RoomTalk {
+  //システムメッセージ登録
+  public static function StoreSystem($sentence) {
+    DB::$ROOM->Talk(new RoomTalkStruct($sentence));
+  }
+
+  //BeforeGame 専用メッセージ登録
+  public static function StoreBeforeGame($sentence, User $user, $font_type = null) {
+    DB::$ROOM->TalkBeforeGame(new RoomTalkBeforeGameStruct($sentence, $user, $font_type));
+  }
+}
+
+//-- Talk 構造体基底クラス --//
+abstract class TalkStruct {
+  const SCENE      = 'scene';
+  const LOCATION   = 'location';
+  const UNAME      = 'uname';
+  const ROLE_ID    = 'role_id';
+  const ACTION     = 'action';
+  const SENTENCE   = 'sentence';
+  const FONT_TYPE  = 'font_type';
+  const SPEND_TIME = 'spend_time';
+  protected $struct = [];
+
+  //セット
+  final public function Set($name, $data) {
+    //Text::p($data, "◆TalkStruct/Set[{$name}]");
+    if (array_key_exists($name, $this->struct)) {
+      $this->struct[$name] = $data;
+    } else {
+      throw new Exception("Invalid Key: {$name}: {$data}");
+    }
+  }
+
+  //取得
+  final public function Get($name) {
+    if (array_key_exists($name, $this->struct)) {
+      return $this->struct[$name];
+    } else {
+      throw new Exception("Invalid Key: {$name}");
+    }
+  }
+
+  //全データ取得
+  final public function GetStruct() {
+    return $this->struct;
+  }
+}
+
+//-- Room 用 Talk 構造体 --//
+final class RoomTalkStruct extends TalkStruct {
+  //コンストラクタ
+  public function __construct($sentence) {
+    $this->struct = [
+      self::SCENE      => DB::$ROOM->scene,
+      self::LOCATION   => TalkLocation::SYSTEM,
+      self::UNAME      => GM::SYSTEM,
+      self::ROLE_ID    => null,
+      self::ACTION     => null,
+      self::SENTENCE   => $sentence,
+      self::FONT_TYPE  => null,
+      self::SPEND_TIME => 0
+    ];
+  }
+}
+
+//-- Room 用 Talk 構造体 (BeforeGame 専用) --//
+final class RoomTalkBeforeGameStruct extends TalkStruct {
+  const HANDLE_NAME = 'handle_name';
+  const COLOR       = 'color';
+
+  //コンストラクタ
+  public function __construct($sentence, User $user, $font_type = null) {
+    $this->struct = [
+      self::UNAME       => $user->uname,
+      self::HANDLE_NAME => $user->handle_name,
+      self::COLOR       => $user->color,
+      self::SENTENCE    => $sentence,
+      self::FONT_TYPE   => $font_type
+    ];
   }
 }

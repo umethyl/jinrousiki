@@ -170,8 +170,8 @@ class Role_mage extends Role {
 
   //呪殺処理
   final public function MageKill() {
-    $fox_list   = array(); //妖狐カウント
-    $other_list = array(); //それ以外
+    $fox_list   = []; //妖狐カウント
+    $other_list = []; //それ以外
     foreach ($this->GetStack('mage_kill') as $id) {
       $user = DB::$USER->ByID($id);
       if (RoleUser::IsFoxCount($user)) {
@@ -198,9 +198,9 @@ class Role_mage extends Role {
 
   //呪殺身代わり能力者取得
   final protected function GetMageKillSacrificeList() {
-    if (DB::$ROOM->IsEvent('no_sacrifice')) return array(); //天候判定
+    if (DB::$ROOM->IsEvent('no_sacrifice')) return []; //天候判定
 
-    $stack = array();
+    $stack = [];
     foreach (RoleFilterData::$sacrifice_mage as $role) {
       foreach (DB::$USER->GetRoleUser($role) as $target) {
 	if ($target->IsLive(true) && ! RoleUser::IsAvoidLovers($target, true)) {

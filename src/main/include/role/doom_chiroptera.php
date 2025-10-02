@@ -6,7 +6,7 @@
   ・ショック死：7日目
 */
 class Role_doom_chiroptera extends Role {
-  public $mix_in = array('chicken');
+  public $mix_in = ['chicken'];
 
   protected function OutputAddResult() {
     RoleHTML::OutputAbilityResult('partner_header', 7, 'sudden_death_footer');

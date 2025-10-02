@@ -1,30 +1,10 @@
 <?php
 //-- オプションローダー --//
-class OptionLoader {
+class OptionLoader extends LoadManager {
   const PATH = '%s/option/%s.php';
   const CLASS_PREFIX = 'Option_';
-  private static $file  = array();
-  private static $class = array();
-
-  //オプションロード
-  public static function Load($name) {
-    return (self::LoadFile($name) && self::LoadClass($name)) ? self::$class[$name] : null;
-  }
-
-  //ファイルロード
-  public static function LoadFile($name) {
-    return LoadManager::LoadFile(self::$file, $name, self::GetPath($name));
-  }
-
-  //クラスロード
-  private static function LoadClass($name) {
-    return LoadManager::LoadClass(self::$class, $name, self::CLASS_PREFIX);
-  }
-
-  //ファイルパス取得
-  private static function GetPath($name) {
-    return sprintf(self::PATH, JINROU_INC, $name);
-  }
+  protected static $file  = [];
+  protected static $class = [];
 }
 
 //-- オプションマネージャ --//
@@ -71,7 +51,7 @@ class OptionManager {
     $stack = Cast::Stack()->Get(Cast::DELETE);
     foreach (OptionFilterData::$add_sub_role as $option) {
       if (DB::$ROOM->IsOption($option) && OptionLoader::LoadFile($option)) {
-	ArrayFilter::Merge($stack, OptionLoader::Load($option)->Cast());
+	ArrayFilter::AddMerge($stack, OptionLoader::Load($option)->Cast());
       }
     }
     Cast::Stack()->Set(Cast::DELETE, $stack);
@@ -112,7 +92,7 @@ class OptionManager {
 //-- オプションパーサ --//
 class OptionParser {
   public $row;
-  public $list = array();
+  public $list = [];
 
   public function __construct($data) {
     $this->row  = $data;
@@ -126,7 +106,7 @@ class OptionParser {
 
   //パース
   private static function Parse($data) {
-    $list = array();
+    $list = [];
     foreach (Text::Parse($data) as $option) {
       if (empty($option)) continue;
       $stack = Text::Parse($option, ':');
@@ -293,7 +273,7 @@ abstract class Option {
 
   //配役済み役職リスト取得
   protected function GetResultCastList() {
-    return array($this->name);
+    return [$this->name];
   }
 }
 
@@ -326,7 +306,7 @@ abstract class OptionSelector extends Option {
   public $conf_name;
   public $source;
   public $item_list;
-  public $form_list = array();
+  public $form_list = [];
   public $on_change = '';
 
   protected function LoadSource() {
@@ -350,7 +330,7 @@ abstract class OptionSelector extends Option {
   //個別データ取得
   public function GetItem() {
     if (! isset($this->item_list)) {
-      $this->item_list = array();
+      $this->item_list = [];
       $stack = is_array($this->conf_name) ? $this->conf_name : GameOptionConfig::${$this->source};
       if (isset($stack)) {
 	foreach ($stack as $key => $value) {

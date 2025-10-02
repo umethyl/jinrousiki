@@ -5,5 +5,5 @@
 */
 RoleLoader::LoadFile('wolf');
 class Role_wise_wolf extends Role_wolf {
-  public $mix_in = array('common');
+  public $mix_in = ['common'];
 }

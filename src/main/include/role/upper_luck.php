@@ -11,11 +11,11 @@ class Role_upper_luck extends Role {
 
     $count = $this->CallParent('GetVotePollCount');
     if (! $this->CallParent('IsUpdateFilterVotePoll')) {
-      $count += $this->GetStack('vote_poll');
+      $count += $this->GetStack(VoteDayElement::POLL_NUMBER);
     }
     $this->CallParent('NoticeFilterVotePoll');
     //Text::p($count, "◆VotePoll [$this->role]");
-    $this->SetStack($count, 'vote_poll');
+    $this->SetStack($count, VoteDayElement::POLL_NUMBER);
   }
 
   //得票数補正無効判定

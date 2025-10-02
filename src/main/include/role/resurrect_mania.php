@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('unknown_mania');
 class Role_resurrect_mania extends Role_unknown_mania {
-  public $mix_in = array('revive_pharmacist');
+  public $mix_in = ['revive_pharmacist'];
 
   protected function IsResurrect() {
     $rate = DB::$ROOM->IsEvent('full_revive') ? 100 : 40;

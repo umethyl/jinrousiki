@@ -39,11 +39,11 @@ class RoleHTML {
 
     $list[] = TableHTML::GenerateTdFooter();
     $str    = ArrayFilter::Concat($list, RoleAbilityMessage::HONORIFIC . Message::SPACER);
-    $stack  = array(
+    $stack  = [
       TableHTML::GenerateHeader('ability-partner'),
       ImageManager::Role()->Generate($header, null, true),
       TableHTML::GenerateTdHeader() . Message::SPACER . $str
-    );
+    ];
     if ($footer) $stack[] = ImageManager::Role()->Generate($footer, null, true);
     $stack[] = TableHTML::GenerateFooter();
     Text::Output(ArrayFilter::Concat($stack, Text::LF));
@@ -76,7 +76,7 @@ class RoleHTML {
 
   //夜の未投票メッセージ出力
   public static function OutputVote($class, $str, $type, $not_type = '') {
-    $stack = DB::$ROOM->IsTest() ? array() : DB::$SELF->LoadVote($type, $not_type);
+    $stack = DB::$ROOM->IsTest() ? [] : DB::$SELF->LoadVote($type, $not_type);
     if (count($stack) > 0) {
       $str = self::GetVoteMessage($stack, $type, $not_type);
     }
@@ -290,7 +290,7 @@ class RoleHTML {
 
     switch ($type) {
     case RoleAbility::MAGE:
-      if ($uniq) $stack = array();
+      if ($uniq) $stack = [];
       foreach ($result_list as $result) {
 	if ($uniq && in_array($result['target'], $stack)) continue;
 	self::OutputAbilityResult($header, $result['target'], $footer . $result['result']);
@@ -324,7 +324,7 @@ class RoleHTML {
       break;
 
     case RoleAbility::REPORTER:
-      if ($uniq) $stack = array();
+      if ($uniq) $stack = [];
       foreach ($result_list as $result) {
 	if ($uniq && in_array($result['result'], $stack)) continue;
 	$target = $result['target'] . ' さんは ' . $result['result'];
@@ -343,10 +343,16 @@ class RoleHTML {
 
   //個別能力発動結果表示
   public static function OutputAbilityResult($header, $target, $footer = null) {
-    $str = Text::Add(TableHTML::GenerateHeader('ability-result'));
-    if (isset($header)) $str .= Text::Add(ImageManager::Role()->Generate($header, null, true));
-    if (isset($target)) $str .= Text::Add(TableHTML::GenerateTd($target));
-    if (isset($footer)) $str .= Text::Add(ImageManager::Role()->Generate($footer, null, true));
+    $str = Text::LineFeed(TableHTML::GenerateHeader('ability-result'));
+    if (true === isset($header)) {
+      $str .= Text::LineFeed(ImageManager::Role()->Generate($header, null, true));
+    }
+    if (true === isset($target)) {
+      $str .= Text::LineFeed(TableHTML::GenerateTd($target));
+    }
+    if (true === isset($footer)) {
+      $str .= Text::LineFeed(ImageManager::Role()->Generate($footer, null, true));
+    }
     echo $str;
     TableHTML::OutputFooter();
   }
@@ -406,7 +412,7 @@ class RoleHTML {
 
   //夜の投票済みメッセージを取得 (複数投票型)
   private static function GetMultiVoteMessage(array $stack) {
-    $str_stack = array();
+    $str_stack = [];
     foreach (Text::Parse($stack['target_no']) as $id) {
       $user = DB::$USER->ByVirtual($id);
       $str_stack[$user->id] = $user->handle_name;

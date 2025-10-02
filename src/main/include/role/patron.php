@@ -28,12 +28,12 @@ class Role_patron extends Role_valkyrja_duelist {
     return 1;
   }
 
-  public function SetVoteNightUserList(array $list) {
-    $stack = array();
+  public function SetVoteNightTargetList(array $list) {
+    $stack = [];
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      $str  = $this->IgnoreVoteNight($user, $user->IsLive()); //例外判定
+      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
       if (! is_null($str)) return $str;
       $stack[$id] = $user;
     }

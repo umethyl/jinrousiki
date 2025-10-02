@@ -72,7 +72,7 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 初日の夜に一度も発言することなく<a href="rule.php#rule_role_wolf">人狼</a>に襲われて、ゲームに参加したとは言えない！と思ったことはありませんか？<br>
 村を作成するときに「<a href="game_option.php#dummy_boy">初日の夜は身代わり君</a>」にチェックを入れると初日の夜、<a href="rule.php#rule_role_wolf">人狼</a>は身代わり君しか襲えないようになります。<br>
 身代わり君はプレイヤーが操作するのではなく、初日に襲われる為だけに存在します。<br>
-割り当てられる役割は [ <?php ScriptInfoInfo::OutputDisableDummyBoyRole(); ?> ] 以外のどれかランダムに設定されます。
+割り当てられる役割は [ <?php ScriptInfoInfoController::OutputDisableDummyBoyRole(); ?> ] 以外のどれかランダムに設定されます。
 </div>
 
 <h4 id="difference_icon">ユーザの似顔絵などを表すユーザアイコンを自由にアップロードできます</h4>
@@ -127,7 +127,7 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 <h4 id="difference_auto_reload">自動リロード</h4>
 <div>
 自動でリロードするように設定することができます。<br>
-リロード間隔は、[ <?php ScriptInfoInfo::OutputAutoReload(); ?> ] のどれかを設定することができます。<br>
+リロード間隔は、[ <?php ScriptInfoInfoController::OutputAutoReload(); ?> ] のどれかを設定することができます。<br>
 サーバ管理者が設定することで観戦画面でも使用できます (現在の設定は [ <?php echo GameConfig::AUTO_RELOAD ? '有効' : '無効'; ?> ] です)。
 </div>
 
@@ -309,7 +309,7 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 
 <h4 id="difference_max_user">村の最大人数を制限できます</h4>
 <div>
-<?php ScriptInfoInfo::OutputMaxUser(); ?>
+<?php ScriptInfoInfoController::OutputMaxUser(); ?>
 </div>
 
 <h4 id="difference_active_room">同時稼働できる村の数 [Ver. 1.4.0 α19～]</h4>

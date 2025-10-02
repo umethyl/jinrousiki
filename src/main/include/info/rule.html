@@ -378,48 +378,48 @@ Ver. 1.5.0 β1 からは、「半角スペース一つ」のみを遺言にセ�
 <table class="role">
 <tr><th>役割</th><th>--　　　　自分の役割 (と能力の結果)　　　　--</th></tr>
 
-<tr id="display_role_human"><td>村人</td><?php RuleInfo::OutputImage('human', '村人', true); ?></tr>
+<tr id="display_role_human"><td>村人</td><?php RuleInfoController::OutputImage('human', '村人', true); ?></tr>
 <tr id="display_role_mage">
-<td class="mage">占い師</td><td><?php RuleInfo::OutputImage('mage', '占い師'); ?>
-<table class="view"><tr><?php RuleInfo::OutputImage('mage_result', '占い結果', true); ?><td>村人一号</td><?php RuleInfo::OutputImage('result_human', '村人', true); ?></tr></table>
-<table class="view"><tr><?php RuleInfo::OutputImage('mage_result', '占い結果', true); ?><td>人狼一号</td><?php RuleInfo::OutputImage('result_wolf', '人狼', true); ?></tr></table>
+<td class="mage">占い師</td><td><?php RuleInfoController::OutputImage('mage', '占い師'); ?>
+<table class="view"><tr><?php RuleInfoController::OutputImage('mage_result', '占い結果', true); ?><td>村人一号</td><?php RuleInfoController::OutputImage('result_human', '村人', true); ?></tr></table>
+<table class="view"><tr><?php RuleInfoController::OutputImage('mage_result', '占い結果', true); ?><td>人狼一号</td><?php RuleInfoController::OutputImage('result_wolf', '人狼', true); ?></tr></table>
 </td>
 </tr>
 <tr id="display_role_necromancer">
-<td class="necromancer">霊能者</td><td><?php RuleInfo::OutputImage('necromancer', '霊能者'); ?>
-<table class="view"><tr><?php RuleInfo::OutputImage('necromancer_result', '霊能結果', true); ?><td>村人一号</td><?php RuleInfo::OutputImage('result_human', '村人', true); ?></tr></table>
-<table class="view"><tr><?php RuleInfo::OutputImage('necromancer_result', '霊能結果', true); ?><td>人狼一号</td><?php RuleInfo::OutputImage('result_wolf', '人狼', true); ?></tr></table>
+<td class="necromancer">霊能者</td><td><?php RuleInfoController::OutputImage('necromancer', '霊能者'); ?>
+<table class="view"><tr><?php RuleInfoController::OutputImage('necromancer_result', '霊能結果', true); ?><td>村人一号</td><?php RuleInfoController::OutputImage('result_human', '村人', true); ?></tr></table>
+<table class="view"><tr><?php RuleInfoController::OutputImage('necromancer_result', '霊能結果', true); ?><td>人狼一号</td><?php RuleInfoController::OutputImage('result_wolf', '人狼', true); ?></tr></table>
 </td>
 </tr>
 <tr id="display_role_guard">
-<td class="guard">狩人</td><td><?php RuleInfo::OutputImage('guard', '狩人'); ?>
-<table class="view"><tr><td>占い師一号</td><?php RuleInfo::OutputImage('guard_success', '護衛成功', true); ?></tr></table></td>
+<td class="guard">狩人</td><td><?php RuleInfoController::OutputImage('guard', '狩人'); ?>
+<table class="view"><tr><td>占い師一号</td><?php RuleInfoController::OutputImage('guard_success', '護衛成功', true); ?></tr></table></td>
 </tr>
 <tr id="display_role_common">
-<td class="common">共有者</td><td><?php RuleInfo::OutputImage('common', '共有者'); ?>
-<table class="view"><tr><?php RuleInfo::OutputImage('common_partner', '共有者の仲間一覧', true); ?><td>　共有者一号さん　</td></tr></table></td>
+<td class="common">共有者</td><td><?php RuleInfoController::OutputImage('common', '共有者'); ?>
+<table class="view"><tr><?php RuleInfoController::OutputImage('common_partner', '共有者の仲間一覧', true); ?><td>　共有者一号さん　</td></tr></table></td>
 </tr>
-<tr id="display_role_poison"><td class="poison">埋毒者</td><?php RuleInfo::OutputImage('poison', '埋毒者', true); ?></tr>
+<tr id="display_role_poison"><td class="poison">埋毒者</td><?php RuleInfoController::OutputImage('poison', '埋毒者', true); ?></tr>
 <tr id="display_role_wolf">
-<td class="wolf">人狼</td><td><?php RuleInfo::OutputImage('wolf', '人狼'); ?>
-<table class="view"><tr><?php RuleInfo::OutputImage('wolf_partner', '人狼の仲間一覧', true); ?><td>人狼一号さん　人狼二号さん</td></tr></table>
+<td class="wolf">人狼</td><td><?php RuleInfoController::OutputImage('wolf', '人狼'); ?>
+<table class="view"><tr><?php RuleInfoController::OutputImage('wolf_partner', '人狼の仲間一覧', true); ?><td>人狼一号さん　人狼二号さん</td></tr></table>
 </td>
 </tr>
-<tr id="display_role_mad"><td class="wolf">狂人</td><?php RuleInfo::OutputImage('mad', '狂人', true); ?></tr>
+<tr id="display_role_mad"><td class="wolf">狂人</td><?php RuleInfoController::OutputImage('mad', '狂人', true); ?></tr>
 <tr id="display_role_fox">
-<td class="fox">妖狐</td><td><?php RuleInfo::OutputImage('fox', '妖狐'); ?>
-<table class="view"><tr><?php RuleInfo::OutputImage('fox_targeted', '人狼襲撃', true); ?></tr></table></td>
+<td class="fox">妖狐</td><td><?php RuleInfoController::OutputImage('fox', '妖狐'); ?>
+<table class="view"><tr><?php RuleInfoController::OutputImage('fox_targeted', '人狼襲撃', true); ?></tr></table></td>
 </tr>
 <tr id="display_role_cupid">
-<td class="lovers">キューピッド</td><td><?php RuleInfo::OutputImage('cupid', 'キューピッド'); ?>
-<table class="view"><tr><?php RuleInfo::OutputImage('cupid_pair', '自分の作った恋人一覧', true); ?><td>恋人一号さん　恋人二号さん</td></tr></table></td>
+<td class="lovers">キューピッド</td><td><?php RuleInfoController::OutputImage('cupid', 'キューピッド'); ?>
+<table class="view"><tr><?php RuleInfoController::OutputImage('cupid_pair', '自分の作った恋人一覧', true); ?><td>恋人一号さん　恋人二号さん</td></tr></table></td>
 </tr>
 <tr id="display_role_decide"><td>決定者</td><td>--なし--</td></tr>
-<tr id="display_role_authority"><td>権力者</td><?php RuleInfo::OutputImage('authority', '権力者', true); ?></tr>
+<tr id="display_role_authority"><td>権力者</td><?php RuleInfoController::OutputImage('authority', '権力者', true); ?></tr>
 <tr id="display_role_lovers">
 <td class="lovers">恋人</td>
-<td><table class="view"><tr><?php RuleInfo::OutputImage('partner_header', '自分の仲間一覧：ヘッダー', true); ?><td>恋人一号さん</td>
-<?php RuleInfo::OutputImage('lovers_footer', '自分の恋人一覧：フッター', true); ?></tr></table></td>
+<td><table class="view"><tr><?php RuleInfoController::OutputImage('partner_header', '自分の仲間一覧：ヘッダー', true); ?><td>恋人一号さん</td>
+<?php RuleInfoController::OutputImage('lovers_footer', '自分の恋人一覧：フッター', true); ?></tr></table></td>
 </tr>
 </table>
 <br>

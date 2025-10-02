@@ -21,6 +21,6 @@ class Option_child_fox extends OptionCheckbox {
   }
 
   public function GetWishRole() {
-    return array($this->name);
+    return [$this->name];
   }
 }

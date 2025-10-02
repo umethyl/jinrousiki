@@ -67,7 +67,7 @@ class GameTime {
 
   /* 変換系 */
   //JavaScript の Date() オブジェクト作成コード生成
-  public static function GetJavaScriptDate($time) {
+  public static function ConvertJavaScriptDate($time) {
     $stack = Text::Parse(Time::GetDate('Y,m,j,G,i,s', $time), ',');
     $stack[1]--;  //JavaScript の Date() の Month は 0 からスタートする
     return sprintf('new Date(%s)', ArrayFilter::ToCSV($stack));
@@ -81,7 +81,7 @@ class Position {
   //東
   public static function GetEast($id) {
     $max   = DB::$USER->Count();
-    $stack = array();
+    $stack = [];
     for ($i = $id + 1; $i <= $max && $i % self::BASE != 1; $i++) {
       $stack[] = $i;
     }
@@ -90,7 +90,7 @@ class Position {
 
   //西
   public static function GetWest($id) {
-    $stack = array();
+    $stack = [];
     for ($i = $id - 1; $i > 0 && $i % self::BASE != 0; $i--) {
       $stack[] = $i;
     }
@@ -100,7 +100,7 @@ class Position {
   //南
   public static function GetSouth($id) {
     $max   = DB::$USER->Count();
-    $stack = array();
+    $stack = [];
     for ($i = $id + self::BASE; $i <= $max; $i += self::BASE) {
       $stack[] = $i;
     }
@@ -109,7 +109,7 @@ class Position {
 
   //北
   public static function GetNorth($id) {
-    $stack = array();
+    $stack = [];
     for ($i = $id - self::BASE; $i > 0; $i -= self::BASE) {
       $stack[] = $i;
     }
@@ -119,7 +119,7 @@ class Position {
   //縦軸
   public static function GetVertical($id) {
     $max   = DB::$USER->Count();
-    $stack = array();
+    $stack = [];
     for ($i = $id % self::BASE; $i <= $max; $i += self::BASE) {
       if ($i > 0) {
 	$stack[] = $i;
@@ -132,7 +132,7 @@ class Position {
   public static function GetHorizontal($id) {
     $max   = DB::$USER->Count();
     $start = $id - ($id % self::BASE == 0 ? self::BASE : $id % self::BASE) + 1;
-    $stack = array();
+    $stack = [];
     for ($i = $start; $i < $start + self::BASE && $i <= $max; $i++) {
       $stack[] = $i;
     }
@@ -143,7 +143,7 @@ class Position {
   public static function GetAround(User $user) {
     $max   = DB::$USER->Count();
     $num   = $user->id;
-    $stack = array();
+    $stack = [];
     for ($i = -1; $i < 2; $i++) {
       $j = $num + $i * self::BASE;
       if ($j < 1 || $max + 1 < $j) continue;
@@ -162,7 +162,7 @@ class Position {
 
   //隣接
   public static function GetChain($id, $max) {
-    $stack = array();
+    $stack = [];
     if ($id - self::BASE >= 1) {
       $stack['N'] = $id - self::BASE;
     }
@@ -233,7 +233,11 @@ class Objection {
     if (self::IsSetUser($user) && self::IsSetScene()) {
       $user->objection++;
       $user->Update('objection', $user->objection);
-      DB::$ROOM->Talk($user->sex, TalkAction::OBJECTION, $user->uname);
+
+      $talk = new RoomTalkStruct($user->sex);
+      $talk->Set(TalkStruct::UNAME,  $user->uname);
+      $talk->Set(TalkStruct::ACTION, TalkAction::OBJECTION);
+      DB::$ROOM->Talk($talk);
     }
   }
 
@@ -275,8 +279,8 @@ class Winner {
   const LOSE	= 'lose';
   const DRAW	= 'draw';
 
-  //勝敗チェック
-  public static function Check($check_draw = false) {
+  //判定
+  public static function Judge($draw = false) {
     if (DB::$ROOM->IsTest()) return false;
 
     //コピー能力者がいるのでキャッシュを更新するかクエリから引くこと
@@ -299,7 +303,7 @@ class Winner {
       $winner = WinCamp::LOVERS;
     } elseif (DB::$ROOM->IsQuiz() && $quiz == 0) { //クイズ村 GM 死亡
       $winner = WinCamp::QUIZ_DEAD;
-    } elseif ($check_draw && DB::$ROOM->revote_count >= GameConfig::DRAW) { //引き分け
+    } elseif ($draw && DB::$ROOM->revote_count >= GameConfig::DRAW) { //引き分け
       $winner = WinCamp::DRAW;
     } else {
       return false;
@@ -309,7 +313,7 @@ class Winner {
     return RoomDB::Finish($winner);
   }
 
-  //勝敗結果生成
+  //結果生成
   public static function Generate($id = 0) {
     /* 村の勝敗結果 */
     $winner = DB::$ROOM->LoadWinner();
@@ -441,7 +445,7 @@ class Winner {
     return $str . GameHTML::GenerateWinner($class, 'self_' . $result);
   }
 
-  //勝敗結果出力
+  //結果出力
   public static function Output() {
     echo self::Generate();
   }

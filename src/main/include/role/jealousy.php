@@ -5,7 +5,7 @@
   ・処刑得票カウンター：ショック死 (同一キューピッド恋人限定)
 */
 class Role_jealousy extends Role {
-  public $mix_in = array('chicken');
+  public $mix_in = ['chicken'];
 
   protected function GetStackVoteKillType() {
     return RoleStackVoteKill::INIT;
@@ -15,7 +15,7 @@ class Role_jealousy extends Role {
     foreach ($this->GetStackKey() as $uname) {
       if ($this->IsVoted($uname)) continue;
 
-      $cupid_list = array(); //橋姫に投票したユーザのキューピッドの ID => 恋人の ID
+      $cupid_list = []; //橋姫に投票したユーザのキューピッドの ID => 恋人の ID
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
 	$user = DB::$USER->ByRealUname($voted_uname);
 	foreach ($user->GetPartner('lovers', true) as $id) {

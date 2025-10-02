@@ -13,10 +13,10 @@ class Role_exchange_angel extends Role_angel {
 
   public function LotteryLovers() {
     //変数を初期化
-    $angel_list    = array();
-    $lovers_list   = array();
-    $fix_list      = array();
-    $exchange_list = array();
+    $angel_list    = [];
+    $lovers_list   = [];
+    $fix_list      = [];
+    $exchange_list = [];
 
     //魂移使が打った恋人の情報を収集 (Reparse() 対策で GetRoleUser() は使わない)
     foreach (DB::$USER->Get() as $user) {
@@ -36,7 +36,7 @@ class Role_exchange_angel extends Role_angel {
 
     foreach ($angel_list as $id => $lovers_stack) { //抽選処理
       if (isset($fix_list[$id])) continue;
-      $duplicate_stack = array();
+      $duplicate_stack = [];
       //Text::p($fix_list, '◆fix_angel:'. $id);
       foreach ($lovers_stack as $lovers_id) {
 	foreach ($lovers_list[$lovers_id] as $cupid_id) {

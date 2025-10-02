@@ -7,6 +7,4 @@ if (! GameConfig::ASYNC) {
   $title = Message::SESSION_ERROR;
   HTML::OutputResult($title, $title . Message::TOP);
 }
-GamePlay::Load();
-GamePlay::CheckSilence();
-GamePlay::OutputTalkAsync();
+GamePlayController::ExecuteAsync();

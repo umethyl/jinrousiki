@@ -1,6 +1,6 @@
 <?php
 //-- 定数リスト (Talk/Location) --//
-class TalkLocation {
+final class TalkLocation {
   const SYSTEM    = 'system';
   const DUMMY_BOY = 'dummy_boy';
   const COMMON    = 'common';
@@ -12,16 +12,46 @@ class TalkLocation {
 }
 
 //-- 定数リスト (Talk/Action) --//
-class TalkAction {
+final class TalkAction {
   const MORNING   = 'MORNING';
   const NIGHT     = 'NIGHT';
   const OBJECTION = 'OBJECTION';
 }
 
 //-- 定数リスト (Talk/Voice) --//
-class TalkVoice {
-  const STRONG = 'strong';
-  const NORMAL = 'normal';
-  const WEAK   = 'weak';
-  const SECRET = 'secret';
+final class TalkVoice {
+  const STRONG     = 'strong';
+  const NORMAL     = 'normal';
+  const WEAK       = 'weak';
+  const SECRET     = 'secret';
+  const LAST_WORDS = 'last_words';
+}
+
+//-- 定数リスト (Talk/Element) --//
+final class TalkElement {
+  const ID       = 'talk_id';
+  const SYMBOL   = 'symbol';
+  const NAME     = 'user_info';
+  const VOICE    = 'voice';
+  const SENTENCE = 'sentence';
+
+  const CSS_ROW  = 'row_class';
+  const CSS_USER = 'user_class';
+  const CSS_SAY  = 'say_class';
+
+  public static $list = [self::ID, self::SYMBOL, self::NAME, self::VOICE, self::SENTENCE];
+  public static $css  = [self::CSS_ROW, self::CSS_USER, self::CSS_SAY];
+}
+
+//-- 定数リスト (Talk/CSS) --//
+final class TalkCSS {
+  const DATE         = 'date-time';
+  const SYSTEM       = 'system-user';
+  const DUMMY        = 'dummy-boy';
+  const COMMON       = 'talk-common';
+  const COMMON_SAY   = 'say-common';
+  const NIGHT_SELF   = 'night-self-talk';
+  const NIGHT_COMMON = 'night-common';
+  const NIGHT_WOLF   = 'night-wolf';
+  const NIGHT_FOX    = 'night-fox';
 }

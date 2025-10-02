@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('doll_master');
 class Role_revive_doll_master extends Role_doll_master {
-  public $mix_in = array('vote' => 'poison_cat', 'protected');
+  public $mix_in = ['vote' => 'poison_cat', 'protected'];
 
   protected function OutputAddResult() {
     $this->OutputReviveResult();

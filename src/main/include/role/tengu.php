@@ -9,7 +9,7 @@
   ・神通力対象：狩人系・暗殺者系・人狼系・子狐系
 */
 class Role_tengu extends Role {
-  public $mix_in = array('mage', 'chicken');
+  public $mix_in = ['mage', 'chicken'];
   public $action       = VoteAction::TENGU;
   public $result       = RoleAbility::TENGU_CAMP;
   public $action_date  = RoleActionDate::AFTER;
@@ -47,7 +47,7 @@ class Role_tengu extends Role {
 	foreach (DB::$USER->Get() as $user) $user->StackReparse();
       }
 
-      $stack = array(Camp::HUMAN => 0, Camp::WOLF => 0); //村と狼は初期値を入れておく
+      $stack = [Camp::HUMAN => 0, Camp::WOLF => 0]; //村と狼は初期値を入れておく
       foreach (DB::$USER->Get() as $user) {
 	$target = $reparse ? $user->GetReparse() : $user;
 	$camp   = $target->GetWinCamp($reparse);

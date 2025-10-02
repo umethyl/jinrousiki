@@ -1,6 +1,6 @@
 <?php
 //-- DB アクセス (データベース初期セットアップ拡張) --//
-class SetupDB {
+final class SetupDB {
   //データベース接続 (データベース作成用)
   public static function Connect() {
     try {

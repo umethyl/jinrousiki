@@ -30,7 +30,7 @@ class Role_weather_priest extends Role_priest {
   protected function PriestAction() {
     $list = $this->GetWeatherList(); //天候発動リスト
     //試行テスト
-    //$stack = array(); for ($i = 0; $i < 20; $i++) @$stack[Lottery::Draw($list)]++;
+    //$stack = []; for ($i = 0; $i < 20; $i++) @$stack[Lottery::Draw($list)]++;
     //ksort($stack); Text::p($stack, "◆{$this->role}");
 
     if (DB::$ROOM->IsOption('full_weather') && DB::$ROOM->IsDate(1)) { //天変地異対応
@@ -68,23 +68,23 @@ class Role_weather_priest extends Role_priest {
     //Text::p($vote_margin, '◆VoteMargin');
 
     if ($stack['fox'] > $stack['wolf']) { //妖狐陣営優勢
-      foreach (array(3, 8, 31, 36) as $id) {
+      foreach ([3, 8, 31, 36] as $id) {
 	$list[$id] = ceil($list[$id] * 0.8);
       }
     }
 
     if ($vote_margin > 2) { //村人陣営優勢
-      foreach (array(17, 18, 20, 23, 30, 33, 35, 37, 41, 45, 47) as $id) {
+      foreach ([17, 18, 20, 23, 30, 33, 35, 37, 41, 45, 47] as $id) {
 	$list[$id] = ceil($list[$id] * 1.2);
       }
-      foreach (array(6, 7, 9, 16, 22, 32, 34, 46) as $id) {
+      foreach ([6, 7, 9, 16, 22, 32, 34, 46] as $id) {
 	$list[$id] = ceil($list[$id] * 0.8);
       }
     } elseif ($vote_margin < 1) { //村人陣営劣勢
-      foreach (array(6, 7, 8, 9, 32, 34, 42, 46) as $id) {
+      foreach ([6, 7, 8, 9, 32, 34, 42, 46] as $id) {
 	$list[$id] = ceil($list[$id] * 1.2);
       }
-      foreach (array(4, 5, 17, 18, 23, 33, 37, 39, 45, 47) as $id) {
+      foreach ([4, 5, 17, 18, 23, 33, 37, 39, 45, 47] as $id) {
 	$list[$id] = ceil($list[$id] * 0.8);
       }
     }
@@ -134,14 +134,14 @@ class Role_weather_priest extends Role_priest {
 
   //天候発動補正リスト取得：発動抑制
   private function GetCalibrationWeatherOffList() {
-    return array(
-      'detective_common' => array(5, 15, 41)
-    );
+    return [
+      'detective_common' => [5, 15, 41]
+    ];
   }
 
   //天候発動補正リスト取得：個別役職
   private function GetCalibrationWeatherRoleList() {
-    return array(
+    return [
       'human'              => 24,
       'suspect'            => 42,
       'critical_mage'      =>  4,
@@ -161,17 +161,17 @@ class Role_weather_priest extends Role_priest {
       'follow_mad'         => 17,
       'critical_fox'       =>  4,
       'critical_avenger'   =>  4
-    );
+    ];
   }
 
   //天候発動補正リスト取得：役職グループ
   private function GetCalibrationWeatherGroupList() {
-    return array(
+    return [
       'cute'     => 42,
       'jeasouly' => 27,
       'depraver' =>  3,
       'vampire'  => 40,
       'fairy'    => 29
-    );
+    ];
   }
 }

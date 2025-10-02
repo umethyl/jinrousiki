@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('wolf');
 class Role_sex_wolf extends Role_wolf {
-  public $mix_in = array('sex_mage');
+  public $mix_in = ['sex_mage'];
   public $result = RoleAbility::SEX_WOLF;
 
   protected function IgnoreResult() {

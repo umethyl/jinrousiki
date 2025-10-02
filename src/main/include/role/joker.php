@@ -16,13 +16,15 @@ class Role_joker extends Role {
 
   //ジョーカー所持者初期化
   public function InitializeJoker() {
-    RoleManager::Stack()->Set('joker_id', $this->SetAllJoker());
+    $this->SetStack(['id' => $this->SetAllJoker()]);
   }
 
   //ジョーカー所持者判定
   public function IsJoker(User $user, $shift = false) {
     if (DB::$ROOM->IsFinished()) {
-      if (! isset($user->joker_flag)) $this->SetAllJoker();
+      if (! isset($user->joker_flag)) {
+	$this->SetAllJoker();
+      }
       return $user->joker_flag;
     } elseif ($user->IsDead()) {
       return false;
@@ -35,55 +37,72 @@ class Role_joker extends Role {
 
   //ジョーカー移動
   public function SetJoker() {
-    $user    = $this->GetJoker(); //現在の所持者を取得
-    $virtual = $user->GetVirtual()->uname; //仮想ユーザ名を取得
+    $user    = $this->GetJoker(); //現在の所持者
+    $virtual = $user->GetVirtual()->uname; //仮想ユーザ名
     $uname   = $this->GetVoteTargetUname($virtual); //ジョーカーの投票先
-    $this->SetStack($uname, 'joker_uname');
+
+    //Stack 格納
+    $stack = $this->GetStack();
+    $stack['uname'] = $uname;
     //Text::p($uname, '◆Vote');
 
-    $target = array(); //移動可能者リスト
-    $stack  = $this->GetVotedUname($virtual); //ジョーカー投票者
-    foreach ($stack as $voter_uname) { //死者と前日所持者を除外
+    $target_list = []; //移動可能者リスト
+    $voter_list  = $this->GetVotedUname($virtual); //ジョーカー投票者
+    foreach ($voter_list as $voter_uname) { //死者と前日所持者を除外
       $voter = DB::$USER->ByRealUname($voter_uname);
       if ($voter->IsLive(true) && ! $this->IsKeepJoker($voter, true)) {
-	$target[] = $voter_uname;
+	$target_list[] = $voter_uname;
       }
     }
-    $this->SetStack($target, 'joker_target');
-    //Text::p($stack,  '◆Target [Voted]');
-    //Text::p($target, '◆Target [joker]');
+    $stack['target_list'] = $target_list;
+    $this->SetStack($stack); //まとめて Stack 登録
+    //Text::p($voter_list,  '◆Target [Voter]');
+    //Text::p($target_list, '◆Target [joker]');
 
     //対象者か現在のジョーカー所持者が処刑者なら無効
-    if ($this->IsVoted($uname) || $this->IsVoted($user->uname)) return true;
+    if ($this->IsVoted($uname) || $this->IsVoted($user->uname)) {
+      return true;
+    }
 
     //相互投票なら無効 (複数から投票されていた場合は残りからランダム)
-    if (in_array($uname, $stack)) {
-      ArrayFilter::Delete($target, $uname);
-      $this->SetStack($target, 'joker_target');
-      //Text::p($target, '◆ReduceTarget');
-      if (count($target) == 0) return true;
-      $uname = Lottery::Get($target);
+    if (in_array($uname, $voter_list)) {
+      //対象者から除外して再登録
+      ArrayFilter::Delete($target_list, $uname);
+      $stack['target_list'] = $target_list;
+      $this->SetStack($stack);
+      //Text::p($target_list, '◆ReduceTarget');
+      if (count($target_list) == 0) {
+	return true;
+      }
+      $uname = Lottery::Get($target_list);
     } elseif (DB::$USER->ByRealUname($uname)->IsDead(true)) { //対象者が死亡していた場合
-      if (count($target) == 0) return true;
-      $uname = Lottery::Get($target); //ジョーカー投票者から選出
+      if (count($target_list) == 0) {
+	return true;
+      }
+      $uname = Lottery::Get($target_list); //ジョーカー投票者から選出
     }
     $this->AddJoker(DB::$USER->ByRealUname($uname));
     return false;
   }
 
   //ジョーカー再配布 (シーン切り替え時)
+  //所持者が生存していたら維持 > 生存者ランダム
   public function ResetJoker($shift = false) {
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsDead(true)) continue;
-      if ($this->IsKeepJoker($user)) return; //現在の所持者が生存していた場合はスキップ
+      if ($this->IsKeepJoker($user)) {
+	return;
+      }
       $stack[] = $user;
     }
-    if (count($stack) > 0) $this->AddJoker(Lottery::Get($stack), $shift);
+    if (count($stack) > 0) {
+      $this->AddJoker(Lottery::Get($stack), $shift);
+    }
   }
 
   //ジョーカー再設定 (処刑処理用)
-  /* 生きていたら本人継承 / 処刑者なら前日所持者以外の投票者ランダム / 死亡なら完全ランダム */
+  //生きていたら本人継承 > 処刑者なら前日所持者以外の投票者ランダム > 生存者ランダム
   public function ResetVoteJoker() {
     $user = $this->GetJoker();
     if ($user->IsLive(true)) {
@@ -91,9 +110,9 @@ class Role_joker extends Role {
       return;
     }
 
-    $target = $this->GetStack('joker_target');
-    if ($this->IsVoted($user->uname) && count($target) > 0) {
-      $stack = $target;
+    $target_list = $this->GetStack()['target_list'];
+    if ($this->IsVoted($user->uname) && count($target_list) > 0) {
+      $stack = $target_list;
     } else {
       $stack = DB::$USER->SearchLive(true);
     }
@@ -101,9 +120,9 @@ class Role_joker extends Role {
   }
 
   //ジョーカー再設定 (ゲーム終了時)
-  /* ゲーム終了時のみ、処刑先への移動許可 (それ以外なら本人継承) */
+  //ゲーム終了時のみ、処刑先への移動許可 (それ以外なら本人継承)
   public function FinishJoker() {
-    $uname = $this->GetStack('joker_uname');
+    $uname = $this->GetStack()['uname'];
     $user  = $this->GetJoker();
     if ($this->IsVoted($uname) && ! $this->IsVoted($user->uname)) {
       $this->AddJoker(DB::$USER->ByRealUname($uname));
@@ -136,7 +155,7 @@ class Role_joker extends Role {
 
   //現在の所持ユーザ取得
   private function GetJoker() {
-    return DB::$USER->ByID($this->GetStack('joker_id'));
+    return DB::$USER->ByID($this->GetStack()['id']);
   }
 
   //現ジョーカー所持者判定

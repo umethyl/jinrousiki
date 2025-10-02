@@ -10,7 +10,7 @@ class Role_doll extends Role {
     $flag  = $this->IsDisplayDoll();
     $main  = 'doll_master_list'; //人形遣い枠
     $sub   = 'doll_partner';     //人形
-    $stack = array($main => array(), $sub => array());
+    $stack = [$main => [], $sub => []];
     foreach (DB::$USER->Get() as $user) {
       if ($this->IsActor($user)) continue;
       if ($this->IsDisplayDollMaster($user)) {

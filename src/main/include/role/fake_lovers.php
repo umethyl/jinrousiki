@@ -17,7 +17,7 @@ class Role_fake_lovers extends Role_lovers {
   }
 
   protected function OutputAddPartner() {
-    $stack = array();
+    $stack = [];
     foreach ($this->GetActor()->GetPartner($this->role, true) as $id) {
       $stack[] = DB::$USER->ByID($id)->handle_name; //憑依追跡不要
     }

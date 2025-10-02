@@ -1,13 +1,7 @@
 <?php
-//-- ゲームオプション出力クラス --//
-class GameOptionInfo {
-  //実行
-  public static function Execute() {
-    self::Output();
-  }
-
-  //出力
-  private static function Output() {
+//-- ゲームオプション情報コントローラー --//
+final class GameOptionInfoController extends JinrouController {
+  protected static function Output() {
     InfoHTML::OutputHeader(GameOptionInfoMessage::TITLE, 0, 'game_option');
     InfoHTML::Load('game_option');
     HTML::OutputFooter();
@@ -33,7 +27,7 @@ class GameOptionInfo {
     $str    = '';
     ksort($stack); //人数順に並び替え
     foreach ($stack as $count => $list) {
-      $order_stack = array();
+      $order_stack = [];
       foreach (RoleDataManager::Sort(array_keys($list)) as $role) { //役職順に並び替え
 	$order_stack[] = RoleDataManager::GetName($role) . $list[$role];
       }

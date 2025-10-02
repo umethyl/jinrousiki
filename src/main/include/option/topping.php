@@ -18,8 +18,10 @@ class Option_topping extends OptionSelector {
     if (is_null(RQ::Get()->{$this->name})) return false;
 
     $post = RQ::Get()->{$this->name};
-    $flag = ! empty($post) && isset($this->form_list[$post]);
-    if ($flag) array_push(RoomOption::${$this->group}, sprintf('%s:%s', $this->name, $post));
+    $flag = (false === empty($post)) && isset($this->form_list[$post]);
+    if (true === $flag) {
+      array_push(RoomOption::${$this->group}, sprintf('%s:%s', $this->name, $post));
+    }
     RQ::Set($this->name, $flag);
   }
 
@@ -74,13 +76,13 @@ class Option_topping extends OptionSelector {
     if (count($stack) < 1) return;
 
     //Text::p($stack, '◆topping');
-    if (ArrayFilter::IsArray($stack, 'fix')) { //固定枠
+    if (ArrayFilter::IsAssoc($stack, 'fix')) { //固定枠
       foreach ($stack['fix'] as $role => $count) {
 	ArrayFilter::Add($list, $role, $count);
       }
     }
 
-    if (ArrayFilter::IsArray($stack, 'random')) { //ランダム枠
+    if (ArrayFilter::IsAssoc($stack, 'random')) { //ランダム枠
       foreach ($stack['random'] as $key => $rate) {
 	Lottery::Add($list, Lottery::Generate($rate), $stack['count'][$key]);
       }

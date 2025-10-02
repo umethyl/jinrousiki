@@ -1,27 +1,32 @@
 <?php
-//-- ログイン処理クラス --//
-class Login {
-  //実行 (手動 > 自動(セッション) > 観戦ページジャンプ)
-  public static function Execute() {
-    self::Load();
-    if (RQ::Get()->login_manually) {
-      if (self::LoginManually()) {
-	self::Output(LoginMessage::MANUALLY_TITLE, LoginMessage::MANUALLY_BODY, 'game_frame');
-      } else {
-	$body = Text::Concat(LoginMessage::FAILED_BODY, LoginMessage::FAILED_CAUTION);
-	self::Output(LoginMessage::FAILED_TITLE, $body);
-      }
-    } elseif (Session::Certify()) {
-      self::Output(LoginMessage::AUTO_TITLE, LoginMessage::AUTO_BODY, 'game_frame');
+//◆文字化け抑制◆//
+//-- ログイン処理コントローラー --//
+final class LoginController extends JinrouController {
+  protected static function Load() {
+    Loader::LoadRequest('login', true);
+    DB::Connect();
+  }
+
+  protected static function EnableCommand() {
+    return RQ::Get()->login_manually;
+  }
+
+  protected static function RunCommand() {
+    if (self::LoginManually()) {
+      self::OutputResult(LoginMessage::MANUALLY_TITLE, LoginMessage::MANUALLY_BODY, 'game_frame');
     } else {
-      self::Output(Message::VIEW_TITLE, Message::VIEW_BODY, 'game_view');
+      $body = Text::Join(LoginMessage::FAILED_BODY, LoginMessage::FAILED_CAUTION);
+      self::OutputResult(LoginMessage::FAILED_TITLE, $body);
     }
   }
 
-  //データロード
-  private static function Load() {
-    Loader::LoadRequest('login', true);
-    DB::Connect();
+  protected static function Output() {
+    //自動(セッション) > 観戦ページジャンプ
+    if (Session::Certify()) {
+      self::OutputResult(LoginMessage::AUTO_TITLE, LoginMessage::AUTO_BODY, 'game_frame');
+    } else {
+      self::OutputResult(Message::VIEW_TITLE, Message::VIEW_BODY, 'game_view');
+    }
   }
 
   //手動ログイン
@@ -41,23 +46,23 @@ class Login {
     //空判定 > ブラックリスト判定
     if ($uname == '' || $password == '') {
       return false;
-    } elseif (! ServerConfig::DEBUG_MODE && Security::IsLoginBlackList($trip)) {
+    } elseif (false === ServerConfig::DEBUG_MODE && Security::IsLoginBlackList($trip)) {
       return false;
     }
 
     $crypt = Text::Crypt($password);
     //$crypt = $password; //デバッグ用
 
-    return LoginDB::Certify($uname, $crypt) && LoginDB::Update($uname, $crypt); //認証＆再登録処理
+    return LoginDB::Execute($uname, $crypt);
   }
 
   //結果出力
-  private static function Output($title, $body, $jump = null) {
+  private static function OutputResult($title, $body, $jump = null) {
     if (is_null($jump)) {
       $url  = '';
     } else {
       $url  = URL::GetRoom($jump, RQ::Get()->room_no);
-      $body = Text::Concat($body, URL::GetJump($url));
+      $body = Text::Join($body, URL::GetJump($url));
     }
     HTML::OutputResult($title, $body, $url);
   }

@@ -1,86 +1,93 @@
 <?php
-//-- アイコン変更処理クラス --//
-class IconEdit {
+//-- アイコン変更コントローラー --//
+final class IconEditController extends JinrouController {
   const URL = 'icon_view.php';
 
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Edit();
+  protected static function Start() {
+    if (Security::IsInvalidReferer(self::URL)) {
+      self::OutputError(IconEditMessage::REFERER);
+    }
   }
 
-  //データロード
-  private static function Load() {
-    if (Security::CheckReferer(self::URL)) { //リファラチェック
-      self::Output(IconEditMessage::REFERER);
-    }
+  protected static function Load() {
     Loader::LoadRequest('icon_edit');
   }
 
-  //変更処理
-  private static function Edit() {
+  protected static function EnableCommand() {
+    return true;
+  }
+
+  protected static function RunCommand() {
     //入力データチェック
     extract(RQ::ToArray()); //引数を展開
     $url = sprintf('<a href="%s?icon_no=%d">%s</a>', self::URL, $icon_no, Message::BACK);
 
     if ($password != UserIconConfig::PASSWORD) { //パスワード照合
-      self::Output(IconEditMessage::PASSWORD, $url);
+      self::OutputError(IconEditMessage::PASSWORD, $url);
     }
 
-    if (! Text::Exists($icon_name)) { //空文字チェック
-      self::Output(IconEditMessage::NAME, $url);
+    if (false === Text::Exists($icon_name)) { //空文字チェック
+      self::OutputError(IconEditMessage::NAME, $url);
     }
 
-    //アイコン名の文字列長のチェック
-    $query_stack = array();
-    foreach (UserIcon::CheckText(IconEditMessage::TITLE, $url) as $key => $value) {
-      $query_stack[] = sprintf('%s = %s', $key, is_null($value) ? 'NULL' : "'{$value}'");
+    //アイコン名の文字列長チェック
+    $query = IconDB::GetQueryUpdate();
+    $stack = [];
+    foreach (UserIcon::ValidateText(IconEditMessage::TITLE, $url) as $key => $value) {
+      if (true === is_null($value)) {
+	$query->SetNull($key);
+      } else {
+	$stack[$key] = $value;
+      }
     }
 
-    if (Text::Exists($color)) { //色指定のチェック
-      $color = UserIcon::CheckColor($color, IconEditMessage::TITLE, $url);
-      $query_stack[] = sprintf("color = '%s'", $color);
+    if (true === Text::Exists($color)) { //色指定チェック
+      $stack['color'] = UserIcon::ValidateColor($color, IconEditMessage::TITLE, $url);
     }
 
     //トランザクション開始
     DB::Connect();
-    if (! DB::Lock('icon')) {
-      self::Output(IconEditMessage::LOCK . Message::DB_ERROR_LOAD, $url);
+    if (false === DB::Lock('icon')) {
+      self::OutputError(IconEditMessage::LOCK . Message::DB_ERROR_LOAD, $url);
     }
 
-    if (! IconDB::Exists($icon_no)) { //存在チェック
-      self::Output(sprintf(IconEditMessage::NOT_EXISTS, $icon_no), $url);
+    if (false === IconDB::Exists($icon_no)) { //存在チェック
+      self::OutputError(sprintf(IconEditMessage::NOT_EXISTS, $icon_no), $url);
     }
 
-    if (IconDB::Duplicate($icon_no, $icon_name)) { //アイコン名重複チェック
-      self::Output(sprintf(IconEditMessage::DUPLICATE, $icon_name), $url);
+    if (true === IconDB::Duplicate($icon_no, $icon_name)) { //アイコン名重複チェック
+      self::OutputError(sprintf(IconEditMessage::DUPLICATE, $icon_name), $url);
     }
 
-    if (IconDB::Using($icon_no)) { //編集制限チェック
-      self::Output(IconEditMessage::USING, $url);
+    if (true === IconDB::Using($icon_no)) { //編集制限チェック
+      self::OutputError(IconEditMessage::USING, $url);
     }
 
     if (IconDB::Disable($icon_no) !== $disable) { //非表示フラグチェック
-      $query_stack[] = sprintf('disable = %s', $disable ? 'TRUE' : 'FALSE');
+      $query->SetData('disable', $disable ? Query::ENABLE : Query::DISABLE);
     }
+    $query->Set(array_keys($stack));
 
-    if (count($query_stack) < 1) { //変更が無いなら終了
-      self::Output(IconEditMessage::NO_CHANGE, $url);
+    if (count($stack) < 1) { //変更が無いなら終了
+      //現状はここに入ることは事実上無い。精度を上げる場合はDBから引いて比較すること
+      self::OutputError(IconEditMessage::NO_CHANGE, $url);
     }
-    $query = ArrayFilter::ToCSV($query_stack);
-    //self::Output($query, $url); //テスト用
+    $list = array_merge(array_values($stack), [$icon_no]);
+    //self::OutputError($query->p() . print_r($list, true), $url); //テスト用
 
-    if (IconDB::Update($icon_no, $query) && DB::Commit()) {
+    if (IconDB::Update($query, $list) && DB::Commit()) {
       $str = sprintf('%s?icon_no=%d', self::URL, $icon_no);
       HTML::OutputResult(IconEditMessage::TITLE, IconEditMessage::SUCCESS, $str);
     } else {
-      self::Output(IconEditMessage::UPDATE . Message::DB_ERROR_LOAD, $url);
+      self::OutputError(IconEditMessage::UPDATE . Message::DB_ERROR_LOAD, $url);
     }
   }
 
-  //エラー処理
-  private static function Output($str, $url = null) {
-    if (isset($url)) $str = Text::Concat($str, $url);
+  //エラー出力
+  private static function OutputError($str, $url = null) {
+    if (false === is_null($url)) {
+      $str = Text::Join($str, $url);
+    }
     HTML::OutputResult(IconEditMessage::TITLE, $str);
   }
 }

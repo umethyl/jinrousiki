@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('assassin');
 class Role_step_assassin extends Role_assassin {
-  public $mix_in = array('step_mad');
+  public $mix_in = ['step_mad'];
   public $action = VoteAction::STEP_ASSASSIN;
   public $submit = VoteAction::ASSASSIN;
 
@@ -22,8 +22,8 @@ class Role_step_assassin extends Role_assassin {
     return OptionFormType::CHECKBOX;
   }
 
-  public function CheckVoteNightTarget(array $list) {
-    return $this->CheckStepVoteNightTarget($list);
+  public function ValidateVoteNightTargetList(array $list) {
+    return $this->ValidateStepVoteNightTargetList($list);
   }
 
   //範囲暗殺

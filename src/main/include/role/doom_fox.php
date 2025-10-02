@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_doom_fox extends Role_fox {
-  public $mix_in = array('vote' => 'assassin');
+  public $mix_in = ['vote' => 'assassin'];
 
   protected function Assassin(User $user) {
     if ($user->IsLive(true)) {

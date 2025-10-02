@@ -11,7 +11,7 @@ class Role_agent_escaper extends Role_escaper {
     return DB::$ROOM->date > 2 && DB::$ROOM->date % 3 == 0;
   }
 
-  protected function GetIgnoreAddVoteMessage() {
+  protected function GetDisabledAddVoteMessage() {
     return VoteRoleMessage::IMPOSSIBLE_VOTE_DAY;
   }
 

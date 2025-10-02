@@ -14,9 +14,9 @@ class Role_trap_common extends Role_common {
     $stack = $this->GetStack();
     if (! is_array($stack) || count($stack) < 1) return;
 
-    $target_list = array();
+    $target_list = [];
     //非村人陣営の ID と仮想ユーザ名を収集
-    foreach ($this->GetStackKey('vote_target') as $uname) {
+    foreach ($this->GetStackKey(VoteDayElement::TARGET_LIST) as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       if (! $user->IsWinCamp(Camp::HUMAN)) {
 	$target_list[$user->id] = $user->GetVirtual()->uname;

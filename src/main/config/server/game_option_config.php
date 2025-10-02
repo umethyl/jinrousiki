@@ -179,36 +179,36 @@ class GameOptionConfig {
   public static $full_mania_enable         = true; //神話マニア村
   public static $full_unknown_mania_enable = true; //鵺村
   //村人置換モードの内訳
-  public static $replace_human_selector_list = array(
+  public static $replace_human_selector_list = [
     '' => 'なし', 'replace_human', 'full_mad', 'full_cupid', 'full_quiz', 'full_vampire',
     'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania'
-  );
+  ];
 
   public static $change_common_enable        = true; //共有者置換村 (管理人カスタムモード)
   public static $change_hermit_common_enable = true; //隠者村
   //共有者置換モードの内訳
-  public static $change_common_selector_list = array(
+  public static $change_common_selector_list = [
     '' => 'なし', 'change_common', 'change_hermit_common'
-  );
+  ];
 
   public static $change_mad_enable          = true; //狂人置換村 (管理人カスタムモード)
   public static $change_fanatic_mad_enable  = true; //狂信者村
   public static $change_whisper_mad_enable  = true; //囁き狂人村
   public static $change_immolate_mad_enable = true; //殉教者村
   //狂人置換モードの内訳
-  public static $change_mad_selector_list = array(
+  public static $change_mad_selector_list = [
     '' => 'なし', 'change_mad', 'change_fanatic_mad', 'change_whisper_mad', 'change_immolate_mad'
-  );
+  ];
 
   public static $change_cupid_enable          = true; //キューピッド置換村 (管理人カスタムモード)
   public static $change_mind_cupid_enable     = true; //女神村
   public static $change_triangle_cupid_enable = true; //小悪魔村
   public static $change_angel_enable          = true; //天使村
   //キューピッド置換モードの内訳
-  public static $change_cupid_selector_list = array(
+  public static $change_cupid_selector_list = [
     '' => 'なし', 'change_cupid', 'change_mind_cupid', 'change_triangle_cupid', 'change_angel',
     'change_exchange_angel'
-  );
+  ];
 
   //-- 特殊配役モード --//
   public static $chaos_enable       = true; //闇鍋モード
@@ -220,14 +220,14 @@ class GameOptionConfig {
   public static $step_enable        = true; //足音村
   public static $quiz_enable        = true; //クイズ村
   //特殊配役モードの内訳
-  public static $special_role_list = array(
+  public static $special_role_list = [
     '' => 'なし', 'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'duel', 'gray_random',
     'step', 'quiz'
-  );
+  ];
 
   //-- 闇鍋モード専用設定 --//
   public static $topping_enable = true; //固定配役追加モード
-  public static $topping_list = array(
+  public static $topping_list = [
     ''  => 'なし',
     'a' => 'A：人形村',
     'b' => 'B：出題村',
@@ -250,10 +250,10 @@ class GameOptionConfig {
     's' => 'S：霊能村',
     't' => 'T：天狗村',
     'u' => 'U：背信村'
-  );
+  ];
 
   public static $boost_rate_enable = true; //出現率変動モード
-  public static $boost_rate_list = array(
+  public static $boost_rate_list = [
     ''  => 'なし',
     'a' => 'A：新顔村',
     'b' => 'B：平等村',
@@ -268,7 +268,7 @@ class GameOptionConfig {
     'k' => 'K：封夢村',
     'l' => 'L：結束村',
     'm' => 'M：天道村'
-  );
+  ];
 
   //配役通知設定
   public static $chaos_open_cast_enable      = true; //配役内訳を表示する

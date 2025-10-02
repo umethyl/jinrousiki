@@ -1,16 +1,12 @@
 <?php
-//-- 裏・闇鍋モードテスト --//
-class ChaosVersoTest {
-  //実行
-  public static function Execute() {
-    self::Output();
-  }
-
-  //出力
-  private static function Output() {
+//-- 裏・闇鍋モードテストコントローラー --//
+final class ChaosVersoTestController extends JinrouController {
+  protected static function Output() {
     DevHTML::OutputRoleTestHeader(ChaosVersoTestMessage::TITLE, 'chaos_verso.php');
     HTML::OutputFormFooter();
-    if (DevHTML::IsExecute()) self::RunTest();
+    if (DevHTML::IsExecute()) {
+      self::RunTest();
+    }
     HTML::OutputFooter(true);
   }
 
@@ -18,8 +14,8 @@ class ChaosVersoTest {
   private static function RunTest() {
     RQ::InitTestRoom();
     $stack = new stdClass();
-    $stack->game_option = array('chaos_verso');
-    $stack->option_role = array();
+    $stack->game_option = ['chaos_verso'];
+    $stack->option_role = [];
     DevRoom::Cast($stack);
   }
 }

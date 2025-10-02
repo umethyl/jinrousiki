@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('necromancer');
 class Role_psycho_necromancer extends Role_necromancer {
-  public $mix_in = array('psycho_mage');
+  public $mix_in = ['psycho_mage'];
   public $result = RoleAbility::PSYCHO_NECROMANCER;
 
   public function Necromancer(User $user, $flag) {

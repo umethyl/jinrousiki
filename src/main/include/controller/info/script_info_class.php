@@ -1,19 +1,11 @@
 <?php
-//-- 特徴と仕様出力クラス --//
-class ScriptInfoInfo {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//-- 特徴と仕様情報コントローラー --//
+final class ScriptInfoInfoController extends JinrouController {
+  protected static function Load() {
     Loader::LoadClass('InfoTime');
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     InfoHTML::OutputHeader(ScriptInfoMessage::TITLE, 0, 'script_info');
     InfoHTML::Load('script_info');
     HTML::OutputFooter();
@@ -21,8 +13,8 @@ class ScriptInfoInfo {
 
   //身代わり君がなれない役職のリスト出力
   public static function OutputDisableDummyBoyRole() {
-    $stack = array();
-    foreach (array_merge(array('wolf', 'fox'), CastConfig::$disable_dummy_boy_role_list) as $role) {
+    $stack = [];
+    foreach (array_merge(['wolf', 'fox'], CastConfig::$disable_dummy_boy_role_list) as $role) {
       $stack[] = RoleDataManager::GetName($role);
     }
     echo ArrayFilter::Concat($stack, ScriptInfoMessage::DOT);

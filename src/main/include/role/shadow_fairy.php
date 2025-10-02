@@ -13,13 +13,13 @@ class Role_shadow_fairy extends Role_fairy {
       $base_date--;
     }
 
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->Get() as $user) {
       foreach ($user->GetPartner('bad_status', true) as $id => $date) {
 	if ($date != $base_date) continue;
 	$target = DB::$USER->ByID($id);
 	if ($target->IsRole($this->role)) {
-	  $stack[$target->id] = array('icon' => $user->icon_filename, 'color' => $user->color);
+	  $stack[$target->id] = ['icon' => $user->icon_filename, 'color' => $user->color];
 	}
       }
     }

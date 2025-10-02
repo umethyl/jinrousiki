@@ -1,9 +1,9 @@
 <?php
 //-- 引数管理クラス --//
-class RQ {
+class RQ extends LoadManager {
   const PATH = '%s/request/%s.php';
   const CLASS_PREFIX = 'Request_';
-  private static $file = array();
+  protected static $file = [];
   private static $instance = null; //Request クラス
 
   //Request クラスの初期化
@@ -12,7 +12,7 @@ class RQ {
   }
 
   //Request クラスのロード
-  public static function Load($name = 'Request', $force = false) {
+  public static function LoadRequest($name = 'Request', $force = false) {
     if ($force || is_null(self::$instance)) {
       if ($name != 'Request' && self::LoadFile($name)) {
 	$class = self::CLASS_PREFIX . $name;
@@ -21,11 +21,6 @@ class RQ {
       }
       new self($class);
     }
-  }
-
-  //ファイルロード
-  public static function LoadFile($name) {
-    return LoadManager::LoadFile(self::$file, $name, self::GetPath($name));
   }
 
   //インスタンス取得
@@ -64,11 +59,6 @@ class RQ {
     return self::Get()->ToArray();
   }
 
-  //ファイルパス取得
-  private static function GetPath($name) {
-    return sprintf(self::PATH, JINROU_INC, $name);
-  }
-
   //デバッグ用
   public static function p($data = null, $name = null) {
     Text::p(is_null($data) ? self::Get() : self::Get()->$data, $name);
@@ -88,11 +78,11 @@ class Request {
     $value_list = $this->GetSource($src);
     foreach ($spec_list as $spec) {
       $value = ArrayFilter::Get($value_list, $spec);
-      if (empty($filter)) {
+      if (true === empty($filter)) {
 	$this->$spec = $value;
-      } elseif (method_exists($this, $filter)) {
+      } elseif (true === method_exists($this, $filter)) {
 	$this->$spec = $this->$filter($value);
-      } elseif (method_exists('Text', $filter)) {
+      } elseif (true === method_exists('Text', $filter)) {
 	$this->$spec = Text::$filter($value);
       } else {
 	$this->$spec = $filter($value);
@@ -100,56 +90,46 @@ class Request {
     }
   }
 
-  public function ParseGet($stack) {
-    $stack  = func_get_args();
+  public function ParseGet(...$stack) {
     $filter = array_shift($stack);
     $this->Parse('get', $filter, $stack);
   }
 
-  public function ParsePost($stack) {
-    $stack  = func_get_args();
+  public function ParsePost(...$stack) {
     $filter = array_shift($stack);
     $this->Parse('post', $filter, $stack);
   }
 
-  public function ParseRequest($stack) {
-    $stack  = func_get_args();
+  public function ParseRequest(...$stack) {
     $filter = array_shift($stack);
     $this->Parse('request', $filter, $stack);
   }
 
-  public function ParseGetInt($stack) {
-    $stack = func_get_args();
+  public function ParseGetInt(...$stack) {
     $this->Parse('get', 'intval', $stack);
   }
 
-  public function ParsePostInt($stack) {
-    $stack = func_get_args();
+  public function ParsePostInt(...$stack) {
     $this->Parse('post', 'intval', $stack);
   }
 
-  public function ParseGetOn($stack) {
-    $stack = func_get_args();
+  public function ParseGetOn(...$stack) {
     $this->Parse('get', 'IsOn', $stack);
   }
 
-  public function ParsePostOn($stack) {
-    $stack = func_get_args();
+  public function ParsePostOn(...$stack) {
     $this->Parse('post', 'IsOn', $stack);
   }
 
-  public function ParsePostStr($stack) {
-    $stack = func_get_args();
+  public function ParsePostStr(...$stack) {
     $this->Parse('post', 'Escape', $stack);
   }
 
-  public function ParseGetData($stack) {
-    $stack = func_get_args();
+  public function ParseGetData(...$stack) {
     $this->Parse('get', null, $stack);
   }
 
-  public function ParsePostData($stack) {
-    $stack = func_get_args();
+  public function ParsePostData(...$stack) {
     $this->Parse('post', null, $stack);
   }
 
@@ -160,7 +140,7 @@ class Request {
   //-- データ展開用 --//
   //全データ展開
   public function ToArray() {
-    $stack = array();
+    $stack = [];
     foreach ($this as $key => $value) {
       $stack[$key] = $value;
     }
@@ -172,7 +152,7 @@ class Request {
     if ($int) {
       return $this->$key ? URL::GetAddInt($key, $this->$key) : '';
     } else {
-      return $this->$key ? URL::GetAdd($key) : '';
+      return $this->$key ? URL::GetSwitch($key) : '';
     }
   }
 
@@ -196,7 +176,7 @@ class Request {
       return $_REQUEST;
 
     default:
-      return array();
+      return [];
     }
   }
 

@@ -20,6 +20,6 @@ class Option_boss_wolf extends OptionCheckbox {
   }
 
   public function GetWishRole() {
-    return array($this->name);
+    return [$this->name];
   }
 }

@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('medium');
 class Role_revive_medium extends Role_medium {
-  public $mix_in = array('vote' => 'poison_cat');
+  public $mix_in = ['vote' => 'poison_cat'];
 
   protected function OutputAddResult() {
     $this->OutputReviveResult();

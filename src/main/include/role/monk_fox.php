@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('child_fox');
 class Role_monk_fox extends Role_child_fox {
-  public $mix_in = array('necromancer');
+  public $mix_in = ['necromancer'];
   public $action = null;
   public $result = RoleAbility::MONK_FOX;
 

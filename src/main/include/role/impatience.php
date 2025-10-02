@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('chicken');
 class Role_impatience extends Role_chicken {
-  public $mix_in = array('decide');
+  public $mix_in = ['decide'];
 
   protected function GetStackVoteKillType() {
     return RoleStackVoteKill::TARGET;

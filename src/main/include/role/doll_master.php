@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('doll');
 class Role_doll_master extends Role_doll {
-  public $mix_in = array('protected');
+  public $mix_in = ['protected'];
 
   protected function IgnorePartner() {
     return true;

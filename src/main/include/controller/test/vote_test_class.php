@@ -1,14 +1,7 @@
 <?php
-//投票テスト
-class VoteTest {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//投票テストコントローラー
+final class VoteTestController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('game_view', true);
     include('data/vote_header.php');
 
@@ -16,7 +9,7 @@ class VoteTest {
     require_once('data/vote_flag.php');
 
     //仮想村
-    $stack = array('name' => GameMessage::ROOM_TITLE_FOOTER, 'status' => RoomStatus::PLAYING);
+    $stack = ['name' => GameMessage::ROOM_TITLE_FOOTER, 'status' => RoomStatus::PLAYING];
     DevRoom::Initialize($stack);
     include('data/vote_option.php');
 
@@ -28,7 +21,7 @@ class VoteTest {
     //仮想投票データ
     require_once('data/vote_room.php');
     RQ::GetTest()->vote = new stdClass();
-    RQ::GetTest()->vote->day = array();
+    RQ::GetTest()->vote->day = [];
     include('data/vote_target_day.php');
     include('data/vote_target_night.php');
 
@@ -43,7 +36,9 @@ class VoteTest {
     DevRoom::Load();
     DB::$ROOM->date = VoteTestRoom::DATE;
     DB::$ROOM->SetScene(VoteTestRoom::SCENE);
-    if (VoteTestRoom::TIME) DB::$ROOM->system_time = Time::Get(); //現在時刻を取得
+    if (VoteTestRoom::TIME) {
+      DB::$ROOM->system_time = Time::Get(); //現在時刻を取得
+    }
     RQ::GetTest()->winner = VoteTestRoom::WINNER;
 
     DevUser::Load();
@@ -58,16 +53,30 @@ class VoteTest {
 	RQ::GetTest()->talk_count[$user->id] = $user->id;
       }
     }
-    if (DB::$ROOM->IsDay()) include('data/vote_talk_count.php'); //沈黙禁止
+    if (DB::$ROOM->IsDay()) {
+      include('data/vote_talk_count.php'); //沈黙禁止
+    }
   }
 
-  //出力
-  private static function Output() {
-    if (VoteTestFlag::VOTE) self::OutputVote();  //投票表示モード
-    if (VoteTestFlag::CAST) self::OutputCast();  //配役情報表示モード
-    if (VoteTestFlag::TALK) self::OutputTalk();  //発言表示モード
-    if (VoteTestFlag::ROLE) self::OutputImage(); //画像表示モード
+  protected static function EnableCommand() {
+    return VoteTestFlag::VOTE || VoteTestFlag::CAST || VoteTestFlag::TALK || VoteTestFlag::ROLE;
+  }
 
+  protected static function RunCommand() {
+    if (VoteTestFlag::VOTE) { //投票表示モード
+      self::OutputVote();
+    } elseif (VoteTestFlag::CAST) { //配役情報表示モード
+      self::OutputCast();
+    } elseif (VoteTestFlag::TALK) { //発言表示モード
+      self::OutputTalk();
+    } elseif (VoteTestFlag::ROLE) { //画像表示モード
+      self::OutputImage();
+    } else { //ここに来たらロジックエラー
+      HTML::OutputResult(VoteTestMessage::TITLE, VoteMessage::INVALID_COMMAND);
+    }
+  }
+
+  protected static function Output() {
     HTML::OutputHeader(VoteTestMessage::TITLE, 'game_play', true);
     GameHTML::OutputPlayer();
     GameHTML::OutputDead();
@@ -112,17 +121,19 @@ class VoteTest {
 
     RQ::Set(RequestDataLogRoom::ROLE, false);
     require_once('data/vote_talk.php');
-    RQ::GetTest()->talk = array();
+    RQ::GetTest()->talk = [];
     foreach (VoteTestTalk::Get() as $stack) {
       $stack['scene'] = DB::$ROOM->scene;
       RQ::GetTest()->talk[] = new TalkParser($stack);
     }
 
     HTML::OutputHeader(VoteTestMessage::TITLE, 'game_play');
-    echo DB::$ROOM->GenerateCSS();
+    DB::$ROOM->OutputCSS();
     HTML::OutputBodyHeader();
     GameHTML::OutputPlayer();
-    if (DB::$SELF->id > 0) RoleHTML::OutputAbility();
+    if (DB::$SELF->id > 0) {
+      RoleHTML::OutputAbility();
+    }
     Talk::Output();
     HTML::OutputFooter(true);
   }
@@ -148,7 +159,7 @@ class VoteTest {
     }
     if ($list['weather']) {
       foreach (WeatherData::$list as $stack) {
-	ImageManager::Role()->Output('prediction_weather_' . $stack['event']);
+	ImageManager::Role()->Output('prediction_weather_' . $stack[WeatherData::EVENT]);
       }
     }
     HTML::OutputFooter(true);
@@ -193,7 +204,9 @@ class VoteTest {
     if (RQ::Get()->say == '') return;
     RoleTalk::Convert(RQ::Get()->say);
     Text::Escape(RQ::Get()->say, false);
-    RoleTalk::Save(RQ::Get()->say, RoomScene::DAY, 0);
+    $talk = new RoleTalkStruct(RQ::Get()->say);
+    $talk->Set(TalkStruct::SCENE, RoomScene::DAY);
+    RoleTalk::Store($talk);
   }
 
   //投票集計処理 (昼)
@@ -201,14 +214,14 @@ class VoteTest {
     $self_id = DB::$SELF->id;
     RQ::Get()->situation = VoteAction::VOTE_KILL;
     RQ::Get()->back_url  = '';
-    RQ::Get()->hash      = Security::GetHash(DB::$ROOM->id);
+    RQ::Get()->token     = Security::GetToken(DB::$ROOM->id);
     foreach (RQ::GetTest()->vote_target_day as $stack) {
       DB::LoadSelf($stack['id']);
       RQ::Set(RequestDataVote::TARGET, $stack[RequestDataVote::TARGET]);
       VoteDay::Execute();
     }
 
-    $stack = array();
+    $stack = [];
     foreach (ArrayFilter::Cast(VoteDay::Aggregate(), true) as $uname => $vote_data) {
       $vote_data['handle_name'] = DB::$USER->ByUname($uname)->handle_name;
       $vote_data['count']       = DB::$ROOM->revote_count + 1;
@@ -235,7 +248,7 @@ class VoteTest {
 
   //闇鍋配役 (系列合計)
   private static function OutputChaosSumGroup() {
-    $stack = array();
+    $stack = [];
     foreach (ChaosConfig::$chaos_hyper_random_role_list as $role => $rate) {
       ArrayFilter::Add($stack, RoleDataManager::GetGroup($role), $rate);
     }

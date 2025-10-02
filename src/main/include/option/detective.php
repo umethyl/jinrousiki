@@ -17,7 +17,7 @@ class Option_detective extends OptionCheckbox {
 
   public function SetRole(array &$list, $count) {
     $target_role = $this->GetTargetRole();
-    foreach (array('mania', 'common', 'human') as $role) {
+    foreach (['mania', 'common', 'human'] as $role) {
       if (OptionManager::Replace($list, $role, $target_role)) break;
     }
   }
@@ -35,7 +35,7 @@ class Option_detective extends OptionCheckbox {
     if (1 > count($stack)) return;
 
     $user = Lottery::Get($stack);
-    DB::$ROOM->Talk(sprintf(TalkMessage::DETECTIVE, $user->handle_name));
+    RoomTalk::StoreSystem(sprintf(TalkMessage::DETECTIVE, $user->handle_name));
 
     //霊界探偵モードなら探偵を霊界に送る
     if (DB::$ROOM->IsOption('gm_login') && DB::$ROOM->IsOption('not_open_cast') &&

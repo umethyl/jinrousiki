@@ -8,11 +8,11 @@
 RoleLoader::LoadFile('wizard');
 class Role_soul_wizard extends Role_wizard {
   protected function GetWizardResultList() {
-    return array(RoleAbility::MAGE, RoleAbility::GUARD, RoleAbility::HUNTED, RoleAbility::ASSASSIN);
+    return [RoleAbility::MAGE, RoleAbility::GUARD, RoleAbility::HUNTED, RoleAbility::ASSASSIN];
   }
 
   protected function GetWizardList() {
-    return array(
+    return [
       'soul_mage'	=> VoteAction::MAGE,
       'psycho_mage'	=> VoteAction::MAGE,
       'stargazer_mage'	=> VoteAction::MAGE,
@@ -21,6 +21,6 @@ class Role_soul_wizard extends Role_wizard {
       'soul_assassin'	=> VoteAction::ASSASSIN,
       'light_fairy'	=> VoteAction::FAIRY,
       'sex_mage'	=> VoteAction::MAGE
-    );
+    ];
   }
 }

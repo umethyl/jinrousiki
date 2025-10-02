@@ -1,19 +1,12 @@
 <?php
-//-- GameFrame 出力クラス --//
-class GameFrame {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//◆文字化け抑制◆//
+//-- GameFrame コントローラー --//
+final class GameFrameController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('game_frame', true);
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     GameFrameHTML::Output();
   }
 }

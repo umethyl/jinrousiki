@@ -47,7 +47,7 @@ class OptionFormHTML {
   //時刻入力フォーム生成 (リアルタイム制用)
   public static function GenerateRealtime(Option_real_time $filter, $day, $night) {
     return sprintf(self::GetRealTime(),
-      Text::Line($filter->GetExplain()), Message::SPACER,
+      Text::ConvertLine($filter->GetExplain()), Message::SPACER,
       OptionMessage::REALTIME_DAY, Message::COLON,
       $filter->name, $day, Message::MINUTE,
       OptionMessage::REALTIME_NIGHT, Message::COLON,
@@ -58,7 +58,7 @@ class OptionFormHTML {
   //発言数フォーム生成 (発言数制限制用)
   public static function GenerateLimitTalk(Option_limit_talk $filter, $count) {
     return sprintf(self::GetLimitTalk(),
-      Text::Line($filter->GetExplain()), Message::SPACER, $filter->name, $count
+      Text::ConvertLine($filter->GetExplain()), Message::SPACER, $filter->name, $count
     );
   }
 
@@ -66,7 +66,7 @@ class OptionFormHTML {
   public static function GenerateSelector(OptionSelector $filter, $str) {
     return sprintf(self::GetSelector(),
       $filter->name, $filter->form_name, $filter->on_change, $filter->label,
-      $str, Text::Line($filter->GetExplain())
+      $str, Text::ConvertLine($filter->GetExplain())
     );
   }
 

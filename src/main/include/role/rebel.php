@@ -10,15 +10,17 @@ class Role_rebel extends Role_authority {
     if (DB::$ROOM->IsEvent('no_authority')) return; //蜃気楼ならスキップ
 
     //データ取得
-    $count_list   = $this->GetStack('vote_count');
-    $message_list = $this->GetStack('vote_message');
+    $count_list   = $this->GetStack(VoteDayElement::COUNT_LIST);
+    $message_list = $this->GetStack(VoteDayElement::MESSAGE_LIST);
 
     //能力発動判定
     $role   = 'authority';
     $self   = $this->GetStack();
     $target = $this->GetStack($role);
     $uname  = $this->GetStack($this->role . '_uname');
-    if (is_null($self) || is_null($target) || $uname != $this->GetStack($role . '_uname')) return;
+    if (is_null($self) || is_null($target) || $uname != $this->GetStack($role . '_uname')) {
+      return;
+    }
 
     //権力者 -2 / 反逆者 -1
     $count = 0;
@@ -36,7 +38,7 @@ class Role_rebel extends Role_authority {
     $count_list[$uname] = $list;
 
     //データ保存
-    $this->SetStack($count_list,   'vote_count');
-    $this->SetStack($message_list, 'vote_message');
+    $this->SetStack($count_list,   VoteDayElement::COUNT_LIST);
+    $this->SetStack($message_list, VoteDayElement::MESSAGE_LIST);
   }
 }

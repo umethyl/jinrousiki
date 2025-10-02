@@ -59,9 +59,9 @@ class Role_guard extends Role {
 
   //護衛
   final public function Guard(User $user) {
-    $stack = array(); //護衛者検出
+    $stack = []; //護衛者検出
     foreach (RoleLoader::LoadFilter('guard') as $filter) {
-      ArrayFilter::Merge($stack, $filter->GetGuard($user->id));
+      ArrayFilter::AddMerge($stack, $filter->GetGuard($user->id));
     }
     //Text::p($stack, sprintf('◆List [gurad/%s]', $this->GetVoter()->uname));
 

@@ -6,7 +6,7 @@ class GameHTML {
     if (count($raw_list) < 1) return null; //投票総数
 
     $open_vote   = DB::$ROOM->IsOpenData() || DB::$ROOM->IsOption('open_vote'); //投票数開示判定
-    $table_stack = array();
+    $table_stack = [];
     foreach ($raw_list as $raw) { //個別投票データのパース
       extract($raw);
       $vote_target = $open_vote ? ' ' . $vote . ' ' . GameMessage::VOTE_UNIT : '';
@@ -45,7 +45,7 @@ class GameHTML {
       $str .= ' ' . self::GenerateHeaderLink($url . URL::GetReload($time), $value);
     }
 
-    return Text::Add(GameMessage::AUTO_RELOAD . Text::Quote($str));
+    return Text::LineFeed(GameMessage::AUTO_RELOAD . Text::Quote($str));
   }
 
   //勝敗生成
@@ -62,7 +62,7 @@ class GameHTML {
     $str    = HTML::GenerateLogLink($url, true, Text::BRLF . $header);
 
     $header = GameMessage::LOG_LINK_ROLE;
-    $url   .= URL::GetAdd(RequestDataLogRoom::ROLE);
+    $url   .= URL::GetSwitch(RequestDataLogRoom::ROLE);
     return $str . HTML::GenerateLogLink($url, false, Text::BRLF . $header);
   }
 
@@ -73,7 +73,7 @@ class GameHTML {
     //$stack->p(null, '◆Player');
 
     $count = 0; //改行カウントを初期化
-    $str   = Text::Add(self::GetPlayerHeader());
+    $str   = Text::LineFeed(self::GetPlayerHeader());
     foreach (DB::$USER->Get() as $id => $user) {
       $str .= Text::Fold($count++, TableHTML::GenerateTrLine());
 
@@ -99,8 +99,7 @@ class GameHTML {
 
       //アイコンと名前を設定
       $str .= sprintf($stack->image,
-        $path, $user->color, self::ConvertImageLine($user->profile),
-        Icon::GetTag(), $mouse,
+        $path, self::ConvertImageLine($user->profile), $user->color, Icon::GetSize(), $mouse,
         $td_header, $user->color, Message::SYMBOL, $user->handle_name
       );
 
@@ -112,9 +111,9 @@ class GameHTML {
 	$str .= self::GenerateOpenPlayer($id, $user, $stack);
       }
 
-      $str .= Text::Add(Text::BR . $live . TableHTML::GenerateTdFooter());
+      $str .= Text::LineFeed(Text::BR . $live . TableHTML::GenerateTdFooter());
     }
-    return Text::Add($str . self::GetPlayerFooter());
+    return Text::LineFeed($str . self::GetPlayerFooter());
   }
 
   //死亡メッセージ生成
@@ -148,7 +147,7 @@ class GameHTML {
     foreach (Lottery::GetList($stack_list) as $stack) { //表示順はランダム
       extract($stack);
       $str .= Text::Format(self::GetLastWords(),
-        $handle_name, GameMessage::LAST_WORDS_FOOTER, Text::Line($message)
+        $handle_name, GameMessage::LAST_WORDS_FOOTER, Text::ConvertLine($message)
       );
     }
 
@@ -182,7 +181,7 @@ class GameHTML {
 	   DB::$ROOM->IsOn(RoomMode::HEAVEN) ||
 	   DB::$ROOM->IsOn(RoomMode::LOG))
 	) {
-      $jump = self::GenerateJump() . URL::GetAdd(RequestDataRoom::DEAD);
+      $jump = self::GenerateJump() . URL::GetSwitch(RequestDataRoom::DEAD);
       $str  = GameMessage::JUMP_HEAVEN;
     } elseif (DB::$ROOM->IsAfterGame() && DB::$ROOM->IsOn(RoomMode::DEAD)) {
       $jump = self::GenerateJump();
@@ -217,7 +216,7 @@ class GameHTML {
       HTML::OutputJavaScript('game_async');
       //リクエストパラメータのハッシュ
       if (method_exists(RQ::Get(), 'GetRawUrlStack')) {
-        $params = array();
+        $params = [];
         foreach (RQ::Get()->GetRawUrlStack() as $name => $value) {
           $params[] = "'{$name}':'{$value}'";
         }
@@ -226,7 +225,7 @@ class GameHTML {
         $params = '{}';
       }
       //ゲーム進行のハッシュ
-      $room_status = array();
+      $room_status = [];
       $room_status[] = sprintf("'date':'%s'",  DB::$ROOM->date);
       $room_status[] = sprintf("'scene':'%s'", DB::$ROOM->scene);
       $room_status = '{'. ArrayFilter::ToCSV($room_status) . '}';
@@ -302,15 +301,15 @@ class GameHTML {
 
   //タイマー JavaScript コード出力 (リアルタイム用)
   public static function OutputTimer($end_time, $type = null, $flag = false) {
-    $end_date = GameTime::GetJavaScriptDate($end_time);
+    $end_date = GameTime::ConvertJavaScriptDate($end_time);
 
     HTML::OutputJavaScript('output_realtime');
     echo HTML::GenerateJavaScriptHeader();
     Text::Printf(self::GetTimer(),
       DB::$ROOM->IsDay() ? GameMessage::TIME_LIMIT_DAY : GameMessage::TIME_LIMIT_NIGHT,
-      GameTime::GetJavaScriptDate(DB::$ROOM->system_time),
+      GameTime::ConvertJavaScriptDate(DB::$ROOM->system_time),
       $end_date,
-      $end_date, GameTime::GetJavaScriptDate(DB::$ROOM->scene_start_time),
+      $end_date, GameTime::ConvertJavaScriptDate(DB::$ROOM->scene_start_time),
       Switcher::GetBool(isset($type)),
       isset($type) && class_exists('Sound') ? SoundHTML::Generate($type) : '',
       Switcher::GetBool($flag), TimeConfig::ALERT_DISTANCE
@@ -597,7 +596,7 @@ class GameHTML {
     case DeadReason::STEP:
       $base  = false;
       $class = 'step';
-      $stack = array();
+      $stack = [];
       foreach (Text::Parse(trim($name)) as $id) {
 	$stack[] = DB::$USER->ByID($id)->handle_name;
       }
@@ -626,15 +625,15 @@ class GameHTML {
       break;
     }
 
-    $str  = Text::Add(TableHTML::GenerateHeader('dead-type', false));
+    $str  = Text::LineFeed(TableHTML::GenerateHeader('dead-type', false));
     $str .= TableHTML::GenerateTrHeader(is_null($class) ? null : 'dead-type-' . $class);
     $str .= TableHTML::GenerateTd($name . DeadMessage::${$base ? 'deadman' : $action});
     if (isset($reason)) {
       $str .= TableHTML::GenerateTrLine();
       $str .= TableHTML::GenerateTd(Text::Quote($name . DeadMessage::$$reason));
     }
-    $str .= Text::Add(TableHTML::GenerateTrFooter());
-    $str .= Text::Add(TableHTML::GenerateFooter(false));
+    $str .= Text::LineFeed(TableHTML::GenerateTrFooter());
+    $str .= Text::LineFeed(TableHTML::GenerateFooter(false));
     return $str;
   }
 
@@ -642,13 +641,13 @@ class GameHTML {
   private static function GenerateWeather() {
     //スキップ判定
     if (DB::$ROOM->Stack()->IsEmpty('weather') ||
-	(DB::$ROOM->IsOn(RoomMode::LOG) && ! DB::$ROOM->IsTest() && DB::$ROOM->IsNight())) {
+	(DB::$ROOM->IsOn(RoomMode::LOG) && false === DB::$ROOM->IsTest() && DB::$ROOM->IsNight())) {
       return '';
     }
 
     $format  = HTML::GenerateDiv(GameMessage::WEATHER, 'weather');
     $weather = WeatherManager::Get(DB::$ROOM->Stack()->Get('weather'));
-    return sprintf($format, $weather['name'], $weather['caption']);
+    return sprintf($format, $weather[WeatherData::NAME], $weather[WeatherData::CAPTION]);
   }
 
   //死因表示判定処理
@@ -759,8 +758,8 @@ EOF;
   //プレイヤーアイコンタグ
   private static function GetPlayerImage() {
     return <<<EOF
-<img src="%s" style="border-color: %s;" alt="icon" title="%s" %s%s></td>
-%s<font color="%s">%s</font>%s
+<img src="%s" alt="icon" title="%s" style="border-color:%s;"%s%s></td>
+%s<span class="symbol" style="color:%s;">%s</span>%s
 EOF;
   }
 

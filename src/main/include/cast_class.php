@@ -1,6 +1,6 @@
 <?php
 //-- 配役基礎クラス --//
-class Cast {
+final class Cast {
   /* フラグ */
   const FORCE = 'force'; //強制開始モード
   const WISH  = 'wish';  //特殊村判定 (希望処理用)
@@ -23,7 +23,7 @@ class Cast {
   public static function Stack() {
     static $stack;
 
-    if (is_null($stack)) {
+    if (true === is_null($stack)) {
       $stack = new Stack();
     }
     return $stack;
@@ -41,8 +41,8 @@ class Cast {
   //人数とゲームオプションに応じた役職テーブルを返す
   public static function Get($user_count) {
     //人数に応じた配役リストを取得
-    if (! isset(CastConfig::$role_list[$user_count])) { //リストの有無をチェック
-      self::Output(sprintf(VoteMessage::NO_CAST_LIST, $user_count));
+    if (false === isset(CastConfig::$role_list[$user_count])) { //リストの有無をチェック
+      self::OutputError(sprintf(VoteMessage::NO_CAST_LIST, $user_count));
     }
     $role_list = CastConfig::$role_list[$user_count];
     //Text::p(DB::$ROOM->option_list, '◆OptionList');
@@ -68,13 +68,15 @@ class Cast {
       self::ReplaceRole($role_list); //村人置換村
     }
 
-    if (! is_array($role_list)) self::Output(VoteMessage::INVALID_CAST);
+    if (false === is_array($role_list)) {
+      self::OutputError(VoteMessage::INVALID_CAST);
+    }
 
     //役職名を格納した配列を生成
-    $role_fill_list = array();
+    $role_fill_list = [];
     foreach ($role_list as $role => $count) {
       if ($count < 0) { //人数をチェック
-	self::Output(sprintf(VoteMessage::INVALID_ROLE_COUNT, $role));
+	self::OutputError(sprintf(VoteMessage::INVALID_ROLE_COUNT, $role));
       }
       for (; $count > 0; $count--) {
 	$role_fill_list[] = $role;
@@ -88,21 +90,21 @@ class Cast {
 	Text::p($str);
 	return $role_fill_list;
       }
-      self::Output($str);
+      self::OutputError($str);
     }
 
     return $role_fill_list;
   }
 
   //役職を DB に登録
-  public static function Save() {
-    $uname_list = self::Stack()->Get(self::UNAME);
-    $flag       = DB::$ROOM->IsOption('detective');
-    if ($flag) {
-      $detective_list = array();
+  public static function Store() {
+    $uname_list   = self::Stack()->Get(self::UNAME);
+    $is_detective = DB::$ROOM->IsOption('detective');
+    if (true === $is_detective) {
+      $detective_list = [];
     }
 
-    $stack = array();
+    $stack = [];
     foreach (self::Stack()->Get(self::CAST) as $id => $fix_role) {
       $user = DB::$USER->ByUname($uname_list[$id]);
       $user->ChangeRole($fix_role);
@@ -112,7 +114,7 @@ class Cast {
 	ArrayFilter::Add($stack, $role);
       }
 
-      if ($flag && in_array('detective_common', $role_list)) {
+      if (true === $is_detective && in_array('detective_common', $role_list)) {
 	$detective_list[] = $user;
       }
     }
@@ -122,7 +124,9 @@ class Cast {
       $stack['joker'] = 1;
     }
     self::Stack()->Set(self::SUM, $stack);
-    if ($flag) self::Stack()->Set(self::DETECTIVE, $detective_list);
+    if (true === $is_detective) {
+      self::Stack()->Set(self::DETECTIVE, $detective_list);
+    }
   }
 
   //配役人数通知リストを生成する
@@ -130,7 +134,7 @@ class Cast {
     $filter = OptionManager::GetFilter('cast_message');
 
     //-- メイン役職 --//
-    if (is_null($filter)) {
+    if (true === is_null($filter)) {
       $header         = VoteMessage::ROLE_HEADER;
       $main_type      = '';
       $main_role_list = $role_count_list;
@@ -141,7 +145,7 @@ class Cast {
     }
 
     //-- サブ役職 --//
-    if (is_null($filter)) {
+    if (true === is_null($filter)) {
       $sub_type      = '';
       $sub_role_list = $role_count_list;
     } else {
@@ -150,9 +154,9 @@ class Cast {
     }
 
     //-- 出力メッセージ生成 --//
-    $stack = array();
+    $stack = [];
     foreach (RoleDataManager::GetDiff($main_role_list) as $role => $name) {
-      if ($css) {
+      if (true === $css) {
 	$name = RoleDataHTML::GenerateMain($role);
       }
       $stack[] = $name . $main_type . $main_role_list[$role];
@@ -166,7 +170,7 @@ class Cast {
 
   //配役フィルタリング処理
   public static function FilterRole($count, array $filter) {
-    $stack = array();
+    $stack = [];
     foreach (CastConfig::$role_list[$count] as $key => $value) {
       $role = 'human';
       foreach ($filter as $set_role => $target_role) {
@@ -194,13 +198,12 @@ class Cast {
 
   //身代わり君配役
   private static function CastDummyBoy() {
-    if (! DB::$ROOM->IsDummyBoy()) return;
+    if (false === DB::$ROOM->IsDummyBoy()) return;
 
     self::SetDummyBoy();
     //self::Stack()->p(self::CAST, '◆dummy_boy');
     if (self::Stack()->Count(self::CAST) < 1) {
-      $str = sprintf(VoteMessage::ERROR_CAST, VoteMessage::NO_CAST_DUMMY_BOY);
-      VoteHTML::OutputResult($str, ! DB::$ROOM->IsTest());
+      self::OutputError(VoteMessage::NO_CAST_DUMMY_BOY);
     }
 
     self::Stack()->Add(self::UNAME,   GM::DUMMY_BOY); //決定済みリスト登録
@@ -220,7 +223,8 @@ class Cast {
     }
 
     if (isset($fix_role)) {
-      if (($key = array_search($fix_role, $role_list)) !== false) {
+      $key = array_search($fix_role, $role_list);
+      if (false !== $key) {
 	self::Stack()->Add(self::CAST, $fix_role);
 	self::Stack()->DeleteKey(self::ROLE, $key);
       }
@@ -250,7 +254,7 @@ class Cast {
 
     //探偵村対応
     $role = 'detective_common';
-    if (DB::$ROOM->IsOption('detective') && ! in_array($role, $stack)) {
+    if (DB::$ROOM->IsOption('detective') && false === in_array($role, $stack)) {
       $stack[] = $role;
     }
     return $stack;
@@ -274,8 +278,7 @@ class Cast {
     $remain = $stack->Count(self::REMAIN);
     $role   = $stack->Count(self::ROLE);
     if ($remain != $role) {
-      $str = sprintf(VoteMessage::CAST_MISMATCH_REMAIN, $remain, $role);
-      VoteHTML::OutputResult(sprintf(VoteMessage::ERROR_CAST, $str), ! DB::$ROOM->IsTest());
+      self::OutputError(sprintf(VoteMessage::CAST_MISMATCH_REMAIN, $remain, $role));
     }
   }
 
@@ -286,7 +289,8 @@ class Cast {
 
     foreach ($stack->Get(self::USER) as $uname) {
       $role = self::GetWishRole($uname); //希望役職を取得
-      if (($key = self::GetWishRoleKey($role)) !== false) { //希望役職存在判定
+      $key  = self::GetWishRoleKey($role); //希望役職存在判定
+      if (false !== $key) {
 	$stack->Add(self::UNAME, $uname);
 	$stack->Add(self::CAST, $role);
 	$stack->DeleteKey(self::ROLE, $key);
@@ -301,10 +305,12 @@ class Cast {
   //希望役職取得
   private static function GetWishRole($uname) {
     $role = DB::$USER->GetWishRole($uname); //希望役職を取得
-    if ($role == '' || ! Lottery::Percent(CastConfig::WISH_ROLE_RATE)) return null;
+    if ($role == '' || false === Lottery::Percent(CastConfig::WISH_ROLE_RATE)) {
+      return null;
+    }
 
     if (self::Stack()->Get(self::WISH)) { //特殊村はグループ単位で希望処理を行なう
-      $stack = array();
+      $stack = [];
       foreach (self::Stack()->Get(self::ROLE) as $stack_role) {
 	if ($role == RoleDataManager::GetGroup($stack_role)) {
 	  $stack[] = $stack_role;
@@ -343,30 +349,24 @@ class Cast {
     //self::Stack()->p(self::UNAME, '◆Uname/2nd');
     //self::Stack()->p(self::CAST, '◆Role/2nd');
 
-    //配役結果チェック
-    $format     = VoteMessage::ERROR_CAST;
-    $reset_flag = ! DB::$ROOM->IsTest();
-
-    //配役決定者チェック
+    //-- 配役結果チェック --//
+    //配役決定者
     $user_count = self::Stack()->Get(self::COUNT);
     $fix_uname  = self::Stack()->Count(self::UNAME);
     if ($user_count != $fix_uname) {
-      $str = sprintf(VoteMessage::CAST_MISMATCH_USER, $user_count, $fix_uname);
-      VoteHTML::OutputResult(sprintf($format, $str), $reset_flag);
+      self::OutputError(sprintf(VoteMessage::CAST_MISMATCH_USER, $user_count, $fix_uname));
     }
 
-    //配役数チェック
+    //配役数
     $fix_role = self::Stack()->Count(self::CAST);
     if ($fix_uname != $fix_role) {
-      $str = sprintf(VoteMessage::CAST_MISMATCH_ROLE, $fix_uname, $fix_role);
-      VoteHTML::OutputResult(sprintf($format, $str), $reset_flag);
+      self::OutputError(sprintf(VoteMessage::CAST_MISMATCH_ROLE, $fix_uname, $fix_role));
     }
 
-    //残り配役数チェック
+    //残り配役数
     $role = self::Stack()->Count(self::ROLE);
     if ($role > 0) {
-      $str = sprintf(VoteMessage::CAST_REMAIN_ROLE, $role);
-      VoteHTML::OutputResult(sprintf($format, $str), $reset_flag);
+      self::OutputError(sprintf(VoteMessage::CAST_REMAIN_ROLE, $role));
     }
   }
 
@@ -386,7 +386,9 @@ class Cast {
     //self::Stack()->p(self::RAND,   '◆Rand');
 
     //闇鍋モード処理
-    if (DB::$ROOM->IsOption('no_sub_role') || ! DB::$ROOM->IsOptionGroup('chaos')) return;
+    if (DB::$ROOM->IsOption('no_sub_role') || false === DB::$ROOM->IsOptionGroup('chaos')) {
+      return;
+    }
 
     //ランダムなサブ役職のコードリストを作成
     $filter = OptionManager::GetFilter('cast_sub_role');
@@ -409,7 +411,7 @@ class Cast {
 
   //固定サブ役職配役 (テスト用)
   private static function CastFixSubRole() {
-    $stack = array('wisp', 'black_wisp', 'spell_wisp', 'foughten_wisp', 'gold_wisp');
+    $stack = ['wisp', 'black_wisp', 'spell_wisp', 'foughten_wisp', 'gold_wisp'];
     $rand_list      = self::Stack()->Get(self::RAND);
     $fix_uname_list = self::Stack()->Get(self::UNAME);
     $fix_role_list  = self::Stack()->Get(self::CAST);
@@ -446,7 +448,7 @@ class Cast {
   //闇鍋モード配役処理
   private static function SetChaos($user_count) {
     //-- 種別検出 --//
-    foreach (array('chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso') as $option) {
+    foreach (['chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso'] as $option) {
       if (DB::$ROOM->IsOption($option)) {
 	$base_name   = $option;
 	$chaos_verso = $option == 'chaos_verso';
@@ -460,19 +462,19 @@ class Cast {
     //Text::p($fix_role_list, sprintf('◆Fix(%d)', array_sum($fix_role_list)));
 
     //-- ランダム枠決定 --//
-    $random_role_list = array(); //ランダム配役結果
+    $random_role_list = []; //ランダム配役結果
     $boost_list = DB::$ROOM->GetOptionList('boost_rate'); //出現率補正リスト
     //Text::p($boost_list, '◆boost');
 
     //-- 最小出現補正 --//
-    if (! $chaos_verso) {
-      $stack = array(); //役職系統別配役数
+    if (false === $chaos_verso) {
+      $stack = []; //役職系統別配役数
       foreach ($fix_role_list as $role => $count) { //固定枠を系統別にカウント
 	ArrayFilter::Add($stack, RoleDataManager::GetGroup($role), $count);
       }
       //Text::p($stack, '◆Min: Fix: Group');
 
-      foreach (array('wolf', 'fox') as $role) {
+      foreach (['wolf', 'fox'] as $role) {
 	$name  = ChaosConfig::${sprintf('%s_%s_list', $base_name, $role)};
 	$min   = ChaosConfig::${sprintf('min_%s_rate', $role)};
 	$rate  = Lottery::GetChaos($name, $boost_list);
@@ -505,10 +507,10 @@ class Cast {
     //Text::p($role_list, sprintf('◆1st(%d)', array_sum($role_list)));
 
     //-- 上限補正 --//
-    if (! $chaos_verso) {
+    if (false === $chaos_verso) {
       //役職グループ毎に集計
-      $total_stack  = array(); //グループ別リスト (全配役)
-      $random_stack = array(); //グループ別リスト (ランダム)
+      $total_stack  = []; //グループ別リスト (全配役)
+      $random_stack = []; //グループ別リスト (ランダム)
       foreach ($role_list as $role => $count) {
 	$total_stack[RoleDataManager::GetGroup($role)][$role] = $count;
       }
@@ -517,7 +519,10 @@ class Cast {
       }
 
       foreach (ChaosConfig::$role_group_rate_list as $group => $rate) {
-	if (! ArrayFilter::IsArray($random_stack, $group)) continue;
+	if (false === ArrayFilter::IsAssoc($random_stack, $group)) {
+	  continue;
+	}
+
 	$target = $random_stack[$group];
 	$count  = array_sum($total_stack[$group]) - round($user_count / $rate);
 	//if ($count > 0) Text::p($count, "◆Calib [{$group}]"); //テスト用
@@ -543,7 +548,7 @@ class Cast {
     //-- 身代わり君モード補正 --//
     if (DB::$ROOM->IsDummyBoy()) {
       $dummy_count   = $user_count; //身代わり君対象役職数
-      $target_stack  = array(); //補正対象リスト
+      $target_stack  = []; //補正対象リスト
       $disable_stack = self::GetDummyBoyRoleList(); //身代わり君の対象外役職リスト
       foreach ($role_list as $role => $count) { //対象役職の情報を収集
 	foreach ($disable_stack as $disable_role) {
@@ -578,10 +583,13 @@ class Cast {
     }
 
     //-- 村人上限補正 --//
-    if (! $chaos_verso && ! DB::$ROOM->IsReplaceHumanGroup() && isset($role_list['human'])) {
+    if (false === $chaos_verso && false === DB::$ROOM->IsReplaceHumanGroup() &&
+	true === isset($role_list['human'])) {
       $role  = 'human';
       $count = $role_list[$role] - round($user_count / ChaosConfig::$max_human_rate);
-      if (DB::$ROOM->IsOption('gerd')) $count--;
+      if (DB::$ROOM->IsOption('gerd')) {
+	$count--;
+      }
       if ($count > 0) {
 	$name = ChaosConfig::${$base_name . '_replace_human_role_list'};
 	$rate = Lottery::GetChaos($name, $boost_list);
@@ -602,7 +610,7 @@ class Cast {
   private static function SetDuel($user_count) {
     CastConfig::InitializeDuel($user_count);
 
-    $stack = array();
+    $stack = [];
     if ($user_count >= array_sum(CastConfig::$duel_fix_list)) {
       foreach (CastConfig::$duel_fix_list as $role => $count) {
 	$stack[$role] = $count;
@@ -631,7 +639,7 @@ class Cast {
 
   //村人置換村の処理
   private static function ReplaceRole(array &$list) {
-    $stack = array();
+    $stack = [];
     foreach (array_keys(DB::$ROOM->option_role->list) as $option) { //処理順にオプションを登録
       if ($option == 'replace_human' || Text::IsPrefix($option, 'full_')) {
 	$stack[0][] = $option;
@@ -655,7 +663,9 @@ class Cast {
 	}
 
 	$count = ArrayFilter::GetInt($list, $role);
-	if ($role == 'human' && DB::$ROOM->IsOption('gerd')) $count--; //ゲルト君モード
+	if ($role == 'human' && DB::$ROOM->IsOption('gerd')) { //ゲルト君モード
+	  $count--;
+	}
 	if ($count > 0) {
 	  ArrayFilter::Replace($list, $role, $target, $count); //置換処理
 	}
@@ -664,7 +674,7 @@ class Cast {
   }
 
   //エラーメッセージ出力
-  private static function Output($str) {
-    VoteHTML::OutputResult(sprintf(VoteMessage::ERROR_CAST, $str), ! DB::$ROOM->IsTest());
+  private static function OutputError($str) {
+    VoteHTML::OutputResult(sprintf(VoteMessage::ERROR_CAST, $str), false === DB::$ROOM->IsTest());
   }
 }

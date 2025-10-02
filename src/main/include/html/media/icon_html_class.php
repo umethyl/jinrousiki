@@ -9,7 +9,9 @@ class IconHTML {
       現時点では GET で直接検索を試みたユーザーのセッション情報まで配慮していないが、
       いずれ必要になるかも知れない (enogu)
     */
-    if (is_null(RQ::Get()->page)) Session::Clear('icon_view');
+    if (is_null(RQ::Get()->page)) {
+      Session::Clear('icon_view');
+    }
 
     //編集フォームの表示
     if ($url == 'icon_view') {
@@ -40,7 +42,7 @@ class IconHTML {
     extract($stack);
     $size = UserIcon::GetMaxLength();
     Text::Printf(self::GetEdit(),
-      $icon_no, Icon::GetFile($icon_filename), $color,
+      $icon_no, Icon::GetFile($icon_filename), $icon_name, $color,
       IconMessage::NAME,	$icon_name,	$size,
       IconMessage::APPEARANCE,	$appearance,	$size,
       IconMessage::CATEGORY,	$category,	$size,
@@ -57,52 +59,43 @@ class IconHTML {
     //-- 検索フォームヘッダ出力 --//
     Text::Output(self::GetSearchHeader());
 
-    $url_option    = array();
-    $query_stack   = array();
-    $category_list = IconDB::GetCategory();
-
     //-- セレクタ出力 --//
-    $where = array();
+    $query      = Query::Init()->Table('user_icon')->Select()->WhereUpper('icon_no');
+    $list       = [0];
+    $sql_stack  = [];
+    $url_option = [];
     if ($base_url == 'user_manager') {
-      $where[] = IconDB::SetDisable();
+      $query->WhereNotTrue('disable');
     }
 
-    $stack = self::OutputSelector(RequestDataIcon::CATEGORY, IconMessage::CATEGORY);
-    if (0 < count($stack)) {
-      foreach ($stack as $data) {
-	$url_option[] = URL::GetList(RequestDataIcon::CATEGORY, $data);
+    $selector_list = [
+      RequestDataIcon::CATEGORY   => IconMessage::CATEGORY,
+      RequestDataIcon::APPEARANCE => IconMessage::APPEARANCE,
+      RequestDataIcon::AUTHOR     => IconMessage::AUTHOR
+    ];
+    foreach ($selector_list as $request => $message) {
+      $stack = self::OutputSelector($request, $message);
+      if (0 < count($stack)) {
+	foreach ($stack as $data) {
+	  $url_option[] = URL::GetList($request, $data);
+	}
+	ArrayFilter::AddMerge($list, IconDB::SetQueryIn($query, $request, $stack));
       }
-      $where[] = IconDB::GetInClause(RequestDataIcon::CATEGORY, $stack);
-    }
-
-    $stack = self::OutputSelector(RequestDataIcon::APPEARANCE, IconMessage::APPEARANCE);
-    if (0 < count($stack)) {
-      foreach ($stack as $data) {
-	$url_option[] = URL::GetList(RequestDataIcon::APPEARANCE, $data);
-      }
-      $where[] = IconDB::GetInClause(RequestDataIcon::APPEARANCE, $stack);
-    }
-
-    $stack = self::OutputSelector(RequestDataIcon::AUTHOR, IconMessage::AUTHOR);
-    if (0 < count($stack)) {
-      foreach ($stack as $data) {
-	$url_option[] = URL::GetList(RequestDataIcon::AUTHOR, $data);
-      }
-      $where[] = IconDB::GetInClause(RequestDataIcon::AUTHOR, $stack);
     }
 
     $stack = self::OutputSelector(RequestDataIcon::KEYWORD, IconMessage::KEYWORD);
     if (0 < count($stack)) {
-      $where[] = IconDB::SetLike($stack[0]);
+      $keyword = $stack[0];
+      ArrayFilter::AddMerge($list, IconDB::SetQueryLike($query, $keyword));
     } else {
-      $stack = array('');
+      $keyword = '';
     }
 
     //-- 検索フォームフッタ出力 --//
     Text::Printf(self::GetSearchFooter(),
       UserIconConfig::COLUMN * 2,
       HTML::GenerateChecked(RQ::Get()->sort_by_name), IconMessage::SORT_BY_NAME,
-      IconMessage::KEYWORD_INPUT, $stack[0], IconMessage::SEARCH
+      IconMessage::KEYWORD_INPUT, $keyword, IconMessage::SEARCH
     );
 
     //検索結果の表示
@@ -124,10 +117,10 @@ class IconHTML {
     $CONF->view       = IconConfig::VIEW;
     $CONF->page       = IconConfig::PAGE;
     $CONF->url        = $base_url;
-    $CONF->count      = IconDB::Count($where);
+    $CONF->count      = IconDB::Count($query, $list);
     $CONF->current    = RQ::Get()->page;
     $CONF->option     = $url_option;
-    $CONF->attributes = array('onClick' => 'return "return submit_icon_search(\'$page\');";');
+    $CONF->attributes = ['onClick' => 'return "return submit_icon_search(\'$page\');";'];
     if (RQ::Get()->room_no > 0) {
       $CONF->option[] = URL::GetInt(RequestDataGame::ID, RQ::Get()->room_no);
     }
@@ -141,7 +134,7 @@ class IconHTML {
     //アイコン情報の表示
     if (isset($method)) {
       $column = 0;
-      foreach (IconDB::GetList($where) as $icon_info) {
+      foreach (IconDB::GetList($query, $list) as $icon_info) {
 	self::$method($icon_info, 162);
 	TableHTML::OutputFold(++$column, UserIconConfig::COLUMN);
       }
@@ -169,7 +162,7 @@ class IconHTML {
     }
     Text::Printf(self::GetSelector(), $type, $caption, $type, Message::FORM_ALL, $str);
 
-    return in_array('__all__', $target) ? array() : $target;
+    return in_array('__all__', $target) ? [] : $target;
   }
 
   //アイコン詳細画面 (IconView 用)
@@ -180,19 +173,19 @@ class IconHTML {
       $icon_name = sprintf('<s>%s</s>', $icon_name);
     }
     $data = '';
-    if (! empty($appearance)) {
+    if (false === empty($appearance)) {
       $data .= Text::Format('<li>[S]%s</li>', $appearance);
     }
-    if (! empty($category)) {
+    if (false === empty($category)) {
       $data .= Text::Format('<li>[C]%s</li>', $category);
     }
-    if (! empty($author)) {
+    if (false === empty($author)) {
       $data .= Text::Format('<li>[A]%s</li>', $author);
     }
 
     Text::Printf(self::GetDetailForIconView(),
       $edit_url, $icon_width + 6,
-      $icon_name, Icon::GetFile($icon_filename), $icon_width, $icon_height, $color,
+      Icon::GetFile($icon_filename), $icon_name, $icon_width, $icon_height, $color,
       $cell_width - $icon_width,
       $edit_url, $icon_no,
       $edit_url, $icon_name,
@@ -207,7 +200,7 @@ class IconHTML {
     $info_width    = $cell_width - $wrapper_width;
 
     Text::Printf(self::GetDetailForUserEntry(),
-      $icon_no, $icon_name, Icon::GetFile($icon_filename), $icon_width, $icon_height, $color,
+      $icon_no, Icon::GetFile($icon_filename), $icon_name, $icon_width, $icon_height, $color,
       $icon_no, $icon_no, $icon_no,
       $color, Message::SYMBOL, $icon_name
     );
@@ -222,7 +215,7 @@ class IconHTML {
     }
     $end_page = min($page_count, $CONFIG->current + $CONFIG->page - 1);
 
-    $url_stack = array(Text::QuoteBracket(isset($CONFIG->title) ? $CONFIG->title : 'Page'));
+    $url_stack = [Text::QuoteBracket(isset($CONFIG->title) ? $CONFIG->title : 'Page')];
     //表示ページ数調整 (先頭側)
     if ($CONFIG->current > 1 && $page_count > $CONFIG->page) {
       $url_stack[] = self::GeneratePageLink($CONFIG, 1, Text::QuoteBracket(1) . '...');
@@ -246,18 +239,24 @@ class IconHTML {
 
   //ページ送り用のリンクタグを作成する
   private static function GeneratePageLink(stdClass $CONFIG, $page, $title = null) {
-    if ($page == $CONFIG->current) return Text::QuoteBracket($page);
+    if ($page == $CONFIG->current) {
+      return Text::QuoteBracket($page);
+    }
+
     $option = (isset($CONFIG->page_type) ? $CONFIG->page_type : 'page') . '=' . $page;
     $list   = $CONFIG->option;
     array_unshift($list, $option);
-    $url = $CONFIG->url . URL::GetExt() . ArrayFilter::Concat($list, '&');
-    $attributes = array();
+    $url = $CONFIG->url . URL::GetExt() . URL::Concat($list);
+    $attributes = [];
     if (isset($CONFIG->attributes)) {
       foreach ($CONFIG->attributes as $attr => $value) {
 	$attributes[] = $attr . '="'. eval($value) . '"';
       }
     }
-    if (is_null($title)) $title = Text::QuoteBracket($page);
+    if (is_null($title)) {
+      $title = Text::QuoteBracket($page);
+    }
+
     return sprintf('<a href="%s" %s>%s</a>', $url, ArrayFilter::Concat($attributes), $title);
   }
 
@@ -268,7 +267,7 @@ class IconHTML {
 <input type="hidden" name="icon_no" value="%d">
 <table cellpadding="3">
 <tr>
-  <td rowspan="7"><img src="%s" style="border:3px solid %s;"></td>
+  <td rowspan="7"><img src="%s" alt="%s" style="border:3px solid %s;"></td>
   <td><label for="name">%s</label></td>
   <td><input type="text" id="name" name="icon_name" value="%s" %s></td>
 </tr>
@@ -386,14 +385,14 @@ EOF;
     return <<<EOF
 <td class="icon-details">
 <a href="%s" class="icon_wrapper" style="width:%dpx">
-<img alt="%s" src="%s" width="%d" height="%d" style="border:3px solid %s;">
+<img src="%s" alt="%s" width="%d" height="%d" style="border:3px solid %s;">
 </a>
 </td>
 <td class="icon-details">
 <ul style="width:%dpx;">
 <li><a href="%s">No. %d</a></li>
 <li><a href="%s">%s</a></li>
-<li><font color="%s">%s</font>%s</li>
+<li><span style="color:%s;">%s</span>%s</li>
 %s</ul>
 </td>
 EOF;
@@ -402,9 +401,9 @@ EOF;
   //アイコン詳細画面タグ (UserEntry 用)
   private static function GetDetailForUserEntry() {
     return <<<EOF
-<td class="icon_details"><label for="icon_%d"><img alt="%s" src="%s" width="%d" height="%d" style="border:3px solid %s;"><br clear="all">
+<td class="icon_details"><label for="icon_%d"><img src="%s" alt="%s" width="%d" height="%d" style="border:3px solid %s;"><br clear="all">
 <input type="radio" id="icon_%d" name="icon_no" value="%d"> No. %d<br>
-<font color="%s">%s</font>%s</label></td>
+<span style="color:%s;">%s</span>%s</label></td>
 EOF;
   }
 }

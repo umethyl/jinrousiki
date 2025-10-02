@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('child_fox');
 class Role_jammer_fox extends Role_child_fox {
-  public $mix_in = array('vote' => 'jammer_mad');
+  public $mix_in = ['vote' => 'jammer_mad'];
   public $result = null;
 
   protected function IsSetJammer() {

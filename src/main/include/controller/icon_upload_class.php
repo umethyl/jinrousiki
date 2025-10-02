@@ -1,25 +1,24 @@
 <?php
-//-- アイコンアップロード処理クラス --//
-class IconUpload {
+//-- アイコンアップローダーコントローラー --//
+final class IconUploadController extends JinrouController {
   const URL = 'icon_upload.php';
 
-  //実行
-  public static function Execute() {
-    self::Load();
-    isset(RQ::Get()->command) ? self::Upload() : self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+  protected static function Start() {
     if (UserIconConfig::DISABLE) {
       HTML::OutputResult(IconUploadMessage::TITLE, IconUploadMessage::DISABLE);
     }
+  }
+
+  protected static function Load() {
     Loader::LoadRequest('icon_upload');
   }
 
-  //登録
-  private static function Upload() {
-    if (Security::CheckReferer(self::URL)) { //リファラチェック
+  protected static function EnableCommand() {
+    return isset(RQ::Get()->command);
+  }
+
+  protected static function RunCommand() {
+    if (Security::IsInvalidReferer(self::URL)) { //リファラチェック
       HTML::OutputResult(IconUploadMessage::TITLE, IconUploadMessage::REFERER);
     }
 
@@ -42,7 +41,7 @@ class IconUpload {
 
     //アップロードされたファイルのエラーチェック
     if (@$_FILES['upfile']['error'][$i] != 0) {
-      self::OutputResult(Text::Concat(IconUploadMessage::FILE_UPLOAD, IconUploadMessage::RETRY));
+      self::OutputResult(Text::Join(IconUploadMessage::FILE_UPLOAD, IconUploadMessage::RETRY));
     }
     extract(RQ::ToArray()); //引数を展開
     $back_url = self::GetURL();
@@ -50,15 +49,15 @@ class IconUpload {
     if ($icon_name == '') { //空白チェック
       self::OutputResult(IconUploadMessage::NAME);
     }
-    UserIcon::CheckText(IconUploadMessage::TITLE, $back_url); //アイコン名の文字列長のチェック
-    $color = UserIcon::CheckColor($color, IconUploadMessage::TITLE, $back_url); //色指定のチェック
+    UserIcon::ValidateText(IconUploadMessage::TITLE, $back_url); //アイコン名の文字列長チェック
+    $color = UserIcon::ValidateColor($color, IconUploadMessage::TITLE, $back_url); //色指定チェック
 
     //ファイルサイズのチェック
     if ($size == 0) {
       self::OutputResult(IconUploadMessage::FILE_EMPTY);
     }
     if ($size > UserIconConfig::FILE) {
-      self::OutputResult(IconUploadMessage::FILE_SIZE. UserIcon::GetFileLimit());
+      self::OutputResult(IconUploadMessage::FILE_SIZE . UserIcon::GetFileLimit());
     }
 
     //ファイルの種類のチェック
@@ -85,7 +84,7 @@ class IconUpload {
     //アイコンの高さと幅をチェック
     list($width, $height) = getimagesize($tmp_name);
     if ($width > UserIconConfig::WIDTH || $height > UserIconConfig::HEIGHT) {
-      $str = Text::Concat(
+      $str = Text::Join(
 	sprintf(IconUploadMessage::SIZE_LIMIT, UserIcon::GetSizeLimit()),
 	sprintf(IconUploadMessage::UPLOAD_SIZE, $width, $height)
       );
@@ -93,7 +92,7 @@ class IconUpload {
     }
 
     DB::Connect();
-    if (! DB::Lock('icon')) { //トランザクション開始
+    if (false === DB::Lock('icon')) { //トランザクション開始
       self::OutputResult(Message::DB_ERROR_LOAD);
     }
 
@@ -111,7 +110,7 @@ class IconUpload {
     //ファイルをテンポラリからコピー
     $file_name = sprintf('%03s.%s', $icon_no, $ext); //ファイル名の桁を揃える
     if (! move_uploaded_file($tmp_name, Icon::GetFile($file_name))) {
-      self::OutputResult(Text::Concat(IconUploadMessage::FILE_COPY, IconUploadMessage::RETRY));
+      self::OutputResult(Text::Join(IconUploadMessage::FILE_COPY, IconUploadMessage::RETRY));
     }
 
     //データベースに登録
@@ -145,15 +144,21 @@ class IconUpload {
       self::OutputResult(Message::DB_ERROR_LOAD);
     }
 
-    $list  = array();
-    $stack = array(
+    $list  = [];
+    $stack = [
       RequestDataIcon::ID, RequestDataIcon::NAME, RequestDataIcon::COLOR,
       'file_name', 'width', 'height', 'data'
-    );
+    ];
     foreach ($stack as $key) {
       $list[$key] = $$key;
     }
     self::OutputConfirm($list);
+  }
+
+  protected static function Output() {
+    HTML::OutputHeader(IconUploadMessage::TITLE, 'icon_upload', true);
+    IconUploadHTML::Output();
+    HTML::OutputFooter();
   }
 
   //登録完了
@@ -162,17 +167,17 @@ class IconUpload {
     $str = IconUploadMessage::SUCCESS . IconUploadMessage::JUMP_VIEW;
 
     DB::Connect();
-    if (! IconDB::ClearSession(RQ::Get()->icon_no)) {
-      $str = Text::Concat($str, IconUploadMessage::SESSION_DELETE);
+    if (false === IconDB::ClearSession(RQ::Get()->icon_no)) {
+      $str = Text::Join($str, IconUploadMessage::SESSION_DELETE);
     }
-    $str = Text::Concat($str, URL::GetJump($url));
+    $str = Text::Join($str, URL::GetJump($url));
     HTML::OutputResult(IconUploadMessage::SUCCESS, $str, $url);
   }
 
   //登録キャンセル
   private static function UploadCancel() {
      DB::Connect();
-    if (! DB::Lock('icon')) { //トランザクション開始
+    if (false === DB::Lock('icon')) { //トランザクション開始
       self::OutputResult(IconUploadMessage::DB_ERROR);
     }
 
@@ -187,23 +192,16 @@ class IconUpload {
       self::OutputResult(IconUploadMessage::SESSION);
     }
 
-    if (! IconDB::Delete(RQ::Get()->icon_no, $icon_filename)) { //削除処理
+    if (false === IconDB::Delete(RQ::Get()->icon_no, $icon_filename)) { //削除処理
       self::OutputResult(IconUploadMessage::DB_ERROR);
     }
     DB::Disconnect();
 
     $url = 'icon_upload.php';
-    $str = Text::Concat(
+    $str = Text::Join(
       IconUploadMessage::DELETE . IconUploadMessage::JUMP_UPLOAD, URL::GetJump($url)
     );
     HTML::OutputResult(IconUploadMessage::DELETE, $str, $url);
-  }
-
-  //出力
-  private static function Output() {
-    HTML::OutputHeader(IconUploadMessage::TITLE, 'icon_upload', true);
-    IconUploadHTML::Output();
-    HTML::OutputFooter();
   }
 
   //確認画面出力

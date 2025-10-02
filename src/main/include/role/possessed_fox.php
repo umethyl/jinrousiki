@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_possessed_fox extends Role_fox {
-  public $mix_in = array('vote' => 'possessed_mad');
+  public $mix_in = ['vote' => 'possessed_mad'];
 
   protected function OutputAddResult() {
     $this->OutputPossessed();

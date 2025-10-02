@@ -20,7 +20,7 @@ class Camp extends BaseCamp {
 }
 
 //-- 陣営グループリスト (Camp/Group) --//
-class CampGroup extends Camp {
+final class CampGroup extends Camp {
   const MAGE		= 'mage';
   const NECROMANCER	= 'necromancer';
   const MEDIUM		= 'medium';
@@ -49,7 +49,7 @@ class CampGroup extends Camp {
 }
 
 //-- 勝利陣営リスト (Camp/Win) --//
-class WinCamp extends BaseCamp {
+final class WinCamp extends BaseCamp {
   const FOX_HUMAN	= 'fox1';
   const FOX_WOLF	= 'fox2';
   const DRAW		= 'draw';

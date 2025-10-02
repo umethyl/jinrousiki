@@ -26,7 +26,7 @@ class Role_decide extends Role {
 
   //処刑者候補取得
   final protected function GetVotePossible() {
-    return $this->GetStack('vote_possible');
+    return $this->GetStack(VoteDayElement::VOTE_POSSIBLE);
   }
 
   //最大得票者投票者ユーザ名取得
@@ -36,7 +36,7 @@ class Role_decide extends Role {
 
   //処刑者ユーザ名登録
   final protected function SetVoteKill($uname) {
-    return $this->SetStack($uname, 'vote_kill_uname');
+    return $this->SetStack($uname, VoteDayElement::VOTE_KILL);
   }
 
   //単一処刑者候補判定

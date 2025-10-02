@@ -11,13 +11,13 @@ class Role_cupid extends Role {
 
   protected function GetPartner() {
     $id    = $this->GetID();
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsPartner('lovers', $id) || $this->IsCupidPartner($user, $id)) {
 	$stack[] = $user->handle_name;
       }
     }
-    return array('cupid_pair' => $stack);
+    return ['cupid_pair' => $stack];
   }
 
   //自分の作った恋人判定
@@ -63,13 +63,13 @@ class Role_cupid extends Role {
     return 2;
   }
 
-  public function SetVoteNightUserList(array $list) {
+  public function SetVoteNightTargetList(array $list) {
     $self_shoot = false; //自分撃ち実行フラグ
-    $user_list  = array();
+    $user_list  = [];
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      $str  = $this->IgnoreVoteNight($user, $user->IsLive()); //例外判定
+      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
       if (! is_null($str)) return $str;
       $user_list[$id] = $user;
       $self_shoot |= $this->IsActor($user); //自分撃ち判定
@@ -90,7 +90,7 @@ class Role_cupid extends Role {
   public function VoteNightAction() {
     $role  = $this->GetActor()->GetID('lovers');
     $list  = $this->GetStack('target_list');
-    $stack = array();
+    $stack = [];
     foreach ($list as $user) {
       $stack[] = $user->handle_name;
       if ($this->IsLoversTarget($user)) {
@@ -117,7 +117,7 @@ class Role_cupid extends Role {
 
   //全恋人ID取得
   final protected function GetLoversList() {
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsRole('lovers')) {
 	$stack[] = $user->id;

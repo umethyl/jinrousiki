@@ -13,11 +13,11 @@ class Role_protected extends Role {
   public function WolfEatResist() {
     if ($this->IgnoreSacrifice()) return false;
 
-    $stack = array();
+    $stack = [];
     foreach ($this->GetActor()->GetPartner($this->role) as $id) {
-      if (DB::$USER->ByID($id)->IsLive(true)) {
-	$stack[] = $id;
-      }
+      $user = DB::$USER->ByID($id);
+      if ($this->IgnoreSacrificeTarget($user)) continue;
+      $stack[] = $id;
     }
     return $this->Sacrifice($stack);
   }
@@ -26,10 +26,9 @@ class Role_protected extends Role {
   public function WolfEatReaction() {
     if ($this->IgnoreSacrifice()) return false;
 
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->Get() as $user) {
-      if ($user->IsDead(true) || RoleUser::IsAvoidLovers($user, true)) continue;
-
+      if ($this->IgnoreSacrificeTarget($user)) continue;
       if ($this->CallParent('IsSacrifice', $user)) {
 	$stack[] = $user->id;
       }
@@ -40,6 +39,11 @@ class Role_protected extends Role {
   //身代わり対象判定
   protected function IsSacrifice(User $user) {
     return false;
+  }
+
+  //身代わり無効対象判定
+  private function IgnoreSacrificeTarget(User $user) {
+    return $user->IsDead(true) || RoleUser::IsAvoidLovers($user, true);
   }
 
   //身代わり無効判定

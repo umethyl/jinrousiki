@@ -24,7 +24,7 @@ class Request_old_log extends Request {
 
   //個別ログページのヘッダリンク生成
   public function GetURL() {
-    $stack = array(
+    $stack = [
       RequestDataLogRoom::REVERSE	=> '逆',
       RequestDataLogRoom::HEAVEN	=> '霊',
       RequestDataLogRoom::HEAVEN_ONLY	=> '逝',
@@ -35,7 +35,7 @@ class Request_old_log extends Request {
       RequestDataLogRoom::WATCH		=> '観',
       RequestDataLogRoom::WOLF		=> '狼',
       RequestDataLogRoom::PERSONAL	=> '結'
-    );
+    ];
     $url = '';
     foreach ($stack as $i => $name) {
       $base_url = URL::GetRoom('old_log', $this->room_no);
@@ -43,9 +43,9 @@ class Request_old_log extends Request {
 	if ($j == $i) continue;
 	$base_url .= $this->ToURL($j);
       }
-      $base_url .= ($this->$i ? '' : URL::GetAdd($i)) . URL::GetDB();
+      $base_url .= ($this->$i ? '' : URL::GetSwitch($i)) . URL::GetAddDB();
       $link_url  = OldLogHTML::GenerateSwitchLink($base_url, $name, Switcher::Get($this->$i));
-      $url .= Text::Add($link_url);
+      $url .= Text::LineFeed($link_url);
     }
 
     return $url;

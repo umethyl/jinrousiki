@@ -6,7 +6,8 @@
 */
 RoleLoader::LoadFile('passion');
 class Role_weekly extends Role_passion {
-  public $convert_say_list = array(
+  public $convert_say_list = [
     '月' => '火', '火' => '水', '水' => '木', '木' => '金',
-    '金' => '土', '土' => '日', '日' => '月');
+    '金' => '土', '土' => '日', '日' => '月'
+  ];
 }

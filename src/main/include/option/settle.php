@@ -16,7 +16,7 @@ class Option_settle extends OptionCheckbox {
 
   //処刑者決定
   public function DecideVoteKill() {
-    $vote_kill_uname = Lottery::Get(RoleManager::Stack()->Get('vote_possible'));
-    RoleManager::Stack()->Set('vote_kill_uname', $vote_kill_uname);
+    $uname = Lottery::Get(RoleManager::Stack()->Get(VoteDayElement::VOTE_POSSIBLE));
+    RoleManager::Stack()->Set(VoteDayElement::VOTE_KILL, $uname);
   }
 }

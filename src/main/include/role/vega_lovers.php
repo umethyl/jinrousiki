@@ -9,7 +9,7 @@
   ・人狼襲撃耐性：無効
 */
 class Role_vega_lovers extends Role {
-  public $mix_in = array('decide', 'watcher', 'upper_luck');
+  public $mix_in = ['decide', 'watcher', 'upper_luck'];
 
   protected function IgnoreAbility() {
     return DB::$ROOM->date < 2;

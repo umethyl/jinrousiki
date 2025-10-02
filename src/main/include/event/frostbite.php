@@ -6,8 +6,8 @@
 */
 class Event_frostbite extends Event {
   public function VoteKillAction() {
-    $stack = array();
-    foreach (RoleManager::Stack()->Get('user_list') as $id => $uname) {
+    $stack = [];
+    foreach (RoleManager::Stack()->Get(VoteDayElement::USER_LIST) as $id => $uname) {
       $user = DB::$USER->ByID($id);
       if ($user->IsLive(true) && ! RoleUser::IsAvoid($user, true) &&
 	  ! $user->IsDoomRole($this->name)) {

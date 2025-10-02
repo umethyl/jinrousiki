@@ -7,13 +7,13 @@ class JinrouCookie {
   public static $vote_result;	//投票結果
   public static $vote_count;	//投票回数
   public static $user_count;	//参加人数
-  public static $objection_list = array(); //最新の「異議」あり情報
+  public static $objection_list = []; //最新の「異議」あり情報
 
   //ユーザー登録時の初期化処理
   public static function Initialize() {
     DB::$ROOM->system_time = Time::Get(); //現在時刻を取得
     $time = DB::$ROOM->system_time - self::TIME;
-    foreach (array('scene', 'objection', 'vote_result', 'vote_count', 'user_count') as $key) {
+    foreach (['scene', 'objection', 'vote_result', 'vote_count', 'user_count'] as $key) {
       setcookie($key, '', $time);
     }
   }

@@ -9,7 +9,7 @@ RoleLoader::LoadFile('mind_read');
 class Role_mind_friend extends Role_mind_read {
   protected function GetPartner() {
     $target = $this->GetActor()->GetPartnerList();
-    $stack  = array();
+    $stack  = [];
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
       if ($this->IsActor($user)) continue;
       if ($user->IsPartner($this->role, $target)) {
@@ -17,7 +17,7 @@ class Role_mind_friend extends Role_mind_read {
       }
     }
     ksort($stack);
-    return array($this->role . '_list' => $stack);
+    return [$this->role . '_list' => $stack];
   }
 
   public function IsMindRead() {

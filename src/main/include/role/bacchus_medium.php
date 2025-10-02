@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('medium');
 class Role_bacchus_medium extends Role_medium {
-  public $mix_in = array('critical_mad', 'chicken');
+  public $mix_in = ['critical_mad', 'chicken'];
 
   protected function GetStackVoteKillType() {
     return RoleStackVoteKill::INIT;

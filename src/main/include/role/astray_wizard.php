@@ -8,11 +8,11 @@
 RoleLoader::LoadFile('wizard');
 class Role_astray_wizard extends Role_wizard {
   protected function GetWizardResultList() {
-    return array();
+    return [];
   }
 
   protected function GetWizardList() {
-    return array(
+    return [
       'reverse_assassin'	=> VoteAction::ASSASSIN,
       'jammer_mad'		=> VoteAction::JAMMER,
       'voodoo_mad'		=> VoteAction::VOODOO_MAD,
@@ -20,6 +20,6 @@ class Role_astray_wizard extends Role_wizard {
       'snow_trap_mad'		=> VoteAction::TRAP,
       'doom_fox'		=> VoteAction::ASSASSIN,
       'dark_fairy'		=> VoteAction::FAIRY
-    );
+    ];
   }
 }

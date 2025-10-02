@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('authority');
 class Role_wirepuller_luck extends Role_authority {
-  public $mix_in = array('disfavor');
+  public $mix_in = ['disfavor'];
 
   protected function IgnoreAbility() {
     return DB::$ROOM->date < 2;

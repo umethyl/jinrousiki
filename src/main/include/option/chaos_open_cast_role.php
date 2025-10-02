@@ -26,7 +26,7 @@ class Option_chaos_open_cast_role extends Option_chaos_open_cast_none {
   }
 
   public function GetCastMessageMainRoleList(array $role_count_list) {
-    $stack = array();
+    $stack = [];
     foreach ($role_count_list as $role => $count) {
       if (RoleDataManager::IsMain($role)) {
 	ArrayFilter::Add($stack, RoleDataManager::GetGroup($role), $count);

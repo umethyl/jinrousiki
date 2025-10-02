@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('escaper');
 class Role_stargazer_escaper extends Role_escaper {
-  public $mix_in = array('stargazer_mage');
+  public $mix_in = ['stargazer_mage'];
 
   protected function EscapeFailed(User $user) {
     return $this->Stargazer($user) == 'stargazer_mage_ability';

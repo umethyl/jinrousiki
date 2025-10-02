@@ -8,16 +8,21 @@ class GamePlayHTML {
 
   //ログリンク出力
   public static function OutputLogLink($header, $scene, $caption, $date = null) {
-    if (isset($date)) {
-      Text::Printf($header . '&date=%d&scene=%s">%d(%s)</a>', $date, $scene, $date, $caption);
+    if (true === isset($date)) {
+      $header .= URL::GetAddInt(RequestDataGameLog::DATE, $date);
+      $str = $date . Text::Quote($caption);
     } else {
-      Text::Printf($header . '&scene=%s">%s</a>', $scene, $caption);
+      $str = $caption;
     }
+    $header .= URL::GetAddString(RequestDataGameLog::SCENE, $scene);
+    Text::Printf($header . '">%s</a>', $str);
   }
 
   //ヘッダーリンク出力
   public static function OutputHeaderLink($url, $add_url, $type = null) {
-    if (is_null($type)) $type = $url;
+    if (true === is_null($type)) {
+      $type = $url;
+    }
     Text::Printf(self::GetHeaderLink(), $url, $add_url, self::GetHeaderStr($type));
   }
 
@@ -26,7 +31,7 @@ class GamePlayHTML {
     if (RQ::Get()->$type) {
       $switch = Switcher::ON;
     } else {
-      $url   .= URL::GetAdd($type);
+      $url   .= URL::GetSwitch($type);
       $switch = Switcher::OFF;
     }
     Text::Printf(self::GetHeaderSwitchLink(), $url, $switch, self::GetHeaderStr($type));
@@ -37,7 +42,7 @@ class GamePlayHTML {
     if (RQ::Get()->$type) {
       $switch = Switcher::OFF;
     } else {
-      $url   .= URL::GetAdd($type);
+      $url   .= URL::GetSwitch($type);
       $switch = Switcher::ON;
     }
     GameHTML::OutputHeaderLink($url, self::GetHeaderStr($type . '_' . $switch));
@@ -71,7 +76,8 @@ class GamePlayHTML {
   //異議ありボタン出力
   public static function OutputObjection($url) {
     Text::Printf(self::GetObjection(),
-      $url, Objection::GetImage(), GamePlayMessage::OBJECTION, Objection::Count()
+      $url, RequestDataTalk::OBJECTION, Switcher::ON,
+      Objection::GetImage(), GamePlayMessage::OBJECTION, Objection::Count()
     );
   }
 
@@ -82,7 +88,7 @@ class GamePlayHTML {
 
   //役職能力出力
   public static function OutputAbility() {
-    if (! DB::$ROOM->IsPlaying()) return; //スキップ判定
+    if (false === DB::$ROOM->IsPlaying()) return; //スキップ判定
 
     HTML::OutputDivHeader('ability-elements');
     RoleHTML::OutputAbility();
@@ -91,11 +97,13 @@ class GamePlayHTML {
 
   //投票情報出力
   public static function OutputVote() {
-    if (! DB::$ROOM->IsPlaying()) return; //スキップ判定
+    if (false === DB::$ROOM->IsPlaying()) return; //スキップ判定
 
     HTML::OutputDivHeader('vote-elements');
     RoleHTML::OutputVoteKill();
-    if (DB::$ROOM->IsPlaying()) GameHTML::OutputRevote();
+    if (DB::$ROOM->IsPlaying()) {
+      GameHTML::OutputRevote();
+    }
     if (DB::$ROOM->IsQuiz() && DB::$ROOM->IsDay() && DB::$SELF->IsDummyBoy()) {
       GamePlayHTML::OutputQuizVote();
     }
@@ -104,7 +112,7 @@ class GamePlayHTML {
 
   //投票結果出力 (クイズ村 GM 専用)
   public static function OutputQuizVote() {
-    $stack = array();
+    $stack = [];
     foreach (SystemMessageDB::GetQuizVote() as $key => $list) {
       $stack[$list['target_no']][] = $key;
     }
@@ -191,7 +199,7 @@ EOF;
   private static function GetObjection() {
     return <<<EOF
 <td class="objection"><form method="post" action="%s">
-<input type="hidden" name="set_objection" value="on">
+<input type="hidden" name="%s" value="%s">
 <input type="image" name="objection_image" src="%s" alt="%s">
 (%d)</form></td>
 EOF;

@@ -27,11 +27,11 @@ class Request_user_manager extends RequestIcon {
 
   //バックリンクに含めないデータを返す
   public function GetIgnoreError() {
-    return array(
+    return [
       'entry',
       RequestDataIcon::CATEGORY,
       RequestDataIcon::APPEARANCE,
       RequestDataIcon::AUTHOR
-    );
+    ];
   }
 }

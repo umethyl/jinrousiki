@@ -17,6 +17,9 @@
 .player table td span { /* 役職名 */
   font-weight: bold;
 }
+.player table td .symbol { /* アイコン色 */
+  font-weight: normal;
+}
 .already-vote { /* ゲーム開始投票済み */
   background-color: #FFDDFF;
 }

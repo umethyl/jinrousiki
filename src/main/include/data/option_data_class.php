@@ -1,13 +1,13 @@
 <?php
 //-- 定数リスト (Option/Group) --//
-class OptionGroup {
+final class OptionGroup {
   const NONE = '';
   const GAME = 'game_option';
   const ROLE = 'role_option';
 }
 
 //-- 定数リスト (OptionForm/Type) --//
-class OptionFormType {
+final class OptionFormType {
   const TEXT		= 'text';
   const PASSWORD	= 'password';
   const REALTIME	= 'realtime';

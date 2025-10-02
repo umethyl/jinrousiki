@@ -19,6 +19,6 @@ class Option_gentleman extends OptionCheckbox {
   }
 
   protected function GetResultCastList() {
-    return array('gentleman', 'lady');
+    return ['gentleman', 'lady'];
   }
 }

@@ -16,17 +16,17 @@ class Role_step_mage extends Role_mage {
     return OptionFormType::CHECKBOX;
   }
 
-  public function CheckVoteNightTarget(array $list) {
-    return $this->CheckStepVoteNightTarget($list);
+  public function ValidateVoteNightTargetList(array $list) {
+    return $this->ValidateStepVoteNightTargetList($list);
   }
 
-  //投票対象チェック (足音用)
-  public function CheckStepVoteNightTarget(array $list) {
+  //複合投票型対象者チェック (足音用)
+  public function ValidateStepVoteNightTargetList(array $list) {
     $id     = $this->GetID();
     $max    = DB::$USER->Count();
     $vector = null;
     $count  = 0;
-    $stack  = array();
+    $stack  = [];
     do {
       $chain = Position::GetChain($id, $max);
       $point = array_intersect($chain, $list);
@@ -50,8 +50,8 @@ class Role_step_mage extends Role_mage {
     if (! DB::$USER->IsVirtualLive($id)) return VoteRoleMessage::TARGET_DEAD;
     if ($this->IsActor($target))         return VoteRoleMessage::TARGET_MYSELF;
 
-    $target_stack = array();
-    $handle_stack = array();
+    $target_stack = [];
+    $handle_stack = [];
     foreach ($stack as $id) { //投票順に意味があるので sort しない
       //対象者のみ憑依追跡する
       $target_stack[] = $id == $target->id ? DB::$USER->ByReal($id)->id : $id;
@@ -68,7 +68,7 @@ class Role_step_mage extends Role_mage {
     if ($this->IgnoreStep()) return false;
 
     array_pop($list); //最後尾は対象者なので除く
-    $stack = array();
+    $stack = [];
     foreach ($list as $id) {
       if (DB::$USER->IsVirtualLive($id)) {
 	$stack[] = $id;

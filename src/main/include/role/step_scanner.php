@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('mind_scanner');
 class Role_step_scanner extends Role_mind_scanner {
-  public $mix_in = array('step_mad', 'step_mage');
+  public $mix_in = ['step_mad', 'step_mage'];
   public $action      = VoteAction::STEP_SCAN;
   public $action_date = RoleActionDate::AFTER;
 
@@ -32,8 +32,8 @@ class Role_step_scanner extends Role_mind_scanner {
     return OptionFormType::CHECKBOX;
   }
 
-  public function CheckVoteNightTarget(array $list) {
-    return $this->CheckStepVoteNightTarget($list);
+  public function ValidateVoteNightTargetList(array $list) {
+    return $this->ValidateStepVoteNightTargetList($list);
   }
 
   //範囲透視
@@ -43,12 +43,12 @@ class Role_step_scanner extends Role_mind_scanner {
     //周辺ID取得
     //Text::p($list, '◆Target [Vote]');
     $max   = DB::$USER->Count();
-    $stack = array();
+    $stack = [];
     foreach ($list as $id) {
-      ArrayFilter::Merge($stack, array_values(Position::GetChain($id, $max)));
+      ArrayFilter::AddMerge($stack, array_values(Position::GetChain($id, $max)));
     }
 
-    $around_list = array();
+    $around_list = [];
     foreach ($stack as $id) {
       if (in_array($id, $list) || DB::$USER->ByID($id)->IsDead(true)) continue;
       $around_list[] = $id;
@@ -58,7 +58,9 @@ class Role_step_scanner extends Role_mind_scanner {
     //確率判定
     $rate = min(80, count($around_list) * 10);
     //Text::p($rate, '◆Rate');
-    if (Lottery::Percent(100 - $rate)) return;
+    if (Lottery::Percent(100 - $rate)) {
+      return false;
+    }
 
     //会話能力者判定
     $step_flag = false;
@@ -71,6 +73,8 @@ class Role_step_scanner extends Role_mind_scanner {
 	break;
       }
     }
-    if ($step_flag) $this->Step($list);
+    if (true === $step_flag) {
+      $this->Step($list);
+    }
   }
 }

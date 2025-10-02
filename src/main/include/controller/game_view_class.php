@@ -1,14 +1,8 @@
 <?php
-//-- 観戦画面出力クラス --//
-class GameView {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//◆文字化け抑制◆//
+//-- 観戦画面コントローラー --//
+final class GameViewController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('game_view', true);
     DB::Connect(RQ::Get()->db_no);
 
@@ -22,7 +16,9 @@ class GameView {
       Loader::LoadFile('winner_message');
     } else { //ゲームオプション表示
       Loader::LoadFile('cast_config', 'image_class', 'room_option_class');
-      if (DB::$ROOM->IsBeforeGame()) RQ::Set('retrieve_type', DB::$ROOM->scene);
+      if (DB::$ROOM->IsBeforeGame()) {
+	RQ::Set('retrieve_type', DB::$ROOM->scene);
+      }
     }
 
     //ユーザ情報ロード
@@ -30,8 +26,7 @@ class GameView {
     DB::LoadViewer();
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     GameViewHTML::Output();
   }
 }

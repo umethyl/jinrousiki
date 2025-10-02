@@ -35,18 +35,18 @@ class UserIcon {
   }
 
   //文字列長チェック
-  public static function CheckText($title, $url) {
-    $stack = array();
-    $list  = array(
+  public static function ValidateText($title, $url) {
+    $stack = [];
+    $list  = [
       RequestDataIcon::NAME       => IconMessage::NAME,
       RequestDataIcon::CATEGORY   => IconMessage::CATEGORY,
       RequestDataIcon::APPEARANCE => IconMessage::APPEARANCE,
       RequestDataIcon::AUTHOR     => IconMessage::AUTHOR
-    );
+    ];
     foreach ($list as $key => $label) {
       $str = RQ::Get()->$key;
       if (Text::Over($str, UserIconConfig::LENGTH)) {
-	$error = Text::Concat(Text::AddHeader(self::GetLengthLimit(), $label), $url);
+	$error = Text::Join(Text::AddHeader(self::GetLengthLimit(), $label), $url);
 	HTML::OutputResult($title, $error);
       }
       $stack[$key] = Text::Exists($str) ? $str : null;
@@ -55,9 +55,9 @@ class UserIcon {
   }
 
   //RGB カラーチェック
-  public static function CheckColor($str, $title, $url) {
-    if (! Text::IsRGB($str)) {
-      $error = Text::Concat(
+  public static function ValidateColor($str, $title, $url) {
+    if (false === Text::IsRGB($str)) {
+      $error = Text::Join(
 	IconMessage::INVALID_COLOR, IconMessage::COLOR_EXPLAIN,
 	sprintf(IconMessage::INPUT_COLOR, $str), $url
       );

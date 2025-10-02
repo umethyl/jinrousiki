@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('escaper');
 class Role_psycho_escaper extends Role_escaper {
-  public $mix_in = array('psycho_mage');
+  public $mix_in = ['psycho_mage'];
 
   protected function EscapeFailed(User $user) {
     return $this->IsLiar($user);

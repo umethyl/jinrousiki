@@ -17,7 +17,7 @@ class Role_confession extends Role {
 
     $role   = 'lovers';
     $target = $this->GetActor()->GetPartnerList();
-    $stack  = array();
+    $stack  = [];
     foreach (DB::$USER->GetRoleUser($role) as $user) {
       if ($this->IsActor($user)) continue;
       if ($user->IsPartner($role, $target)) {

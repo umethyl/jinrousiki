@@ -9,14 +9,14 @@
 */
 RoleLoader::LoadFile('wizard');
 class Role_pierrot_wizard extends Role_wizard {
-  public $mix_in = array('doom_assassin', 'flower_fairy');
+  public $mix_in = ['doom_assassin', 'flower_fairy'];
 
   protected function GetWizardResultList() {
-    return array(RoleAbility::MAGE);
+    return [RoleAbility::MAGE];
   }
 
   protected function GetWizardList() {
-    return array(
+    return [
       'soul_mage'	=> VoteAction::MAGE,
       1			=> VoteAction::ASSASSIN,
       2			=> VoteAction::FAIRY,
@@ -25,7 +25,7 @@ class Role_pierrot_wizard extends Role_wizard {
       'flower_fairy'	=> VoteAction::FAIRY,
       'ice_fairy'	=> VoteAction::FAIRY,
       'sex_mage'	=> VoteAction::MAGE
-    );
+    ];
   }
 
   protected function GetDoomAssassinDate() {

@@ -4,7 +4,7 @@
   ○仕様
 */
 class Role_step_mad extends Role {
-  public $mix_in = array('step_mage');
+  public $mix_in = ['step_mage'];
   public $action     = VoteAction::STEP;
   public $not_action = VoteAction::NOT_STEP;
 
@@ -25,18 +25,18 @@ class Role_step_mad extends Role {
     return OptionFormType::CHECKBOX;
   }
 
-  public function CheckVoteNightTarget(array $list) {
-    return $this->CheckStepVoteNightTarget($list);
+  public function ValidateVoteNightTargetList(array $list) {
+    return $this->ValidateStepVoteNightTargetList($list);
   }
 
-  public function CheckStepVoteNightTarget(array $list) {
+  public function ValidateStepVoteNightTargetList(array $list) {
     sort($list);
 
     $id     = array_shift($list);
     $max    = DB::$USER->Count();
     $vector = null;
     $count  = 0;
-    $root_list = array($id);
+    $root_list = [$id];
     while (count($list) > 0) {
       $chain = Position::GetChain($id, $max);
       $point = array_intersect($chain, $list);
@@ -53,8 +53,8 @@ class Role_step_mad extends Role {
       ArrayFilter::Delete($list, $id);
     }
 
-    $target_stack = array();
-    $handle_stack = array();
+    $target_stack = [];
+    $handle_stack = [];
     foreach ($root_list as $id) {
       $target_stack[] = $id;
       $handle_stack[] = DB::$USER->ByID($id)->handle_name;
@@ -69,7 +69,7 @@ class Role_step_mad extends Role {
   public function Step(array $list) {
     if ($this->IgnoreStep()) return false;
 
-    $stack = array();
+    $stack = [];
     foreach ($list as $id) {
       if (DB::$USER->IsVirtualLive($id)) {
 	$stack[] = $id;

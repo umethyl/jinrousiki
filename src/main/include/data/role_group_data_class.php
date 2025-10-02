@@ -1,9 +1,9 @@
 <?php
 //-- 役職データベース (グループ) --//
-class RoleGroupData {
+final class RoleGroupData {
   //メイン役職のグループリスト (役職 => 所属グループ)
   //このリストの並び順に strpos() で判別する (毒系など、順番依存の役職があるので注意)
-  public static $list = array(
+  public static $list = [
     //-- 神話マニア陣営 --//
     //鵺系
     'unknown_mania'	=> CampGroup::UNKNOWN_MANIA,
@@ -73,5 +73,5 @@ class RoleGroupData {
     'voodoo_killer'	=> CampGroup::MAGE,
     'cat'		=> CampGroup::POISON_CAT,	//猫又系
     'poison'		=> CampGroup::POISON,		//埋毒者系
-  );
+  ];
 }

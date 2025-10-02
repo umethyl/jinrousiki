@@ -79,5 +79,5 @@ class Message {
 
   /* ランダムメッセージ挿入 */
   //GameConfig::RANDOM_MESSAGE を true にすると、この配列の中身がランダムに表示される
-  public static $random_message_list = array();
+  public static $random_message_list = [];
 }

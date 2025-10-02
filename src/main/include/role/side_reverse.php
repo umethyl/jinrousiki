@@ -7,12 +7,12 @@
 class Role_side_reverse extends Role {
   public function ConvertSay() {
     $result = '';
-    $line   = array();
+    $line   = [];
     foreach (Text::Split($this->GetStack('say')) as $str) {
       if ($str == Text::LF) {
 	if (count($line) > 0) $result .= ArrayFilter::ConcatReverse($line, '');
 	$result .= $str;
-	$line = array();
+	$line = [];
       } else {
 	$line[] = $str;
       }

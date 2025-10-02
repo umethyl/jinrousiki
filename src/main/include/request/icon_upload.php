@@ -8,10 +8,10 @@
 RQ::LoadFile('request_icon');
 class Request_icon_upload extends RequestIcon {
   public function __construct() {
-    if (Security::CheckValue($_FILES)) die();
+    if (Security::IsInvalidValue($_FILES)) die();
     parent::__construct();
-    $this->Parse('file', 'intval', array('size'));
-    $this->Parse('file', null, array('type', 'tmp_name'));
+    $this->Parse('file', 'intval', ['size']);
+    $this->Parse('file', null, ['type', 'tmp_name']);
     $this->ParsePostData('command');
   }
 }

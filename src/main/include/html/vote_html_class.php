@@ -17,7 +17,7 @@ class VoteHTML {
 
   //開始前の投票ページ出力
   public static function OutputBeforeGame() {
-    self::CheckScene(); //投票する状況があっているかチェック
+    self::ValidateScene(); //投票する状況があっているかチェック
     self::OutputHeader();
     Text::Printf(self::GetBeforeHeader(), VoteAction::KICK);
 
@@ -37,14 +37,14 @@ class VoteHTML {
     Text::Printf(self::GetBeforeFooter(),
       sprintf(VoteMessage::CAUTION_KICK, GameConfig::KICK),
       RQ::Get()->back_url, VoteMessage::KICK_DO, RQ::Get()->post_url,
-      Security::GetHash(DB::$ROOM->id), VoteAction::GAME_START, VoteMessage::GAME_START
+      Security::GetToken(DB::$ROOM->id), VoteAction::GAME_START, VoteMessage::GAME_START
     );
     if (! DB::$ROOM->IsTest()) HTML::OutputFooter(true);
   }
 
   //昼の投票ページを出力する
   public static function OutputDay() {
-    self::CheckScene(); //投票シーンチェック
+    self::ValidateScene(); //投票シーンチェック
     if (DB::$ROOM->IsDate(1)) self::OutputResult(VoteMessage::NEEDLESS_VOTE);
     if (! DB::$ROOM->IsTest() && UserDB::IsVoteKill()) { //投票済みチェック
       self::OutputResult(VoteMessage::ALREADY_VOTE);
@@ -52,7 +52,7 @@ class VoteHTML {
 
     //特殊イベントを参照して投票対象をセット
     if (DB::$ROOM->IsEvent('vote_duel')) {
-      $user_stack = array();
+      $user_stack = [];
       foreach (DB::$ROOM->Stack()->Get('vote_duel') as $id) {
 	$user_stack[$id] = DB::$USER->ByID($id);
       }
@@ -90,13 +90,13 @@ class VoteHTML {
 
   //夜の投票ページを出力する
   public static function OutputNight() {
-    self::CheckScene(); //投票シーンチェック
+    self::ValidateScene(); //投票シーンチェック
     //-- 投票済みチェック --//
     $filter = VoteNight::GetFilter();
     if (! DB::$ROOM->IsTest()) {
       $action     = RoleManager::Stack()->Get('action');
       $not_action = RoleManager::Stack()->Get('not_action');
-      VoteNight::CheckVote($action, $not_action);
+      VoteNight::ValidateVoted($action, $not_action);
     }
 
     self::OutputHeader();
@@ -129,7 +129,7 @@ class VoteHTML {
 
     if (RoleManager::Stack()->Exists('not_action')) {
       Text::Printf(self::GetNightNotAction(),
-	RQ::Get()->post_url, Security::GetHash(DB::$ROOM->id),
+	RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id),
 	RoleManager::Stack()->Get('not_action'), DB::$SELF->id,
 	self::GetSubmit('not_submit', 'not_action')
       );
@@ -164,7 +164,7 @@ class VoteHTML {
     if (! DB::$SELF->IsDrop() && DB::$ROOM->IsOption('not_open_cast') &&
 	! DB::$ROOM->IsOpenCast()) {
       Text::Printf(self::GetDummyBoyReviveRefuse(),
-	RQ::Get()->post_url, Security::GetHash(DB::$ROOM->id),
+	RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id),
 	VoteAction::HEAVEN, VoteMessage::REVIVE_REFUSE
       );
     }
@@ -175,8 +175,10 @@ class VoteHTML {
   }
 
   //シーンの一致チェック
-  private static function CheckScene() {
-    if (! DB::$SELF->CheckScene()) self::OutputResult(VoteMessage::RELOAD);
+  private static function ValidateScene() {
+    if (DB::$SELF->IsInvalidScene()) {
+      self::OutputResult(VoteMessage::RELOAD);
+    }
   }
 
   //結果生成
@@ -193,7 +195,7 @@ class VoteHTML {
     GameHTML::OutputSceneCSS();
     HTML::OutputBodyHeader($css);
     GameHTML::OutputGameTop();
-    Text::Printf(self::GetHeader(), RQ::Get()->post_url, Security::GetHash(DB::$ROOM->id));
+    Text::Printf(self::GetHeader(), RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id));
   }
 
   //夜の投票ボタンメッセージ取得
@@ -210,7 +212,7 @@ class VoteHTML {
     return <<<EOF
 <form method="post" action="%s">
 <input type="hidden" name="vote" value="on">
-<input type="hidden" name="hash" value="%s">
+<input type="hidden" name="token" value="%s">
 EOF;
   }
 
@@ -247,7 +249,7 @@ EOF;
 <td>
 <form method="post" action="%s">
 <input type="hidden" name="vote" value="on">
-<input type="hidden" name="hash" value="%s">
+<input type="hidden" name="token" value="%s">
 <input type="hidden" name="situation" value="%s">
 <input type="submit" value="%s">
 </form>
@@ -307,7 +309,7 @@ EOF;
 <td class="add-action">
 <form method="post" action="%s">
 <input type="hidden" name="vote" value="on">
-<input type="hidden" name="hash" value="%s">
+<input type="hidden" name="token" value="%s">
 <input type="hidden" name="situation" value="%s">
 <input type="hidden" name="target_no" value="%d">
 <input type="submit" value="%s"></form>
@@ -348,7 +350,7 @@ EOF;
 <td>
 <form method="post" action="%s">
 <input type="hidden" name="vote" value="on">
-<input type="hidden" name="hash" value="%s">
+<input type="hidden" name="token" value="%s">
 <input type="hidden" name="situation" value="%s">
 <input type="submit" value="%s">
 </form>

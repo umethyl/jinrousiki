@@ -7,14 +7,14 @@
 */
 RoleLoader::LoadFile('valkyrja_duelist');
 class Role_sea_duelist extends Role_valkyrja_duelist {
-  public $mix_in = array('chicken');
+  public $mix_in = ['chicken'];
 
   protected function GetStackVoteKillType() {
     return RoleStackVoteKill::INIT;
   }
 
   public function VoteKillAction() {
-    $stack = array(); //ショック死対象者リスト
+    $stack = []; //ショック死対象者リスト
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname) || $this->IsVoted($target_uname)) continue;
 

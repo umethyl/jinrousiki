@@ -8,12 +8,12 @@
 RoleLoader::LoadFile('mind_read');
 class Role_mind_sheep extends Role_mind_read {
   protected function GetPartner() {
-    $stack = array();
+    $stack = [];
     foreach ($this->GetActor()->GetPartner($this->role, true) as $id) {
       $stack[$id] = DB::$USER->ByID($id)->handle_name;
     }
     ksort($stack);
-    return array('shepherd_patron_list' => $stack);
+    return ['shepherd_patron_list' => $stack];
   }
 
   public function WolfEatCounter(User $user) {

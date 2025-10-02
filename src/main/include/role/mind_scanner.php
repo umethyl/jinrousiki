@@ -23,13 +23,13 @@ class Role_mind_scanner extends Role {
   protected function GetPartner() {
     $id    = $this->GetID();
     $role  = $this->GetMindRole();
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->GetRoleUser($role) as $user) {
       if ($user->IsPartner($role, $id)) {
 	$stack[] = $user->handle_name; //憑依追跡なし
       }
     }
-    return array('mind_scanner_target' => $stack);
+    return ['mind_scanner_target' => $stack];
   }
 
   public function OutputAction() {

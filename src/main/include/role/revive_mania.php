@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('unknown_mania');
 class Role_revive_mania extends Role_unknown_mania {
-  public $mix_in = array('revive_pharmacist');
+  public $mix_in = ['revive_pharmacist'];
 
   public function WolfEatCounter(User $user) {
     //全体無効判定 (公開 > 天候)

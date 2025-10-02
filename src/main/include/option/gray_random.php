@@ -12,10 +12,10 @@ class Option_gray_random extends OptionCheckbox {
   }
 
   public function SetFilterRole($count) {
-    return Cast::FilterRole($count, array('wolf', 'mad', 'fox'));
+    return Cast::FilterRole($count, ['wolf', 'mad', 'fox']);
   }
 
   public function GetWishRole() {
-    return array('human', 'wolf', 'mad', 'fox');
+    return ['human', 'wolf', 'mad', 'fox'];
   }
 }

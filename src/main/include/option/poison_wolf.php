@@ -23,6 +23,6 @@ class Option_poison_wolf extends OptionCheckbox {
   }
 
   public function GetWishRole() {
-    return array($this->name, 'pharmacist');
+    return [$this->name, 'pharmacist'];
   }
 }

@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('tengu');
 class Role_priest_tengu extends Role_tengu {
-  public $mix_in = array('mage', 'chicken', 'priest');
+  public $mix_in = ['mage', 'chicken', 'priest'];
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 2 || DB::$ROOM->date % 2 == 1;

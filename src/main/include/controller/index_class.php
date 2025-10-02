@@ -1,19 +1,12 @@
 <?php
+//◆文字化け抑制◆//
 //-- TOPページコントローラー --//
-class JinrouIndex {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+final class JinrouIndexController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('request_index');
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     if (0 < RQ::Get()->id && RQ::Get()->id <= count(TopPageConfig::$server_list)) {
       InfoHTML::OutputSharedRoom(RQ::Get()->id, true);
     } else {

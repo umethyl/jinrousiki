@@ -7,11 +7,11 @@
 RoleLoader::LoadFile('fairy');
 class Role_greater_fairy extends Role_fairy {
   protected function GetBadStatus() {
-    $stack = array(
+    $stack = [
       RoleTalkMessage::COMMON_TALK,
       RoleTalkMessage::SPRING_FAIRY, RoleTalkMessage::SUMMER_FAIRY,
       RoleTalkMessage::AUTUMN_FAIRY, RoleTalkMessage::WINTER_FAIRY
-    );
+    ];
     return Lottery::Get($stack);
   }
 }

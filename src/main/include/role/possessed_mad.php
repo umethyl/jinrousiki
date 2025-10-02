@@ -7,7 +7,7 @@
   ・投票数：+1 (憑依成立 3 日後)
 */
 class Role_possessed_mad extends Role {
-  public $mix_in = array('authority');
+  public $mix_in = ['authority'];
   public $action      = VoteAction::POSSESSED;
   public $not_action  = VoteAction::NOT_POSSESSED;
   public $action_date = RoleActionDate::AFTER;
@@ -22,7 +22,7 @@ class Role_possessed_mad extends Role {
 
   protected function OutputAddResult() {
     RoleHTML::OutputPossessed();
-    if (! $this->IgnoreFilterVoteDo()) {
+    if (false === $this->IgnoreFilterVoteDo()) {
       RoleHTML::OutputAbilityResult('ability_possessed_mad', null);
     }
   }
@@ -49,7 +49,7 @@ class Role_possessed_mad extends Role {
     return count($list) < 1 || DB::$ROOM->date < ArrayFilter::GetMin($list) + 2;
   }
 
-  protected function GetIgnoreAddVoteMessage() {
+  protected function GetDisabledAddVoteMessage() {
     return VoteRoleMessage::LOST_ABILITY;
   }
 
@@ -58,7 +58,7 @@ class Role_possessed_mad extends Role {
   }
 
   protected function IsVoteCheckboxLive($live) {
-    return ! $live;
+    return false === $live;
   }
 
   protected function IgnoreVoteCheckboxDummyBoy() {
@@ -66,7 +66,7 @@ class Role_possessed_mad extends Role {
   }
 
   protected function IgnoreFinishVote() {
-    return ! $this->IsAddVote();
+    return false === $this->IsAddVote();
   }
 
   //死者憑依情報セット
@@ -80,7 +80,7 @@ class Role_possessed_mad extends Role {
       return false;
     } elseif (RoleUser::LimitedPossessed($user)) {
       return false;
-    } elseif (! $user->IsSame($user->GetReal())) {
+    } elseif (false === $user->IsSame($user->GetReal())) {
       return false;
     }
     $this->AddStack($user->id, 'possessed_dead');
@@ -95,7 +95,7 @@ class Role_possessed_mad extends Role {
   final public function SetPossessed() {
     $stack = $this->GetStack('possessed_dead');
     foreach ($stack as $id => $target_id) {
-      if (count(array_keys($stack, $target_id)) == 1) { //競合判定
+      if (ArrayFilter::CountKey($stack, $target_id) == 1) { //競合判定
 	$this->AddStack($target_id, RoleVoteSuccess::POSSESSED, $id);
       }
     }

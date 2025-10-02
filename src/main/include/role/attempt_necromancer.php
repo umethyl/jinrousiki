@@ -10,7 +10,7 @@ class Role_attempt_necromancer extends Role_necromancer {
 
   //霊能 (夜発動型)
   public function NecromancerNight() {
-    $stack = array();
+    $stack = [];
 
     //-- 人狼襲撃 --//
     $user = RoleManager::Stack()->Get('wolf_target');
@@ -20,7 +20,7 @@ class Role_attempt_necromancer extends Role_necromancer {
 
     //-- 暗殺・人攫い --//
     $vote_data = RoleManager::GetVoteData();
-    foreach (array(VoteAction::ASSASSIN, VoteAction::OGRE) as $action) {
+    foreach ([VoteAction::ASSASSIN, VoteAction::OGRE] as $action) {
       foreach ($vote_data[$action] as $id) {
 	if (DB::$USER->ByID($id)->IsLive(true)) {
 	  $stack[$id] = true;
@@ -28,7 +28,7 @@ class Role_attempt_necromancer extends Role_necromancer {
       }
     }
 
-    $str_stack = array();
+    $str_stack = [];
     foreach (array_keys($stack) as $id) { //仮想ユーザの ID 順に出力
       $user = DB::$USER->ByVirtual($id);
       $str_stack[$user->id] = $user->handle_name;

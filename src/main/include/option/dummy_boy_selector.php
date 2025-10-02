@@ -5,7 +5,7 @@
 class Option_dummy_boy_selector extends OptionSelector {
   public $group = OptionGroup::GAME;
   public $type  = OptionFormType::GROUP;
-  public $form_list = array('dummy_boy' => Switcher::ON, 'gm_login' => 'gm_login');
+  public $form_list = ['dummy_boy' => Switcher::ON, 'gm_login' => 'gm_login'];
 
   protected function LoadValue() {
     $this->value = GameOptionConfig::$default_dummy_boy;
@@ -25,7 +25,7 @@ class Option_dummy_boy_selector extends OptionSelector {
   }
 
   public function GetItem() {
-    $stack = array();
+    $stack = [];
 
     //-- 身代わり君なし --//
     $item = OptionLoader::Load('no_dummy_boy');

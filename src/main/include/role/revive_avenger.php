@@ -5,5 +5,5 @@
 */
 RoleLoader::LoadFile('avenger');
 class Role_revive_avenger extends Role_avenger {
-  public $mix_in = array('revive_pharmacist');
+  public $mix_in = ['revive_pharmacist'];
 }

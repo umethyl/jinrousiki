@@ -13,11 +13,11 @@ class Role_authority extends Role {
 
     $count = $this->CallParent('GetVoteDoCount');
     if (! $this->CallParent('IsUpdateFilterVoteDo')) {
-      $count += $this->GetStack('vote_number');
+      $count += $this->GetStack(VoteDayElement::VOTE_NUMBER);
     }
     $this->CallParent('NoticeFilterVoteDo');
     //Text::p($count, "◆VoteCount [$this->role]");
-    $this->SetStack($count, 'vote_number');
+    $this->SetStack($count, VoteDayElement::VOTE_NUMBER);
   }
 
   //投票数補正無効判定
@@ -42,7 +42,7 @@ class Role_authority extends Role {
     return RoleStackVoteKill::ETC;
   }
 
-  protected function SetStackVoteKillEtc($name) {
+  protected function SetStackVoteKillEtc($uname) {
     $this->SetStack($this->GetUname());
     $this->SetStack($uname, $this->role . '_uname');
   }

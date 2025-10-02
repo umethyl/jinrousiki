@@ -6,7 +6,7 @@
   ・処刑者決定：候補者の内訳によって変化
 */
 class Role_saint extends Role {
-  public $mix_in = array('decide');
+  public $mix_in = ['decide'];
   public $display_role = 'human';
 
   protected function GetStackVoteKillType() {
@@ -16,8 +16,8 @@ class Role_saint extends Role {
   public function DecideVoteKill() {
     if ($this->IsVoteKill()) return;
 
-    $self   = array();
-    $target = array();
+    $self   = [];
+    $target = [];
     foreach ($this->GetVotePossible() as $uname) {
       $user = DB::$USER->ByRealUname($uname); //$uname は仮想ユーザ
       if ($user->IsRole('saint')) {

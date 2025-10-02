@@ -6,6 +6,6 @@
 */
 RoleLoader::LoadFile('mage');
 class Role_cute_mage extends Role_mage {
-  public $mix_in = array('suspect');
+  public $mix_in = ['suspect'];
   public $display_role = 'mage';
 }

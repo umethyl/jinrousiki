@@ -35,7 +35,7 @@ class TableHTML {
 
   //tr 改行生成
   public static function GenerateTrLine() {
-    return Text::Add(self::GenerateTrFooter()) . self::GenerateTrHeader();
+    return Text::LineFeed(self::GenerateTrFooter()) . self::GenerateTrHeader();
   }
 
   //td 生成

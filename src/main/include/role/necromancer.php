@@ -21,19 +21,19 @@ class Role_necromancer extends Role {
   final protected function DistinguishNecromancer(User $user, $reverse = false) {
     switch ($camp = $user->DistinguishCamp()) {
     case Camp::WOLF:
-      $stack = array(
+      $stack = [
         'boss_wolf', 'mist_wolf', 'tiger_wolf', 'phantom_wolf', 'cursed_wolf', 'possessed_wolf'
-      );
+      ];
       if ($user->IsRole($stack)) return $user->main_role;
       break;
 
     case Camp::FOX:
       if ($user->IsMainGroup(CampGroup::CHILD_FOX)) return 'child_fox';
 
-      $stack = array(
+      $stack = [
         'white_fox', 'black_fox', 'mist_fox', 'tiger_fox', 'phantom_fox', 'sacrifice_fox',
 	'possessed_fox', 'cursed_fox'
-      );
+      ];
       if ($user->IsRole($stack)) return $camp;
       break;
 

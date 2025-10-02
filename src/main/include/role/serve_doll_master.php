@@ -9,7 +9,7 @@
 */
 RoleLoader::LoadFile('doll_master');
 class Role_serve_doll_master extends Role_doll_master {
-  public $mix_in = array('vote' => 'guard', 'protected');
+  public $mix_in = ['vote' => 'guard', 'protected'];
 
   protected function OutputAddResult() {
     $this->OutputGuardResult();
@@ -46,7 +46,7 @@ class Role_serve_doll_master extends Role_doll_master {
 
   //生存人形取得
   private function GetLiveDoll() {
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsLive(true) && $this->IsDoll($user) && ! RoleUser::IsAvoidLovers($user, true)) {
 	$stack[] = $user->id;

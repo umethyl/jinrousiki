@@ -2,12 +2,12 @@
 //-- テスト村生成クラス --//
 class DevRoom {
   //テスト村データ初期化
-  public static function Initialize($list = array()) {
+  public static function Initialize($list = []) {
     //初期村データを生成
     RQ::Set(RequestDataGame::ID, 1);
     RQ::Set('vote_times', 1);
     RQ::Set(RequestDataLogRoom::REVERSE, null);
-    $base_list = array(
+    $base_list = [
       'id'		=> RQ::Get()->room_no,
       'comment'		=> '',
       'date'		=> 0,
@@ -16,14 +16,14 @@ class DevRoom {
       'game_option'	=> 'dummy_boy real_time:6:4 wish_role',
       'option_role'	=> '',
       'vote_count'	=> 1
-    );
+    ];
 
     RQ::InitTestRoom();
     RQ::GetTest()->test_room = array_merge($base_list, $list);
-    RQ::GetTest()->event           = array();
-    RQ::GetTest()->result_ability  = array();
-    RQ::GetTest()->result_dead     = array();
-    RQ::GetTest()->system_message  = array();
+    RQ::GetTest()->event           = [];
+    RQ::GetTest()->result_ability  = [];
+    RQ::GetTest()->result_dead     = [];
+    RQ::GetTest()->system_message  = [];
   }
 
   //村データロード
@@ -39,7 +39,7 @@ class DevRoom {
 
   //イベント情報取得
   public static function GetEvent() {
-    $stack = array();
+    $stack = [];
     foreach (RQ::GetTest()->system_message as $date => $date_list) {
       //Text::p($date_list, "◆Event [{$date}]");
       if ($date != DB::$ROOM->date) continue;
@@ -51,7 +51,7 @@ class DevRoom {
 	case EventType::SAME_FACE:
 	case DeadReason::BLIND_VOTE:
 	  foreach ($type_list as $event) {
-	    $stack[] = array('type' => $type, 'message' => $event);
+	    $stack[] = ['type' => $type, 'message' => $event];
 	  }
 	  break;
 	}
@@ -66,7 +66,7 @@ class DevRoom {
     $stack = RQ::GetTest()->result_ability;
     $stack = ArrayFilter::GetList(ArrayFilter::GetList($stack, $date), $action);
     if ($limit) {
-      $limit_stack = array();
+      $limit_stack = [];
       foreach ($stack as $list) {
 	if ($list['user_no'] == DB::$SELF->id) {
 	  $limit_stack[] = $list;
@@ -101,80 +101,80 @@ class DevRoom {
 //-- テストユーザ生成クラス --//
 class DevUser {
   // ユーザのアイコンカラーリスト
-  static $icon_color_list = array(
+  static $icon_color_list = [
     '#DDDDDD', '#999999', '#FFD700', '#FF9900', '#FF0000',
     '#99CCFF', '#0066FF', '#00EE00', '#CC00CC', '#FF9999'
-  );
+  ];
 
   // ユーザの初期データ
-  static $user_list = array(
-     1 => array('uname'         => GM::DUMMY_BOY,
-		'handle_name'   => Message::DUMMY_BOY,
-		'icon_filename' => '../img/dummy_boy_user_icon.jpg',
-		'color'         => '#000000'),
-     2 => array('uname'         => 'light_gray',
-		'handle_name'   => '明灰'),
-     3 => array('uname'         => 'dark_gray',
-		'handle_name'   => '暗灰'),
-     4 => array('uname'         => 'yellow',
-		'handle_name'   => '黄色'),
-     5 => array('uname'         => 'orange',
-		'handle_name'   => 'オレンジ'),
-     6 => array('uname'         => 'red',
-		'handle_name'   => '赤'),
-     7 => array('uname'         => 'light_blue',
-		'handle_name'   => '水色'),
-     8 => array('uname'         => 'blue',
-		'handle_name'   => '青'),
-     9 => array('uname'         => 'green',
-		'handle_name'   => '緑'),
-    10 => array('uname'         => 'purple',
-		'handle_name'   => '紫'),
-    11 => array('uname'         => 'cherry',
-		'handle_name'   => 'さくら'),
-    12 => array('uname'         => 'white',
-		'handle_name'   => '白'),
-    13 => array('uname'         => 'black',
-		'handle_name'   => '黒'),
-    14 => array('uname'         => 'gold',
-		'handle_name'   => '金'),
-    15 => array('uname'         => 'frame',
-		'handle_name'   => '炎'),
-    16 => array('uname'         => 'crimson',
-		'handle_name'   => '紅'),
-    17 => array('uname'         => 'ice',
-		'handle_name'   => '氷'),
-    18 => array('uname'         => 'deep_blue',
-		'handle_name'   => '蒼'),
-    19 => array('uname'         => 'emerald',
-		'handle_name'   => '翠'),
-    20 => array('uname'         => 'rose',
-		'handle_name'   => '薔薇'),
-    21 => array('uname'         => 'peach',
-		'handle_name'   => '桃'),
-    22 => array('uname'         => 'gust',
-		'handle_name'   => '霧'),
-    23 => array('uname'         => 'cloud',
-		'handle_name'   => '雲'),
-    24 => array('uname'         => 'moon',
-		'handle_name'   => '月'),
-    25 => array('uname'         => 'sun',
-		'handle_name'   => '太陽'),
-    26 => array('uname'         => 'scarlet',
-		'handle_name'   => '緋色'),
-    27 => array('uname'         => 'sky',
-		'handle_name'   => '空'),
-    28 => array('uname'         => 'sea',
-		'handle_name'   => '海'),
-    29 => array('uname'         => 'forest',
-		'handle_name'   => '森'),
-    30 => array('uname'         => 'violet',
-		'handle_name'   => '菫'),
-  );
+  static $user_list = [
+     1 => ['uname'         => GM::DUMMY_BOY,
+	   'handle_name'   => Message::DUMMY_BOY,
+	   'icon_filename' => '../img/dummy_boy_user_icon.jpg',
+	   'color'         => '#000000'],
+     2 => ['uname'         => 'light_gray',
+	   'handle_name'   => '明灰'],
+     3 => ['uname'         => 'dark_gray',
+	   'handle_name'   => '暗灰'],
+     4 => ['uname'         => 'yellow',
+	   'handle_name'   => '黄色'],
+     5 => ['uname'         => 'orange',
+	   'handle_name'   => 'オレンジ'],
+     6 => ['uname'         => 'red',
+	   'handle_name'   => '赤'],
+     7 => ['uname'         => 'light_blue',
+	   'handle_name'   => '水色'],
+     8 => ['uname'         => 'blue',
+	   'handle_name'   => '青'],
+     9 => ['uname'         => 'green',
+	   'handle_name'   => '緑'],
+    10 => ['uname'         => 'purple',
+	   'handle_name'   => '紫'],
+    11 => ['uname'         => 'cherry',
+	   'handle_name'   => 'さくら'],
+    12 => ['uname'         => 'white',
+	   'handle_name'   => '白'],
+    13 => ['uname'         => 'black',
+	   'handle_name'   => '黒'],
+    14 => ['uname'         => 'gold',
+	   'handle_name'   => '金'],
+    15 => ['uname'         => 'frame',
+	   'handle_name'   => '炎'],
+    16 => ['uname'         => 'crimson',
+	   'handle_name'   => '紅'],
+    17 => ['uname'         => 'ice',
+	   'handle_name'   => '氷'],
+    18 => ['uname'         => 'deep_blue',
+	   'handle_name'   => '蒼'],
+    19 => ['uname'         => 'emerald',
+	   'handle_name'   => '翠'],
+    20 => ['uname'         => 'rose',
+	   'handle_name'   => '薔薇'],
+    21 => ['uname'         => 'peach',
+	   'handle_name'   => '桃'],
+    22 => ['uname'         => 'gust',
+	   'handle_name'   => '霧'],
+    23 => ['uname'         => 'cloud',
+	   'handle_name'   => '雲'],
+    24 => ['uname'         => 'moon',
+	   'handle_name'   => '月'],
+    25 => ['uname'         => 'sun',
+	   'handle_name'   => '太陽'],
+    26 => ['uname'         => 'scarlet',
+	   'handle_name'   => '緋色'],
+    27 => ['uname'         => 'sky',
+	   'handle_name'   => '空'],
+    28 => ['uname'         => 'sea',
+	   'handle_name'   => '海'],
+    29 => ['uname'         => 'forest',
+	   'handle_name'   => '森'],
+    30 => ['uname'         => 'violet',
+	   'handle_name'   => '菫'],
+  ];
 
   //ユーザデータ初期化
-  public static function Initialize($count, $role_list = array()) {
-    RQ::GetTest()->test_users = array();
+  public static function Initialize($count, $role_list = []) {
+    RQ::GetTest()->test_users = [];
     for ($id = 1; $id <= $count; $id++) {
       RQ::GetTest()->test_users[$id] = new User(isset($role_list[$id]) ? $role_list[$id] : null);
     }
@@ -246,6 +246,7 @@ class DevVote {
     RQ::LoadFile('game_vote');
 
     $stack = new Request_game_vote();
+    RQ::Set('token', Security::GetToken(DB::$ROOM->id));
     RQ::Set(RequestDataVote::ON,         $stack->vote);
     RQ::Set(RequestDataVote::TARGET,     $stack->target_no);
     RQ::Set(RequestDataVote::SITUATION,  $stack->situation);
@@ -255,10 +256,18 @@ class DevVote {
 
   //実行
   private static function Execute() {
-    if (RQ::Get()->target_no == 0) { //空投票検出
+    if (DB::$SELF->IsDead()) { //死者の霊界投票処理
+      HTML::OutputHeader(VoteTestMessage::TITLE, 'game_play', true);
+      if (RQ::Get()->situation == VoteAction::RESET_TIME && DB::$SELF->IsDummyBoy()) {
+	VoteDummyBoy::Execute();
+      } else {
+	VoteHeaven::Execute();
+      }
+    } elseif (RQ::Get()->target_no == 0) { //空投票検出
       VoteHTML::OutputError(VoteMessage::NO_TARGET_TITLE, VoteMessage::NO_TARGET);
     } elseif (DB::$ROOM->IsDay()) { //昼の処刑投票処理
-      //VoteDay::Execute();
+      HTML::OutputHeader(VoteTestMessage::TITLE, 'game_play', true);
+      VoteDay::Execute();
     } elseif (DB::$ROOM->IsNight()) { //夜の投票処理
       HTML::OutputHeader(VoteTestMessage::TITLE, 'game_play', true);
       VoteNight::Execute();

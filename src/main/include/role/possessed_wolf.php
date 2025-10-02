@@ -70,12 +70,12 @@ class Role_possessed_wolf extends Role_wolf {
 	if (! $user->IsSame($virtual)) { //憑依中なら元の体に戻される
 	  //憑依先のリセット処理
 	  $virtual->ReturnPossessed('possessed');
-	  $virtual->SaveLastWords();
+	  $virtual->StoreLastWords();
 	  DB::$ROOM->ResultDead($virtual->handle_name, DeadReason::POSSESSED_RESET);
 
 	  //見かけ上の蘇生処理
 	  $user->ReturnPossessed('possessed_target');
-	  $user->SaveLastWords($virtual->handle_name);
+	  $user->StoreLastWords($virtual->handle_name);
 	  DB::$ROOM->ResultDead($user->handle_name, DeadReason::REVIVE_SUCCESS);
 	}
 	continue;
@@ -98,14 +98,14 @@ class Role_possessed_wolf extends Role_wolf {
 	//憑依処理
 	$user->AddRole(sprintf('possessed_target[%d-%d]', $possessed_date, $target->id));
 	DB::$ROOM->ResultDead($virtual->handle_name, DeadReason::POSSESSED);
-	$user->SaveLastWords($virtual->handle_name);
+	$user->StoreLastWords($virtual->handle_name);
 	$user->Update('last_words', null);
       }
 
       if (! $user->IsSame($virtual)) { //多段憑依対応
 	$virtual->ReturnPossessed('possessed');
 	if ($user->IsLive(true)) {
-	  $virtual->SaveLastWords();
+	  $virtual->StoreLastWords();
 	}
       }
     }

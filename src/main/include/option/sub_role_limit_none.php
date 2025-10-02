@@ -16,6 +16,6 @@ class Option_sub_role_limit_none extends OptionCheckbox {
   //配役対象サブ役職取得
   public function GetCastSubRoleList() {
     $list = 'chaos_' . $this->name . '_list';
-    return isset(ChaosConfig::$$list) ? ChaosConfig::$$list : array();
+    return isset(ChaosConfig::$$list) ? ChaosConfig::$$list : [];
   }
 }

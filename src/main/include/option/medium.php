@@ -22,6 +22,6 @@ class Option_medium extends OptionCheckbox {
   }
 
   public function GetWishRole() {
-    return array($this->name, 'mind_cupid');
+    return [$this->name, 'mind_cupid'];
   }
 }

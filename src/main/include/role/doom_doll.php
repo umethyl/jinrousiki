@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('doll');
 class Role_doom_doll extends Role_doll {
   public function VoteKillCounter(array $list) {
-    $stack = array();
+    $stack = [];
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       if (! $this->IsDoll($user) && ! RoleUser::IsAvoid($user)) {

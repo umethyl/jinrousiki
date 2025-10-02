@@ -6,7 +6,7 @@
   ・仲間表示：対象者 (恋人表示 / 1 日目限定 / 委託あり)
 */
 class Role_sweet_status extends Role {
-  public $mix_in = array('lovers');
+  public $mix_in = ['lovers'];
 
   protected function IgnoreImage() {
     return ! DB::$ROOM->IsDate(2);

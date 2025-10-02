@@ -59,7 +59,9 @@ class IndexHTML {
     TableHTML::OutputTdHeader();
     self::OutputField(TopPageMessage::INFORMATION, 'information', 'top/information.html');
     self::OutputField(TopPageMessage::GAME_LIST,   'game-list',   'room_manager.php');
-    if (! TopPageConfig::DISABLE_SHARED_SERVER) InfoHTML::OutputSharedRoomList(true);
+    if (false === TopPageConfig::DISABLE_SHARED_SERVER) {
+      InfoHTML::OutputSharedRoomList(true);
+    }
     self::OutputBBS();
     self::OutputCreateRoom();
     TableHTML::OutputTdFooter();
@@ -103,7 +105,7 @@ class IndexHTML {
   //村作成フォーム出力
   private static function OutputCreateRoom() {
     HTML::OutputFieldsetHeader(TopPageMessage::CREATE_ROOM);
-    RoomManager::OutputCreate();
+    RoomManagerController::OutputCreate();
     HTML::OutputFieldsetFooter();
   }
 
@@ -134,7 +136,7 @@ class IndexHTML {
   //タイトル画像タグ
   private static function GetTitle() {
     return <<<EOF
-<a href="./"><img src="img/title/top.jpg" title="%s" alt="%s"></a>
+<a href="./"><img src="img/title/top.jpg" alt="%s" title="%s"></a>
 <div class="comment">%s</div>
 <noscript>%s</noscript>
 EOF;

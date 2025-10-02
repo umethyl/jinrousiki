@@ -12,7 +12,7 @@ class Role_miasma_fox extends Role_child_fox {
   public $result = null;
 
   public function VoteKillCounter(array $list) {
-    $stack = array();
+    $stack = [];
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       if (! RoleUser::IsFoxCount($user) && ! RoleUser::IsAvoid($user)) {

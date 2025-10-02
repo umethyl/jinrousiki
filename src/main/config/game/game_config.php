@@ -19,8 +19,8 @@ class GameConfig {
 
   const QUOTE_TALK   = false; //発言を「」で括る
   const REPLACE_TALK = false; //発言置換モード：発言内容の一部を強制置換する
-  public static $replace_talk_list = array(); //発言置換モードの変換リスト
-  //public static $replace_talk_list = array('◆' => '◇'); //流石ツール対応例
+  public static $replace_talk_list = []; //発言置換モードの変換リスト
+  //public static $replace_talk_list = ['◆' => '◇']; //流石ツール対応例
 
   /* 表示設定 */
   //「異議」あり
@@ -31,7 +31,7 @@ class GameConfig {
   const AUTO_RELOAD = true; //game_view.php で自動更新を有効にする / しない (サーバ負荷に注意)
 
   //自動更新モードの更新間隔 (秒) のリスト
-  public static $auto_reload_list = array(15, 30, 45, 60, 90, 120);
+  public static $auto_reload_list = [15, 30, 45, 60, 90, 120];
 
   //非同期更新
   const ASYNC = false; //非同期更新を有効にする / しない
@@ -56,10 +56,10 @@ class GameConfig {
   const SILENT_LENGTH    = 25; //無口が発言できる最大文字数
 
   //役者の変換テーブル
-  public static $actor_replace_list = array('です' => 'みょん');
+  public static $actor_replace_list = ['です' => 'みょん'];
 
   //恋色迷彩の変換テーブル
-  public static $passion_replace_list = array(
+  public static $passion_replace_list = [
     '村人' => '好き', '好き' => '村人',
     '人狼' => '嫌い', '嫌い' => '人狼',
     'むらびと' => 'すき', 'すき' => 'むらびと',
@@ -73,13 +73,13 @@ class GameConfig {
     'CO' => 'プロポーズ', 'ＣＯ' => 'プロポーズ', 'プロポーズ' => 'CO',
     'グレラン' => '告白', '告白'  => 'グレラン',
     'ローラー' => 'ハーレム', 'ハーレム'  => 'ローラー'
-  );
+  ];
 
   /* その他 */
   const POWER_GM = false; //強権 GM モード (ON：true / OFF：false)
 
   //天候の出現比設定 (番号と天候の対応は WeatherData::$list 参照)
-  public static $weather_list = array(
+  public static $weather_list = [
      0 => 10,   1 => 15,   2 => 20,   3 => 20,   4 => 15,
      5 =>  5,   6 => 10,   7 => 20,   8 => 20,   9 => 10,
     10 => 10,  11 => 20,  12 =>  5,  13 => 10,  14 => 20,
@@ -95,5 +95,5 @@ class GameConfig {
     60 => 10,  61 =>  5,  62 => 10,  63 =>  5,  64 =>  5,
     65 => 15,  66 => 15,  67 => 15,  68 => 10,  69 => 10,
     70 =>  5,  71 => 15,  72 => 15
-  );
+  ];
 }

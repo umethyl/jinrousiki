@@ -1,9 +1,9 @@
 <?php
 //-- 役職データベース (サブ役職) --//
-class RoleSubData {
+final class RoleSubData {
   /* 役職名 (役職通知リストはこの順番で表示される) */
   //サブ役職のリスト (コード名 => 表示名)
-  public static $list = array(
+  public static $list = [
     'chicken'			=> '小心者',
     'rabbit'			=> 'ウサギ',
     'perverseness'		=> '天邪鬼',
@@ -124,5 +124,5 @@ class RoleSubData {
     'copied_nymph'		=> '元紅天女',
     'copied_soul'		=> '元覚醒者',
     'copied_teller'		=> '元夢語部'
-  );
+  ];
 }

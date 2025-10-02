@@ -1,6 +1,6 @@
 <?php
 //-- 定数リスト (User/Live) --//
-class UserLive {
+final class UserLive {
   const LIVE = 'live';
   const DEAD = 'dead';
   const KICK = 'kick';
@@ -8,7 +8,7 @@ class UserLive {
 }
 
 //-- 定数リスト (User/Mode) --//
-class UserMode {
+final class UserMode {
   const DEAD			= 'dead';
   const SUICIDE			= 'suicide';
   const REVIVE			= 'revive';

@@ -1,6 +1,6 @@
 <?php
 //-- キャッシュマネージャ --//
-class JinrouCacheManager {
+final class JinrouCacheManager {
   const TALK_VIEW	= 'talk_view';
   const TALK_PLAY	= 'talk_play';
   const TALK_HEAVEN	= 'talk_heaven';
@@ -61,7 +61,7 @@ class JinrouCacheManager {
     case self::TALK_VIEW:
       self::Load($type, CacheConfig::TALK_VIEW_EXPIRE);
       $filter = self::FetchTalk();
-      self::Save($filter, true);
+      self::Store($filter, true);
       self::Output($type);
       return $filter;
 
@@ -75,7 +75,7 @@ class JinrouCacheManager {
       }
       self::Load($cache_name, CacheConfig::TALK_PLAY_EXPIRE);
       $filter = self::FetchTalk(Talk::Stack()->Get(Talk::UPDATE));
-      self::Save($filter, true, Talk::Stack()->Get(Talk::UPDATE));
+      self::Store($filter, true, Talk::Stack()->Get(Talk::UPDATE));
       self::Output($type);
       return $filter;
 
@@ -86,7 +86,7 @@ class JinrouCacheManager {
       }
       self::Load($cache_name, CacheConfig::TALK_HEAVEN_EXPIRE);
       $filter = self::FetchTalk(Talk::Stack()->Get(Talk::UPDATE), true);
-      self::Save($filter, true, Talk::Stack()->Get(Talk::UPDATE));
+      self::Store($filter, true, Talk::Stack()->Get(Talk::UPDATE));
       self::Output($type);
       return $filter;
 
@@ -107,7 +107,9 @@ class JinrouCacheManager {
 
     self::Load()->updated = true;
     self::Load()->next    = $data['expire'];
-    if (CacheConfig::DEBUG_MODE) self::OutputTime($data['expire']);
+    if (CacheConfig::DEBUG_MODE) {
+      self::OutputTime($data['expire']);
+    }
     $content = gzinflate($data['content']);
 
     return $serialize ? unserialize($content) : $content;
@@ -115,23 +117,25 @@ class JinrouCacheManager {
 
   //会話情報取得
   public static function FetchTalk($force = false, $heaven = false) {
-    if (! $force) {
+    if (false === $force) {
       $filter = self::Fetch(true);
-      if (isset($filter) && $filter instanceOf TalkBuilder) return $filter;
+      if (isset($filter) && $filter instanceOf TalkBuilder) {
+	return $filter;
+      }
     }
 
     return $heaven ? Talk::FetchHeaven() : Talk::Fetch();
   }
 
   //保存処理
-  public static function Save($object, $serialize = false, $force = false) {
-    if (! $force && self::Load()->updated) return;
+  public static function Store($object, $serialize = false, $force = false) {
+    if (false === $force && self::Load()->updated) return;
 
     $content = gzdeflate($serialize ? serialize($object) : $object);
     if (JinrouCacheDB::Exists()) { //存在するならロックする
       DB::Transaction();
       $data = JinrouCacheDB::Lock();
-      if (! $force && ! self::Expire($data)) {
+      if (false === $force && false === self::Expire($data)) {
 	self::Load()->next = $data['expire'];
 	return DB::Rollback();
       }
@@ -171,7 +175,7 @@ class JinrouCacheManager {
 }
 
 //-- キャッシュコントロールクラス --//
-class JinrouCache {
+final class JinrouCache {
   public $room_no = 0;
   public $name    = null;
   public $expire  = 0;
@@ -198,6 +202,6 @@ class JinrouCache {
 
   //汎用検索情報取得
   public function GetKey() {
-    return array($this->room_no, $this->GetName(true));
+    return [$this->room_no, $this->GetName(true)];
   }
 }

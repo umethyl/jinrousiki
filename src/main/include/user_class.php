@@ -6,9 +6,9 @@ class User extends StackManager {
   public $role;
   public $main_role;
   public $live;
-  protected $role_list = array();
-  protected $partner   = array();
-  protected $updated   = array();
+  protected $role_list = [];
+  protected $partner   = [];
+  protected $updated   = [];
 
   public function __construct($role = null) {
     if (is_null($role)) return;
@@ -22,14 +22,14 @@ class User extends StackManager {
     if (isset($role)) {
       $this->role = $role;
     }
-    $this->partner = array();
+    $this->partner = [];
 
     //展開用の正規表現をセット
     $regex_partner = '/([^\[]+)\[([^\]]+)\]/'; //恋人型 (role[id])
     $regex_status  = '/([^-]+)-(.+)/';         //憑依型 (role[date-id])
 
     //展開処理
-    $role_list = array();
+    $role_list = [];
     foreach (Text::Parse($this->role) as $role) {
       if (preg_match($regex_partner, $role, $match_partner)) {
 	$role_list[] = $match_partner[1];
@@ -231,39 +231,39 @@ class User extends StackManager {
   }
 
   //役職判定
-  public function IsRole($role) {
-    $stack = func_get_args();
-    $list  = $this->role_list;
-    if ($stack[0] === true) { //仮想役職対応
-      array_shift($stack);
-      if (isset($this->virtual_role)) {
-	$list[] = $this->virtual_role;
+  public function IsRole(...$target_list) {
+    $role_list = $this->role_list;
+    if (true === $target_list[0]) { //仮想役職対応
+      array_shift($target_list);
+      if (true === isset($this->virtual_role)) {
+	$role_list[] = $this->virtual_role;
       }
     }
-    $stack = ArrayFilter::GetArg($stack);
+    $target_list = ArrayFilter::GetArg($target_list);
 
-    if (count($stack) > 1) {
-      return count(array_intersect($stack, $list)) > 0;
+    if (count($target_list) > 1) {
+      return count(array_intersect($target_list, $role_list)) > 0;
     } else {
-      return in_array($stack[0], $list);
+      return in_array($target_list[0], $role_list);
     }
   }
 
   //役職グループ判定
-  public function IsRoleGroup($role) {
-    $stack     = func_get_args();
+  public function IsRoleGroup(...$target_list) {
     $role_list = $this->role_list;
-    if ($stack[0] === true) { //仮想役職対応
-      array_shift($stack);
-      if (isset($this->virtual_role)) {
+    if (true === $target_list[0]) { //仮想役職対応
+      array_shift($target_list);
+      if (true === isset($this->virtual_role)) {
 	$role_list[] = $this->virtual_role;
       }
     }
-    $stack = ArrayFilter::GetArg($stack);
+    $target_list = ArrayFilter::GetArg($target_list);
 
-    foreach ($stack as $target) {
+    foreach ($target_list as $target) {
       foreach ($role_list as $role) {
-	if (Text::Search($role, $target)) return true;
+	if (Text::Search($role, $target)) {
+	  return true;
+	}
       }
     }
     return false;
@@ -275,8 +275,8 @@ class User extends StackManager {
   }
 
   //生存 + 役職グループ判定
-  public function IsLiveRoleGroup($role) {
-    return $this->IsLive(true) && $this->IsRoleGroup(func_get_args());
+  public function IsLiveRoleGroup(...$target_list) {
+    return $this->IsLive(true) && $this->IsRoleGroup($target_list);
   }
 
   //同一陣営判定
@@ -295,20 +295,28 @@ class User extends StackManager {
   }
 
   //同一役職系判定
-  public function IsMainGroup($group) {
-    $stack = func_get_args();
-    return in_array($this->DistinguishRoleGroup(), $stack);
+  public function IsMainGroup(...$target_list) {
+    return in_array($this->DistinguishRoleGroup(), $target_list);
   }
 
   //拡張判定
   public function IsPartner($type, $target) {
     $partner = $this->GetPartner($type);
-    if (is_null($partner)) return false;
-    if (is_array($target)) {
-      if (! isset($target[$type])) return false;
+    if (true === is_null($partner)) {
+      return false;
+    }
+
+    if (true === is_array($target)) {
+      if (true !== isset($target[$type])) {
+	return false;
+      }
+
       $target_list = $target[$type];
-      if (! is_array($target_list)) return false;
-      return count(array_intersect($partner, $target_list)) > 0;
+      if (true === is_array($target_list)) {
+	return count(array_intersect($partner, $target_list)) > 0;
+      } else {
+	return false;
+      }
     } else {
       return in_array($target, $partner);
     }
@@ -336,8 +344,8 @@ class User extends StackManager {
   }
 
   //有効シーン判定
-  public function CheckScene() {
-    return $this->last_load_scene == DB::$ROOM->scene;
+  public function IsInvalidScene() {
+    return $this->last_load_scene != DB::$ROOM->scene;
   }
 
   //投票済み判定
@@ -460,13 +468,13 @@ class User extends StackManager {
       return true;
     }
     $set = sprintf('%s = %s', $item, is_null($value) ? 'NULL' : "'{$value}'");
-    return UserDB::Update($set, array(), $this->id);
+    return UserDB::Update($set, [], $this->id);
   }
 
   //更新処理
   public function UpdateList(array $list) {
-    $stack     = array();
-    $set_stack = array();
+    $stack     = [];
+    $set_stack = [];
     foreach ($list as $key => $value) {
       $set_stack[] = sprintf('%s = ?', $key);
       $stack[] = $value;
@@ -571,9 +579,11 @@ class User extends StackManager {
     $this->AddRole(sprintf('%s[%d-%d]', $type, DB::$ROOM->date + 1, $this->id));
   }
 
-  //遺言を取得して保存する
-  public function SaveLastWords($handle_name = null) {
-    if (! $this->IsDummyBoy() && RoleUser::LimitedSaveLastWords($this)) return true; //スキップ判定
+  //遺言登録
+  public function StoreLastWords($handle_name = null) {
+    if (! $this->IsDummyBoy() && RoleUser::LimitedStoreLastWords($this)) { //スキップ判定
+      return true;
+    }
 
     if (is_null($handle_name)) {
       $handle_name = $this->handle_name;
@@ -583,7 +593,8 @@ class User extends StackManager {
       return true;
     }
 
-    if (is_null($message = UserDB::GetLastWords($this->id))) return true;
+    $message = UserDB::GetLastWords($this->id);
+    if (is_null($message)) return true;
 
     $items  = 'room_no, date, handle_name, message';
     $values = sprintf("%d, %d, '%s', '%s'", DB::$ROOM->id, DB::$ROOM->date, $handle_name, $message);
@@ -594,12 +605,12 @@ class User extends StackManager {
   public function Vote($action, $target = null, $vote_number = null) {
     if (DB::$ROOM->IsTest()) {
       if (DB::$ROOM->IsDay()) {
-	$stack = array(
+	$stack = [
 	  'user_no'     => $this->id,
 	  'uname'       => $this->uname,
 	  'target_no'   => $target,
 	  'vote_number' => $vote_number
-	);
+	];
 	RQ::GetTest()->vote->day[$this->uname] = $stack;
 	//Text::p($stack, '◆Vote');
       } else {
@@ -659,10 +670,10 @@ class User extends StackManager {
 //-- ユーザ情報ローダー --//
 class UserLoader {
   public $room_no;
-  protected $rows = array();
-  protected $kick = array();
-  protected $name = array();
-  protected $role = array();
+  protected $rows = [];
+  protected $kick = [];
+  protected $name = [];
+  protected $role = [];
 
   //-- インスタンス取得 --//
   public function __construct(Request $request, $lock = false) {
@@ -755,7 +766,7 @@ class UserLoader {
 
   //生存者を取得する
   public function SearchLive($strict = false) {
-    $stack = array();
+    $stack = [];
     foreach ($this->rows as $user) {
       if ($user->IsLive($strict)) {
 	$stack[$user->id] = $user->uname;
@@ -766,7 +777,7 @@ class UserLoader {
 
   //生存している人狼を取得する
   public function SearchLiveWolf() {
-    $stack = array();
+    $stack = [];
     foreach ($this->rows as $user) {
       if ($user->IsLive() && $user->IsMainGroup(CampGroup::WOLF)) {
 	$stack[] = $user->id;
@@ -848,27 +859,45 @@ class UserLoader {
   }
 
   //霊界の配役公開判定
+  /*
+    非公開条件
+    ・身代わり君は判定対象外
+    ・天人存在 (能力発動前)
+    ・イタコ生存 (投票前)
+    ・時間差コピー能力者 (投票前 / 能力発動前)
+    ・蘇生能力者生存
+    ・イタコ/口寄せシステム発動中
+  */
   public function IsOpenCast() {
-    $evoke_scanner = array();
-    $mind_evoke    = array();
+    $evoke_scanner = [];
+    $mind_evoke    = [];
     foreach ($this->rows as $user) {
       if ($user->IsDummyBoy()) continue;
 
       if ($user->IsRole('revive_priest')) {
-	if ($user->IsActive()) return false;
+	if ($user->IsActive()) {
+	  return false;
+	}
       } elseif ($user->IsRole('evoke_scanner')) {
 	if ($user->IsLive()) {
-	  if (DB::$ROOM->IsDate(1)) return false;
+	  if (DB::$ROOM->IsDate(1)) {
+	    return false;
+	  }
 	  $evoke_scanner[] = $user->id;
 	}
       } elseif (RoleUser::IsDelayCopy($user)) {
-	if (DB::$ROOM->IsDate(1) || ! is_null($user->GetMainRoleTarget())) return false;
+	//厳密には1日目の投票前に死亡した場合は公開可となるがレアケースなので対応しない
+	if (DB::$ROOM->IsDate(1) || false === is_null($user->GetMainRoleTarget())) {
+	  return false;
+	}
       } elseif (RoleUser::IsRevive($user) || $user->IsRole('revive_mania')) {
-	if ($user->IsLive()) return false;
+	if ($user->IsLive()) {
+	  return false;
+	}
       }
 
       if ($user->IsRole('mind_evoke')) {
-	ArrayFilter::Merge($mind_evoke, $user->GetPartner('mind_evoke'));
+	ArrayFilter::AddMerge($mind_evoke, $user->GetPartner('mind_evoke'));
       }
     }
     return count(array_intersect($evoke_scanner, $mind_evoke)) < 1;
@@ -902,8 +931,10 @@ class UserLoader {
       break;
 
     default: //遺言処理
-      $user->SaveLastWords($virtual->handle_name);
-      if (! $virtual->IsSame($user)) $virtual->SaveLastWords();
+      $user->StoreLastWords($virtual->handle_name);
+      if (! $virtual->IsSame($user)) {
+	$virtual->StoreLastWords();
+      }
       break;
     }
     return true;
@@ -923,11 +954,11 @@ class UserLoader {
       break;
 
     default:
-      $str ='sudden_death';
+      $str = 'sudden_death';
       break;
     }
 
-    DB::$ROOM->Talk($user->GetName() . ' ' . DeadMessage::$$str);
+    RoomTalk::StoreSystem($user->GetName() . ' ' . DeadMessage::$$str);
     return true;
   }
 
@@ -949,7 +980,7 @@ class UserLoader {
 
   //役職ユーザ取得
   public function GetRoleUser($role) {
-    $stack = array();
+    $stack = [];
     foreach ($this->GetRoleID($role) as $id) {
       $stack[] = $this->ByID($id);
     }
@@ -957,8 +988,7 @@ class UserLoader {
   }
 
   //役職の出現判定
-  public function IsAppear($role) {
-    $role_list = func_get_args();
+  public function IsAppear(...$role_list) {
     return count(array_intersect($role_list, array_keys($this->role))) > 0;
   }
 
@@ -1040,10 +1070,10 @@ class UserLoader {
   //ユーザ情報を User クラスでパースして登録
   private function Parse(array $user_list) {
     //初期化処理
-    $this->rows = array();
-    $this->kick = array();
-    $this->name = array();
-    $this->role = array();
+    $this->rows = [];
+    $this->kick = [];
+    $this->name = [];
+    $this->role = [];
     $kick = 0;
 
     foreach ($user_list as $user) {

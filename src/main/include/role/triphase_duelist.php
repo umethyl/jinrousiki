@@ -21,11 +21,11 @@ class Role_triphase_duelist extends Role_valkyrja_duelist {
   private function GetAddDuelistRoleList() {
     $stack = $this->GetStack();
     if (is_null($stack)) { //空なら初期設定を行う
-      $stack = Lottery::GetList(array(
-	array('flattery',  'wisp'),
-	array('rabbit', 'black_wisp'),
-	array('nervy', 'foughten_wisp')
-      ));
+      $stack = Lottery::GetList([
+	['flattery',  'wisp'],
+	['rabbit', 'black_wisp'],
+	['nervy', 'foughten_wisp']
+      ]);
     }
     $role_list = array_shift($stack);
     $this->SetStack($stack);

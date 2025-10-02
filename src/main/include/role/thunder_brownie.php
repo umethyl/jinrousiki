@@ -10,17 +10,19 @@ class Role_thunder_brownie extends Role {
 
   //落雷判定
   public function SetThunderbolt() {
-    if (! is_array($stack = $this->GetStack()) || $this->IsVoteKill()) return;
+    $stack = $this->GetStack();
+    if (false === is_array($stack) || $this->IsVoteKill()) return;
 
-    if (count(array_intersect($this->GetStack('vote_possible'), array_keys($stack))) > 0) {
+    $target_list = $this->GetStack(VoteDayElement::VOTE_POSSIBLE);
+    if (count(array_intersect($target_list, array_keys($stack))) > 0) {
       $this->SetThunderboltTarget();
     }
   }
 
   //落雷対象者選出
   public function SetThunderboltTarget() {
-    $stack = array();
-    foreach (RoleManager::Stack()->Get('user_list') as $uname) {
+    $stack = [];
+    foreach (RoleManager::Stack()->Get(VoteDayElement::USER_LIST) as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       if ($user->IsLive(true) && ! RoleUser::IsAvoid($user, true)) {
 	$stack[] = $user->id;

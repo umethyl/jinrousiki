@@ -1,19 +1,11 @@
 <?php
-//-- ルール出力クラス --//
-class RuleInfo {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//-- ルール情報コントローラー --//
+final class RuleInfoController extends JinrouController {
+  protected static function Load() {
     Loader::LoadClass('InfoTime');
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     InfoHTML::OutputHeader(RuleInfoMessage::TITLE, 0, 'rule');
     InfoHTML::Load('rule');
     HTML::OutputFooter();

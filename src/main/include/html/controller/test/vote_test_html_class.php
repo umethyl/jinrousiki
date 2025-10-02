@@ -46,7 +46,7 @@ class VoteTestHTML {
       case VoteAction::SILENT_WOLF:
       case VoteAction::STEP:
       case VoteAction::STEP_VAMPIRE:
-	$target_stack = array();
+	$target_stack = [];
 	foreach (Text::Parse($stack[RequestDataVote::TARGET]) as $id) {
 	  $user = DB::$USER->ByVirtual($id);
 	  $target_stack[$user->id] = $user->GenerateShortRoleName(false, true);

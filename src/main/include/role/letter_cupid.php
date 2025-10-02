@@ -10,7 +10,7 @@ class Role_letter_cupid extends Role_cupid {
     $cupid_list = DB::$USER->GetRoleID($this->role);
     //Text::p($cupid_list, "◆{$this->role}");
 
-    $stack = array();
+    $stack = [];
     foreach ($this->GetLoversList() as $id) { //恋人一覧から検索
       $cupid_stack = DB::$USER->ByID($id)->GetPartner('lovers');
       if (count($cupid_stack) > 1) continue; //単独カップルのみ

@@ -1,80 +1,97 @@
 <?php
 //-- DB アクセス (RoomManager 拡張) --//
-class RoomManagerDB {
+final class RoomManagerDB {
   //村情報取得
   public static function Load($lock = false) {
-    $query = <<<EOF
-SELECT room_no AS id, name, comment, date, scene, status, game_option, option_role, max_user
-FROM room WHERE room_no = ?
-EOF;
-    DB::Prepare($query . DB::SetLock($lock), array(RQ::Get()->room_no));
+    $column = [
+      'room_no AS id', 'name', 'comment', 'date', 'scene', 'status', 'game_option',
+      'option_role', 'max_user'
+    ];
+    $query = self::GetQueryBase()->Select($column)->Where(['room_no'])->Lock($lock);
+
+    DB::Prepare($query->Build(), [RQ::Get()->room_no]);
     return DB::FetchClass('Room', true);
   }
 
   //稼働中の村取得
   public static function GetList() {
-    $query = <<<EOF
-SELECT room_no AS id, name, comment, game_option, option_role, max_user, status
-FROM room WHERE status IN (?, ?, ?) ORDER BY room_no DESC
-EOF;
-    DB::Prepare($query, self::SetStatus());
+    $column = [
+      'room_no AS id', 'name', 'comment', 'game_option', 'option_role', 'max_user', 'status'
+    ];
+    $list   = self::GetStatus();
+    $query  = self::GetQueryBase()->Select($column)->WhereIn('status', count($list));
+    $query->Order(['room_no' => false]);
+
+    DB::Prepare($query->Build(), $list);
     return DB::FetchAssoc();
   }
 
   //最終村作成時刻を取得
   public static function GetLastEstablish() {
-    DB::Prepare(self::SetQuery('MAX(establish_datetime)'), self::SetStatus());
+    $query = self::GetQuery(['MAX(establish_datetime)']);
+
+    DB::Prepare($query->Build(), self::GetStatus());
     return DB::FetchResult();
   }
 
   //次の村番号を取得
   public static function GetNext() {
-    DB::Prepare(self::SetSelect('MAX(room_no)'));
+    $query = self::GetQueryBase()->Select(['MAX(room_no)']);
+
+    DB::Prepare($query->Build());
     return (int)DB::FetchResult() + 1;
   }
 
   //現在の稼動数を取得
   public static function CountActive() {
-    DB::Prepare(self::SetQuery('room_no'), self::SetStatus());
+    $query =self:: GetQuery(['room_no']);
+
+    DB::Prepare($query->Build(), self::GetStatus());
     return DB::Count();
   }
 
   //現在の稼動数を取得 (本人作成限定)
   public static function CountEstablish() {
-    $list = array_merge(self::SetStatus(), array(Security::GetIP()));
-    DB::Prepare(self::SetQuery('room_no') . ' AND establisher_ip = ?', $list);
+    $query = self::GetQuery(['room_no'])->Where(['establisher_ip']);
+    $list  = array_merge(self::GetStatus(), [Security::GetIP()]);
+
+    DB::Prepare($query->Build(), $list);
     return DB::Count();
   }
 
   //ユーザ数取得
   public static function CountUser($room_no) {
-    DB::Prepare('SELECT user_no FROM user_entry WHERE room_no = ?', array($room_no));
+    $query = Query::Init()->Table('user_entry')->Select(['user_no'])->Where(['room_no']);
+
+    DB::Prepare($query->Build(), [$room_no]);
     return DB::Count();
   }
 
   //村作成
   public static function Insert($room_no, $game_option, $option_role) {
-    $query = <<<EOF
-INSERT INTO room (room_no, name, comment, max_user, game_option, option_role, status, date, scene,
-vote_count, scene_start_time, last_update_time, establisher_ip, establish_datetime)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, NOW())
-EOF;
-    $list = array(
+    $column = [
+      'room_no', 'name', 'comment', 'max_user', 'game_option',
+      'option_role', 'status', 'date', 'scene', 'vote_count', 'establisher_ip'
+    ];
+    $list = [
       $room_no, RQ::Get()->room_name, RQ::Get()->room_comment, RQ::Get()->max_user, $game_option,
       $option_role, RoomStatus::WAITING, 0, RoomScene::BEFORE, 1, Security::GetIP()
-    );
-    DB::Prepare($query, $list);
+    ];
+
+    $query = self::GetQueryBase()->Insert()->Into($column);
+    $query->IntoData('scene_start_time', Query::TIME);
+    $query->IntoData('last_update_time', Query::TIME);
+    $query->IntoData('establish_datetime', Query::NOW);
+
+    DB::Prepare($query->Build(), $list);
     return DB::Execute();
   }
 
   //村データ UPDATE
   public static function Update(array $list) {
-    $query  = 'UPDATE room SET %s WHERE room_no = ?';
-    $update = array();
-    foreach ($list as $key => $value) {
-      $update[] = sprintf("%s = '%s'", $key, $value);
-    }
-    DB::Prepare(sprintf($query, ArrayFilter::ToCSV($update)), array(DB::$ROOM->id));
+    $query = self::GetQueryBase()->Update()->Set(array_keys($list))->Where(['room_no']);
+
+    DB::Prepare($query->Build(), array_merge(array_values($list), [DB::$ROOM->id]));
     return DB::Execute();
   }
 
@@ -84,16 +101,15 @@ EOF;
     パフォーマンスの観点から見ても割に合わないと評価してロックは行わない
   */
   public static function DieRoom() {
-    $query = <<<EOF
-UPDATE room SET status = ?, scene = ?
-WHERE status IN (?, ?, ?) AND last_update_time < UNIX_TIMESTAMP() - ?
-EOF;
-    $list = array(
-      RoomStatus::FINISHED, RoomScene::AFTER,
-      RoomStatus::WAITING, RoomStatus::CLOSING, RoomStatus::PLAYING,
-      RoomConfig::DIE_ROOM
+    $status_list = self::GetStatus();
+    $query = self::GetQueryBase()->Update()->Set(['status', 'scene']);
+    $query->WhereIn('status', count($status_list));
+    $query->WhereLower('last_update_time', sprintf('%s - ?', Query::TIME));
+    $list  = array_merge(
+      [RoomStatus::FINISHED, RoomScene::AFTER], $status_list, [RoomConfig::DIE_ROOM]
     );
-    DB::Prepare($query, $list);
+
+    DB::Prepare($query->Build(), $list);
     return DB::Execute();
   }
 
@@ -103,28 +119,29 @@ EOF;
     仕様上、強制排除措置にあたるので敢えてロックは行わない
   */
   public static function ClearSession() {
-    $query = <<<EOF
-UPDATE user_entry AS u INNER JOIN room AS r USING (room_no)
-SET u.session_id = NULL
-WHERE u.session_id IS NOT NULL AND r.status = ? AND
-  (r.finish_datetime IS NULL OR r.finish_datetime < DATE_SUB(NOW(), INTERVAL ? SECOND))
-EOF;
-    DB::Prepare($query, array(RoomStatus::FINISHED, RoomConfig::KEEP_SESSION));
+    $query = Query::Init()->Table('user_entry AS u INNER JOIN room AS r USING (room_no)');
+    $query->Update()->SetNull('u.session_id');
+    $query->WhereNotNull('u.session_id')->Where(['r.status']);
+    $query->WhereUpper('r.finish_datetime', 'DATE_SUB(NOW(), INTERVAL ? SECOND)');
+    $query->WhereNull('r.finish_datetime');
+    $query->WhereOr(['r.finish_datetime', 'r.finish_datetime']);
+
+    DB::Prepare($query->Build(), [RoomStatus::FINISHED, RoomConfig::KEEP_SESSION]);
     return DB::Execute();
   }
 
-  //共通 SELECT 句生成
-  private static function SetSelect($column) {
-    return DB::SetSelect('room', $column);
+  //基本選択条件取得
+  private static function GetStatus() {
+    return [RoomStatus::WAITING, RoomStatus::CLOSING, RoomStatus::PLAYING];
   }
 
-  //共通 SQL 文生成
-  private static function SetQuery($column) {
-    return self::SetSelect($column) . ' WHERE status IN (?, ?, ?)';
+  //共通 Query 取得
+  private static function GetQuery(array $column) {
+    return self::GetQueryBase()->Select($column)->WhereIn('status', count(self::GetStatus()));
   }
 
-  //基本選択条件セット
-  private static function SetStatus() {
-    return array(RoomStatus::WAITING, RoomStatus::CLOSING, RoomStatus::PLAYING);
+  //共通 Query Base 取得
+  private static function GetQueryBase() {
+    return Query::Init()->Table('room');
   }
 }

@@ -35,7 +35,7 @@ class Role_death_note extends Role {
 
   //デスノート再配布
   public function ResetDeathNote() {
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsLive(true)) {
 	$stack[] = $user->id;

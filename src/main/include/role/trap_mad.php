@@ -23,7 +23,7 @@ class Role_trap_mad extends Role {
     RoleHTML::OutputVote(VoteCSS::WOLF, $str, $this->action, $this->not_action);
   }
 
-  protected function GetIgnoreAddVoteMessage() {
+  protected function GetDisabledAddVoteMessage() {
     return VoteRoleMessage::LOST_ABILITY;
   }
 
@@ -136,6 +136,6 @@ class Role_trap_mad extends Role {
     foreach ($this->GetStack($this->GetTrapType()) as $id => $flag) {
       DB::$USER->Kill($id, DeadReason::TRAPPED);
     }
-    $this->SetStack(array(), $this->GetTrapType()); //リストをリセット
+    $this->SetStack([], $this->GetTrapType()); //リストをリセット
   }
 }

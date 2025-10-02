@@ -1,6 +1,6 @@
 <?php
 //-- 発言処理クラス (GamePlay 拡張) --//
-class GamePlayTalk {
+final class GamePlayTalk {
   //判定用変数初期化
   public static function InitStack() {
     Talk::Stack()->Set(Talk::LIMIT_SAY, null);
@@ -17,11 +17,11 @@ class GamePlayTalk {
   }
 
   //発言登録
-  public static function Save($say) {
+  public static function Store($say) {
     //-- 秘密発言判定 --//
     if (RQ::Get()->font_type == TalkVoice::SECRET) {
       RQ::Set('secret_talk', true);
-      RQ::Set('font_type', TalkVoice::NORMAL); //声の大きさは普通で固定
+      RQ::Set(RequestDataTalk::VOICE, TalkVoice::NORMAL); //声の大きさは普通で固定
     } else {
       RQ::Set('secret_talk', false);
     }
@@ -30,47 +30,59 @@ class GamePlayTalk {
     Talk::Stack()->Set(Talk::UPDATE, true);
 
     //-- 無条件登録 (ゲーム開始前後 > 身代わり君のシステムメッセージ (遺言) > 死者の霊話) --//
-    if (! DB::$ROOM->IsPlaying()) {
-      return RoleTalk::Save($say, DB::$ROOM->scene, null, 0, true);
+    $talk = new RoleTalkStruct($say);
+    if (false === DB::$ROOM->IsPlaying()) {
+      return RoleTalk::Store($talk, true);
     } elseif (RQ::Get()->last_words && DB::$SELF->IsDummyBoy()) {
-      return RoleTalk::Save($say, DB::$ROOM->scene, TalkLocation::DUMMY_BOY);
+      $talk->Set(TalkStruct::LOCATION, TalkLocation::DUMMY_BOY);
+      return RoleTalk::Store($talk);
     } elseif (DB::$SELF->IsDead()) {
-      return RoleTalk::Save($say, RoomScene::HEAVEN);
+      $talk->Set(TalkStruct::SCENE, RoomScene::HEAVEN);
+      return RoleTalk::Store($talk);
     }
 
     //-- 制限時間判定 --//
-    $left_time  = GameTime::GetLeftTime();
-    $spend_time = GameTime::GetSpendTime($say);
-    if ($left_time < 1) return false; //制限時間外ならスキップ (ここに来るのは生存者のみのはず)
+    if (GameTime::GetLeftTime() < 1) { //制限時間外ならスキップ (ここに来るのは生存者のみのはず)
+      return false;
+    }
 
     //-- シーン別処理 --//
     if (DB::$ROOM->IsDay()) { //昼はそのまま発言
       if (DB::$ROOM->IsEvent('wait_morning')) return false; //待機時間判定
 
-      if (! RQ::Get()->secret_talk) {
-	if (DB::$ROOM->IsOption('limit_talk')) { //発言数制限制
-	  if (! self::UpdateLimitTalkCount()) return false;
+      if (RQ::Get()->secret_talk) {
+	$talk->Set(TalkStruct::LOCATION, TalkLocation::SECRET);
+      } else {
+	//発言数制限制
+	if (DB::$ROOM->IsOption('limit_talk') && false === self::UpdateLimitTalkCount()) {
+	  return false;
 	}
 
-	if (DB::$ROOM->IsOption('no_silence')) { //沈黙禁止
-	  if (! self::UpdateNoSilenceTalkCount()) return false;
+	//沈黙禁止
+	if (DB::$ROOM->IsOption('no_silence') && false === self::UpdateNoSilenceTalkCount()) {
+	  return false;
 	}
 
 	RoleTalk::EchoSay(); //山彦の処理
       }
 
-      $location = RQ::Get()->secret_talk ? TalkLocation::SECRET : null;
-      return RoleTalk::Save($say, DB::$ROOM->scene, $location, $spend_time, true);
+      $talk->Set(TalkStruct::SPEND_TIME, GameTime::GetSpendTime($say));
+      return RoleTalk::Store($talk, true);
     } else { //夜の処理 (役職毎に分ける)
-      //仮想ユーザで判定, 時間経過するのは人狼の発言のみ (本人判定)
-      $location = RoleTalk::GetLocation(DB::$SELF->GetVirtual(), DB::$SELF);
-      $update   = DB::$SELF->IsMainGroup(CampGroup::WOLF);
-      return RoleTalk::Save($say, DB::$ROOM->scene, $location, $update ? $spend_time : 0, $update);
+      //仮想ユーザで判定
+      $talk->Set(TalkStruct::LOCATION, RoleTalk::GetLocation(DB::$SELF->GetVirtual(), DB::$SELF));
+
+      //時間経過するのは人狼の発言のみ (本人判定)
+      $update = DB::$SELF->IsMainGroup(CampGroup::WOLF);
+      if (true === $update) {
+	$talk->Set(TalkStruct::SPEND_TIME, GameTime::GetSpendTime($say));
+      }
+      return RoleTalk::Store($talk, $update);
     }
   }
 
   //遺言登録
-  public static function SaveLastWords($say) {
+  public static function StoreLastWords($say) {
     //-- スキップ判定 (シーン > オプション) --//
     if (DB::$ROOM->IsFinished()) {
       return false;
@@ -91,7 +103,7 @@ class GamePlayTalk {
 	DB::$SELF->Update('last_words', $say);
       }
     } elseif (DB::$SELF->IsDead()) {
-      RoleTalk::SaveHeavenLastWords($say);
+      RoleTalk::StoreHeavenLastWords($say);
     }
 
     //-- タイマー更新判定 --//

@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('patron');
 class Role_critical_patron extends Role_patron {
-  public $mix_in = array('critical_luck');
+  public $mix_in = ['critical_luck'];
 
   protected function IgnoreFilterVotePoll() {
     return ! Lottery::Percent(5);

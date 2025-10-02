@@ -10,13 +10,13 @@ class Role_philosophy_wizard extends Role_wizard {
   public $action = null;
 
   protected function GetWizardResultList() {
-    return array(RoleAbility::PHARMACIST);
+    return [RoleAbility::PHARMACIST];
   }
 
   protected function GetWizardList() {
-    return array(
+    return [
       'alchemy_pharmacist', 'cure_pharmacist', 'miasma_jealousy', 'miasma_mad', 'critical_mad',
       'sweet_cupid', 'corpse_courier_mad'
-    );
+    ];
   }
 }

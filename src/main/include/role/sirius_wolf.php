@@ -23,7 +23,7 @@ class Role_sirius_wolf extends Role_wolf {
   //覚醒状態取得
   public function GetAbilitySiriusWolf() {
     //生存人狼数依存なので日数単位で同一になるはず (日数を追加しているのはログ対策)
-    $stack = array();
+    $stack = [];
     $count = DB::$USER->CountLiveWolf();
 
     $stack[Switcher::ON]	= $count < 3;;

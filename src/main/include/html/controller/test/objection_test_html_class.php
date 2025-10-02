@@ -4,7 +4,7 @@ class ObjectionTestHTML {
   //フォーム出力
   public static function OutputForm(array $stack) {
     $url   = 'objection_test.php';
-    $image = JINROU_ROOT . '/' . GameConfig::OBJECTION_IMAGE;
+    $image = URL::Combine(JINROU_ROOT, GameConfig::OBJECTION_IMAGE);
 
     Text::Printf(HTML::GetP(), HTML::GenerateLink($url, ObjectionTestMessage::RESET));
     TableHTML::OutputHeader(null, false);
@@ -12,7 +12,8 @@ class ObjectionTestHTML {
       TableHTML::OutputTrHeader();
       TableHTML::OutputTdHeader('objection');
       Text::Printf(self::GetForm(),
-        $url, $name, $image . self::GetImage($name) . '.gif', ObjectionTestMessage::$$name
+        $url, Switcher::ON, RequestDataTalk::OBJECTION, $name,
+        $image . self::GetImage($name) . '.gif', ObjectionTestMessage::$$name
       );
       TableHTML::OutputTdFooter();
       TableHTML::OutputTrFooter();
@@ -36,9 +37,9 @@ class ObjectionTestHTML {
   private static function GetForm() {
     return <<<EOF
 <form method="post" action="%s">
-<input type="hidden" name="execute" value="on">
-<input type="hidden" name="set_objection" value="%s">
-<input type="image" name="objimage" src="%s" border="0"> %s
+<input type="hidden" name="execute" value="%s">
+<input type="hidden" name="%s" value="%s">
+<input type="image" name="objection_image" src="%s" border="0"> %s
 </form>
 EOF;
   }

@@ -1,16 +1,8 @@
 <?php
-//-- GameLog 出力クラス --//
-class GameLog {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Certify();
-    self::Check();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//◆文字化け抑制◆//
+//-- GameLog コントローラー --//
+final class GameLogController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('game_log');
     DB::Connect();
     Session::Login();
@@ -19,40 +11,11 @@ class GameLog {
     DB::$ROOM->SetFlag(RoomMode::LOG);
     DB::LoadUser();
     DB::LoadSelf();
+    self::Certify();
+    self::Validate();
   }
 
-  //認証 (死者 / ゲーム終了後)
-  private static function Certify() {
-    if (DB::$SELF->IsDead() || DB::$ROOM->IsFinished()) return;
-    HTML::OutputResult(GameLogMessage::CERTIFY, GameLogMessage::CERTIFY . Message::TOP);
-  }
-
-  //シーンチェック
-  private static function Check() {
-    switch (RQ::Get()->scene) {
-    case RoomScene::AFTER:
-    case RoomScene::HEAVEN:
-      if (! DB::$ROOM->IsFinished()) { //霊界・ゲーム終了後はゲーム終了後のみ
-	self::OutputResult(GameLogMessage::PLAYING);
-      }
-      break;
-
-    default:
-      if (DB::$ROOM->date < RQ::Get()->date ||
-	  (DB::$ROOM->IsDate(RQ::Get()->date) &&
-	   (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Get()->scene))) { //未来判定
-	self::OutputResult(GameLogMessage::FUTURE);
-      }
-      DB::$ROOM->last_date = DB::$ROOM->date;
-      DB::$ROOM->date      = RQ::Get()->date;
-      DB::$ROOM->SetScene(RQ::Get()->scene);
-      DB::$USER->SetEvent(true);
-      break;
-    }
-  }
-
-  //出力
-  private static function Output() {
+  protected static function Output() {
     GameHTML::OutputHeader('game_log');
     self::OutputHeader();
     if (RQ::Get()->scene == RoomScene::HEAVEN) {
@@ -69,9 +32,41 @@ class GameLog {
 	GameHTML::OutputLastWords(true); //遺言 (昼終了時限定)
       }
 
-      if (DB::$ROOM->IsNight()) GameHTML::OutputVote();
+      if (DB::$ROOM->IsNight()) {
+	GameHTML::OutputVote();
+      }
     }
     HTML::OutputFooter(true);
+  }
+
+  //認証 (死者 or ゲーム終了後のみ)
+  private static function Certify() {
+    if (DB::$SELF->IsDead() || DB::$ROOM->IsFinished()) return;
+    HTML::OutputResult(GameLogMessage::CERTIFY, GameLogMessage::CERTIFY . Message::TOP);
+  }
+
+  //シーンチェック
+  private static function Validate() {
+    switch (RQ::Get()->scene) {
+    case RoomScene::AFTER:
+    case RoomScene::HEAVEN:
+      if (false === DB::$ROOM->IsFinished()) { //霊界・ゲーム終了後はゲーム終了後のみ
+	self::OutputError(GameLogMessage::PLAYING);
+      }
+      break;
+
+    default:
+      if (DB::$ROOM->date < RQ::Get()->date ||
+	  (DB::$ROOM->IsDate(RQ::Get()->date) &&
+	   (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Get()->scene))) { //未来判定
+	self::OutputError(GameLogMessage::FUTURE);
+      }
+      DB::$ROOM->last_date = DB::$ROOM->date;
+      DB::$ROOM->date      = RQ::Get()->date;
+      DB::$ROOM->SetScene(RQ::Get()->scene);
+      DB::$USER->SetEvent(true);
+      break;
+    }
   }
 
   //ヘッダ出力
@@ -102,7 +97,8 @@ class GameLog {
 
   //能力発動ログ出力 (管理者限定)
   private static function OutputAbility() {
-    if (RQ::Get()->user_no > 0 && DB::$SELF->IsDummyBoy() && ! DB::$ROOM->IsOption('gm_login')) {
+    if (RQ::Get()->user_no > 0 && DB::$SELF->IsDummyBoy() &&
+	false === DB::$ROOM->IsOption('gm_login')) {
       Loader::LoadFile('image_class');
       DB::LoadSelf(RQ::Get()->user_no);
       DB::$SELF->live = UserLive::LIVE;
@@ -111,7 +107,7 @@ class GameLog {
   }
 
   //エラー処理
-  private static function OutputResult($str) {
+  private static function OutputError($str) {
     HTML::OutputResult(GameLogMessage::INPUT, GameLogMessage::INPUT . $str);
   }
 }

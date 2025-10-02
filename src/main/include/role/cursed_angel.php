@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('angel');
 class Role_cursed_angel extends Role_angel {
-  public $mix_in = array('chicken');
+  public $mix_in = ['chicken'];
 
   protected function IgnoreSuddenDeath() {
     return ! $this->IsRealActor() || RoleUser::IsAvoidLovers($this->GetActor(), true);

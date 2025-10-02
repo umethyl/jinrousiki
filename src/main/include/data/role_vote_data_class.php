@@ -1,6 +1,6 @@
 <?php
 //-- 定数リスト (Role/StackVoteKill) --//
-class RoleStackVoteKill {
+final class RoleStackVoteKill {
   const ACTOR	= 'actor';
   const TARGET	= 'target';
   const ADD	= 'add';
@@ -9,13 +9,13 @@ class RoleStackVoteKill {
 }
 
 //-- 定数リスト (Role/ActionDate) --//
-class RoleActionDate {
+final class RoleActionDate {
   const FIRST = 'first';
   const AFTER = 'after';
 }
 
 //-- 定数リスト (Role/Ability) --//
-class RoleAbility {
+final class RoleAbility {
   const MAGE			= 'MAGE_RESULT';
   const VOODOO_KILLER		= 'VOODOO_KILLER_SUCCESS';
   const NECROMANCER		= 'NECROMANCER_RESULT';
@@ -63,7 +63,7 @@ class RoleAbility {
 }
 
 //-- 定数リスト (Role/Vote/Target) --//
-class RoleVoteTarget {
+final class RoleVoteTarget {
   const TRAP			= 'trap';
   const SNOW_TRAP		= 'snow_trap';
   const GUARD			= 'guard';
@@ -77,7 +77,7 @@ class RoleVoteTarget {
 }
 
 //-- 定数リスト (Role/Vote/Success) --//
-class RoleVoteSuccess {
+final class RoleVoteSuccess {
   //遅行発動
   const TRAPPED		= 'trapped';
   const FROSTBITE	= 'frostbite';

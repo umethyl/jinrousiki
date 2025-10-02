@@ -1,15 +1,8 @@
 <?php
-//-- GameVote 出力クラス --//
-class GameVote {
-  //実行
-  public static function Execute() {
-    self::Load();
-    RQ::Get()->vote ? self::Vote() : self::Output();
-    DB::Disconnect();
-  }
-
-  //データロード
-  private static function Load() {
+//◆文字化け抑制◆//
+//-- GameVote コントローラー --//
+final class GameVoteController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('game_vote', true);
     DB::Connect();
     Session::Login();
@@ -25,8 +18,11 @@ class GameVote {
     DB::LoadSelf();
   }
 
-  //投票処理
-  private static function Vote() {
+  protected static function EnableCommand() {
+    return RQ::Get()->vote;
+  }
+
+  protected static function RunCommand() {
     if (DB::$ROOM->IsBeforeGame()) { //ゲーム開始 or Kick 投票処理
       switch (RQ::Get()->situation) {
       case VoteAction::GAME_START:
@@ -41,7 +37,7 @@ class GameVote {
       }
     } elseif (DB::$SELF->IsDead()) { //死者の霊界投票処理
       if (RQ::Get()->situation == VoteAction::RESET_TIME && DB::$SELF->IsDummyBoy()) {
-	VoteDummyBoy::ResetTime();
+	VoteDummyBoy::Execute();
       } else {
 	VoteHeaven::Execute();
       }
@@ -56,10 +52,9 @@ class GameVote {
     }
   }
 
-  //出力 (死者は専用ページ / シーン別の投票ページ)
-  private static function Output() {
+  protected static function Output() {
     Loader::LoadFile('vote_message');
-    if (DB::$SELF->IsDead()) {
+    if (DB::$SELF->IsDead()) { //死者は専用ページ
       return DB::$SELF->IsDummyBoy() ? VoteHTML::OutputDummyBoy() : VoteHTML::OutputHeaven();
     }
 
@@ -76,5 +71,9 @@ class GameVote {
     default: //ここに来たらロジックエラー
       return VoteHTML::OutputError(VoteMessage::INVALID_SCENE);
     }
+  }
+
+  protected static function Finish() {
+    DB::Disconnect();
   }
 }

@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('chicken');
 class Role_panelist extends Role_chicken {
-  public $mix_in = array('watcher');
+  public $mix_in = ['watcher'];
 
   protected function IsSuddenDeath() {
     return $this->GetVoteUser()->IsRole('quiz');

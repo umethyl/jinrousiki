@@ -1,22 +1,16 @@
 <?php
-//-- Twitter 投稿テスト --//
-class TwitterTest {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//-- Twitter 投稿テストコントローラー --//
+final class TwitterTestController extends JinrouController {
+  protected static function Load() {
     DevHTML::LoadRequest();
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     HTML::OutputHeader(TwitterMessage::TITLE, null, true);
     TwitterTestHTML::OutputForm();
-    if (DevHTML::IsExecute()) self::RunTest();
+    if (DevHTML::IsExecute()) {
+      self::RunTest();
+    }
     HTML::OutputFooter();
   }
 

@@ -21,6 +21,6 @@ class Option_cupid extends OptionCheckbox {
   }
 
   public function GetWishRole() {
-    return array($this->name);
+    return [$this->name];
   }
 }

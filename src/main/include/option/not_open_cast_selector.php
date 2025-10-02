@@ -5,7 +5,7 @@
 class Option_not_open_cast_selector extends OptionSelector {
   public $group = OptionGroup::GAME;
   public $type  = OptionFormType::GROUP;
-  public $form_list = array('not_open_cast', 'auto_open_cast');
+  public $form_list = ['not_open_cast', 'auto_open_cast'];
 
   protected function LoadValue() {
     $this->value = GameOptionConfig::$default_not_open_cast;
@@ -13,7 +13,7 @@ class Option_not_open_cast_selector extends OptionSelector {
   }
 
   public function GetItem() {
-    $stack = array('' => OptionLoader::Load('not_close_cast'));
+    $stack = ['' => OptionLoader::Load('not_close_cast')];
     foreach ($this->form_list as $option) {
       $item = OptionLoader::Load($option);
       if ($item->enable) {

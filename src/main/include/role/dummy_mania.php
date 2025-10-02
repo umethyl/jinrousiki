@@ -15,7 +15,7 @@ class Role_dummy_mania extends Role_soul_mania {
   }
 
   protected function GetDelayCopyList() {
-    return array(
+    return [
       CampGroup::HUMAN		=> 'suspect',
       CampGroup::MAGE		=> 'dummy_mage',
       CampGroup::NECROMANCER	=> 'dummy_necromancer',
@@ -50,6 +50,6 @@ class Role_dummy_mania extends Role_soul_mania {
       CampGroup::AVENGER	=> 'cute_avenger',
       CampGroup::PATRON		=> 'critical_patron',
       CampGroup::TENGU		=> 'eclipse_tengu'
-    );
+    ];
   }
 }

@@ -1,6 +1,6 @@
 <?php
 //-- 定数リスト (Event/Type) --//
-class EventType {
+final class EventType {
   const WEATHER   = 'WEATHER';
   const EVENT     = 'EVENT';
   const VOTE_DUEL = 'VOTE_DUEL';

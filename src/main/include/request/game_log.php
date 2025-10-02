@@ -8,8 +8,8 @@
 class Request_game_log extends Request {
   public function __construct() {
     $this->ParseGetRoomNo();
-    $this->ParseGetInt('date', RequestDataUser::ID);
-    $this->ParseGetData('scene');
+    $this->ParseGetInt(RequestDataGameLog::DATE, RequestDataUser::ID);
+    $this->ParseGetData(RequestDataGameLog::SCENE);
     if ($this->IsInvalidScene()) {
       HTML::OutputResult(Message::REQUEST_ERROR, Message::REQUEST_ERROR);
     }

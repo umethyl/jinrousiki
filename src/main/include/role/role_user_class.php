@@ -10,7 +10,7 @@ class RoleUser {
     }
 
     $target = $user;
-    $stack  = array();
+    $stack  = [];
     while ($target->IsMainGroup(CampGroup::UNKNOWN_MANIA)) { //鵺系ならコピー先を辿る
       $id = $target->GetMainRoleTarget();
       if (is_null($id) || in_array($id, $stack)) break;
@@ -173,12 +173,12 @@ class RoleUser {
 
   //特殊恋人
   public static function IsAvoidLovers(User $user, $strict = false) {
-    return (! $strict && self::IsChallengeLovers($user)) || $user->IsRole('vega_lovers');
+    return (false === $strict && self::IsChallengeLovers($user)) || $user->IsRole('vega_lovers');
   }
 
   //特殊耐性
   public static function IsAvoid(User $user, $quiz = false) {
-    $stack = array('detective_common');
+    $stack = ['detective_common'];
     if ($quiz) {
       $stack[] = 'quiz';
     }
@@ -205,9 +205,9 @@ class RoleUser {
     return $user->IsMainGroup(CampGroup::ESCAPER) || $user->IsRole($stack);
   }
 
-  //遺言保存制限
-  public static function LimitedSaveLastWords(User $user) {
-    $stack = RoleFilterData::$limited_save_last_words;
+  //遺言登録制限
+  public static function LimitedStoreLastWords(User $user) {
+    $stack = RoleFilterData::$limited_store_last_words;
     return self::LimitedLastWords($user) || $user->IsRole($stack);
   }
 

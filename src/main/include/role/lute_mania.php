@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('unknown_mania');
 class Role_lute_mania extends Role_unknown_mania {
-  public $mix_in = array('step_mage');
+  public $mix_in = ['step_mage'];
 
   //足音処理
   public function Step() {
@@ -14,7 +14,7 @@ class Role_lute_mania extends Role_unknown_mania {
 
     $list  = RoleManager::GetVoteData();
     $id    = $list[$this->action][$this->GetID()];
-    $stack = array();
+    $stack = [];
     foreach ($this->LotteryChainStep($this->GetChainStep($id), $id) as $target_id) {
       if (DB::$USER->IsVirtualLive($target_id)) {
 	$stack[] = $target_id;
@@ -30,7 +30,7 @@ class Role_lute_mania extends Role_unknown_mania {
     //Text::p($length, '◆ChainStep [length]');
 
     $max   = count($list);
-    $stack = array();
+    $stack = [];
     for ($i = 0; $i < $max; $i++) {
       if ($i + $length > $max) break;
       $slice = array_slice($list, $i, $length);

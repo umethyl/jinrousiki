@@ -54,7 +54,7 @@ class Role_soul_mania extends Role_mania {
 
   //覚醒コピー変換リスト取得
   protected function GetDelayCopyList() {
-    return array(
+    return [
       CampGroup::HUMAN		=> 'executor',
       CampGroup::MAGE		=> 'soul_mage',
       CampGroup::NECROMANCER	=> 'soul_necromancer',
@@ -89,6 +89,6 @@ class Role_soul_mania extends Role_mania {
       CampGroup::AVENGER	=> 'revive_avenger',
       CampGroup::PATRON		=> 'sacrifice_patron',
       CampGroup::TENGU		=> 'soul_tengu'
-    );
+    ];
   }
 }

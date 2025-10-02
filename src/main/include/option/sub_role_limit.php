@@ -6,8 +6,8 @@ class Option_sub_role_limit extends OptionSelector {
   public $type = OptionFormType::GROUP;
 
   protected function LoadFormList() {
-    $stack = array('no_sub_role' => 'no_sub_role');
-    foreach (array('easy', 'normal', 'hard') as $name) {
+    $stack = ['no_sub_role' => 'no_sub_role'];
+    foreach (['easy', 'normal', 'hard'] as $name) {
       $stack[$name] = sprintf('%s_%s', $this->name, $name);
     }
     foreach ($stack as $name => $class) {
@@ -37,13 +37,13 @@ class Option_sub_role_limit extends OptionSelector {
   }
 
   public function GetItem() {
-    $stack = array(
+    $stack = [
       'no_sub_role' => OptionLoader::Load('no_sub_role'),
       'easy'        => OptionLoader::Load('sub_role_limit_easy'),
       'normal'      => OptionLoader::Load('sub_role_limit_normal'),
       'hard'        => OptionLoader::Load('sub_role_limit_hard'),
       ''            => OptionLoader::Load('sub_role_limit_none')
-    );
+    ];
     foreach ($stack as $key => $item) {
       $item->form_name  = $this->form_name;
       $item->form_value = $key;

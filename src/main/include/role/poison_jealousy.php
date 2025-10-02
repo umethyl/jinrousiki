@@ -5,7 +5,7 @@
   ・毒：恋人
 */
 class Role_poison_jealousy extends Role {
-  public $mix_in = array('poison');
+  public $mix_in = ['poison'];
   public $display_role = 'poison';
 
   protected function IsPoisonTarget(User $user) {

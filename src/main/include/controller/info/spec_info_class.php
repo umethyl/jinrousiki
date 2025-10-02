@@ -1,13 +1,8 @@
 <?php
-//-- 詳細な仕様出力クラス --//
-class SpecInfo {
-  //実行
-  public static function Execute() {
-    self::Output();
-  }
-
-  //出力
-  private static function Output() {
+//◆文字化け抑制◆//
+//-- 詳細な仕様情報コントローラー --//
+final class SpecInfoController extends JinrouController {
+  protected static function Output() {
     InfoHTML::OutputHeader(SpecInfoMessage::TITLE, 0, 'spec');
     InfoHTML::Load('spec');
     HTML::OutputFooter();

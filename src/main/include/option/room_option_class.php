@@ -1,10 +1,10 @@
 <?php
 //-- 村作成オプションクラス --//
 class RoomOption {
-  public static $stack       = array();
-  public static $game_option = array();
-  public static $role_option = array();
-  public static $icon_order  = array(
+  public static $stack       = [];
+  public static $game_option = [];
+  public static $role_option = [];
+  public static $icon_order  = [
     'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'gerd', 'open_vote', 'settle',
     'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
     'wait_morning', 'limit_last_words', 'limit_talk', 'secret_talk', 'no_silence',
@@ -22,26 +22,29 @@ class RoomOption {
     'duel', 'gray_random', 'step', 'quiz',
     'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'topping', 'boost_rate',
     'chaos_open_cast', 'chaos_open_cast_camp', 'chaos_open_cast_role', 'secret_sub_role',
-    'no_sub_role', 'sub_role_limit_easy', 'sub_role_limit_normal', 'sub_role_limit_hard');
+    'no_sub_role', 'sub_role_limit_easy', 'sub_role_limit_normal', 'sub_role_limit_hard'
+  ];
   public static $max_user = 0;
 
   //オプション情報ロード
-  public static function Load(array $list = array()) {
+  public static function Load(array $list = []) {
     if (count($list) < 1) {
       $list = RoomDB::GetOption();
     }
     extract($list);
-    self::$stack       = array();
+    self::$stack       = [];
     self::$game_option = $game_option;
     self::$role_option = $option_role;
     self::$max_user    = $max_user;
   }
 
   //フォーム入力値取得
-  public static function LoadPost($name) {
-    foreach (func_get_args() as $option) {
+  public static function LoadPost(...$option_list) {
+    foreach ($option_list as $option) {
       $filter = OptionLoader::Load($option);
-      if (isset($filter)) $filter->LoadPost();
+      if (true === isset($filter)) {
+	$filter->LoadPost();
+      }
     }
   }
 

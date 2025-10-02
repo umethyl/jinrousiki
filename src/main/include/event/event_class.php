@@ -1,34 +1,14 @@
 <?php
 //-- イベントローダー --//
-class EventLoader {
+final class EventLoader extends LoadManager {
   const PATH = '%s/event/%s.php';
   const CLASS_PREFIX = 'Event_';
-  private static $file  = array();
-  private static $class = array();
-
-  //イベントロード
-  public static function Load($name) {
-    return (self::LoadFile($name) && self::LoadClass($name)) ? self::$class[$name] : null;
-  }
-
-  //ファイルロード
-  public static function LoadFile($name) {
-    return LoadManager::LoadFile(self::$file, $name, self::GetPath($name));
-  }
-
-  //クラスロード
-  private static function LoadClass($name) {
-    return LoadManager::LoadClass(self::$class, $name, self::CLASS_PREFIX);
-  }
-
-  //ファイルパス取得
-  private static function GetPath($name) {
-    return sprintf(self::PATH, JINROU_INC, $name);
-  }
+  protected static $file  = [];
+  protected static $class = [];
 }
 
 //-- イベントマネージャ --//
-class EventManager {
+final class EventManager {
   //複合型イベントセット
   public static function SetMultiple() {
     self::Filter('multiple', 'SetEvent');
@@ -69,7 +49,7 @@ class EventManager {
 
   //処刑者決定
   public static function DecideVoteKill() {
-    if (! RoleManager::Stack()->IsEmpty('vote_kill_uname')) return;
+    if (RoleManager::Stack()->Exists(VoteDayElement::VOTE_KILL)) return;
 
     $method = __FUNCTION__;
     foreach (EventFilterData::$decide_vote_kill as $event) {
@@ -82,7 +62,7 @@ class EventManager {
   //夜投票封印
   public static function SealVoteNight() {
     $method = __FUNCTION__;
-    $stack  = array();
+    $stack  = [];
     foreach (self::Get('seal_vote_night') as $event) {
       EventLoader::Load($event)->$method($stack);
     }
@@ -94,10 +74,12 @@ class EventManager {
     self::Filter('step', __FUNCTION__);
   }
 
-  //罠能力有効
-  public static function IsSetTrap() {
-    foreach (EventFilterData::$ignore_set_trap as $event) {
-      if (DB::$ROOM->IsEvent($event)) return false;
+  //罠能力有効判定
+  public static function EnableTrap() {
+    foreach (EventFilterData::$disable_trap as $event) {
+      if (DB::$ROOM->IsEvent($event)) {
+	return false;
+      }
     }
     return true;
   }
@@ -114,7 +96,7 @@ class EventManager {
 
   //適合イベント取得
   private static function Get($type) {
-    $stack = array();
+    $stack = [];
     foreach (EventFilterData::$$type as $event) {
       if (DB::$ROOM->IsEvent($event)) {
 	$stack[] = $event;

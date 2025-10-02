@@ -5,7 +5,7 @@ class ImageManager {
   public static function Room() {
     static $filter;
 
-    if (is_null($filter)) {
+    if (true === is_null($filter)) {
       $filter = new RoomImage();
     }
     return $filter;
@@ -15,7 +15,7 @@ class ImageManager {
   public static function Role() {
     static $filter;
 
-    if (is_null($filter)) {
+    if (true === is_null($filter)) {
       $filter = new RoleImage();
     }
     return $filter;
@@ -25,7 +25,7 @@ class ImageManager {
   public static function Winner() {
     static $filter;
 
-    if (is_null($filter)) {
+    if (true === is_null($filter)) {
       $filter = new WinnerImage();
     }
     return $filter;
@@ -43,14 +43,14 @@ abstract class Image {
 
   //画像タグ生成
   public function Generate($name, $alt = null, $table = false) {
-    $css = $this->class == '' ? '' : ImageHTML::GenerateCSS($this->class);
-    if (isset($alt)) {
+    if (true === isset($alt)) {
       Text::Escape($alt);
       $title = ImageHTML::GenerateTitle($alt, $alt);
     } else {
       $title = '';
     }
-    $str = ImageHTML::Generate($this->GetPath($name), $css, $title);
+    $css = $this->class == '' ? '' : ImageHTML::GenerateCSS($this->class);
+    $str = ImageHTML::Generate($this->GetPath($name), $title, $css);
     return $table ? TableHTML::GenerateTd($str) : $str;
   }
 
@@ -61,7 +61,9 @@ abstract class Image {
 
   //出力 (存在確認対応版)
   final public function OutputExists($name) {
-    if ($this->Exists($name)) $this->Output($name);
+    if ($this->Exists($name)) {
+      $this->Output($name);
+    }
   }
 
   //画像のファイルパス取得
@@ -84,8 +86,11 @@ class RoomImage extends Image {
   public function GenerateMaxUser($number) {
     $name = 'max' . $number;
     $alt  = sprintf(GameMessage::ROOM_MAX_USER, $number);
-    return in_array($number, RoomConfig::$max_user_list) && $this->Exists($name) ?
-      $this->Generate($name, $alt) : $alt;
+    if (true === in_array($number, RoomConfig::$max_user_list) && $this->Exists($name)) {
+      return $this->Generate($name, $alt);
+    } else {
+      return $alt;
+    }
   }
 }
 

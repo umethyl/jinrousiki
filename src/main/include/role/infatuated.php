@@ -9,7 +9,7 @@ class Role_infatuated extends Role {
     return RoleStackVoteKill::ETC;
   }
 
-  protected function SetStackVoteKillEtc($name) {
+  protected function SetStackVoteKillEtc($uname) {
     if (DB::$ROOM->IsEvent('no_sudden_death')) return; //凪ならスキップ
 
     $role = 'follow_mad';

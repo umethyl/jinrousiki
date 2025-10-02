@@ -40,7 +40,7 @@ class JinrouTwitter {
     $filter = new TwitterOAuth(
       TwitterConfig::KEY_CK, TwitterConfig::KEY_CS, TwitterConfig::KEY_AT, TwitterConfig::KEY_AS
     );
-    $response = $filter->OAuthRequest(self::API, 'POST', array('status' => $str));
+    $response = $filter->OAuthRequest(self::API, 'POST', ['status' => $str]);
 
     if (! ($response === false || strrpos($response, 'error'))) return true;
 

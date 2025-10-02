@@ -23,7 +23,7 @@ class Role_nephila_cupid extends Role_cupid {
   protected function IsLoversTarget(User $user) {
     $target_id = $this->GetStack();
     if (is_null($target_id)) { //恋人抽選処理
-      $stack = array();
+      $stack = [];
       foreach ($this->GetStack('target_list') as $target) {
 	if (! $this->IsActor($target)) {
 	  $stack[] = $target->id;

@@ -16,7 +16,7 @@ class Option_quiz extends OptionCheckbox {
   }
 
   public function SetFilterRole($count) {
-    $stack = Cast::FilterRole($count, array('common', 'wolf', 'mad', 'fox'));
+    $stack = Cast::FilterRole($count, ['common', 'wolf', 'mad', 'fox']);
     ArrayFilter::Replace($stack, 'human', $this->name);
     return $stack;
   }
@@ -31,10 +31,10 @@ class Option_quiz extends OptionCheckbox {
   }
 
   protected function GetResultCastList() {
-    return array('panelist');
+    return ['panelist'];
   }
 
   public function GetWishRole() {
-    return array('mad', 'common', 'fox');
+    return ['mad', 'common', 'fox'];
   }
 }

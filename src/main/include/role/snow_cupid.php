@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('cupid');
 class Role_snow_cupid extends Role_cupid {
-  public $mix_in = array('critical_mad');
+  public $mix_in = ['critical_mad'];
 
   protected function GetStackVoteKillType() {
     return RoleStackVoteKill::INIT;

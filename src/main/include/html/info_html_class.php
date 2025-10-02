@@ -82,10 +82,10 @@ class InfoHTML {
   //配役テーブル出力
   public static function OutputCast($min = 0, $max = null) {
     //設定されている役職名を取得
-    $stack = array();
+    $stack = [];
     foreach (CastConfig::$role_list as $key => $value) {
       if ($key < $min) continue;
-      ArrayFilter::Merge($stack, array_keys($value));
+      ArrayFilter::AddMerge($stack, array_keys($value));
       if ($key == $max) break;
     }
     $role_list = RoleDataManager::Sort(array_unique($stack)); //表示順を決定
@@ -95,7 +95,7 @@ class InfoHTML {
       $header .= RoleDataHTML::GenerateMain($role, 'th');
     }
     $header .= TableHTML::GenerateTrFooter();
-    Text::Output(Text::Add(TableHTML::GenerateHeader('member', false)) . $header);
+    Text::Output(Text::LineFeed(TableHTML::GenerateHeader('member', false)) . $header);
 
     //人数毎の配役を表示
     foreach (CastConfig::$role_list as $key => $value) {
@@ -106,7 +106,9 @@ class InfoHTML {
       }
       TableHTML::OutputTr($str);
       if ($key == $max) break;
-      if ($key % 20 == 0) Text::Output($header);
+      if ($key % 20 == 0) {
+	Text::Output($header);
+      }
     }
     TableHTML::OutputFooter(false);
   }
@@ -173,7 +175,7 @@ class InfoHTML {
     }
     if ($data == '') return false;
 
-    $replace_list = array('href="' => 'href="' . $url, 'src="'  => 'src="' . $url);
+    $replace_list = ['href="' => 'href="' . $url, 'src="'  => 'src="' . $url];
     $data = strtr($data, $replace_list);
     ExternalLinkBuilder::Output($title, $data);
   }

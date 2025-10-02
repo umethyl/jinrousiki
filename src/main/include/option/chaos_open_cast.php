@@ -6,7 +6,7 @@ class Option_chaos_open_cast extends OptionSelector {
   public $type = OptionFormType::GROUP;
 
   protected function LoadFormList() {
-    foreach (array('camp', 'role', 'full') as $name) {
+    foreach (['camp', 'role', 'full'] as $name) {
       $class  = sprintf('%s_%s', $this->name, $name);
       $filter = OptionLoader::Load($class);
       if (isset($filter) && $filter->enable) {
@@ -34,12 +34,12 @@ class Option_chaos_open_cast extends OptionSelector {
   }
 
   public function GetItem() {
-    $stack = array(
+    $stack = [
       ''     => OptionLoader::Load('chaos_open_cast_none'),
       'camp' => OptionLoader::Load('chaos_open_cast_camp'),
       'role' => OptionLoader::Load('chaos_open_cast_role'),
       'full' => OptionLoader::Load('chaos_open_cast_full')
-    );
+    ];
     foreach ($stack as $key => $item) {
       $item->form_name  = $this->form_name;
       $item->form_value = $key;

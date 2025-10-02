@@ -1,22 +1,16 @@
 <?php
-//-- 役職名表示 --//
-class NameTest {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//-- 役職名表示コントローラー --//
+final class NameTestController extends JinrouController {
+  protected static function Load() {
     DevHTML::LoadRequest();
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     HTML::OutputHeader(NameTestMessage::TITLE, 'test/name', true);
     self::OutputForm();
-    if (DevHTML::IsExecute()) self::RunTest();
+    if (DevHTML::IsExecute()) {
+      self::RunTest();
+    }
     HTML::OutputFooter();
   }
 
@@ -27,7 +21,7 @@ class NameTest {
     self::OutputRadio('all-all', Message::FORM_ALL);
     $count     = 0;
     $role_data = self::GetList();
-    $stack     = array('camp' => VoteMessage::CAMP_FOOTER, 'group' => VoteMessage::GROUP_FOOTER);
+    $stack     = ['camp' => VoteMessage::CAMP_FOOTER, 'group' => VoteMessage::GROUP_FOOTER];
     foreach ($stack as $type => $name) {
       foreach (array_keys($role_data->$type) as $role) {
 	Text::OutputFold(++$count, Text::BR, 9);
@@ -59,7 +53,9 @@ class NameTest {
     default:
       return;
     }
-    foreach ($stack as $role) Text::d(RoleDataHTML::GenerateMain($role));
+    foreach ($stack as $role) {
+      Text::d(RoleDataHTML::GenerateMain($role));
+    }
   }
 
   //役職リスト取得

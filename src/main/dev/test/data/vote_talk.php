@@ -1,59 +1,70 @@
 <?php
 class VoteTestTalk {
-  private static $day = array(
-    array('uname' => 'moon',
-	  'font_type' => TalkVoice::NORMAL, 'sentence' => '●かー'),
-    array('uname' => 'light_blue',
-	  'font_type' => TalkVoice::WEAK, 'sentence' => 'えっ'),
-    array('uname' => 'green',
-	  'location' => TalkLocation::SYSTEM, 'action' => TalkAction::OBJECTION),
-    array('uname' => 'dark_gray',
-	  'font_type' => TalkVoice::WEAK, 'sentence' => 'チラッ'),
-    array('uname' => 'yellow',
-	  'font_type' => TalkVoice::STRONG, 'sentence' => "占いCO\n黒は●"),
-    array('uname' => 'light_gray',
-	  'font_type' => TalkVoice::NORMAL, 'sentence' => 'おはよう'),
-    array('uname' => GM::SYSTEM,
-	  'location' => TalkLocation::SYSTEM, 'action' => TalkAction::MORNING,
-	  'sentence' => VoteTestRoom::DATE)
-  );
+  private static $day = [
+    ['uname' => 'moon', 'font_type' => TalkVoice::NORMAL,
+     'sentence' => '●かー'],
+    ['uname' => 'frame', 'font_type' => TalkVoice::NORMAL,
+     'location' => TalkVoice::SECRET,
+     'sentence' => 'よしよし、気づかれてないな'],
+    ['uname' => 'frame', 'font_type' => TalkVoice::NORMAL,
+     'sentence' => 'おっすおっす'],
+    ['uname' => 'light_blue', 'font_type' => TalkVoice::WEAK,
+     'sentence' => 'えっ'],
+    ['uname' => 'green',
+     'location' => TalkLocation::SYSTEM, 'action' => TalkAction::OBJECTION],
+    ['uname' => 'dark_gray', 'font_type' => TalkVoice::NORMAL,
+     'location' => TalkVoice::SECRET,
+     'sentence' => 'チラッチラッ'],
+    ['uname' => 'dark_gray', 'font_type' => TalkVoice::WEAK,
+     'sentence' => 'チラッ'],
+    ['uname' => 'yellow', 'font_type' => TalkVoice::STRONG,
+     'sentence' => "占いCO\n黒は●"],
+    ['uname' => 'light_gray', 'font_type' => TalkVoice::NORMAL,
+     'location' => TalkVoice::SECRET,
+     'sentence' => 'ねむい'],
+    ['uname' => 'light_gray', 'font_type' => TalkVoice::NORMAL,
+     'sentence' => 'おはよう'],
+    ['uname' => GM::SYSTEM,
+     'location' => TalkLocation::SYSTEM, 'action' => TalkAction::MORNING,
+     'sentence' => VoteTestRoom::DATE]
+  ];
 
-  private static $night = array(
-    array('uname' => 'cloud',
-	  'font_type' => TalkVoice::NORMAL, 'sentence' => '吸血鬼なんだ'),
-    array('uname' => 'light_blue',
-	  'font_type' => TalkVoice::WEAK, 'sentence' => 'えっ'),
-    array('uname' => 'moon',
-	  'font_type' => TalkVoice::NORMAL, 'sentence' => 'あーうー'),
-    array('uname' => 'gold',
-	  'location' => TalkLocation::COMMON, 'font_type' => TalkVoice::NORMAL,
-	  'sentence' => 'やあやあ'),
-    array('uname' => 'rose',
-	  'font_type' => TalkVoice::STRONG, 'sentence' => '誰吸血しようかな'),
-    array('uname' => 'frame',
-	  'font_type' => TalkVoice::NORMAL, 'sentence' => 'どうしよう'),
-    array('uname' => 'black',
-	  'location' => TalkLocation::FOX, 'font_type' => TalkVoice::WEAK,
-	  'sentence' => '占い師早く死んで欲しいなぁ'),
-    array('uname' => 'gust',
-	  'location' => TalkLocation::SYSTEM, 'action' => VoteAction::NOT_GRAVE),
-    array('uname' => 'cherry',
-	  'location' => TalkLocation::MAD, 'font_type' => TalkVoice::WEAK,
-	  'sentence' => 'やあ'),
-    array('uname' => 'white',
-	  'location' => TalkLocation::SYSTEM, 'action' => VoteAction::MAGE,
-	  'sentence' => '黒'),
-    array('uname' => 'green',
-	  'font_type' => TalkVoice::NORMAL, 'sentence' => 'てすてす'),
-    array('uname' => 'dark_gray',
-	  'font_type' => TalkVoice::WEAK, 'sentence' => 'チラッ'),
-    array('uname' => 'yellow',
-	  'font_type' => TalkVoice::STRONG, 'sentence' => "占いCO\n黒は●"),
-    array('uname' => 'light_gray',
-	  'location' => TalkLocation::WOLF, 'font_type' => TalkVoice::NORMAL,
-	  'sentence' => '生き延びたか'),
-    array('uname' => TalkLocation::SYSTEM, 'action' => TalkAction::NIGHT)
-  );
+  private static $night = [
+    ['uname' => 'cloud',
+     'font_type' => TalkVoice::NORMAL, 'sentence' => '吸血鬼なんだ'],
+    ['uname' => 'light_blue',
+     'font_type' => TalkVoice::WEAK, 'sentence' => 'えっ'],
+    ['uname' => 'moon',
+     'font_type' => TalkVoice::NORMAL, 'sentence' => 'あーうー'],
+    ['uname' => 'gold',
+     'location' => TalkLocation::COMMON, 'font_type' => TalkVoice::NORMAL,
+     'sentence' => 'やあやあ'],
+    ['uname' => 'rose',
+     'font_type' => TalkVoice::STRONG, 'sentence' => '誰吸血しようかな'],
+    ['uname' => 'frame',
+     'font_type' => TalkVoice::NORMAL, 'sentence' => 'どうしよう'],
+    ['uname' => 'black',
+     'location' => TalkLocation::FOX, 'font_type' => TalkVoice::WEAK,
+     'sentence' => '占い師早く死んで欲しいなぁ'],
+    ['uname' => 'gust',
+     'location' => TalkLocation::SYSTEM, 'action' => VoteAction::NOT_GRAVE],
+    ['uname' => 'cherry',
+     'location' => TalkLocation::MAD, 'font_type' => TalkVoice::WEAK,
+     'sentence' => 'やあ'],
+    ['uname' => 'white',
+     'location' => TalkLocation::SYSTEM, 'action' => VoteAction::MAGE,
+     'sentence' => '黒'],
+    ['uname' => 'green',
+     'font_type' => TalkVoice::NORMAL, 'sentence' => 'てすてす'],
+    ['uname' => 'dark_gray',
+     'font_type' => TalkVoice::WEAK, 'sentence' => 'チラッ'],
+    ['uname' => 'yellow',
+     'font_type' => TalkVoice::STRONG, 'sentence' => "占いCO\n黒は●"],
+    ['uname' => 'light_gray',
+     'location' => TalkLocation::WOLF, 'font_type' => TalkVoice::NORMAL,
+     'sentence' => '生き延びたか'],
+    ['uname' => TalkLocation::SYSTEM, 'action' => TalkAction::NIGHT]
+  ];
 
   static function Get() {
     switch (DB::$ROOM->scene) {
@@ -74,7 +85,7 @@ class VoteTestTalk {
       return $stack;
 
     default:
-      return array();
+      return [];
     }
   }
 }

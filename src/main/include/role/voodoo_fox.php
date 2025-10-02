@@ -5,7 +5,7 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_voodoo_fox extends Role_fox {
-  public $mix_in = array('voodoo_mad');
+  public $mix_in = ['voodoo_mad'];
   public $action = VoteAction::VOODOO_FOX;
   public $submit = VoteAction::VOODOO_MAD;
 

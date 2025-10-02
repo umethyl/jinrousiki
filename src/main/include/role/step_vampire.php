@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('vampire');
 class Role_step_vampire extends Role_vampire {
-  public $mix_in = array('step_mage');
+  public $mix_in = ['step_mage'];
   public $action = VoteAction::STEP_VAMPIRE;
   public $submit = VoteAction::VAMPIRE;
 
@@ -37,7 +37,7 @@ class Role_step_vampire extends Role_vampire {
     return OptionFormType::CHECKBOX;
   }
 
-  public function CheckVoteNightTarget(array $list) {
-    return $this->CheckStepVoteNightTarget($list);
+  public function ValidateVoteNightTargetList(array $list) {
+    return $this->ValidateStepVoteNightTargetList($list);
   }
 }

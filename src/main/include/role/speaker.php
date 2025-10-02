@@ -10,7 +10,7 @@
 */
 RoleLoader::LoadFile('strong_voice');
 class Role_speaker extends Role_strong_voice {
-  public $mix_in = array('blinder');
+  public $mix_in = ['blinder'];
 
   public function FilterTalk(User $user, &$name, &$voice, &$str) {
     if (! $this->IgnoreTalk()) $this->ShiftVoice($voice, $str);

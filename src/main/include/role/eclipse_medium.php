@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('medium');
 class Role_eclipse_medium extends Role_medium {
-  public $mix_in = array('chicken');
+  public $mix_in = ['chicken'];
   public $display_role = 'medium';
 
   protected function IgnoreSuddenDeath() {

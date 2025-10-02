@@ -6,7 +6,7 @@
 */
 class Event_random_step extends Event {
   public function Step() {
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->Get() as $user) {
       if (DB::$USER->IsVirtualLive($user->id)) {
 	$stack[] = $user->id;

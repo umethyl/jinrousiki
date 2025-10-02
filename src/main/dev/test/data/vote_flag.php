@@ -5,10 +5,10 @@ class VoteTestFlag {
   const TALK = false; //発言表示モード
   const ROLE = false; //画像表示モード
 
-  public static $role_list = array(
+  public static $role_list = [
     'main'    => true,
     'sub'     => false,
     'result'  => false,
     'weather' => false
-  );
+  ];
 }

@@ -56,7 +56,7 @@ class RoleVote {
 
   //処刑投票補正
   public static function VoteKillCorrect() {
-    //RoleManager::Stack()->p('vote_count', '◆VoteCount');
+    //RoleManager::Stack()->p(VoteDayElement::COUNT, '◆VoteCount');
     self::Filter('vote_kill_correct', __FUNCTION__);
   }
 
@@ -88,9 +88,10 @@ class RoleVote {
   public static function GetVoteKillPoisonTarget() {
     //毒の対象オプションをチェックして初期候補者リストを作成後に対象者を取得
     if (GameConfig::POISON_ONLY_VOTER) { //投票した人限定
-      $stack = RoleManager::Stack()->GetKeyList('vote_target', self::GetVoteKill()->uname);
+      $uname = self::GetVoteKill()->uname;
+      $stack = RoleManager::Stack()->GetKeyList(VoteDayElement::TARGET_LIST, $uname);
     } else {
-      $stack = RoleManager::Stack()->Get('live_uname');
+      $stack = RoleManager::Stack()->Get(VoteDayElement::LIVE_LIST);
     }
     //Text::p($stack, '◆BaseTarget [poison]');
 
@@ -122,7 +123,7 @@ class RoleVote {
   public static function VoteKillCounter() {
     $method = __FUNCTION__;
     $user   = self::GetVoteKill();
-    $stack  = RoleManager::Stack()->GetKeyList('vote_target', $user->uname); //投票者
+    $stack  = RoleManager::Stack()->GetKeyList(VoteDayElement::TARGET_LIST, $user->uname); //投票者
     foreach (RoleLoader::LoadUser($user, 'vote_kill_counter') as $filter) {
       $filter->$method($stack);
     }
@@ -308,6 +309,6 @@ class RoleVote {
 
   //処刑者取得
   private static function GetVoteKill() {
-    return RoleManager::Stack()->Get('vote_kill_user');
+    return RoleManager::Stack()->Get(VoteDayElement::VOTED_USER);
   }
 }

@@ -1,23 +1,32 @@
 <?php
 //--◆ DB アクセス (Login 拡張) ◆--//
-class LoginDB {
+final class LoginDB {
+  //Login 実行処理
+  public static function Execute($uname, $password) {
+    $list = [RQ::Get()->room_no, $uname, $password, UserLive::KICK];
+    return self::Certify($list) && self::Update($list);
+  }
+
   //ユーザ認証
-  public static function Certify($uname, $password) {
-    self::Prepare(DB::SetSelect('user_entry', 'user_no'), $uname, $password);
+  private static function Certify(array $list) {
+    $query = self::GetQuery()->Select(['user_no']);
+
+    DB::Prepare($query->Build(), $list);
     return DB::Count() == 1;
   }
 
   //セッション ID 再登録
-  public static function Update($uname, $password) {
-    self::Prepare('UPDATE user_entry SET session_id = ?', $uname, $password, true);
+  private static function Update(array $list) {
+    $query = self::GetQuery()->Update()->Set(['session_id']);
+    array_unshift($list, Session::GetUniqID());
+
+    DB::Prepare($query->Build(), $list);
     return DB::Execute();
   }
 
-  //Prepare 処理
-  private static function Prepare($query, $uname, $password, $update = false) {
-    $query .= ' WHERE room_no = ? AND uname = ? AND password = ? AND live <> ?';
-    $list   = array(RQ::Get()->room_no, $uname, $password, UserLive::KICK);
-    if ($update) array_unshift($list, Session::GetUniqID());
-    DB::Prepare($query, $list);
+  //共通 Query 取得
+  private static function GetQuery() {
+    $query = Query::Init()->Table('user_entry')->Where(['room_no', 'uname', 'password']);
+    return $query->WhereNot('live');
   }
 }

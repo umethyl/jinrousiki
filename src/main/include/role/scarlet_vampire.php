@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('vampire');
 class Role_scarlet_vampire extends Role_vampire {
-  public $mix_in = array('revive_pharmacist');
+  public $mix_in = ['revive_pharmacist'];
 
   protected function IsResurrect() {
     return Lottery::Percent(DB::$ROOM->IsEvent('full_revive') ? 100 : 40);

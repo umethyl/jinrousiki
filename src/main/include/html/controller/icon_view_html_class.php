@@ -32,7 +32,7 @@ class IconViewHTML {
 <a href="./">%s</a>
 <a href="icon_upload.php">%s</a>
 </div>
-<img class="title" src="img/title/icon_view.jpg" title="%s" alt="%s">
+<img src="img/title/icon_view.jpg" alt="%s" title="%s" class="title">
 <table align="center">
 <tr><td>
 EOF;

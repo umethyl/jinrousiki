@@ -3,14 +3,14 @@
 <a href="#wish_role"><?php OptionManager::OutputCaption('wish_role'); ?></a>
 </p>
 <p>
-<?php InfoHTML::OutputCategory(array('chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso')); ?>
+<?php InfoHTML::OutputCategory(['chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso']); ?>
 <a href="#chaos_old"><?php OptionManager::OutputCaption('chaos'); ?> (旧設定)</a>
 </p>
 <p>
-<?php InfoHTML::OutputCategory(array('topping', 'boost_rate', 'chaos_open_cast')); ?>
+<?php InfoHTML::OutputCategory(['topping', 'boost_rate', 'chaos_open_cast']); ?>
 </p>
 <p>
-<?php InfoHTML::OutputCategory(array('sub_role_limit', 'secret_sub_role')); ?>
+<?php InfoHTML::OutputCategory(['sub_role_limit', 'secret_sub_role']); ?>
 </p>
 
 <h2 id="decide_role">配役決定ルーチン</h2>
@@ -938,8 +938,8 @@
   <li>内容は設定ファイルで変更できます。</li>
 </ol>
 <p>
-<?php InfoHTML::OutputCategory(array('no_sub_role', 'sub_role_limit_easy', 'sub_role_limit_normal',
-'sub_role_limit_hard')); ?>
+<?php InfoHTML::OutputCategory(['no_sub_role', 'sub_role_limit_easy', 'sub_role_limit_normal',
+'sub_role_limit_hard']); ?>
 <a href="#sub_role_limit_none">サブ役職制限なし</a>
 </p>
 

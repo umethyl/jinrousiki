@@ -20,7 +20,7 @@ class DevHTML {
 
     $id_u = 'user_count';
     $id_t = 'try_count';
-    foreach (array($id_u => 20, $id_t => 100) as $key => $value) {
+    foreach ([$id_u => 20, $id_t => 100] as $key => $value) {
       RQ::Get()->ParsePostInt($key);
       $$key = RQ::Get()->$key > 0 ? RQ::Get()->$key : $value;
     }

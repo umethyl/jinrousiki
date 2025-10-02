@@ -13,7 +13,7 @@
 */
 RoleLoader::LoadFile('ogre');
 class Role_sacrifice_ogre extends Role_ogre {
-  public $mix_in = array('protected');
+  public $mix_in = ['protected'];
 
   protected function IgnorePartner() {
     /* 2日目の時点で洗脳者が発生する特殊イベントを実装したら対応すること */
@@ -21,11 +21,11 @@ class Role_sacrifice_ogre extends Role_ogre {
   }
 
   protected function GetPartner() {
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->GetRoleUser('psycho_infected') as $user) {
       $stack[] = $user->handle_name;
     }
-    return array('psycho_infected_list' => $stack);
+    return ['psycho_infected_list' => $stack];
   }
 
   protected function GetOgreWolfEatResistRate() {

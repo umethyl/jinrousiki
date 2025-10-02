@@ -1,6 +1,6 @@
 <?php
 //-- 定数リスト (Vote/Action) --//
-class VoteAction {
+final class VoteAction {
   const GAME_START	= 'GAMESTART';
   const KICK		= 'KICK_DO';
   const VOTE		= 'VOTE_DO';
@@ -55,8 +55,31 @@ class VoteAction {
   const RESET_TIME	= 'RESET_TIME';
 }
 
+//-- 定数リスト (Vote/Element/Kick) --//
+final class VoteKickElement {
+  const TARGET		= 'target';
+}
+
+//-- 定数リスト (Vote/Element/Day) --//
+final class VoteDayElement {
+  const TARGET		= 'target';
+  const VOTE_NUMBER	= 'vote_number';
+  const POLL_NUMBER	= 'poll_number';
+  const USER_LIST	= 'user_list';
+  const LIVE_LIST	= 'live_uname_list';
+  const COUNT_LIST	= 'vote_count_list';
+  const TARGET_LIST	= 'vote_target_list';
+  const MESSAGE_LIST	= 'vote_message_list';
+  const MAX_VOTED	= 'max_voted_list';
+  const VOTE_KILL	= 'vote_kill_uname';
+  const VOTED_USER	= 'vote_kill_user';
+  const VOTE_POSSIBLE	= 'vote_possible_list';
+  const POLL_LIST	= 'poll_count_list';
+  const SUDDEN_DEATH	= 'sudden_death';
+}
+
 //-- 定数リスト (Vote/CSS) --//
-class VoteCSS {
+final class VoteCSS {
   const MAGE		= 'mage-do';
   const GUARD		= 'guard-do';
   const REVIVE		= 'revive-do';

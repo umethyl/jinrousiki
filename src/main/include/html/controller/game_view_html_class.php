@@ -7,12 +7,18 @@ class GameViewHTML {
     self::OutputLink();
     self::OutputLoginForm();
 
-    if (! DB::$ROOM->IsFinished()) RoomOption::Output();
+    if (! DB::$ROOM->IsFinished()) {
+      RoomOption::Output();
+    }
     self::OutputTimeTable();
 
     GameHTML::OutputPlayer();
-    if (DB::$ROOM->IsFinished()) Winner::Output();
-    if (DB::$ROOM->IsPlaying())  GameHTML::OutputRevote();
+    if (DB::$ROOM->IsFinished()) {
+      Winner::Output();
+    }
+    if (DB::$ROOM->IsPlaying()) {
+      GameHTML::OutputRevote();
+    }
 
     self::OutputTalk();
     GameHTML::OutputLastWords();
@@ -25,7 +31,7 @@ class GameViewHTML {
   private static function OutputHeader() {
     HTML::OutputHeader(ServerConfig::TITLE . GameViewMessage::TITLE, 'game_view');
 
-    echo DB::$ROOM->GenerateCSS(); //シーン別 CSS をロード
+    DB::$ROOM->OutputCSS();
     if (GameConfig::AUTO_RELOAD && RQ::Get()->auto_reload > 0) { //自動更新
       GameHTML::OutputAutoReloadHeader();
     }
@@ -43,7 +49,7 @@ class GameViewHTML {
   private static function OutputLink() {
     $url = URL::GetRoom('game_view');
     Text::Printf(self::GetLink(),
-      DB::$ROOM->GenerateTitle(),
+      RoomHTML::GenerateTitle(),
       $url, RQ::Get()->ToURL(RequestDataGame::RELOAD, true), GameViewMessage::RELOAD,
       GameConfig::AUTO_RELOAD ? GameHTML::GenerateAutoReloadLink('<a href="' . $url) : '',
       $url, GameViewMessage::BLANK, GameViewMessage::BACK,

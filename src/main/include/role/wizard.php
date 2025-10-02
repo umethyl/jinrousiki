@@ -22,7 +22,7 @@ class Role_wizard extends Role {
 
   //能力結果表示対象役職取得
   protected function GetWizardResultList() {
-    return array(RoleAbility::MAGE, RoleAbility::GUARD, RoleAbility::HUNTED);
+    return [RoleAbility::MAGE, RoleAbility::GUARD, RoleAbility::HUNTED];
   }
 
   public function OutputAction() {
@@ -39,13 +39,13 @@ class Role_wizard extends Role {
 
   //魔法リスト取得
   protected function GetWizardList() {
-    return array(
+    return [
       'mage'		=> VoteAction::MAGE,
       'psycho_mage'	=> VoteAction::MAGE,
       'guard'		=> VoteAction::GUARD,
       'assassin'	=> VoteAction::ASSASSIN,
       'sex_mage'	=> VoteAction::MAGE
-    );
+    ];
   }
 
   //魔法取得

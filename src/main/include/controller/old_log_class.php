@@ -1,21 +1,13 @@
 <?php
-//-- 過去ログ表示クラス --//
 //-- ◆文字化け抑制◆ --//
-class OldLog {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//-- 過去ログ表示クラス --//
+final class OldLogController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('old_log');
     DB::Connect(RQ::Get()->db_no);
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     if (RQ::Get()->is_room) {
       Loader::LoadFile('icon_class', 'image_class', 'talk_class');
       self::LoadRoom();
@@ -53,6 +45,8 @@ class OldLog {
   //本人情報ロード
   private static function LoadSelf() {
     DB::$ROOM->IsOn(RoomMode::SINGLE) ? DB::LoadSelf(RQ::Get()->user_no) : DB::LoadViewer();
-    if (DB::$ROOM->IsOn(RoomMode::WATCH)) DB::$SELF->live = UserLive::LIVE;
+    if (DB::$ROOM->IsOn(RoomMode::WATCH)) {
+      DB::$SELF->live = UserLive::LIVE;
+    }
   }
 }

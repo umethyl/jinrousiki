@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_revive_fox extends Role_fox {
-  public $mix_in = array('vote' => 'poison_cat');
+  public $mix_in = ['vote' => 'poison_cat'];
 
   protected function IsReviveVote() {
     return $this->IsActorActive();
@@ -19,7 +19,7 @@ class Role_revive_fox extends Role_fox {
     RoleHTML::OutputResult(RoleAbility::REVIVE);
   }
 
-  protected function GetIgnoreReviveVoteMessage() {
+  protected function GetDisabledReviveVoteMessage() {
     return VoteRoleMessage::LOST_ABILITY;
   }
 

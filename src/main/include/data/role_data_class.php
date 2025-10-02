@@ -1,9 +1,9 @@
 <?php
 //-- 役職データベース --//
-class RoleData {
+final class RoleData {
   /* 役職名 (役職通知リストはこの順番で表示される) */
   //メイン役職のリスト (コード名 => 表示名)
-  public static $list = array(
+  public static $list = [
     'human'			=> '村人',
     'saint'			=> '聖女',
     'executor'			=> '執行者',
@@ -388,5 +388,5 @@ class RoleData {
     'lute_mania'		=> '琵琶牧々',
     'harp_mania'		=> '琴古主',
     'mask_mania'		=> '面霊気'
-  );
+  ];
 }

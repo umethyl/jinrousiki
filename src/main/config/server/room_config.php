@@ -11,24 +11,24 @@ class RoomConfig {
 
   /* 村立て・入村制限 */
   //IP アドレスは strpos() による先頭一致、ホスト名は正規表現
-  public static $white_list_ip = array(); //IP アドレス (ホワイトリスト)
-  public static $black_list_ip = array(); //IP アドレス (ブラックリスト)
+  public static $white_list_ip = []; //IP アドレス (ホワイトリスト)
+  public static $black_list_ip = []; //IP アドレス (ブラックリスト)
   public static $white_list_host = null; //ホスト名 (ホワイトリスト)
   public static $black_list_host = null; //ホスト名 (ブラックリスト)
   //public static $black_list_host = '/localhost.localdomain/'; //入力例
-  public static $white_list_trip = array(); //トリップ (ホワイトリスト/入村制限限定)
-  //public static $white_list_trip = array('◆1234567'); //入力例
+  public static $white_list_trip = []; //トリップ (ホワイトリスト/入村制限限定)
+  //public static $white_list_trip = ['◆1234567']; //入力例
 
   /* 村立てのみ制限 */
   //記法は村立て・入村制限と同じ
-  public static $establish_white_list_ip = array(); //IP アドレス (ホワイトリスト)
-  public static $establish_black_list_ip = array(); //IP アドレス (ブラックリスト)
+  public static $establish_white_list_ip = []; //IP アドレス (ホワイトリスト)
+  public static $establish_black_list_ip = []; //IP アドレス (ブラックリスト)
   public static $establish_white_list_host = null; //ホスト名 (ホワイトリスト)
   public static $establish_black_list_host = null; //ホスト名 (ブラックリスト)
 
   /* 村作成設定 */
   //最大人数のリスト
-  public static $max_user_list = array(8, 11, 16, 22, 32, 50);
+  public static $max_user_list = [8, 11, 16, 22, 32, 50];
   public static $default_max_user = 22; //デフォルトの最大人数 ($max_user_list にある値を入れること)
 
   public static $room_name          = 90; //村名の最大文字数 (byte)

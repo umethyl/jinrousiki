@@ -11,7 +11,7 @@ class PageLinkBuilder {
     $this->url    = '<a href="' . $file . URL::GetExt();
     $this->title  = $title;
     $this->type   = $type;
-    $this->option = array();
+    $this->option = [];
     $this->page   = new stdClass();
     $this->SetPage($page);
   }
@@ -23,7 +23,7 @@ class PageLinkBuilder {
 
   //ページリンクを生成する
   public function Generate() {
-    $url_stack = array(Text::QuoteBracket($this->title));
+    $url_stack = [Text::QuoteBracket($this->title)];
     if ($this->file == 'index') {
       $url_stack[] = '[<a href="index.html">new</a>]';
     }
@@ -49,7 +49,7 @@ class PageLinkBuilder {
     }
 
     if ($this->file == 'old_log') {
-      $this->AddOption('reverse', Switcher::Get(! $this->set_reverse));
+      $this->AddOption('reverse', Switcher::Get(false === $this->set_reverse));
       $url_stack[] = OldLogMessage::LINK_ORDER;
       if ($this->set_reverse) {
 	$url_stack[] = OldLogMessage::ORDER_REVERSE;
@@ -80,8 +80,11 @@ class PageLinkBuilder {
 
   //ページ送り用のリンクタグを作成する
   protected function GenerateTag($page, $title = null, $force = false) {
-    if ($page == $this->page->set && ! $force) return Text::QuoteBracket($page);
-    if (is_null($title)) {
+    if ($page == $this->page->set && false === $force) {
+      return Text::QuoteBracket($page);
+    }
+
+    if (true === is_null($title)) {
       $title = Text::QuoteBracket($page);
     }
     if ($this->file == 'index') {
@@ -89,7 +92,7 @@ class PageLinkBuilder {
     } else {
       $list = $this->option;
       array_unshift($list, $this->type . '=' . $page);
-      $footer = ArrayFilter::Concat($list, '&');
+      $footer = URL::Concat($list);
     }
     return $this->url . $footer . '">' . $title . '</a>';
   }
@@ -106,15 +109,12 @@ class PageLinkBuilder {
       }
       $start = max(1, $start);
     }
-    $end = $start + $this->view_page - 1;
-    if ($end > $total) $end = $total;
+    $end = min($total, $start + $this->view_page - 1);
 
     $this->page->set   = $page;
     $this->page->total = $total;
     $this->page->start = $start;
     $this->page->end   = $end;
     //Text::p($this->page, '◆page');
-    $this->limit = $page == 'all' ? '' : $this->view_count * ($page - 1);
-    $this->query = $page == 'all' ? '' : DB::SetLimit($this->limit, $this->view_count);
   }
 }

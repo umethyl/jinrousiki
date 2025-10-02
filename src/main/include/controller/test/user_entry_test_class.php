@@ -1,20 +1,13 @@
 <?php
-//-- 住民登録テスト --//
-class UserEntryTest {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//-- 住民登録テストコントローラー --//
+final class UserEntryTestController extends JinrouController {
+  protected static function Load() {
     DB::Connect();
     Session::Start();
     Loader::LoadRequest('game_view', true);
 
     //仮想村
-    DevRoom::Initialize(array('name' => GameMessage::ROOM_TITLE_FOOTER));
+    DevRoom::Initialize(['name' => GameMessage::ROOM_TITLE_FOOTER]);
     include('data/cast_option.php');
 
     //仮想ユーザ
@@ -30,8 +23,7 @@ class UserEntryTest {
     DB::$ROOM->LoadOption();
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     UserManagerHTML::Output();
     DB::Disconnect();
   }

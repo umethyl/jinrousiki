@@ -18,6 +18,6 @@ class Option_critical extends OptionCheckbox {
   }
 
   protected function GetResultCastList() {
-    return array('critical_voter', 'critical_luck');
+    return ['critical_voter', 'critical_luck'];
   }
 }

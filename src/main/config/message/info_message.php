@@ -22,8 +22,9 @@ class InfoMessage {
   const TITLE_ROLE_ABILITY	= '能力者逆引き';
   const TITLE_DEVELOP_TOP	= '開発者向け情報';
   const TITLE_DEVELOP_ADMIN	= '管理者向け情報';
-  const TITLE_DEVELOP_HISTORY	= '開発履歴';
+  const TITLE_DEVELOP_RELEASE	= 'リリース情報';
   const TITLE_DEVELOP_DEBUG	= 'デバッグ情報';
+  const TITLE_DEVELOP_HISTORY	= '開発履歴';
   const TITLE_HISTORY_TOP	= '過去の Information';
   const TITLE_HISTORY_SERVER	= 'サーバ更新履歴';
 

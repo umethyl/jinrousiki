@@ -9,7 +9,7 @@
   ・人狼襲撃耐性：無効 (5 日目以内)
 */
 class Role_challenge_lovers extends Role {
-  public $mix_in = array('chicken');
+  public $mix_in = ['chicken'];
 
   protected function IgnoreAbility() {
     return DB::$ROOM->date < 2;
@@ -23,8 +23,8 @@ class Role_challenge_lovers extends Role {
     $role = 'lovers';
     $cupid_list = $this->GetStack(); //QP データ
     if (! is_array($cupid_list)) { //未設定なら登録
-      $cupid_list = array();
-      foreach ($this->GetStackKey('vote_target') as $uname) {
+      $cupid_list = [];
+      foreach ($this->GetStackKey(VoteDayElement::TARGET_LIST) as $uname) {
 	$user = DB::$USER->ByRealUname($uname);
 	if (! $user->IsRole($role)) continue;
 
@@ -35,7 +35,7 @@ class Role_challenge_lovers extends Role {
       //Text::p($cupid_list, '◆QP');
       $this->SetStack($cupid_list);
     }
-    $target = $this->GetStack('vote_target');
+    $target = $this->GetStack(VoteDayElement::TARGET_LIST);
     $stack  = array_keys($target, $target[$this->GetUname()]);
     //Text::p($stack, "◆VoteTarget/{$this->GetUname()} [{$this->role}]");
 

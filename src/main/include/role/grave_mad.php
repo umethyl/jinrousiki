@@ -22,7 +22,7 @@ class Role_grave_mad extends Role {
     RoleHTML::OutputVote(VoteCSS::WOLF, $str, $this->action, $this->not_action);
   }
 
-  protected function GetIgnoreAddVoteMessage() {
+  protected function GetDisabledAddVoteMessage() {
     return VoteRoleMessage::OPEN_CAST;
   }
 

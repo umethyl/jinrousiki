@@ -35,9 +35,9 @@ class Role_priest extends Role {
   final public function AggregatePriest() {
     //-- 初期化 --//
     $data = new stdClass();
-    $data->list  = array();
-    $data->type  = array();
-    $data->count = array('total' => 0, 'human' => 0, 'wolf' => 0, 'fox' => 0, 'lovers' => 0);
+    $data->list  = [];
+    $data->type  = [];
+    $data->count = ['total' => 0, 'human' => 0, 'wolf' => 0, 'fox' => 0, 'lovers' => 0];
     $this->SetStack($data); //オブジェクトなので Get/Set を都度する必要はない
     $flag = false;
 
@@ -65,7 +65,7 @@ class Role_priest extends Role {
     if (! $flag) return;
 
     //陣営情報収集リスト初期化
-    foreach (array('human_side', 'dead', 'sub_role', 'dream', 'tengu') as $type) {
+    foreach (['human_side', 'dead', 'sub_role', 'dream', 'tengu'] as $type) {
       if (in_array($type, $data->type)) {
 	$data->count[$type] = 0;
       }

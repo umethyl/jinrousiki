@@ -20,7 +20,7 @@ class Role_gatekeeper_guard extends Role_guard {
     if (count($stack) < 1) return false;
 
     //護衛成功者を検出
-    $guard_stack = array();
+    $guard_stack = [];
     foreach ($stack as $guard_id) {
       $user = DB::$USER->ByID($guard_id);
       if ($user->IsLive(true)) {

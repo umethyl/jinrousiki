@@ -17,8 +17,8 @@ class Role_chain_poison extends Role_poison {
   public function ChainPoison() {
     if ($this->IsDetox($this->GetActor()->GetVirtual())) return; //解毒判定
 
-    $stack     = array();
-    $aspirator = array();
+    $stack     = [];
+    $aspirator = [];
     foreach (DB::$USER->SearchLive(true) as $id => $uname) { //生存者から常時対象外の役職を除く
       $target = DB::$USER->ByReal($id);
       if (RoleUser::IsAvoid($target, true)) continue;
@@ -34,7 +34,7 @@ class Role_chain_poison extends Role_poison {
       //Text::p($stack, "◆Remain/{$count} [{$this->role}]");
 
       //-- 対象者選出 --//
-      $target_stack = array();
+      $target_stack = [];
       for ($i = 0; $i < 2; $i++) {
 	if (count($stack) < 1) break;
 	$id = Lottery::Get(count($aspirator) > 0 ? $aspirator : $stack);

@@ -16,7 +16,7 @@ class Role_fox extends Role {
   protected function GetPartner() {
     $main  = 'fox_partner';       //妖狐系
     $sub   = 'child_fox_partner'; //子狐系
-    $stack = array($main => array(), $sub => array());
+    $stack = [$main => [], $sub => []];
     foreach (DB::$USER->Get() as $user) {
       if ($this->IsActor($user)) continue;
       if ($user->IsRole('possessed_fox')) {

@@ -15,7 +15,7 @@ class IconUploadHTML {
     Text::Printf(self::GetConfirm(),
       IconUploadMessage::MESSAGE,
       IconMessage::APPEARANCE, IconMessage::CATEGORY, IconMessage::AUTHOR,
-      Icon::GetFile($file_name), $width, $height,
+      Icon::GetFile($file_name), $icon_name, $width, $height,
       $icon_no, $icon_name, $color, Message::SYMBOL, $color, $data,
       IconUploadMessage::CONFIRM,
       $icon_no, IconUploadMessage::CHECK_NG,
@@ -49,7 +49,7 @@ class IconUploadHTML {
   private static function OutputColor() {
     $format = self::GetColor();
 
-    $color_base = array();
+    $color_base = [];
     for ($i = 0; $i < 256; $i += 51) {
       $color_base[] = sprintf('%02X', $i);
     }
@@ -80,7 +80,7 @@ class IconUploadHTML {
   private static function GetHeader() {
     return <<<EOF
 <div class="link"><a href="./">%s</a></div>
-<img class="title" src="img/title/icon_upload.jpg" title="%s" alt="%s">
+<img src="img/title/icon_upload.jpg" alt="%s" title="%s" class="title">
 EOF;
   }
 
@@ -130,7 +130,7 @@ EOF;
 
   //色名タグ
   private static function GetColorName() {
-    return '<font color="#FFFFFF">%s</font>';
+    return '<span style="color:#FFFFFF;">%s</span>';
   }
 
   //フッタタグ
@@ -149,8 +149,8 @@ EOF;
 <p>%s</p>
 <p>[S] %s / [C] %s / [A] %s</p>
 <table><tr>
-<td><img src="%s" width="%d" height="%d"></td>
-<td class="name">No. %d %s<br><font color="%s">%s</font>%s%s</td>
+<td><img src="%s" alt="%s" width="%d" height="%d"></td>
+<td class="name">No. %d %s<br><span style="color:%s;">%s</span>%s%s</td>
 </tr>
 <tr><td colspan="2">%s</td></tr>
 <tr><td><form method="post" action="icon_upload.php">

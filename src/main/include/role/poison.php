@@ -12,8 +12,8 @@ class Role_poison extends Role {
 
   //処刑毒死候補者選出
   final public function GetVoteKillPoisonTarget(array $list) {
-    $stack     = array();
-    $aspirator = array();
+    $stack     = [];
+    $aspirator = [];
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       if ($user->IsDead(true) || $this->IsAvoidPoison($user)) continue;

@@ -16,9 +16,14 @@ class GameUpHTML {
   private static function OutputForm() {
     Text::Printf(self::GetForm(),
       RQ::Get()->url, RQ::Get()->url, RQ::Get()->heaven_mode ? 'reload_middle_frame();' : '',
-      Security::GetHash(RQ::Get()->room_no), GameUpMessage::SUBMIT,
-      GameUpMessage::STRONG, GameUpMessage::NORMAL, GameUpMessage::WEAK,
-      GameUpMessage::SECRET, GameUpMessage::LAST_WORDS,
+      Security::GetToken(RQ::Get()->room_no),
+      RequestDataTalk::SENTENCE, GameUpMessage::SUBMIT,
+      RequestDataTalk::VOICE,
+      TalkVoice::STRONG, GameUpMessage::STRONG,
+      TalkVoice::NORMAL, HTML::GenerateSelected(true), GameUpMessage::NORMAL,
+      TalkVoice::WEAK, GameUpMessage::WEAK,
+      TalkVoice::SECRET, GameUpMessage::SECRET,
+      TalkVoice::LAST_WORDS, GameUpMessage::LAST_WORDS,
       RQ::Get()->url, GameUpMessage::VOTE, GameUpMessage::TOP
     );
   }
@@ -28,17 +33,17 @@ class GameUpHTML {
     return <<<EOF
 <form method="post" action="game_play.php%s" target="bottom" name="reload_game"></form>
 <form method="post" action="game_play.php%s" target="bottom" class="input-say" name="send" onSubmit="%sset_focus();">
-<input type="hidden" name="hash" value="%s">
+<input type="hidden" name="token" value="%s">
 <table><tr>
-<td><textarea name="say" rows="3" cols="70" wrap="soft"></textarea></td>
+<td><textarea name="%s" rows="3" cols="70" wrap="soft"></textarea></td>
 <td>
 <input type="submit" onClick="setTimeout(&quot;auto_clear()&quot;, 10)" value="%s"><br>
-<select name="font_type">
-<option value="strong">%s</option>
-<option value="normal" selected>%s</option>
-<option value="weak">%s</option>
-<option value="secret">%s</option>
-<option value="last_words">%s</option>
+<select name="%s">
+<option value="%s">%s</option>
+<option value="%s"%s>%s</option>
+<option value="%s">%s</option>
+<option value="%s">%s</option>
+<option value="%s">%s</option>
 </select><br>
 [<a class="vote" href="game_vote.php%s">%s</a>]
 <a class="top-link" href="./" target="_top">%s</a>

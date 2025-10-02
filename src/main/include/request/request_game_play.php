@@ -5,14 +5,14 @@
 */
 RQ::LoadFile('request_game');
 class RequestGamePlay extends RequestGame {
-  private $url_stack = array();
+  private $url_stack = [];
 
   public function __construct() {
     parent::__construct();
     $this->ParseGetOn(
       RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::DOWN
     );
-    $this->ParsePostData('hash');
+    $this->ParsePostData('token');
     if (GameConfig::ASYNC) {
       $this->ParseGetOn(RequestDataGame::ASYNC);
     } else {
@@ -26,9 +26,9 @@ class RequestGamePlay extends RequestGame {
       $url .= URL::GetReload($this->auto_reload);
     }
 
-    $stack = array(
+    $stack = [
       RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::DOWN
-    );
+    ];
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;
     }

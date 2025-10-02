@@ -41,7 +41,7 @@ class Session {
   }
 
   //データ初期化
-  public static function Init($type, $key, $value = array()) {
+  public static function Init($type, $key, $value = []) {
     if (! self::Exists($type, $key)) {
       $_SESSION[$type][$key] = $value;
     }
@@ -106,8 +106,8 @@ class Session {
   //観戦ページ移動
   private static function OutputJump() {
     $url  = URL::GetRoom('game_view', RQ::Get()->room_no);
-    $jump = URL::GetJump($url);
-    $str  = Text::Add(Text::Concat(Message::VIEW_BODY, $jump)) . HTML::GenerateSetLocation();
+    $body = Text::Join(Message::VIEW_BODY, URL::GetJump($url));
+    $str  = Text::LineFeed($body) . HTML::GenerateSetLocation();
     HTML::OutputResult(Message::VIEW_TITLE, $str, $url);
   }
 }

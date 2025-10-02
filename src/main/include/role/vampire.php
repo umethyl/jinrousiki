@@ -18,8 +18,8 @@ class Role_vampire extends Role {
     $id        = $this->GetID();
     $main      = 'infected';
     $sub       = 'psycho_infected';
-    $main_list = array();
-    $sub_list  = array();
+    $main_list = [];
+    $sub_list  = [];
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsPartner($main, $id)) {
 	$main_list[] = $user->handle_name;
@@ -28,7 +28,7 @@ class Role_vampire extends Role {
 	$sub_list[]  = $user->handle_name;
       }
     }
-    return array($main . '_list' => $main_list,  $sub . '_list' => $sub_list);
+    return [$main . '_list' => $main_list,  $sub . '_list' => $sub_list];
   }
 
   public function OutputAction() {
@@ -119,8 +119,8 @@ class Role_vampire extends Role {
   //勝敗判定
   final public function CheckWin() {
     /* 情報収集 */
-    $live_list     = array(); //生存者の ID リスト
-    $infected_list = array(); //吸血鬼 => 感染者リスト
+    $live_list     = []; //生存者の ID リスト
+    $infected_list = []; //吸血鬼 => 感染者リスト
     foreach (DB::$USER->SearchLive(true) as $id => $uname) {
       $user = DB::$USER->ByID($id);
       $user->Reparse();

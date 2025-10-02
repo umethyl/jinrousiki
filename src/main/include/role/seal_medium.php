@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('medium');
 class Role_seal_medium extends Role_medium {
-  public $mix_in = array('critical_mad', 'chicken');
+  public $mix_in = ['critical_mad', 'chicken'];
 
   protected function GetStackVoteKillType() {
     return RoleStackVoteKill::INIT;
@@ -22,13 +22,13 @@ class Role_seal_medium extends Role_medium {
 
   //封印対象役職取得
   private function GetSealList() {
-    return array(
+    return [
       'phantom_wolf', 'resist_wolf', 'revive_wolf', 'step_wolf', 'tongue_wolf',
       'trap_mad', 'possessed_mad', 'revive_mad',
       'phantom_fox', 'spell_fox', 'emerald_fox', 'revive_fox', 'possessed_fox', 'trap_fox',
       'revive_cupid',
       'revive_avenger'
-    );
+    ];
   }
 
   protected function SetVoteKillAction(User $user) {

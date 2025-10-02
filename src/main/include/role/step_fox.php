@@ -5,5 +5,5 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_step_fox extends Role_fox {
-  public $mix_in = array('vote' => 'step_mad');
+  public $mix_in = ['vote' => 'step_mad'];
 }

@@ -15,7 +15,7 @@ class Role_mask_mania extends Role_unknown_mania {
 
   //コピー追加役職候補リスト取得
   private function GetCopySelfActionRoleList() {
-    return array(
+    return [
       Camp::HUMAN	=> 'upper_voter',
       Camp::WOLF	=> 'black_wisp',
       Camp::FOX		=> 'spell_wisp',
@@ -26,6 +26,6 @@ class Role_mask_mania extends Role_unknown_mania {
       Camp::OGRE	=> 'wisp',
       Camp::DUELIST	=> 'star',
       Camp::TENGU	=> 'tengu_spell_wisp'
-    );
+    ];
   }
 }

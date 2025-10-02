@@ -6,7 +6,7 @@
   ・処刑者決定：同一投票先 & 非村人
 */
 class Role_executor extends Role {
-  public $mix_in = array('decide');
+  public $mix_in = ['decide'];
   public $display_role = 'human';
 
   protected function GetStackVoteKillType() {
@@ -16,7 +16,7 @@ class Role_executor extends Role {
   public function DecideVoteKill() {
     if ($this->IsVoteKill() || ! is_array($this->GetStack())) return;
 
-    $stack = array();
+    $stack = [];
     foreach ($this->GetMaxVotedUname() as $uname) {
       if (! DB::$USER->ByRealUname($uname)->IsWinCamp(Camp::HUMAN)) {
 	$stack[$uname] = true;

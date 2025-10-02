@@ -3,11 +3,17 @@
 class HTML {
   //共通タグヘッダ生成
   public static function GenerateTagHeader($name, $class = null, $id = null, $align = null) {
-    $tag = '<' . $name;
-    if (isset($id))    $tag .= ' id="'    . $id    . '"';
-    if (isset($class)) $tag .= ' class="' . $class . '"';
-    if (isset($align)) $tag .= ' align="' . $align . '"';
-    return $tag . '>';
+    $str = $name;
+    if (true === isset($id)) {
+      $str .= self::GenerateAttribute('id', $id);
+    }
+    if (true === isset($class)) {
+      $str .= self::GenerateAttribute('class', $class);
+    }
+    if (true === isset($align)) {
+      $str .= self::GenerateAttribute('align', $align);
+    }
+    return '<' . $str . '>';
   }
 
   //共通タグフッタ生成
@@ -15,36 +21,49 @@ class HTML {
     return '</' . $name . '>';
   }
 
+  //Attribute 要素生成
+  public static function GenerateAttribute($name, $value = null) {
+    $str = ' ' . $name;
+    if (true === isset($value)) {
+      $str .= '="' . $value . '"';
+    }
+    return $str;
+  }
+
   //共通 HTML ヘッダ生成
   public static function GenerateHeader($title, $css = null, $close = false) {
     $str = Text::Format(self::GetHeader(), ServerConfig::ENCODE, $title);
-    if (is_null($css)) $css = 'action';
+    if (true === is_null($css)) {
+      $css = 'action';
+    }
     $str .= self::LoadCSS(sprintf('%s/%s', JINROU_CSS, $css));
-    if ($close) $str .= self::GenerateBodyHeader();
+    if (true === $close) {
+      $str .= self::GenerateBodyHeader();
+    }
     return $str;
   }
 
   //JavaScript ヘッダ生成
   public static function GenerateJavaScriptHeader() {
-    return Text::Add(self::GetJavaScriptHeader());
+    return Text::LineFeed(self::GetJavaScriptHeader());
   }
 
   //JavaScript フッタ生成
   public static function GenerateJavaScriptFooter() {
-    return Text::Add(self::GetJavaScriptFooter());
+    return Text::LineFeed(self::GetJavaScriptFooter());
   }
 
   //ページジャンプ用 JavaScript 生成
   public static function GenerateSetLocation() {
-    $str = Text::Add('if (top != self) { top.location.href = self.location.href; }');
+    $str = Text::LineFeed('if (top != self) { top.location.href = self.location.href; }');
     return self::GenerateJavaScriptHeader() . $str . self::GenerateJavaScriptFooter();
   }
 
   //BODY ヘッダ生成
   public static function GenerateBodyHeader($css = null, $on_load = null) {
     return Text::Format(self::GetBodyHeader(),
-      isset($css) ? self::LoadCSS($css) : '',
-      isset($on_load) ? ' onLoad="' . $on_load . '"' : ''
+      isset($css)     ? self::LoadCSS($css) : '',
+      isset($on_load) ? self::GenerateAttribute('onLoad', $on_load) : ''
     );
   }
 
@@ -84,7 +103,7 @@ class HTML {
       $url, $css, Message::LOG_HEAVEN_REVERSE
     );
 
-    if ($watch) {
+    if (true === $watch) {
       $str .= sprintf(Text::LF . self::GetWatchLogLink(),
 	$url, $css, Message::LOG_WATCH,
 	$url, $css, Message::LOG_WATCH_REVERSE
@@ -105,12 +124,12 @@ class HTML {
 
   //チェック済み生成
   public static function GenerateChecked($flag) {
-    return $flag ? ' checked' : '';
+    return $flag ? self::GenerateAttribute('checked') : '';
   }
 
   //選択済み生成
   public static function GenerateSelected($flag) {
-    return $flag ? ' selected' : '';
+    return $flag ? self::GenerateAttribute('selected') : '';
   }
 
   //窓を閉じるボタン生成
@@ -118,9 +137,18 @@ class HTML {
     return Text::Format(self::GetCloseWindow(), $str, Text::BR, Message::CLOSE_WINDOW);
   }
 
+  //色付きメッセージ生成
+  public static function GenerateMessage($str, $color, $css = null) {
+    $style = '';
+    if (true === isset($css)) {
+      $style .= $css . '; ';
+    }
+    return sprintf(self::GetMessage(), $style, $color, $str);
+  }
+
   //警告メッセージ生成
   public static function GenerateWarning($str) {
-    return sprintf(self::GetWarning(), $str);
+    return self::GenerateMessage($str, '#FF0000');
   }
 
   //CSS 読み込み
@@ -130,7 +158,9 @@ class HTML {
 
   //JavaScript 読み込み
   public static function LoadJavaScript($file, $path = null) {
-    if (is_null($path)) $path = JINROU_ROOT . '/javascript';
+    if (true === is_null($path)) {
+      $path = JINROU_ROOT . '/javascript';
+    }
     return Text::Format(self::GetJavaScript(), $path, $file);
   }
 
@@ -143,7 +173,9 @@ class HTML {
   public static function OutputFooter($exit = false) {
     DB::Disconnect();
     echo self::GetFooter();
-    if ($exit) exit;
+    if (true === $exit) {
+      exit;
+    }
   }
 
   //CSS 出力
@@ -222,7 +254,7 @@ class HTML {
   }
 
   //結果ページ出力
-  public static function OutputResult($title, $body, $url = '') {
+  public static function OutputResult($title, $body, $url = null) {
     DB::Disconnect();
     self::OutputResultHeader($title, $url);
     Text::Output($body, true);
@@ -230,10 +262,14 @@ class HTML {
   }
 
   //結果ページ HTML ヘッダ出力
-  public static function OutputResultHeader($title, $url = '') {
+  public static function OutputResultHeader($title, $url = null) {
     self::OutputHeader($title);
-    if ($url != '') Text::Printf(self::GetJamp(), $url);
-    if (is_object(DB::$ROOM)) echo DB::$ROOM->GenerateCSS();
+    if (true === isset($url)) {
+      Text::Printf(self::GetJamp(), $url);
+    }
+    if (true === is_object(DB::$ROOM)) {
+      DB::$ROOM->OutputCSS();
+    }
     self::OutputBodyHeader();
   }
 
@@ -250,12 +286,10 @@ class HTML {
   //HTML ヘッダタグ
   private static function GetHeader() {
     return <<<EOF
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=%s">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta charset="%s">
 <title>%s</title>
 EOF;
   }
@@ -275,7 +309,7 @@ EOF;
 
   //JavaScript 読み込みタグ
   private static function GetJavaScript() {
-    return '<script type="text/javascript" src="%s/%s.js"></script>';
+    return '<script src="%s/%s.js"></script>';
   }
 
   //JavaScript ヘッダタグ
@@ -383,8 +417,8 @@ EOF;
 EOF;
   }
 
-  //警告メッセージタグ
-  private static function GetWarning() {
-    return '<font color="#FF0000">%s</font>';
+  //メッセージタグ
+  private static function GetMessage() {
+    return '<span style="%scolor:%s;">%s</span>';
   }
 }

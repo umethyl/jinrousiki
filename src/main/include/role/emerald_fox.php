@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_emerald_fox extends Role_fox {
-  public $mix_in = array('mage');
+  public $mix_in = ['mage'];
   public $action = VoteAction::MAGE;
 
   protected function IsAddVote() {
@@ -17,7 +17,7 @@ class Role_emerald_fox extends Role_fox {
     RoleHTML::OutputVote(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
   }
 
-  protected function GetIgnoreAddVoteMessage() {
+  protected function GetDisabledAddVoteMessage() {
     return VoteRoleMessage::LOST_ABILITY;
   }
 

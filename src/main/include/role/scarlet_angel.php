@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('angel');
 class Role_scarlet_angel extends Role_angel {
-  public $mix_in = array('wolf');
+  public $mix_in = ['wolf'];
 
   protected function OutputAddPartner() {
     if (! DB::$ROOM->IsNight()) return;

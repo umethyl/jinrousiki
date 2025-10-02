@@ -1,18 +1,11 @@
 <?php
-//足音投票テスト
-class StepVoteTest {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//足音投票テストコントローラー
+final class StepVoteTestController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('game_view', true);
 
     //仮想村
-    $stack = array('name' => GameMessage::ROOM_TITLE_FOOTER, 'status' => RoomStatus::PLAYING);
+    $stack = ['name' => GameMessage::ROOM_TITLE_FOOTER, 'status' => RoomStatus::PLAYING];
     DevRoom::Initialize($stack);
     include('data/step_vote_option.php');
 
@@ -24,7 +17,7 @@ class StepVoteTest {
     //仮想投票データ
     $set_date = 6;
     RQ::GetTest()->vote = new stdClass();
-    RQ::GetTest()->vote->night = array();
+    RQ::GetTest()->vote->night = [];
 
     //仮想イベント
     include('data/vote_event.php');
@@ -41,12 +34,13 @@ class StepVoteTest {
     #DB::$USER->ByID(9)->live = UserLive::LIVE;
     DB::LoadSelf(18);
     foreach (DB::$USER->Get() as $user) {
-      if (! isset($user->target_no)) $user->target_no = 0;
+      if (! isset($user->target_no)) {
+	$user->target_no = 0;
+      }
     }
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     DevVote::Output('step_vote_test.php');
   }
 }

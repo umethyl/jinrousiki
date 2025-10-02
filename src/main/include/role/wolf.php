@@ -34,7 +34,7 @@ class Role_wolf extends Role {
     $main = 'wolf_partner';     //人狼
     $mad  = 'mad_partner';      //囁き狂人
     $sub  = 'unconscious_list'; //無意識
-    $stack = array($main => array(), $mad => array(), $sub => array());
+    $stack = [$main => [], $mad => [], $sub => []];
     foreach (DB::$USER->Get() as $user) {
       if ($this->IsActor($user)) continue;
       if ($user->IsRole('possessed_wolf')) {
@@ -58,26 +58,26 @@ class Role_wolf extends Role {
   public function Howl(TalkBuilder $builder, TalkParser $talk) {
     if (! $builder->flag->wolf_howl) return false; //スキップ判定
 
-    $str   = RoleTalkMessage::WOLF_HOWL;
-    $voice = $talk->font_type;
+    $sentence = RoleTalkMessage::WOLF_HOWL;
+    $voice    = $talk->font_type;
     foreach ($builder->filter as $filter) {
-      $filter->FilterWhisper($voice, $str); //フィルタリング処理
+      $filter->FilterWhisper($voice, $sentence); //フィルタリング処理
     }
 
-    $stack = array(
-      'str'       => $str,
-      'symbol'    => '',
-      'user_info' => RoleTalkMessage::WOLF,
-      'voice'     => $voice,
-      'talk_id'   => $builder->GetTalkID($talk)
-    );
+    $stack = [
+      TalkElement::ID       => $builder->GetTalkID($talk),
+      TalkElement::SYMBOL   => '',
+      TalkElement::NAME     => RoleTalkMessage::WOLF,
+      TalkElement::VOICE    => $voice,
+      TalkElement::SENTENCE => $sentence
+    ];
     return $builder->Register($stack);
   }
 
   protected function GetVoteTargetUserFilter(array $list) {
     if ($this->IsFixDummyBoy()) {
       $id = DB::$USER->GetDummyBoyID();
-      return array($id => $list[$id]);
+      return [$id => $list[$id]];
     } else {
       return $list;
     }
@@ -119,7 +119,7 @@ class Role_wolf extends Role {
     return false;
   }
 
-  protected function IgnoreVoteNightFilter(User $user) {
+  protected function ValidateVoteNightTargetFilter(User $user) {
     //身代わり君判定 (クイズ村 > 身代わり君)
     if (DB::$ROOM->IsQuiz()) {
       if (! $user->IsDummyBoy()) return VoteRoleMessage::TARGET_QUIZ;

@@ -8,12 +8,47 @@ class GM {
   const ROLE      = 'GM';		//役職 (初期処理用)
 }
 
+//-- コントローラー基底クラス --//
+abstract class JinrouController {
+  //実行
+  public static function Execute() {
+    static::Start();
+    static::Load();
+    if (true === static::EnableCommand()) {
+      static::RunCommand();
+    } else {
+      static::Output();
+    }
+    static::Finish();
+  }
+
+  //初期処理
+  protected static function Start() {}
+
+  //データロード
+  protected static function Load() {}
+
+  //コマンド実行有効判定
+  protected static function EnableCommand() {
+    return false;
+  }
+
+  //コマンド実行
+  protected static function RunCommand() {}
+
+  //出力
+  protected static function Output() {}
+
+  //終了処理
+  protected static function Finish() {}
+}
+
 //-- 汎用スタッククラス --//
 class Stack {
   //初期化
   public function Init($name) {
     //Text::p($name, '◆Stack/Init');
-    $this->Set($name, array());
+    $this->Set($name, []);
   }
 
   //取得
@@ -161,7 +196,7 @@ abstract class StackManager {
   //-- スタック関連 --//
   //スタック取得
   final public function Stack() {
-    if (is_null($this->stack)) {
+    if (true === is_null($this->stack)) {
       $this->stack = new Stack();
     }
     //if (get_class($this) == 'Room') Text::p($this->stack);
@@ -170,7 +205,7 @@ abstract class StackManager {
 
   //フラグスタック取得
   final public function Flag() {
-    if (is_null($this->flag)) {
+    if (true === is_null($this->flag)) {
       $this->flag = new FlagStack();
     }
     //if (get_class($this) == 'Room') Text::p($this->flag);
@@ -178,8 +213,8 @@ abstract class StackManager {
   }
 
   //フラグセット
-  final public function SetFlag() {
-    foreach (func_get_args() as $mode) {
+  final public function SetFlag(...$mode_list) {
+    foreach ($mode_list as $mode) {
       $this->Flag()->On($mode);
     }
   }
@@ -192,6 +227,6 @@ abstract class StackManager {
 
   //OFF 判定
   final public function IsOff($mode) {
-    return ! $this->IsOn($mode);
+    return true !== $this->IsOn($mode);
   }
 }

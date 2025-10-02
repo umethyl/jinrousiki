@@ -9,7 +9,7 @@
 */
 RoleLoader::LoadFile('ogre');
 class Role_wise_ogre extends Role_ogre {
-  public $mix_in = array('common');
+  public $mix_in = ['common'];
 
   protected function GetOgreWolfEatResistRate() {
     return 40;

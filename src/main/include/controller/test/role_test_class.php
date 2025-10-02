@@ -1,26 +1,22 @@
 <?php
-//-- オプション配役テスト --//
-class RoleTest {
-  //実行
-  public static function Execute() {
-    self::Output();
-  }
-
-  //出力
-  private static function Output() {
+//-- オプション配役テストコントローラー --//
+final class RoleTestController extends JinrouController {
+  protected static function Output() {
     DevHTML::OutputRoleTestHeader(RoleTestMessage::TITLE, 'role_test.php');
     self::OutputForm();
-    if (DevHTML::IsExecute()) self::RunTest();
+    if (DevHTML::IsExecute()) {
+      self::RunTest();
+    }
     HTML::OutputFooter(true);
   }
 
   //フォーム出力
   private static function OutputForm() {
     $id    = 'game_option';
-    $stack = array(
+    $stack = [
       'normal', 'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'duel', 'duel_auto_open_cast',
       'duel_not_open_cast', 'gray_random', 'step', 'quiz'
-    );
+    ];
     RQ::Get()->ParsePostData($id);
     $checked_key = in_array(RQ::Get()->$id, $stack) ? RQ::Get()->$id : 'chaos_hyper';
     foreach ($stack as $option) {
@@ -30,7 +26,7 @@ class RoleTest {
     }
     Text::d();
 
-    foreach (array('replace_human', 'change_common', 'change_mad', 'change_cupid') as $option) {
+    foreach (['replace_human', 'change_common', 'change_mad', 'change_cupid'] as $option) {
       $count = 0;
       RQ::Get()->ParsePostData($option);
       foreach (GameOptionConfig::${$option.'_selector_list'} as $key => $mode) {
@@ -50,7 +46,7 @@ class RoleTest {
       Text::d();
     }
 
-    foreach (array('topping', 'boost_rate') as $option) {
+    foreach (['topping', 'boost_rate'] as $option) {
       $count = -1;
       RQ::Get()->ParsePostData($option);
       foreach (GameOptionConfig::${$option.'_list'} as $key => $mode) {
@@ -62,12 +58,12 @@ class RoleTest {
       Text::d();
     }
 
-    $stack = array(
+    $stack = [
       'gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf',
       'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver',
       'cupid', 'medium', 'mania', 'detective', 'festival', 'chaos_open_cast_camp',
       'chaos_open_cast_role', 'limit_off'
-    );
+    ];
     $count = 0;
     foreach ($stack as $option) {
       Text::OutputFold(++$count, Text::BR, 14);
@@ -80,8 +76,8 @@ class RoleTest {
   private static function RunTest() {
     RQ::InitTestRoom();
     $stack = new stdClass();
-    $stack->game_option = array('dummy_boy');
-    $stack->option_role = array();
+    $stack->game_option = ['dummy_boy'];
+    $stack->option_role = [];
 
     switch (RQ::Get()->game_option) { //メインオプション
     case 'chaos':
@@ -107,7 +103,7 @@ class RoleTest {
     }
 
     //置換系
-    foreach (array('replace_human', 'change_common', 'change_mad', 'change_cupid') as $option) {
+    foreach (['replace_human', 'change_common', 'change_mad', 'change_cupid'] as $option) {
       RQ::Get()->ParsePostData($option);
       if (empty(RQ::Get()->$option)) continue;
       $list = $option . '_selector_list';
@@ -117,7 +113,7 @@ class RoleTest {
     }
 
     //闇鍋用オプション
-    foreach (array('topping', 'boost_rate') as $option) {
+    foreach (['topping', 'boost_rate'] as $option) {
       RQ::Get()->ParsePostData($option);
       if (empty(RQ::Get()->$option)) continue;
       if (array_key_exists(RQ::Get()->$option, GameOptionConfig::${$option.'_list'})) {
@@ -126,11 +122,11 @@ class RoleTest {
     }
 
     //普通村向けオプション
-    $option_stack = array(
+    $option_stack = [
       'gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf',
       'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver',
       'cupid', 'medium', 'mania', 'detective'
-    );
+    ];
     foreach ($option_stack as $option) {
       RQ::Get()->ParsePostOn($option);
       if (RQ::Get()->$option) {
@@ -138,7 +134,7 @@ class RoleTest {
       }
     }
 
-    foreach (array('festival') as $option) { //特殊村
+    foreach (['festival'] as $option) { //特殊村
       RQ::Get()->ParsePostOn($option);
       if (RQ::Get()->$option) {
 	$stack->game_option[] = $option;
@@ -146,7 +142,7 @@ class RoleTest {
     }
 
     //陣営通知オプション
-    foreach (array('chaos_open_cast_camp', 'chaos_open_cast_role') as $option) {
+    foreach (['chaos_open_cast_camp', 'chaos_open_cast_role'] as $option) {
       RQ::Get()->ParsePostOn($option);
       if (RQ::Get()->$option) {
 	$stack->option_role[] = $option;
@@ -155,7 +151,7 @@ class RoleTest {
 
     RQ::Get()->ParsePostOn('limit_off');
     if (RQ::Get()->limit_off) {
-      ChaosConfig::$role_group_rate_list = array();
+      ChaosConfig::$role_group_rate_list = [];
     }
     DevRoom::Cast($stack);
   }

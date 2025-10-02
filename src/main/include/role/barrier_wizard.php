@@ -8,31 +8,32 @@
 */
 RoleLoader::LoadFile('wizard');
 class Role_barrier_wizard extends Role_wizard {
-  public $mix_in = array('guard');
+  public $mix_in = ['guard'];
   public $action = VoteAction::SPREAD_WIZARD;
   public $submit = VoteAction::WIZARD;
 
   protected function GetWizardResultList() {
-    return array(RoleAbility::GUARD);
+    return [RoleAbility::GUARD];
   }
 
   protected function GetVoteCheckboxType() {
     return OptionFormType::CHECKBOX;
   }
 
-  public function CheckVoteNightTarget(array $list) {
+  public function ValidateVoteNightTargetList(array $list) {
     if (count($list) < 1 || 4 < count($list)) {
       return VoteRoleMessage::INVALID_TARGET_RANGE;
     }
     return null;
   }
 
-  public function SetVoteNightUserList(array $list) {
-    $target_stack = array();
-    $handle_stack = array();
+  public function SetVoteNightTargetList(array $list) {
+    $target_stack = [];
+    $handle_stack = [];
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      $str  = $this->IgnoreVoteNight($user, DB::$USER->IsVirtualLive($user->id)); //例外判定
+      $live = DB::$USER->IsVirtualLive($user->id); //生死判定は仮想を使う
+      $str  = $this->ValidateVoteNightTarget($user, $live);
       if (! is_null($str)) return $str;
       $target_stack[$id] = DB::$USER->ByReal($id)->id;
       $handle_stack[$id] = $user->handle_name;
@@ -46,7 +47,7 @@ class Role_barrier_wizard extends Role_wizard {
   }
 
   protected function GetWizardList() {
-    return array($this->role => VoteAction::SPREAD_WIZARD);
+    return [$this->role => VoteAction::SPREAD_WIZARD];
   }
 
   //護衛先セット (魔法)
@@ -71,7 +72,7 @@ class Role_barrier_wizard extends Role_wizard {
   }
 
   public function GetGuard($target_id) {
-    $result = array();
+    $result = [];
     $rate   = $this->GetGuardRate();
     foreach ($this->GetStack() as $id => $stack) {
       if (in_array($target_id, $stack) && Lottery::Percent((100 - count($stack) * 20) * $rate)) {

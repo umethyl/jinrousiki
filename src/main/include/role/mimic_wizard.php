@@ -9,14 +9,14 @@
 */
 RoleLoader::LoadFile('wizard');
 class Role_mimic_wizard extends Role_wizard {
-  public $mix_in = array('mage', 'necromancer');
+  public $mix_in = ['mage', 'necromancer'];
 
   protected function GetWizardResultList() {
-    return array(RoleAbility::MAGE, RoleAbility::MIMIC_WIZARD);
+    return [RoleAbility::MAGE, RoleAbility::MIMIC_WIZARD];
   }
 
   protected function GetWizardList() {
-    return array('mage' => VoteAction::MAGE, 1 => VoteAction::MAGE);
+    return ['mage' => VoteAction::MAGE, 1 => VoteAction::MAGE];
   }
 
   public function IsMageFailed() {

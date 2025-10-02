@@ -7,7 +7,7 @@
 class Role_chicken extends Role {
   //ショック死判定 (セット済み > 対象外 > 個別判定)
   final public function SuddenDeath() {
-    $type = 'sudden_death';
+    $type = VoteDayElement::SUDDEN_DEATH;
     if (! is_null($this->GetStack($type))) {
       return;
     } elseif ($this->CallParent('IgnoreSuddenDeath')) {
@@ -34,12 +34,14 @@ class Role_chicken extends Role {
 
   //投票先人数取得
   final protected function CountVoteTarget() {
-    return ArrayFilter::GetInt($this->GetStack('count'), $this->GetVoteTargetUname());
+    $stack = $this->GetStack(VoteDayElement::POLL_LIST);
+    return ArrayFilter::GetInt($stack, $this->GetVoteTargetUname());
   }
 
   //得票人数取得
   final protected function CountVoted() {
-    return ArrayFilter::GetInt($this->GetStack('count'), $this->GetUname());
+    $stack = $this->GetStack(VoteDayElement::POLL_LIST);
+    return ArrayFilter::GetInt($stack, $this->GetUname());
   }
 
   //突然死処理

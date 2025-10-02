@@ -13,13 +13,13 @@ class Role_rival extends Role {
 
   protected function GetPartner() {
     $target = $this->GetActor()->GetPartnerList();
-    $stack  = array();
+    $stack  = [];
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
       if ($this->IsRival($user, $target)) {
 	$stack[] = $user->handle_name; //憑依追跡なし
       }
     }
-    return array('partner_header' => $stack);
+    return ['partner_header' => $stack];
   }
 
   protected function OutputPartnerByType(array $list, $type) {

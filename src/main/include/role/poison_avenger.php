@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('avenger');
 class Role_poison_avenger extends Role_avenger {
-  public $mix_in = array('poison');
+  public $mix_in = ['poison'];
 
   protected function IsPoisonTarget(User $user) {
     return RoleUser::IsInhuman($user) || $user->IsPartner($this->GetPartnerRole(), $this->GetID());

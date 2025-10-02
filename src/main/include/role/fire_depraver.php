@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('depraver');
 class Role_fire_depraver extends Role_depraver {
-  public $mix_in = array('critical_mad');
+  public $mix_in = ['critical_mad'];
 
   protected function GetStackVoteKillType() {
     return RoleStackVoteKill::INIT;

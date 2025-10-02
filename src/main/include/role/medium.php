@@ -22,7 +22,7 @@ class Role_medium extends Role {
     }
     if (! $flag) return;
 
-    $stack = array(); //突然死者を収集
+    $stack = []; //突然死者を収集
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsOn(UserMode::SUICIDE)) {
 	$virtual = $user->GetVirtual();

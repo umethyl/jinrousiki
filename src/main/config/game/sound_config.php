@@ -1,8 +1,8 @@
 <?php
 //-- 音源設定 --//
 class SoundConfig {
-  const PATH      = 'swf'; //音源のパス
-  const EXTENSION = 'swf'; //拡張子
+  const PATH      = 'sound'; //音源のパス
+  const EXTENSION = 'mp3'; //拡張子
 
   public static $entry			= 'sound_entry';		//入村
   public static $full			= 'sound_full';			//定員

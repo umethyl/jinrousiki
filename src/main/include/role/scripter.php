@@ -6,7 +6,7 @@
   ・投票数：+1 (5 日目以降)
 */
 class Role_scripter extends Role {
-  public $mix_in = array('upper_voter');
+  public $mix_in = ['upper_voter'];
 
   protected function IgnoreResult() {
     return $this->IgnoreFilterVoteDo();

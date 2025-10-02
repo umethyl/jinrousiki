@@ -5,4 +5,4 @@ $disable = true; //false にすると使用可能になる
 if ($disable) HTML::OutputUnusableError();
 
 Loader::LoadFile('twitter_test_class');
-TwitterTest::Execute();
+TwitterTestController::Execute();

@@ -1,22 +1,16 @@
 <?php
-//-- トリップテスト --//
-class TripTest {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//-- トリップテストコントローラー --//
+final class TripTestController extends JinrouController {
+  protected static function Load() {
     DevHTML::LoadRequest();
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     HTML::OutputHeader(TripTestMessage::TITLE, null, true);
     TripTestHTML::OutputForm();
-    if (DevHTML::IsExecute()) self::RunTest();
+    if (DevHTML::IsExecute()) {
+      self::RunTest();
+    }
     HTML::OutputFooter();
   }
 

@@ -9,7 +9,7 @@
 */
 RoleLoader::LoadFile('ogre');
 class Role_revive_ogre extends Role_ogre {
-  public $mix_in = array('psycho_mage', 'revive_pharmacist');
+  public $mix_in = ['psycho_mage', 'revive_pharmacist'];
 
   protected function GetOgreWolfEatResistRate() {
     return 0;

@@ -1,4 +1,4 @@
 <?php
 require_once('init.php');
 Loader::LoadFile('spec_info_class');
-SpecInfo::Execute();
+SpecInfoController::Execute();

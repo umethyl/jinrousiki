@@ -1,6 +1,6 @@
 <?php
 //-- 定数リスト (Request/Game) --//
-class RequestDataGame {
+final class RequestDataGame {
   const DB     = 'db_no';
   const ID     = 'room_no';
   const RELOAD = 'auto_reload';
@@ -11,14 +11,20 @@ class RequestDataGame {
   const ASYNC  = 'async';
 }
 
+//-- 定数リスト (Request/Game/Log) --//
+final class RequestDataGameLog {
+  const DATE  = 'date';
+  const SCENE = 'scene';
+}
+
 //-- 定数リスト (Request/Room) --//
-class RequestDataRoom {
+final class RequestDataRoom {
   const DEAD   = 'dead_mode';
   const HEAVEN = 'heaven_mode';
 }
 
 //-- 定数リスト (Request/User) --//
-class RequestDataUser {
+final class RequestDataUser {
   const ID       = 'user_no';
   const UNAME    = 'uname';
   const TRIP     = 'trip';
@@ -30,8 +36,15 @@ class RequestDataUser {
   const LOGIN    = 'login_manually';
 }
 
+//-- 定数リスト (Request/Talk) --//
+final class RequestDataTalk {
+  const SENTENCE  = 'say';
+  const VOICE     = 'font_type';
+  const OBJECTION = 'set_objection';
+}
+
 //-- 定数リスト (Request/Vote) --//
-class RequestDataVote {
+final class RequestDataVote {
   const ON         = 'vote';
   const TARGET     = 'target_no';
   const SITUATION  = 'situation';
@@ -40,7 +53,7 @@ class RequestDataVote {
 }
 
 //-- 定数リスト (Request/Log/Room) --//
-class RequestDataLogRoom {
+final class RequestDataLogRoom {
   const REVERSE     = 'reverse_log';
   const HEAVEN      = 'heaven_talk';
   const HEAVEN_ONLY = 'heaven_only';
@@ -53,7 +66,7 @@ class RequestDataLogRoom {
 }
 
 //-- 定数リスト (Request/Icon) --//
-class RequestDataIcon {
+final class RequestDataIcon {
   const ID         = 'icon_no';
   const NAME       = 'icon_name';
   const CATEGORY   = 'category';

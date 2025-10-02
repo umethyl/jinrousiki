@@ -6,7 +6,7 @@
   ・司祭：恋人
 */
 class Role_priest_jealousy extends Role {
-  public $mix_in = array('priest');
+  public $mix_in = ['priest'];
   public $display_role = 'priest';
 
   protected function IgnoreResult() {

@@ -5,7 +5,7 @@
   ・仲間表示：人狼枠(憑依追跡)
 */
 class Role_fanatic_mad extends Role {
-  public $mix_in = array('wolf');
+  public $mix_in = ['wolf'];
 
   protected function GetPartner() {
     $stack = $this->GetWolfPartner();

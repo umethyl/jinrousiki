@@ -5,7 +5,7 @@
   ・悪戯：迷彩 (同一アイコン)
 */
 class Role_enchant_mad extends Role {
-  public $mix_in = array('vote' => 'light_fairy');
+  public $mix_in = ['vote' => 'light_fairy'];
 
   protected function GetBadStatus() {
     return 'same_face';

@@ -9,25 +9,25 @@
 */
 RoleLoader::LoadFile('wizard');
 class Role_awake_wizard extends Role_wizard {
-  public $mix_in = array('mage');
+  public $mix_in = ['mage'];
 
   protected function GetWizardResultList() {
-    return array(RoleAbility::MAGE);
+    return [RoleAbility::MAGE];
   }
 
   protected function GetWizardList() {
     if ($this->IsActorActive()) {
       if (Lottery::Percent(30)) {
-	return array(
+	return [
 	  'mage'		=> VoteAction::MAGE,
 	  'stargazer_mage'	=> VoteAction::MAGE,
 	  'sex_mage'		=> VoteAction::MAGE
-	);
+	];
       } else {
-	return array(1 => VoteAction::MAGE);
+	return [1 => VoteAction::MAGE];
       }
     } else {
-      return array('soul_mage' => VoteAction::MAGE);
+      return ['soul_mage' => VoteAction::MAGE];
     }
   }
 

@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_child_fox extends Role_fox {
-  public $mix_in = array('mage');
+  public $mix_in = ['mage'];
   public $action = VoteAction::CHILD_FOX;
   public $result = RoleAbility::CHILD_FOX;
   public $submit = VoteAction::MAGE;

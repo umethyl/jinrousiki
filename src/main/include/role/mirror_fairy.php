@@ -27,12 +27,12 @@ class Role_mirror_fairy extends Role_fairy {
     return OptionFormType::CHECKBOX;
   }
 
-  public function SetVoteNightUserList(array $list) {
-    $stack = array();
+  public function SetVoteNightTargetList(array $list) {
+    $stack = [];
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      $str  = $this->IgnoreVoteNight($user, $user->IsLive()); //例外判定
+      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
       if (! is_null($str)) return $str;
       $stack[$id] = $user->handle_name;
     }
@@ -49,7 +49,7 @@ class Role_mirror_fairy extends Role_fairy {
   }
 
   public function SetEvent() {
-    $stack = array(); //決選投票対象者の ID リスト
+    $stack = []; //決選投票対象者の ID リスト
     foreach ($this->GetActor()->GetPartner($this->role, true) as $key => $value) { //生存確認
       if (DB::$USER->IsVirtualLive($key)) {
 	$stack[] = $key;

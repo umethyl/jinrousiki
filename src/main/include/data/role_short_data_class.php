@@ -1,8 +1,8 @@
 <?php
 //-- 役職データベース (省略名) --//
-class RoleShortData {
+final class RoleShortData {
   //役職の省略名 (過去ログ用)
-  public static $list = array(
+  public static $list = [
     'human'			=> '村',
     'saint'			=> '聖',
     'executor'			=> '執行',
@@ -507,5 +507,5 @@ class RoleShortData {
     'copied_nymph'		=> '元紅',
     'copied_soul'		=> '元覚',
     'copied_teller'		=> '元語'
-  );
+  ];
 }

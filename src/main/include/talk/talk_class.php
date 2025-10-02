@@ -1,6 +1,6 @@
 <?php
 //-- 発言処理クラス --//
-class Talk {
+final class Talk {
   /* フラグ */
   const UPDATE		= 'update';	//キャッシュ更新
   const LIMIT_SAY	= 'limit_say';	//発言制限
@@ -60,7 +60,7 @@ class Talk {
 }
 
 //-- 発言パーサ --//
-class TalkParser {
+final class TalkParser {
   public $scene;
   public $location;
   public $uname;
@@ -239,23 +239,23 @@ class TalkParser {
 }
 
 //-- 会話生成クラス --//
-class TalkBuilder {
-  public  $filter = array();
+final class TalkBuilder {
+  public  $filter = [];
   public  $flag;
   private $actor;
   private $cache;
 
-  public function __construct($class, $id = null) {
+  public function __construct($css, $id = null) {
     $this->actor = DB::$SELF->GetVirtual(); //仮想ユーザを取得
     $this->LoadVirtualRole();
     $this->LoadFilter();
     $this->LoadFlag();
-    $this->Begin($class, $id);
+    $this->Begin($css, $id);
   }
 
   //テーブルヘッダ生成
-  public function Begin($class, $id = null) {
-    $this->cache = TalkHTML::GenerateHeader($class, $id);
+  public function Begin($css, $id = null) {
+    $this->cache = TalkHTML::GenerateHeader($css, $id);
   }
 
   //発言生成
@@ -342,12 +342,12 @@ class TalkBuilder {
       $handle_name = $user->handle_name;
     }
 
-    $stack = array(
-      'str'       => $talk->sentence,
-      'symbol'    => TalkHTML::GenerateSymbol($user->color),
-      'user_info' => $handle_name,
-      'voice'     => $talk->font_type
-    );
+    $stack = [
+      TalkElement::SYMBOL   => TalkHTML::GenerateSymbol($user->color),
+      TalkElement::NAME     => $handle_name,
+      TalkElement::VOICE    => $talk->font_type,
+      TalkElement::SENTENCE => $talk->sentence
+    ];
     return $this->Register($stack);
   }
 
@@ -395,8 +395,8 @@ class TalkBuilder {
   //発言登録
   public function Register(array $list) {
     extract($list);
-    $stack = array();
-    foreach (array('row_class', 'user_class', 'say_class') as $key) {
+    $stack = [];
+    foreach (TalkElement::$css as $key) {
       if (isset($$key) && $$key != '') {
 	$$key = ' ' . $$key;
       } else {
@@ -404,10 +404,10 @@ class TalkBuilder {
       }
       $stack[$key] = $$key;
     }
-    $str = Text::Line($str);
-    $str = $this->QuoteTalk($str);
+    $sentence = Text::ConvertLine($sentence);
+    $sentence = $this->QuoteTalk($sentence);
 
-    foreach (array('str', 'symbol', 'user_info', 'voice', 'talk_id') as $key) {
+    foreach (TalkElement::$list as $key) {
       $stack[$key] = isset($$key) ? $$key : '';
     }
     $this->cache .= TalkHTML::Generate($stack);
@@ -415,12 +415,12 @@ class TalkBuilder {
   }
 
   //発言 (デバッグ用)
-  public function TalkDebug($str, $symbol = '') {
-    $stack = array(
-      'str'    => $str,
-      'symbol' => $symbol,
-      'voice'  => null
-    );
+  public function TalkDebug($sentence, $symbol = '') {
+    $stack = [
+      TalkElement::SYMBOL   => $symbol,
+      TalkElement::VOICE    => null,
+      TalkElement::SENTENCE => $sentence
+    ];
     return $this->Register($stack);
   }
 
@@ -449,7 +449,7 @@ class TalkBuilder {
     }
 
     $is_day = DB::$ROOM->IsDay();
-    $stack  = array('blinder' => $is_day, 'earplug' => $is_day, 'deep_sleep' => true);
+    $stack  = ['blinder' => $is_day, 'earplug' => $is_day, 'deep_sleep' => true];
     foreach ($stack as $role => $flag) {
       if (($flag && DB::$ROOM->IsEvent($role)) || DB::$ROOM->IsOption($role)) {
 	$this->actor->virtual_live = true;
@@ -487,7 +487,7 @@ class TalkBuilder {
     if (DB::$ROOM->IsOn(RoomMode::WATCH)) {
       $stack->wolf |= RQ::Get()->wolf_sight; //狼視点モード
     }
-    foreach (array('common', 'wolf', 'fox') as $type) { //身代わり君の上書き判定
+    foreach (['common', 'wolf', 'fox'] as $type) { //身代わり君の上書き判定
       $stack->$type |= $stack->dummy_boy;
     }
 
@@ -561,8 +561,7 @@ class TalkBuilder {
   //発言
   private function Talk(TalkParser $talk, User $user, $real = null) {
     //表示情報を抽出
-    $symbol = $this->GetSymbol($talk, $user);
-    $name   = $this->GetHandleName($talk, $user);
+    $name = $this->GetHandleName($talk, $user);
     if (RQ::Get()->add_role && $user->id != 0) { //役職表示モード対応
       if ($talk->scene == RoomScene::HEAVEN) {
 	$real = $user;
@@ -579,26 +578,23 @@ class TalkBuilder {
 	 $user->IsRole('leader_common', 'mind_read', 'mind_open'))) {
       $name .= TalkHTML::GenerateSelfTalk();
     }
-    $str   = $talk->sentence;
-    $voice = $talk->font_type;
 
+    $voice    = $talk->font_type;
+    $sentence = $talk->sentence;
     foreach ($this->filter as $filter) { //発言フィルタ処理
-      $filter->FilterTalk($user, $name, $voice, $str);
+      $filter->FilterTalk($user, $name, $voice, $sentence);
     }
 
-    $symbol = $this->AddIcon($user, $symbol, $name);
-    $name  .= $this->AddTimeName($talk);
-
-    $stack = array(
-      'str'       => $str,
-      'symbol'    => $symbol,
-      'user_info' => $name,
-      'voice'     => $voice,
-      'talk_id'   => $this->GetTalkID($talk)
-    );
+    $stack = [
+      TalkElement::ID       => $this->GetTalkID($talk),
+      TalkElement::SYMBOL   => $this->AddIcon($user, $this->GetSymbol($talk, $user), $name),
+      TalkElement::NAME     => $name . $this->AddTimeName($talk),
+      TalkElement::VOICE    => $voice,
+      TalkElement::SENTENCE => $sentence
+    ];
     if ($talk->location == TalkLocation::SECRET) {
-      $stack['row_class'] = 'secret';
-      $stack['symbol'] .= TalkMessage::SECRET_SYMBOL;
+      $stack[TalkElement::CSS_ROW] = TalkVoice::SECRET;
+      $stack[TalkElement::SYMBOL] .= TalkMessage::SECRET_SYMBOL;
     }
 
     return $this->Register($stack);
@@ -613,9 +609,9 @@ class TalkBuilder {
 
     switch ($talk->action) { //投票情報
     case TalkAction::OBJECTION: //「異議」ありは常時表示
-      $sex   = empty($talk->sex) ? $user->sex : $talk->sex;
-      $class = 'objection-' . $sex;
-      return $this->RegisterSystemMessage($name . $str, $this->GetTalkID($talk), $class);
+      $sex = empty($talk->sex) ? $user->sex : $talk->sex;
+      $css = 'objection-' . $sex;
+      return $this->RegisterSystemMessage($name . $str, $this->GetTalkID($talk), $css);
 
     case TalkAction::MORNING:
     case TalkAction::NIGHT:
@@ -633,7 +629,7 @@ class TalkBuilder {
   private function TalkDummyBoy(TalkParser $talk, User $user) {
     $str = Message::SYMBOL . $user->handle_name . Message::SPACER . $talk->sentence;
     $str = $this->QuoteTalk($str) . $this->AddTime($talk);
-    return $this->RegisterSystem($str, $this->GetTalkID($talk), 'dummy-boy');
+    return $this->RegisterSystem($str, $this->GetTalkID($talk), TalkCSS::DUMMY);
   }
 
   //発言 (昼)
@@ -643,7 +639,7 @@ class TalkBuilder {
 	if (! $this->IsMindRead($talk, $actor, $real_actor, true)) {
 	  return false;
 	}
-      } elseif (! $actor->IsSelf()) {
+      } elseif (! $this->actor->IsSame($actor)) {
 	return false;
       }
     }
@@ -723,50 +719,47 @@ class TalkBuilder {
 
   //発言 (夜 + 公開)
   private function TalkOpenNight(TalkParser $talk, User $user, $symbol, $name) {
-    $class = '';
+    $css   = '';
     $voice = $talk->font_type;
     switch ($talk->location) {
     case TalkLocation::COMMON:
-      $class  = 'night-common';
+      $css    = TalkCSS::NIGHT_COMMON;
       $name  .= TalkHTML::GenerateInfo(TalkMessage::COMMON);
-      $voice .= ' ' . $class;
+      $voice .= ' ' . $css;
       break;
 
     case TalkLocation::WOLF:
-      $class  = 'night-wolf';
+      $css    = TalkCSS::NIGHT_WOLF;
       $name  .= TalkHTML::GenerateInfo(TalkMessage::WOLF);
-      $voice .= ' ' . $class;
+      $voice .= ' ' . $css;
       break;
 
     case TalkLocation::MAD:
-      $class  = 'night-wolf';
+      $css    = TalkCSS::NIGHT_WOLF;
       $name  .= TalkHTML::GenerateInfo(TalkMessage::MAD);
-      $voice .= ' ' . $class;
+      $voice .= ' ' . $css;
       break;
 
     case TalkLocation::FOX:
-      $class  = 'night-fox';
+      $css    = TalkCSS::NIGHT_FOX;;
       $name  .= TalkHTML::GenerateInfo(TalkMessage::FOX);
-      $voice .= ' ' . $class;
+      $voice .= ' ' . $css;
       break;
 
     case TalkLocation::MONOLOGUE:
-      $class  = 'night-self-talk';
+      $css    = TalkCSS::NIGHT_SELF;
       $name  .= TalkHTML::GenerateSelfTalk();
       break;
     }
-    $str    = $talk->sentence; //改行を入れるため再セット
-    $symbol = $this->AddIcon($user, $symbol, $name);
-    $name  .= $this->AddTimeName($talk);
 
-    $stack = array(
-      'str'        => $str,
-      'symbol'     => $symbol,
-      'user_info'  => $name,
-      'voice'      => $voice,
-      'user_class' => $class,
-      'talk_id'    => $this->GetTalkID($talk)
-    );
+    $stack = [
+      TalkElement::ID       => $this->GetTalkID($talk),
+      TalkElement::SYMBOL   => $this->AddIcon($user, $symbol, $name),
+      TalkElement::NAME     => $name . $this->AddTimeName($talk),
+      TalkElement::VOICE    => $voice,
+      TalkElement::SENTENCE => $talk->sentence,
+      TalkElement::CSS_USER => $css
+    ];
     return $this->Register($stack);
   }
 
@@ -774,26 +767,25 @@ class TalkBuilder {
   private function TalkHeaven(TalkParser $talk, $symbol, $name) {
     if (! $this->flag->open_talk) return false;
 
-    $name .= $this->AddTimeName($talk);
-    $stack = array(
-      'str'       => $talk->sentence,
-      'symbol'    => $symbol,
-      'user_info' => $name,
-      'voice'     => $talk->font_type,
-      'row_class' => $talk->scene
-    );
+    $stack = [
+      TalkElement::SYMBOL   => $symbol,
+      TalkElement::NAME     => $name . $this->AddTimeName($talk),
+      TalkElement::VOICE    => $talk->font_type,
+      TalkElement::SENTENCE => $talk->sentence,
+      TalkElement::CSS_ROW  => $talk->scene
+    ];
     return $this->Register($stack);
   }
 
   //発言登録 (システムユーザ)
-  private function RegisterSystem($str, $talk_id, $class = 'system-user') {
-    $this->cache .= TalkHTML::GenerateSystem(Text::Line($str), $talk_id, $class);
+  private function RegisterSystem($str, $talk_id, $css = TalkCSS::SYSTEM) {
+    $this->cache .= TalkHTML::GenerateSystem(Text::ConvertLine($str), $talk_id, $css);
     return true;
   }
 
   //発言登録 (システムメッセージ)
-  private function RegisterSystemMessage($str, $talk_id, $class) {
-    $this->cache .= TalkHTML::GenerateSystemMessage($str, $talk_id, $class);
+  private function RegisterSystemMessage($str, $talk_id, $css) {
+    $this->cache .= TalkHTML::GenerateSystemMessage($str, $talk_id, $css);
     return true;
   }
 

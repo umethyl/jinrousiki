@@ -7,7 +7,7 @@
 */
 RoleLoader::LoadFile('common');
 class Role_critical_common extends Role_common {
-  public $mix_in = array('authority', 'critical_luck');
+  public $mix_in = ['authority', 'critical_luck'];
 
   protected function IgnoreFilterVotePoll() {
     return ! Lottery::Percent(5);

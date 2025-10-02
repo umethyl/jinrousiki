@@ -8,7 +8,7 @@ class JinrouAdmin {
     RQ::Get()->ParseGetRoomNo();
 
     DB::Connect();
-    if (DB::Lock('room') && DB::DeleteRoom(RQ::Get()->room_no)) {
+    if (true === DB::Lock('room') && DB::DeleteRoom(RQ::Get()->room_no)) {
       DB::Commit();
       //DB::Optimize(); //遅いのでオフにしておく
       $str = RQ::Get()->room_no . AdminMessage::DELETE_ROOM_SUCCESS;
@@ -32,7 +32,9 @@ class JinrouAdmin {
 
     Loader::LoadFile('icon_html_class');
     DB::Connect();
-    if (! DB::Lock('icon')) HTML::OutputResult($title, Message::DB_ERROR_LOAD);
+    if (false === DB::Lock('icon')) {
+      HTML::OutputResult($title, Message::DB_ERROR_LOAD);
+    }
 
     //使用中判定
     if (IconDB::Using($icon_no)) HTML::OutputResult($title, IconMessage::USING);
@@ -44,7 +46,7 @@ class JinrouAdmin {
 
     if (IconDB::Delete($icon_no, $file)) {
       $url = '../icon_upload.php';
-      $str = Text::Concat(AdminMessage::DELETE_ICON_SUCCESS, URL::GetJump($url));
+      $str = Text::Join(AdminMessage::DELETE_ICON_SUCCESS, URL::GetJump($url));
       HTML::OutputResult(AdminMessage::DELETE_ICON, $str, $url);
     } else {
       HTML::OutputResult($title, Message::DB_ERROR_LOAD);
@@ -54,7 +56,7 @@ class JinrouAdmin {
   //ログ生成
   public static function GenerateLog() {
     $format = sprintf('../log_test/%s', RQ::Get()->prefix) . '%d%s.html';
-    $footer = Text::Add(HTML::FOOTER);
+    $footer = Text::LineFeed(HTML::FOOTER);
     for ($i = RQ::Get()->min_room_no; $i <= RQ::Get()->max_room_no; $i++) {
       RQ::Set(RequestDataGame::ID, $i);
       foreach (array(false, true) as $flag) {

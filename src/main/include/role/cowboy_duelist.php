@@ -9,7 +9,7 @@
 */
 RoleLoader::LoadFile('valkyrja_duelist');
 class Role_cowboy_duelist extends Role_valkyrja_duelist {
-  public $mix_in = array('chicken', 'reduce_voter');
+  public $mix_in = ['chicken', 'reduce_voter'];
 
   protected function GetStackVoteKillType() {
     return RoleStackVoteKill::INIT;
@@ -17,8 +17,8 @@ class Role_cowboy_duelist extends Role_valkyrja_duelist {
 
   public function VoteKillCorrect() {
     //データ取得
-    $count_list   = $this->GetStack('vote_count');
-    $message_list = $this->GetStack('vote_message');
+    $count_list   = $this->GetStack(VoteDayElement::COUNT_LIST);
+    $message_list = $this->GetStack(VoteDayElement::MESSAGE_LIST);
 
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($uname == $this->GetVoteTargetUname($target_uname)) continue; //相互投票判定
@@ -36,12 +36,12 @@ class Role_cowboy_duelist extends Role_valkyrja_duelist {
     }
 
     //データ保存
-    $this->SetStack($count_list,   'vote_count');
-    $this->SetStack($message_list, 'vote_message');
+    $this->SetStack($count_list,   VoteDayElement::COUNT_LIST);
+    $this->SetStack($message_list, VoteDayElement::MESSAGE_LIST);
   }
 
   public function VoteKillAction() {
-    $stack = array(); //ショック死対象者リスト
+    $stack = []; //ショック死対象者リスト
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
 

@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('avenger');
 class Role_trick_avenger extends Role_avenger {
-  public $mix_in = array('trick_mania');
+  public $mix_in = ['trick_mania'];
 
   public function DuelistAction($target_id) {
     foreach (Text::Parse($target_id) as $id) {

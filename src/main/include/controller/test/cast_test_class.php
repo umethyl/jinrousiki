@@ -1,18 +1,11 @@
 <?php
-//-- 村配役テスト --//
-class CastTest {
-  //実行
-  public static function Execute() {
-    self::Load();
-    self::Output();
-  }
-
-  //データロード
-  private static function Load() {
+//-- 村配役テストコントローラー --//
+final class CastTestController extends JinrouController {
+  protected static function Load() {
     Loader::LoadRequest('game_view', true);
 
     //仮想村
-    DevRoom::Initialize(array('name' => GameMessage::ROOM_TITLE_FOOTER));
+    DevRoom::Initialize(['name' => GameMessage::ROOM_TITLE_FOOTER]);
     include('data/cast_option.php');
 
     //仮想ユーザ
@@ -27,8 +20,7 @@ class CastTest {
     DevUser::Load();
   }
 
-  //出力
-  private static function Output() {
+  protected static function Output() {
     HTML::OutputHeader(CastTestMessage::TITLE, 'game_play', true);
     GameHTML::OutputPlayer();
     self::RunTest();
@@ -41,6 +33,8 @@ class CastTest {
     VoteGameStart::Aggregate();
     DB::$ROOM->date++;
     DB::$ROOM->SetScene(RoomScene::NIGHT);
-    foreach (DB::$USER->Get() as $user) $user->Reparse();
+    foreach (DB::$USER->Get() as $user) {
+      $user->Reparse();
+    }
   }
 }

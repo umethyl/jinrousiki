@@ -8,40 +8,42 @@ class TalkHTML {
     return Text::Format(self::Get(),
       $talk_id, $row_class,
       $user_class, $symbol, $user_info,
-      $say_class, $voice, $str
+      $say_class, $voice, $sentence
     );
   }
 
   //システムユーザ
-  public static function GenerateSystem($str, $talk_id, $class) {
-    return Text::Format(self::GetSystem(), $talk_id, $class, $str);
+  public static function GenerateSystem($sentence, $talk_id, $class) {
+    return Text::Format(self::GetSystem(), $talk_id, $class, $sentence);
   }
 
   //システムメッセージ
-  public static function GenerateSystemMessage($str, $talk_id, $class) {
-    return Text::Format(self::GetSystemMessage(), $talk_id, $class, $str);
+  public static function GenerateSystemMessage($sentence, $talk_id, $class) {
+    return Text::Format(self::GetSystemMessage(), $talk_id, $class, $sentence);
   }
 
   /* 個別データ */
   //ヘッダー生成
   public static function GenerateHeader($class, $id = null) {
-    if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) $class .= ' hide';
-    return Text::Add(TableHTML::GenerateHeader($class, false, $id));
+    if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
+      $class .= ' hide';
+    }
+    return Text::LineFeed(TableHTML::GenerateHeader($class, false, $id));
   }
 
   //フッター生成
   public static function GenerateFooter() {
-    return Text::Add(TableHTML::GenerateFooter(false));
+    return Text::LineFeed(TableHTML::GenerateFooter(false));
   }
 
   //ユーザ名生成
   public static function GenerateSymbol($color) {
-    return '<font color="' . $color . '">' . Message::SYMBOL . '</font>';
+    return HTML::GenerateMessage(Message::SYMBOL, $color, 'font-size:100%');
   }
 
   //追加情報生成
-  public static function GenerateInfo($str) {
-    return HTML::GenerateSpan(Text::Quote($str));
+  public static function GenerateInfo($sentence) {
+    return HTML::GenerateSpan(Text::Quote($sentence));
   }
 
   //追加情報生成 (独り言)
@@ -51,7 +53,7 @@ class TalkHTML {
 
   //時刻生成
   public static function GenerateTime($time) {
-    return HTML::GenerateSpan(Text::Quote($time), 'date-time');
+    return HTML::GenerateSpan(Text::Quote($time), TalkCSS::DATE);
   }
 
   //発言タグ

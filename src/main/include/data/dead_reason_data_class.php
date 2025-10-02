@@ -1,6 +1,6 @@
 <?php
 //-- 定数リスト (死因) --//
-class DeadReason {
+final class DeadReason {
   const VOTE_KILLED		= 'VOTE_KILLED';
   const VOTE_CANCELLED		= 'VOTE_CANCELLED';
   const BLIND_VOTE		= 'BLIND_VOTE';

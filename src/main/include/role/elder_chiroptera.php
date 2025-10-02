@@ -5,5 +5,5 @@
   ・投票数：+1
 */
 class Role_elder_chiroptera extends Role {
-  public $mix_in = array('authority');
+  public $mix_in = ['authority'];
 }

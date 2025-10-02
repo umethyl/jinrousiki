@@ -16,17 +16,17 @@ class Role_lovers extends Role {
 
   //恋人表示 (委託あり)
   final protected function GetLoversPartner() {
-    if ($this->CallParent('IgnoreGetLoversPartner')) return array();
+    if ($this->CallParent('IgnoreGetLoversPartner')) return [];
 
     $this->SetStack($this->GetActor()->GetPartnerList());
-    $stack = array();
+    $stack = [];
     foreach (DB::$USER->Get() as $user) {
       if ($this->IsActor($user)) continue;
       if ($this->CallParent('IsLoversPartner', $user)) {
 	$stack[] = $user->GetName(); //憑依追跡
       }
     }
-    return array('partner_header' => $stack);
+    return ['partner_header' => $stack];
   }
 
   //恋人表示委託判定
@@ -51,31 +51,31 @@ class Role_lovers extends Role {
   public function Whisper(TalkBuilder $builder, TalkParser $talk) {
     if (! $builder->flag->sweet_ringing) return false; //スキップ判定
 
-    $str   = RoleTalkMessage::LOVERS_TALK;
-    $voice = $talk->font_type;
+    $sentence = RoleTalkMessage::LOVERS_TALK;
+    $voice    = $talk->font_type;
     foreach ($builder->filter as $filter) {
-      $filter->FilterWhisper($voice, $str); //フィルタリング処理
+      $filter->FilterWhisper($voice, $sentence); //フィルタリング処理
     }
 
-    $stack = array(
-      'str'       => $str,
-      'symbol'    => '',
-      'user_info' => RoleTalkMessage::LOVERS,
-      'voice'     => $voice,
-      'talk_id'   => $builder->GetTalkID($talk)
-    );
+    $stack = [
+      TalkElement::ID       => $builder->GetTalkID($talk),
+      TalkElement::SYMBOL   => '',
+      TalkElement::NAME     => RoleTalkMessage::LOVERS,
+      TalkElement::VOICE    => $voice,
+      TalkElement::SENTENCE => $sentence
+    ];
     return $builder->Register($stack);
   }
 
   //後追い処理
   public function Followed($sudden_death = false, $not_kill = false) {
-    $cupid_list      = array(); //キューピッドのID => 恋人のID
-    $lost_cupid_list = array(); //恋人が死亡したキューピッドのリスト
-    $checked_list    = array(); //処理済キューピッドのID
-    $followed_list   = array(); //後追い恋人リスト
-    $fox_list        = array(); //妖狐リスト
-    $fox_live_list   = array(); //生存妖狐リスト
-    $depraver_list   = array(); //背徳者リスト
+    $cupid_list      = []; //キューピッドのID => 恋人のID
+    $lost_cupid_list = []; //恋人が死亡したキューピッドのリスト
+    $checked_list    = []; //処理済キューピッドのID
+    $followed_list   = []; //後追い恋人リスト
+    $fox_list        = []; //妖狐リスト
+    $fox_live_list   = []; //生存妖狐リスト
+    $depraver_list   = []; //背徳者リスト
     foreach (DB::$USER->Get() as $user) { //キューピッドと死んだ恋人のリストを取得
       foreach ($user->GetPartner($this->role, true) as $id) {
 	$cupid_list[$id][] = $user->id;
@@ -120,8 +120,10 @@ class Role_lovers extends Role {
 	    $followed_list[] = $user->id;
 	  } else {
 	    if (! DB::$USER->Kill($user->id, DeadReason::FOX_FOLLOWED)) continue;
-	    //突然死の処理
-	    if ($sudden_death) DB::$ROOM->Talk($user->handle_name . DeadMessage::$fox_followed);
+	    if ($sudden_death) { //突然死の処理
+	      $talk = new RoomTalkStruct($user->handle_name . DeadMessage::$fox_followed);
+	      DB::$ROOM->Talk($talk);
+	    }
 	    $user->Flag()->On(UserMode::SUICIDE);
 	  }
 
@@ -137,8 +139,10 @@ class Role_lovers extends Role {
 	    $followed_list[] = $user->id;
 	  } else {
 	    if (! DB::$USER->Kill($user->id, DeadReason::LOVERS_FOLLOWED)) continue;
-	    //突然死の処理
-	    if ($sudden_death) DB::$ROOM->Talk($user->handle_name . DeadMessage::$lovers_followed);
+	    if ($sudden_death) { //突然死の処理
+	      $talk = new RoomTalkStruct($user->handle_name . DeadMessage::$lovers_followed);
+	      DB::$ROOM->Talk($talk);
+	    }
 	    $user->Flag()->On(UserMode::SUICIDE);
 	  }
 

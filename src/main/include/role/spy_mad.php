@@ -21,13 +21,13 @@ class Role_spy_mad extends Role_fanatic_mad {
     RoleHTML::OutputVote(VoteCSS::ESCAPE, $str, $this->action, $this->not_action);
   }
 
-  protected function GetIgnoreAddVoteMessage() {
+  protected function GetDisabledAddVoteMessage() {
     return VoteRoleMessage::LOST_ABILITY;
   }
 
   protected function GetVoteTargetUserFilter(array $list) {
     $id = $this->GetID();
-    return array($id => $list[$id]);
+    return [$id => $list[$id]];
   }
 
   protected function IgnoreVoteCheckboxSelf() {
@@ -38,7 +38,7 @@ class Role_spy_mad extends Role_fanatic_mad {
     return $this->IsActor($user);
   }
 
-  public function IgnoreVoteNightFilter(User $user) {
+  public function ValidateVoteNightTargetFilter(User $user) {
     return $this->IsActor($user) ? null : VoteRoleMessage::TARGET_INCLUDE_MYSELF;
   }
 

@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('guard');
 class Role_elder_guard extends Role_guard {
-  public $mix_in = array('authority');
+  public $mix_in = ['authority'];
 
   public function IgnoreGuard(User $user) {
     return Lottery::Percent(30) ? true : null;

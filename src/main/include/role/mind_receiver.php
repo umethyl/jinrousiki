@@ -8,12 +8,12 @@
 RoleLoader::LoadFile('mind_read');
 class Role_mind_receiver extends Role_mind_read {
   protected function GetPartner() {
-    $stack = array();
+    $stack = [];
     foreach ($this->GetActor()->GetPartner($this->role, true) as $id) {
       $stack[$id] = DB::$USER->ByID($id)->handle_name;
     }
     ksort($stack);
-    return array('mind_scanner_target' => $stack);
+    return ['mind_scanner_target' => $stack];
   }
 
   public function IsMindReadActive(User $user) {

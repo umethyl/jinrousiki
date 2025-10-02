@@ -7,11 +7,11 @@
 RoleLoader::LoadFile('priest');
 class Role_holy_priest extends Role_priest {
   protected function IgnoreResult() {
-    return ! DB::$ROOM->IsDate(5);
+    return false === DB::$ROOM->IsDate(5);
   }
 
   protected function IgnoreSetPriest() {
-    return ! DB::$ROOM->IsDate(4);
+    return false === DB::$ROOM->IsDate(4);
   }
 
   protected function IsAggregatePriestCamp() {
@@ -27,13 +27,13 @@ class Role_holy_priest extends Role_priest {
       }
       //Text::p($list, "◆Around [{$this->role}]");
 
-      $stack = array();
+      $stack = [];
       foreach ($list as $id) {
 	$stack[DB::$USER->ByID($id)->GetWinCamp()][] = $id; //陣営カウント
       }
       //Text::p($stack, "◆Camp [{$this->role}]");
 
-      DB::$ROOM->ResultAbility($result, count(array_keys($stack)), null, $user->id);
+      DB::$ROOM->ResultAbility($result, ArrayFilter::CountKey($stack), null, $user->id);
     }
   }
 }
