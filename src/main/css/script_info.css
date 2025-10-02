@@ -1,0 +1,30 @@
+body {
+  background-color: #FFFFFF;
+  background-image: url("../img/script_info_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-attachment: fixed;
+}
+img{margin-bottom: 1em;}
+h1{
+  background-color: #AAEEAA;
+  font-size: 130%;
+}
+h2{
+  margin-left: 2em;
+  margin-bottom: 1em;
+  border: 2px double #FF9966;
+  font-size: 100%;
+}
+.diff{
+  margin-left: 3em;
+  margin-bottom: 2em;
+  font-size: 95%;
+}
+.diff img{margin: 0;}
+div{
+  margin-left: 1em;
+  margin-bottom: 1em;
+}
+ul{margin: 0;}
+.diff-time{border: 1px solid #CCCCCC;}
