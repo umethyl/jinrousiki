@@ -1,0 +1,19 @@
+@charset "utf-8";
+.selector select {
+  width: 12em;
+}
+.page-link {
+  text-align: right;
+}
+td.icon-details {
+  padding: 2px;
+}
+td.icon-details .icon_wrapper {
+  display: block;
+  text-align: left;
+}
+td.icon-details ul {
+  margin: 4px;
+  padding: 0;
+  list-style: none;
+}

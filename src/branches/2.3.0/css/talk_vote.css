@@ -1,0 +1,22 @@
+@charset "utf-8";
+.objection-male   { background-color: #336699; } /* 異議あり(男) */
+.objection-female { background-color: #FF0099; } /* 異議あり(女) */
+.game-start       { background-color: #999900; } /* ゲーム開始投票 (現在は不使用) */
+.kick-do          { background-color: #AAAA33; } /* キック投票 */
+.vote-do          { background-color: #999900; } /* 処刑投票 */
+.mage-do          { background-color: #9933FF; } /* 占い師 */
+.guard-do         { background-color: #3399FF; } /* 狩人 */
+.revive-do        { background-color: #009966; } /* 猫又 */
+.assassin-do      { background-color: #904040; } /* 暗殺者 */
+.mind-scanner-do  { background-color: #A0A000; } /* さとり */
+.wizard-do        { background-color: #BB88CC; } /* 魔法使い */
+.escape-do        { background-color: #606090; } /* 逃亡者 */
+.wolf-eat         { background-color: #CC3300; } /* 人狼 */
+.step-do          { background-color: #669933; } /* 家鳴 */
+.cupid-do         { background-color: #FF88DD; } /* キューピッド */
+.vampire-do       { background-color: #A000A0; } /* 吸血鬼 */
+.fairy-do         { background-color: #666666; } /* 妖精 */
+.ogre-do          { background-color: #C07000; } /* 鬼 */
+.duelist-do       { background-color: #D04060; } /* 決闘者 */
+.mania-do         { background-color: #C0A060; } /* 神話マニア */
+.death-note-do    { background-color: #904040; } /* デスノート */
