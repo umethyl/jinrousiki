@@ -1,5 +1,6 @@
 <?php
-define('IMAGE_FONT_PATH', "C:\\WINDOWS\\Fonts\\");
+#define('IMAGE_FONT_PATH', "C:\\WINDOWS\\Fonts\\");
+define('IMAGE_FONT_PATH', "./");
 //define('IMAGE_FONT_PATH', '/Library/Fonts');
 
 require_once('include/message_image_generator.php');

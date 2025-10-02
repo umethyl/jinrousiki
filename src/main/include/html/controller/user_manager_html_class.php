@@ -71,21 +71,12 @@ class UserManagerHTML {
       TableHTML::OutputTd(RQ::Get()->uname);
       TableHTML::OutputTd($str, 'explain');
     } elseif (GameConfig::TRIP) { //トリップ対応
-      if (DB::$ROOM->IsOption('necessary_name') && DB::$ROOM->IsOption('necessary_trip')) {
-	$warning = Text::BR . HTML::GenerateSpan(UserManagerMessage::NECESSARY_NAME_TRIP);
-      } elseif (DB::$ROOM->IsOption('necessary_name')) {
-	$warning = Text::BR . HTML::GenerateSpan(UserManagerMessage::NECESSARY_NAME);
-      } elseif (DB::$ROOM->IsOption('necessary_trip')) {
-	$warning = Text::BR . HTML::GenerateSpan(UserManagerMessage::NECESSARY_TRIP);
-      } else {
-	$warning = '';
-      }
-
       Text::Printf(self::GetFormUnameWithTrip(),
 	RQ::Get()->uname, Message::TRIP_KEY, RQ::Get()->trip,
 	UserManagerMessage::UNAME_EXPLAIN_HEADER,
 	UserManagerMessage::UNAME_EXPLAIN_FOOTER, Text::BR,
-	Message::TRIP_KEY, UserManagerMessage::TRIP, $warning
+	Message::TRIP_KEY, UserManagerMessage::TRIP,
+	OptionManager::GetUserEntryUnameWarning()
       );
     } else {
       Text::Printf(self::GetFormUnameWithoutTrip(),
@@ -150,15 +141,25 @@ class UserManagerHTML {
 
   //希望役職選択フォーム出力
   private static function OutputFormWishRole() {
-    if (false === DB::$ROOM->IsOption('wish_role')) {
-      Text::Output(self::GetFormWishRoleNone());
-      return;
+    if (DB::$ROOM->IsOption('wish_role')) {
+      self::OutputFormWishRoleEnableHeader();
+      self::OutputFormWishRoleEnable();
+      self::OutputFormWishRoleEnableFooter();
+    } else {
+      self::OutputFormWishRoleNone();
     }
-    Text::Printf(self::GetFormWishRoleHeader(), self::PATH, UserManagerMessage::WISH_ROLE);
+  }
 
-    $stack = OptionLoader::Load('wish_role')->GetWishRole();
-    $count = 0;
+  //希望役職選択有効フォームヘッダー出力
+  private static function OutputFormWishRoleEnableHeader() {
+    Text::Printf(self::GetFormWishRoleHeader(), self::PATH, UserManagerMessage::WISH_ROLE);
+  }
+
+  //希望役職選択有効フォーム出力
+  private static function OutputFormWishRoleEnable() {
+    $stack      = OptionManager::GetWishRoleList();
     $check_role = in_array(RQ::Get()->role, $stack) ? RQ::Get()->role : 'none';
+    $count      = 0;
     foreach ($stack as $role) {
       TableHTML::OutputFold($count++, 4);
       if ($role == 'none') {
@@ -171,7 +172,16 @@ class UserManagerHTML {
 	$role, $role, $role, $checked, self::PATH, $role, $alt
       );
     }
+  }
+
+  //希望役職選択有効フォームフッター出力
+  private static function OutputFormWishRoleEnableFooter() {
     Text::Output(self::GetFormWishRoleFooter());
+  }
+
+  //希望役職選択無効フォーム出力
+  private static function OutputFormWishRoleNone() {
+    Text::Output(self::GetFormWishRoleNone());
   }
 
   //登録ボタン出力

@@ -10,7 +10,7 @@ class Role_sharp_wolf extends Role_wolf {
   public $result = RoleAbility::SHARP_WOLF;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2 || DB::$ROOM->IsOption('seal_message');
+    return DB::$ROOM->date < 2;
   }
 
   public function WolfEatAction(User $user) {
@@ -18,10 +18,8 @@ class Role_sharp_wolf extends Role_wolf {
       return false;
     }
 
-    if (false === DB::$ROOM->IsOption('seal_message')) {
-      $id = $this->GetWolfVoter()->id;
-      DB::$ROOM->StoreAbility($this->result, 'wolf_avoid', $user->GetName(), $id);
-    }
+    $id = $this->GetWolfVoter()->id;
+    DB::$ROOM->StoreAbility($this->result, 'wolf_avoid', $user->GetName(), $id);
     return true;
   }
 }

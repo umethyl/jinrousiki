@@ -12,12 +12,5 @@ class TopPageConfig {
 		'separator' => '<!-- atpages banner tag -->',
 		'footer' => '</a><br>',
 		'disable' => false],
-
-    'mystia' => ['name' => 'ミスティア鯖',
-		 'url' => 'http://www.kuroienogu.net/mystia/',
-		 'encode' => 'UTF-8',
-		 'separator' => '',
-		 'footer' => '',
-		 'disable' => false]
   ];
 }

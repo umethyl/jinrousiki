@@ -10,7 +10,7 @@ class Role_voodoo_killer extends Role {
   public $result = RoleAbility::VOODOO_KILLER;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2 || DB::$ROOM->IsOption('seal_message');
+    return DB::$ROOM->date < 2;
   }
 
   public function OutputAction() {

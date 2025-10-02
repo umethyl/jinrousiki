@@ -202,7 +202,8 @@ final class DB {
     $stmt = self::Execute();
     self::Reset();
     $stack = $stmt instanceOf PDOStatement ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
-    return (true === $shift) ? array_shift($stack) : $stack;
+    $list = (true === $shift) ? array_shift($stack) : $stack;
+    return is_array($list) ? $list : [];
   }
 
   //オブジェクト形式の配列を取得

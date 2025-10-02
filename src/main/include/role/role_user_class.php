@@ -234,7 +234,7 @@ class RoleUser {
 
   //難題
   public static function IsChallengeLovers(User $user) {
-    return 1 < DB::$ROOM->date && DB::$ROOM->date < 5 && $user->IsRole('challenge_lovers');
+    return Number::InRange(DB::$ROOM->date, 1, 5) && $user->IsRole('challenge_lovers');
   }
 
   //特殊恋人

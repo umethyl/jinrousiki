@@ -34,4 +34,13 @@ class Request_user_manager extends RequestIcon {
       RequestDataIcon::AUTHOR
     ];
   }
+
+  //DB情報からポストデータを登録する
+  public function StorePost(array $stack) {
+    foreach ($stack as $key => $value) {
+      if (property_exists($this, $key)) {
+        RQ::Set($key, $value);
+      }
+    }
+  }  
 }

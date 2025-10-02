@@ -7,11 +7,11 @@
 RoleLoader::LoadFile('priest');
 class Role_bishop_priest extends Role_priest {
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2 || DB::$ROOM->date % 2 == 0;
+    return Number::Even(DB::$ROOM->date, 2);
   }
 
   protected function IgnoreSetPriest() {
-    return DB::$ROOM->date < 1 || DB::$ROOM->date % 2 == 1;
+    return Number::Odd(DB::$ROOM->date, 1);
   }
 
   protected function GetPriestType() {

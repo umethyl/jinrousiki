@@ -15,7 +15,7 @@ class Role_revive_fox extends Role_fox {
   }
 
   protected function OutputAddResult() {
-    if (DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message')) {
+    if (DB::$ROOM->date < 3) {
       return;
     }
     RoleHTML::OutputResult(RoleAbility::REVIVE);

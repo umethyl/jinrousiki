@@ -13,7 +13,7 @@ class Role_anti_voodoo extends Role {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message');
+    return DB::$ROOM->date < 3;
   }
 
   public function OutputAction() {
@@ -44,12 +44,12 @@ class Role_anti_voodoo extends Role {
 
   //厄払い成立判定
   public function IsGuard($id) {
-    if (! $this->InStack($id)) {
+    if ($this->InStack($id)) {
+      $this->AddSuccess($id, RoleVoteSuccess::ANTI_VOODOO);
+      return true;
+    } else {
       return false;
     }
-
-    $this->AddSuccess($id, RoleVoteSuccess::ANTI_VOODOO);
-    return true;
   }
 
   //成功結果登録

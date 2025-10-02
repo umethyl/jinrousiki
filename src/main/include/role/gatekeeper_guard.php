@@ -34,9 +34,6 @@ class Role_gatekeeper_guard extends Role_guard {
     }
 
     //護衛成功メッセージを登録
-    if (DB::$ROOM->IsOption('seal_message')) {
-      return true;
-    }
     $handle_name = DB::$USER->ByVirtual($id)->handle_name;
     foreach ($guard_stack as $user) {
       if (RoleUser::GuardSuccess($user, $id)) {

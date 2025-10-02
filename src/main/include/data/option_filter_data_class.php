@@ -66,6 +66,9 @@ final class OptionFilterData {
   ];
 
   //-- UserManager --//
+  //ユーザー名入力制限 (注意事項表示処理は順番依存あり)
+  public static $user_entry_uname = ['necessary_name', 'necessary_trip'];
+
   //追加希望役職
   public static $add_wish_role = [
     'poison', 'assassin', 'boss_wolf', 'depraver', 'poison_wolf', 'possessed_wolf',

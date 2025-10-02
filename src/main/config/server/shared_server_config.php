@@ -11,54 +11,5 @@ class SharedServerConfig {
 		'separator' => '<!-- atpages banner tag -->',
 		'footer' => '</a><br>',
 		'disable' => false],
-
-    'mystia' => ['name' => 'ミスティア鯖',
-		 'url' => 'http://www.kuroienogu.net/mystia/',
-		 'encode' => 'UTF-8',
-		 'separator' => '',
-		 'footer' => '',
-		 'disable' => false],
-
-    'sanae' => ['name' => '早苗鯖',
-		'url' => 'http://alicegame.xsrv.jp/sanae/',
-		'encode' => 'UTF-8',
-		'separator' => '',
-		'footer' => '',
-		'disable' => false],
-
-    'suisei' => ['name' => '翠星石鯖',
-		 'url' => 'http://alicegame.xsrv.jp/suisei/',
-		 'encode' => 'UTF-8',
-		 'separator' => '',
-		 'footer' => '',
-		 'disable' => false],
-
-    'sousei' => ['name' => '蒼星石テスト鯖',
-		 'url' => 'http://alicegame.xsrv.jp/sousei/',
-		 'encode' => 'UTF-8',
-		 'separator' => '',
-		 'footer' => '',
-		 'disable' => false],
-
-    'shink' => ['name' => '真紅鯖',
-		'url' => 'http://alicegame.xsrv.jp/shinku/',
-		'encode' => 'UTF-8',
-		'separator' => '',
-		'footer' => '',
-		'disable' => false],
-
-    'hina' => ['name' => '雛苺テスト鯖',
-	       'url' => 'http://alicegame.xsrv.jp/hina/',
-	       'encode' => 'UTF-8',
-	       'separator' => '',
-	       'footer' => '',
-	       'disable' => false],
-
-    'bourbonhouse' => ['name' => 'バーボンハウス鯖',
-		       'url' => 'http://bourbonhouse.xsrv.jp/jinro/',
-		       'encode' => 'UTF-8',
-		       'separator' => '',
-		       'footer' => '',
-		       'disable' => false]
   ];
 }

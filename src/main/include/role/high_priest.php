@@ -11,7 +11,7 @@ class Role_high_priest extends Role_priest {
   }
 
   protected function GetPriestResultRole() {
-    return DB::$ROOM->date % 2 == 0 ? 'priest' : 'bishop_priest';
+    return Number::Even(DB::$ROOM->date) ? 'priest' : 'bishop_priest';
   }
 
   protected function IgnoreSetPriest() {
@@ -19,7 +19,7 @@ class Role_high_priest extends Role_priest {
   }
 
   protected function GetPriestType() {
-    return DB::$ROOM->date % 2 == 1 ? 'human_side' : 'dead';
+    return Number::Odd(DB::$ROOM->date) ? 'human_side' : 'dead';
   }
 
   protected function IgnorePriest() {
@@ -27,6 +27,6 @@ class Role_high_priest extends Role_priest {
   }
 
   protected function GetPriestRole() {
-    return DB::$ROOM->date % 2 == 1 ? 'priest' : 'bishop_priest';
+    return Number::Odd(DB::$ROOM->date) ? 'priest' : 'bishop_priest';
   }
 }

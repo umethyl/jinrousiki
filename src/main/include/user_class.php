@@ -48,7 +48,7 @@ class User extends StackManager {
 
     //代入処理
     $this->role_list = array_unique($role_list);
-    $this->main_role = $this->role_list[0];
+    $this->main_role = $this->role_list[0] ?? '';
   }
 
   //役職の再パース処理
@@ -759,7 +759,7 @@ class User extends StackManager {
 }
 
 //-- ユーザ情報ローダー --//
-class UserLoader {
+class UserLoader extends stdClass {
   public $room_no;
   protected $rows = [];
   protected $kick = [];

@@ -272,7 +272,7 @@ final class GamePlayController extends JinrouController {
 }
 
 //-- GamePlay 出力基礎クラス --//
-abstract class GamePlayView {
+abstract class GamePlayView extends stdClass {
   public function __construct() {}
 
   //リンク情報取得 (差分型)

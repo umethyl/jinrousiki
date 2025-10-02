@@ -2,7 +2,7 @@
 /*
   ◆夢守人 (dummy_guard)
   ○仕様
-  ・狩り：獏・妖精系
+  ・狩り：獏・妖精系 (天啓封印あり)
 */
 RoleLoader::LoadFile('guard');
 class Role_dummy_guard extends Role_guard {
@@ -26,9 +26,8 @@ class Role_dummy_guard extends Role_guard {
       }
 
       $flag = true;
-      if (false === DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
-	DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $user->handle_name, $actor->id);
-      }
+      //狩りメッセージを登録
+      DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $user->handle_name, $actor->id);
     }
 
     if (true === $flag) {
@@ -52,9 +51,8 @@ class Role_dummy_guard extends Role_guard {
 	$list[$user->id] = $target;
       }
 
-      if (false === DB::$ROOM->IsOption('seal_message')) { //常時護衛成功メッセージだけが出る
-	DB::$ROOM->StoreAbility(RoleAbility::GUARD, 'success', $target->GetName(), $user->id);
-      }
+      //常時護衛成功メッセージだけが出る
+      DB::$ROOM->StoreAbility(RoleAbility::GUARD, 'success', $target->GetName(), $user->id);
     }
   }
 
@@ -63,9 +61,7 @@ class Role_dummy_guard extends Role_guard {
     foreach ($list as $id => $target) {
       DB::$USER->Kill($target->id, DeadReason::HUNTED);
       //憑依能力者は対象外なので仮想ユーザを引く必要なし
-      if (false === DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
-	DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $target->handle_name, $id);
-      }
+      DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $target->handle_name, $id);
     }
   }
 

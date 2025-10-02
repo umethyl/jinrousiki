@@ -2,7 +2,7 @@
 /*
   ◆紂王 (fire_depraver)
   ○仕様
-  ・処刑投票：狐火 (3 の倍数日)
+  ・処刑投票：狐火 (3の倍数日)
 */
 RoleLoader::LoadFile('depraver');
 class Role_fire_depraver extends Role_depraver {
@@ -13,7 +13,7 @@ class Role_fire_depraver extends Role_depraver {
   }
 
   protected function IsVoteKillActionTarget(User $user) {
-    return DB::$ROOM->date % 3 == 0;
+    return Number::MultipleThree(DB::$ROOM->date, 2);
   }
 
   protected function GetVoteKillActionRole() {

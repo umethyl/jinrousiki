@@ -1,17 +1,7 @@
 <?php
 //-- 村作成オプションマネージャ --//
 //-- ◆文字化け抑制◆ --//
-class RoomOptionManager {
-  //スタック取得
-  public static function Stack() {
-    static $stack;
-
-    if (null === $stack) {
-      $stack = new Stack();
-    }
-    return $stack;
-  }
-
+final class RoomOptionManager extends StackStaticManager {
   //村オプション変更実施判定
   public static function IsChange() {
     if (self::Stack()->IsEmpty('change')) {

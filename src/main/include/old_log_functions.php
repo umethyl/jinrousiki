@@ -1,6 +1,6 @@
 <?php
 //-- ページ送りリンク生成クラス --//
-class PageLinkBuilder {
+class PageLinkBuilder extends stdClass {
   public function __construct($file, $page, $count, $title = 'Page', $type = 'page') {
     $this->view_total = $count;
     $this->view_page  = OldLogConfig::PAGE;

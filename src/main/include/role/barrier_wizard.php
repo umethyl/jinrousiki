@@ -21,7 +21,7 @@ class Role_barrier_wizard extends Role_wizard {
   }
 
   protected function ValidateVoteNightTargetList(array $list) {
-    if (count($list) < 1 || 4 < count($list)) {
+    if (Number::OutRange(count($list), 1, 4)) {
       throw new UnexpectedValueException(VoteRoleMessage::INVALID_TARGET_RANGE);
     }
   }

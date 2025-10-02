@@ -1461,10 +1461,6 @@ final class VoteNight extends VoteBase {
 
   //陰陽師・厄神の成功結果登録
   private static function SaveSuccess() {
-    if (DB::$ROOM->IsOption('seal_message')) {
-      return;
-    }
-
     $stack = [
       'voodoo_killer' => RoleVoteSuccess::VOODOO_KILLER,
       'anti_voodoo'   => RoleVoteSuccess::ANTI_VOODOO

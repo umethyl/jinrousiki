@@ -66,7 +66,7 @@ class RQ extends LoadManager {
 }
 
 //-- 引数解析の基底クラス --//
-class Request {
+class Request extends stdClass {
   public function __get($name) {
     $this->$name = false;
     return null;

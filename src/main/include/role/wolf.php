@@ -6,7 +6,7 @@
   ・仲間表示：人狼枠(憑依追跡)・囁き狂人・無意識枠
   ・仲間襲撃：不可
   ・護衛カウンター：なし
-  ・襲撃失敗判定：人狼系・妖狐
+  ・襲撃失敗判定：人狼系・妖狐 (天啓封印あり)
   ・襲撃失敗：なし
   ・妖狐襲撃：なし
   ・人狼襲撃死因：人狼襲撃
@@ -273,12 +273,11 @@ class Role_wolf extends Role {
     return false;
   }
 
-  //人狼襲撃無効判定
+  //人狼襲撃無効判定 (スキップ判定 > 人狼襲撃 > 妖狐襲撃 > 襲撃成功)
   final public function DisableWolfEat(User $user) {
-    //スキップ判定 > 人狼襲撃 > 妖狐襲撃
     if ($this->IgnoreDisableWolfEat()) {
       return false;
-    } elseif ($user->IsMainGroup(CampGroup::WOLF)) { //人狼系判定 (例：銀狼出現)
+    } elseif ($user->IsMainGroup(CampGroup::WOLF)) { //人狼系判定 (例：銀狼襲撃)
       $this->WolfEatWolfAction($user);
       $user->wolf_eat = true; //襲撃は成功扱い
       return $this->WolfEatFailed('WOLF', true);
@@ -290,10 +289,8 @@ class Role_wolf extends Role {
       $this->WolfEatFoxAction($user); //妖狐襲撃処理
       $filter->WolfEatFoxCounter($this->GetWolfVoter()); //妖狐襲撃カウンター処理
 
-      //人狼襲撃メッセージを登録
-      if (false === DB::$ROOM->IsOption('seal_message')) {
-	DB::$ROOM->StoreAbility(RoleAbility::FOX, 'targeted', null, $user->id);
-      }
+      //人狼襲撃メッセージを登録 (天啓封印あり)
+      DB::$ROOM->StoreAbility(RoleAbility::FOX, 'targeted', null, $user->id);
       $user->wolf_eat = true; //襲撃は成功扱い
       return $this->WolfEatFailed('FOX', true);
     } else {

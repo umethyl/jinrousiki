@@ -105,6 +105,13 @@ class RoleHTML {
 
   //能力発動結果表示
   public static function OutputResult($action) {
+    if (OptionManager::IsSealMessage($action)) {
+      if (DB::$ROOM->IsTest()) {
+	//Text::p($action, '◆Seal Message');
+      }
+      return;
+    }
+
     $header = null;
     $footer = 'result_';
     $limit  = false;

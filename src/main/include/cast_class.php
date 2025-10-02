@@ -1,6 +1,6 @@
 <?php
 //-- 配役基礎クラス --//
-final class Cast {
+final class Cast extends StackStaticManager {
   /* フラグ */
   const FORCE = 'force'; //強制開始モード
   const WISH  = 'wish';  //特殊村判定 (希望処理用)
@@ -19,16 +19,6 @@ final class Cast {
   const DETECTIVE = 'detective'; //探偵候補
   const DUMMY     = 'dummy';     //身代わり君配役制限候補
   const SUM       = 'sum';       //役職別人数
-
-  //スタック取得
-  public static function Stack() {
-    static $stack;
-
-    if (null === $stack) {
-      $stack = new Stack();
-    }
-    return $stack;
-  }
 
   //配役処理
   public static function Execute() {

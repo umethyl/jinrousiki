@@ -205,7 +205,7 @@ class DevUser {
 	$user->live = UserLive::LIVE;
       }
       if (false === isset($user->sex)) {
-	$user->sex = ($id % 2 == 0 ? Sex::FEMALE : Sex::MALE);
+	$user->sex = (Number::Even($id) ? Sex::FEMALE : Sex::MALE);
       }
       if (false === isset($user->profile)) {
 	$user->profile = $id;

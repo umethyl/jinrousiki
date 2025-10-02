@@ -17,7 +17,7 @@ class Role_male_status extends Role {
 
       $date = $filter->GetGenderStatusDate();
       //Text::p($date, "◆Date [{$filter->role}]");
-      if ($target_date < $date && $date <= DB::$ROOM->date) {
+      if (Number::Within($date, $target_date, DB::$ROOM->date)) {
 	$target_date = $date;
 	$target_sex  = $filter->GetFilterSex();
       }

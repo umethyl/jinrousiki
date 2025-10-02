@@ -18,7 +18,7 @@ class Role_guard extends Role {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message');
+    return DB::$ROOM->date < 3;
   }
 
   protected function OutputAddResult() {
@@ -104,10 +104,6 @@ class Role_guard extends Role {
       }
 
       $this->AddSuccess($actor->id, RoleVoteSuccess::GUARD); //成功者を登録
-      if (DB::$ROOM->IsOption('seal_message')) {
-	continue;
-      }
-
       if (RoleUser::GuardSuccess($actor, $user->id)) {
 	DB::$ROOM->StoreAbility($this->result, 'success', $user->GetName(), $actor->id);
       }
@@ -191,9 +187,7 @@ class Role_guard extends Role {
   //狩り処理
   protected function HuntKill(User $user) {
     DB::$USER->Kill($user->id, DeadReason::HUNTED);
-    if (false === DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
-      DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $user->GetName(), $this->GetID());
-    }
+    DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $user->GetName(), $this->GetID());
   }
 
   //護衛制限判定 (司祭系 > 暗殺者系・人形遣い系 > 上位能力者・身代わり能力者)

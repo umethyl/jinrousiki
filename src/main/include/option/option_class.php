@@ -9,6 +9,17 @@ class OptionLoader extends LoadManager {
 
 //-- オプションマネージャ --//
 class OptionManager {
+  //オプションクラスロード
+  public static function GetFilter($type) {
+    foreach (OptionFilterData::$$type as $option) {
+      if (self::CanLoad($option)) {
+	return OptionLoader::Load($option);
+      }
+    }
+    return null;
+  }
+
+  //-- 存在判定 --//
   //オプション存在判定
   public static function Exists($type) {
     foreach (OptionFilterData::$$type as $option) {
@@ -35,16 +46,7 @@ class OptionManager {
       self::Exists('group_wish_role_chaos');
   }
 
-  //オプションクラスロード
-  public static function GetFilter($type) {
-    foreach (OptionFilterData::$$type as $option) {
-      if (DB::$ROOM->IsOption($option)) {
-	return OptionLoader::Load($option);
-      }
-    }
-    return null;
-  }
-
+  //-- オプション情報表示 --//
   //オプション名生成
   public static function GenerateCaption($name) {
     return OptionLoader::LoadFile($name) ? OptionLoader::Load($name)->GetName() : '';
@@ -64,13 +66,11 @@ class OptionManager {
   //基礎配役取得
   public static function GetCastBase($user_count) {
     foreach (OptionFilterData::$cast_base as $option) {
-      if (false === DB::$ROOM->IsOption($option)) {
-	continue;
-      }
-
-      $filter = OptionLoader::Load($option);
-      if (true === $filter->EnableCast($user_count)) {
-	return $filter;
+      if (self::CanLoad($option)) {
+	$filter = OptionLoader::Load($option);
+	if (true === $filter->EnableCast($user_count)) {
+	  return $filter;
+	}
       }
     }
     return null;
@@ -79,7 +79,7 @@ class OptionManager {
   //追加配役 (普通村)
   public static function FilterCastAddRole(array &$list, $count) {
     foreach (OptionFilterData::$cast_add_role as $option) {
-      if (DB::$ROOM->IsOption($option) && OptionLoader::LoadFile($option)) {
+      if (self::CanLoad($option)) {
 	OptionLoader::Load($option)->FilterCastAddRole($list, $count);
       }
     }
@@ -88,7 +88,7 @@ class OptionManager {
   //追加配役 (闇鍋固定枠)
   public static function FilterCastChaosFixRole(array &$list) {
     foreach (OptionFilterData::$cast_chaos_fix_role as $option) {
-      if (DB::$ROOM->IsOption($option)) {
+      if (self::CanLoad($option)) {
 	OptionLoader::Load($option)->FilterCastChaosFixRole($list);
       }
     }
@@ -119,14 +119,14 @@ class OptionManager {
   //ゲルト君モード有効判定
   public static function EnableGerd($role = 'human') {
     $option = 'gerd';
-    return DB::$ROOM->IsOption($option) && OptionLoader::Load($option)->EnableGerd($role);
+    return self::CanLoad($option) && OptionLoader::Load($option)->EnableGerd($role);
   }
 
   //ユーザーサブ役職配役処理
   public static function CastUserSubRole() {
     $stack = Cast::Stack()->Get(Cast::DELETE);
     foreach (OptionFilterData::$cast_user_sub_role as $option) {
-      if (DB::$ROOM->IsOption($option) && OptionLoader::LoadFile($option)) {
+      if (self::CanLoad($option)) {
 	ArrayFilter::AddMerge($stack, OptionLoader::Load($option)->CastUserSubRole());
       }
     }
@@ -136,7 +136,7 @@ class OptionManager {
   //配役一覧出力用フィルター取得
   public static function GetCastMessageFilter() {
     //闇鍋モード判定
-    if (OptionManager::ExistsChaos()) {
+    if (self::ExistsChaos()) {
       foreach (OptionFilterData::$cast_message as $option) {
 	if (DB::$ROOM->IsOption($option)) {
 	  return OptionLoader::Load($option);
@@ -151,12 +151,37 @@ class OptionManager {
     }
   }
 
+  //-- UserManager --//
+  //ユーザー名入力欄注意事項取得
+  public static function GetUserEntryUnameWarning() {
+    $filter = self::GetFilter('user_entry_uname');
+    if (null === $filter) {
+      return '';
+    } else {
+      return $filter->GetUserEntryUnameWarning();
+    }
+  }
+
+  //ユーザー名入力エラーチェック
+  public static function ValidateUserEntryUname($uname) {
+    foreach (OptionFilterData::$user_entry_uname as $option) {
+      if (self::CanLoad($option)) {
+	OptionLoader::Load($option)->ValidateUserEntryUname($uname);
+      }
+    }
+  }
+
+  //希望役職リスト取得
+  public static function GetWishRoleList() {
+    return OptionLoader::Load('wish_role')->GetWishRole();
+  }
+
   //-- Room --//
   //霊界公開判定
   public static function IsRoomOpenCast() {
     //便宜上常時公開設定もオプションクラスは実装しているが、システム上はオプション未設定になる
     foreach (OptionFilterData::$room_open_cast as $option) {
-      if (DB::$ROOM->IsOption($option)) {
+      if (self::CanLoad($option)) {
 	return OptionLoader::Load($option)->IsRoomOpenCast();
       }
     }
@@ -166,11 +191,28 @@ class OptionManager {
   //ゲーム開始時シーン取得
   public static function GetRoomGameStartScene() {
     foreach (OptionFilterData::$room_game_start_scene as $option) {
-      if (DB::$ROOM->IsOption($option)) {
+      if (self::CanLoad($option)) {
 	return OptionLoader::Load($option)->GetRoomGameStartScene();
       }
     }
     return RoomScene::NIGHT;
+  }
+
+  //-- 個別オプション判定 --//
+  //天啓封印対象判定
+  public static function IsSealMessage($type) {
+    $option = 'seal_message';
+    if (self::CanLoad($option)) {
+      return OptionLoader::Load($option)->IsSealMessage($type);
+    } else {
+      return false;
+    }
+  }
+
+  //-- 共通処理 --//
+  //オプションロード可能判定
+  private static function CanLoad($option) {
+    return DB::$ROOM->IsOption($option) && OptionLoader::LoadFile($option);
   }
 }
 
@@ -424,7 +466,7 @@ abstract class OptionLimitedCheckbox extends OptionCheckbox {
     $post = sprintf('%s_count', $this->name);
     RQ::Get()->ParsePostInt($post);
     $count = RQ::Get()->$post;
-    if ($count < 1 || 99 < $count) {
+    if (Number::OutRange($count, 1, 99)) {
       RoomManagerHTML::OutputResult('limit_over', $this->GetName());
     }
     $this->Set(sprintf('%s:%d', $this->name, $count));

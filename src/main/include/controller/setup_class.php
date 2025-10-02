@@ -34,7 +34,7 @@ final class JinrouSetupController extends JinrouController {
 
   //対象バージョン確認
   private static function IsRevision($revision) {
-    return 0 < ServerConfig::REVISION && ServerConfig::REVISION <= $revision;
+    return Number::Within(ServerConfig::REVISION, 0, $revision);
   }
 
   //データベース作成

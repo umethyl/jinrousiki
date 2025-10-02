@@ -1,21 +1,11 @@
 <?php
 //-- 発言処理クラス (AutoPlay 拡張) --//
-final class AutoPlayTalk {
+final class AutoPlayTalk extends StackStaticManager {
   /* フラグ */
   const ID	= 'talk_id';	//ID
   const DATE	= 'date';	//日数
   const TIME	= 'time';	//時刻
   const SCENE	= 'scene';	//シーン
-
-  //スタック取得
-  public static function Stack() {
-    static $stack;
-
-    if (null === $stack) {
-      $stack = new Stack();
-    }
-    return $stack;
-  }
 
   //判定用変数初期化
   public static function InitStack() {

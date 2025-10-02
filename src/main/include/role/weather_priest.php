@@ -11,17 +11,17 @@ class Role_weather_priest extends Role_priest {
   }
 
   protected function IgnoreSetPriest() {
-    if (DB::$ROOM->date < 3 || DB::$ROOM->date % 3 != 0) {
+    if (DB::$ROOM->date < 3 || false === Number::MultipleThree(DB::$ROOM->date)) {
       return true;
     }
     return false === DB::$USER->IsLiveRole($this->role);
   }
 
   protected function IgnorePriest() {
-    //天変地異なら常時発動 > 3の倍数限定 > 生存者 - 村人陣営(恋人・愛人を含む) > 人狼系 × 2
+    //天変地異なら常時発動 > 3の倍数限定 > [生存者 - 村人陣営(恋人・愛人を含む) > 人狼系 × 2]
     if (DB::$ROOM->IsOption('full_weather')) {
       return false;
-    } elseif (DB::$ROOM->date % 3 != 0) {
+    } elseif (false === Number::MultipleThree(DB::$ROOM->date)) {
       return true;
     } else {
       $data = $this->GetStack('priest');

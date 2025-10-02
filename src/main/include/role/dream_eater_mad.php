@@ -19,9 +19,7 @@ class Role_dream_eater_mad extends Role {
     $actor = $this->GetActor();
     if ($user->IsLiveRole('dummy_guard', true)) { //対象が夢守人なら返り討ちに合う
       DB::$USER->Kill($actor->id, DeadReason::HUNTED);
-      if (false === DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
-	DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $actor->handle_name, $user->id);
-      }
+      DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $actor->handle_name, $user->id);
       return;
     }
 

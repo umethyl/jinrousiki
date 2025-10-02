@@ -108,7 +108,12 @@ abstract class JinrouController {
 }
 
 //-- 汎用スタッククラス --//
-class Stack {
+class Stack extends stdClass {
+  public function __get($name) {
+    $this->$name = null;
+    return null;
+  }
+
   //初期化
   public function Init($name) {
     //Text::p($name, '◆Stack/Init');
@@ -119,6 +124,11 @@ class Stack {
   public function Get($name) {
     //Text::p($name, '◆Stack/Get[Get]');
     return isset($this->$name) ? $this->$name : null;
+  }
+
+  //取得 (数値)
+  public function GetInt($name) {
+    return (int)$this->Get($name);
   }
 
   //取得 (配列)
@@ -162,6 +172,19 @@ class Stack {
     $this->Set($name, $stack);
   }
 
+  //数値加算
+  public function AddNumber($name, $data) {
+    //Text::p($data, "◆Stack/AddNumber[{$name}]");
+    $number = $this->Get($name);
+    if (null === $number) {
+      $number = $data;
+    } else {
+      $number += $data;
+    }
+
+    $this->Set($name, $number);
+  }
+
   //存在判定
   public function Exists($name) {
     //Text::p($name, '◆Stack/Exists');
@@ -187,7 +210,14 @@ class Stack {
 
   //カウント
   public function Count($name) {
-    return count($this->Get($name));
+    $data = $this->Get($name);
+    if (null === $data) {
+      return 0;
+    } elseif (is_array($data)) {
+      return count($data);
+    } else {
+      return 1;
+    }
   }
 
   //シャッフル
@@ -277,7 +307,7 @@ class FlagStack extends Stack {
 }
 
 //-- マネージャ基底クラス --//
-abstract class StackManager {
+abstract class StackManager extends stdClass {
   private $stack;
   private $flag;
 
@@ -316,6 +346,19 @@ abstract class StackManager {
   //OFF 判定
   final public function IsOff($mode) {
     return true !== $this->IsOn($mode);
+  }
+}
+
+//-- スタック持ちマネージャ基底クラス --//
+abstract class StackStaticManager {
+  //スタック取得
+  public static function Stack() {
+    static $stack;
+
+    if (null === $stack) {
+      $stack = new Stack();
+    }
+    return $stack;
   }
 }
 

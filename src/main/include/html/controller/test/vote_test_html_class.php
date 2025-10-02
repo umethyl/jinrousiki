@@ -88,7 +88,8 @@ class VoteTestHTML {
       case VoteAction::NOT_POSSESSED:
       case VoteAction::NOT_OGRE:
       case VoteAction::NOT_DEATH_NOTE:
-	echo VoteRoleMessage::$$stack['type'];
+        $type = $stack['type'];
+	echo VoteRoleMessage::$$type;
 	break;
 
       case VoteAction::REVIVE:

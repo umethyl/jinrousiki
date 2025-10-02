@@ -78,17 +78,7 @@ class RoleLoader extends LoadManager {
 }
 
 //-- 役職マネージャ --//
-class RoleManager {
-  //スタック取得
-  public static function Stack() {
-    static $stack;
-
-    if (null === $stack) {
-      $stack = new Stack();
-    }
-    return $stack;
-  }
-
+final class RoleManager extends StackStaticManager {
   //投票データ取得
   public static function GetVoteData() {
     return self::Stack()->Get('vote_data');
@@ -101,7 +91,7 @@ class RoleManager {
 }
 
 //-- 役職の基底クラス --//
-abstract class Role {
+abstract class Role extends stdClass {
   public $role;
 
   //-- システム関数 --//

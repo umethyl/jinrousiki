@@ -112,7 +112,7 @@ class OldLogHTML {
 
     if (RQ::Get()->generate_index) {
       $max = RQ::Get()->max_room_no;
-      if (is_int($max) && $max > 0 && $room_count > $max) {
+      if (is_int($max) && Number::InRange($max, 0, $room_count)) {
 	$room_count = $max;
       }
       $builder = new PageLinkBuilder('index', RQ::Get()->page, $room_count);

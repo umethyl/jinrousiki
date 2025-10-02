@@ -1,6 +1,6 @@
 <?php
 //-- 発言処理クラス --//
-final class Talk {
+final class Talk extends StackStaticManager {
   /* フラグ */
   const UPDATE		= 'update';	//キャッシュ更新
   const LIMIT_SAY	= 'limit_say';	//発言制限
@@ -8,16 +8,6 @@ final class Talk {
 
   /* 内部格納クラス */
   private static $instance = null; //TalkBuilder クラス
-
-  //スタック取得
-  public static function Stack() {
-    static $stack;
-
-    if (null === $stack) {
-      $stack = new Stack();
-    }
-    return $stack;
-  }
 
   //会話取得
   public static function Fetch() {
@@ -64,15 +54,10 @@ final class Talk {
 }
 
 //-- 発言パーサ --//
-final class TalkParser {
-  public $scene;
-  public $location;
+final class TalkParser extends stdClass {
   public $uname;
   public $action;
-  public $sentence;
-  public $font_type;
-  public $time;
-  public $date_time;
+  public $location;
 
   public function __construct($list = null) {
     if (is_array($list)) {

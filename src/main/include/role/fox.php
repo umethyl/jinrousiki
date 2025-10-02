@@ -41,8 +41,7 @@ class Role_fox extends Role {
   }
 
   protected function IgnoreResult() {
-    return false === $this->ResistWolfEatFox() || DB::$ROOM->date < 2 ||
-      DB::$ROOM->IsOption('seal_message');
+    return DB::$ROOM->date < 2 || false === $this->ResistWolfEatFox();
   }
 
   //妖狐人狼襲撃耐性判定

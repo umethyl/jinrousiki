@@ -146,7 +146,7 @@ class Position {
     $stack = [];
     for ($i = -1; $i < 2; $i++) {
       $j = $num + $i * self::BASE;
-      if ($j < 1 || $max + 1 < $j) {
+      if (Number::OutRange($j, 1, $max + 1)) {
 	continue;
       }
 

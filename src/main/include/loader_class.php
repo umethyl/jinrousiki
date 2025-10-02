@@ -141,7 +141,8 @@ final class Loader extends LoadManager {
     if (true === extension_loaded('mbstring')) {
       mb_language('ja');
       mb_internal_encoding(ServerConfig::ENCODE);
-      mb_http_input('auto');
+      mb_http_input();
+      //mb_http_input('auto');
       mb_http_output(ServerConfig::ENCODE);
     }
 
@@ -353,6 +354,7 @@ final class LoaderData {
     'UserLoader'	=> 'user_class',
     //database
     'DB'		=> 'db_class',
+    'Query'		=> 'db_class',
     'RoomDB'		=> 'room_db_class',
     'SystemMessageDB'	=> 'room_db_class',
     'RoomLoaderDB'	=> 'room_db_class',

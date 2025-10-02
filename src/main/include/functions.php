@@ -10,22 +10,22 @@ final class Text {
   /* 判定 */
   //存在
   public static function Exists($str) {
-    return self::Over($str, 0);
+    return self::Over($str ?? '', 0);
   }
 
   //検索
   public static function Search($str, $target) {
-    return false !== strpos($str, $target);
+    return false !== strpos($str ?? '', $target);
   }
 
   //先頭
   public static function IsPrefix($str, $target) {
-    return strpos($str, $target) === 0;
+    return strpos($str ?? '', $target) === 0;
   }
 
   //文字数上限
   public static function Over($str, $limit) {
-    return strlen($str) > $limit;
+    return strlen($str ?? '') > $limit;
   }
 
   //RGB 文字列
@@ -82,6 +82,9 @@ final class Text {
 
   //分離 (explode() ラッパー)
   public static function Parse($str, $delimiter = ' ', $limit = null) {
+    if (null === $str) {
+      return [];
+    }	     
     return self::Exists($limit) ? explode($delimiter, $str, $limit) : explode($delimiter, $str);
   }
 
@@ -112,7 +115,7 @@ final class Text {
 
   //BOM 消去
   public static function RemoveBOM($str) {
-    if (ord($str{0}) == '0xef' && ord($str{1}) == '0xbb' && ord($str{2}) == '0xbf') {
+    if (ord($str[0]) == '0xef' && ord($str[1]) == '0xbb' && ord($str[2]) == '0xbf') {
       $str = substr($str, 3);
     }
     return $str;
@@ -148,7 +151,7 @@ final class Text {
     if (GameConfig::TRIP) {
       //トリップ関連のキーワードを置換
       $trip_list = [Message::TRIP, Message::TRIP_KEY];
-      $str = str_replace($trip_list, [Message::TRIP_CONVERT, '#'], $str);
+      $str = str_replace($trip_list, [Message::TRIP_CONVERT, '#'], $str ?? '');
 
       $trip_start = mb_strpos($str, '#');
       if (false !== $trip_start) { //トリップキーの位置を検索
@@ -263,7 +266,7 @@ final class Text {
       '"'  => '&quot;',
       "'"  => '&#039;'
     ];
-    $str = strtr($str, $replace_list);
+    $str = strtr($str ?? '', $replace_list);
     if (true === $trim) {
       $str = trim($str);
     } else {
@@ -295,6 +298,48 @@ final class Text {
   public static function t($data, $name = null) {
     $builder = class_exists('Talk') ? Talk::GetBuilder() : null;
     return (null === $builder) ? self::p($data, $name) : $builder->TalkDebug($data, $name);
+  }
+}
+
+//-- 数字判定関連 --//
+final class Number {
+  //範囲内 (a < target <= b)
+  public static function Within($number, $from, $to) {
+    return $from < $number && $number <= $to;
+  }
+
+  //範囲内 (a < target < b)
+  public static function InRange($number, $from, $to) {
+    return $from < $number && $number < $to;
+  }
+
+  //範囲外 (target < a || b < target)
+  public static function OutRange($number, $from, $to) {
+    return $number < $from || $to < $number;
+  }
+
+  //倍数
+  public static function Multiple($number, $base, $target, $limit = null) {
+    if (null === $limit) {
+      return $number % $base == $target;
+    } else {
+      return $number < $limit || $number % $base == $target;
+    }
+  }
+
+  //偶数
+  public static function Even($number, $limit = null) {
+    return self::Multiple($number, 2, 0, $limit);
+  }
+
+  //奇数
+  public static function Odd($number, $limit = null) {
+    return self::Multiple($number, 2, 1, $limit);
+  }
+
+  //3の倍数
+  public static function MultipleThree($number, $limit = null) {
+    return self::Multiple($number, 3, 0, $limit);
   }
 }
 

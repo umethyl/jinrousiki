@@ -1,17 +1,10 @@
 <?php
 //-- 個別村クラス --//
 final class Room extends StackManager {
-  public $id;
-  public $name;
-  public $comment;
-  public $game_option = '';
-  public $option_role = '';
-  public $date;
-  public $scene;
-  public $status;
-  public $system_time;
-  public $sudden_death;
-
+   public $game_option;
+   public $option_role;
+   public $scene;
+ 
   //-- 初期化・基本関数 --//
   public function __construct($request = null, $lock = false) {
     if (null === $request) {
@@ -484,6 +477,13 @@ final class Room extends StackManager {
 
   //能力発動結果登録
   public function StoreAbility($type, $result, $target = null, $user_no = null) {
+    if (OptionManager::IsSealMessage($type)) {
+      if ($this->IsTest()) {
+	Text::p("{$type}: {$result}: {$target}: {$user_no}", '★SealMessage');
+      }
+      return true;
+    }
+
     $date = $this->date;
     if ($this->IsTest()) {
       Text::p("{$type}: {$result}: {$target}: {$user_no}", '★ResultAbility');

@@ -27,7 +27,7 @@ class Role_poison_cat extends Role {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3 || DB::$ROOM->IsOpenCast() || DB::$ROOM->IsOption('seal_message');
+    return DB::$ROOM->date < 3 || DB::$ROOM->IsOpenCast();
   }
 
   //蘇生結果表示 (Mixin 用)
@@ -82,10 +82,6 @@ class Role_poison_cat extends Role {
     } else {
       $target = $user;
       DB::$ROOM->StoreDead(DB::$USER->GetHandleName($target->uname), DeadReason::REVIVE_FAILED);
-    }
-
-    if (DB::$ROOM->IsOption('seal_message')) { //蘇生結果を登録 (天啓封印ならスキップ)
-      return;
     }
 
     //蘇生結果は憑依を追跡しない
