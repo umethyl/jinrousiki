@@ -5,7 +5,7 @@
   ・悪戯：発言妨害 (妖精・春妖精・夏妖精・秋妖精・冬妖精相当のいずれか)
 */
 RoleManager::LoadFile('fairy');
-class Role_greater_fairy extends Role_fairy{
+class Role_greater_fairy extends Role_fairy {
   function __construct(){ parent::__construct(); }
 
   protected function GetBadStatus(){

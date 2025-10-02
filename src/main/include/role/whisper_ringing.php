@@ -8,6 +8,6 @@ class Role_whisper_ringing extends Role{
   function __construct(){ parent::__construct(); }
 
   function Whisper($builder, $voice){
-    return $builder->flag->{$this->role} && $this->filter->Whisper($builder, $voice);
+    return $builder->flag->{$this->role} && parent::Whisper($builder, $voice);
   }
 }

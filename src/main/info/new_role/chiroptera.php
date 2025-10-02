@@ -238,13 +238,20 @@ PP 要員に組み込まれることの多い蝙蝠陣営の花形と言える�
 <ol>
 <li>発言妨害<br>対象の発言の先頭に無意味な文字列を追加する (当日限定)。</li>
 <li>迷彩<br>悪戯先が人狼に襲撃されると、全員に特定のサブ役職が付加される (昼限定/例外あり)。<br>
-  <a href="wolf.php#hungry_wolf">餓狼</a>・<a href="wolf.php#possessed_wolf">憑狼</a>による襲撃の場合は無効。</li>
+「<a href="sub_role.php#bad_status">悪戯</a>」はつかない。
+  <a href="wolf.php#hungry_wolf">餓狼</a>・<a href="wolf.php#possessed_wolf">憑狼</a>による襲撃の場合でも有効。
+</li>
 <li>死亡欄妨害<br>死亡メッセージ欄に無意味な文字列を表示する。「<a href="sub_role.php#bad_status">悪戯</a>」はつかない。</li>
 <li>アイコンコピー<br>詳細は<a href="#shadow_fairy">影妖精</a>参照。</li>
 <li>決選投票<br>詳細は<a href="#mirror_fairy">鏡妖精</a>参照。「<a href="sub_role.php#bad_status">悪戯</a>」はつかない。<br>悪戯ができるのは一日目のみで、対象は身代わり君以外の誰か二人。</li>
 <li>悲恋<br>詳細は<a href="#sweet_fairy">恋妖精</a>参照。「<a href="sub_role.php#bad_status">悪戯</a>」はつかない。<br>悪戯ができるのは一日目のみで、対象は身代わり君以外の誰か二人。</li>
 <li>凍傷<br>詳細は<a href="#ice_fairy">氷妖精</a>参照。「<a href="sub_role.php#bad_status">悪戯</a>」はつかない。</li>
 </ol>
+<h5>Ver. 2.0.0 α3～</h5>
+<pre>
+迷彩：「<a href="sub_role.php#bad_status">悪戯</a>」はつかない仕様に変更。
+<a href="wolf.php#hungry_wolf">餓狼</a>・<a href="wolf.php#possessed_wolf">憑狼</a>による襲撃の場合でも有効になる仕様に変更。
+</pre>
 
 <h3 id="fairy">妖精 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β6～]</h3>
 <h4>[悪戯能力] タイプ：発言妨害 / 占い妨害：有効 / 呪い：有効</h4>

@@ -3,9 +3,17 @@
   ◆虚弱体質村 (sudden_death)
   ○仕様
 */
-class Option_sudden_death extends Option{
+class Option_sudden_death extends CheckRoomOptionItem {
   public $disable_list = array('febris', 'frostbite', 'death_warrant', 'panelist');
-  function __construct(){ parent::__construct(); }
+
+  function __construct(){
+		parent::__construct(RoomOption::ROLE_OPTION);
+	}
+
+	function  LoadMessages() {
+		$this->caption = '虚弱体質村';
+		$this->explain = '全員に投票でショック死するサブ役職のどれかがつきます';
+	}
 
   function Cast(&$list, &$rand){
     global $ROLE_DATA;

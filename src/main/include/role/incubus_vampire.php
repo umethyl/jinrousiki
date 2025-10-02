@@ -5,15 +5,17 @@
   ・吸血：女性以外なら吸血死
 */
 RoleManager::LoadFile('vampire');
-class Role_incubus_vampire extends Role_vampire{
+class Role_incubus_vampire extends Role_vampire {
   function __construct(){ parent::__construct(); }
 
   function Infect($user){
     global $USERS;
 
-    if($user->IsFemale())
+    if ($user->IsFemale()) {
       parent::Infect($user);
-    elseif(! $user->IsAvoid())
+    }
+    elseif (! $user->IsAvoid()) {
       $USERS->Kill($user->user_no, 'VAMPIRE_KILLED');
+    }
   }
 }

@@ -1,19 +1,16 @@
-body{
-  background-color: #000030; /* 背景色 */
-  color: #FFFAFA; /* 文字色 */
+@charset "utf-8";
+body, .real-time input {
+  background-color: #000030;
 }
-a:link{   color: #8080FF;}
-a:visited{color: #8080FF;}
-a:active{ color: #FF0000;}
-a:hover{  color: #FF0000;}
-.real-time input{
-  background-color: #000030; /* body の背景色と揃えてください */
-  color: #FFFAFA; /* body の文字色と揃えてください */
+body, .real-time input, .vote-page td {
+  color: #FFFAFA;
 }
-.vote-page{border-color: #FFFAFA;}
-.vote-page td{
+.vote-page, .vote-page td, .vote-list, .vote-list td {
   border-color: #FFFAFA;
-  color: #FFFAFA; /* body の文字色と揃えてください */
 }
-.vote-list{   border-color: #FFFAFA;}
-.vote-list td{border-color: #FFFAFA;}
+a:link, a:visited {
+  color: #8080FF;
+}
+a:active, a:hover {
+  color: #FF0000;
+}

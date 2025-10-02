@@ -7,7 +7,7 @@
 class Role_downer_luck extends Role{
   function __construct(){ parent::__construct(); }
 
-  function FilterVoted(&$number){
+  function FilterVotePoll(&$number){
     global $ROOM;
     $number += $ROOM->date == 2 ? -4 : 2;
   }

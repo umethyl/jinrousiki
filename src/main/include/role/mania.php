@@ -4,7 +4,7 @@
   ○仕様
   ・コピー：メイン役職
 */
-class Role_mania extends Role{
+class Role_mania extends Role {
   public $action = 'MANIA_DO';
   public $result = 'MANIA_RESULT';
   public $copied = 'copied';
@@ -27,20 +27,19 @@ class Role_mania extends Role{
 
     $this->delay_copy || $this->camp_copy ? $actor->AddMainRole($user->user_no) :
       $actor->ReplaceRole($this->role, $role);
-    if(! $this->delay_copy) $actor->AddRole($this->GetCopiedRole());
-
-    if($this->camp_copy) return;
-    $str = $actor->handle_name . "\t" . $user->handle_name . "\t" . $role;
-    $ROOM->SystemMessage($str, $this->result);  //コピー結果
+    if (! $this->delay_copy) $actor->AddRole($this->GetCopiedRole());
+    if (! $this->camp_copy) {
+      $ROOM->ResultAbility($this->result, $role, $user->handle_name, $actor->user_no);
+    }
   }
 
   //コピー結果役職取得
   protected function GetRole($user){
-    return $user->IsRoleGroup('mania') ? 'human' : $this->GetCopyRole($user);
+    return $user->IsRoleGroup('mania') ? 'human' : $this->GetManiaRole($user);
   }
 
   //コピー役職取得
-  protected function GetCopyRole($user){ return $user->main_role; }
+  protected function GetManiaRole($user){ return $user->main_role; }
 
   //特殊コピー処理
   protected function CopyAction($user, $role){}

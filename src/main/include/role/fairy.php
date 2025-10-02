@@ -5,17 +5,17 @@
   ・悪戯：発言妨害 (共有者の囁き)
   ・発言変換：悪戯
 */
-class Role_fairy extends Role{
+class Role_fairy extends Role {
   public $mix_in = 'mage';
   public $action = 'FAIRY_DO';
-  public $bad_status = NULL;
+  public $bad_status = null;
   function __construct(){ parent::__construct(); }
 
   function OutputAction(){ OutputVoteMessage('fairy-do', 'fairy_do', $this->action); }
 
   //占い (悪戯)
   function Mage($user){
-    if($this->IsJammer($user) || $this->IsCursed($user)) return false;
+    if ($this->IsJammer($user) || $this->IsCursed($user)) return false;
     $this->FairyAction($user);
   }
 

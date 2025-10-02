@@ -10,7 +10,7 @@ class Role_weather_priest extends Role_priest{
 
   protected function GetOutputRole(){
     global $ROOM;
-    return $ROOM->date > 1 ? $this->role : NULL;
+    return $ROOM->date > 1 ? $this->role : null;
   }
 
   function Priest($role_flag){
@@ -18,7 +18,7 @@ class Role_weather_priest extends Role_priest{
 
     $data = $this->GetStack('priest');
     //スキップ判定
-    if(! ($data->{$this->role} ||
+    if(! (property_exists($data, $this->role) ||
 	  ($ROOM->date > 2 && ($ROOM->date % 3) == 0 &&
 	   $data->count['total'] - $data->count['human_side'] > $data->count['wolf'] * 2))){
       return false;
@@ -59,7 +59,7 @@ class Role_weather_priest extends Role_priest{
       'snow_trap_mad' => 33, 'corpse_courier_mad' => 45, 'amaze_mad' => 2, 'critical_mad' => 4,
       'follow_mad' => 17, 'critical_avenger' => 4);
     foreach($role_flag as $role => $list){
-      $id = NULL;
+      $id = null;
       if(array_key_exists($role, $stack))
 	$id = $stack[$role];
       elseif(strpos($role, 'cute') !== false)

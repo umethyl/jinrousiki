@@ -10,7 +10,7 @@ class Role_succubus_yaksa extends Role_yaksa{
   public $reduce_rate = 2;
   function __construct(){ parent::__construct(); }
 
-  function Win($victory){
+  function Win($winner){
     if($this->IsDead()) return false;
     foreach($this->GetUser() as $user){
       if(! $this->IsActor($user->uname) && $user->IsLive() && $user->IsMale()) return false;

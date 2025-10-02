@@ -41,15 +41,13 @@ class Role_dummy_chiroptera extends Role{
   function CheckVoteNight(){ $this->filter->CheckVoteNight(); }
 
   function VoteNightAction($list, $flag){
-    $uname_stack  = array();
-    $handle_stack = array();
+    $stack = array();
     foreach($list as $user){
-      $uname_stack[]  = $user->uname;
-      $handle_stack[] = $user->handle_name;
+      $stack[] = $user->handle_name;
       if(! $this->IsActor($user->uname)) $this->GetActor()->AddMainRole($user->user_no);
     }
 
-    $this->SetStack(implode(' ', $uname_stack), 'target_uname');
-    $this->SetStack(implode(' ', $handle_stack), 'target_handle');
+    $this->SetStack(implode(' ', array_keys($list)), 'target_no');
+    $this->SetStack(implode(' ', $stack), 'target_handle');
   }
 }

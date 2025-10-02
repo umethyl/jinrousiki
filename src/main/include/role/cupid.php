@@ -51,11 +51,12 @@ class Role_cupid extends Role{
 
     $self_shoot = false; //自分撃ちフラグ
     $user_list  = array();
+    sort($stack);
     foreach($stack as $id){
       $user = $USERS->ByID($id);
       //例外判定
       if($user->IsDead() || $user->IsDummyBoy()) return '死者と身代わり君には投票できません';
-      $user_list[] = $user;
+      $user_list[$id] = $user;
       $self_shoot |= $this->IsActor($user->uname); //自分撃ち判定
     }
 
@@ -66,7 +67,7 @@ class Role_cupid extends Role{
     }
     $class = $this->GetClass($method = 'VoteNightAction');
     $class->$method($user_list, $self_shoot);
-    return NULL;
+    return null;
   }
 
   //投票人数取得
@@ -74,18 +75,16 @@ class Role_cupid extends Role{
 
   //キューピッドの投票処理
   function VoteNightAction($list, $flag){
-    $role = $this->GetActor()->GetID('lovers');
-    $uname_stack  = array();
-    $handle_stack = array();
+    $role  = $this->GetActor()->GetID('lovers');
+    $stack = array();
     foreach($list as $user){
-      $uname_stack[]  = $user->uname;
-      $handle_stack[] = $user->handle_name;
+      $stack[] = $user->handle_name;
       $user->AddRole($role); //恋人セット
       $this->AddCupidRole($user, $flag); //役職追加
       $user->ReparseRoles(); //再パース (魂移使判定用：反映が保障されているのは恋人のみ)
     }
-    $this->SetStack(implode(' ', $uname_stack), 'target_uname');
-    $this->SetStack(implode(' ', $handle_stack), 'target_handle');
+    $this->SetStack(implode(' ', array_keys($list)), 'target_no');
+    $this->SetStack(implode(' ', $stack), 'target_handle');
   }
 
   //役職追加処理

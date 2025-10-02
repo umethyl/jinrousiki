@@ -41,7 +41,7 @@ class Role_escaper extends Role{
   //逃亡処理
   protected function EscapeAction($user){}
 
-  function Win($victory){
+  function Win($winner){
     $this->SetStack('escaper', 'class');
     return $this->IsLive();
   }

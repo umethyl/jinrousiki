@@ -8,11 +8,10 @@ This server is Japanese only. -&gt; <a href="http://sourceforge.jp/projects/jinr
 </font>
 
 <h1>TOPIC</h1>
-<h2>Ver. 1.5.0 β17 アップロード (2011/11/26 (Sat) 17:43) → <a href="http://sourceforge.jp/projects/jinrousiki/releases/">ダウンロード</a> (SourceForge)</h2>
+<h2>Ver. 2.0.0 β1 アップロード (2012/03/25 (Sun) 03:04) → <a href="http://sourceforge.jp/projects/jinrousiki/releases/55373">ダウンロード</a> (SourceForge)</h2>
 <ul>
   <!-- <li>→ <a href="info/develop/debug.php#ver150b15">デバッグ情報</a> (2011/11/06 (Sun) 04:20)</li> -->
-  <li>「帝狼」実装</li>
-  <li>「キューピッド置換村」「女神村」「小悪魔村」「天使村」オプション実装</li>
+  <li>遺言制限機能を実装</li>
 </ul>
 
 <h1>開発状況</h1>

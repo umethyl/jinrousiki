@@ -2,7 +2,7 @@
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
 $INIT_CONF->LoadFile('info_functions');
-OutputInfoPageHeader('開発履歴 / ～1.3', 1);
+OutputInfoPageHeader('開発履歴 / ～1.3', 1, 'develop_history');
 ?>
 <p><a href="history.php">最新情報</a></p>
 <p>

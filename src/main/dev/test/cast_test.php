@@ -1,7 +1,7 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadClass('ROOM_CONF', 'CAST_CONF', 'ICON_CONF', 'ROLES');
+$INIT_CONF->LoadClass('ROOM_CONF', 'CAST_CONF', 'ICON_CONF', 'ROLES', 'ROOM_OPT');
 $INIT_CONF->LoadFile('game_vote_functions', 'user_class');
 
 //-- 仮想村データをセット --//
@@ -11,7 +11,7 @@ $RQ_ARGS->TestItems->test_room = array(
   'id' => $RQ_ARGS->room_no, 'name' => '配役テスト村', 'comment' => '',
   'game_option' => 'dummy_boy real_time:6:4 wish_role',
   'option_role' => '',
-  'date' => 0, 'day_night' => 'beforegame', 'status' => 'waiting'
+  'date' => 0, 'scene' => 'beforegame', 'status' => 'waiting'
 );
 #$RQ_ARGS->TestItems->test_room['game_option'] .= ' quiz';
 #$RQ_ARGS->TestItems->test_room['game_option'] .= ' chaosfull';
@@ -35,7 +35,7 @@ $RQ_ARGS->TestItems->test_room['option_role'] .= ' chaos_open_cast';
 $RQ_ARGS->TestItems->is_virtual_room = true;
 $RQ_ARGS->vote_times = 1;
 $RQ_ARGS->TestItems->test_users = array();
-for($id = 1; $id <= 22; $id++) $RQ_ARGS->TestItems->test_users[$id] = new User();
+for ($id = 1; $id <= 22; $id++) $RQ_ARGS->TestItems->test_users[$id] = new User();
 
 $RQ_ARGS->TestItems->test_users[1]->uname = 'dummy_boy';
 $RQ_ARGS->TestItems->test_users[1]->handle_name = '身代わり君';
@@ -129,15 +129,14 @@ $RQ_ARGS->TestItems->test_users[22]->role = '';
 
 $icon_color_list = array('#DDDDDD', '#999999', '#FFD700', '#FF9900', '#FF0000',
 			 '#99CCFF', '#0066FF', '#00EE00', '#CC00CC', '#FF9999');
-foreach($RQ_ARGS->TestItems->test_users as $id => $user){
+foreach ($RQ_ARGS->TestItems->test_users as $id => $user) {
   $user->room_no = $RQ_ARGS->room_no;
   $user->user_no = $id;
   $user->sex = $id % 2 == 0 ? 'female' : 'male';
   $user->profile = '';
   $user->live = 'live';
-  $user->last_load_day_night = 'beforegame';
-  $user->is_system = $user->user_no == 1;
-  if($id > 1){
+  $user->last_load_scene = 'beforegame';
+  if ($id > 1) {
     $user->color = $icon_color_list[($id - 2) % 10];
     $user->icon_filename = sprintf('%03d.gif', ($id - 2) % 10 + 1);
   }
@@ -153,7 +152,8 @@ foreach($RQ_ARGS->TestItems->test_users as $id => $user){
 $ROOM = new Room($RQ_ARGS); //村情報を取得
 $ROOM->test_mode = true;
 $ROOM->log_mode  = true;
-$ROOM->day_night = 'beforegame';
+$ROOM->scene = 'beforegame';
+$ROOM->vote = array();
 
 $USERS = new UserDataSet($RQ_ARGS); //ユーザ情報をロード
 $SELF = $USERS->ByID(1);
@@ -161,10 +161,11 @@ $SELF = $USERS->ByID(1);
 //-- データ出力 --//
 OutputHTMLHeader('配役テスト', 'game'); //HTMLヘッダ
 echo '</head><body>'."\n";
+
 OutputPlayerList(); //プレイヤーリスト
 AggregateVoteGameStart(); //配役処理
 $ROOM->date++;
-$ROOM->day_night = 'night';
-foreach($USERS->rows as $user) $user->ReparseRoles();
+$ROOM->scene = 'night';
+foreach ($USERS->rows as $user) $user->ReparseRoles();
 OutputPlayerList(); //プレイヤーリスト
 OutputHTMLFooter(); //HTMLフッタ

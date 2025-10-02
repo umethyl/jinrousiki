@@ -23,7 +23,7 @@ class Role_doll extends Role{
     if($this->display_doll) OutputPartner($doll_stack, 'doll_partner'); //人形
   }
 
-  function Win($victory){
+  function Win($winner){
     $this->SetStack('doll', 'class');
     foreach($this->GetUser() as $user){
       if($user->IsLiveRole('doll_master')) return false;

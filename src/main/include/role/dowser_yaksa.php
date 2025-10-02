@@ -11,7 +11,7 @@ class Role_dowser_yaksa extends Role_yaksa{
   public $reduce_rate =  2;
   function __construct(){ parent::__construct(); }
 
-  function Win($victory){
+  function Win($winner){
     if($this->IsDead()) return false;
     $count = count($this->GetActor()->role_list);
     foreach($this->GetUser() as $user){

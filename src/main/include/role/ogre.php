@@ -19,9 +19,9 @@ class Role_ogre extends Role{
 
   function IsVote(){ global $ROOM; return $ROOM->date > 1; }
 
-  function Win($victory){
+  function Win($winner){
     if($this->IsDead()) return false;
-    if($victory == 'wolf') return true;
+    if($winner == 'wolf') return true;
     foreach($this->GetUser() as $user){
       if($user->IsLiveRoleGroup('wolf')) return true;
     }

@@ -7,5 +7,5 @@
 class Role_disfavor extends Role{
   function __construct(){ parent::__construct(); }
 
-  function FilterVoted(&$number){ $number++; }
+  function FilterVotePoll(&$number){ $number++; }
 }

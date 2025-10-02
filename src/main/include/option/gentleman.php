@@ -4,8 +4,15 @@
   ○仕様
   ・配役：性別に応じた紳士・淑女 / 全員
 */
-class Option_gentleman extends Option{
-  function __construct(){ parent::__construct(); }
+class Option_gentleman extends CheckRoomOptionItem {
+  function __construct(){
+		parent::__construct(RoomOption::ROLE_OPTION);
+	}
+
+	function  LoadMessages() {
+		$this->caption = '紳士・淑女村';
+		$this->explain = '全員に性別に応じた「紳士」「淑女」がつきます';
+	}
 
   function Cast(&$list, &$rand){
     global $ROLES, $USERS;

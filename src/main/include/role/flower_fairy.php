@@ -5,14 +5,14 @@
   ・悪戯：死亡欄妨害 (花)
 */
 RoleManager::LoadFile('fairy');
-class Role_flower_fairy extends Role_fairy{
-  public $result_header = 'FLOWERED';
+class Role_flower_fairy extends Role_fairy {
+  public $result = 'FLOWERED';
   function __construct(){ parent::__construct(); }
 
   function FairyAction($user){
     global $ROOM, $USERS;
 
-    $result = $this->result_header . '_' . GetRandom(range('A', 'Z'));
-    $ROOM->SystemMessage($USERS->GetHandleName($user->uname, true), $result);
+    $handle_name = $USERS->GetHandleName($user->uname, true);
+    $ROOM->ResultDead($handle_name, $this->result, GetRandom(range('A', 'Z')));
   }
 }

@@ -11,5 +11,5 @@ class Role_critical_common extends Role_common{
 
   function FilterVoteDo(&$number){ $number++; }
 
-  function FilterVoted(&$number){ if(mt_rand(1, 100) <= 5) $number += 100; }
+  function FilterVotePoll(&$number){ if(mt_rand(1, 100) <= 5) $number += 100; }
 }

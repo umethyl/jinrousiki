@@ -37,9 +37,9 @@ class Role_voodoo_killer extends Role{
     global $ROOM, $USERS;
 
     foreach($this->GetStack($this->role . '_success') as $target_uname => $flag){
-      $str = "\t" . $USERS->GetHandleName($target_uname, true);
+      $target = $USERS->GetHandleName($target_uname, true);
       foreach(array_keys($this->GetStack(), $target_uname) as $uname){ //成功者を検出
-	$ROOM->SystemMessage($USERS->GetHandleName($uname) . $str, $this->result);
+	$ROOM->ResultAbility($this->result, 'success', $target, $USERS->ByUname($uname)->user_no);
       }
     }
   }

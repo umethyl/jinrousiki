@@ -12,5 +12,5 @@ class Role_wirepuller_luck extends Role{
 
   function FilterVoteDo(&$number){ if($this->IsLivePartner()) $number += 2; }
 
-  function FilterVoted(&$number){ if(! $this->IsLivePartner()) $number += 3; }
+  function FilterVotePoll(&$number){ if(! $this->IsLivePartner()) $number += 3; }
 }

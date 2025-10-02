@@ -32,7 +32,7 @@ class Role_priest extends Role{
     $data = $this->GetStack('priest');
     if(is_null($role = $this->GetPriestRole($data->list))) return;
     $class = $this->GetClass($method = 'GetPriestType');
-    $ROOM->SystemMessage($data->count[$class->$method()], $this->GetEvent($role));
+    $ROOM->ResultAbility($this->GetEvent($role), $data->count[$class->$method()]);
   }
 
   //司祭能力発動判定

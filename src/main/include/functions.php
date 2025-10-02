@@ -1,7 +1,7 @@
 <?php
 //-- セキュリティ関連 --//
 //リファラチェック
-function CheckReferer($page, $white_list = NULL){
+function CheckReferer($page, $white_list = null){
   global $SERVER_CONF;
 
   if(is_array($white_list)){ //ホワイトリストチェック
@@ -59,25 +59,28 @@ function FindDangerValue($value, $found = false){
 //-- DB 関連 --//
 //DB 問い合わせ処理のラッパー関数
 function SendQuery($query, $commit = false){
-  if(($sql = mysql_query($query)) !== false) return $commit ? SendCommit() : $sql;
+  global $SERVER_CONF, $DB_CONF;
+
+  if(($sql = mysql_query($query)) !== false) return $commit ? $DB_CONF->Commit() : $sql;
+  $error = sprintf('MYSQL_ERROR(%d):%s', mysql_errno(), mysql_error());
   $backtrace = debug_backtrace(); //バックトレースを取得
 
   //SendQuery() を call した関数と位置を取得して「SQLエラー」として返す
   $trace_stack = array_shift($backtrace);
-  $stack = array($trace_stack['line'], $query);
+  $stack = array($trace_stack['line'], $error, $query);
   $trace_stack = array_shift($backtrace);
   array_unshift($stack, $trace_stack['function'] . '()');
-  PrintData(implode(': ', $stack), 'SQLエラー');
+  $str = 'SQLエラー: ' . implode(': ', $stack) . "<br>\n";
 
   foreach($backtrace as $trace_stack){ //呼び出し元があるなら追加で出力
     $stack = array($trace_stack['function'] . '()', $trace_stack['line']);
-    PrintData(implode(': ', $stack), 'Caller');
+    $str .= 'Caller: ' . implode(': ', $stack) . "<br>\n";
   }
-  return false;
+  OutputActionResult($SERVER_CONF->title . ' [エラー]', $str);
 }
 
-//コミット処理
-function SendCommit(){ return mysql_query('COMMIT'); }
+//SQL 実行結果を bool で受け取るラッパー関数
+function FetchBool($query, $commit = false){ return SendQuery($query, $commit) !== false; }
 
 //DB から単体の値を取得する処理のラッパー関数
 function FetchResult($query){
@@ -97,108 +100,84 @@ function FetchCount($query){
 
 //DB から一次元の配列を取得する処理のラッパー関数
 function FetchArray($query){
-  $array = array();
-  if(($sql = SendQuery($query)) === false) return $array;
+  $stack = array();
+  if(($sql = SendQuery($query)) === false) return $stack;
   $count = mysql_num_rows($sql);
-  for($i = 0; $i < $count; $i++) $array[] = mysql_result($sql, $i, 0);
+  for($i = 0; $i < $count; $i++) $stack[] = mysql_result($sql, $i, 0);
   mysql_free_result($sql);
-  return $array;
+  return $stack;
 }
 
 //DB から連想配列を取得する処理のラッパー関数
 function FetchAssoc($query, $shift = false){
-  $array = array();
-  if(($sql = SendQuery($query)) === false) return $array;
-  while(($stack = mysql_fetch_assoc($sql)) !== false) $array[] = $stack;
+  $stack = array();
+  if(($sql = SendQuery($query)) === false) return $stack;
+  while(($array = mysql_fetch_assoc($sql)) !== false) $stack[] = $array;
   mysql_free_result($sql);
-  return $shift ? array_shift($array) : $array;
+  return $shift ? array_shift($stack) : $stack;
 }
 
 //DB からオブジェクト形式の配列を取得する処理のラッパー関数
 function FetchObject($query, $class, $shift = false){
-  $array = array();
-  if(($sql = SendQuery($query)) === false) return $array;
-  while(($stack = mysql_fetch_object($sql, $class)) !== false) $array[] = $stack;
-  mysql_free_result($sql);
-  return $shift ? array_shift($array) : $array;
-}
-
-//talk 専用 DB 取得関数 (負荷実験テスト用)
-function FetchTalk($query, $class, $reverse){
-  global $GAME_CONF, $ROOM;
-
   $stack = array();
-  foreach(FetchObject($query, $class) as $object) $stack[$object->talk_id] = $object;
-  if(! $reverse) krsort($stack);
-  if(! $ROOM->IsPlaying() && $GAME_CONF->display_talk_limit > 0){
-    $stack = array_slice($stack, 0, $GAME_CONF->display_talk_limit);
-  }
-  return $stack;
+  if(($sql = SendQuery($query)) === false) return $stack;
+  while(($object = mysql_fetch_object($sql, $class)) !== false) $stack[] = $object;
+  mysql_free_result($sql);
+  return $shift ? array_shift($stack) : $stack;
 }
 
 //データベース登録のラッパー関数
 function InsertDatabase($table, $items, $values){
-  return SendQuery("INSERT INTO {$table}({$items}) VALUES({$values})", true);
+  return FetchBool("INSERT INTO {$table}({$items}) VALUES({$values})");
 }
 
 //ユーザ登録処理
 function InsertUser($room_no, $uname, $handle_name, $password, $user_no = 1, $icon_no = 0,
-		    $profile = NULL, $sex = 'male', $role = NULL, $session_id = NULL){
+		    $profile = null, $sex = 'male', $role = null, $session_id = null){
   global $MESSAGE;
 
   $crypt_password = CryptPassword($password);
-  $items = 'room_no, user_no, uname, handle_name, icon_no, sex, password, live, profile, last_words';
+  $items  = 'room_no, user_no, uname, handle_name, icon_no, sex, password, live';
   $values = "{$room_no}, {$user_no}, '{$uname}', '{$handle_name}', {$icon_no}, '{$sex}', " .
-    "'{$crypt_password}', 'live', ";
+    "'{$crypt_password}', 'live'";
+
   if($uname == 'dummy_boy'){
-    $values .= "'{$MESSAGE->dummy_boy_comment}', '{$MESSAGE->dummy_boy_last_words}'";
+    $profile    = $MESSAGE->dummy_boy_comment;
+    $last_words = $MESSAGE->dummy_boy_last_words;
   }
   else{
     $ip_address = $_SERVER['REMOTE_ADDR']; //ユーザのIPアドレスを取得
-    $items .= ', role, session_id, ip_address, last_load_day_night';
-    $values .= "'{$profile}', '', '{$role}', '{$session_id}', '{$ip_address}', 'beforegame'";
+    $items  .= ', ip_address, last_load_scene';
+    $values .= ", '{$ip_address}', 'beforegame'";
+  }
+
+  foreach(array('profile', 'role', 'session_id', 'last_words') as $var){
+    if(is_null($$var)) continue;
+    $items  .= ", {$var}";
+    $values .= ", '{$$var}'";
   }
   return InsertDatabase('user_entry', $items, $values);
 }
 
-//テーブルを排他的ロック
-function LockTable($type = NULL){
-  $stack = array('room', 'user_entry', 'talk', 'vote');
-  switch($type){
-  case 'game':
-    array_push($stack, 'system_message', 'user_icon');
-    break;
-
-  case 'icon':
-    $stack = array('user_icon');
-    break;
-
-  case 'icon_delete':
-    $stack = array('user_icon', 'user_entry');
-    break;
-  }
-
-  $query_stack = array();
-  foreach($stack as $table) $query_stack[] = $table . ' WRITE';
-  return ! SendQuery('LOCK TABLES ' . implode(', ', $query_stack));
-}
-
-//テーブルロック解除
-function UnlockTable(){ return SendQuery('UNLOCK TABLES'); }
-
-//部屋削除
+//村削除
 function DeleteRoom($room_no){
   $header = 'DELETE FROM ';
   $footer = ' WHERE room_no = ' . $room_no;
-  foreach(array('room', 'user_entry', 'talk', 'system_message', 'vote') as $name){
-    SendQuery($header . $name . $footer);
+  $stack  = array('room', 'user_entry', 'player', 'talk', 'talk_beforegame', 'talk_aftergame',
+		  'system_message', 'result_ability', 'result_dead', 'result_lastwords',
+		  'result_vote_kill', 'vote');
+  foreach($stack as $name){
+    if(! FetchBool($header . $name . $footer)) return false;
   }
+  return true;
 }
 
 //DB 最適化
-function OptimizeTable($name = NULL){
-  $query = is_null($name) ? 'room, user_entry, talk, system_message, vote' : $name;
-  SendQuery('OPTIMIZE TABLE ' . $query, true);
+function OptimizeTable($name = null){
+  $tables = 'room, user_entry, talk, talk_beforegame, talk_aftergame, system_message' .
+    'result_lastwords, vote';
+  $query = is_null($name) ? $tables : $name;
+  return FetchBool('OPTIMIZE TABLE ' . $query, true);
 }
 
 //-- 日時関連 --//
@@ -257,7 +236,7 @@ function EncodePostData(){
   global $SERVER_CONF;
 
   foreach($_POST as $key => $value){
-    $encode = mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
+    $encode = @mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
     if($encode != '' && $encode != $SERVER_CONF->encode){
       $_POST[$key] = mb_convert_encoding($value, $SERVER_CONF->encode, $encode);
     }
@@ -360,7 +339,7 @@ function CryptPassword($raw_password){
 
 //-- 出力関連 --//
 //変数表示関数 (デバッグ用)
-function PrintData($data, $name = NULL){
+function PrintData($data, $name = null){
   $str = is_null($name) ? '' : $name . ': ';
   $str .= (is_array($data) || is_object($data)) ? print_r($data, true) : $data;
   echo $str . '<br>';
@@ -427,7 +406,7 @@ function OutputPageLink($CONFIG){
 }
 
 //ページ送り用のリンクタグを作成する
-function GeneratePageLink($CONFIG, $page, $title = NULL){
+function GeneratePageLink($CONFIG, $page, $title = null){
   if($page == $CONFIG->current) return '[' . $page . ']';
   $option = (is_null($CONFIG->page_type) ? 'page' : $CONFIG->page_type) . '=' . $page;
   $list = $CONFIG->option;
@@ -461,54 +440,6 @@ EOF;
 <a target="_top" href="{$url}&watch=on"{$footer}>観</a>
 <a target="_top" href="{$url}&watch=on&reverse_log=on"{$footer}>逆&amp;観</a>
 EOF;
-  }
-  return $str;
-}
-
-//ゲームオプションの画像タグを作成する
-function GenerateGameOptionImage($game_option, $option_role = ''){
-  global $CAST_CONF, $ROOM_IMG, $GAME_OPT_MESS;
-
-  $stack = new OptionParser($game_option . ' ' . $option_role);
-  //PrintData($stack); //テスト用
-  $str = '';
-  $display_order_list = array(
-    'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'gerd', 'wait_morning', 'open_vote',
-    'seal_message', 'open_day', 'not_open_cast', 'auto_open_cast', 'poison', 'assassin', 'wolf',
-    'boss_wolf', 'poison_wolf', 'possessed_wolf', 'sirius_wolf', 'fox', 'child_fox', 'cupid',
-    'medium', 'mania', 'decide', 'authority', 'detective', 'liar', 'gentleman', 'deep_sleep',
-    'blinder', 'mind_open', 'sudden_death', 'perverseness', 'critical', 'joker', 'death_note',
-    'weather', 'festival', 'replace_human', 'full_mad', 'full_cupid', 'full_quiz', 'full_vampire',
-    'full_chiroptera', 'full_mania', 'full_unknown_mania', 'change_common', 'change_hermit_common',
-    'change_mad', 'change_fanatic_mad', 'change_whisper_mad', 'change_immolate_mad', 'change_cupid',
-    'change_mind_cupid', 'change_triangle_cupid', 'change_angel', 'duel', 'gray_random', 'quiz',
-    'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'topping', 'boost_rate', 'chaos_open_cast',
-    'chaos_open_cast_camp', 'chaos_open_cast_role', 'secret_sub_role', 'no_sub_role',
-    'sub_role_limit_easy', 'sub_role_limit_normal', 'sub_role_limit_hard');
-
-  foreach($display_order_list as $option){
-    if(! $stack->Exists($option) || $GAME_OPT_MESS->$option == '') continue;
-    $footer = '';
-    $sentence = $GAME_OPT_MESS->$option;
-    if(property_exists($CAST_CONF, $option) && is_int($CAST_CONF->$option)){
-      $sentence .= '(' . $CAST_CONF->$option . '人～)';
-    }
-    switch($option){
-    case 'real_time':
-      $day   = $stack->options[$option][0];
-      $night = $stack->options[$option][1];
-      $sentence .= "　昼： {$day} 分　夜： {$night} 分";
-      $footer = '['. $day . '：' . $night . ']';
-      break;
-
-    case 'topping':
-    case 'boost_rate':
-      $type = $stack->options[$option][0];
-      $sentence .= '(Type' . $GAME_OPT_MESS->{$option . '_' . $type} . ')';
-      $footer = '['. strtoupper($type) . ']';
-      break;
-    }
-    $str .= $ROOM_IMG->Generate($option, $sentence) . $footer;
   }
   return $str;
 }
@@ -551,10 +482,10 @@ function OutputActionResultHeader($title, $url = ''){
 }
 
 //結果ページ出力
-function OutputActionResult($title, $body, $url = '', $unlock = false){
+function OutputActionResult($title, $body, $url = ''){
   global $DB_CONF;
 
-  $DB_CONF->Disconnect($unlock); //DB 接続解除
+  $DB_CONF->Disconnect(); //DB 接続解除
 
   OutputActionResultHeader($title, $url);
   echo $body . "\n";

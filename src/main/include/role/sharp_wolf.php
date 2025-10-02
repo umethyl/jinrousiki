@@ -15,12 +15,12 @@ class Role_sharp_wolf extends Role_wolf{
   }
 
   function WolfEatAction($user){
-    global $ROOM;
+    global $ROOM, $USERS;
 
     if(! $user->IsRoleGroup('mad') && ! $user->IsPoison()) return false;
     if($ROOM->IsOption('seal_message')) return true;
-    $str = $this->GetWolfVoter()->GetHandleName($user->uname, 'wolf_avoid');
-    $ROOM->SystemMessage($str, $this->result);
+    $target = $USERS->GetHandleName($user->uname, true);
+    $ROOM->ResultAbility($this->result, 'wolf_avoid', $target, $this->GetWolfVoter()->user_no);
     return true;
   }
 }

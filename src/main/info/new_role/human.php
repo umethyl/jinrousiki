@@ -797,7 +797,7 @@ PP ラインの計算を難しくさせるために作成してみました。
 <ol>
 <li>判定が出るのは 4 日目以降の偶数日 (4 → 6 → 8 →...)。</li>
 <li>村人陣営の判定法則は<a href="#medium_rule">巫女</a>と同じ。</li>
-<li><a href="#revive_priest">天人</a>の蘇生判定は司祭判定の後に実施される。<br>
+<li><a href="#revive_priest">天人</a>の蘇生判定は<a href="../spec.php#vote_night">司祭判定</a>の後に実施される。<br>
   従って、「司祭の判定 + <a href="#revive_priest">天人</a>が蘇生した人数」 が司祭視点の正しい値となる。
 </li>
 </ol>
@@ -1064,7 +1064,7 @@ PP ラインの計算を難しくさせるために作成してみました。
 <pre>
 1. 狩り能力があるのは<a href="#guard">狩人</a>・<a href="#hunter_guard">猟師</a>・<a href="#reflect_guard">侍</a>・<a href="#poison_guard">騎士</a>・<a href="#fend_guard">忍者</a>。
 2. 対象は特殊狂人・特殊妖狐・特殊天使・特殊吸血鬼・特殊蝙蝠・特殊復讐者。
-2-1. 特殊狂人 (<a href="wolf.php#mad">狂人</a>・<a href="wolf.php#fanatic_mad">狂信者</a>・<a href="wolf.php#whisper_mad">囁き狂人</a>・<a href="wolf.php#swindle_mad">因幡兎</a>・<a href="wolf.php#therian_mad">獣人</a>・<a href="wolf.php#revive_mad">尸解仙</a>・<a href="wolf.php#immolate_mad">殉教者</a>以外の<a href="wolf.php#mad_group">狂人系</a>)
+2-1. 特殊狂人 (<a href="wolf.php#mad">狂人</a>・<a href="wolf.php#fanatic_mad">狂信者</a>・<a href="wolf.php#whisper_mad">囁き狂人</a>・<a href="wolf.php#therian_mad">獣人</a>・<a href="wolf.php#revive_mad">尸解仙</a>・<a href="wolf.php#immolate_mad">殉教者</a>以外の<a href="wolf.php#mad_group">狂人系</a>)
 2-2. 特殊妖狐 (<a href="fox.php#phantom_fox">幻狐</a>・<a href="fox.php#voodoo_fox">九尾</a>・<a href="fox.php#revive_fox">仙狐</a>・<a href="fox.php#possessed_fox">憑狐</a>・<a href="fox.php#doom_fox">冥狐</a>・<a href="fox.php#trap_fox">狡狐</a>・<a href="fox.php#cursed_fox">天狐</a>)
 2-3. 特殊天使 (<a href="lovers.php#cursed_angel">堕天使</a>)
 2-4. 特殊吸血鬼 (<a href="vampire.php#vampire">吸血鬼</a>・<a href="vampire.php#scarlet_vampire">屍鬼</a>以外の<a href="vampire.php#vampire_group">吸血鬼系</a>)
@@ -1760,7 +1760,7 @@ Ver. 1.4.0 β9 からは吊られた時のみ<a href="wolf.php#dream_eater_mad">
 <h4>[薬師能力] 毒能力判定：有り / 解毒：有り / ショック死抑制：無し</h4>
 <pre>
 処刑投票先が処刑されたら毒能力を無効化 (解毒) する、薬師系の<a href="mania.php#basic_mania">基本種</a>。
-また、処刑投票先の毒能力が分かる (自分が処刑されたら無効)。
+また、処刑投票先の毒能力が分かる (処刑されたら無効)。
 </pre>
 <h4>毒能力判定法則</h4>
 <ol>
@@ -1799,7 +1799,7 @@ Ver. 1.4.0 β9 からは吊られた時のみ<a href="wolf.php#dream_eater_mad">
 <li>抑制できるのは<a href="sub_role.php">サブ役職</a> (例：<a href="sub_role.php#chicken_group">小心者系</a>) のみで、<a href="ability.php#sudden_death">メイン役職</a>によるものは対象外。</li>
 <li>解毒・ショック死抑制に成功すると次の日に「治療成功」という趣旨のメッセージが表示される。</li>
 <li>何の「治療」に成功したのか (毒やショック死の種類など) は表示されない。</li>
-<li>処刑されたら解毒・ショック死抑制能力無効。</li>
+<li>再投票時には発動せず、処刑されたら解毒・ショック死抑制能力無効。</li>
 </ol>
 <pre>
 例) A[河童] → B[村人][小心者]
@@ -1808,8 +1808,7 @@ Ver. 1.4.0 β9 からは吊られた時のみ<a href="wolf.php#dream_eater_mad">
 </pre>
 <h5>Ver. 1.5.0 α6～</h5>
 <pre>
-再投票でもショック死抑制能力有効
-処刑されたらショック死抑制能力無効
+処刑されたら解毒・ショック死抑制能力無効。
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -1839,8 +1838,7 @@ Ver. 1.4.0 β9 からは吊られた時のみ<a href="wolf.php#dream_eater_mad">
 </ol>
 <h5>Ver. 1.5.0 α6～</h5>
 <pre>
-再投票でもショック死抑制能力有効
-処刑されたらショック死抑制能力無効
+処刑されたらショック死抑制能力無効。
 </pre>
 <h4>関連役職</h4>
 <pre>

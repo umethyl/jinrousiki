@@ -11,5 +11,5 @@ class Role_immolate_fox extends Role_fox{
 
   function FoxEatCounter($user){ $this->GetActor()->AddRole('muster_ability'); }
 
-  function Win($victory){ return $this->GetActor()->IsRole('muster_ability'); }
+  function Win($winner){ return $this->GetActor()->IsRole('muster_ability'); }
 }

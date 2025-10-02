@@ -15,7 +15,7 @@ class Role_earplug extends Role_strong_voice{
 
   function IgnoreTalk(){
     global $ROOM;
-    return $this->filter->IgnoreTalk() || ! $ROOM->IsPlaying() ||
+    return parent::IgnoreTalk() || ! $ROOM->IsPlaying() ||
       ($ROOM->log_mode && $ROOM->IsEvent($this->role) && ! $ROOM->IsDay());
   }
 

@@ -22,24 +22,29 @@ function OutputNameTest(){
 
 EOF;
 
-  foreach(array_keys($ROLE_DATA->main_role_list) as $role){ //役職データ収集
+  $stack = new StdClass();
+  foreach (array_keys($ROLE_DATA->main_role_list) as $role) { //役職データ収集
     $stack->group[$ROLE_DATA->DistinguishRoleGroup($role)][] = $role;
     $stack->camp[$ROLE_DATA->DistinguishCamp($role, true)][] = $role;
   }
   $count = 0;
-  foreach(array('camp' => '陣営', 'group' => '系') as $type => $name){
-    foreach(array_keys($stack->$type) as $role){
+  foreach (array('camp' => '陣営', 'group' => '系') as $type => $name) {
+    foreach (array_keys($stack->$type) as $role) {
       $count++;
-      if($count > 0 && $count % 9 == 0) echo "<br>\n";
-      echo '<input type="radio" name="type" value="' . $role . '-' . $type . '">' .
-	$ROLE_DATA->main_role_list[$role] . $name . "\n";
+      if ($count > 0 && $count % 9 == 0) echo "<br>\n";
+      $value = $role . '-' . $type;
+      $label = $ROLE_DATA->main_role_list[$role] . $name;
+      echo <<<EOF
+<input type="radio" name="type" id="{$value}" value="{$value}"><label for="{$value}">{$label}</label>
+
+EOF;
     }
   }
   echo "</form>\n";
 
-  if($_POST['command'] != 'name_test') return; //実行判定
-  list($role, $type) = explode('-', $_POST['type']);
-  switch($type){
+  if (@$_POST['command'] != 'name_test') return; //実行判定
+  list($role, $type) = explode('-', @$_POST['type']);
+  switch ($type) {
   case 'all':
     $stack = array_keys($ROLE_DATA->main_role_list);
     break;
@@ -52,5 +57,5 @@ EOF;
   default:
     return;
   }
-  foreach($stack as $role) PrintData($ROLE_DATA->GenerateMainRoleTag($role));
+  foreach ($stack as $role) PrintData($ROLE_DATA->GenerateMainRoleTag($role));
 }

@@ -1,7 +1,7 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-OutputHTMLHeader('新役職情報 - [メニュー]', 'info_menu');
+OutputHTMLHeader('新役職情報 - [メニュー]', 'info/menu');
 ?>
 </head>
 <body>

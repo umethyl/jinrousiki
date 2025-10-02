@@ -18,7 +18,7 @@ class Role_cursed_angel extends Role_angel{
   function SuddenDeath(){
     global $USERS;
 
-    if($this->IgnoreSuddenDeath()) return;
+    if($this->IgnoreSuddenDeath() || ! $this->IsRealActor()) return;
     foreach($this->GetVotedUname() as $uname){
       if($USERS->ByRealUname($uname)->IsLovers()){
 	$this->SetSuddenDeath($this->sudden_death);

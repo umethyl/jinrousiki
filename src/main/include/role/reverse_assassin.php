@@ -56,7 +56,7 @@ class Role_reverse_assassin extends Role_assassin{
 	//特殊ケースなのでベタに処理
 	$virtual->Update('live', 'live');
 	$virtual->revive_flag = true;
-	$ROOM->SystemMessage($virtual->handle_name, 'REVIVE_SUCCESS');
+	$ROOM->ResultDead($virtual->handle_name, 'REVIVE_SUCCESS');
       }
       else{
 	//憑依されていたらリセット

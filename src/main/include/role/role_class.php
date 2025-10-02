@@ -90,11 +90,12 @@ class RoleManager{
     'day_voter', 'wirepuller_luck', 'watcher', 'panelist');
 
   //処刑得票(メイン)
-  public $voted_main_list = array('critical_common', 'critical_patron');
+  public $vote_poll_main_list = array('critical_common', 'critical_patron');
 
   //処刑得票(サブ)
-  public $voted_sub_list = array('upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck',
-				 'random_luck', 'occupied_luck', 'wirepuller_luck');
+  public $vote_poll_sub_list = array(
+    'upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck', 'random_luck',
+    'occupied_luck', 'wirepuller_luck');
 
   //処刑投票能力者
   public $vote_day_list = array(
@@ -120,7 +121,8 @@ class RoleManager{
   public $detox_list = array('pharmacist', 'cure_pharmacist', 'alchemy_pharmacist');
 
   //処刑者カウンター
-  public $vote_kill_counter_list = array('brownie', 'doom_doll', 'miasma_fox');
+  public $vote_kill_counter_list = array('brownie', 'sun_brownie', 'doom_doll', 'miasma_fox',
+					 'mirror_fairy');
 
   //処刑投票能力処理 (順番依存あり)
   public $vote_action_list = array(
@@ -168,8 +170,9 @@ class RoleManager{
     'sacrifice_vampire', 'boss_chiroptera', 'sacrifice_ogre');
 
   //人狼襲撃カウンター
-  public $wolf_eat_counter_list = array('ghost_common', 'presage_scanner', 'cursed_brownie',
-					'miasma_fox', 'revive_mania', 'mind_sheep');
+  public $wolf_eat_counter_list = array(
+    'ghost_common', 'presage_scanner', 'cursed_brownie', 'sun_brownie', 'history_brownie',
+    'miasma_fox', 'revive_mania', 'mind_sheep');
 
   //襲撃毒死回避
   public $avoid_poison_eat_list = array('guide_poison', 'poison_jealousy', 'poison_wolf');
@@ -194,20 +197,6 @@ class RoleManager{
     'revive_pharmacist', 'revive_brownie', 'revive_doll', 'revive_mad', 'revive_cupid',
     'scarlet_vampire', 'revive_ogre', 'revive_avenger', 'resurrect_mania');
 
-  //特殊イベント (昼)
-  public $event_day_list = array('sun_brownie', 'mirror_fairy');
-
-  //特殊イベント (夜)
-  public $event_night_list = array('sun_brownie', 'history_brownie');
-
-  //悪戯 (昼)
-  public $bad_status_day_list = array('amaze_mad');
-
-  //悪戯 (夜)
-  public $bad_status_night_list = array(
-    'soul_wizard', 'astray_wizard', 'pierrot_wizard', 'enchant_mad', 'light_fairy', 'dark_fairy',
-    'grass_fairy', 'sun_fairy', 'moon_fairy');
-
   //イベントセット用
   public $event_virtual_list = array('no_last_words', 'whisper_ringing', 'howl_ringing',
 				     'sweet_ringing', 'deep_sleep', 'mind_open');
@@ -216,9 +205,6 @@ class RoleManager{
   public $event_virtual_day_list = array(
     'actor', 'passion', 'rainbow', 'grassy', 'invisible', 'side_reverse', 'line_reverse',
     'critical_voter', 'critical_luck', 'blinder', 'earplug', 'silent', 'mower');
-
-  //悪戯 (迷彩/アイコン変更)
-  public $change_face_list = array('enchant_mad');
 
   //特殊勝敗判定 (ジョーカー系)
   public $joker_list = array('joker', 'rival');
@@ -261,7 +247,7 @@ class RoleManager{
   }
 
   function LoadMix($name){
-    if(! $this->LoadFile($name)) return NULL;
+    if(! $this->LoadFile($name)) return null;
     $class = 'Role_' . $name;
     return new $class();
   }
@@ -334,48 +320,49 @@ class Role{
     return method_exists($class, $method) ? new $class() : $this;
   }
 
-  //function __get($name){ return NULL; } //メモ
+  protected function GetProperty($property){
+    $class  = 'Role_' . $this->role;
+    $mix_in = new $class();
+    return isset($mix_in->$property) ? $mix_in->$property :
+      (isset($this->$property) ? $this->$property : null);
+  }
+
+  //function __get($name){ return null; } //メモ
 
   //-- 汎用関数 --//
   //ユーザ取得
-  protected function GetActor(){
-    global $ROLES;
-    return $ROLES->actor;
-  }
+  protected function GetActor(){ global $ROLES; return $ROLES->actor; }
 
   //ユーザ名取得
-  protected function GetUname($uname = NULL){
+  protected function GetUname($uname = null){
     return is_null($uname) ? $this->GetActor()->uname : $uname;
   }
 
   //ユーザ情報取得
-  protected function GetUser(){
-    global $USERS;
-    return $USERS->rows;
-  }
+  protected function GetUser(){ global $USERS; return $USERS->rows; }
 
   //データ初期化
-  protected function InitStack($name = NULL){
+  protected function InitStack($name = null){
     global $ROLES;
     $data = is_null($name) ? $this->role : $name;
     if(! property_exists($ROLES->stack, $data)) $ROLES->stack->$data = array();
   }
 
   //データ取得
-  protected function GetStack($name = NULL, $fill = false){
+  protected function GetStack($name = null, $fill = false){
     global $ROLES;
     $data = is_null($name) ? $this->role : $name;
-    return property_exists($ROLES->stack, $data) ? $ROLES->stack->$data : ($fill ? array() : NULL);
+    return property_exists($ROLES->stack, $data) ? $ROLES->stack->$data : ($fill ? array() : null);
   }
 
   //データセット
-  protected function SetStack($data, $role = NULL){
+  protected function SetStack($data, $role = null){
     global $ROLES;
     $ROLES->stack->{is_null($role) ? $this->role : $role} = $data;
   }
 
   //データ追加
-  protected function AddStack($data, $role = NULL, $uname = NULL){
+  protected function AddStack($data, $role = null, $uname = null){
     global $ROLES;
     $ROLES->stack->{is_null($role) ? $this->role : $role}[$this->GetUname($uname)] = $data;
   }
@@ -446,7 +433,7 @@ class Role{
 
   protected function SuddenDeathKill($id){
     global $USERS;
-    $USERS->SuddenDeath($id, 'SUDDEN_DEATH_' . $this->sudden_death);
+    $USERS->SuddenDeath($id, 'SUDDEN_DEATH', $this->sudden_death);
   }
 
   //-- 処刑集計処理 --//
@@ -457,23 +444,23 @@ class Role{
   protected function IsVoteKill(){ return $this->GetVoteKill() != ''; }
 
   //処刑者判定
-  protected function IsVoted($uname = NULL){
+  protected function IsVoted($uname = null){
     return $this->GetVoteKill() == $this->GetUname($uname);
   }
 
   //得票者名取得
-  protected function GetVotedUname($uname = NULL){
+  protected function GetVotedUname($uname = null){
     return array_keys($this->GetStack('target'), $this->GetUname($uname));
   }
 
   //投票先ユーザ名取得
-  protected function GetVoteTargetUname($uname = NULL){
+  protected function GetVoteTargetUname($uname = null){
     $stack = $this->GetStack('target');
     return $stack[$this->GetUname($uname)];
   }
 
   //投票者ユーザ取得
-  protected function GetVoteUser($uname = NULL){
+  protected function GetVoteUser($uname = null){
     global $USERS;
     return $USERS->ByRealUname($this->GetVoteTargetUname($uname));
   }
@@ -495,7 +482,7 @@ class Role{
   }
 
   //投票スキップ判定
-  function IgnoreVote(){ return $this->IsVote() ? NULL : $this->ignore_message; }
+  function IgnoreVote(){ return $this->IsVote() ? null : $this->ignore_message; }
 
   //-- 投票画面表示 (夜) --//
   //投票対象ユーザ取得
@@ -540,27 +527,24 @@ class Role{
     $user = $USERS->ByID($this->GetVoteNightTarget());
     $live = $USERS->IsVirtualLive($user->user_no); //仮想的な生死を判定
     if(! is_null($str = $this->IgnoreVoteNight($user, $live))) return $str;
-    $this->SetStack($USERS->ByReal($user->user_no)->uname, 'target_uname');
+    $this->SetStack($USERS->ByReal($user->user_no)->user_no, 'target_no');
     $this->SetStack($user->handle_name, 'target_handle');
-    return NULL;
+    return null;
   }
 
   //投票対象者取得 (夜)
-  function GetVoteNightTarget(){
-    global $RQ_ARGS;
-    return $RQ_ARGS->target_no;
-  }
+  function GetVoteNightTarget(){ global $RQ_ARGS; return $RQ_ARGS->target_no; }
 
   //投票スキップ判定 (夜)
   function IgnoreVoteNight($user, $live){
-    return ! $live || $this->IsActor($user->uname) ? '自分・死者には投票できません' : NULL;
+    return ! $live || $this->IsActor($user->uname) ? '自分・死者には投票できません' : null;
   }
 
   //-- 投票集計処理 (夜) --//
   //成功データ追加
-  protected function AddSuccess($target, $data = NULL, $null = false){
+  protected function AddSuccess($target, $data = null, $null = false){
     global $ROLES;
-    $ROLES->stack->{is_null($data) ? $this->role : $data}[$target] = $null ? NULL : true;
+    $ROLES->stack->{is_null($data) ? $this->role : $data}[$target] = $null ? null : true;
   }
 
   //投票者取得
@@ -574,7 +558,7 @@ class Role{
 
   //-- 勝敗判定 --//
   //勝利判定
-  function Win($victory){ return true; }
+  function Win($winner){ return true; }
 
   //生存判定
   protected function IsLive($strict = false){ return $this->GetActor()->IsLive($strict); }

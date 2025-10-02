@@ -7,7 +7,7 @@
   ・人狼襲撃耐性：常時無効
 */
 RoleManager::LoadFile('vampire');
-class Role_doom_vampire extends Role_vampire{
+class Role_doom_vampire extends Role_vampire {
   function __construct(){ parent::__construct(); }
 
   protected function InfectVampire($user){ return; }

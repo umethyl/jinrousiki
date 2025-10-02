@@ -1658,7 +1658,7 @@ B：「恋人陣営の勝利」
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#enchant_mad">狢</a>・<a href="wolf.php#amaze_mad">傘化け</a>・<a href="chiroptera.php#fairy_group">妖精系</a>
+<a href="chiroptera.php#fairy_group">妖精系</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

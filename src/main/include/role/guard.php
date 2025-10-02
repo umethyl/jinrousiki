@@ -14,8 +14,10 @@ class Role_guard extends Role{
   protected function OutputResult(){
     global $ROOM;
     if($ROOM->date < 1) return;
-    OutputSelfAbilityResult('GUARD_SUCCESS'); //護衛結果
-    if(! $ROOM->IsOption('seal_message')) OutputSelfAbilityResult('GUARD_HUNTED');  //狩り結果
+    if(! $ROOM->IsOption('seal_message')){
+      OutputSelfAbilityResult('GUARD_SUCCESS'); //護衛結果
+      OutputSelfAbilityResult('GUARD_HUNTED');  //狩り結果
+    }
   }
 
   function OutputAction(){ OutputVoteMessage('guard-do', 'guard_do', $this->action); }
@@ -35,7 +37,7 @@ class Role_guard extends Role{
   }
 
   //護衛
-  function Guard($user){
+  function Guard($user, $flag = false){
     global $ROOM, $ROLES, $USERS;
 
     $stack = array(); //護衛者検出
@@ -53,10 +55,11 @@ class Role_guard extends Role{
       if($failed = $filter->GuardFailed()) continue; //個別護衛失敗判定
       $result |= ! ($half && mt_rand(0, 1) > 0) && (! $limited || is_null($failed));
 
-      $filter->GuardAction(); //護衛実行処理
-      if(! $ROOM->IsOption('seal_message') &&
-	 $actor->IsFirstGuardSuccess($user->uname)){ //護衛成功メッセージを登録
-	$ROOM->SystemMessage($actor->GetHandleName($user->uname), 'GUARD_SUCCESS');
+      $filter->GuardAction($this->GetWolfVoter(), $flag); //護衛実行処理
+      //護衛成功メッセージを登録
+      if(! $ROOM->IsOption('seal_message') && $actor->IsFirstGuardSuccess($user->uname)){
+	$target = $USERS->GetHandleName($user->uname, true);
+	$ROOM->ResultAbility('GUARD_SUCCESS', 'success', $target, $actor->user_no);
       }
     }
     return $result;
@@ -68,10 +71,10 @@ class Role_guard extends Role{
   //護衛制限判定
   private function IsGuardLimited($user){
     return $user->IsRole(
-      'emissary_necromancer', 'detective_common', 'sacrifice_common', 'spell_common', 'reporter',
+      'emissary_necromancer', 'reporter', 'detective_common', 'sacrifice_common', 'spell_common',
       'clairvoyance_scanner', 'soul_wizard', 'barrier_wizard', 'pierrot_wizard', 'doll_master') ||
       ($user->IsRoleGroup('priest') &&
-       ! $user->IsRole('revive_priest', 'crisis_priest', 'widow_priest')) ||
+       ! $user->IsRole('crisis_priest', 'widow_priest', 'revive_priest')) ||
       $user->IsRoleGroup('assassin');
   }
 
@@ -79,7 +82,7 @@ class Role_guard extends Role{
   function GuardFailed(){ return false; }
 
   //護衛処理
-  function GuardAction(){}
+  function GuardAction($user, $flag){}
 
   //狩り
   function Hunt($user){
@@ -89,7 +92,8 @@ class Role_guard extends Role{
     if(in_array($user->uname, $this->GetStack('sacrifice')) || ! $this->IsHunt($user)) return false;
     $USERS->Kill($user->user_no, 'HUNTED');
     if(! $ROOM->IsOption('seal_message')){ //狩りメッセージを登録
-      $ROOM->SystemMessage($this->GetActor()->GetHandleName($user->uname), 'GUARD_HUNTED');
+      $target = $USERS->GetHandleName($user->uname, true);
+      $ROOM->ResultAbility('GUARD_HUNTED', 'hunted', $target, $this->GetActor()->user_no);
     }
   }
 
@@ -100,8 +104,8 @@ class Role_guard extends Role{
       'cursed_fox', 'cursed_angel', 'poison_chiroptera', 'cursed_chiroptera', 'boss_chiroptera',
       'cursed_avenger', 'critical_avenger') ||
       ($user->IsRoleGroup('mad') &&
-       ! $user->IsRole('mad', 'fanatic_mad', 'whisper_mad', 'swindle_mad', 'therian_mad',
-		       'revive_mad', 'immolate_mad')) ||
+       ! $user->IsRole('mad', 'fanatic_mad', 'whisper_mad', 'therian_mad', 'revive_mad',
+		       'immolate_mad')) ||
       ($user->IsRoleGroup('vampire') && ! $user->IsRole('vampire', 'scarlet_vampire'));
   }
 }

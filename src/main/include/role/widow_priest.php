@@ -22,12 +22,13 @@ class Role_widow_priest extends Role_priest{
     global $ROOM, $USERS;
 
     $dummy_boy = $USERS->ByID(1);
-    $str = "\t" . $dummy_boy->handle_name . "\t" . $dummy_boy->main_role;
+    $result = $dummy_boy->main_role;
+    $target = $dummy_boy->handle_name;
     foreach($role_flag->{$this->role} as $uname){
       $user = $USERS->ByUname($uname);
       if($user->IsDummyBoy()) continue;
       $user->AddRole('mind_sympathy');
-      $ROOM->SystemMessage($user->handle_name . $str, 'SYMPATHY_RESULT');
+      $ROOM->ResultAbility('SYMPATHY_RESULT', $result, $target, $user->user_no);
     }
   }
 }

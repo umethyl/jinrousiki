@@ -21,7 +21,7 @@ if(! ($SELF->IsDead() || $ROOM->IsFinished())){ //死者かゲーム終了後だ
 		     'からログインしなおしてください');
 }
 
-switch($RQ_ARGS->day_night){
+switch($RQ_ARGS->scene){
 case 'aftergame':
 case 'heaven':
   if(! $ROOM->IsFinished()){ //霊界・ゲーム終了後はゲーム終了後のみ
@@ -32,13 +32,13 @@ case 'heaven':
 default:
   if($ROOM->date < $RQ_ARGS->date ||
      ($ROOM->date == $RQ_ARGS->date &&
-      ($ROOM->IsDay() || $ROOM->day_night == $RQ_ARGS->day_night))){ //「未来」判定
+      ($ROOM->IsDay() || $ROOM->scene == $RQ_ARGS->scene))){ //「未来」判定
     OutputActionResult('入力データエラー', '入力データエラー：無効な日時です');
   }
 
   $ROOM->last_date = $ROOM->date;
   $ROOM->date      = $RQ_ARGS->date;
-  $ROOM->day_night = $RQ_ARGS->day_night;
+  $ROOM->scene     = $RQ_ARGS->scene;
   $USERS->SetEvent(true);
   break;
 }
@@ -47,7 +47,7 @@ default:
 OutputGamePageHeader(); //HTMLヘッダ
 
 $str = '<h1>ログ閲覧 ';
-switch($RQ_ARGS->day_night){
+switch($RQ_ARGS->scene){
 case 'beforegame':
   $str .= '(開始前)';
   break;
@@ -70,7 +70,7 @@ case 'heaven':
 }
 echo $str . '</h1>'."\n";
 
-if($RQ_ARGS->day_night == 'heaven'){
+if($RQ_ARGS->scene == 'heaven'){
   $ROOM->heaven_mode = true; //念のためセット
   OutputHeavenTalkLog(); //霊界会話ログ
 }

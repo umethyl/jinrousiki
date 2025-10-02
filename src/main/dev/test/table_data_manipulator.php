@@ -37,7 +37,6 @@ OutputHTMLHeader('Test Tools');
 //UpdateIconInfo('appearance', '東方夢時空', 181);
 //UpdateIconInfo('appearance', '東方怪綺談', 185, 186);
 //UpdateIconInfo('author', '夏蛍', 12, 77);
-//SendCommit();
 //ReconstructEstablishTime();
 //ReconstructStartTime();
 //ReconstructFinishTime();
@@ -51,8 +50,10 @@ OutputHTMLHeader('Test Tools');
 //ConvertTableEncode('talk');
 //ConvertTableEncode('user_entry');
 //ConvertTalkTableEncode('talk', array('uname', 'sentence'), 238);
-ConvertTableEncode('user_icon');
+//ConvertTableEncode('user_icon');
 //ConvertTableEncode('vote');
+//OutputExportIconTable();
+//$DB_CONF->Commit();
 OutputHTMLFooter();
 //UpdateRoomInfo('room_name', 'テスト', 1);
 //OutputActionResult('処理完了', '処理完了。');
@@ -76,6 +77,7 @@ function OpenFile($file){
 }
 
 //使用されているアイコンを削除する (from: 対象番号 / to: 代替番号)
+/* ロック処理を再設計しているので 2.0 では使用できない */
 function DeleteUsedIcon($from, $to){
   global $ICON_CONF;
 
@@ -120,7 +122,7 @@ function SqueezeIcon(){
   OptimizeTable('user_icon');
 }
 
-//村立て時刻再生成関数
+//村立て時刻再生成関数 (for 1.4, 1.5)
 function ReconstructEstablishTime($test = false){
   $room_list = FetchArray("SELECT room_no FROM room WHERE establish_time IS NULL ORDER BY room_no");
   //PrintData($room_list);
@@ -164,7 +166,7 @@ function ReconstructEstablishTime($test = false){
   }
 }
 
-//ゲーム開始時刻再生成関数
+//ゲーム開始時刻再生成関数 (for 1.4, 1.5)
 function ReconstructStartTime($test = false){
   $room_list = FetchArray("SELECT room_no FROM room WHERE start_time IS NULL ORDER BY room_no");
   $keyword = 'ゲーム開始：';
@@ -205,7 +207,7 @@ function ReconstructStartTime($test = false){
   }
 }
 
-//ゲーム終了時刻再生成関数
+//ゲーム終了時刻再生成関数 (for 1.4, 1.5)
 function ReconstructFinishTime($test = false){
   $room_list = FetchArray("SELECT room_no FROM room WHERE finish_time IS NULL ORDER BY room_no");
   //PrintData($room_list);
@@ -257,7 +259,7 @@ function UpdateRoomInfo($item, $value, $id){
   SendQuery("UPDATE room SET {$item} = '{$value}' WHERE room_no = {$id}");
 }
 
-//テーブルデータの文字コード変換
+//テーブルデータの文字コード変換 (for 1.4, 1.5)
 /* table : TABLE  */
 function ConvertTableEncode($table){
   $max = 0;
@@ -394,4 +396,21 @@ function ConvertTalkTableEncode($table, $recode_list, $start){
       }
     }
   }
+}
+
+function OutputExportIconTable(){
+  $query = 'SELECT * FROM user_icon ORDER BY icon_no';
+  $str = 'INSERT INTO `user_icon` (`icon_no`, `icon_name`, `icon_filename`, `icon_width`, ' .
+    '`icon_height`, `color`, `session_id`, `appearance`, `category`, `author`, `regist_date`, ' .
+    '`disable`) VALUES'."\n".'<br>';
+  foreach(FetchAssoc($query) as $stack){
+    extract($stack);
+    if($icon_no <= 10) continue;
+    $date = is_null($regist_date) ? 'NULL' : "'$regist_date'";
+    $bool = is_null($disable) ? 'NULL' : "'$disable'";
+    $str .= "({$icon_no}, '{$icon_name}', '{$icon_filename}', {$icon_width}, " .
+      "{$icon_height}, '{$color}', NULL, '{$appearance}', '{$category}', '{$author}', {$date}, " .
+      "$bool),\n<br>";
+  }
+  echo $str;
 }

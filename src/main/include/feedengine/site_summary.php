@@ -1,5 +1,5 @@
 <?php
-$INIT_CONF->LoadClass('ROOM_IMG');
+$INIT_CONF->LoadClass('ROOM_IMG', 'ROOM_OPT');
 
 class SiteSummary extends FeedEngine {
   var $room_info = array();
@@ -11,13 +11,13 @@ class SiteSummary extends FeedEngine {
     foreach ($rooms->rows as $room) {
       $title = "{$room->name}村";
       $url = "{$this->uri}game_view.php?room_no={$room->id}";
-      $options = GenerateGameOptionImage($room->game_option->row, $room->option_role->row);
+      $options = RoomOption::Wrap($room->game_option->row, $room->option_role->row)->GenerateImageList();
       $status = $ROOM_IMG->Generate($room->status);
       $description = <<<XHTML
 <div>
 <a href="{$url}">
 {$status}<span class='room_no'>[{$room->id}番地]</span><h2>{$title}</h2>
-〜 {$room->comment} 〜 {$options}(最大{$room->max_user}人)
+～ {$room->comment} 〜 {$options}(最大{$room->max_user}人)
 </a>
 </div>
 

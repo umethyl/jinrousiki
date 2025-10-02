@@ -668,10 +668,6 @@ class RoleMessageList{
     'message' => "[役割] [|人狼|陣営] [|狂人|系]\n　あなたは|囁き狂人|です。夜の|人狼|の相談に参加することができます。|人狼|と完璧な連携を組んで村を殲滅するのです！",
     'type' => 'mad');
 
-  public $swindle_mad = array(
-    'message' => "[役割] [|人狼|陣営] [|狂人|系]\n　あなたは|因幡兎|です。#占い#結果が|人狼|、#精神鑑定#結果が正常と判定されます。騙す事が信条の悪戯者。でも皮剥がれれば中身は人と変わらず。",
-    'type' => 'mad', 'delimiter' => array('#' => 'mage'));
-
   public $jammer_mad = array(
     'message' => "[役割] [|人狼|陣営] [|狂人|系]\n　あなたは|月兎|です。夜の間に誰か一人の#占い#を妨害することができます。#占い師#を月の魔性に狂わせ、村を破滅へ導くのです！",
     'type' => 'mad', 'delimiter' => array('#' => 'mage'));
@@ -1829,7 +1825,6 @@ class RoleMessageList{
   public $result_mad = array('message' => "さんは|狂人|でした", 'type' => 'result_wolf');
   public $result_fanatic_mad = array('message' => "さんは|狂信者|でした", 'type' => 'result_mad');
   public $result_whisper_mad = array('message' => "さんは|囁き狂人|でした", 'type' => 'result_mad');
-  public $result_swindle_mad = array('message' => "さんは|因幡兎|でした", 'type' => 'result_mad');
   public $result_jammer_mad = array('message' => "さんは|月兎|でした", 'type' => 'result_mad');
   public $result_voodoo_mad = array('message' => "さんは|呪術師|でした", 'type' => 'result_mad');
   public $result_enchant_mad = array('message' => "さんは|狢|でした", 'type' => 'result_mad');
@@ -2161,5 +2156,4 @@ $builder = new MessageImageBuilder('RoleMessageList');
 #$builder->Test('poison_ogre');
 #$builder->Output('prediction_weather_aurora');
 #$builder->Output('poison'); //128
-#$builder->Output('fire_mania');
-$builder->Output('swindle_mad', array(1, 1, 1, 1, 0, -0.5, 0.3, -0.5));
+$builder->Output('fire_mania');

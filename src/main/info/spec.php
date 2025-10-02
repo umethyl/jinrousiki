@@ -57,11 +57,16 @@ OutputInfoPageHeader('詳細な仕様');
 <li>ゲーム中は「遺言」発言をすると専用システムメッセージになります</li>
 <li>ゲーム開始前のみ遺言を変更できます</li>
 <li>投票能力がある役職であっても投票することはできません</li>
-<li><a href="#revive_refuse">蘇生辞退</a>を実行することで一部の<a href="game_option.php#open_cast_option">霊界公開設定</a>を変更することができます</li>
+<li>「<a href="#revive_refuse">蘇生辞退</a>」を実行することで一部の<a href="game_option.php#open_cast_option">霊界公開設定</a>を変更することができます</li>
+<li>「超過時間リセット」を実行することで投票超過時間をリセットすることができます</li>
 </ol>
+<h3>Ver. 2.0.0 α5～</h3>
+<pre>
+超過時間リセット機能実装
+</pre>
 <h3>Ver. 1.5.0 β14～</h3>
 <pre>
-<a href="#revive_refuse">蘇生辞退</a>を実行することで一部の<a href="game_option.php#open_cast_option">霊界公開設定</a>を変更することができます
+蘇生辞退機能実装
 </pre>
 <h3>Ver. 1.5.0 β2～</h3>
 <pre>
@@ -228,8 +233,8 @@ OutputInfoPageHeader('詳細な仕様');
 <h3 id="vote_night">夜</h3>
 <pre>
 + 処理順序
-  - 恋人 → 接触 → 夢 → 占い → &lt;日にち別処理&gt; → 憑依 → 後追い → 司祭
-    &lt;[初日] コピー → 帰還 / [二日目以降] 尾行 → 反魂 → 蘇生&gt;
+  - 恋人 → 接触 → 夢 → 占い → 透視 → コピー → 帰還 → 反魂 → 蘇生 →
+    憑依 → 覚醒コピー → 後追い → 蟲姫 → 司祭
 
 + 恋人 (<a href="new_role/lovers.php">恋人陣営</a>)
   - 相互作用はないので投票直後に処理を行う
@@ -237,9 +242,9 @@ OutputInfoPageHeader('詳細な仕様');
 + 接触 (罠・逃亡・護衛・身代わり・人狼襲撃・狩り・吸血・暗殺・人攫い)
   - 罠 ＞ 逃亡失敗 →
     罠 ＞ 狩人護衛 ＞ <a href="new_role/sub_role.php#challenge_lovers">難題</a> ＞ <a href="new_role/sub_role.php#protected">庇護者</a> ＞ 襲撃耐性 ＞ 身代わり ＞ 人狼襲撃 →
-    <a href="new_role/sub_role.php#death_note">デスノート</a> → 狩人の狩り → 罠能力者の罠死 → 罠 ＞ 狩人護衛 ＞ 吸血 →
+    <a href="new_role/sub_role.php#death_note">デスノート</a> → 狩り → 罠能力者の罠死 → 罠 ＞ 狩人護衛 ＞ 吸血 →
     罠 ＞ 無効判定 ＞ 反射判定 ＞ 暗殺 →
-    罠 ＞ 無効判定 ＞ 反射判定 ＞ 失敗判定 ＞ 人攫い → 凍傷判定 → <a href="new_role/sub_role.php#death_selected">オシラ遊び</a>
+    罠 ＞ 無効判定 ＞ 反射判定 ＞ 失敗判定 ＞ 人攫い → <a href="new_role/sub_role.php#death_selected">オシラ遊び</a> → 凍傷判定
 
   - <a href="new_role/ability.php#trap">罠能力者</a>
   - 逃亡能力者 (<a href="new_role/human.php#escaper_group">逃亡者系</a>)
@@ -258,6 +263,14 @@ OutputInfoPageHeader('詳細な仕様');
 
 + 占い判定 (<a href="new_role/sub_role.php#wisp_group">鬼火系</a>)
   - <a href="new_role/sub_role.php#sheep_wisp">羊皮</a> ＞ <a href="new_role/sub_role.php#wisp">鬼火</a> ＞ <a href="new_role/sub_role.php#foughten_wisp">古戦場火</a> ＞ <a href="new_role/sub_role.php#black_wisp">天火</a> ＞ 役職別判定
+
++ 透視 (<a href="new_role/human.php#mind_scanner_group">さとり系</a> / 1日目限定)
+
++ コピー (<a href="new_role/mania.php">神話マニア陣営</a> / 1日目限定)
+
++ 帰還 (<a href="new_role/human.php#revive_priest">天人</a> / 1日目限定)
+
++ 尾行 (<a href="new_role/human.php#reporter">ブン屋</a>・<a href="new_role/human.php#clairvoyance_scanner">猩々</a>)
 </pre>
 
 <h2 id="revive_refuse">蘇生辞退システム [Ver. 1.4.0 β7～]</h2>

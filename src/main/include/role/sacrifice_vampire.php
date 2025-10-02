@@ -5,7 +5,7 @@
   ・身代わり：自分の感染者
 */
 RoleManager::LoadFile('vampire');
-class Role_sacrifice_vampire extends Role_vampire{
+class Role_sacrifice_vampire extends Role_vampire {
   public $mix_in = 'protected';
   function __construct(){ parent::__construct(); }
 

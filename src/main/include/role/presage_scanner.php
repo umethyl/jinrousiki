@@ -16,10 +16,9 @@ class Role_presage_scanner extends Role_mind_scanner{
     $actor = $this->GetActor();
     foreach($this->GetUser() as $user){
       if($user->IsPartner($this->mind_role, $actor->user_no)){
-	$str = $user->handle_name . "\t" .
-	  $USERS->GetHandleName($actor->uname, true) . "\t" .
-	  $USERS->GetHandleName($target->uname, true);
-	$ROOM->SystemMessage($str, 'PRESAGE_RESULT');
+	$result = $USERS->GetHandleName($target->uname, true);
+	$target = $USERS->GetHandleName($actor->uname, true);
+	$ROOM->ResultAbility('PRESAGE_RESULT', $result, $target, $user->user_no);
 	break;
       }
     }

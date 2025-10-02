@@ -1,42 +1,70 @@
-﻿<?php
+<?php
 //オプションパーサ
-class OptionParser{
+class OptionParser {
   public $row;
   public $options = array();
 
   function __construct($value){
     $this->row = $value;
-    foreach(explode(' ', $this->row) as $option){
-      if(empty($option)) continue;
+    foreach (explode(' ', $this->row) as $option){
+      if (empty($option)) continue;
       $items = explode(':', $option);
       $this->options[$items[0]] = count($items) > 1 ? array_slice($items, 1) : true;
     }
   }
 
+  function  __isset($name) {
+    return isset($this->options[$name]);
+  }
+
+  function  __unset($name) {
+    unset($this->options[$name]);
+  }
+
   function __get($name){
-    $this->$name = array_key_exists($name, $this->options) ? $this->options[$name] : false;
-    return $this->$name;
+    if (isset($this->options[$name])) {
+      $value = $this->options[$name];
+      $this->$name = $value;
+      return $value;
+    }
+    $this->$name = false;
+    return null;
   }
 
   function __set($name, $value){
-    if($value === false)
-      unset($this->options[$name]);
-    else
-      $this->options[$name] = $value;
+    //Note:$value === falseの時unsetする代わりに__toStringで値がfalseの項目を省略する仕様に改めた(2011-01-14 enogu)
+    $this->options[$name] = $value;
   }
 
   function __toString(){
-    return '';
-    $result = '';
-    foreach($this->options as $name => $value){
-      $result = ' ' . is_array($value) ? "{$name}:" . implode(':', $value) : $name;
+    return $this->ToString();
+  }
+
+  function ToString($items = null) {
+    if (isset($items)) {
+      $filter = array_flip(is_array($items) ? $items : func_get_args());
     }
-    return $result;
+    else {
+      $filter = $this->options;
+    }
+    $result = array();
+    foreach (array_intersect_key($this->options, $filter) as $name => $value) {
+      if (is_bool($value)) {
+        if ($value) $result[] = $name;
+      }
+      elseif (is_array($value)) {
+        $result[] = "{$name}:" . implode(':', $value);
+      }
+      elseif (! empty($value)) {
+        $result[] = "{$name}:{$value}";
+      }
+    }
+    return implode(' ', $result);
   }
 
   function Option($value){
     $this->__construct($value);
-    foreach($this->options as $name => $value) $this->__get($name);
+    foreach ($this->options as $name => $value) $this->__get($name);
   }
 
   function Exists($name){ return array_key_exists($name, $this->options); }
@@ -65,8 +93,8 @@ class OptionManager{
   }
 
   protected function Load($name){
-    if(is_null($name) || ! file_exists($file = $this->path . '/' . $name . '.php')) return false;
-    if(in_array($name, $this->loaded)) return true;
+    if (is_null($name) || ! file_exists($file = $this->path . '/' . $name . '.php')) return false;
+    if (in_array($name, $this->loaded)) return true;
     require_once($file);
     $this->loaded[] = $name;
     return true;
@@ -75,8 +103,8 @@ class OptionManager{
   function SetRole(&$list, $count){
     global $ROOM;
 
-    foreach($this->role_list as $option){
-      if(! $ROOM->IsOption($option) || ! $this->Load($option)) continue;
+    foreach ($this->role_list as $option) {
+      if (! $ROOM->IsOption($option) || ! $this->Load($option)) continue;
       $class  = 'Option_' . $option;
       $filter = new $class();
       $filter->SetRole($list, $count);
@@ -87,30 +115,13 @@ class OptionManager{
     global $ROOM;
 
     $delete = $this->stack->delete;
-    foreach($this->cast_list as $option){
-      if(! $ROOM->IsOption($option) || ! $this->Load($option)) continue;
+    foreach ($this->cast_list as $option) {
+      if (! $ROOM->IsOption($option) || ! $this->Load($option)) continue;
       $class  = 'Option_' . $option;
       $filter = new $class();
       $stack  = $filter->Cast($list, $rand);
-      if(is_array($stack)) $delete = array_merge($delete, $stack);
+      if (is_array($stack)) $delete = array_merge($delete, $stack);
     }
     $this->stack->delete = $delete;
-  }
-}
-
-//オプション基底クラス
-class Option{
-  public $name;
-
-  function __construct(){ $this->name = array_pop(explode('Option_', get_class($this))); }
-
-  function CastOnce(&$list, &$rand, $str = ''){
-    $list[array_pop($rand)] .= ' ' . $this->name . $str;
-    return array($this->name);
-  }
-
-  function CastAll(&$list){
-    foreach(array_keys($list) as $id) $list[$id] .= ' ' . $this->name;
-    return array($this->name);
   }
 }

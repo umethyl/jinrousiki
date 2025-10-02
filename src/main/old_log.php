@@ -7,7 +7,7 @@ $DB_CONF->Connect(); //DB 接続
 ob_start();
 if($RQ_ARGS->is_room){
   $INIT_CONF->LoadFile('game_play_functions', 'talk_class');
-  $INIT_CONF->LoadClass('ROLES', 'ICON_CONF', 'VICT_MESS');
+  $INIT_CONF->LoadClass('ROLES', 'ICON_CONF', 'WINNER_MESS');
 
   $ROOM = new Room($RQ_ARGS);
   $ROOM->LoadOption();
@@ -19,9 +19,10 @@ if($RQ_ARGS->is_room){
 
   $USERS = new UserDataSet($RQ_ARGS);
   $USERS->SetEvent(true);
+  $USERS->player = $ROOM->LoadPlayer();
   if($ROOM->watch_mode || $ROOM->single_view_mode) $USERS->SaveRoleList();
 
-  $SELF  = $ROOM->single_view_mode ? $USERS->ByID($RQ_ARGS->user_no) : new User();
+  $SELF = $ROOM->single_view_mode ? $USERS->ByID($RQ_ARGS->user_no) : new User();
   if($ROOM->watch_mode) $SELF->live = 'live';
   OutputOldLog();
 }

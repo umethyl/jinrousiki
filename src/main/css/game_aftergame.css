@@ -1,8 +1,6 @@
-body{
-  background-color: #F0F8FF; /* 背景色 */
-  color: #000000; /* 文字色 */
+@charset "utf-8";
+@import url(anchor.css);
+body {
+  background-color: #F0F8FF;
+  color: #000000;
 }
-a:link{   color: #0000FF;}
-a:visited{color: #0000FF;}
-a:active{ color: #FF0000;}
-a:hover{  color: #FF0000;}

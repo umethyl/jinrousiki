@@ -1,26 +1,31 @@
-.vote-page{
+@charset "utf-8";
+.vote-page, .vote-page-link table {
   border: 0;
-  border-spacing: 5px;
   border-collapse: collapse;
 }
-.vote-page td{
-  border: 1px dotted;
-  width: 180px;
-  vertical-align: top;
-  font-size: 10pt;
-  line-height: 150%;
+.vote-page {
+  border-spacing: 5px;
 }
-.vote-page img{
+.vote-page td {
+  width: 180px;
+  border: 1px dotted;
+  vertical-align: top;
+  line-height: 150%;
+  font-size: 10pt;
+}
+.vote-page img {
   margin-right: 5px;
   border: 2px solid; /* 枠の色はアイコン毎 */
   float: left;
 }
-.vote-message{font-size:8pt;} /* メッセージ */
-.vote-page-link table{
-  border: 0;
-  border-collapse: collapse;
+.vote-message { /* メッセージ */
+  font-size: 8pt;
 }
-.vote-page-link td{
+.vote-page-link td {
   vertical-align: top;
   font-size: 14pt;
+}
+.add-action {
+  position: absolute;
+  left: 10px;
 }

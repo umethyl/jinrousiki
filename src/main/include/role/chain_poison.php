@@ -39,7 +39,7 @@ class Role_chain_poison extends Role{
 	  $stack[] = $id;
 	  continue;
 	}
-	$USERS->Kill($id, 'POISON_DEAD_day'); //死亡処理
+	$USERS->Kill($id, 'POISON_DEAD'); //死亡処理
 
 	if(! $target->IsRole($this->role)) continue; //連鎖判定
 	$ROLES->actor = $USERS->ByVirtual($target->user_no); //解毒判定

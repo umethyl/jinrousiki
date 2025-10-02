@@ -26,7 +26,7 @@ class Role_dummy_guard extends Role_guard{
 
       $flag = true;
       if(! $ROOM->IsOption('seal_message')){ //狩りメッセージを登録
-	$ROOM->SystemMessage($guard_user->handle_name . "\t" . $user->handle_name, 'GUARD_HUNTED');
+	$ROOM->ResultAbility('GUARD_HUNTED', 'hunted', $user->handle_name, $guard_user->user_no);
       }
     }
     if($flag) $USERS->Kill($user->user_no, 'HUNTED');
@@ -44,10 +44,11 @@ class Role_dummy_guard extends Role_guard{
       $target = $USERS->ByUname($target_uname);
       if(($target->IsRole('dream_eater_mad') || $target->IsRoleGroup('fairy')) &&
 	 $target->IsLive(true)){ //狩り判定 (獏・妖精系)
-	$list[$user->handle_name] = $target;
+	$list[$user->user_no] = $target;
       }
       //常時護衛成功メッセージだけが出る
-      $ROOM->SystemMessage($user->GetHandleName($target->uname), 'GUARD_SUCCESS');
+      $name = $USERS->GetHandleName($target->uname, true);
+      $ROOM->ResultAbility('GUARD_SUCCESS', 'success', $name, $user->user_no);
     }
   }
 
@@ -55,11 +56,11 @@ class Role_dummy_guard extends Role_guard{
   function DreamHunt($list){
     global $ROOM, $USERS;
 
-    foreach($list as $handle_name => $target){
+    foreach($list as $id => $target){
       $USERS->Kill($target->user_no, 'HUNTED');
       //憑依能力者は対象外なので仮想ユーザを引く必要なし
       if(! $ROOM->IsOption('seal_message')){ //狩りメッセージを登録
-	$ROOM->SystemMessage($handle_name . "\t" . $target->handle_name, 'GUARD_HUNTED');
+	$ROOM->ResultAbility('GUARD_HUNTED', 'hunted', $target->handle_name, $id);
       }
     }
   }

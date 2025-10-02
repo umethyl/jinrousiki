@@ -1,47 +1,76 @@
 <?php
 //-- データベース処理の基底クラス --//
-class DatabaseConfigBase{
+class DatabaseConfigBase {
   public $db_handle;
+  public $transaction = false;
+
   //データベース接続
   /*
     $header : HTML ヘッダ出力情報 [true: 出力済み / false: 未出力]
     $exit   : エラー処理 [true: exit を返す / false で終了]
   */
   function Connect($header = false, $exit = true){
+    //error_reporting(E_ALL);
     //データベースサーバにアクセス
-    if(! ($db_handle = mysql_connect($this->host, $this->user, $this->password))){
+    if (! ($db_handle = mysql_connect($this->host, $this->user, $this->password))) {
       return $this->OutputError($header, $exit, 'MySQL サーバ接続失敗', $this->host);
     }
 
     mysql_set_charset($this->encode); //文字コード設定
-    if(! mysql_select_db($this->name, $db_handle)){ //データベース接続
+    if (! mysql_select_db($this->name, $db_handle)) { //データベース接続
       return $this->OutputError($header, $exit, 'データベース接続失敗', $this->name);
     }
-    if($this->encode == 'utf8') mysql_query('SET NAMES utf8');
+    if ($this->encode == 'utf8') mysql_query('SET NAMES utf8');
     return $this->db_handle = $db_handle; //成功したらハンドルを返して処理終了
   }
 
-  //データベースとの接続を閉じる
-  function Disconnect($unlock = false){
-    if(empty($this->db_handle)) return;
+  //トランザクション開始
+  function Transaction(){
+    if ($this->transaction) return true; //トランザクション中ならスキップ
+    if (mysql_query('START TRANSACTION') === false) return false;
+    $this->transaction = true;
+    return true;
+  }
 
-    if($unlock) UnlockTable(); //ロック解除
+  //カウンタロック処理
+  function LockCount($type){
+    $query = "SELECT count FROM count_limit WHERE type = '{$type}' FOR UPDATE";
+    return $this->Transaction() && FetchBool($query);
+  }
+
+  //ロールバック処理
+  function Rollback(){
+    $this->transaction = false; //必要なら事前にフラグ判定を行う
+    return mysql_query('ROLLBACK') !== false;
+  }
+
+  //コミット処理
+  function Commit(){
+    $this->transaction = false;
+    return mysql_query('COMMIT') !== false;
+  }
+
+  //データベースとの接続を閉じる
+  function Disconnect(){
+    if (empty($this->db_handle)) return;
+
+    if ($this->transaction) $this->Rollback();
     mysql_close($this->db_handle);
-    unset($this->db_handle); //ハンドルをクリア
+    unset($this->db_handle);
   }
 
   //データベース名変更
   function ChangeName($id){
-    if(is_null($name = @$this->name_list[$id - 1])) return;
+    if (is_null($name = @$this->name_list[$id - 1])) return;
     $this->name = $name;
   }
 
   //エラー出力 ($header, $exit は Connect() 参照)
   private function OutputError($header, $exit, $title, $type){
     $str = $title . ': ' . $type; //エラーメッセージ作成
-    if($header){
+    if ($header) {
       echo '<font color="#FF0000">' . $str . '</font><br>';
-      if($exit) OutputHTMLFooter($exit);
+      if ($exit) OutputHTMLFooter($exit);
       return false;
     }
     OutputActionResult($title, $str);
@@ -49,7 +78,7 @@ class DatabaseConfigBase{
 }
 
 //-- セッション管理クラス --//
-class Session{
+class Session {
   public $id;
   public $user_no;
 
@@ -72,10 +101,9 @@ class Session{
 
   //DB に登録されているセッション ID と被らないようにする (private)
   function GetUniq(){
-    $query = 'SELECT COUNT(room_no) FROM user_entry WHERE session_id = ';
-    do{
+    do {
       $this->Reset();
-    }while(FetchResult($query ."'{$this->id}'") > 0);
+    } while (FetchCount("SELECT room_no FROM user_entry WHERE session_id = '{$this->id}'") > 0);
     return $this->id;
   }
 
@@ -85,18 +113,18 @@ class Session{
   //認証
   function Certify($exit = true){
     global $RQ_ARGS;
-    //$ip_address = $_SERVER['REMOTE_ADDR']; //IPアドレス認証は現在は行っていない
 
+    //$ip_address = $_SERVER['REMOTE_ADDR']; //IPアドレス認証は現在は行っていない
     //セッション ID による認証
     $query = "SELECT user_no FROM user_entry WHERE room_no = {$RQ_ARGS->room_no}" .
       " AND session_id = '{$this->id}' AND live <> 'kick'";
     $stack = FetchArray($query);
-    if(count($stack) == 1){
+    if (count($stack) == 1) {
       $this->user_no = $stack[0];
       return true;
     }
 
-    if($exit) $this->OutputError(); //エラー処理
+    if ($exit) $this->OutputError(); //エラー処理
     return false;
   }
 
@@ -104,20 +132,20 @@ class Session{
   function CertifyGamePlay(){
     global $RQ_ARGS;
 
-    if($this->Certify(false)) return true;
+    if ($this->Certify(false)) return true;
 
     //村が存在するなら観戦ページにジャンプする
-    if(FetchResult('SELECT COUNT(room_no) FROM room WHERE room_no = ' . $RQ_ARGS->room_no) > 0){
+    if (FetchCount('SELECT room_no FROM room WHERE room_no = ' . $RQ_ARGS->room_no) > 0) {
       $url   = 'game_view.php?room_no=' . $RQ_ARGS->room_no;
       $title = '観戦ページにジャンプ';
       $body  = "観戦ページに移動します。<br>\n" .
 	'切り替わらないなら <a href="' . $url . '" target="_top">ここ</a> 。'."\n" .
 	'<script type="text/javascript"><!--'."\n" .
-	'if(top != self){ top.location.href = self.location.href; }'."\n" .
+	'if (top != self){ top.location.href = self.location.href; }'."\n" .
 	'--></script>'."\n";
       OutputActionResult($title, $body, $url);
     }
-    else{
+    else {
       $this->OutputError();
     }
   }
@@ -131,14 +159,14 @@ class Session{
 }
 
 //-- クッキーデータのロード処理 --//
-class CookieDataSet{
-  public $day_night;  //夜明け
+class CookieDataSet {
+  public $scene;      //夜明け
   public $objection;  //「異議あり」の情報
   public $vote_times; //投票回数
   public $user_count; //参加人数
 
   function __construct(){
-    $this->day_night  = @$_COOKIE['day_night'];
+    $this->scene      = @$_COOKIE['scene'];
     $this->objection  = @$_COOKIE['objection'];
     $this->vote_times = @(int)$_COOKIE['vote_times'];
     $this->user_count = @(int)$_COOKIE['user_count'];
@@ -146,14 +174,14 @@ class CookieDataSet{
 }
 
 //-- 外部リンク生成の基底クラス --//
-class ExternalLinkBuilder{
-  public $time = 2; //タイムアウト時間 (秒)
+class ExternalLinkBuilder {
+  public $time = 5; //タイムアウト時間 (秒)
 
   //サーバ通信状態チェック (private)
   function CheckConnection($url){
-    $url_stack = explode('/', $url);
+    $url_stack  = explode('/', $url);
     $this->host = $url_stack[2];
-    if(! ($io = @fsockopen($this->host, 80, $status, $str, $this->time))) return false;
+    if (! ($io = @fsockopen($this->host, 80, $status, $str, $this->time))) return false;
 
     stream_set_timeout($io, $this->time);
     fwrite($io, "GET / HTTP/1.1\r\nHost: {$host}\r\nConnection: Close\r\n\r\n");
@@ -187,7 +215,7 @@ EOF;
 }
 
 //ゲームプレイ時のアイコン表示設定の基底クラス --//
-class IconConfigBase{
+class IconConfigBase {
   //初期設定
   public $path   = 'user_icon'; //ユーザアイコンのパス
   public $dead   = 'grave.gif'; //死者
@@ -205,10 +233,16 @@ class IconConfigBase{
   }
 
   function GenerateTag(){ return ' width="' . $this->width . '" height="' . $this->height . '"'; }
+
+  function GetUserIcon($user){
+    $format = '<img src="%s" style="border-color: %s;" alt="" align="middle" %s>';
+    $path = $this->path . '/' . $user->icon_filename;
+    return sprintf($format, $path, $user->color, $this->GenerateTag());
+  }
 }
 
 //-- ユーザアイコン管理の基底クラス --//
-class UserIconBase{
+class UserIconBase {
   // アイコンの文字数
   function MaxNameLength(){
     return '半角で' . $this->name . '文字、全角で' . floor($this->name / 2) . '文字まで';
@@ -226,7 +260,7 @@ class UserIconBase{
 }
 
 //-- 画像管理の基底クラス --//
-class ImageManager{
+class ImageManager {
   //画像のファイルパス取得 (private)
   function GetPath($name){
     return JINRO_IMG . '/' . $this->path . '/' . $name . '.' . $this->extension;
@@ -238,14 +272,14 @@ class ImageManager{
   //画像タグ生成
   function Generate($name, $alt = null, $table = false){
     $str = '<img';
-    if($this->class != '') $str .= ' class="' . $this->class . '"';
+    if ($this->class != '') $str .= ' class="' . $this->class . '"';
     $str .= ' src="' . $this->GetPath($name) . '"';
-    if(isset($alt)){
+    if (isset($alt)) {
       EscapeStrings($alt);
       $str .= ' alt="' . $alt . '" title="' . $alt . '"';
     }
     $str .= '>';
-    if($table) $str = '<td>' . $str . '</td>';
+    if ($table) $str = '<td>' . $str . '</td>';
     return $str;
   }
 
@@ -254,9 +288,9 @@ class ImageManager{
 }
 
 //-- 勝利陣営の画像処理の基底クラス --//
-class VictoryImageBase extends ImageManager{
+class WinnerImageBase extends ImageManager {
   function Generate($name, $alt = null, $table = null){
-    switch($name){
+    switch ($name){
     case 'human':
       $alt = '村人勝利';
       break;
@@ -297,8 +331,33 @@ class VictoryImageBase extends ImageManager{
   }
 }
 
+//-- 村のオプション画像 --//
+class RoomImage extends ImageManager {
+  /*
+    max[NN].gif という画像が該当パス内にあった場合は村の最大参加人数の表示に使用される。
+    例) max8.gif (8人村用)
+  */
+  public $path      = 'room_option';
+  public $extension = 'gif';
+  public $class     = 'option';
+}
+
+//-- 役職の画像 --//
+class RoleImage extends ImageManager {
+  public $path      = 'role';
+  public $extension = 'gif';
+  public $class     = '';
+}
+
+//-- 勝利陣営の画像 --//
+class WinnerImage extends WinnerImageBase {
+  public $path      = 'winner';
+  public $extension = 'gif';
+  public $class     = 'winner';
+}
+
 //-- 音源処理の基底クラス --//
-class SoundBase{
+class SoundConfigBase {
   //ファイルパス生成
   function GetPath($type, $file = null){
     $path = JINRO_ROOT . '/' . $this->path;
@@ -333,7 +392,7 @@ EOF;
 }
 
 //-- Twitter 投稿用の基底クラス --//
-class TwitterConfigBase{
+class TwitterConfigBase {
   //メッセージのセット
   function GenerateMessage($id, $name, $comment){ return true; }
 
@@ -341,33 +400,33 @@ class TwitterConfigBase{
   function Send($id, $name, $comment){
     global $SERVER_CONF;
 
-    if($this->disable) return;
+    if ($this->disable) return;
 
     $message = $this->GenerateMessage($id, $name, $comment);
-    if($SERVER_CONF->encode != 'UTF-8'){ //Twitter は UTF-8
+    if ($SERVER_CONF->encode != 'UTF-8') { //Twitter は UTF-8
       $message = mb_convert_encoding($message, 'UTF-8', $SERVER_CONF->encode);
     }
-    if(mb_strlen($message) > 140) $message = mb_substr($message, 0, 139);
+    if (mb_strlen($message) > 140) $message = mb_substr($message, 0, 139);
 
-    if($this->add_url){
+    if ($this->add_url) {
       $url = $SERVER_CONF->site_root;
-      if($this->direct_url) $url .= 'login.php?room_no=' . $id;
-      if($this->short_url){
+      if ($this->direct_url) $url .= 'login.php?room_no=' . $id;
+      if ($this->short_url) {
 	$short_url = @file_get_contents('http://tinyurl.com/api-create.php?url=' . $url);
-	if($short_url != '') $url = $short_url;
+	if ($short_url != '') $url = $short_url;
       }
-      if(mb_strlen($message . $url) + 1 < 140) $message .= ' ' . $url;
+      if (mb_strlen($message . $url) + 1 < 140) $message .= ' ' . $url;
     }
-    if(strlen($this->hash) > 0 && mb_strlen($message . $this->hash) + 2 < 140){
+    if (strlen($this->hash) > 0 && mb_strlen($message . $this->hash) + 2 < 140) {
       $message .= " #{$this->hash}";
     }
 
     //投稿
-    $to = new TwitterOAuth($this->key_ck, $this->key_cs, $this->key_at, $this->key_as);
-    $response = $to->OAuthRequest('https://api.twitter.com/1.1/statuses/update.json', 'POST',
-				  array('status' => $message));
+    $to  = new TwitterOAuth($this->key_ck, $this->key_cs, $this->key_at, $this->key_as);
+    $url = 'https://api.twitter.com/1/statuses/update.json';
+    $response = $to->OAuthRequest($url, 'POST', array('status' => $message));
 
-    if(! ($response === false || (strrpos($response, 'error')))) return true;
+    if (! ($response === false || (strrpos($response, 'error')))) return true;
     //エラー処理
     $sentence = 'Twitter への投稿に失敗しました。<br>'."\n" .
       'ユーザ名：' . $this->user . '<br>'."\n" . 'メッセージ：' . $message;
@@ -377,7 +436,7 @@ class TwitterConfigBase{
 }
 
 //-- 役職データベース --//
-class RoleData{
+class RoleData {
   //-- 役職名の翻訳 --//
   //メイン役職のリスト (コード名 => 表示名)
   //初日の役職通知リストはこの順番で表示される
@@ -543,7 +602,6 @@ class RoleData{
     'mad'                  => '狂人',
     'fanatic_mad'          => '狂信者',
     'whisper_mad'          => '囁き狂人',
-    'swindle_mad'          => '因幡兎',
     'jammer_mad'           => '月兎',
     'voodoo_mad'           => '呪術師',
     'enchant_mad'          => '狢',
@@ -961,7 +1019,6 @@ class RoleData{
     'mad'                  => '狂',
     'fanatic_mad'          => '狂信',
     'whisper_mad'          => '囁',
-    'swindle_mad'          => '幡',
     'jammer_mad'           => '兎',
     'voodoo_mad'           => '呪',
     'enchant_mad'          => '狢',
@@ -1458,15 +1515,15 @@ class RoleData{
   //-- 関数 --//
   //役職グループ判定
   function DistinguishRoleGroup($role){
-    foreach($this->main_role_group_list as $key => $value){
-      if(strpos($role, $key) !== false) return $value;
+    foreach ($this->main_role_group_list as $key => $value) {
+      if (strpos($role, $key) !== false) return $value;
     }
     return 'human';
   }
 
   //所属陣営判別
   function DistinguishCamp($role, $start = false){
-    switch($camp = $this->DistinguishRoleGroup($role)){
+    switch ($camp = $this->DistinguishRoleGroup($role)) {
     case 'wolf':
     case 'mad':
       return 'wolf';
@@ -1507,7 +1564,7 @@ class RoleData{
 
   //役職クラス (CSS) 判定
   function DistinguishRoleClass($role){
-    switch($class = $this->DistinguishRoleGroup($role)){
+    switch ($class = $this->DistinguishRoleGroup($role)) {
     case 'poison_cat':
       $class = 'cat';
       break;
@@ -1530,8 +1587,8 @@ class RoleData{
   //役職名のタグ生成
   function GenerateRoleTag($role, $css = null, $sub_role = false){
     $str = '';
-    if(is_null($css)) $css = $this->DistinguishRoleClass($role);
-    if($sub_role) $str .= '<br>';
+    if (is_null($css)) $css = $this->DistinguishRoleClass($role);
+    if ($sub_role) $str .= '<br>';
     $str .= '<span class="' . $css . '">[' .
       ($sub_role ? $this->sub_role_list[$role] : $this->main_role_list[$role]) . ']</span>';
     return $str;
@@ -1545,15 +1602,15 @@ class RoleData{
 
   //役職の説明ページへのリンク生成
   function GenerateRoleLink($role){
-    if(array_key_exists($role, $this->sub_role_list)){
+    if (array_key_exists($role, $this->sub_role_list)) {
       $url  = 'sub_role';
       $name = $this->sub_role_list[$role];
     }
-    elseif($this->DistinguishCamp($role, true) == 'mania'){
+    elseif ($this->DistinguishCamp($role, true) == 'mania') {
       $url  = 'mania';
       $name = $this->main_role_list[$role];
     }
-    else{
+    else {
       $url  = $this->DistinguishCamp($role);
       $name = $this->main_role_list[$role];
     }
@@ -1565,18 +1622,21 @@ class RoleData{
 }
 
 //-- 「福引」生成の基底クラス --//
-class LotteryBuilder{
+class LotteryBuilder {
   //「福引き」を一定回数行ってリストに追加する
   function AddRandom(&$list, $random_list, $count){
     $total = count($random_list) - 1;
-    for(; $count > 0; $count--) $list[$random_list[mt_rand(0, $total)]]++;
+    for (; $count > 0; $count--) {
+      $role = $random_list[mt_rand(0, $total)];
+      isset($list[$role]) ? $list[$role]++ : $list[$role] = 1;
+    }
   }
 
   //「比」の配列から「福引き」を作成する
   function GenerateRandomList($list){
     $stack = array();
-    foreach($list as $role => $rate){
-      for(; $rate > 0; $rate--) $stack[] = $role;
+    foreach ($list as $role => $rate) {
+      for (; $rate > 0; $rate--) $stack[] = $role;
     }
     return $stack;
   }
@@ -1585,7 +1645,7 @@ class LotteryBuilder{
   function RateToProbability($list){
     $stack = array();
     $total_rate = array_sum($list);
-    foreach($list as $role => $rate){
+    foreach ($list as $role => $rate) {
       $stack[$role] = sprintf('%01.2f', $rate / $total_rate * 100);
     }
     PrintData($stack);
@@ -1593,18 +1653,18 @@ class LotteryBuilder{
 }
 
 //-- 配役設定の基底クラス --//
-class GameConfigBase extends LotteryBuilder{
+class GameConfigBase extends LotteryBuilder {
   //天候決定
   function GetWeather(){ return GetRandom($this->GenerateRandomList($this->weather_list)); }
 }
 
 //-- 配役設定の基底クラス --//
-class CastConfigBase extends LotteryBuilder{
+class CastConfigBase extends LotteryBuilder {
   //闇鍋モードの配役リスト取得
-  function GetChaosRateList($name, $filter){
+  function GetChaosRateList($name, $filter) {
     $list = $this->$name;
-    foreach($filter as $role => $rate){ //出現率補正
-      if(array_key_exists($role, $list)) $list[$role] = round($list[$role] * $rate);
+    foreach ($filter as $role => $rate) { //出現率補正
+      if (array_key_exists($role, $list)) $list[$role] = round($list[$role] * $rate);
     }
     return $list;
   }
@@ -1615,7 +1675,7 @@ class CastConfigBase extends LotteryBuilder{
 
     $stack = $this->disable_dummy_boy_role_list; //サーバ個別設定を取得
     array_push($stack, 'wolf', 'fox'); //常時対象外の役職を追加
-    if($ROOM->IsOption('detective') && ! in_array('detective_common', $stack)){ //探偵村対応
+    if ($ROOM->IsOption('detective') && ! in_array('detective_common', $stack)) { //探偵村対応
       $stack[] = 'detective_common';
     }
     return $stack;
@@ -1626,34 +1686,36 @@ class CastConfigBase extends LotteryBuilder{
     global $ROOM;
 
     $stack = array();
-    foreach(array_keys($ROOM->option_role->options) as $option){ //処理順にオプションを登録
-      if($option == 'replace_human' || strpos($option, 'full_') === 0)
+    foreach (array_keys($ROOM->option_role->options) as $option) { //処理順にオプションを登録
+      if ($option == 'replace_human' || strpos($option, 'full_') === 0) {
 	$stack[0][] = $option;
-      elseif(strpos($option, 'change_') === 0)
+      }
+      elseif (strpos($option, 'change_') === 0) {
 	$stack[1][] = $option;
+      }
     }
     //PrintData($stack);
 
-    foreach($stack as $order => $option_list){
-      foreach($option_list as $option){
-	if(array_key_exists($option, $this->replace_role_list)){ //管理者設定
+    foreach ($stack as $order => $option_list) {
+      foreach ($option_list as $option) {
+	if (array_key_exists($option, $this->replace_role_list)) { //管理者設定
 	  $target = $this->replace_role_list[$option];
 	  $role   = array_pop(explode('_', $option));
 	}
-	elseif($order == 0){ //村人置換
+	elseif ($order == 0) { //村人置換
 	  $target = array_pop(explode('_', $option, 2));
 	  $role   = 'human';
 	}
-	else{ //共有者・狂人・キューピッド置換
+	else { //共有者・狂人・キューピッド置換
 	  $target = array_pop(explode('_', $option, 2));
 	  $role   = $target == 'angel' ? 'cupid' : array_pop(explode('_', $target));
 	}
 
-	$count = $role_list[$role];
-	if($role == 'human' && $ROOM->IsOption('gerd')) $count--; //ゲルト君モード
-	if($count > 0){ //置換処理
-	  $role_list[$target] += $count;
-	  $role_list[$role]   -= $count;
+	$count = isset($role_list[$role]) ? $role_list[$role] : 0;
+	if ($role == 'human' && $ROOM->IsOption('gerd')) $count--; //ゲルト君モード
+	if ($count > 0) { //置換処理
+	  @$role_list[$target] += $count;
+	  $role_list[$role]    -= $count;
 	}
       }
     }
@@ -1670,15 +1732,15 @@ class CastConfigBase extends LotteryBuilder{
     $role_list = array(); //初期化処理
     $this->InitializeDuel($user_count);
 
-    if(array_sum($this->duel_fix_list) <= $user_count){
-      foreach($this->duel_fix_list as $role => $count) $role_list[$role] = $count;
+    if (array_sum($this->duel_fix_list) <= $user_count) {
+      foreach ($this->duel_fix_list as $role => $count) $role_list[$role] = $count;
     }
     $rest_user_count = $user_count - array_sum($role_list);
     asort($this->duel_rate_list);
     $total_rate = array_sum($this->duel_rate_list);
     $max_rate_role = array_pop(array_keys($this->duel_rate_list));
-    foreach($this->duel_rate_list as $role => $rate){
-      if($role == $max_rate_role) continue;
+    foreach ($this->duel_rate_list as $role => $rate) {
+      if ($role == $max_rate_role) continue;
       $role_list[$role] = round($rest_user_count / $total_rate * $rate);
     }
     $role_list[$max_rate_role] = $user_count - array_sum($role_list);
@@ -1688,17 +1750,17 @@ class CastConfigBase extends LotteryBuilder{
   }
 
   //配役フィルタリング処理
-  function FilterRoles($user_count, $filter){
+  function FilterRoles($user_count, $filter) {
     $stack = array();
-    foreach($this->role_list[$user_count] as $key => $value){
+    foreach ($this->role_list[$user_count] as $key => $value) {
       $role = 'human';
-      foreach($filter as $set_role){
-	if(strpos($key, $set_role) !== false){
+      foreach ($filter as $set_role) {
+	if (strpos($key, $set_role) !== false) {
 	  $role = $set_role;
 	  break;
 	}
       }
-      $stack[$role] += (int)$value;
+      @$stack[$role] += (int)$value;
     }
     return $stack;
   }

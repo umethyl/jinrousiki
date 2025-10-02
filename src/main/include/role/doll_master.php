@@ -13,7 +13,7 @@ class Role_doll_master extends Role_doll{
 
   protected function OutputPartner(){ return; }
 
-  function Win($victory){ return true; }
+  function Win($winner){ return true; }
 
   function IsSacrifice($user){ return Role_doll::IsDoll($user); }
 }

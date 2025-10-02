@@ -4,6 +4,12 @@ require_once(JINRO_ROOT . '/include/init.php');
 $INIT_CONF->LoadFile('info_functions');
 OutputInfoPageHeader('開発者向け情報', 1);
 ?>
+<h2>Ver. 2 について</h2>
+<ul>
+  <li>データベースのテーブル構成が Ver. 1 と違うので<font color="#FF0000">ログの互換性がありません</font></li>
+  <li>ユーザアイコンのみ互換性が保たれる予定なので Ver. 1 からインポート可能です</li>
+</ul>
+
 <h2>デバッグモードについて</h2>
 <ul>
   <li>一部のセキュリティチェックがスキップされます</li>

@@ -1,44 +1,28 @@
 @charset "utf-8";
 @import url(base.css);
-a:link{   color: #0000FF;}
-a:visited{color: #0000FF;}
-a:active {color: #FF0000;}
-a:hover { color: #FF0000;}
-#room_list{
- background-color: #FFFFFF;
- background-image: url("../img/old_log_bg.jpg");
- background-repeat: no-repeat;
- background-position: 100% 100%;
- background-attachment: fixed;
+@import url(anchor.css);
+@import url(body_bg.css);
+body {
+  background-color: #FFFAF0;
+  background-image: url("../img/bg/old_log.png");
 }
-#room_list table{
- filter: alpha(opacity=80, enabled=80)
- -moz-opacity: 0.8;
- opacity: 0.8;
-}
-h1{
- font-size: 12pt;
- font-weight: normal;
-}
-h1 em{
- font-size: 15pt;
- font-weight: bold;
- font-style: normal;
-}
-table{
-  border-width: 0;
-  border-collapse: collapse;
-}
-td{border-width: 0;}
-.list{   text-align: right;}
-.list td{text-align: right;}
-.icon{text-align: left;}
-.main{
-  background-color: #CCCCCC;
-  border: 1px solid #FFFFFF;
+div {
   text-align: center;
 }
-th{
+table {
+  filter: alpha(opacity=80, enabled=80);
+  -moz-opacity: 0.8;
+  opacity: 0.8;
+  margin-left:  auto;
+  margin-right: auto;
+  border: 1px solid #000000;
+  border-collapse: collapse;
+}
+caption {
+  margin-bottom: 5px;
+  text-align: right;
+}
+th {
   margin: 0px;
   padding : 3px 3px 3px 6px;
   border: 1px solid #000000;
@@ -46,40 +30,58 @@ th{
   color: #FFFFFF;
   white-space: nowrap;
 }
-.main td{
-  margin: 0px;
+tbody tr, tbody td {
+  text-align: right;
+}
+.main {
+  background-color: #CCCCCC;
+  border: 1px solid #FFFFFF;
+  text-align: center;
+}
+td {
   padding: 3px 3px 3px 6px;
   background-color: #F2EACE;
   color: #333333;
   vertical-align: middle;
 }
-.number{border: 1px solid  #000000;}
-.title{
+.title {
   border-top:    1px solid  #000000;
   border-right:  1px solid  #000000;
   border-left:   1px solid  #000000;
   border-bottom: 1px dotted #CCCCCC;
 }
-.upper{
+.upper {
   border-right:  1px dotted #CCCCCC;
   border-bottom: 1px dotted #CCCCCC;
 }
-.side{
+.side {
   border-right:  1px solid  #000000;
   border-bottom: 1px dotted #CCCCCC;
 }
-.middle{
+.middle {
   border-bottom: 1px dotted #CCCCCC;
 }
-.lower td{
+.lower td {
   border-right:  1px solid  #000000;
   border-left:   1px solid  #000000;
   border-bottom: 1px solid  #000000;
   vertical-align: middle;
 }
-.lower img{vertical-align: middle;}
-.comment{font-size: 75%;}
-.time{
-  text-align: center;
+.lower img {
+  vertical-align: middle;
+}
+.time {
   border-right:  1px solid  #000000;
+}
+.number {
+  border: 1px solid  #000000;
+}
+.comment {
+  font-size: 75%;
+}
+.icon {
+  text-align: left;
+}
+.vanish a:link, .vanish a:visited {
+  color: #909090;
 }

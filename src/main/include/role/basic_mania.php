@@ -5,9 +5,9 @@
   ・コピー：基本種
 */
 RoleManager::LoadFile('mania');
-class Role_basic_mania extends Role_mania{
+class Role_basic_mania extends Role_mania {
   public $copied = 'copied_basic';
   function __construct(){ parent::__construct(); }
 
-  protected function GetCopyRole($user){ return $user->DistinguishRoleGroup(); }
+  protected function GetManiaRole($user){ return $user->DistinguishRoleGroup(); }
 }

@@ -13,5 +13,5 @@ class Role_immolate_mad extends Role{
     return false;
   }
 
-  function Win($victory){ return $this->GetActor()->IsRole('muster_ability'); }
+  function Win($winner){ return $this->GetActor()->IsRole('muster_ability'); }
 }

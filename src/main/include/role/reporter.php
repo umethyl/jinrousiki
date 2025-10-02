@@ -27,8 +27,8 @@ class Role_reporter extends Role{
     if($user->IsSame($target->uname)){ //尾行成功
       if(! $user->wolf_eat) return; //人狼襲撃が失敗していたらスキップ
       $result = $USERS->GetHandleName($this->GetWolfVoter()->uname, true);
-      $str    = $this->GetActor()->GetHandleName($target->uname, $result);
-      $ROOM->SystemMessage($str, $this->result);
+      $name   = $USERS->GetHandleName($target->uname, true);
+      $ROOM->ResultAbility($this->result, $result, $name, $this->GetActor()->user_no);
     }
     elseif($user->IsLiveRoleGroup('wolf', 'fox')){ //尾行対象が人狼か妖狐なら殺される
       $USERS->Kill($this->GetActor()->user_no, 'REPORTER_DUTY');

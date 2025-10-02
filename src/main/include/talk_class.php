@@ -1,41 +1,32 @@
 <?php
 class Talk{
-  public $uname;
-  public $location;
   public $scene;
-  public $type;
+  public $location;
+  public $uname;
+  public $action;
   public $sentence;
   public $font_type;
+  public $time;
+  public $date_time;
 
-  function __construct($list = NULL){
+  function __construct($list = null){
     if(is_array($list)){
       foreach($list as $key => $data) $this->$key = $data;
     }
-    $this->ParseLocation();
+    if(isset($this->time)) $this->date_time = TZDate('(Y/m/d (D) H:i:s)', $this->time);
     $this->ParseSentence();
   }
 
-  //シーン解析
-  function ParseLocation($location = NULL){
-    if(! is_null($location)) $this->location = $location; //初期化処理
-
-    @list($scene, $type) = explode(' ', $this->location);
-    $this->scene = $scene;
-    $this->type  = $type;
-  }
-
   //データ解析
-  protected function ParseSentence($sentence = NULL){
+  protected function ParseSentence($sentence = null){
     global $GAME_CONF, $MESSAGE;
 
     is_null($sentence) ? $sentence = $this->sentence : $this->sentence = $sentence; //初期化処理
 
     switch($this->uname){ //システムユーザ系の処理
     case 'system':
-      $action = strtok($sentence, "\t");
-      switch($action){
+      switch($this->action){
       case 'MORNING':
-	$sentence = strtok("\t");
 	$this->sentence = "{$MESSAGE->morning_header} {$sentence} {$MESSAGE->morning_footer}";
 	return;
 
@@ -46,16 +37,15 @@ class Talk{
       return;
 
     case 'dummy_boy':
-      if($this->type == 'system') break;
-      if($this->type == $this->uname){
+      if($this->location == 'system') break;
+      if($this->location == $this->uname){
 	if($GAME_CONF->quote_words) $sentence = '「' . $sentence . '」';
 	$this->sentence = $MESSAGE->dummy_boy . $sentence;
       }
       return;
     }
 
-    if($this->type == 'system'){ //投票データ系
-      $this->action = strtok($sentence, "\t");
+    if($this->location == 'system'){ //投票データ系
       $action = strtolower($this->action);
       switch($this->action){ //大文字小文字をきちんと区別してマッチングする
       case 'OBJECTION':
@@ -136,7 +126,7 @@ class Talk{
 	$this->class = strtr($action, '_', '-');
 	break;
       }
-      $this->sentence = ' は ' . strtok("\t") . ' ' . $MESSAGE->$action;
+      $this->sentence = ' は ' . $this->sentence . ' ' . $MESSAGE->$action;
       return;
     }
   }

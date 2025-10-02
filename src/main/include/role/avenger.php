@@ -24,18 +24,19 @@ class Role_avenger extends Role_valkyrja_duelist{
     if(count($stack) != $count) return '指定人数は' . $count . '人にしてください';
 
     $user_list  = array();
+    sort($stack);
     foreach($stack as $id){
       $user = $USERS->ByID($id);
       if($this->IsActor($user->uname) || $user->IsDead() || $user->IsDummyBoy()){ //例外判定
 	return '自分・死者・身代わり君には投票できません';
       }
-      $user_list[] = $user;
+      $user_list[$id] = $user;
     }
     $this->VoteNightAction($user_list);
-    return NULL;
+    return null;
   }
 
-  function Win($victory){
+  function Win($winner){
     $actor = $this->GetActor();
     $id    = $actor->user_no;
     $count = 0;

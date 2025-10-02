@@ -1,3 +1,3 @@
-function change_css(day_night){
-  parent.up.document.getElementById('day_night').href = 'css/game_' + day_night + '.css';
+function change_css(scene){
+  parent.up.document.getElementById('scene').href = 'css/game_' + scene + '.css';
 }

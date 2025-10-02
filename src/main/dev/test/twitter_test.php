@@ -9,9 +9,9 @@ if($DISABLE_TWITTER_TEST){
 $INIT_CONF->LoadClass('ROOM_CONF', 'TWITTER');
 
 //-- 投稿テスト用データ --//
-$room_no     = 'xxx';
-$room_name   = 'Twitter投稿テスト';
-$room_comment= 'Twitter投稿テストです';
+$room_no      = 'xxx';
+$room_name    = 'Twitter投稿テスト';
+$room_comment = 'Twitter投稿テストです';
 
 //-- 表示 --//
 OutputHTMLHeader('Twitter投稿テストツール', 'game');

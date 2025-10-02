@@ -14,7 +14,7 @@ $RQ_ARGS->TestItems->test_room = array(
   'game_option'  => 'dummy_boy real_time:6:4',
   'option_role' => '',
   'date' => 0,
-  'day_night' => 'day',
+  'scene' => 'day',
   'status' => 'waiting'
 );
 $RQ_ARGS->TestItems->is_virtual_room = true;
@@ -76,8 +76,7 @@ foreach($RQ_ARGS->TestItems->test_users as $id => $user){
   $user->sex = $id % 1 == 0 ? 'female' : 'male';
   $user->profile = '';
   $user->live = 'live';
-  $user->last_load_day_night = 'beforegame';
-  $user->is_system = $user->user_no == 1;
+  $user->last_load_scene = 'beforegame';
   if($id > 1){
     $user->color = $icon_color_list[($id - 2) % 10];
     $user->icon_filename = sprintf('%03d.gif', ($id - 2) % 10 + 1);
@@ -94,11 +93,11 @@ foreach($RQ_ARGS->TestItems->test_users as $id => $user){
 $ROOM = new Room($RQ_ARGS); //村情報を取得
 $ROOM->test_mode = true;
 $ROOM->log_mode  = true;
-switch($_GET['day_night']){
+switch($_GET['scene']){
 case 'beforegame':
 case 'day':
 case 'night':
-  $ROOM->day_night = $_GET['day_night'];
+  $ROOM->scene = $_GET['scene'];
   break;
 }
 $USERS = new UserDataSet($RQ_ARGS); //ユーザ情報をロード
@@ -165,9 +164,9 @@ if(false){
 
 //-- データ出力 --//
 OutputHTMLHeader('表示テスト', 'game'); //HTMLヘッダ
-echo '<link rel="stylesheet" href="' . JINRO_CSS . '/game_' . $ROOM->day_night . '.css">'."\n";
+echo '<link rel="stylesheet" href="' . JINRO_CSS . '/game_' . $ROOM->scene . '.css">'."\n";
 echo '</head><body>'."\n";
-//PrintData($ROOM->day_night, $_GET['day_night']);
+//PrintData($ROOM->scene, $_GET['scene']);
 OutputPlayerList(); //プレイヤーリスト
 OutputHTMLFooter(true); //HTMLフッタ
 
@@ -221,19 +220,19 @@ echo <<<EOF
 <br><br>
 [夜]：<br>
 身代わり君：
-<a href="view_test.php?day_night=night&dummy_boy=1">1</a> /
-<a href="view_test.php?day_night=night&dummy_boy=2">2</a> /
-<a href="view_test.php?day_night=night&dummy_boy=3">3</a><br>
+<a href="view_test.php?scene=night&dummy_boy=1">1</a> /
+<a href="view_test.php?scene=night&dummy_boy=2">2</a> /
+<a href="view_test.php?scene=night&dummy_boy=3">3</a><br>
 人狼：
-<a href="view_test.php?day_night=night&wolf=1">1</a> /
-<a href="view_test.php?day_night=night&wolf=2">2</a> /
-<a href="view_test.php?day_night=night&wolf=3">3</a> /
-<a href="view_test.php?day_night=night&wolf=4">4</a> /
-<a href="view_test.php?day_night=night&wolf=5">5</a><br>
+<a href="view_test.php?scene=night&wolf=1">1</a> /
+<a href="view_test.php?scene=night&wolf=2">2</a> /
+<a href="view_test.php?scene=night&wolf=3">3</a> /
+<a href="view_test.php?scene=night&wolf=4">4</a> /
+<a href="view_test.php?scene=night&wolf=5">5</a><br>
 死亡：
 EOF;
 foreach(array_keys($dead_list) as $id){
-  echo '<a href="view_test.php?day_night=night&dead=' . $id . '">' . $id . '</a> /'."\n";
+  echo '<a href="view_test.php?scene=night&dead=' . $id . '">' . $id . '</a> /'."\n";
 }
 
 echo <<<EOF
@@ -241,7 +240,7 @@ echo <<<EOF
 身代わり君(東方)：
 EOF;
 foreach(array_keys($t_dummy_list) as $id){
-  echo '<a href="view_test.php?day_night=night&t_dummy_boy=' . $id . '">' . $id . '</a> /'."\n";
+  echo '<a href="view_test.php?scene=night&t_dummy_boy=' . $id . '">' . $id . '</a> /'."\n";
 }
 
 echo <<<EOF
@@ -249,7 +248,7 @@ echo <<<EOF
 人狼(東方)：
 EOF;
 foreach(array_keys($t_wolf_list) as $id){
-  echo '<a href="view_test.php?day_night=night&t_wolf=' . $id . '">' . $id . '</a> /'."\n";
+  echo '<a href="view_test.php?scene=night&t_wolf=' . $id . '">' . $id . '</a> /'."\n";
 }
 
 echo <<<EOF
@@ -257,7 +256,7 @@ echo <<<EOF
 死亡(東方)：
 EOF;
 foreach(array_keys($t_dead_list) as $id){
-  echo '<a href="view_test.php?day_night=night&t_dead=' . $id . '">' . $id . '</a> /'."\n";
+  echo '<a href="view_test.php?scene=night&t_dead=' . $id . '">' . $id . '</a> /'."\n";
 }
 
 OutputHTMLFooter(); //HTMLフッタ

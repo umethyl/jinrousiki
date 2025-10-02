@@ -25,7 +25,7 @@ class Role_sacrifice_ogre extends Role_ogre{
     OutputPartner($stack, 'psycho_infected_list');
   }
 
-  function Win($victory){ return $victory != 'human' && $this->IsLive(); }
+  function Win($winner){ return $winner != 'human' && $this->IsLive(); }
 
   function GetResistRate(){ return 0; }
 

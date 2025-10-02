@@ -12,7 +12,7 @@ class Role_exchange_angel extends Role_angel{
 
   //交換憑依処理
   function Exchange(){
-    global $ROOM, $USERS;
+    global $USERS;
 
     //変数を初期化
     $angel_list    = array();
@@ -58,13 +58,9 @@ class Role_exchange_angel extends Role_angel{
       $target_list = $angel_list[$id];
       $lovers_a = $USERS->ByID($target_list[0]);
       $lovers_b = $USERS->ByID($target_list[1]);
-      $lovers_a->AddRole('mind_sympathy possessed_exchange[' . $target_list[1] . ']');
-      $sentence = $lovers_a->handle_name . "\t" . $lovers_b->handle_name . "\t";
-      $ROOM->SystemMessage($sentence . $lovers_b->main_role, 'SYMPATHY_RESULT');
-
-      $lovers_b->AddRole('mind_sympathy possessed_exchange[' . $target_list[0] . ']');
-      $sentence = $lovers_b->handle_name . "\t" . $lovers_a->handle_name . "\t";
-      $ROOM->SystemMessage($sentence . $lovers_a->main_role, 'SYMPATHY_RESULT');
+      $lovers_a->AddRole('possessed_exchange[' . $target_list[1] . ']');
+      $lovers_b->AddRole('possessed_exchange[' . $target_list[0] . ']');
+      $this->SetSympathy($lovers_a, $lovers_b);
     }
   }
 }

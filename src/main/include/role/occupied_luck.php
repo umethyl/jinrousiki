@@ -9,5 +9,5 @@ class Role_occupied_luck extends Role{
 
   protected function IgnoreAbility(){ global $ROOM; return $ROOM->date < 2; }
 
-  function FilterVoted(&$number){ $number += $this->IsLivePartner() ? 1 : 3; }
+  function FilterVotePoll(&$number){ $number += $this->IsLivePartner() ? 1 : 3; }
 }

@@ -6,10 +6,10 @@
   ・人狼襲撃耐性：常時無効
 */
 RoleManager::LoadFile('unknown_mania');
-class Role_sacrifice_mania extends Role_unknown_mania{
+class Role_sacrifice_mania extends Role_unknown_mania {
   function __construct(){ parent::__construct(); }
 
-  protected function GetCopyRole($user){ return $user->GetID('protected'); }
+  protected function GetManiaRole($user){ return $user->GetID('protected'); }
 
   function WolfEatResist(){ return true; }
 }

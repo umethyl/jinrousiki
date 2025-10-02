@@ -20,7 +20,7 @@ class Role_dream_eater_mad extends Role{
     if($user->IsLiveRole('dummy_guard', true)){ //対象が夢守人なら返り討ちに合う
       $USERS->Kill($actor->user_no, 'HUNTED');
       if(! $ROOM->IsOption('seal_message')){ //狩りメッセージを登録
-	$ROOM->SystemMessage($user->handle_name . "\t" . $actor->handle_name, 'GUARD_HUNTED');
+	$ROOM->ResultAbility('GUARD_HUNTED', 'hunted', $actor->handle_name, $user->user_no);
       }
       return;
     }

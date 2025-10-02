@@ -13,7 +13,7 @@ class Role_poison_ogre extends Role_ogre{
   public $reduce_rate = 3;
   function __construct(){ parent::__construct(); }
 
-  function Win($victory){ return $victory == 'quiz' || $this->IsLive(); }
+  function Win($winner){ return $winner == 'quiz' || $this->IsLive(); }
 
   protected function IgnoreAssassin($user){ return $user->IsRole('quiz'); }
 

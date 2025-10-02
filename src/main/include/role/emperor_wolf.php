@@ -8,7 +8,7 @@ RoleManager::LoadFile('wolf');
 class Role_emperor_wolf extends Role_wolf{
   function __construct(){ parent::__construct(); }
 
-  function Win($victory){
+  function Win($winner){
     foreach($this->GetUser() as $user){
       if($user->IsLive() && $user->IsRoleGroup('mad')) return false;
     }

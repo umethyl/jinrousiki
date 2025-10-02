@@ -69,11 +69,10 @@ class Role_pharmacist extends Role{
   function SaveResult(){
     global $ROOM, $USERS;
     foreach($this->GetStack($this->role . '_result') as $uname => $result){
-      $user = $USERS->ByUname($uname);
-      $list = $this->GetStack($user->GetMainRole(true));
-      $handle_name = $USERS->GetHandleName($list[$user->uname], true);
-      $str = $user->handle_name . "\t" . $handle_name . "\t" . $result;
-      $ROOM->SystemMessage($str, $this->result);
+      $user   = $USERS->ByUname($uname);
+      $list   = $this->GetStack($user->GetMainRole(true));
+      $target = $USERS->GetHandleName($list[$user->uname], true);
+      $ROOM->ResultAbility($this->result, $result, $target, $user->user_no);
     }
   }
 }

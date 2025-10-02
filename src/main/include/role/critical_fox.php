@@ -26,7 +26,7 @@ class Role_critical_fox extends Role_child_fox{
     if(! $user->IsAvoid() && $user->IsFox()) $user->AddRole('critical_luck');
   }
 
-  function Win($victory){
+  function Win($winner){
     foreach($this->GetUser() as $user){
       if($user->IsLive() && $user->IsFox() && ! $user->IsChildFox()) return false;
     }

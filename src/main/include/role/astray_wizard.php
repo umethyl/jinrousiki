@@ -3,7 +3,6 @@
   ◆左道使い (astray_wizard)
   ○仕様
   ・魔法：反魂師・月兎・呪術師・獏・雪女・冥狐・闇妖精
-  ・悪戯：迷彩 (目隠し/闇妖精)
 */
 RoleManager::LoadFile('wizard');
 class Role_astray_wizard extends Role_wizard{
@@ -12,11 +11,5 @@ class Role_astray_wizard extends Role_wizard{
     'voodoo_mad' => 'VOODOO_MAD_DO', 'dream_eater_mad' => 'DREAM_EAT',
     'snow_trap_mad' => 'TRAP_MAD_DO', 'doom_fox' => 'ASSASSIN_DO', 'dark_fairy' => 'FAIRY_DO');
   public $result_list = array();
-  public $bad_status = 'blinder';
   function __construct(){ parent::__construct(); }
-
-  function SetBadStatus($user){
-    global $ROOM;
-    $ROOM->event->{$this->bad_status} = true;
-  }
 }

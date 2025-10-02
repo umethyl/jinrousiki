@@ -10,7 +10,7 @@ class Role_incubus_ogre extends Role_ogre{
   public $reduce_rate =  2;
   function __construct(){ parent::__construct(); }
 
-  function Win($victory){
+  function Win($winner){
     if($this->IsDead()) return false;
     foreach($this->GetUser() as $user){
       if(! $this->IsActor($user->uname) && $user->IsLive() && $user->IsFemale()) return false;

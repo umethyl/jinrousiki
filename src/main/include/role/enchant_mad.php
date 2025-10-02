@@ -4,8 +4,9 @@
   ○仕様
   ・悪戯：迷彩 (同一アイコン)
 */
-class Role_enchant_mad extends Role{
-  public $mix_in = 'fairy';
+class Role_enchant_mad extends Role {
+  public $mix_in = 'light_fairy';
+  public $bad_status = 'same_face';
   function __construct(){ parent::__construct(); }
 
   function OutputAction(){ $this->filter->OutputAction(); }
@@ -14,17 +15,12 @@ class Role_enchant_mad extends Role{
 
   function SetVoteNight(){ $this->filter->SetVoteNight(); }
 
-  function SetBadStatus($user){
-    global $ROOM;
-    $ROOM->event->same_face[] = $user->user_no;
-  }
-
   function BadStatus($USERS){
     global $ROOM;
 
-    if(! property_exists($ROOM->event, 'same_face')) return;
-    $target = $USERS->ById(GetRandom($ROOM->event->same_face));
-    if(! property_exists($target, 'icon_filename')) return;
-    foreach($USERS->rows as $user) $user->icon_filename = $target->icon_filename;
+    if (! isset($ROOM->event->{$this->bad_status})) return;
+    $target = $USERS->ById($ROOM->event->{$this->bad_status});
+    if (! isset($target->icon_filename)) return;
+    foreach ($USERS->rows as $user) $user->icon_filename = $target->icon_filename;
   }
 }

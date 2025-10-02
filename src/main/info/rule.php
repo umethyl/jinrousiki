@@ -5,7 +5,7 @@ $INIT_CONF->LoadFile('info_functions');
 $INIT_CONF->LoadClass('TIME_CALC', 'ROLE_IMG');
 OutputInfoPageHeader('ルール', 0, 'rule');
 ?>
-<img src="../img/rule_title.jpg" title="ルールの説明">
+<img src="../img/rule_title.jpg" alt="ルール" title="ルールの説明">
 <ul>
   <li><a href="#worning">ゲームに参加する上で重要なこと</a></li>
   <li><a href="#rule">「汝は人狼なりや？」の基本ルールについて</a></li>
@@ -14,7 +14,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </ul>
 
 <h2 id="worning">ゲームに参加する上で重要なこと</h2>
-<div class="info">
+<div>
 <span class="worning">「ゲームのプレイ内容についてこのゲーム以外の場所で話すのはやめてください。」<br></span>
 これをやってしまうとゲームがおもしろくなくなります。<br>
 特に自分が死んだからといって役割を公開するようなことは絶対にしないでください。 <br>
@@ -29,7 +29,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </ul>
 
 <h3 id="rule_purpose">[ゲームの目的]</h3>
-<div class="info">
+<div>
 ある村で人狼が村の住人に紛れ込み、夜な夜な村人を襲っているという。<br>
 困った村人たちは集会所に集まって話し合いをし、一日に一人、人狼だと思われる人を処刑することにした。<br>
 村人は村を守るために、人狼は村を狼のものにするために、どこからかやってきた妖狐はその様子をそばで伺っています。<br>
@@ -44,13 +44,13 @@ OutputInfoPageHeader('ルール', 0, 'rule');
   <li><span class="fox">妖狐</span>の勝利　恋人を全滅させ、人狼が全滅したときまたは村人の人数が人狼の人数以下になった時に生きていること</li>
   <li><span class="lovers">恋人</span>の勝利　人狼が全滅したときまたは村人の人数が人狼の人数以下になった時に、恋人が生きていること</li>
 </ul>
-<div class="info">
+<div>
 必ずしもあなたが生き残ることがこのゲームの目的ではありません。<br>
 自分を犠牲にしてもあなたのチームが勝てば勝利となります。<br>
 </div>
 
 <h3 id="rule_cast">[村人の人口推移]</h3>
-<div class="info">
+<div>
 村には特殊な能力を持った人や、考えの異なる人が居ます。<br>
 下の表がその人口の推移です → <a href="cast.php">詳細</a>。
 </div>
@@ -65,7 +65,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 <?php OutputCastTable(8, 22); ?>
 
 <h3 id="rule_role">[役割紹介]</h3>
-<div class="info">　登場する役割について詳しく説明します。</div>
+<div>　登場する役割について詳しく説明します。</div>
 
 <ul>
   <li><a href="#rule_role_human">村人</a></li>
@@ -89,13 +89,13 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_human">
   <td>村人</td>
-  <td><div class="info">
+  <td><div>
     特殊な能力はありません。しかし、アナタの知恵と勇気で村を救うことができるはずです。
   </div></td>
 </tr>
 <tr id="rule_role_mage">
   <td class="mage">占い師</td>
-  <td><div class="info">
+  <td><div>
     夜の間に村人ひとりを「人」か「狼」か占い、翌朝にその結果を知ることができます。<br>
     ただし解るのは「人」か「狼」かだけです。<br>
     狂人や霊能者を占っても「人」としか表示されません。<br>
@@ -106,7 +106,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_necromancer">
   <td class="necromancer">霊能者</td>
-  <td><div class="info">
+  <td><div>
     ２日目以降にその日の処刑者が「人」か「狼」かを知ることができます。<br>
     霊能には一晩の時間が必要で、その結果がわかるのは翌日の朝になります。<br>
     地味ですがあなたの努力次第で大きく貢献することも不可能ではありません。
@@ -114,7 +114,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_guard">
   <td class="guard">狩人</td>
-  <td><div class="info">
+  <td><div>
     ２日目以降に夜の間に村人ひとりを指定し人狼の殺害から護ることができます。<br>
     しかし直接人狼に狙われると殺されてしまいます。<br>
     人狼のココロを読むのです。
@@ -122,7 +122,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_common">
   <td class="common">共有者</td>
-  <td><div class="info">
+  <td><div>
     あなたは不思議な能力でもうひとりの共有者がだれであるかを知ることができます。<br>
     また離れていても共有者同士で意思の疎通をすることができます。<br>
     共有者ということを公表することで皆の信用を得やすく、生存期間が他に比べ永い能力です。<br>
@@ -131,7 +131,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_poison">
   <td class="poison">埋毒者</td>
-  <td><div class="info">
+  <td><div>
     あなたは体に少量の毒が流れています。<br>
     自身は抗体がありなんともありませんが、その血液に触れた人は死に至ると言われています。<br>
     あなたが処刑されると村の中からランダムに一人道連れにします。<br>
@@ -144,7 +144,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_wolf">
   <td class="wolf">人狼</td>
-  <td><div class="info">
+  <td><div>
     夜の間に他の人狼と協力し村人を一人殺害できます。<br>
     また、自分以外の人狼が誰なのか知ることができます。<br>
     あなたはその強力な力で村人を食い殺すのです。<br>
@@ -154,7 +154,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_mad">
   <td class="wolf">狂人</td>
-  <td><div class="info">
+  <td><div>
     人狼を崇拝している人間で、人狼の勝利がアナタの勝利となります。<br>
     しかしあなたは村人の一人と数えられます。<br>
     あなたは占い師の振りをしたり、巧みな話術で村人を混乱におとしいれるのです。<br>
@@ -163,7 +163,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_fox">
   <td class="fox">妖狐</td>
-  <td><div class="info">
+  <td><div>
     あなたは人狼に狙われても殺されることはありません。<br>
     ただし占われてしまうと死んでしまいます。<br>
     村人を騙し、人狼を騙し、村を妖狐のものにするのです。
@@ -171,7 +171,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_cupid">
   <td class="lovers">キューピッド</td>
-  <td><div class="info">
+  <td><div>
     あなたは愛の天使です。１日目の夜に誰か２名に愛の矢を放つことでその２人を恋人にできます。<br>
     恋に落ちた二人は能力に変化はありませんが、何をおいてもお互いの生存を最優先に考えるようになります。<br>
     あなた自身の生死は勝利条件に関係しません。時には自らを犠牲にしてでも恋人たちを生き残らせるのです。<br>
@@ -181,7 +181,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_decide">
   <td>決定者</td>
-  <td><div class="info">
+  <td><div>
     あなたの持っている雰囲気は他人を信用させる匂いを持っています。<br>
     処刑投票の票数が同数で分かれた場合、あなたの投票したほうが優先されます。<br>
     しかしあなた自身は自分が決定者であることはわかりません。<br>
@@ -191,7 +191,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_authority">
   <td>権力者</td>
-  <td><div class="info">
+  <td><div>
     あなたは身なり、財産から村では一目置かれた存在になっています。<br>
     他の村からもあなたのうわさが耳に入るほどです。<br>
     その権力を振りかざし、処刑投票であなたの投票は2票分の効果を発揮します。<br>
@@ -201,7 +201,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </tr>
 <tr id="rule_role_lovers">
   <td class="lovers">恋人</td>
-  <td><div class="info">
+  <td><div>
     あなたはキューピッドが放った愛の矢によって恋に落ちています。<br>
     その恋は時に種族の壁を越えることもあります。<br>
     もしどちらか一方が死亡した場合、残された方も恋人の後を追って自殺してしまいます。<br>
@@ -225,7 +225,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </ul>
 
 <h3 id="system_day">[昼の行動]</h3>
-<div class="info">
+<div>
 昼は集会場で皆と議論することになります。<br>
 他の人の意見や能力者の発言を聞きながら自分の意見を発言していってください。<br>
 また処刑する人を決めるための投票もしなければなりません。<br>
@@ -233,7 +233,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </div>
 
 <h3 id="system_night">[夜の行動]</h3>
-<div class="info">
+<div>
 夜はそれぞれ自分の家に帰り、一人で過ごすことになります。<br>
 普通の人は他の人と会話できませんが狼同士は発言をすることで遠吠えとなり、会話することができます。<br>
 共有者も発言することで共有者同士で会話することができます。<br>
@@ -242,7 +242,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 </div>
 
 <h3 id="system_date">[昼の集会所や夜の時間経過について]</h3>
-<div class="info">
+<div>
 一日は昼と夜に分かれており、昼は集会所で12時間の間議論、夜は集会所から離れ、個人別々に6時間の時間があります。<br>
 この12時間や6時間という時間はゲーム内の仮想時間で、この時間の間で様々な行動を行います。<br>
 　昼の行動： 皆と議論する、処刑の投票をする<br>
@@ -252,7 +252,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 
 <h3 id="system_time">[消費される時間について]</h3>
 <h4>リアルタイム制の場合</h4>
-<div class="info">
+<div>
 村作成のオプションで「リアルタイム制」をチェック入れていると、実時間で経過していきます。<br>
 時間は部屋を作成した人が設定でき、トップページのゲーム一覧の「リアルタイム制」画像のAltテキストに表示されます。<br>
 (ゲーム一覧のオプションの部分にあるリアルタイム制の画像 <?php echo
@@ -264,7 +264,7 @@ $ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->
 </div>
 
 <h4>リアルタイム制でない場合</h4>
-<div class="info">
+<div>
 村作成のオプションで「リアルタイム制」にチェックを入れない場合はこちらになります。<br>
 非リアルタイム制では発言することで時間が消費されます。<br>
 半角100文字(全角50文字)の発言で、仮想時間が昼: [<?php echo $TIME_CALC->spend_day ?>] 夜: [<?php echo $TIME_CALC->spend_night ?>] ずつ消費されていきます。<br>
@@ -277,7 +277,7 @@ $ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->
 
 <h3 id="system_vote">[投票について]</h3>
 <h4>昼の処刑投票</h4>
-<div class="info">
+<div>
 処刑するための投票は毎日、昼に行われます。<br>
 投票は議論中いつでも可能ですが投票をやり直すことはできません、慎重に投票先を決めてください。<br>
 また全員が投票した場合、その時点で残り時間に関係なく即処刑が実行され夜になります。<br>
@@ -287,7 +287,7 @@ $ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->
 </div>
 
 <h4>夜の投票（人狼が襲う・占い師が占う・狩人が護衛する・（１日目のみ）キューピッドが愛の矢を放つ）</h4>
-<div class="info">
+<div>
 夜になると人狼・占い師・狩人・キューピッドはそれぞれの能力を発揮するためにターゲットを指定します。<br>
 投票ページでターゲットを指定してください。<br>
 人狼は全員で一人だけターゲットできます。<br>
@@ -299,7 +299,7 @@ $ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->
 </div>
 
 <h3 id="system_sudden_death">[制限時間が過ぎると・・・]</h3>
-<div class="info">
+<div>
 昼12時間、夜6時間の制限時間が過ぎると発言できなくなります。<br>
 村の住人達はこれまでの情報を元に投票しなくてはなりません。<br>
 投票せずに [<?php echo $TIME_CALC->sudden_death ?>] 過ぎてしまうと投票されて無い方は突然死となり強制的に死んでしまいます。<br>
@@ -310,7 +310,7 @@ $ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->
 </div>
 
 <h3 id="system_last_words">[遺言とは]</h3>
-<div class="info">
+<div>
 処刑されたり、人狼に襲われたり、妖狐が占い殺されたり、恋人が後追い自殺したりしたときに初めて公開される文書です。<br>
 思っていても言えなかった事や生存者に向けたメッセージなどをあらかじめ遺言に残しておくことで、<br>
 死んだときの最後の一言として以後の展開に影響を与えるかもしれません。<br>
@@ -328,7 +328,7 @@ Ver. 1.5.0 β1 からは、「半角スペース一つ」のみを遺言にセ�
 </ul>
 
 <h3 id="display_main">[ゲーム前・生存中・ゲーム後]</h3>
-<div class="info">
+<div>
 フレームに分割されている上の部分は発言するための領域と投票するために使用します。<br>
 下のフレームはゲームの内容を表示しています。<br>
 右上にある「自動更新」は下のフレームを指定した秒数で自動更新します。<br>
@@ -418,7 +418,7 @@ Ver. 1.5.0 β1 からは、「半角スペース一つ」のみを遺言にセ�
 
 
 <h3 id="display_dead">[ゲーム中に死亡すると]</h3>
-<div class="info">
+<div>
 ゲーム中に死亡した場合は天国モードになります。<br>
 上のフレームは霊話発言用、中央のフレームは村での出来事、下のフレームは霊話用となっています。<br>
 発言すると死亡者同士でしか交わすことのできない霊話をすることができます。<br>

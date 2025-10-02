@@ -9,11 +9,8 @@ class Role_embalm_necromancer extends Role_necromancer{
   function __construct(){ parent::__construct(); }
 
   function Necromancer($user, $flag){
-    global $USERS;
-
-    $str = $USERS->GetHandleName($user->uname, true) . "\t";
-    if($flag) return $str . 'stolen';
-    $target = $this->GetVoteUser($user->uname)->GetCamp(true);
-    return $str . 'embalm_' . ($user->GetCamp(true) == $target ? 'agony' : 'reposeful');
+    if($flag) return 'stolen';
+    $camp = $this->GetVoteUser($user->uname)->GetCamp(true);
+    return 'embalm_' . ($user->GetCamp(true) == $camp ? 'agony' : 'reposeful');
   }
 }

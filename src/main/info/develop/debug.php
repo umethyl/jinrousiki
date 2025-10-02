@@ -2,7 +2,7 @@
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
 $INIT_CONF->LoadFile('info_functions');
-OutputInfoPageHeader('デバッグ情報', 1);
+OutputInfoPageHeader('デバッグ情報', 1, 'debug');
 ?>
 <p>
 Ver. 1.5.0<br>

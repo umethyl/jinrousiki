@@ -40,7 +40,7 @@ class Role_holy_priest extends Role_priest{
       $stack = array();
       foreach($list as $id) $stack[$USERS->ByID($id)->GetCamp(true)][] = $id; //陣営カウント
       //PrintData($stack, $uname);
-      $ROOM->SystemMessage($user->handle_name . "\t" . count(array_keys($stack)), $event);
+      $ROOM->ResultAbility($event, count(array_keys($stack)), null, $user->user_no);
     }
   }
 }

@@ -752,6 +752,7 @@ OutputInfoPageHeader('闇鍋モード');
 <a href="#boost_rate_d"><?php echo $GAME_OPT_MESS->boost_rate_d ?></a>
 <a href="#boost_rate_e"><?php echo $GAME_OPT_MESS->boost_rate_e ?></a>
 <a href="#boost_rate_f"><?php echo $GAME_OPT_MESS->boost_rate_f ?></a>
+<a href="#boost_rate_g"><?php echo $GAME_OPT_MESS->boost_rate_g ?></a>
 </p>
 
 <h3 id="boost_rate_a"><?php echo $GAME_OPT_MESS->boost_rate_a ?> [Ver. 1.5.0 β7～]</h3>
@@ -784,6 +785,11 @@ OutputInfoPageHeader('闇鍋モード');
 <h3 id="boost_rate_f"><?php echo $GAME_OPT_MESS->boost_rate_f ?> [Ver. 1.5.0 β12～]</h3>
 <pre>
 <a href="new_role/chiroptera.php">蝙蝠陣営</a>・<a href="new_role/ogre.php">鬼陣営</a>・<a href="new_role/duelist.php">決闘者陣営</a>の出現率が 0 になります。
+</pre>
+
+<h3 id="boost_rate_g"><?php echo $GAME_OPT_MESS->boost_rate_g ?> [Ver. 2.0.0～]</h3>
+<pre>
+<a href="new_role/human.php#jealousy">橋姫系</a>・<a href="new_role/lovers.php">恋人陣営</a>の出現率が 0 になります。
 </pre>
 
 <h2 id="chaos_open_cast"><?php echo $GAME_OPT_MESS->chaos_open_cast ?> [Ver. 1.4.0 α14～]</h2>

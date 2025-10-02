@@ -9,7 +9,7 @@ class Role_power_ogre extends Role_ogre{
   public $resist_rate = 40;
   function __construct(){ parent::__construct(); }
 
-  function Win($victory){
+  function Win($winner){
     global $USERS;
     return $this->IsLive() && count($USERS->GetLivingUsers()) <= ceil(count($USERS->rows) / 3);
   }

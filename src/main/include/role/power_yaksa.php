@@ -10,7 +10,7 @@ class Role_power_yaksa extends Role_yaksa{
   public $resist_rate = 30;
   function __construct(){ parent::__construct(); }
 
-  function Win($victory){
+  function Win($winner){
     if($this->IsDead()) return false;
     $camp_list = array();
     $live_list = array();

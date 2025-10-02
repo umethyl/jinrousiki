@@ -1,4 +1,32 @@
 <?php
+
+//村で使用中のアイコンチェック
+function IsUsingIcon($id){
+  $query = 'SELECT icon_no FROM user_icon INNER JOIN ' .
+    '(user_entry INNER JOIN room USING (room_no)) USING (icon_no) ' .
+    "WHERE icon_no = {$id} AND room.status IN ('waiting', 'playing')";
+  return FetchCount($query) > 0;
+}
+
+//文字列長チェック
+function CheckIconText($title, $url){
+  global $RQ_ARGS, $USER_ICON;
+
+  $stack = array();
+  $list  = array('icon_name'  => 'アイコン名',
+		 'appearance' => '出典',
+		 'category'   => 'カテゴリ',
+		 'author'     => 'アイコンの作者');
+  foreach($list as $key => $label){
+    $value = $RQ_ARGS->$key;
+    if(strlen($value) > $USER_ICON->name){
+      OutputActionResult($title, $label . ': ' . $USER_ICON->MaxNameLength() . $url);
+    }
+    $stack[$key] = strlen($value) > 0 ? $value : null;
+  }
+  return $stack;
+}
+
 //RGB カラーチェック
 function CheckColorString($str, $title, $url){
   if(strlen($str) != 7 || substr($str, 0, 1) != '#' || ! ctype_xdigit(substr($str, 1, 7))){
@@ -8,6 +36,16 @@ function CheckColorString($str, $title, $url){
     OutputActionResult($title, $error . $url);
   }
   return strtoupper($str);
+}
+
+//アイコン削除
+function DeleteIcon($id, $file){
+  global $ICON_CONF;
+
+  if(! FetchBool('DELETE FROM user_icon WHERE icon_no = ' . $id)) return false; //削除処理
+  unlink($ICON_CONF->path . '/' . $file); //ファイル削除
+  OptimizeTable('user_icon'); //テーブル最適化 + コミット
+  return true;
 }
 
 function OutputIconList($base_url = 'icon_view'){
@@ -151,7 +189,6 @@ HTML;
   }
 
   //-- ヘッダ出力 --//
-  //$icon_count  = FetchResult('SELECT COUNT(icon_no) FROM user_icon WHERE icon_no > 0'); //不使用
   $colspan     = $USER_ICON->column * 2;
   $line_header = '<tr><td colspan="' . $colspan . '">';
   $line_footer = '</td></tr>'."\n";
@@ -160,9 +197,7 @@ HTML;
   $query_stack = array();
   $category_list = GetIconCategoryList('category');
   //PrintData($category_list);
-  $all_url = $url_header;
-  if($RQ_ARGS->room_no > 0) $all_url .= 'room_no=' . $RQ_ARGS->room_no;
-  echo "<table class=\"selector\">\n<tr>\n";
+  echo '<table class="selector">'."\n<tr>\n";
 
   //検索条件の表示
   $where_cond = array();
@@ -257,6 +292,7 @@ HTML;
   $PAGE_CONF->option  = $url_option;
   $PAGE_CONF->attributes  = array('onclick' => 'return "return submit_icon_search(\'$page\');";');
   if($RQ_ARGS->room_no > 0) $PAGE_CONF->option[] = 'room_no=' . $RQ_ARGS->room_no;
+  if($RQ_ARGS->icon_no > 0) $PAGE_CONF->option[] = 'icon_no=' . $RQ_ARGS->icon_no;
   echo '<td colspan="' . $colspan . '" class="page-link">';
   //PrintData($PAGE_CONF, 'PAGE_CONF');
   OutputPageLink($PAGE_CONF);

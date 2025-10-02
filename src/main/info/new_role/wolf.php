@@ -963,16 +963,15 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
 <a href="#mad">狂人</a>
 <a href="#fanatic_mad">狂信者</a>
 <a href="#whisper_mad">囁き狂人</a>
-<a href="#swindle_mad">因幡兎</a>
 <a href="#jammer_mad">月兎</a>
 <a href="#voodoo_mad">呪術師</a>
 <a href="#enchant_mad">狢</a>
 <a href="#dream_eater_mad">獏</a>
 <a href="#possessed_mad">犬神</a>
 <a href="#trap_mad">罠師</a>
+<a href="#snow_trap_mad">雪女</a>
 </p>
 <p>
-<a href="#snow_trap_mad">雪女</a>
 <a href="#corpse_courier_mad">火車</a>
 <a href="#amaze_mad">傘化け</a>
 <a href="#agitate_mad">扇動者</a>
@@ -1024,21 +1023,6 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
 <pre>
 通称「C国狂人」、最強クラスの狂人です。「ささやき きょうじん」と読みます。
 相談できるので完璧な連携が取れます。
-</pre>
-
-<h3 id="swindle_mad">因幡兎 (占い結果：人狼 / 霊能結果：村人) [Ver. 1.5.2～]</h3>
-<h4>[耐性] 精神鑑定：正常</h4>
-<pre>
-占い結果が人狼、精神鑑定結果が正常と判定される特殊な狂人。
-霊能は通常の狂人と同じ。
-</pre>
-<h4>関連役職</h4>
-<pre>
-<a href="ability.php#mage_wolf">特殊占い判定能力者</a>
-</pre>
-<h4>[作成者からのコメント]</h4>
-<pre>
-「第２回５鯖合同人狼トーナメント」の MVP の賞品としてプレゼントしたものです。
 </pre>
 
 <h3 id="jammer_mad">月兎 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α19～]</h3>
@@ -1251,11 +1235,15 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
 処刑投票先が処刑されたら投票結果を隠蔽できる特殊な狂人。
 </pre>
 <ol>
-  <li>処刑投票先が処刑された時点で能力が発動し、処刑者に<a href="sub_role.php#bad_status">悪戯</a>が付く。</li>
+  <li>処刑投票先が処刑された時点で能力が発動する。</li>
   <li>能力が発動すると死亡者メッセージ欄に「傘化けの能力で隠蔽された」と表示される。</li>
   <li>観戦画面・配役公開されていない霊界でも能力は有効。</li>
   <li>対象が<a href="sub_role.php#possessed_target">憑依</a>中でも能力は有効。</li>
 </ol>
+<h5>Ver. 2.0.0 α3～</h5>
+<pre>
+<a href="sub_role.php#bad_status">悪戯</a>はつかない仕様に変更。
+</pre>
 <h5>Ver. 1.4.8 / Ver. 1.5.0 α6～</h5>
 <pre>
 対象が<a href="sub_role.php#possessed_target">憑依</a>中でも能力が適用される。

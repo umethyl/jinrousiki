@@ -24,8 +24,8 @@ class Role_mimic_wizard extends Role_wizard{
     if($ROOM->date < 3) return;
     $failed = ! $ROOM->IsEvent('full_wizard') &&
       ($ROOM->IsEvent('debilitate_wizard') || mt_rand(0, 1) > 0);
-    $header = $USERS->GetHandleName($user->uname, true) . "\t";
     $result = $flag || $failed ? 'stolen' : $user->DistinguishNecromancer();
-    $ROOM->SystemMessage($header . $result, 'MIMIC_WIZARD_RESULT');
+    $target = $USERS->GetHandleName($user->uname, true);
+    $ROOM->ResultAbility('MIMIC_WIZARD_RESULT', $result, $target);
   }
 }

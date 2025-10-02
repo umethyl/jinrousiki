@@ -1,15 +1,23 @@
 @charset "utf-8";
 @import url(game.css);
-.login{ /* 村名とユーザログインフォームの table */
+.login { /* 村名とユーザログインフォームの table */
+  width: 100%;
   border: 0;
   border-collapse: collapse;
-  width: 100%;
 }
-.login-link{text-align: right;} /* 更新 & 戻る  */
-.login-link span{font-weight: bold;} /* 住民登録 */
-.login form{margin-bottom: 0;}
-.login label{ /* ユーザ名 & パスワード */
+.login-link { /* 更新 & 戻る  */
+  text-align: right;
+}
+.login-link span { /* 住民登録 */
+  font-weight: bold;
+}
+.login form {
+  margin-bottom: 0;
+}
+.login label { /* ユーザ名 & パスワード */
   margin-right: 5px;
   font-weight: bold;
 }
-.login-password{ime-mode: disabled;} /* ログインパスワード */
+.login-password { /* ログインパスワード */
+  ime-mode: disabled;
+}

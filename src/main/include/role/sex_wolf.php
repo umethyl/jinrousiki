@@ -16,10 +16,12 @@ class Role_sex_wolf extends Role_wolf{
   }
 
   function WolfEatAction($user){
-    global $ROOM;
+    global $ROOM, $USERS;
 
-    $str = $this->GetWolfVoter()->GetHandleName($user->uname, $this->DistinguishSex($user));
-    $ROOM->SystemMessage($str, $this->result);
+    $result = $this->DistinguishSex($user);
+    $target = $USERS->GetHandleName($user->uname, true);
+    $ROOM->ResultAbility($this->result, $result, $target, $this->GetWolfVoter()->user_no);
+
     $user->wolf_eat = true; //襲撃は成功扱い
     return true;
   }

@@ -13,9 +13,5 @@ class Role_necromancer extends Role{
   }
 
   //霊能
-  function Necromancer($user, $flag){
-    global $USERS;
-    return $USERS->GetHandleName($user->uname, true) . "\t" .
-      ($flag ? 'stolen' : $user->DistinguishNecromancer());
-  }
+  function Necromancer($user, $flag){ return $flag ? 'stolen' : $user->DistinguishNecromancer(); }
 }

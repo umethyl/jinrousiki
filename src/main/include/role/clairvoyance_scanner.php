@@ -29,21 +29,25 @@ class Role_clairvoyance_scanner extends Role_mind_scanner{
 
     foreach($this->GetStack('vote_data') as $action => $vote_stack){
       if(strpos($action, '_NOT_DO') !== false ||
-	 ! array_key_exists($user->uname, $vote_stack)) continue;
-      $str = $this->GetActor()->GetHandleName($user->uname) . "\t";
-      $target_stack = $vote_stack[$user->uname];
+	 ! array_key_exists($user->user_no, $vote_stack)) continue;
+      $actor_id     = $this->GetActor()->user_no;
+      $target_name  = $USERS->ByVirtual($user->user_no)->handle_name;
+      $target_stack = $vote_stack[$user->user_no];
 
       if($user->IsRole('barrier_wizard')){
-	$str_stack = array();
+	$result_stack = array();
 	foreach(explode(' ', $target_stack) as $id){
 	  $voted_user = $USERS->ByVirtual($id);
-	  $str_stack[$voted_user->user_no] = $str . $voted_user->handle_name;
+	  $result_stack[$voted_user->user_no] = $voted_user->handle_name;
 	}
-	ksort($str_stack);
-	foreach($str_stack as $str) $ROOM->SystemMessage($str, $this->result);
+	ksort($result_stack);
+	foreach($result_stack as $result){
+	  $ROOM->ResultAbility($this->result, $result, $target_name, $actor_id);
+	}
       }
       else{
-	$ROOM->SystemMessage($str . $USERS->GetHandleName($target_stack, true), $this->result);
+	$result = $USERS->ByVirtual($target_stack)->handle_name;
+	$ROOM->ResultAbility($this->result, $result, $target_name, $actor_id);
       }
     }
   }

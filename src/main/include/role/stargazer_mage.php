@@ -13,7 +13,8 @@ class Role_stargazer_mage extends Role_psycho_mage{
   //投票能力鑑定
   function Stargazer($user){
     global $ROOM;
-    return array_key_exists($user->uname, $ROOM->vote) || $user->IsWolf() ?
+
+    return (array_key_exists($user->user_no, $ROOM->vote) || $user->IsWolf()) ?
       'stargazer_mage_ability' : 'stargazer_mage_nothing';
   }
 }

@@ -3,7 +3,7 @@ define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
 
 $disable = true; //使用時には false に変更する
-if($disable){
+if ($disable) {
   OutputActionResult('認証エラー', 'このスクリプトは使用できない設定になっています。');
 }
 
@@ -22,9 +22,9 @@ $RQ_ARGS->add_role = true;
 $RQ_ARGS->heaven_talk = true;
 
 $db_delete_mode = false; //部屋削除のみ
-if($db_delete_mode){
+if ($db_delete_mode) {
   OutputHTMLHeader('DB削除モード');
-  for($i = $RQ_ARGS->min_room_no; $i <= $RQ_ARGS->max_room_no; $i++){
+  for ($i = $RQ_ARGS->min_room_no; $i <= $RQ_ARGS->max_room_no; $i++) {
     DeleteRoom($i);
     echo "{$i} 番地を削除しました<br>";
   }
@@ -36,12 +36,12 @@ if($db_delete_mode){
 //OutputHTMLFooter(true);
 
 $INIT_CONF->LoadFile('game_play_functions', 'talk_class');
-$INIT_CONF->LoadClass('ROLES', 'ICON_CONF', 'VICT_MESS');
+$INIT_CONF->LoadClass('ROLES', 'ICON_CONF', 'WINNER_MESS');
 
 $room_delete = false; //DB削除設定
 $header = "../log_test/{$RQ_ARGS->prefix}";
 $footer = '</body></html>'."\n";
-for($i = $RQ_ARGS->min_room_no; $i <= $RQ_ARGS->max_room_no; $i++){
+for ($i = $RQ_ARGS->min_room_no; $i <= $RQ_ARGS->max_room_no; $i++) {
   $RQ_ARGS->room_no = $i;
   $ROOM = new Room($RQ_ARGS);
   $ROOM->log_mode = true;
@@ -61,10 +61,10 @@ for($i = $RQ_ARGS->min_room_no; $i <= $RQ_ARGS->max_room_no; $i++){
   $USERS = new UserDataSet($RQ_ARGS);
   $SELF  = new User();
   file_put_contents("{$header}{$i}r.html", GenerateOldLog() . $footer);
-  if($room_delete) DeleteRoom($i);
+  if ($room_delete) DeleteRoom($i);
 }
-if($room_delete) OptimizeTable();
+if ($room_delete) OptimizeTable();
 
 OutputActionResult('ログ生成',
-		   $RQ_ARGS->min_room_no . ' 番地から' .
-		   $RQ_ARGS->max_room_no . '番地までをHTML化しました');
+		   $RQ_ARGS->min_room_no . ' 番地から ' .
+		   $RQ_ARGS->max_room_no . ' 番地までを HTML 化しました');

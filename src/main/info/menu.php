@@ -1,7 +1,7 @@
 <?php
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
-OutputHTMLHeader($SERVER_CONF->title . $SERVER_CONF->comment, 'info_menu');
+OutputHTMLHeader('情報一覧 - [メニュー]', 'info/menu');
 ?>
 </head>
 <body>

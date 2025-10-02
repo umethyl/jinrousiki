@@ -19,7 +19,7 @@ function OutputGameUp(){
   if($RQ_ARGS->heaven_mode) $submit .= 'reload_middle_frame();';
   $submit .= 'set_focus();">';
   echo <<<EOF
-<link rel="stylesheet" id="day_night">
+<link rel="stylesheet" id="scene">
 <script type="text/javascript" src="javascript/game_up.js"></script>
 </head>
 <body onLoad="set_focus(); reload_game();">

@@ -10,8 +10,8 @@ class Role_north_ogre extends Role_ogre{
   public $reduce_rate =  2;
   function __construct(){ parent::__construct(); }
 
-  function Win($victory){
-    if($victory != 'human' || $this->IsDead()) return false;
+  function Win($winner){
+    if($winner != 'human' || $this->IsDead()) return false;
     $id = $this->GetActor()->user_no;
     foreach($this->GetUser() as $user){
       if($user->user_no >= $id) return true;

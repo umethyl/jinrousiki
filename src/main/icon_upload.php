@@ -8,7 +8,7 @@ if($USER_ICON->disable_upload){
   OutputActionResult('ユーザアイコンアップロード', '現在アップロードは停止しています');
 }
 $INIT_CONF->LoadRequest('RequestIconUpload'); //引数を取得
-is_null($RQ_ARGS->command) ? OutputUploadIconPage() : UploadIcon();
+isset($RQ_ARGS->command) ? UploadIcon() : OutputUploadIconPage();
 
 //-- 関数 --//
 //投稿データチェック
@@ -28,63 +28,65 @@ function UploadIcon(){
 
   case 'success': //セッション ID 情報を DB から削除
     $DB_CONF->Connect();
-    SendQuery('UPDATE user_icon SET session_id = NULL' . $query_no, true);
-    OutputActionResult('アイコン登録完了',
-		       '登録完了：アイコン一覧のページに飛びます。<br>'."\n" .
-		       '切り替わらないなら <a href="icon_view.php">ここ</a> 。',
-		       'icon_view.php');
+    $url = 'icon_view.php';
+    $str = '登録完了：アイコン一覧のページに飛びます。<br>'."\n" .
+      '切り替わらないなら <a href="' . $url . '">ここ</a> 。';
+    if(! FetchBool('UPDATE user_icon SET session_id = NULL' . $query_no)){
+      $str .= "\nセッションの削除に失敗しました。";
+    }
+    OutputActionResult('アイコン登録完了', $str, $url);
     break;
 
-  case 'cancel':
-    //DB からアイコンのファイル名と登録時のセッション ID を取得
+  case 'cancel': //アイコン削除
+    //負荷エラー用
+    $str = "サーバが混雑しているため、削除に失敗しました。<br>\n管理者に問い合わせてください。";
+
     $DB_CONF->Connect(); //DB 接続
-    extract(FetchAssoc('SELECT icon_filename, session_id FROM user_icon' . $query_no, true));
+    //トランザクション開始
+    if(! $DB_CONF->LockCount('icon')) OutputActionResult($title, $str . $back_url);
 
-    //セッション ID 確認
-    if($session_id != $SESSION->Get()){
-      OutputActionResult('アイコン削除失敗', '削除失敗：アップロードセッションが一致しません');
+    //アイコンのファイル名と登録時のセッション ID を取得
+    $stack = FetchAssoc('SELECT icon_filename, session_id FROM user_icon' . $query_no, true);
+    if(count($stack) < 1) OutputActionResult($title, $str . $back_url);
+    extract($stack);
+
+    if($session_id != $SESSION->Get()){ //セッション ID 確認
+      $str = '削除失敗：アップロードセッションが一致しません';
+      OutputActionResult('アイコン削除失敗', $str . $back_url);
     }
-    unlink($ICON_CONF->path . '/' . $icon_filename);
-    SendQuery('DELETE FROM user_icon' . $query_no);
-    OptimizeTable('user_icon');
 
-    //DB 接続解除は OutputActionResult() 経由
+    if(! DeleteIcon($RQ_ARGS->icon_no, $icon_filename)){ //削除処理
+      OutputActionResult($title, $str . $back_url);
+    }
+    $DB_CONF->Disconnect(); //DB 接続解除
+
+    $url = 'icon_upload.php';
     $str = '削除完了：登録ページに飛びます。<br>'."\n" .
-      '切り替わらないなら <a href="icon_upload.php">ここ</a> 。';
-    OutputActionResult('アイコン削除完了', $str, 'icon_upload.php');
+      '切り替わらないなら <a href="' . $url . '">ここ</a> 。';
+    OutputActionResult('アイコン削除完了', $str, $url);
     break;
 
   default:
-    OutputActionResult($title, '無効なコマンドです');
+    OutputActionResult($title, '無効なコマンドです' . $back_url);
     break;
   }
 
   //アップロードされたファイルのエラーチェック
   if($_FILES['upfile']['error'][$i] != 0){
     $str = "ファイルのアップロードエラーが発生しました。<br>\n再度実行してください。";
-    OutputActionResult($title, $str);
+    OutputActionResult($title, $str . $back_url);
   }
   extract($RQ_ARGS->ToArray()); //引数を展開
 
   //空白チェック
-  if($icon_name == '') OutputActionResult($title, 'アイコン名を入力してください');
-
-  //アイコン名の文字列長のチェック
-  $text_list = array('icon_name'  => 'アイコン名',
-		     'appearance' => '出典',
-		     'category'   => 'カテゴリ',
-		     'author'     => 'アイコンの作者');
-  foreach($text_list as $text => $label){
-    $value = $RQ_ARGS->$text;
-    if(strlen($value) > $USER_ICON->name){
-      OutputActionResult($title, $label . ': ' . $USER_ICON->MaxNameLength());
-    }
-  }
+  if($icon_name == '') OutputActionResult($title, 'アイコン名を入力してください' . $back_url);
+  CheckIconText($title, $back_url); //アイコン名の文字列長のチェック
+  $color = CheckColorString($color, $title, $back_url); //色指定のチェック
 
   //ファイルサイズのチェック
-  if($size == 0) OutputActionResult($title, 'ファイルが空です');
+  if($size == 0) OutputActionResult($title, 'ファイルが空です' . $back_url);
   if($size > $USER_ICON->size){
-    OutputActionResult($title, 'ファイルサイズは ' . $USER_ICON->MaxFileSize());
+    OutputActionResult($title, 'ファイルサイズは ' . $USER_ICON->MaxFileSize() . $back_url);
   }
 
   //ファイルの種類のチェック
@@ -104,41 +106,43 @@ function UploadIcon(){
     break;
 
   default:
-    OutputActionResult($title, $type . ' : jpg、gif、png 以外のファイルは登録できません');
+    $str = $type . ' : jpg、gif、png 以外のファイルは登録できません';
+    OutputActionResult($title, $str . $back_url);
     break;
   }
-
-  $color = CheckColorString($color, $title, $back_url); //色指定のチェック
 
   //アイコンの高さと幅をチェック
   list($width, $height) = getimagesize($tmp_name);
   if($width > $USER_ICON->width || $height > $USER_ICON->height){
     $str = 'アイコンは ' . $USER_ICON->MaxIconSize() . ' しか登録できません。<br>'."\n" .
       '送信されたファイル → <span class="color">幅 ' . $width . '、高さ ' . $height . '</span>';
-    OutputActionResult($title, $str);
+    OutputActionResult($title, $str . $back_url);
   }
 
+  //負荷エラー用
+  $str = "サーバが混雑しています。<br>\n時間を置いてから再登録をお願いします。" . $back_url;
   $DB_CONF->Connect(); //DB 接続
+  if(! $DB_CONF->LockCount('icon')) OutputActionResult($title, $str); //トランザクション開始
 
-  //アイコンの名前が既に登録されていないかチェック
+  //登録数上限チェック
+  if(FetchResult('SELECT COUNT(icon_no) FROM user_icon') >= $USER_ICON->number){
+    OutputActionResult($title, 'これ以上登録できません');
+  }
+
+  //アイコン名チェック
   if(FetchResult("SELECT COUNT(icon_no) FROM user_icon WHERE icon_name = '{$icon_name}'") > 0){
-    OutputActionResult($title, 'アイコン名 "' . $icon_name . '" は既に登録されています');
+    $str = 'アイコン名 "' . $icon_name . '" は既に登録されています';
+    OutputActionResult($title, $str . $back_url);
   }
 
-  if(! mysql_query('LOCK TABLES user_icon WRITE')){ //user_icon テーブルをロック
-    $str = "サーバが混雑しています。<br>\n時間を置いてから再登録をお願いします。";
-    OutputActionResult($title, $str);
-  }
+  $icon_no = FetchResult('SELECT MAX(icon_no) + 1 FROM user_icon'); //次のアイコン No を取得
+  if($icon_no === false) OutputActionResult($title, $str); //負荷エラー対策
 
-  //アイコン登録数が最大値を超えてないかチェック
-  $icon_no = FetchResult('SELECT MAX(icon_no) FROM user_icon') + 1; //アイコン No 最大値 + 1
-  if($icon_no >= $USER_ICON->number) OutputActionResult($title, 'これ以上登録できません', '', true);
-
-  $file_name = sprintf("%03s.%s", $icon_no, $ext); //ファイル名の桁をそろえる
   //ファイルをテンポラリからコピー
+  $file_name = sprintf("%03s.%s", $icon_no, $ext); //ファイル名の桁を揃える
   if(! move_uploaded_file($tmp_name, $ICON_CONF->path . '/' . $file_name)){
-    $sentence = "ファイルのコピーに失敗しました。<br>\n再度実行してください。";
-    OutputActionResult($title, $sentence, '', true);
+    $str = "ファイルのコピーに失敗しました。<br>\n再度実行してください。";
+    OutputActionResult($title, $str . $back_url);
   }
 
   //データベースに登録
@@ -165,9 +169,13 @@ function UploadIcon(){
     $values .= ", '{$author}'";
   }
 
-  InsertDatabase('user_icon', $items, $values);
-  mysql_query('COMMIT'); //一応コミット
-  $DB_CONF->Disconnect(true); //DB 接続解除
+  if(InsertDatabase('user_icon', $items, $values)){
+    $DB_CONF->Commit();
+    $DB_CONF->Disconnect(); //DB 接続解除
+  }
+  else{
+    OutputActionResult($title, $str);
+  }
 
   //確認ページを出力
   OutputHTMLHeader('ユーザアイコンアップロード処理[確認]', 'icon_upload_check');
@@ -208,7 +216,7 @@ function OutputUploadIconPage(){
 </head>
 <body>
 <a href="./">←戻る</a><br>
-<img class="title" src="img/icon_upload_title.jpg"><br>
+<img class="title" src="img/icon_upload_title.jpg" title="アイコン登録" alt="アイコン登録"><br>
 <table align="center">
 <tr><td class="link"><a href="icon_view.php">→アイコン一覧</a></td><tr>
 <tr><td class="caution">＊あらかじめ指定する大きさ ({$USER_ICON->MaxIconSize()}) にリサイズしてからアップロードしてください。{$cation}</td></tr>
@@ -255,7 +263,7 @@ EOF;
   foreach($color_base as $i => $r){
     foreach($color_base as $j => $g){
       foreach($color_base as $k => $b){
-	$color_list["#{$r}{$g}{$b}"] = (($i + $j + $k) < 8  && ($i + $j) < 5);
+	$color_list["#{$r}{$g}{$b}"] = ($i + $j + $k) < 8  && ($i + $j) < 5;
       }
     }
   }

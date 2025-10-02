@@ -22,35 +22,30 @@ class Role_barrier_wizard extends Role_wizard{
     //人数チェック
     if(count($stack) < 1 || 4 < count($stack)) return '指定人数は1～4人にしてください';
 
-    $user_list = array();
+    $target_stack = array();
+    $handle_stack = array();
     foreach($stack as $id){
       $user = $USERS->ByID($id);
       //例外判定
       if($this->IsActor($user->uname) || ! $USERS->IsVirtualLive($id) || $user->IsDummyBoy()){
 	return '自分・死者・身代わり君には投票できません';
       }
-      $user_list[$id] = $user;
-    }
-
-    $uname_stack  = array();
-    $handle_stack = array();
-    foreach($user_list as $id => $user){
-      $uname_stack[] = $USERS->ByReal($id)->user_no;
+      $target_stack[$id] = $USERS->ByReal($id)->user_no;
       $handle_stack[$id] = $user->handle_name;
     }
-    sort($uname_stack);
+    sort($target_stack);
     ksort($handle_stack);
 
-    $this->SetStack(implode(' ', $uname_stack), 'target_uname');
+    $this->SetStack(implode(' ', $target_stack), 'target_no');
     $this->SetStack(implode(' ', $handle_stack), 'target_handle');
-    return NULL;
+    return null;
   }
 
   function SetGuard($list){
     global $USERS;
 
     $actor     = $this->GetActor()->uname;
-    $stack     = $this->GetStack(NULL, true);
+    $stack     = $this->GetStack(null, true);
     $trapped   = false;
     $frostbite = false;
     foreach(explode(' ', $list) as $id){
@@ -82,5 +77,5 @@ class Role_barrier_wizard extends Role_wizard{
 
   function GuardFailed(){ return false; }
 
-  function GuardAction(){}
+  function GuardAction($user, $flag){}
 }
