@@ -48,12 +48,13 @@ class GameConfig {
   //狼が毒能力者を襲撃した際に巻き込まれる対象 (true:投票者固定 / false:ランダム)
   const POISON_ONLY_EATER = true;
 
-  const CUPID_SELF_SHOOT = 18; //キューピッドが他人撃ち可能となる参加人数
-  const CUTE_WOLF_RATE   =  1; //萌狼の発動率 (%)
-  const GENTLEMAN_RATE   = 13; //紳士・淑女の発動率 (%)
-  const LIAR_RATE        = 95; //狼少年の発動率 (%)
-  const INVISIBLE_RATE   = 15; //光学迷彩の発言が空白に入れ替わる割合 (%)
-  const SILENT_LENGTH    = 25; //無口が発言できる最大文字数
+  const DISABLE_GERD_COUNT =  7; //ゲルト君モード無効が適用される参加人数の初期入力設定 (～人以下)
+  const CUPID_SELF_SHOOT   = 18; //キューピッドが他人撃ち可能となる参加人数
+  const CUTE_WOLF_RATE     =  1; //萌狼の発動率 (%)
+  const GENTLEMAN_RATE     = 13; //紳士・淑女の発動率 (%)
+  const LIAR_RATE          = 95; //狼少年の発動率 (%)
+  const INVISIBLE_RATE     = 15; //光学迷彩の発言が空白に入れ替わる割合 (%)
+  const SILENT_LENGTH      = 25; //無口が発言できる最大文字数
 
   //役者の変換テーブル
   public static $actor_replace_list = ['です' => 'みょん'];

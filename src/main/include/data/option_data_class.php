@@ -8,12 +8,12 @@ final class OptionGroup {
 
 //-- 定数リスト (OptionForm/Type) --//
 final class OptionFormType {
-  const TEXT		= 'text';
-  const PASSWORD	= 'password';
-  const REALTIME	= 'realtime';
-  const LIMIT_TALK	= 'limit_talk';
-  const RADIO		= 'radio';
-  const CHECKBOX	= 'checkbox';
-  const SELECTOR	= 'selector';
-  const GROUP		= 'group';
+  const CHECKBOX		= 'checkbox';
+  const LIMITED_CHECKBOX	= 'limited_checkbox';
+  const REALTIME		= 'realtime';
+  const RADIO			= 'radio';
+  const TEXT			= 'text';
+  const PASSWORD		= 'password';
+  const SELECTOR		= 'selector';
+  const GROUP			= 'group';
 }

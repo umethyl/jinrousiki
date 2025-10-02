@@ -217,20 +217,19 @@ final class Cast {
     $role_list = self::Stack()->Get(self::ROLE);
 
     //役職固定オプション判定
-    $fix_role = null;
-    if (DB::$ROOM->IsOption('gerd') && in_array('human', $role_list)) {
-      $fix_role = 'human';
-    } elseif (DB::$ROOM->IsQuiz()) {
-      $fix_role = 'quiz';
-    }
-
-    if (isset($fix_role)) {
-      $key = array_search($fix_role, $role_list);
-      if (false !== $key) {
-	self::Stack()->Add(self::CAST, $fix_role);
-	self::Stack()->DeleteKey(self::ROLE, $key);
+    foreach (OptionFilterData::$dummy_boy_fix_role as $option) {
+      if (DB::$ROOM->IsOption($option)) {
+	$fix_role = OptionLoader::Load($option)->GetDummyBoyFixRole($role_list);
+	//Text::p($fix_role, '◆DummyBoy: [fix_role]');
+	if (isset($fix_role)) {
+	  $key = array_search($fix_role, $role_list);
+	  if (false !== $key) {
+	    self::Stack()->Add(self::CAST, $fix_role);
+	    self::Stack()->DeleteKey(self::ROLE, $key);
+	  }
+	  return;
+	}
       }
-      return;
     }
 
     shuffle($role_list); //配列をシャッフル
@@ -596,9 +595,13 @@ final class Cast {
 	true === isset($role_list['human'])) {
       $role  = 'human';
       $count = $role_list[$role] - round($user_count / ChaosConfig::$max_human_rate);
-      if (DB::$ROOM->IsOption('gerd')) {
+
+      //ゲルト君モード補正
+      if (OptionManager::EnableGerd()) {
 	$count--;
       }
+      //Text::p($count, '◆Human Count Limit');
+
       if ($count > 0) {
 	$name = ChaosConfig::${$base_name . '_replace_human_role_list'};
 	$rate = Lottery::GetChaos($name, $boost_list);
@@ -672,10 +675,12 @@ final class Cast {
 	}
 
 	$count = ArrayFilter::GetInt($list, $role);
-	if ($role == 'human' && DB::$ROOM->IsOption('gerd')) { //ゲルト君モード
+	if (OptionManager::EnableGerd($role)) { //ゲルト君モード補正
 	  $count--;
 	}
+
 	if ($count > 0) {
+	  //Text::p($count, sprintf('◆ReplaceRole [%s -> %s]', $role, $target));
 	  ArrayFilter::Replace($list, $role, $target, $count); //置換処理
 	}
       }

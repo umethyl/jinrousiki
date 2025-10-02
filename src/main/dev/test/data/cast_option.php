@@ -4,6 +4,7 @@
 #RQ::AddTestRoom('game_option', 'step');
 #RQ::AddTestRoom('game_option', 'quiz');
 #RQ::AddTestRoom('option_role', 'gerd');
+#RQ::AddTestRoom('option_role', 'disable_gerd:7');
 
 //-- add_role --//
 #RQ::AddTestRoom('option_role', 'poison');

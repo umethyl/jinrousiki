@@ -104,7 +104,7 @@
 
 <h2 id="dummy_boy_option">身代わり君設定</h2>
 <p>
-<?php InfoHTML::OutputCategory(['dummy_boy', 'gm_login', 'gm_logout', 'gerd']); ?>
+<?php InfoHTML::OutputCategory(['dummy_boy', 'gm_login', 'gm_logout', 'gerd', 'disable_gerd']); ?>
 </p>
 
 <h3 id="dummy_boy"><?php OptionManager::OutputCaption('dummy_boy'); ?></h3>
@@ -135,6 +135,16 @@
 <li><a href="#chaos"><?php OptionManager::OutputCaption('chaos'); ?></a>の固定配役に村人を一人追加します</li>
 <li><a href="#replace_human"><?php OptionManager::OutputCaption('replace_human'); ?></a>オプションが付いていても村人を一人確保します</li>
 <li><a href="#duel"><?php OptionManager::OutputCaption('duel'); ?></a>・<a href="#festival"><?php OptionManager::OutputCaption('festival'); ?></a>の配役は入れ替えません (最初から存在する場合のみ有効)</li>
+<li><a href="#disable_gerd"><?php OptionManager::OutputCaption('disable_gerd'); ?></a>オプションを設定した場合は機能が無効化される場合があります</li>
+</ul>
+
+<h3 id="disable_gerd"><?php OptionManager::OutputCaption('disable_gerd'); ?> [Ver. 4.1.0 α3～]</h3>
+<ul>
+<li><?php OptionManager::OutputExplain('disable_gerd'); ?></li>
+<li>ゲーム開始時の参加人数が設定された人数以下だった場合に適用されます</li>
+<li>適用された場合は、<a href="#gerd"><?php OptionManager::OutputCaption('gerd'); ?></a>オプションの機能が全て無効化されます</li>
+<li>適用の有効・無効の状態に関わらず、アイコンは共に表示されます</li>
+<li><a href="#gerd"><?php OptionManager::OutputCaption('gerd'); ?></a>オプションを設定しないと設定できません</li>
 </ul>
 
 

@@ -105,13 +105,13 @@ final class IconDB {
 
   //有効判定
   public static function Enable($icon_no) {
-    self::PrepareBool($icon_no, true);
+    self::PrepareBool($icon_no, false);
     return DB::Exists();
   }
 
   //無効判定
   public static function Disable($icon_no) {
-    self::PrepareBool($icon_no, false);
+    self::PrepareBool($icon_no, true);
     return DB::Exists();
   }
 
@@ -223,9 +223,9 @@ final class IconDB {
     $column = 'disable';
     $query  = self::GetQueryIconNo()->Where(['icon_no']);
     if (true === $bool) {
-      $query->WhereNull($column)->WhereBool($column, $bool)->WhereOr([$column, $column]);
-    } else {
       $query->WhereBool($column, $bool);
+    } else {
+      $query->WhereNull($column)->WhereBool($column, $bool)->WhereOr([$column, $column]);
     }
     DB::Prepare($query->Build(), [$icon_no]);
   }

@@ -19,6 +19,33 @@ class OptionFormHTML {
     );
   }
 
+  //チェックボックス生成
+  public static function GenerateCheckbox(OptionCheckbox $filter, $type, $footer) {
+    return sprintf(self::GetCheckbox(),
+      $type, $filter->name, $filter->form_name, $filter->form_value,
+      HTML::GenerateChecked($filter->value), $footer
+    );
+  }
+
+  //制限付きチェックボックスフォーム生成
+  public static function GenerateLimitedCheckbox(OptionLimitedCheckbox $filter) {
+    return sprintf(self::GetLimitedCheckbox(),
+      Text::ConvertLine($filter->GetExplain()), Message::SPACER, $filter->name,
+      $filter->GetLimitedCount(), $filter->GetLimitedFormCaption()
+    );
+  }
+
+  //時刻入力フォーム生成 (リアルタイム制専用)
+  public static function GenerateRealtime(Option_real_time $filter, $day, $night) {
+    return sprintf(self::GetRealTime(),
+      Text::ConvertLine($filter->GetExplain()), Message::SPACER,
+      OptionMessage::REALTIME_DAY, Message::COLON,
+      $filter->name, $day, Message::MINUTE,
+      OptionMessage::REALTIME_NIGHT, Message::COLON,
+      $filter->name, $night, Message::MINUTE
+    );
+  }
+
   //テキストボックス生成
   public static function GenerateTextbox(OptionText $filter) {
     $size = sprintf('%s_input', $filter->name);
@@ -33,32 +60,6 @@ class OptionFormHTML {
     return sprintf(self::GetTextbox(),
       $filter->type, $filter->name, $filter->name, RoomConfig::$$size, $value,
       isset($str) ? HTML::GenerateSpan($str, 'explain') : ''
-    );
-  }
-
-  //チェックボックス生成
-  public static function GenerateCheckbox(OptionCheckbox $filter, $type, $footer) {
-    return sprintf(self::GetCheckbox(),
-      $type, $filter->name, $filter->form_name, $filter->form_value,
-      HTML::GenerateChecked($filter->value), $footer
-    );
-  }
-
-  //時刻入力フォーム生成 (リアルタイム制用)
-  public static function GenerateRealtime(Option_real_time $filter, $day, $night) {
-    return sprintf(self::GetRealTime(),
-      Text::ConvertLine($filter->GetExplain()), Message::SPACER,
-      OptionMessage::REALTIME_DAY, Message::COLON,
-      $filter->name, $day, Message::MINUTE,
-      OptionMessage::REALTIME_NIGHT, Message::COLON,
-      $filter->name, $night, Message::MINUTE
-    );
-  }
-
-  //発言数フォーム生成 (発言数制限制用)
-  public static function GenerateLimitTalk(Option_limit_talk $filter, $count) {
-    return sprintf(self::GetLimitTalk(),
-      Text::ConvertLine($filter->GetExplain()), Message::SPACER, $filter->name, $count
     );
   }
 
@@ -99,26 +100,26 @@ EOF;
     return '<tr><td colspan="2"><hr></td></tr>';
   }
 
-  //テキストボックスタグ
-  private static function GetTextbox() {
-    return '<input type="%s" id="%s" name="%s" size="%d" value="%s">%s';
-  }
-
   //チェックボックスタグ
   public static function GetCheckbox() {
     return '<input type="%s" id="%s" name="%s" value="%s"%s> <span class="explain">%s</span>';
   }
 
+  //制限付きチェックボックスフォームタグ
+  private static function GetLimitedCheckbox() {
+    return '%s%s(<input type="text" name="%s_count" size="2" maxlength="2" value="%d">%s)';
+  }
+
   //時刻入力フォームタグ
   private static function GetRealTime() {
-    return '(%s%s' .
+    return '%s%s(' .
       '%s%s<input type="text" name="%s_day" size="2" maxlength="2" value="%d">%s ' .
       '%s%s<input type="text" name="%s_night" size="2" maxlength="2" value="%d">%s)';
   }
 
-  //発言数フォームタグ
-  private static function GetLimitTalk() {
-    return '(%s%s<input type="text" name="%s_count" size="2" maxlength="2" value="%d">)';
+  //テキストボックスタグ
+  private static function GetTextbox() {
+    return '<input type="%s" id="%s" name="%s" size="%d" value="%s">%s';
   }
 
   //セレクタタグ

@@ -19,6 +19,7 @@ class RoleTestMessage {
 
   /* 追加オプション */
   public static $gerd			= 'ゲルト君';
+  public static $disable_gerd		= 'ゲルト君無効';
   public static $poison			= '毒';
   public static $assassin		= '暗殺';
   public static $wolf			= '人狼';

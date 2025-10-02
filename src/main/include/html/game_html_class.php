@@ -256,7 +256,8 @@ class GameHTML {
       $sound_type = null;
       $alert_flag = false;
       $on_load .= 'output_realtime();';
-      if ($left_time < 1 && DB::$SELF->IsLive()) { //超過判定
+      //超過判定 (身代わり君は霊界でも有効)
+      if ($left_time < 1 && (DB::$SELF->IsLive() || DB::$SELF->IsDummyBoy())) {
 	DB::$ROOM->LoadVote(); //投票情報を取得
 	if (DB::$ROOM->IsDay()) { //未投票判定
 	  $novote_flag = ! DB::$SELF->ExistsVote();

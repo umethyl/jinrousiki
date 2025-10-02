@@ -59,9 +59,9 @@ final class RoleTestController extends JinrouController {
     }
 
     $stack = [
-      'gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf',
-      'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver',
-      'cupid', 'medium', 'mania', 'detective', 'festival', 'chaos_open_cast_camp',
+      'gerd', 'disable_gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf',
+      'tongue_wolf', 'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox',
+      'depraver', 'cupid', 'medium', 'mania', 'detective', 'festival', 'chaos_open_cast_camp',
       'chaos_open_cast_role', 'limit_off'
     ];
     $count = 0;
@@ -129,9 +129,9 @@ final class RoleTestController extends JinrouController {
 
     //普通村向けオプション
     $option_stack = [
-      'gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf',
-      'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver',
-      'cupid', 'medium', 'mania', 'detective'
+      'gerd', 'disable_gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf',
+      'tongue_wolf', 'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox',
+      'depraver', 'cupid', 'medium', 'mania', 'detective'
     ];
     foreach ($option_stack as $option) {
       RQ::Get()->ParsePostOn($option);

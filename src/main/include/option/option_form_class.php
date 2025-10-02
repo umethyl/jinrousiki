@@ -7,7 +7,7 @@ class OptionForm {
     'wish_role', 'real_time', 'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name',
     'necessary_trip', 'close_room',
     'dummy_boy' => null,
-    'dummy_boy_selector', 'gm_password', 'gerd',
+    'dummy_boy_selector', 'gm_password', 'gerd', 'disable_gerd',
     'talk' => null,
     'wait_morning', 'limit_last_words', 'limit_talk', 'secret_talk', 'no_silence',
     'open_cast' => null,
@@ -52,22 +52,22 @@ class OptionForm {
     }
 
     switch ($filter->type) {
-    case OptionFormType::TEXT:
-    case OptionFormType::PASSWORD:
-      $str = self::GenerateTextbox($filter);
-      break;
-
     case OptionFormType::CHECKBOX:
     case OptionFormType::RADIO:
       $str = self::GenerateCheckbox($filter);
+      break;
+
+    case OptionFormType::LIMITED_CHECKBOX:
+      $str = self::GenerateLimitedCheckbox($filter);
       break;
 
     case OptionFormType::REALTIME:
       $str = self::GenerateRealtime($filter);
       break;
 
-    case OptionFormType::LIMIT_TALK:
-      $str = self::GenerateLimitTalk($filter);
+    case OptionFormType::TEXT:
+    case OptionFormType::PASSWORD:
+      $str = self::GenerateTextbox($filter);
       break;
 
     case OptionFormType::SELECTOR:
@@ -108,15 +108,16 @@ class OptionForm {
     OptionFormHTML::OutputToggle($group, OptionMessage::${'category_' . $group});
   }
 
-  //テキストボックス生成
-  private static function GenerateTextbox(OptionText $filter) {
-    return OptionFormHTML::GenerateTextbox($filter);
-  }
-
   //チェックボックス生成
   private static function GenerateCheckbox(OptionCheckbox $filter) {
-    $footer = isset($filter->footer) ? $filter->footer : Text::Quote($filter->GetExplain());
+    $footer = isset($filter->footer) ? $filter->footer : $filter->GetExplain();
     return OptionFormHTML::GenerateCheckbox($filter, $filter->type, Text::ConvertLine($footer));
+  }
+
+  //チェックボックス生成 (制限付き用)
+  private static function GenerateLimitedCheckbox(OptionLimitedCheckbox $filter) {
+    $footer = OptionFormHTML::GenerateLimitedCheckbox($filter);
+    return OptionFormHTML::GenerateCheckbox($filter, OptionFormType::CHECKBOX, $footer);
   }
 
   //チェックボックス生成 (リアルタイム制専用)
@@ -133,16 +134,9 @@ class OptionForm {
     return OptionFormHTML::GenerateCheckbox($filter, OptionFormType::CHECKBOX, $footer);
   }
 
-  //チェックボックス生成 (発言制限制専用)
-  private static function GenerateLimitTalk(Option_limit_talk $filter) {
-    if (OptionManager::IsChange() && DB::$ROOM->IsOption($filter->name)) {
-      $count = ArrayFilter::Pick(DB::$ROOM->game_option->list[$filter->name]);
-    } else {
-      $count = GameConfig::LIMIT_TALK_COUNT;
-    }
-    $footer = OptionFormHTML::GenerateLimitTalk($filter, $count);
-
-    return OptionFormHTML::GenerateCheckbox($filter, OptionFormType::CHECKBOX, $footer);
+  //テキストボックス生成
+  private static function GenerateTextbox(OptionText $filter) {
+    return OptionFormHTML::GenerateTextbox($filter);
   }
 
   //セレクタ生成

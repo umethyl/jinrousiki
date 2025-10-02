@@ -60,17 +60,17 @@ final class IconEditController extends JinrouController {
     }
 
     if (true === IconDB::Using($icon_no)) { //編集制限チェック
-      self::OutputError(IconEditMessage::USING, $url);
+      self::OutputError(IconMessage::USING, $url);
     }
 
     //非表示フラグチェック
     //論理フラグとDBの組み合わせをチェックして変更がある時だけセットする
-    if (true === $disable) { //無効 -> 有効
-      if (false === IconDB::Enable($icon_no)) {
+    if (true === $disable) { //表示 -> 非表示
+      if (true === IconDB::Enable($icon_no)) {
 	$query->SetData('disable', Query::ENABLE);
       }
-    } elseif (false === $disable) { //有効 -> 無効
-      if (false === IconDB::Disable($icon_no)) {
+    } elseif (false === $disable) { //非表示 -> 表示
+      if (true === IconDB::Disable($icon_no)) {
 	$query->SetData('disable', Query::DISABLE);
       }
     }

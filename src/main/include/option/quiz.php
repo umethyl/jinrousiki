@@ -34,6 +34,10 @@ class Option_quiz extends OptionCheckbox {
     return ['panelist'];
   }
 
+  public function GetDummyBoyFixRole(array $list) {
+    return $this->name;
+  }
+
   public function GetWishRole() {
     return ['mad', 'common', 'fox'];
   }

@@ -35,10 +35,6 @@ class Option_topping extends OptionSelector {
     return '固定配役に追加する役職セットです';
   }
 
-  protected function GetRoomCaption() {
-    return parent::GetRoomCaption() . $this->GetRoomCaptionFooter();
-  }
-
   protected function GetURL() {
     return 'chaos.php#' . $this->name;
   }
@@ -51,7 +47,7 @@ class Option_topping extends OptionSelector {
   public function GenerateRoomCaption() {
     $image   = $this->GenerateImage();
     $url     = sprintf('%s_%s', $this->GetURL(), $this->GetRoomType());
-    $caption = parent::GetRoomCaption() . $this->GetRoomImageFooter();
+    $caption = $this->GetCaption() . $this->GetRoomImageFooter();
     $explain = $this->GetExplain() . $this->GetRoomCaptionFooter();
     return OptionHTML::GenerateRoomCaption($image, $url, $caption, $explain);
   }
@@ -61,10 +57,9 @@ class Option_topping extends OptionSelector {
     return ArrayFilter::Pick($this->GetStack());
   }
 
-  //村用キャプション追加メッセージ取得
   protected function GetRoomCaptionFooter() {
     $item = $this->GetItem();
-    return sprintf(' (Type%s)', $item[$this->GetRoomType()]);
+    return $this->GetRoomCaptionConfig('Type%s', $item[$this->GetRoomType()]);
   }
 
   //村用画像追加メッセージ取得

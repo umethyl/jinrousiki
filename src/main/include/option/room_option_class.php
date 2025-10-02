@@ -5,8 +5,8 @@ class RoomOption {
   public static $game_option = [];
   public static $role_option = [];
   public static $icon_order  = [
-    'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'gerd', 'open_vote', 'settle',
-    'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
+    'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'gerd', 'disable_gerd', 'open_vote',
+    'settle', 'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
     'wait_morning', 'limit_last_words', 'limit_talk', 'secret_talk', 'no_silence',
     'not_open_cast', 'auto_open_cast',
     'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf', 'possessed_wolf',
@@ -55,14 +55,18 @@ class RoomOption {
 
   //スタックから表示順に取得
   public static function GetOrder() {
-    if (count(self::$stack) < 1) self::SetStack();
+    if (count(self::$stack) < 1) {
+      self::SetStack();
+    }
     return array_intersect(self::$icon_order, array_keys(self::$stack));
   }
 
   //オプション登録
   public static function Set($type, $name) {
     RQ::Set($name, true);
-    if (! in_array($name, self::$$type)) array_push(self::$$type, $name);
+    if (false === in_array($name, self::$$type)) {
+      array_push(self::$$type, $name);
+    }
   }
 
   //オプションをパースしてスタック登録

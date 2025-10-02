@@ -75,6 +75,12 @@ class OptionManager {
     }
   }
 
+  //ゲルト君モード有効判定
+  public static function EnableGerd($role = 'human') {
+    $option = 'gerd';
+    return DB::$ROOM->IsOption($option) && OptionLoader::Load($option)->EnableGerd($role);
+  }
+
   //オプション名生成
   public static function GenerateCaption($name) {
     return OptionLoader::LoadFile($name) ? OptionLoader::Load($name)->GetName() : '';
@@ -151,8 +157,8 @@ abstract class Option {
     if (OptionManager::IsChange()) {
       switch ($this->type) {
       case OptionFormType::CHECKBOX:
+      case OptionFormType::LIMITED_CHECKBOX:
       case OptionFormType::REALTIME:
-      case OptionFormType::LIMIT_TALK:
 	$this->value = DB::$ROOM->IsOption($this->name);
 	break;
       }
@@ -212,9 +218,20 @@ abstract class Option {
     return $this->GetCaption();
   }
 
-  //キャプション取得 (村用)
-  protected function GetRoomCaption() {
-    return $this->GetCaption();
+  //村用キャプション取得
+  final protected function GetRoomCaption() {
+    return $this->GetCaption() . $this->GetRoomCaptionFooter();
+  }
+
+  //村用キャプションフッター取得
+  protected function GetRoomCaptionFooter() {
+    return '';
+  }
+
+  //個別設定値テキスト取得
+  final protected function GetRoomCaptionConfig(...$stack) {
+    $format = array_shift($stack);
+    return ' ' . Text::Quote(vsprintf($format, $stack));
   }
 
   //説明リンク取得
@@ -304,12 +321,98 @@ abstract class OptionCheckbox extends Option {
     }
   }
 
-  protected function GetRoomCaption() {
-    $str = parent::GetRoomCaption();
+  protected function GetRoomCaptionFooter() {
     if (isset(CastConfig::${$this->name}) && is_int(CastConfig::${$this->name})) {
-      $str .= sprintf(' (%d人～)', CastConfig::${$this->name});
+      return $this->GetRoomCaptionConfig('%d人～', CastConfig::${$this->name});
+    } else {
+      return '';
     }
-    return $str;
+  }
+}
+
+//-- チェックボックス型(制限付き) --//
+abstract class OptionLimitedCheckbox extends OptionCheckbox {
+  public $type = OptionFormType::LIMITED_CHECKBOX;
+
+  public function LoadPost() {
+    RQ::Get()->ParsePostOn($this->name);
+    if (false === RQ::Get()->{$this->name}) {
+      return false;
+    }
+
+    $post = sprintf('%s_count', $this->name);
+    RQ::Get()->ParsePostInt($post);
+    $count = RQ::Get()->$post;
+    if ($count < 1 || 99 < $count) {
+      RoomManagerHTML::OutputResult('limit_over', $this->GetName());
+    }
+    $this->Set(sprintf('%s:%d', $this->name, $count));
+  }
+
+  public function GenerateImage() {
+    $str = sprintf('[%d]', ArrayFilter::Pick($this->GetStack()));
+    return ImageManager::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
+  }
+
+  public function GenerateRoomCaption() {
+    $image   = $this->GenerateImage();
+    $url     = $this->GetURL();
+    $caption = $this->GetCaption();
+    $explain = $this->GetExplain() . $this->GetRoomCaptionFooter();
+    return OptionHTML::GenerateRoomCaption($image, $url, $caption, $explain);
+  }
+
+  //制限設定値取得
+  final public function GetLimitedCount() {
+    if (OptionManager::IsChange() && DB::$ROOM->IsOption($this->name)) {
+      switch ($this->group) {
+      case OptionGroup::GAME:
+	$list = DB::$ROOM->game_option->list;
+	break;
+
+      case OptionGroup::ROLE:
+	$list = DB::$ROOM->option_role->list;
+	break;
+      }
+      return ArrayFilter::Pick($list[$this->name]);
+    } else {
+      return $this->GetDefaultLimitedCount();
+    }
+  }
+
+  //制限の初期設定値取得
+  protected function GetDefaultLimitedCount() {
+    return 0;
+  }
+
+  //制限値設定フォームメッセージ取得
+  public function GetLimitedFormCaption() {
+    return '';
+  }
+
+  //村用キャプション追加メッセージ取得
+  protected function GetRoomCaptionFooter() {
+    $format = $this->GetRoomCaptionFooterFormat();
+    return $this->GetRoomCaptionConfig($format, ArrayFilter::Pick($this->GetStack()));
+  }
+
+  //村用キャプション追加メッセージフォーマット取得
+  protected function GetRoomCaptionFooterFormat() {
+    return '%s';
+  }
+}
+
+//-- テキスト入力型 --//
+abstract class OptionText extends Option {
+  public $group = OptionGroup::NONE;
+  public $type  = OptionFormType::TEXT;
+
+  public function LoadPost() {
+    if ($this->IgnorePost()) {
+      return false;
+    }
+
+    RQ::Get()->ParsePost('Escape', $this->name);
   }
 }
 
@@ -391,19 +494,5 @@ abstract class OptionSelector extends Option {
   private function IsEnable($name) {
     $enable = sprintf('%s_enable', $name);
     return isset(GameOptionConfig::$$enable) ? GameOptionConfig::$$enable : true;
-  }
-}
-
-//-- テキスト入力型 --//
-abstract class OptionText extends Option {
-  public $group = OptionGroup::NONE;
-  public $type  = OptionFormType::TEXT;
-
-  public function LoadPost() {
-    if ($this->IgnorePost()) {
-      return false;
-    }
-
-    RQ::Get()->ParsePost('Escape', $this->name);
   }
 }

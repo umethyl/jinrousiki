@@ -18,6 +18,6 @@ class Option_close_room extends OptionCheckbox {
   }
 
   public function GetExplain() {
-    return '住民登録を停止します [村オプション変更専用]';
+    return '住民登録を停止します (村オプション変更専用)';
   }
 }

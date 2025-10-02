@@ -21,6 +21,9 @@ final class OptionFilterData {
     'sirius_wolf', 'child_fox', 'cupid', 'medium'
   ];
 
+  //身代わり君固定配役 (順番依存あり)
+  public static $dummy_boy_fix_role = ['quiz', 'gerd'];
+
   //闇鍋固定枠追加
   public static $chaos_fix_role = ['topping', 'gerd', 'detective'];
 

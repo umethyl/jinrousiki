@@ -180,6 +180,11 @@ final class RoomManagerController extends JinrouController {
 	RoomOption::LoadPost('gerd');
       }
 
+      //ゲルト君モード無効はゲルト君モードと連動させる
+      if (true === RQ::Get()->gerd) {
+	RoomOption::LoadPost('disable_gerd');
+      }
+
       //闇鍋モード
       if (RQ::Get()->chaos || RQ::Get()->chaosfull || RQ::Get()->chaos_hyper ||
 	  RQ::Get()->chaos_verso) { //闇鍋
