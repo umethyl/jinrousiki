@@ -1,0 +1,130 @@
+@import url(game.css);
+@import url(game_aftergame.css);
+#log{
+ background-color: #F0F8FF;
+ color: #000000;
+}
+#players {
+ border : 1px dashed #DCDCDC;
+}
+#players .player {
+ font-size:smaller;
+}
+#players .player img {
+ display:block;
+ position:absolute;
+}
+#players .player ul {
+ margin: 0 1em 1ex 45px;
+ padding:0 0 0 1ex;
+ list-style-type:none;
+}
+#players .role {
+ font-weight:bolder;
+}
+h1 {
+ font-size:12pt;
+ font-weight:normal;
+}
+h1 em {
+ font-size:15pt;
+ font-weight:bold;
+ font-style:normal;
+}
+img.icon {
+ height:16px;
+ width:16px;
+}
+img.winner {
+ height:15px;
+ width:15px;
+}
+a:link {
+ color:#0000ff;
+}
+a:visited {
+ color:#0000ff;
+}
+a:active {
+ color:#ff0000;
+}
+a:hover {
+ color:#ff0000;
+}
+.old-log-talk{
+  border: 0;
+  border-collapse: collapse;
+  width: 100%
+}
+.day {
+ background-color: #FFFAF0;
+ color: #000000;
+}
+.night {
+ background-color: #000030;
+ color: #FFFAFA;
+}
+.beforegame {
+ background-color: #FFF5EE;
+ color: #000000;
+}
+.aftergame {
+ background-color: #F0F8FF;
+ color:#000000;
+}
+.heaven {
+ background-color: #CCCCCC;
+ color: #000000;
+}
+.talk {
+ position:relative;
+ padding-left:20%;
+}
+.talk dt {
+ width:22%;
+ float:left;
+ clear:both;
+ margin-left:-25%;
+ padding:0.5ex 0;
+ padding-right:3%;
+ border-top:dashed 1px #cccccc;
+}
+.talk dd {
+ width:100%;
+ margin-left:-20%;
+ float:left;
+ padding:0.5ex 0;
+ padding-left:20%;
+ border-top:dashed 1px #cccccc;
+}
+.talk dt.s {
+ width:0;
+ padding:0;
+}
+.talk dd.s {
+ width:125%;
+ margin-left:-25%;
+ padding:0 0 0 25%;
+ background-color:#f5f5f5;
+ color:#000000;
+ font-weight:bolder;
+}
+.talk dt .note{ font-size:80%; }
+.talk .strong { font-size:large; font-weight:bold;
+} .talk .weak { font-size:x-small; }
+
+/* ñêEÇÃîzêF */
+.role.wolf { color:#ff0000; }
+.talk dd.s.wolf_eat { background-color:#ff0000; }
+.role.mage { color:#9933ff; }
+.talk dd.s.mage_do { background-color:#9933ff; }
+.role.necromancer { color:#009900; }
+.role.mad { color:#ff0000; }
+.role.hunter { color:#3399ff; }
+.talk dd.s.guard_do { background-color:#3399ff; }
+.role.common { color:#cc9966; }
+.role.lovers { color:#ff66cc; }
+.role.fox { color:#cc0099; }
+.role.authority { color:#999999; }
+.role.decide { color:#999999; }
+.role.poison { color:#006633; }
