@@ -1,0 +1,77 @@
+<p>
+<a href="debug_1.3.php">1.3</a>
+<a href="debug_1.4.php">1.4</a>
+<a href="debug_1.5.php">1.5</a>
+<a href="debug_2.0.php">2.0</a>
+<a href="debug_2.1.php">2.1</a>
+<a href="debug_2.2.php">2.2</a>
+<a href="debug_2.3.php">2.3</a>
+</p>
+
+<h2>旧版非対応バグリスト</h2>
+<h3>～ Ver. 3.0</h3>
+<ul>
+<li><a href="../new_role/sub_role.php#vega_lovers">織姫</a>：<a href="../new_role/sub_role.php#protected">庇護者</a>を無効化していない (2.3 ～ 4.0 / Rev. 2324)</li>
+<li><a href="../new_role/ability.php#copy_delay">コピー能力者(時間差型)</a> が<a href="../new_role/ability.php#count_decay">回数減衰能力者</a>に変化すると能力を正しく発動できないことがある (1.5 ～ 3.0 / Rev. 1871)</li>
+<li><a href="../script_info.php#difference_objection">異議あり</a>：超過後に実行できてしまう (？ ～ 3.0 / Rev. 1806)</li>
+<li><a href="../new_role/human.php#serve_doll_master">奉公童女</a>：護衛成功率が処理順で変化することがある (3.0 / Rev. 1573)</li>
+<li><a href="../new_role/mania.php#revive_mania">五徳猫</a>の蘇生対象者に対して、死因が多重に出力されることがある (1.5 ～ 3.0 / Rev. 1560)</li>
+<li>複数投票の終端位置の<a href="../new_role/human.php#border_priest">境界師</a>が反応できない (3.0 / Rev. 1513)</li>
+</ul>
+
+<h3>～ Ver. 2.3</h3>
+<ul>
+<li><a href="../new_role/ability.php#revive">蘇生能力者</a>・<a href="../new_role/human.php#evoke_scanner">イタコ</a>の夜の投票不可メッセージが正しくないことがある (1.5 ～ 3.0 / Rev. 1248)</li>
+<li><a href="../new_role/sub_role.php#possessed_target">憑依者</a>に死者投票をしても憑依元に投票してしまう (1.4 ～ 3.0 / Rev. 1202)</li>
+<li>処刑投票が連続して入ることがある (1.3 ～ 3.0 / Rev. 1162)</li>
+<li>入村時に<a href="../game_option.php#wish_role">希望制</a>の入力状況をチェックしていない (1.3 ～ 3.0 / Rev. 1160)</li>
+</ul>
+
+<h3>～ Ver. 2.2</h3>
+<ul>
+<li><a href="../new_role/human.php#guard_hunt">狩り</a>：身代わり死した対象に狩り判定が入ることがある (1.5 ～ 3.0 / Rev. 1555)</li>
+<li>過去ログ：バックリンクが db_no を参照していない (1.4 ～ 3.0 / Rev. 1535)</li>
+<li><a href="../new_role/ability.php#revive">蘇生</a>：<a href="../new_role/sub_role.php#possessed">憑依者</a>経由で<a href="../new_role/ability.php#revive_limit">蘇生対象外</a>の人が蘇生することがある (1.4 ～ 3.0 / Rev. 1534)</li>
+<li><a href="../new_role/ability.php#assassin">暗殺</a>：<a href="../new_role/ability.php#trap">罠</a>に関連した投票順で処理結果が変わることがある (1.4 ～ 3.0 / Rev. 1522)</li>
+<li><a href="../new_role/ability.php#sex">性別鑑定</a>：<a href="../new_role/ogre.php">鬼陣営</a>に付与された<a href="../new_role/sub_role.php#gold_wisp">松明丸</a>を判定しない (1.5 ～ 3.0 / Rev. 1518)</li>
+<li><a href="../new_role/human.php#escaper">逃亡者</a>を希望するとゲーム開始前に<a href="../script_info.php#difference_last_words">遺言</a>を残せない (1.4 ～ 2.3 / Rev. 1008)</li>
+<li>正順ログでゲーム開始が表示されないことがある (？ ～ 2.3 / Rev. 997)</li>
+</ul>
+
+<h3>～ Ver. 2.1</h3>
+<ul>
+<li>正順ログで死因が出ないことがある (？ ～ 3.0 / Rev. 1110)</li>
+</ul>
+
+<h3>～ Ver. 2.0</h3>
+<ul>
+<li>憑依成立後に恋人後追いすると憑依された人の死亡メッセージが出ない (1.4 ～ 2.3 / Rev. 878)</li>
+</ul>
+
+<h3>～ Ver. 1.4</h3>
+<ul>
+<li><a href="../new_role/sub_role.php#mind_lonely">はぐれ者</a>・<a href="../new_role/human.php#whisper_scanner">囁耳鳴</a>：PHP のバージョン依存でエラーになる (1.4 ～ 2.3 / Rev. 1029)</li>
+</ul>
+<h4>凡例</h4>
+<ul>
+<li>内容 (1.4 ～ 2.0 / Rev. 100)<br>
+<ul>
+  <li>Ver. 1.4 ～ 2.0 に影響し、Rev. 100 で修正されました。</li>
+  <li>～ Ver. 1.5にある場合は、Ver. 1.5 以前には非対応です (対応予定はありません)。</li>
+</ul>
+</li>
+</ul>
+
+<h2>再現性不明</h2>
+<h3>Ver. 1</h3>
+<ul>
+  <li>ゲーム終了の切り替え時に発言窓が複数出ることがある<br>
+     =&gt; SQL 接続エラーに起因する事が判明
+  </li>
+  <li>昼の投票時、まれに投票制限時間前に突然死処理が発生する事がある<br>
+     =&gt; 紫炎鯖でのみ確認
+  </li>
+  <li>再投票の結果表示がおかしくなる<br>
+     =&gt; DB の OPTIMIZE で解決する (InnoDB 採用以降は発生しない)
+  </li>
+</ul>
