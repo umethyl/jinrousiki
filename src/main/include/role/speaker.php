@@ -15,7 +15,7 @@ class Role_speaker extends Role_strong_voice{
 
   function IgnoreTalk(){
     global $ROOM;
-    return parent::IgnoreTalk() || ! $ROOM->IsPlaying();
+    return $this->filter->IgnoreTalk() || ! $ROOM->IsPlaying();
   }
 
   function FilterTalk($user, &$name, &$voice, &$str){

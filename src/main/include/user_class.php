@@ -1,7 +1,8 @@
 <?php
 class User{
-  public $uname;
   public $user_no;
+  public $uname;
+  public $role;
   public $main_role;
   public $live;
   public $role_list    = array();
@@ -59,9 +60,12 @@ class User{
   function ChangePlayer($id){
     global $USERS;
 
-    if (! isset($this->role_id) || $this->role_id == $id) return;
+    if (! isset($USERS->player) || ! isset($this->role_id) || $this->role_id == $id) {
+      return false;
+    }
     $this->role_id = $id;
     $this->ParseRoles($USERS->player->roles[$id]);
+    return true;
   }
 
   //指定したユーザーデータのセットを名前つき配列にして返します。

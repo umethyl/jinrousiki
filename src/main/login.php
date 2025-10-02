@@ -1,6 +1,6 @@
 <?php
 require_once('include/init.php');
-$INIT_CONF->LoadClass('SESSION', 'GAME_CONF'); //セッションスタート
+$INIT_CONF->LoadClass('SESSION', 'GAME_CONF', 'ROOM_CONF'); //セッションスタート
 $INIT_CONF->LoadRequest('RequestLogin'); //引数を取得
 $DB_CONF->Connect(); //DB 接続
 
@@ -45,9 +45,9 @@ function OutputLoginResult($title, $jump, $body = null){
   ログイン成功/失敗を true/false で返す
 */
 function LoginManually(){
-  global $SESSION, $RQ_ARGS;
+  global $SERVER_CONF, $SESSION, $RQ_ARGS;
 
-  if (CheckBlackList()) return false; //ブラックリストチェック
+  if (! $SERVER_CONF->debug_mode && CheckBlackList()) return false; //ブラックリストチェック
 
   extract($RQ_ARGS->ToArray());
   if ($uname == '' || $password == '') return false;

@@ -9,9 +9,11 @@ RoleManager::LoadFile('guard');
 class Role_hunter_guard extends Role_guard{
   function __construct(){ parent::__construct(); }
 
-  function GuardAction($user, $flag){
+  function GuardAction(){
     global $USERS;
-    if(! $flag) $USERS->Kill($this->GetActor()->user_no, 'WOLF_KILLED');
+    if ($this->GetVoter()->IsSame($this->GetWolfVoter()->uname)) {
+      $USERS->Kill($this->GetActor()->user_no, 'WOLF_KILLED');
+    }
   }
 
   protected function IsHunt($user){ return parent::IsHunt($user) || $user->IsFox(); }

@@ -105,7 +105,7 @@ function GetRoleList($user_count){
     if (! $chaos_verso) { //-- 最小出現補正 --//
       $stack = array(); //役職系統別配役数
       foreach ($fix_role_list as $key => $value) { //固定枠内の該当グループをカウント
-	$stack[$ROLE_DATA->DistinguishRoleGroup($key)] = $value;
+	@$stack[$ROLE_DATA->DistinguishRoleGroup($key)] += $value;
       }
       //PrintData($stack, 'FixRole');
 
@@ -729,9 +729,11 @@ function AggregateVoteDay(){
     $vote   = @(int)$list['vote_number']; //投票数
     $poll   = @(int)$vote_count_list[$user->uname]; //得票数
 
-    $ROLES->actor = $user; //得票者をセット
     //得票補正 (メイン役職)
+    $ROLES->actor = $USERS->ByReal($user->user_no);
     foreach ($ROLES->Load('vote_poll_main') as $filter) $filter->FilterVotePoll($poll);
+
+    $ROLES->actor = $user;
     if (! $ROOM->IsEvent('no_authority')) { //得票補正 (サブ役職 / 蜃気楼ならスキップ)
       foreach ($ROLES->Load('vote_poll_sub') as $filter) $filter->FilterVotePoll($poll);
     }
