@@ -13,7 +13,7 @@ class RoleUser {
     $stack  = [];
     while ($target->IsMainGroup(CampGroup::UNKNOWN_MANIA)) { //鵺系ならコピー先を辿る
       $id = $target->GetMainRoleTarget();
-      if (is_null($id) || in_array($id, $stack)) {
+      if ((null === $id) || in_array($id, $stack)) {
 	break;
       }
 
@@ -23,7 +23,7 @@ class RoleUser {
 
     if (self::IsDelayCopy($target)) { //時間差コピー能力者ならコピー先を辿る
       $id = $target->GetMainRoleTarget();
-      if (false === is_null($id)) {
+      if (null !== $id) {
 	$target = $reparse ? DB::$USER->ByID($id)->GetReparse() : DB::$USER->ByID($id);
 	if ($target->GetMainCamp(true) == Camp::MANIA) { //神話マニア陣営なら元に戻す
 	  $target = $user;
@@ -52,7 +52,7 @@ class RoleUser {
       $stack = $user->Stack();
       $sex_stack = $stack->Get('gender_status');
       //Text::p($sex_stack, "◆GetSex/Stack [{$user->uname}]");
-      if (is_null($sex_stack)) {
+      if (null === $sex_stack) {
 	$stack->Init('gender_status');
       } elseif (ArrayFilter::IsKey($sex_stack, DB::$ROOM->date)) {
 	$sex_list = ArrayFilter::GetList($sex_stack, DB::$ROOM->date);

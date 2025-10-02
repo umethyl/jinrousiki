@@ -35,9 +35,9 @@ class Role_wizard extends Role {
   //魔法セット (返り値：昼：魔法 / 夜：投票タイプ)
   final public function SetWizard() {
     $list = $this->GetWizardList();
-    $role = $this->GetWizard(is_null($this->action) ? $list : array_keys($list));
+    $role = $this->GetWizard((null === $this->action) ? $list : array_keys($list));
     $this->GetActor()->virtual_role = (is_int($role) ? $this->role : $role); //仮想役職を登録
-    return is_null($this->action) ? $role : $list[$role];
+    return (null === $this->action) ? $role : $list[$role];
   }
 
   //魔法リスト取得

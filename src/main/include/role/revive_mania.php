@@ -16,7 +16,7 @@ class Role_revive_mania extends Role_unknown_mania {
 
     //コピー先無効判定 (不在 > 生存 > 蘇生制限)
     $id = $this->GetActor()->GetMainRoleTarget();
-    if (is_null($id)) {
+    if (null === $id) {
       return false;
     }
 
@@ -30,7 +30,7 @@ class Role_revive_mania extends Role_unknown_mania {
   }
 
   protected function IgnoreResurrect() {
-    return is_null($this->GetStack());
+    return null === $this->GetStack();
   }
 
   protected function IsResurrect() {

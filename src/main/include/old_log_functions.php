@@ -84,7 +84,7 @@ class PageLinkBuilder {
       return Text::QuoteBracket($page);
     }
 
-    if (true === is_null($title)) {
+    if (null === $title) {
       $title = Text::QuoteBracket($page);
     }
     if ($this->file == 'index') {

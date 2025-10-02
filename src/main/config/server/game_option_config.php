@@ -31,12 +31,12 @@ class GameOptionConfig {
 
   //-- 身代わり君設定 --//
   public static $dummy_boy_enable = true; //初日の夜は身代わり君
-  //身代わり君のデフォルト ['':身代わり君無し / 'on':身代わり君有り / 'gm_login': GM 有り ]
+  //身代わり君のデフォルト ['':身代わり君無し / 'on':身代わり君有り / 'gm_login':GM有り ]
   public static $default_dummy_boy = 'on';
 
-  public static $gm_login_enable = true; //GM 有り
+  public static $gm_login_enable = true; //GM有り
 
-  public static $gm_logout_enable = true; //GM ログアウト (GM → 身代わり君有り)
+  public static $gm_logout_enable = true; //GMログアウト (GM → 身代わり君有り)
 
   public static $gerd_enable  = true; //ゲルト君モード
   public static $default_gerd = false;
@@ -44,6 +44,9 @@ class GameOptionConfig {
   //ゲルト君モード無効 (初期設定は GameConfig::DISABLE_GERD_COUNT 参照)
   public static $disable_gerd_enable  = true;
   public static $default_disable_gerd = false;
+
+  public static $temporary_gm_enable  = true; //仮GMモード
+  public static $default_temporary_gm = false;
 
   //身代わり君配役制限
   public static $dummy_boy_cast_limit_enable  = true;

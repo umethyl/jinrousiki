@@ -14,7 +14,7 @@ final class Room extends StackManager {
 
   //-- 初期化・基本関数 --//
   public function __construct($request = null, $lock = false) {
-    if (is_null($request)) {
+    if (null === $request) {
       return;
     }
 
@@ -192,35 +192,56 @@ final class Room extends StackManager {
     $this->LoadWeather(true);
   }
 
+  //-- 日付判定関連 --//
+  //当日判定
+  public function IsDate($date) {
+    return $date == $this->date;
+  }
+
+  //日付セット (ログ用)
+  public function SetDate($date) {
+    return $this->date = $date;
+  }
+
+  //最終日セット (ログ用)
+  /*
+    日付を任意に上書きしてログを出力する際に事前に最終日を退避させておく
+    現在の日付を更新する前に実行すること
+   */
+  public function SetLastDate() {
+    return $this->last_date = $this->date;
+  }
+
   //-- シーン判定関連 --//
   //ゲーム開始前シーン判定
   public function IsBeforeGame() {
-    return $this->scene == RoomScene::BEFORE;
+    return RoomScene::BEFORE == $this->scene;
   }
 
   //ゲーム中 (昼) シーン判定
   public function IsDay() {
-    return $this->scene == RoomScene::DAY;
+    return RoomScene::DAY == $this->scene;
   }
 
   //ゲーム中 (夜) シーン判定
   public function IsNight() {
-    return $this->scene == RoomScene::NIGHT;
+    return RoomScene::NIGHT == $this->scene;
   }
 
   //ゲーム終了後シーン判定
   public function IsAfterGame() {
-    return $this->scene == RoomScene::AFTER;
+    return RoomScene::AFTER == $this->scene;
   }
 
+  //-- ステータス判定関連 --//
   //ゲーム開始前判定
   public function IsWaiting() {
-    return $this->status == RoomStatus::WAITING;
+    return RoomStatus::WAITING == $this->status;
   }
 
   //募集停止中判定
   public function IsClosing() {
-    return $this->status == RoomStatus::CLOSING;
+    return RoomStatus::CLOSING == $this->status;
   }
 
   //ゲーム中判定 (仮想処理をする為、status では判定しない)
@@ -230,12 +251,12 @@ final class Room extends StackManager {
 
   //ゲーム終了判定
   public function IsFinished() {
-    return $this->status == RoomStatus::FINISHED;
+    return RoomStatus::FINISHED == $this->status;
   }
 
-  //当日判定
-  public function IsDate($date) {
-    return $this->date == $date;
+  //ステータスセット (ログ用)
+  public function SetStatus($status) {
+    $this->status = $status;
   }
 
   //-- モード判定関連 --//
@@ -310,9 +331,24 @@ final class Room extends StackManager {
   }
 
   //-- 時間関連 --//
+  //現在時刻セット
+  public function SetTime() {
+    $this->system_time = Time::Get();
+  }
+
+  //突然死タイマー初期化
+  public function InitializeSuddenDeath() {
+    $this->sudden_death = 0;
+  }
+
   //突然死タイマーセット
   public function SetSuddenDeath() {
     $this->sudden_death = TimeConfig::SUDDEN_DEATH - RoomDB::GetTime();
+  }
+
+  //突然死タイマーリセット
+  public function ResetSuddenDeath() {
+    $this->sudden_death = TimeConfig::SUDDEN_DEATH;
   }
 
   //超過警告メッセージ登録
@@ -330,7 +366,7 @@ final class Room extends StackManager {
   public function LoadVote($kick = false) {
     if (RQ::Get()->IsVirtualRoom()) {
       $vote_list = RQ::GetTest()->vote->{$this->scene};
-      if (is_null($vote_list)) {
+      if (null === $vote_list) {
 	return null;
       }
     } else {
@@ -389,6 +425,11 @@ final class Room extends StackManager {
       }
     }
     return $stack;
+  }
+
+  //再投票カウントリセット
+  public function ResetRevoteCount() {
+    $this->revote_count = 0;
   }
 
   //-- システムメッセージ関連 --//

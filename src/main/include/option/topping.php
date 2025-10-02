@@ -8,14 +8,14 @@ class Option_topping extends OptionSelector {
   }
 
   protected function LoadValue() {
-    if (OptionManager::IsChange() && DB::$ROOM->IsOption($this->name)) {
+    if (RoomOptionManager::IsChange() && DB::$ROOM->IsOption($this->name)) {
       $this->value = DB::$ROOM->option_role->list[$this->name][0];
     }
   }
 
   public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
-    if (is_null(RQ::Get()->{$this->name})) {
+    if (null === RQ::Get()->{$this->name}) {
       return false;
     }
 

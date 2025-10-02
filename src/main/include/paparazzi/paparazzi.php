@@ -5,7 +5,7 @@ class JinrouLogger {
 
   //ロガーロード
   public static function Load() {
-    if (is_null(self::$instance)) {
+    if (null === self::$instance) {
       self::$instance = new Paparazzi();
     }
     return self::$instance;

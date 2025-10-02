@@ -46,7 +46,7 @@ class JinrouAdmin {
     }
 
     $file = IconDB::GetFile($icon_no); //存在判定
-    if (false === $file || is_null($file)) {
+    if (false === $file || null === $file) {
       HTML::OutputResult($title, AdminMessage::DELETE_ICON_NOT_EXISTS);
     }
 
@@ -70,7 +70,7 @@ class JinrouAdmin {
 
 	DB::LoadRoom();
 	DB::$ROOM->SetFlag(RoomMode::LOG);
-	DB::$ROOM->last_date = DB::$ROOM->date;
+	DB::$ROOM->SetLastDate();
 
 	DB::LoadUser();
 	DB::LoadViewer();

@@ -236,13 +236,16 @@ final class UserManagerController extends JinrouController {
       if ($stack['session_id'] != Session::GetID()) {
 	self::OutputError(Message::SESSION_ERROR, UserManagerMessage::SESSION);
       }
+
       foreach ($stack as $key => $value) {
-	if (array_key_exists($key, RQ::Get())) RQ::Set($key, $value);
+	if (array_key_exists($key, RQ::Get())) {
+	  RQ::Set($key, $value);
+	}
       }
     }
 
     DB::SetRoom(RoomLoaderDB::LoadEntryUserPage());
-    if (is_null(DB::$ROOM->id)) {
+    if (null === DB::$ROOM->id) {
       $str = sprintf(UserManagerMessage::NOT_EXISTS, RQ::Get()->room_no);
       self::OutputError(UserManagerMessage::LOGIN, $str);
     }

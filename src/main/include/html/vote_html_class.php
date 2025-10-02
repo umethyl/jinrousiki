@@ -11,7 +11,7 @@ class VoteHTML {
 
   //エラーページ出力
   public static function OutputError($title, $str = null) {
-    if (is_null($str)) {
+    if (null === $str) {
       $str = VoteMessage::BUG;
     }
     HTML::OutputResult(sprintf(VoteMessage::ERROR_TITLE, $title), self::GenerateResult($str));

@@ -9,7 +9,9 @@
 require_once('init.php');
 
 $disable = true; //false にすると使用可能になる
-if ($disable) HTML::OutputUnusableError();
+if (true === $disable) {
+  HTML::OutputUnusableError();
+}
 
 DB::Connect();
 HTML::OutputHeader('Test Tools', null, true);
@@ -77,9 +79,12 @@ function OutputExportIconTable() {
   DB::Prepare($query);
   foreach (DB::FetchAssoc(true) as $stack) {
     extract($stack);
-    if ($icon_no <= 10) continue;
-    $date = is_null($regist_date) ? 'NULL' : "'$regist_date'";
-    $bool = is_null($disable) ? 'NULL' : "'$disable'";
+    if ($icon_no <= 10) {
+      continue;
+    }
+
+    $date = (null === $regist_date) ? 'NULL' : "'$regist_date'";
+    $bool = (null === $disable) ? 'NULL' : "'$disable'";
     $str .= "({$icon_no}, '{$icon_name}', '{$icon_filename}', {$icon_width}, " .
       "{$icon_height}, '{$color}', NULL, '{$appearance}', '{$category}', '{$author}', {$date}, " .
       "$bool),\n<br>";

@@ -12,7 +12,7 @@ class Session {
 
   //セッション開始
   public static function Start() {
-    if (is_null(self::$id)) {
+    if (null === self::$id) {
       new self();
     }
   }

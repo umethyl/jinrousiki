@@ -190,7 +190,7 @@ class Role_lovers extends Role {
 
     if (RoleUser::IsDelayCopy($user)) { //時間差コピー能力者ならコピー先を辿る
       $id = $user->GetMainRoleTarget();
-      return is_null($id) ? false : DB::$USER->ByID($id)->IsMainGroup(CampGroup::DEPRAVER);
+      return (null === $id) ? false : DB::$USER->ByID($id)->IsMainGroup(CampGroup::DEPRAVER);
     } else {
       return $user->IsMainGroup(CampGroup::DEPRAVER);
     }

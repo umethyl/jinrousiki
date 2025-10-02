@@ -53,7 +53,7 @@ class Role_possessed_wolf extends Role_wolf {
       //憑依成立している恋人なら、後追いが発生していないか確認する
       if ($user->IsOff(UserMode::POSSESSED_RESET) && $user->IsOff(UserMode::POSSESSED_CANCEL) &&
 	  $user->IsRole('lovers')) {
-	if (is_null($followed_list)) {
+	if (null === $followed_list) {
 	  $followed_list = RoleLoader::Load('lovers')->Followed(false, true);
 	}
 
@@ -64,9 +64,14 @@ class Role_possessed_wolf extends Role_wolf {
 
       //憑依者死亡 > 憑依リセット > 憑依失敗 > 憑依成功
       if ($user->IsDead(true)) {
-	if (isset($target->id)) $this->PossessedCancelWolfKill($target);
+	if (isset($target->id)) {
+	  $this->PossessedCancelWolfKill($target);
+	}
       } elseif ($user->IsOn(UserMode::POSSESSED_RESET)) {
-	if (isset($target->id)) $this->PossessedCancelWolfKill($target);
+	if (isset($target->id)) {
+	  $this->PossessedCancelWolfKill($target);
+	}
+
 	if (! $user->IsSame($virtual)) { //憑依中なら元の体に戻される
 	  //憑依先のリセット処理
 	  $virtual->ReturnPossessed('possessed');

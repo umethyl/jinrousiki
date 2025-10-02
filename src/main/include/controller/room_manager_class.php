@@ -39,33 +39,14 @@ final class RoomManagerController extends JinrouController {
 
   //村作成画面出力
   public static function OutputCreate() {
-    if (ServerConfig::DISABLE_ESTABLISH || DatabaseConfig::DISABLE) {
+    if (ServerConfig::DISABLE_ESTABLISH || DatabaseConfig::DISABLE) { //無効判定
       Text::Output(RoomManagerMessage::NOT_ESTABLISH);
       return;
     }
 
-    OptionManager::Stack()->Set('change', RQ::Get()->room_no > 0);
-    if (OptionManager::IsChange()) {
-      Session::Login();
-      DB::SetRoom(RoomManagerDB::Load());
-
-      $title  = RoomManagerMessage::TITLE_CHANGE . ' ' . Message::ERROR_TITLE;
-      $header = DB::$ROOM->id . GameMessage::ROOM_NUMBER_FOOTER;
-      if (DB::$ROOM->IsFinished()) {
-	HTML::OutputResult($title, $header . RoomManagerMessage::ERROR_FINISHED);
-      }
-      if (false === DB::$ROOM->IsBeforegame()) {
-	HTML::OutputResult($title, $header . RoomManagerMessage::ERROR_CHANGE_PLAYING);
-      }
-
-      DB::LoadUser();
-      DB::LoadSelf();
-      if (false === DB::$SELF->IsDummyBoy()) {
-	$body = sprintf(RoomManagerMessage::ERROR_CHANGE_NOT_GM, Message::DUMMY_BOY, Message::GM);
-	HTML::OutputResult($title, $body);
-      }
-      DB::$ROOM->ParseOption(true);
-
+    RoomOptionManager::Stack()->Set('change', RQ::Get()->room_no > 0);
+    if (RoomOptionManager::IsChange()) {
+      self::LoadOutputCreateInChange();
       HTML::OutputHeader(RoomManagerMessage::TITLE_CHANGE, 'room_manager');
       HTML::OutputHeaderTitle(RoomManagerMessage::TITLE_CHANGE);
     }
@@ -93,217 +74,28 @@ final class RoomManagerController extends JinrouController {
     }
 
     if (true === RQ::Get()->change_room) {
-      OptionManager::Stack()->Set('change', true);
-      Session::Login();
-      DB::SetRoom(RoomManagerDB::Load(true));
-
-      $title  = RoomManagerMessage::TITLE_CHANGE . ' ' . Message::ERROR_TITLE;
-      $header = DB::$ROOM->id . GameMessage::ROOM_NUMBER_FOOTER;
-      if (DB::$ROOM->IsFinished()) {
-	HTML::OutputResult($title, $header . RoomManagerMessage::ERROR_FINISHED);
-      }
-      if (false === DB::$ROOM->IsBeforegame()) {
-	HTML::OutputResult($title, $header . RoomManagerMessage::ERROR_CHANGE_PLAYING);
-      }
-
-      DB::LoadUser();
-      if (RQ::Get()->max_user < DB::$USER->Count()) {
-	$title = sprintf('%s [%s]',
-	  RoomManagerMessage::TITLE_CHANGE, RoomManagerMessage::ERROR_INPUT
-	);
-	HTML::OutputResult($title, RoomManagerMessage::ERROR_CHANGE_MAX_USER);
-      }
-
-      DB::LoadSelf();
-      if (false === DB::$SELF->IsDummyBoy()) {
-	$body = sprintf(RoomManagerMessage::ERROR_CHANGE_NOT_GM, Message::DUMMY_BOY, Message::GM);
-	HTML::OutputResult($title, $body);
-      }
-      DB::$ROOM->ParseOption(true);
+      RoomOptionManager::Stack()->Set('change', true);
+      self::LoadCreateInChange();
     } else {
       self::ValidateEstablishLimit();
     }
 
     //-- ゲームオプションをセット --//
-    RoomOption::LoadPost('wish_role', 'real_time');
-    if (RQ::Get()->real_time) {
-      RoomOption::LoadPost('wait_morning');
-    }
-    RoomOption::LoadPost(
-      'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
-      'limit_last_words', 'limit_talk', 'secret_talk', 'dummy_boy_selector',
-      'not_open_cast_selector', 'perverseness', 'replace_human_selector', 'special_role'
-    );
-
-    if (true === RQ::Get()->change_room) { //変更できないオプションを自動セット
-      foreach (['gm_login', 'dummy_boy'] as $option) {
-	if (DB::$ROOM->IsOption($option)) {
-	  OptionLoader::Load($option)->LoadPost();
-	  if (RQ::Get()->$option) {
-	    break;
-	  }
-	}
-      }
-    }
-
-    if (RQ::Get()->quiz) { //クイズ村
-      if (false === RQ::Get()->change_room) {
-	RQ::Get()->ParsePostStr('gm_password'); //GM ログインパスワードをチェック
-	if (RQ::Get()->gm_password == '') {
-	  RoomManagerHTML::OutputResult('no_password');
-	}
-	$dummy_boy_handle_name = Message::GM;
-	$dummy_boy_password    = RQ::Get()->gm_password;
-      }
-      RoomOption::Set(OptionGroup::GAME, 'dummy_boy');
-      RoomOption::Set(OptionGroup::GAME, 'gm_login');
-    } else {
-      //身代わり君関連のチェック
-      if (RQ::Get()->dummy_boy) {
-	if (false === RQ::Get()->change_room) {
-	  $dummy_boy_handle_name = Message::DUMMY_BOY;
-	  $dummy_boy_password    = ServerConfig::PASSWORD;
-	}
-	RoomOption::LoadPost('gerd', 'dummy_boy_cast_limit');
-      } elseif (RQ::Get()->gm_login) {
-	if (false === RQ::Get()->change_room) {
-	  RQ::Get()->ParsePostStr('gm_password'); //GM ログインパスワードをチェック
-	  if (RQ::Get()->gm_password == '') {
-	    RoomManagerHTML::OutputResult('no_password');
-	  }
-	  $dummy_boy_handle_name = Message::GM;
-	  $dummy_boy_password    = RQ::Get()->gm_password;
-	}
-	RoomOption::Set(OptionGroup::GAME, 'dummy_boy');
-	RoomOption::LoadPost('gerd', 'dummy_boy_cast_limit');
-      }
-
-      //ゲルト君モード無効はゲルト君モードと連動させる
-      if (true === RQ::Get()->gerd) {
-	RoomOption::LoadPost('disable_gerd');
-      }
-
-      //闇鍋モード
-      if (RQ::Get()->chaos || RQ::Get()->chaosfull || RQ::Get()->chaos_hyper ||
-	  RQ::Get()->chaos_verso) { //闇鍋
-	RoomOption::LoadPost(
-	  'secret_sub_role', 'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit'
-	);
-      } elseif (RQ::Get()->duel || RQ::Get()->gray_random || RQ::Get()->step) {
-	//特殊配役
-      } else { //通常村
-	RoomOption::LoadPost(
-	  'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf', 'possessed_wolf',
-	  'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'medium'
-	);
-	if (false === RQ::Get()->full_cupid) {
-	  RoomOption::LoadPost('cupid');
-	}
-	if (false === RQ::Get()->full_mania) {
-	  RoomOption::LoadPost('mania');
-	}
-	if (false === RQ::Get()->perverseness) {
-	  RoomOption::LoadPost('decide', 'authority');
-	}
-      }
-
-      if (false === RQ::Get()->perverseness) {
-	RoomOption::LoadPost('sudden_death');
-      }
-      RoomOption::LoadPost(
-	'joker', 'death_note', 'detective', 'full_weather', 'festival', 'change_common_selector',
-	'change_mad_selector', 'change_cupid_selector'
-      );
-      if (false === RQ::Get()->full_weather) {
-	RoomOption::LoadPost('weather');
-      }
-    }
-    RoomOption::LoadPost(
-      'no_silence', 'liar', 'gentleman', 'passion', 'deep_sleep', 'mind_open', 'blinder',
-      'critical', 'notice_critical'
-    );
-
-    $game_option = RoomOption::Get(OptionGroup::GAME);
-    $option_role = RoomOption::Get(OptionGroup::ROLE);
+    RoomOptionManager::LoadPost();
     //self::p(); //テスト用
 
+    //-- 登録処理 --//
     if (true === RQ::Get()->change_room) { //オプション変更
-      RoomOption::LoadPost('close_room');
-      if (RQ::Get()->gm_logout) { //GM ログアウト処理
-	if (DB::$ROOM->IsClosing() || RQ::Get()->close_room == RoomStatus::CLOSING) {
-	  RoomManagerHTML::OutputResult('gm_logout');
-	} elseif (false === UserDB::LogoutGM()) {
-	  RoomManagerHTML::OutputResult('busy');
-	}
-      }
-      $list = [
-	'name'		=> RQ::Get()->room_name,
-	'comment'	=> RQ::Get()->room_comment,
-	'max_user'	=> RQ::Get()->max_user,
-	'game_option'	=> $game_option,
-	'option_role'	=> $option_role,
-	'status'	=> RQ::Get()->close_room ? RoomStatus::CLOSING : RoomStatus::WAITING
-      ];
-      if (false === RoomManagerDB::Update($list)) {
-	RoomManagerHTML::OutputResult('busy');
-      }
-
-      //システムメッセージ
-      $str = Message::SYSTEM . Message::COLON . RoomManagerMessage::CHANGE;
-      RoomTalk::StoreBeforeGame($str, DB::$SELF);
-
-      //投票リセット処理 (募集停止のみが変更されている場合はスキップ)
-      if (DB::$ROOM->status == $list['status'] ||
-	  DB::$ROOM->game_option->row != $game_option ||
-	  DB::$ROOM->option_role->row != $option_role) {
-	if (false === RoomDB::UpdateVoteCount()) {
-	  RoomManagerHTML::OutputResult('busy');
-	}
-      }
-      DB::Commit();
-
+      self::StoreInChange();
       $str = HTML::GenerateCloseWindow(RoomManagerMessage::CHANGE);
       HTML::OutputResult(RoomManagerMessage::TITLE_CHANGE, $str);
-    }
-
-    //-- 登録処理 --//
-    $room_no = RoomManagerDB::GetNext(); //村番号を取得
-    if (false === ServerConfig::DRY_RUN) {
-      if (false === RoomManagerDB::Insert($room_no, $game_option, $option_role)) { //村作成
-	RoomManagerHTML::OutputResult('busy');
-      }
-
-      //身代わり君を入村させる
-      if (RQ::Get()->dummy_boy && RoomManagerDB::CountUser($room_no) == 0) {
-	$list = [
-	  'room_no'	=> $room_no,
-	  'user_no'	=> GM::ID,
-	  'uname'	=> GM::DUMMY_BOY,
-	  'handle_name'	=> $dummy_boy_handle_name,
-	  'password'	=> $dummy_boy_password,
-	  'icon_no'	=> RQ::Get()->gerd ? UserIconConfig::GERD : 0,
-	  'sex'		=> Sex::MALE,
-	  'profile'	=> Message::DUMMY_BOY_PROFILE,
-	  'last_words'	=> Message::DUMMY_BOY_LAST_WORDS
-	];
-	if (false === UserDB::Insert($list)) {
-	  RoomManagerHTML::OutputResult('busy');
-	}
-      }
-    }
-
-    JinrouTwitter::Send($room_no, RQ::Get()->room_name, RQ::Get()->room_comment); //Twitter 投稿
-
-    if (CacheConfig::ENABLE) {
-      JinrouCacheDB::Clear(); //コミットも内部で行う
     } else {
-      DB::Commit();
+      self::Store();
+      $url  = ServerConfig::SITE_ROOT;
+      $jump = URL::GetJump($url);
+      $str  = Text::Join(sprintf(RoomManagerMessage::ENTRY, RQ::Get()->room_name), $jump);
+      HTML::OutputResult(RoomManagerMessage::TITLE, $str, $url);
     }
-
-    $url  = ServerConfig::SITE_ROOT;
-    $jump = URL::GetJump($url);
-    $str  = Text::Join(sprintf(RoomManagerMessage::ENTRY, RQ::Get()->room_name), $jump);
-    HTML::OutputResult(RoomManagerMessage::TITLE, $str, $url);
   }
 
   //稼働中の村リスト出力
@@ -319,21 +111,87 @@ final class RoomManagerController extends JinrouController {
 
   //部屋説明出力
   private static function OutputDescribe() {
-    //エラーチェック
-    $title = RoomManagerMessage::TITLE_DESCRIBE . ' ' . Message::ERROR_TITLE;
+    //リクエストチェック
     if (RQ::Get()->room_no < 1) {
-      HTML::OutputResult($title, Message::INVALID_ROOM);
+      self::OutputDescribeError(Message::INVALID_ROOM);
     }
 
+    //村情報ロード
     DB::SetRoom(RoomManagerDB::Load());
     if (DB::$ROOM->id < 1) {
-      HTML::OutputResult($title, Message::INVALID_ROOM);
+      self::OutputDescribeError(Message::INVALID_ROOM);
     }
     if (DB::$ROOM->IsFinished()) {
-      $body = DB::$ROOM->id . GameMessage::ROOM_NUMBER_FOOTER . RoomManagerMessage::ERROR_FINISHED;
-      HTML::OutputResult($title, $body);
+      self::OutputDescribeError(self::GetErrorRoom(RoomManagerMessage::ERROR_FINISHED));
     }
+
     RoomManagerHTML::OutputDescribe();
+  }
+
+  //部屋説明エラー出力
+  private static function OutputDescribeError($body) {
+    HTML::OutputResult(self::GetErrorTitle(RoomManagerMessage::TITLE_DESCRIBE), $body);
+  }
+
+  //データロード (村作成画面出力 / オプション変更時)
+  private static function LoadOutputCreateInChange() {
+    Session::Login();
+
+    //村情報ロード
+    DB::SetRoom(RoomManagerDB::Load());
+    self::ValidateRoomCreateInChange();
+
+    //ユーザー情報ロード
+    DB::LoadUser();
+    DB::LoadSelf();
+    DB::$ROOM->ParseOption(true);
+    self::ValidateSelfCreateInChange();
+  }
+
+  //データロード (村作成 / オプション変更時)
+  private static function LoadCreateInChange() {
+    Session::Login();
+
+    //村情報ロード
+    DB::SetRoom(RoomManagerDB::Load(true));
+    self::ValidateRoomCreateInChange();
+
+    //ユーザー情報ロード
+    DB::LoadUser();
+    if (RQ::Get()->max_user < DB::$USER->Count()) {
+      $title = sprintf('%s [%s]',
+	RoomManagerMessage::TITLE_CHANGE, RoomManagerMessage::ERROR_INPUT
+      );
+      HTML::OutputResult($title, RoomManagerMessage::ERROR_CHANGE_MAX_USER);
+    }
+
+    //本人情報ロード
+    DB::LoadSelf();
+    DB::$ROOM->ParseOption(true);
+    self::ValidateSelfCreateInChange();
+  }
+
+  //村情報チェック (オプション変更時)
+  private static function ValidateRoomCreateInChange() {
+    if (DB::$ROOM->IsFinished()) {
+      self::OutputCreateInChangeError(self::GetErrorRoom(RoomManagerMessage::ERROR_FINISHED));
+    }
+    if (false === DB::$ROOM->IsBeforegame()) {
+      self::OutputCreateInChangeError(self::GetErrorRoom(RoomManagerMessage::ERROR_CHANGE_PLAYING));
+    }
+  }
+
+  //本人情報チェック (オプション変更時)
+  private static function ValidateSelfCreateInChange() {
+    if (false === RoomOptionManager::EnableChange()) {
+      $body = sprintf(RoomManagerMessage::ERROR_CHANGE_NOT_GM, Message::DUMMY_BOY, Message::GM);
+      self::OutputCreateInChangeError($body);
+    }
+  }
+
+  //オプション変更時エラー出力
+  private static function OutputCreateInChangeError($body) {
+    HTML::OutputResult(self::GetErrorTitle(RoomManagerMessage::TITLE_CHANGE), $body);
   }
 
   //村作成呼び出しチェック
@@ -423,6 +281,101 @@ final class RoomManagerController extends JinrouController {
     }
   }
 
+  //村作成情報登録 (オプション変更時)
+  private static function StoreInChange() {
+    RoomOption::LoadPost('close_room');
+    if (RQ::Get()->gm_logout) { //GMログアウト処理
+      if (DB::$ROOM->IsClosing() || RQ::Get()->close_room == RoomStatus::CLOSING) {
+	RoomManagerHTML::OutputResult('gm_logout');
+      } elseif (false === UserDB::LogoutGM()) {
+	RoomManagerHTML::OutputResult('busy');
+      }
+    }
+
+    $game_option = RoomOption::Get(OptionGroup::GAME);
+    $option_role = RoomOption::Get(OptionGroup::ROLE);
+    $list = [
+      'name'		=> RQ::Get()->room_name,
+      'comment'		=> RQ::Get()->room_comment,
+      'max_user'	=> RQ::Get()->max_user,
+      'game_option'	=> $game_option,
+      'option_role'	=> $option_role,
+      'status'		=> RQ::Get()->close_room ? RoomStatus::CLOSING : RoomStatus::WAITING
+    ];
+    if (false === RoomManagerDB::Update($list)) {
+      RoomManagerHTML::OutputResult('busy');
+    }
+
+    //システムメッセージ
+    $str = Message::SYSTEM . Message::COLON . RoomManagerMessage::CHANGE;
+    RoomTalk::StoreBeforeGame($str, DB::$SELF);
+
+    //投票リセット処理 (募集停止のみが変更されている場合はスキップ)
+    if (DB::$ROOM->status == $list['status'] ||
+	DB::$ROOM->game_option->row != $game_option ||
+	DB::$ROOM->option_role->row != $option_role) {
+      if (false === RoomDB::UpdateVoteCount()) {
+	RoomManagerHTML::OutputResult('busy');
+      }
+    }
+    DB::Commit();
+  }
+
+  //村作成情報登録
+  private static function Store() {
+    $room_no = RoomManagerDB::GetNext(); //村番号を取得
+    if (false === ServerConfig::DRY_RUN) {
+      $game_option = RoomOption::Get(OptionGroup::GAME);
+      $option_role = RoomOption::Get(OptionGroup::ROLE);
+      if (false === RoomManagerDB::Insert($room_no, $game_option, $option_role)) { //村作成
+	RoomManagerHTML::OutputResult('busy');
+      }
+
+      //身代わり君を入村させる
+      if (RQ::Get()->dummy_boy && RoomManagerDB::CountUser($room_no) == 0) {
+	$list = [
+	  'room_no'	=> $room_no,
+	  'user_no'	=> GM::ID,
+	  'uname'	=> GM::DUMMY_BOY,
+	  'handle_name'	=> RoomOptionManager::Stack()->Get('gm_name'),
+	  'password'	=> RoomOptionManager::Stack()->Get('gm_password'),
+	  'icon_no'	=> RQ::Get()->gerd ? UserIconConfig::GERD : 0,
+	  'sex'		=> Sex::MALE,
+	  'profile'	=> Message::DUMMY_BOY_PROFILE,
+	  'last_words'	=> Message::DUMMY_BOY_LAST_WORDS
+	];
+	if (false === UserDB::Insert($list)) {
+	  RoomManagerHTML::OutputResult('busy');
+	}
+      }
+    }
+
+    //Twitter 投稿
+    JinrouTwitter::Send($room_no, RQ::Get()->room_name, RQ::Get()->room_comment);
+
+    //コミット
+    if (CacheConfig::ENABLE) {
+      JinrouCacheDB::Clear(); //コミットも内部で行う
+    } else {
+      DB::Commit();
+    }
+  }
+
+  //エラーメッセージタイトル取得
+  private static function GetErrorTitle($str) {
+    return $str . ' ' . Message::ERROR_TITLE;
+  }
+
+  //エラーメッセージ対象村取得
+  private static function GetErrorRoom($str) {
+    return self::GetErrorRoomHeader() . $str;
+  }
+
+  //エラーメッセージ対象村ヘッダー取得
+  private static function GetErrorRoomHeader() {
+    return DB::$ROOM->id . GameMessage::ROOM_NUMBER_FOOTER;
+  }
+
   //テスト用結果表示
   private static function p() {
     if (true !== ServerConfig::DEBUG_MODE) { //スキップ判定
@@ -433,6 +386,10 @@ final class RoomManagerController extends JinrouController {
     Text::p($_POST, '◆Post');
     Text::p(RoomOption::Get(OptionGroup::GAME), '◆GameOption');
     Text::p(RoomOption::Get(OptionGroup::ROLE), '◆OptionRole');
+    if (RoomOptionManager::IsChange()) {
+      Text::p(DB::$ROOM->game_option, '◆ROOM/game_option');
+      Text::p(DB::$ROOM->option_role, '◆ROOM/role_option');
+    }
     RQ::p();
     HTML::OutputFooter(true);
   }

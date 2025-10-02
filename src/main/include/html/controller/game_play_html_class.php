@@ -8,7 +8,7 @@ class GamePlayHTML {
 
   //ヘッダーリンク出力
   public static function OutputHeaderLink($url, $add_url, $type = null) {
-    if (true === is_null($type)) {
+    if (null === $type) {
       $type = $url;
     }
     Text::Printf(self::GetHeaderLink(), $url, $add_url, self::GetHeaderStr($type));
@@ -45,7 +45,7 @@ class GamePlayHTML {
 
   //時間設定出力
   public static function OutputTimeSetting() {
-    echo TableHTML::GenerateTdHeader('real-time');
+    TableHTML::OutputTdHeader('real-time');
     if (DB::$ROOM->IsRealTime()) { //実時間の制限時間を取得
       printf(GamePlayMessage::REAL_TIME, DB::$ROOM->real_time->day, DB::$ROOM->real_time->night);
     }
@@ -102,7 +102,7 @@ class GamePlayHTML {
     HTML::OutputDivFooter();
   }
 
-  //投票結果出力 (クイズ村 GM 専用)
+  //投票結果出力 (クイズ村GM専用)
   public static function OutputQuizVote() {
     $stack = [];
     foreach (SystemMessageDB::GetQuizVote() as $key => $list) {

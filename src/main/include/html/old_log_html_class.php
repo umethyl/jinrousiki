@@ -19,8 +19,8 @@ class OldLogHTML {
     }
 
     if (DB::$ROOM->IsOn(RoomMode::WATCH)) { //観戦モード判定
-      DB::$ROOM->status = RoomStatus::PLAYING;
       DB::$ROOM->SetScene(RoomScene::DAY);
+      DB::$ROOM->SetStatus(RoomStatus::PLAYING);
     }
 
     if (RQ::Get()->auto_play) { //自動再生モード判定
@@ -359,12 +359,12 @@ EOF;
     //出力
     $str = '';
     if (true === $border_game_flag && false === RQ::Get()->reverse_log) {
-      DB::$ROOM->date = $date + 1;
+      DB::$ROOM->SetDate($date + 1);
       DB::$ROOM->SetScene(RoomScene::DAY);
       $str .= self::GenerateLastWords() . self::GenerateDead(); //死亡者を出力
     }
 
-    DB::$ROOM->date = $date;
+    DB::$ROOM->SetDate($date);
     DB::$ROOM->SetScene($table_class);
     if ($scene != RoomScene::HEAVEN_ONLY) {
       DB::$ROOM->SetWeather();
@@ -415,7 +415,7 @@ EOF;
 	$str .= self::GenerateDead();
       }
 
-      DB::$ROOM->date = $date + 1;
+      DB::$ROOM->SetDate($date + 1);
       DB::$ROOM->SetScene(RoomScene::DAY);
       $str .= self::GenerateDead() . self::GenerateLastWords(); //遺言を出力
     }
@@ -429,7 +429,7 @@ EOF;
       return $str;
     }
 
-    DB::$ROOM->date = $date;
+    DB::$ROOM->SetDate($date);
     if (true === RQ::Get()->reverse_log) {
       DB::$ROOM->SetScene(RoomScene::NIGHT);
       $str .= self::GenerateVote() . self::GenerateDead();

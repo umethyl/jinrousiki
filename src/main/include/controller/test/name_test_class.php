@@ -61,7 +61,8 @@ final class NameTestController extends JinrouController {
   //役職リスト取得
   private static function GetList() {
     static $stack;
-    if (is_null($stack)) {
+
+    if (null === $stack) {
       $stack = new stdClass();
       foreach (RoleDataManager::GetList() as $role) {
 	$stack->group[RoleDataManager::GetGroup($role)][]     = $role;

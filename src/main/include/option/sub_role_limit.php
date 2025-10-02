@@ -20,14 +20,14 @@ class Option_sub_role_limit extends OptionSelector {
   }
 
   protected function LoadValue() {
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       $this->SetFormValue('key');
     }
   }
 
   public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
-    if (is_null(RQ::Get()->{$this->name})) {
+    if (null === RQ::Get()->{$this->name}) {
       return false;
     }
 

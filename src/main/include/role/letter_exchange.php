@@ -43,7 +43,7 @@ class Role_letter_exchange extends Role {
   //遺言登録
   private function StoreLastWords(User $user, $id) {
     $str = DB::$ROOM->IsTest() ? $user->uname : UserDB::GetLastWords($id);
-    if (is_null($str)) {
+    if (null === $str) {
       return true;
     }
     $user->Update('last_words', $str);

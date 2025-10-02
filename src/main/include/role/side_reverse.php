@@ -10,14 +10,19 @@ class Role_side_reverse extends Role {
     $line   = [];
     foreach (Text::Split($this->GetStack('say')) as $str) {
       if ($str == Text::LF) {
-	if (count($line) > 0) $result .= ArrayFilter::ConcatReverse($line, '');
+	if (count($line) > 0) {
+	  $result .= ArrayFilter::ConcatReverse($line, '');
+	}
 	$result .= $str;
 	$line = [];
       } else {
 	$line[] = $str;
       }
     }
-    if (count($line) > 0) $result .= ArrayFilter::ConcatReverse($line, '');
+ 
+   if (count($line) > 0) {
+      $result .= ArrayFilter::ConcatReverse($line, '');
+    }
     $this->SetStack($result, 'say');
   }
 }

@@ -34,7 +34,7 @@ class Paparazzi {
   }
 
   public function OutputBench($label = null) {
-    echo (is_null($label) ? '' : $label . ':') . sprintf('%f[s]', $this->GetTime());
+    echo ((null === $label) ? '' : $label . ':') . sprintf('%f[s]', $this->GetTime());
   }
 
   public function Collect($force = false) {

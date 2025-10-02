@@ -1,19 +1,19 @@
 <?php
 /*
-  ◆身代わり君は GM (gm_login)
+  ◆身代わり君はGM (gm_login)
 */
 class Option_gm_login extends OptionCheckbox {
   public $group = OptionGroup::GAME;
   public $type  = OptionFormType::RADIO;
 
   protected function FilterEnable() {
-    if (true === $this->enable && OptionManager::IsChange()) {
+    if (true === $this->enable && RoomOptionManager::IsChange()) {
       $this->enable = DB::$ROOM->IsOption($this->name);
     }
   }
 
   public function LoadPost() {
-    if (OptionManager::IsChange()) { //GM ログアウト判定 (クイズ村は無効)
+    if (RoomOptionManager::IsChange()) { //GMログアウト判定 (クイズ村は無効)
       if (RQ::Get()->dummy_boy_selector == 'gm_logout' && false === DB::$ROOM->IsQuiz()) {
 	RQ::Get()->gm_logout = true;
 	return;
@@ -23,10 +23,10 @@ class Option_gm_login extends OptionCheckbox {
   }
 
   public function GetCaption() {
-    return '身代わり君は GM';
+    return '身代わり君はGM';
   }
 
   public function GetExplain() {
-    return '仮想 GM が身代わり君としてログインします';
+    return '仮想GMが身代わり君としてログインします';
   }
 }

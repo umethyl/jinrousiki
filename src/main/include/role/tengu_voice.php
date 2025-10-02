@@ -7,6 +7,8 @@
 RoleLoader::LoadFile('strong_voice');
 class Role_tengu_voice extends Role_strong_voice {
   public function FilterVoice(&$voice, &$str) {
-    if (DB::$ROOM->IsDay() && Lottery::Percent(15)) $voice = TalkVoice::STRONG;
+    if (DB::$ROOM->IsDay() && Lottery::Percent(15)) {
+      $voice = TalkVoice::STRONG;
+    }
   }
 }

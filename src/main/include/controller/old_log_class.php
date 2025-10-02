@@ -25,7 +25,7 @@ final class OldLogController extends JinrouController {
     DB::$ROOM->Flag()->Set(RoomMode::WATCH,    RQ::Get()->watch);
     DB::$ROOM->Flag()->Set(RoomMode::SINGLE,   RQ::Get()->user_no > 0);
     DB::$ROOM->Flag()->Set(RoomMode::PERSONAL, RQ::Get()->personal_result);
-    DB::$ROOM->last_date = DB::$ROOM->date;
+    DB::$ROOM->SetLastDate();
   }
 
   protected static function LoadUser() {

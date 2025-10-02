@@ -104,7 +104,7 @@ final class UserDB {
     return DB::FetchBool();
   }
 
-  //GM ログアウト
+  //GMログアウト
   public static function LogoutGM() {
     $query = self::GetQueryUpdate()->Set(['handle_name', 'password'])->SetNull('session_id')
       ->Where(['user_no']);

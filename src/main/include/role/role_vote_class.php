@@ -175,7 +175,7 @@ class RoleVote {
       if ($role_flag->$role || $wizard_flag->$role) {
 	$filter = RoleLoader::Load($role);
 	$result = $filter->Necromancer($user, $stolen_flag);
-	if (is_null($result)) {
+	if (null === $result) {
 	  continue;
 	}
 

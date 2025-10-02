@@ -43,8 +43,8 @@ final class GameLogController extends JinrouController {
 	   (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Get()->scene))) { //未来判定
 	self::OutputError(GameLogMessage::FUTURE);
       }
-      DB::$ROOM->last_date = DB::$ROOM->date;
-      DB::$ROOM->date      = RQ::Get()->date;
+      DB::$ROOM->SetLastDate();
+      DB::$ROOM->SetDate(RQ::Get()->date);
       DB::$ROOM->SetScene(RQ::Get()->scene);
       DB::$USER->SetEvent(true);
       break;

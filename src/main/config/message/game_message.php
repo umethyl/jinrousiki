@@ -52,6 +52,9 @@ class GameMessage {
   const LIVE = '生存中';
   const DEAD = '死亡';
 
+  /* 特殊ステータス */
+  const TEMPORARY_GM = '仮GM';
+
   /* 投票 */
   const VOTE_RESET = '＜投票がリセットされました　再度投票してください＞'; //投票リセット
 

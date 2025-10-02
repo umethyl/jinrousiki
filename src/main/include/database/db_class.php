@@ -24,7 +24,7 @@ final class DB {
     if (isset($id)) {
       $name = ArrayFilter::Get(DatabaseConfig::$name_list, is_int($id) ? $id - 1 : $id);
     }
-    if (is_null($name)) {
+    if (null === $name) {
       $name = DatabaseConfig::NAME;
     }
 
@@ -56,7 +56,7 @@ final class DB {
 
   //データベース接続
   public static function Connect($id = null) {
-    if (is_null(self::$instance)) {
+    if (null === self::$instance) {
       new self($id);
     }
     return isset(self::$instance);
@@ -64,7 +64,7 @@ final class DB {
 
   //データベース接続 (ヘッダ出力あり)
   public static function ConnectInHeader($id = null) {
-    if (is_null(self::$instance)) {
+    if (null === self::$instance) {
       new self($id, true, false);
     }
     return isset(self::$instance);
@@ -123,7 +123,7 @@ final class DB {
 
   //SQL 実行
   public static function Execute($quiet = false) {
-    if (is_null(self::$statement)) {
+    if (null === self::$statement) {
       return false;
     }
 
@@ -238,7 +238,7 @@ final class DB {
 
   //最適化
   public static function Optimize($name = null) {
-    $table = is_null($name) ? ArrayFilter::ToCSV(self::GetTableList()) : $name;
+    $table = (null === $name) ? ArrayFilter::ToCSV(self::GetTableList()) : $name;
     $query = Query::Init()->Optimize()->Table($table);
 
     self::Prepare($query->Build());
@@ -260,7 +260,7 @@ final class DB {
 
   //本人情報ロード
   public static function LoadSelf($id = null) {
-    self::$SELF = is_null($id) ? self::$USER->BySession() : self::$USER->ByID($id);
+    self::$SELF = (null === $id) ? self::$USER->BySession() : self::$USER->ByID($id);
   }
 
   //本人情報ロード (観戦者)
@@ -643,10 +643,10 @@ final class Query {
     $stack = [];
     foreach ($this->into as $value) {
       $data = ArrayFilter::Get($this->into_data, $value);
-      if (false === is_null($data)) {
-	$stack[] = $data;
-      } else {
+      if (null === $data) {
 	$stack[] = '?';
+      } else {
+	$stack[] = $data;
       }
     }
 
@@ -679,10 +679,10 @@ final class Query {
     $stack = [];
     foreach ($this->set as $value) {
       $data = ArrayFilter::Get($this->set_data, $value);
-      if (false === is_null($data)) {
-	$stack[] = $value . ' = ' . $data;
-      } else {
+      if (null === $data) {
 	$stack[] = $value . ' = ?';
+      } else {
+	$stack[] = $value . ' = ' . $data;
       }
     }
 
@@ -733,24 +733,24 @@ final class Query {
       $upper     = ArrayFilter::Get($where_upper,  $value);
       $lower     = ArrayFilter::Get($where_lower,  $value);
       $like_flag = false;
-      if (false === is_null($data)) {
+      if (null !== $data) {
 	$query = $value . ' = ' . $data;
 	array_shift($where_data);
-      } elseif (false === is_null($count) && $count > 0) {
+      } elseif ((null !== $count) && $count > 0) {
 	$list  = array_fill(0, $count, '?');
 	$query = $value . ' IN ' . Text::Quote(ArrayFilter::ToCSV($list));
 	array_shift($where_in);
-      } elseif (false === is_null($not_count) && $not_count > 0) {
+      } elseif ((null !== $not_count) && $not_count > 0) {
 	$list  = array_fill(0, $not_count, '?');
 	$query = $value . ' NOT IN ' . Text::Quote(ArrayFilter::ToCSV($list));
 	array_shift($where_not_in);
-      } elseif (false === is_null($bool)) {
+      } elseif (null !== $bool) {
 	$query = $value . ' IS ' . ((true === $bool) ? self::ENABLE : self::DISABLE);
 	array_shift($where_bool);
-      } elseif (false === is_null($upper)) {
+      } elseif (null !== $upper) {
 	$query = $value . ' > ' . $upper;
 	array_shift($where_upper);
-      } elseif (false === is_null($lower)) {
+      } elseif (null !== $lower) {
 	$query = $value . ' < ' . $lower;
 	array_shift($where_lower);
       } elseif (true === in_array($value, $where_upper)) {
@@ -841,7 +841,7 @@ final class Query {
     $stack = $this->limit;
     $from  = array_shift($stack);
     $to    = array_shift($stack);
-    if (true === is_null($to)) {
+    if (null === $to) {
       return sprintf('LIMIT %d', $from);
     } else {
       return sprintf('LIMIT %d, %d', $from, $to);
@@ -866,7 +866,7 @@ final class Query {
   //プロパティ格納 (値指定)
   private function StoreData($name, $key, $column, $value = null) {
     $this->{$name}[] = $column;
-    if (true === is_null($value)) {
+    if (null === $value) {
       $this->{$key}[] = $column;
     } else {
       $this->{$key}[$column] = $value;
@@ -876,7 +876,7 @@ final class Query {
 
   //Build 一時情報格納
   private function StoreBuild($data) {
-    if (false === is_null($data)) {
+    if (null !== $data) {
       $this->list[] = $data;
     }
   }

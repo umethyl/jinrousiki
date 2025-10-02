@@ -35,10 +35,15 @@ class Role_reverse_assassin extends Role_assassin {
   public function Resurrect() {
     $role = 'possessed';
     foreach ($this->GetStack('reverse') as $id => $flag) {
-      if (! $flag) continue;
+      if (! $flag) {
+	continue;
+      }
+
       $user = DB::$USER->ByID($id);
       if (RoleUser::IsPossessed($user)) { //憑依能力者対応
-	if ($user->IsOn(UserMode::REVIVE)) continue; //蘇生済みならスキップ
+	if ($user->IsOn(UserMode::REVIVE)) { //蘇生済みならスキップ
+	  continue;
+	}
 
 	$virtual = $user->GetVirtual();
 	if (! $user->IsSame($virtual)) { //憑依中ならリセット

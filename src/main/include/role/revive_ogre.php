@@ -25,7 +25,7 @@ class Role_revive_ogre extends Role_ogre {
 
   protected function IsResurrect() {
     $event = $this->GetOgreEvent();
-    return Lottery::Percent(is_null($event) ? 40 : $event);
+    return Lottery::Percent((null === $event) ? 40 : $event);
   }
 
   protected function IsResurrectLost() {

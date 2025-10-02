@@ -13,7 +13,7 @@ class Option_dummy_boy_selector extends OptionSelector {
 
   public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
-    if (is_null(RQ::Get()->{$this->name})) {
+    if (null === RQ::Get()->{$this->name}) {
       return false;
     }
 
@@ -57,7 +57,7 @@ class Option_dummy_boy_selector extends OptionSelector {
     }
 
     //-- チェック位置判定 --//
-    if (OptionManager::IsChange() && DB::$ROOM->IsOption('gm_login')) {
+    if (RoomOptionManager::IsChange() && DB::$ROOM->IsOption('gm_login')) {
       $stack['gm_login']->value = true;
     } elseif (isset($stack[$this->value])) {
       $stack[$this->value]->value = true;

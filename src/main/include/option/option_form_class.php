@@ -7,7 +7,8 @@ class OptionForm {
     'wish_role', 'real_time', 'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name',
     'necessary_trip', 'close_room',
     'dummy_boy' => null,
-    'dummy_boy_selector', 'gm_password', 'gerd', 'disable_gerd', 'dummy_boy_cast_limit',
+    'dummy_boy_selector', 'gm_password', 'gerd', 'disable_gerd', 'temporary_gm',
+    'dummy_boy_cast_limit',
     'talk' => null,
     'wait_morning', 'limit_last_words', 'limit_talk', 'secret_talk', 'no_silence',
     'open_cast' => null,
@@ -36,7 +37,7 @@ class OptionForm {
       if (false === is_int($group)) {
 	$class = sprintf(' class="%s"', $group); //class 切り替え
       }
-      is_null($name) ? self::OutputSeparator($group) : self::OutputForm($name, $class);
+      (null === $name) ? self::OutputSeparator($group) : self::OutputForm($name, $class);
     }
 
     if (count(self::$javascript) > 0) {
@@ -84,7 +85,7 @@ class OptionForm {
   //境界線出力
   private static function OutputSeparator($group) {
     OptionFormHTML::OutputSeparator();
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       return;
     }
 
@@ -122,7 +123,7 @@ class OptionForm {
 
   //チェックボックス生成 (リアルタイム制専用)
   private static function GenerateRealtime(Option_real_time $filter) {
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       $day   = DB::$ROOM->game_option->list[$filter->name][0];
       $night = DB::$ROOM->game_option->list[$filter->name][1];
     } else {
@@ -151,7 +152,7 @@ class OptionForm {
       $str .= OptionFormHTML::GenerateSelectorOption($code, $selected, $label);
     }
 
-    if (! OptionManager::IsChange() && isset($filter->javascript)) {
+    if (false === RoomOptionManager::IsChange() && isset($filter->javascript)) {
       self::$javascript[] = $filter->javascript;
     }
 

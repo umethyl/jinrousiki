@@ -11,7 +11,7 @@ final class JinrouCacheManager {
   static function Load($name = null, $expire = 0) {
     static $instance;
 
-    if (is_null($instance)) {
+    if (null === $instance) {
       $instance = new JinrouCache($name, $expire);
     }
     return $instance;
@@ -21,7 +21,7 @@ final class JinrouCacheManager {
   static function Enable($type) {
     static $flag;
 
-    if (is_null($flag)) { //未設定ならキャッシュする
+    if (null === $flag) { //未設定ならキャッシュする
       switch ($type) {
       case self::TALK_VIEW:
 	$count  = CacheConfig::TALK_VIEW_COUNT;
@@ -173,7 +173,7 @@ final class JinrouCacheManager {
 
   //有効期限切れ判定
   private static function Expire($data) {
-    if (is_null($data) || Time::Get() > $data['expire']) {
+    if ((null === $data) || Time::Get() > $data['expire']) {
       return true;
     }
     return isset(self::Load()->hash) && isset($data['hash']) && self::Load()->hash != $data['hash'];

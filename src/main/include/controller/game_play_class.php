@@ -20,8 +20,8 @@ final class GamePlayController extends JinrouController {
     DB::LoadRoom();
     DB::$ROOM->Flag()->Set(RoomMode::DEAD,   RQ::Get()->dead_mode);
     DB::$ROOM->Flag()->Set(RoomMode::HEAVEN, RQ::Get()->heaven_mode);
-    DB::$ROOM->system_time  = Time::Get();
-    DB::$ROOM->sudden_death = 0; //突然死実行までの残り時間
+    DB::$ROOM->SetTime();
+    DB::$ROOM->InitializeSuddenDeath();
 
     //-- シーンに応じた追加クラスをロード --//
     if (DB::$ROOM->IsOn(RoomMode::HEAVEN)) {
@@ -89,7 +89,7 @@ final class GamePlayController extends JinrouController {
   private static function Talk() {
     GamePlayTalk::InitStack(); //判定用変数初期化
 
-    //発言送信フレーム (bottom) 判定 > 霊界 GM 判定
+    //発言送信フレーム (bottom) 判定 > 霊界GM判定
     if (DB::$ROOM->IsOff(RoomMode::DEAD) || DB::$ROOM->IsOn(RoomMode::HEAVEN)) {
       GamePlayTalk::Convert(); //発言変換処理
 
@@ -171,7 +171,7 @@ final class GamePlayController extends JinrouController {
       //警告メッセージを出力 (最終出力判定は呼び出し先で行う)
       $str = sprintf(GamePlayMessage::SUDDEN_DEATH_ALERT, Time::Convert(TimeConfig::SUDDEN_DEATH));
       if (DB::$ROOM->OvertimeAlert($str)) { //出力したら突然死タイマーをリセット
-	DB::$ROOM->sudden_death = TimeConfig::SUDDEN_DEATH;
+	DB::$ROOM->ResetSuddenDeath();
 	if (DB::$ROOM->IsDay() && DB::$ROOM->IsOption('no_silence')) { //沈黙死 + 処刑投票処理
 	  self::VoteNoSilence();
 	}
@@ -611,7 +611,7 @@ class GamePlayView_Before extends GamePlayView {
   protected function OutputHeaderLinkFooter() {
     $url = sprintf('%s&user_no=%s', $this->SelectURL([]), DB::$SELF->id);
     GamePlayHTML::OutputHeaderLink('user_manager', $url); //登録情報変更
-    if (DB::$SELF->IsDummyBoy()) { //村オプション変更
+    if (RoomOptionManager::EnableChange()) { //村オプション変更
       GamePlayHTML::OutputHeaderLink('room_manager', $this->SelectURL([]));
     }
   }

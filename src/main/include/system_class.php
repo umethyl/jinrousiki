@@ -124,7 +124,7 @@ class Stack {
   //取得 (配列)
   public function GetKey($name, $key) {
     $stack = $this->GetArray($name);
-    return is_null($stack) ? null : ArrayFilter::Get($stack, $key);
+    return (null === $stack) ? null : ArrayFilter::Get($stack, $key);
   }
 
   //取得 (array_keys() ベース)
@@ -142,7 +142,7 @@ class Stack {
   public function Register($name, $data) {
     //Text::p($data, "◆Stack/Register[{$name}]");
     $stack = $this->GetArray($name);
-    if (is_null($stack)) {
+    if (null === $stack) {
       return;
     }
 
@@ -154,7 +154,7 @@ class Stack {
   public function Add($name, $data) {
     //Text::p($data, "◆Stack/Add[{$name}]");
     $stack = $this->GetArray($name);
-    if (is_null($stack)) {
+    if (null === $stack) {
       return;
     }
 
@@ -182,7 +182,7 @@ class Stack {
 
   //未設定判定
   public function IsEmpty($name) {
-    return is_null($this->Get($name));
+    return null === $this->Get($name);
   }
 
   //カウント
@@ -193,7 +193,7 @@ class Stack {
   //シャッフル
   public function Shuffle($name) {
     $stack = $this->GetArray($name);
-    if (is_null($stack)) {
+    if (null === $stack) {
       return;
     }
 
@@ -205,7 +205,7 @@ class Stack {
   public function Delete($name, $data) {
     //Text::p($data, "◆Stack/Delete[{$name}]");
     $stack = $this->GetArray($name);
-    if (is_null($stack)) {
+    if (null === $stack) {
       return;
     }
 
@@ -218,7 +218,7 @@ class Stack {
   //削除 (キー指定)
   public function DeleteKey($name, $key) {
     $stack = $this->GetArray($name);
-    if (is_null($stack)) {
+    if (null === $stack) {
       return;
     }
 
@@ -229,7 +229,7 @@ class Stack {
   //削除 (差分指定)
   public function DeleteDiff($name, array $list) {
     $stack = $this->GetArray($name);
-    if (is_null($stack)) {
+    if (null === $stack) {
       return;
     }
 
@@ -284,7 +284,7 @@ abstract class StackManager {
   //-- スタック関連 --//
   //スタック取得
   final public function Stack() {
-    if (true === is_null($this->stack)) {
+    if (null === $this->stack) {
       $this->stack = new Stack();
     }
     //if (get_class($this) == 'Room') Text::p($this->stack);
@@ -293,7 +293,7 @@ abstract class StackManager {
 
   //フラグスタック取得
   final public function Flag() {
-    if (true === is_null($this->flag)) {
+    if (null === $this->flag) {
       $this->flag = new FlagStack();
     }
     //if (get_class($this) == 'Room') Text::p($this->flag);

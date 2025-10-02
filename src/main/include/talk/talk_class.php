@@ -13,7 +13,7 @@ final class Talk {
   public static function Stack() {
     static $stack;
 
-    if (is_null($stack)) {
+    if (null === $stack) {
       $stack = new Stack();
     }
     return $stack;
@@ -389,7 +389,7 @@ final class TalkBuilder {
     }
 
     $time = RoomDB::Get($type);
-    if (is_null($time)) {
+    if (null === $time) {
       return false;
     }
 
@@ -581,7 +581,7 @@ final class TalkBuilder {
     if (RQ::Get()->add_role && $user->id != 0) { //役職表示モード対応
       if ($talk->scene == RoomScene::HEAVEN) {
 	$real = $user;
-      } elseif (is_null($real)) {
+      } elseif (null === $real) {
 	$real = DB::$USER->ByReal($user->id);
       }
       $name .= $real->GenerateShortRoleName();
@@ -665,7 +665,7 @@ final class TalkBuilder {
 	! $this->flag->dummy_boy && ! $this->actor->IsSameName($talk->uname)) {
       //位置判定 (観戦者以外の上下左右)
       $viewer = $this->actor->id;
-      if (is_null($viewer) || ! Position::IsCross($actor->id, $viewer)) {
+      if ((null === $viewer) || ! Position::IsCross($actor->id, $viewer)) {
 	$talk->sentence = RoleTalkMessage::COMMON_TALK;
       }
     }

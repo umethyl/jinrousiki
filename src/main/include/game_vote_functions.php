@@ -142,7 +142,7 @@ final class VoteKick extends VoteBase {
 
     DB::$ROOM->LoadVote(true); //投票情報ロード
     $stack = DB::$ROOM->Stack()->GetKey('vote', DB::$SELF->id);
-    if (false === is_null($stack) && in_array($target->id, $stack)) {
+    if ((null !== $stack) && in_array($target->id, $stack)) {
       self::Output($target->handle_name . VoteMessage::ALREADY_KICK);
     }
     RoleManager::Stack()->Set(VoteKickElement::TARGET, $target);
@@ -168,7 +168,7 @@ final class VoteKick extends VoteBase {
 
   //投票先チェック
   private static function ValidateTarget(User $target) {
-    if (is_null($target->id) || $target->live == UserLive::KICK) {
+    if ((null === $target->id) || $target->live == UserLive::KICK) {
       self::Output(VoteMessage::KICK_EMPTY);
     } elseif ($target->IsDummyBoy()) {
       self::Output(VoteMessage::KICK_DUMMY_BOY);
@@ -319,7 +319,7 @@ final class VoteDay extends VoteBase {
   //投票先チェック
   private static function ValidateTarget() {
     $target = RoleManager::Stack()->Get(VoteDayElement::TARGET);
-    if (is_null($target->id)) {
+    if (null === $target->id) {
       VoteHTML::OutputResult(VoteMessage::INVALID_VOTE);
     } elseif ($target->IsSelf()) {
       VoteHTML::OutputResult(VoteMessage::VOTE_SELF);
@@ -867,7 +867,7 @@ final class VoteNight extends VoteBase {
   private static function Stack() {
     static $stack;
 
-    if (is_null($stack)) {
+    if (null === $stack) {
       $stack = new Stack();
     }
     return $stack;
@@ -1487,7 +1487,7 @@ final class VoteNight extends VoteBase {
 	}
 
 	$id = $user->GetMainRoleTarget();
-	if (is_null($id)) {
+	if (null === $id) {
 	  continue;
 	}
 	RoleLoader::LoadMain($user)->DelayCopy(DB::$USER->ByID($id));

@@ -34,7 +34,7 @@ final class IconEditController extends JinrouController {
     $query = IconDB::GetQueryUpdate();
     $stack = [];
     foreach (UserIcon::ValidateText(IconEditMessage::TITLE, $url) as $key => $value) {
-      if (true === is_null($value)) {
+      if (null === $value) {
 	$query->SetNull($key);
       } else {
 	$stack[$key] = $value;
@@ -93,7 +93,7 @@ final class IconEditController extends JinrouController {
 
   //エラー出力
   private static function OutputError($str, $url = null) {
-    if (false === is_null($url)) {
+    if (null !== $url) {
       $str = Text::Join($str, $url);
     }
     HTML::OutputResult(IconEditMessage::TITLE, $str);

@@ -177,7 +177,7 @@ final class RoomDB {
 
   //投票データ削除
   public static function DeleteVote() {
-    if (is_null(DB::$ROOM->id)) {
+    if (null === DB::$ROOM->id) {
       return true;
     }
 
@@ -281,7 +281,7 @@ final class SystemMessageDB {
     return DB::FetchAssoc();
   }
 
-  //処刑結果取得 (クイズ村 GM 専用)
+  //処刑結果取得 (クイズ村GM専用)
   public static function GetQuizVote() {
     $query = self::GetQuery()->Table('vote')->Select(['target_no'])->Where(['vote_count']);
     $list  = [DB::$ROOM->id, DB::$ROOM->date, DB::$ROOM->vote_count];

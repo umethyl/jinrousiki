@@ -16,7 +16,10 @@ class Role_shadow_fairy extends Role_fairy {
     $stack = [];
     foreach (DB::$USER->Get() as $user) {
       foreach ($user->GetPartner('bad_status', true) as $id => $date) {
-	if ($date != $base_date) continue;
+	if ($date != $base_date) {
+	  continue;
+	}
+
 	$target = DB::$USER->ByID($id);
 	if ($target->IsRole($this->role)) {
 	  $stack[$target->id] = ['icon' => $user->icon_filename, 'color' => $user->color];

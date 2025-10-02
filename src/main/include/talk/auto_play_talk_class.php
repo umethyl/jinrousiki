@@ -11,7 +11,7 @@ final class AutoPlayTalk {
   public static function Stack() {
     static $stack;
 
-    if (is_null($stack)) {
+    if (null === $stack) {
       $stack = new Stack();
     }
     return $stack;
@@ -79,7 +79,9 @@ final class AutoPlayTalk {
     foreach (array_reverse(self::Stack()->Get(self::SCENE)) as $scene) {
       $scene_stack[] = sprintf("'%s'", $scene);
       foreach ([$scene . '_' . RoomScene::DAY, $scene] as $strict_scene) {
-	if (! self::Stack()->Exists($strict_scene)) continue;
+	if (! self::Stack()->Exists($strict_scene)) {
+	  continue;
+	}
 
 	$stack = self::Stack()->Get($strict_scene);
 	$time_stack = [];

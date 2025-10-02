@@ -217,7 +217,7 @@ final class Text {
 
   //出力 (NULL 対応版)
   public static function OutputExists($str) {
-    if (is_null($str)) {
+    if (null === $str) {
       return null;
     }
     echo $str;
@@ -294,7 +294,7 @@ final class Text {
   //Talk 出力
   public static function t($data, $name = null) {
     $builder = class_exists('Talk') ? Talk::GetBuilder() : null;
-    return is_null($builder) ? self::p($data, $name) : $builder->TalkDebug($data, $name);
+    return (null === $builder) ? self::p($data, $name) : $builder->TalkDebug($data, $name);
   }
 }
 
@@ -386,7 +386,7 @@ final class URL {
 
   //取得 (部屋共通)
   public static function GetRoom($url, $id = null) {
-    return self::GetHeaderLink($url, RequestDataGame::ID, (is_null($id) ? DB::$ROOM->id : $id));
+    return self::GetHeaderLink($url, RequestDataGame::ID, ((null === $id) ? DB::$ROOM->id : $id));
   }
 
   //取得 (移動用)
@@ -440,7 +440,7 @@ final class ArrayFilter {
 
   //取得 (array_keys() ラッパー)
   public static function GetKeyList(array $list, $key = null) {
-    return is_null($key) ? array_keys($list) : array_keys($list, $key);
+    return (null === $key) ? array_keys($list) : array_keys($list, $key);
   }
 
   //取得 (引数)

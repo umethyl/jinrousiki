@@ -35,8 +35,8 @@ class RoomConfig {
   public static $room_name_input    = 50; //村名の入力欄サイズ (文字数)
   public static $room_comment       = 90; //村の説明の最大文字数 (byte)
   public static $room_comment_input = 50; //村の説明の入力欄サイズ (文字数)
-  public static $gm_password        = 50; //GM ログインパスワードの最大文字数 (byte)
-  public static $gm_password_input  = 20; //GM ログインパスワードの入力欄サイズ (文字数)
+  public static $gm_password        = 50; //GMログインパスワードの最大文字数 (byte)
+  public static $gm_password_input  = 20; //GMログインパスワードの入力欄サイズ (文字数)
 
   const NG_WORD = '/http:\/\//i'; //入力禁止文字列 (正規表現)
   const ESTABLISH_WAIT  = 120; //次の村を立てられるまでの待ち時間 (秒)

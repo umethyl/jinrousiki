@@ -12,7 +12,7 @@ class Option_quiz extends OptionCastCheckbox {
   }
 
   public function GetExplain() {
-    return 'GM が出題者になり、プレイヤー全員に回答者がつきます。';
+    return 'GMが出題者になり、プレイヤー全員に回答者がつきます。';
   }
 
   protected function GetFilterCastRoleList() {

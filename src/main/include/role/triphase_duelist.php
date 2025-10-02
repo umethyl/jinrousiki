@@ -20,13 +20,14 @@ class Role_triphase_duelist extends Role_valkyrja_duelist {
   //追加役職一覧取得
   private function GetAddDuelistRoleList() {
     $stack = $this->GetStack();
-    if (is_null($stack)) { //空なら初期設定を行う
+    if (null === $stack) { //空なら初期設定を行う
       $stack = Lottery::GetList([
 	['flattery',  'wisp'],
 	['rabbit', 'black_wisp'],
 	['nervy', 'foughten_wisp']
       ]);
     }
+
     $role_list = array_shift($stack);
     $this->SetStack($stack);
     return $role_list;

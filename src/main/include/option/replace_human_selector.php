@@ -10,7 +10,7 @@ class Option_replace_human_selector extends OptionSelector {
   }
 
   protected function LoadValue() {
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       $this->SetFormValue('int');
     }
   }

@@ -29,9 +29,9 @@ final class StepVoteTestController extends JinrouController {
   }
 
   protected static function LoadRoom() {
-    $set_date = 6;
+    $date = 6;
     DevRoom::Load();
-    DB::$ROOM->date = $set_date;
+    DB::$ROOM->SetDate($date);
     DB::$ROOM->SetScene(RoomScene::NIGHT);
     RQ::GetTest()->winner = WinCamp::WOLF;
   }

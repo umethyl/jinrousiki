@@ -24,7 +24,7 @@ final class Cast {
   public static function Stack() {
     static $stack;
 
-    if (true === is_null($stack)) {
+    if (null === $stack) {
       $stack = new Stack();
     }
     return $stack;
@@ -43,7 +43,7 @@ final class Cast {
   public static function Get($user_count) {
     //人数に応じた配役リストを取得
     $role_list = ArrayFilter::Get(CastConfig::$role_list, $user_count);
-    if (true === is_null($role_list)) { //配役リスト設定存在判定
+    if (null === $role_list) { //配役リスト設定存在判定
       self::OutputError(sprintf(VoteMessage::NO_CAST_LIST, $user_count));
     }
     //Text::p($role_list, '◆RoleList [CastConfig]');
@@ -51,7 +51,7 @@ final class Cast {
 
     //基礎配役オプション取得 (適用されなかった場合は通常村用オプションを適用する)
     $filter = OptionManager::GetCastBase($user_count);
-    if (true === is_null($filter)) {
+    if (null === $filter) {
       OptionManager::FilterCastAddRole($role_list, $user_count);
     } else {
       $role_list = $filter->GetCastRole($user_count);
@@ -59,7 +59,7 @@ final class Cast {
     //Text::p($role_list, '◆RoleList [Option]');
 
     //村人置換村の処理
-    if (true === is_null($filter) || true === $filter->EnableReplaceRole()) {
+    if ((null === $filter) || true === $filter->EnableReplaceRole()) {
       self::ReplaceRole($role_list);
     }
     //Text::p($role_list, '◆RoleList [ReplaceRole]');
@@ -337,7 +337,7 @@ final class Cast {
 
   //希望役職判定
   private static function GetWishRoleKey($role) {
-    return is_null($role) ? false : array_search($role, self::Stack()->Get(self::ROLE));
+    return (null === $role) ? false : array_search($role, self::Stack()->Get(self::ROLE));
   }
 
   //未決定者配役
@@ -405,7 +405,7 @@ final class Cast {
 
     //ランダムなサブ役職のコードリストを作成
     $filter = OptionManager::GetFilter('cast_user_chaos_sub_role');
-    if (is_null($filter)) {
+    if (null === $filter) {
       $sub_role_list = RoleDataManager::GetList(true);
     } else {
       $sub_role_list = $filter->GetCastUserChaosSubRoleList();

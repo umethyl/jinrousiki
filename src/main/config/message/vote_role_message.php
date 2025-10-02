@@ -57,7 +57,7 @@ class VoteRoleMessage {
   const TARGET_ALIVE          = '死者以外には投票できません';
   const TARGET_DUMMY_BOY      = '身代わり君には投票できません';
   const TARGET_ONLY_DUMMY_BOY = '身代わり君使用の場合は、身代わり君以外に投票できません';
-  const TARGET_QUIZ           = 'クイズ村では GM 以外に投票できません';
+  const TARGET_QUIZ           = 'クイズ村ではGM以外に投票できません';
   const TARGET_WOLF           = '狼同士には投票できません';
   const TARGET_INCLUDE_MYSELF = '必ず自分を対象に含めてください';
   const TARGET_MYSELF_COUNT   = '少人数村の場合は、必ず自分を対象に含めてください';

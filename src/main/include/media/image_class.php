@@ -5,7 +5,7 @@ class ImageManager {
   public static function Room() {
     static $filter;
 
-    if (true === is_null($filter)) {
+    if (null === $filter) {
       $filter = new RoomImage();
     }
     return $filter;
@@ -15,7 +15,7 @@ class ImageManager {
   public static function Role() {
     static $filter;
 
-    if (true === is_null($filter)) {
+    if (null === $filter) {
       $filter = new RoleImage();
     }
     return $filter;
@@ -25,7 +25,7 @@ class ImageManager {
   public static function Winner() {
     static $filter;
 
-    if (true === is_null($filter)) {
+    if (null === $filter) {
       $filter = new WinnerImage();
     }
     return $filter;

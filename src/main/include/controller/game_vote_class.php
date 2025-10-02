@@ -23,7 +23,7 @@ final class GameVoteController extends JinrouController {
     if (DB::$ROOM->IsFinished()) {
       VoteHTML::OutputError(VoteMessage::FINISHED_TITLE, VoteMessage::FINISHED);
     }
-    DB::$ROOM->system_time = Time::Get();
+    DB::$ROOM->SetTime();
   }
 
   protected static function LoadUser() {

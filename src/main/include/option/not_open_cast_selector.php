@@ -9,7 +9,7 @@ class Option_not_open_cast_selector extends OptionSelector {
 
   protected function LoadValue() {
     $this->value = GameOptionConfig::$default_not_open_cast;
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       $this->SetFormValue('value');
     }
   }

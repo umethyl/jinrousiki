@@ -14,7 +14,7 @@ class Option_special_role extends OptionSelector {
   }
 
   protected function LoadValue() {
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       $this->SetFormValue('int');
     }
   }

@@ -83,7 +83,7 @@ class RoleManager {
   public static function Stack() {
     static $stack;
 
-    if (is_null($stack)) {
+    if (null === $stack) {
       $stack = new Stack();
     }
     return $stack;
@@ -117,7 +117,7 @@ abstract class Role {
     }
 
     $filter = $this->GetMethod($name);
-    if (is_null($filter)) {
+    if (null === $filter) {
       return $this->ReturnError($name, 'Method');
     }
 
@@ -220,7 +220,7 @@ abstract class Role {
   final protected function CallParent($method, $arg = null) {
     //Text::p($method, "◆CallParent [{$this->role}]");
     $class = $this->GetParent($method);
-    return is_null($arg) ? $class->$method() : $class->$method($arg);
+    return (null === $arg) ? $class->$method() : $class->$method($arg);
   }
 
   //投票用 Mixin 存在判定
@@ -255,12 +255,12 @@ abstract class Role {
 
   //ユーザ名取得
   final protected function GetUname($uname = null) {
-    return is_null($uname) ? $this->GetActor()->uname : $uname;
+    return (null === $uname) ? $this->GetActor()->uname : $uname;
   }
 
   //データ取得
   final protected function GetStack($name = null, $fill = false) {
-    $stack = RoleManager::Stack()->Get(is_null($name) ? $this->role : $name);
+    $stack = RoleManager::Stack()->Get((null === $name) ? $this->role : $name);
     return isset($stack) ? $stack : ArrayFilter::Fill($fill);
   }
 
@@ -271,12 +271,12 @@ abstract class Role {
 
   //データセット
   final protected function SetStack($data, $role = null) {
-    RoleManager::Stack()->Set(is_null($role) ? $this->role : $role, $data);
+    RoleManager::Stack()->Set((null === $role) ? $this->role : $role, $data);
   }
 
   //データ初期化
   final protected function InitStack($name = null) {
-    $data  = is_null($name) ? $this->role : $name;
+    $data  = (null === $name) ? $this->role : $name;
     $stack = RoleManager::Stack()->Get($data);
     if (false === isset($stack)) {
       RoleManager::Stack()->Init($data);
@@ -285,10 +285,10 @@ abstract class Role {
 
   //データ追加
   final protected function AddStack($data, $role = null, $id = null) {
-    if (is_null($id)) {
+    if (null === $id) {
       $id = $this->GetID();
     }
-    $name  = is_null($role) ? $this->role : $role;
+    $name  = (null === $role) ? $this->role : $role;
     $stack = RoleManager::Stack()->Get($name);
     $stack[$id] = $data;
     RoleManager::Stack()->Set($name, $stack);
@@ -296,7 +296,7 @@ abstract class Role {
 
   //データ追加 (Uname 用)
   final protected function AddStackName($data, $role = null, $uname = null) {
-    $name  = is_null($role) ? $this->role : $role;
+    $name  = (null === $role) ? $this->role : $role;
     $stack = RoleManager::Stack()->Get($name);
     $stack[$this->GetUname($uname)] = $data;
     RoleManager::Stack()->Set($name, $stack);
@@ -329,7 +329,7 @@ abstract class Role {
       return $this->CallVoteMix(__FUNCTION__);
     }
 
-    return false === is_null($this->action) && $this->IsVoteDate() && $this->IsAddVote();
+    return (null !== $this->action) && $this->IsVoteDate() && $this->IsAddVote();
   }
 
   //投票可能日判定
@@ -521,7 +521,7 @@ abstract class Role {
 
   //処刑者決定済判定
   final protected function DetermineVoteKill() {
-    return false === is_null($this->GetVoteKill());
+    return null !== $this->GetVoteKill();
   }
 
   //処刑者判定
@@ -572,7 +572,7 @@ abstract class Role {
 
   //夜投票無効メッセージ取得
   final protected function GetDisabledVoteNightMessage() {
-    if (is_null($this->action)) {
+    if (null === $this->action) {
       return VoteRoleMessage::NO_ACTION;
     } elseif (false === $this->IsVoteDate()) {
       switch ($this->GetActionDate()) {
@@ -630,7 +630,7 @@ abstract class Role {
 
     if (true === $live || $this->FixLiveVoteNightIconPath()) {
       $path = $this->GetPartnerVoteNightIconPath($user);
-      return is_null($path) ? Icon::GetFile($user->icon_filename) : $path;
+      return (null === $path) ? Icon::GetFile($user->icon_filename) : $path;
     } else {
       return Icon::GetDead();
     }
@@ -816,7 +816,7 @@ abstract class Role {
   //-- 投票集計処理 (夜) --//
   //成功データ追加
   final protected function AddSuccess($target, $data = null, $set_null = false) {
-    $name  = is_null($data) ? $this->role : $data;
+    $name  = (null === $data) ? $this->role : $data;
     $stack = RoleManager::Stack()->Get($name);
     $stack[$target] = (true === $set_null) ? null : true;
     RoleManager::Stack()->Set($name, $stack);
@@ -917,7 +917,7 @@ class RoleTalk {
     } while (false);
 
     foreach ($virtual->GetPartner('bad_status', true) as $id => $date) { //妖精の処理
-      if ($date != DB::$ROOM->date) {
+      if (false === DB::$ROOM->IsDate($date)) {
 	continue;
       }
 

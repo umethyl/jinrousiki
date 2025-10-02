@@ -48,7 +48,7 @@ class RoomManagerMessage {
   const ERROR_INPUT_LIMIT_OVER = 'が 0 以下、または 99 以上である。';
   const ERROR_INPUT_NG_WORD    = 'に入力禁止文字列が含まれている。';
   const ERROR_INPUT_MAX_USER   = '無効な最大人数です。';
-  const ERROR_INPUT_PASSWORD   = '有効な GM ログインパスワードが設定されていません。';
+  const ERROR_INPUT_PASSWORD   = '有効なGMログインパスワードが設定されていません。';
 
   /* リアルタイム制 */
   const ERROR_INPUT_REAL_TIME_HEADER = 'リアルタイム制の昼・夜の時間';
@@ -60,6 +60,6 @@ class RoomManagerMessage {
   const ERROR_CHANGE_NOT_GM   = '%s・%s以外は変更できません。';
   const ERROR_CHANGE_MAX_USER = '現在の参加人数より少なくできません。';
 
-  /* GM ログアウト */
+  /* GMログアウト */
   const ERROR_INPUT_GM_LOGOUT = '募集停止中はログアウトできません。';
 }

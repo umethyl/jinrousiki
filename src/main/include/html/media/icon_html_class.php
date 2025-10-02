@@ -9,7 +9,7 @@ class IconHTML {
       現時点では GET で直接検索を試みたユーザーのセッション情報まで配慮していないが、
       いずれ必要になるかも知れない (enogu)
     */
-    if (is_null(RQ::Get()->page)) {
+    if (null === RQ::Get()->page) {
       Session::Clear('icon_view');
     }
 
@@ -255,7 +255,7 @@ class IconHTML {
 	$attributes[] = $attr . '="'. eval($value) . '"';
       }
     }
-    if (is_null($title)) {
+    if (null === $title) {
       $title = Text::QuoteBracket($page);
     }
 

@@ -9,7 +9,7 @@ class Role_human extends Role {
 
   protected function IgnoreFilterVoteDo() {
     $flag = $this->GetStack();
-    if (is_null($flag)) {
+    if (null === $flag) {
       $role = 'brownie';
       $flag = DB::$ROOM->IsEvent($role) || DB::$USER->IsLiveRole($role);
       $this->SetStack($flag);

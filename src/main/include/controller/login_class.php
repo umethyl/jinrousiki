@@ -61,7 +61,7 @@ final class LoginController extends JinrouController {
 
   //結果出力
   private static function OutputResult($title, $body, $jump = null) {
-    if (is_null($jump)) {
+    if (null === $jump) {
       $url  = '';
     } else {
       $url  = URL::GetRoom($jump, RQ::Get()->room_no);

@@ -9,24 +9,6 @@ class OptionLoader extends LoadManager {
 
 //-- オプションマネージャ --//
 class OptionManager {
-  //スタック取得
-  public static function Stack() {
-    static $stack;
-
-    if (is_null($stack)) {
-      $stack = new Stack();
-    }
-    return $stack;
-  }
-
-  //村オプション変更判定
-  public static function IsChange() {
-    if (self::Stack()->IsEmpty('change')) {
-      self::Stack()->Set('change', false);
-    }
-    return self::Stack()->Get('change');
-  }
-
   //オプション存在判定
   public static function Exists($type) {
     foreach (OptionFilterData::$$type as $option) {
@@ -249,7 +231,7 @@ abstract class Option {
       $this->form_value = $this->value;
     }
 
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       switch ($this->type) {
       case OptionFormType::CHECKBOX:
       case OptionFormType::LIMITED_CHECKBOX:
@@ -463,7 +445,7 @@ abstract class OptionLimitedCheckbox extends OptionCheckbox {
 
   //制限設定値取得
   final public function GetLimitedCount() {
-    if (OptionManager::IsChange() && DB::$ROOM->IsOption($this->name)) {
+    if (RoomOptionManager::IsChange() && DB::$ROOM->IsOption($this->name)) {
       switch ($this->group) {
       case OptionGroup::GAME:
 	$list = DB::$ROOM->game_option->list;
@@ -582,7 +564,7 @@ abstract class OptionSelector extends Option {
     }
 
     RQ::Get()->ParsePostData($this->name);
-    if (is_null(RQ::Get()->{$this->name})) {
+    if (null === RQ::Get()->{$this->name}) {
       return false;
     }
 

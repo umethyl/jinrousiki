@@ -5,7 +5,7 @@ class Icon {
   public static function GetPath() {
     static $path;
 
-    if (true === is_null($path)) {
+    if (null === $path) {
       $path = URL::Combine(JINROU_ROOT, IconConfig::PATH, '');
     }
     return $path;
@@ -20,7 +20,7 @@ class Icon {
   public static function GetDead() {
     static $path;
 
-    if (true === is_null($path)) {
+    if (null === $path) {
       $path = URL::Combine(JINROU_IMG, IconConfig::$dead);
     }
     return $path;
@@ -30,7 +30,7 @@ class Icon {
   public static function GetWolf() {
     static $path;
 
-    if (true === is_null($path)) {
+    if (null === $path) {
       $path = URL::Combine(JINROU_IMG, IconConfig::$wolf);
     }
     return $path;
@@ -40,7 +40,7 @@ class Icon {
   public static function GetSize() {
     static $str;
 
-    if (true === is_null($str)) {
+    if (null === $str) {
       $str = ImageHTML::GenerateIconSize(IconConfig::WIDTH, IconConfig::HEIGHT);
     }
     return $str;

@@ -20,7 +20,7 @@ class Role_rebel extends Role_authority {
     $self   = $this->GetStack();
     $target = $this->GetStack($role);
     $uname  = $this->GetStack($this->role . '_uname');
-    if (is_null($self) || is_null($target) || $uname != $this->GetStack($role . '_uname')) {
+    if ((null === $self) || (null === $target) || $uname != $this->GetStack($role . '_uname')) {
       return;
     }
 

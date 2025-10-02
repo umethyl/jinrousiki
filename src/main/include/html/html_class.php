@@ -40,7 +40,7 @@ class HTML {
   //共通 HTML ヘッダ生成
   public static function GenerateHeader($title, $css = null, $close = false) {
     $str = Text::Format(self::GetHeader(), ServerConfig::ENCODE, $title);
-    if (true === is_null($css)) {
+    if (null === $css) {
       $css = 'action';
     }
     $str .= self::LoadCSS(sprintf('%s/%s', JINROU_CSS, $css));
@@ -165,7 +165,7 @@ class HTML {
 
   //JavaScript 読み込み
   public static function LoadJavaScript($file, $path = null) {
-    if (true === is_null($path)) {
+    if (null === $path) {
       $path = JINROU_ROOT . '/javascript';
     }
     return Text::Format(self::GetJavaScript(), $path, $file);

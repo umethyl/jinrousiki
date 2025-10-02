@@ -11,7 +11,7 @@ class JinrouCookie {
 
   //ユーザー登録時の初期化処理
   public static function Initialize() {
-    DB::$ROOM->system_time = Time::Get(); //現在時刻を取得
+    DB::$ROOM->SetTime(); //現在時刻を登録
     $time = DB::$ROOM->system_time - self::TIME;
     foreach (['scene', 'objection', 'vote_result', 'vote_count', 'user_count'] as $key) {
       setcookie($key, '', $time);
@@ -43,7 +43,9 @@ class JinrouCookie {
     }
 
     /* 投票済み */
-    if (self::$vote_result != '') setcookie('vote_result', '', $time);
+    if (self::$vote_result != '') {
+      setcookie('vote_result', '', $time);
+    }
 
     /* 「異議」あり */
     self::$objection_list = Objection::GetCookie();

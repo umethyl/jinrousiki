@@ -74,7 +74,7 @@ class Role_poison_cat extends Role {
   //蘇生
   final public function Revive(User $user) {
     $target = $this->GetReviveTarget($user);
-    $result = (is_null($target) || ! $this->ReviveUser($target)) ? 'failed' : 'success';
+    $result = ((null === $target) || ! $this->ReviveUser($target)) ? 'failed' : 'success';
     if ($result == 'success') {
       if (false === DB::$ROOM->IsEvent('full_revive')) { //雷雨ならスキップ
 	$this->CallParent('ReviveAction');
@@ -157,7 +157,7 @@ class Role_poison_cat extends Role {
   final protected function IsBoostRevive() {
     $data = 'boost_revive';
     $flag = $this->GetStack($data);
-    if (is_null($flag)) {
+    if (null === $flag) {
       $flag = DB::$USER->IsLiveRole('revive_brownie');
       $this->SetStack($flag, $data);
     }

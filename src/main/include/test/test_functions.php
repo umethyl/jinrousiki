@@ -31,7 +31,7 @@ class DevRoom {
     DB::LoadRoom();
     DB::$ROOM->SetFlag(RoomMode::TEST, RoomMode::LOG);
     DB::$ROOM->SetScene(RoomScene::BEFORE);
-    DB::$ROOM->revote_count = 0;
+    DB::$ROOM->ResetRevoteCount();
     if (DB::$ROOM->Stack()->IsEmpty('vote')) {
       DB::$ROOM->Stack()->Init('vote');
     }
@@ -42,7 +42,10 @@ class DevRoom {
     $stack = [];
     foreach (RQ::GetTest()->system_message as $date => $date_list) {
       //Text::p($date_list, "◆Event [{$date}]");
-      if ($date != DB::$ROOM->date) continue;
+      if (false === DB::$ROOM->IsDate($date)) {
+	continue;
+      }
+
       foreach ($date_list as $type => $type_list) {
 	switch ($type) {
 	case EventType::WEATHER:
@@ -182,7 +185,10 @@ class DevUser {
     }
 
     foreach (self::$user_list as $id => $list) {
-      if ($id > $count) break;
+      if ($id > $count) {
+	break;
+      }
+
       foreach ($list as $key => $value) {
 	RQ::GetTest()->test_users[$id]->id   = $id;
 	RQ::GetTest()->test_users[$id]->$key = $value;

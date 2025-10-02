@@ -50,7 +50,7 @@ class OptionFormHTML {
   public static function GenerateTextbox(OptionText $filter) {
     $size = sprintf('%s_input', $filter->name);
     $str  = $filter->GetExplain();
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       $name  = Text::CutPop($filter->name);
       $value = DB::$ROOM->$name;
     } else {

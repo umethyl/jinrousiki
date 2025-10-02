@@ -13,7 +13,7 @@ class RQ extends LoadManager {
 
   //Request クラスのロード
   public static function LoadRequest($name = 'Request') {
-    if (true === is_null(self::$instance)) {
+    if (null === self::$instance) {
       if ($name != 'Request' && self::LoadFile($name)) {
 	$class = self::CLASS_PREFIX . $name;
       } else {
@@ -61,7 +61,7 @@ class RQ extends LoadManager {
 
   //デバッグ用
   public static function p($data = null, $name = null) {
-    Text::p(is_null($data) ? self::Get() : self::Get()->$data, $name);
+    Text::p((null === $data) ? self::Get() : self::Get()->$data, $name);
   }
 }
 

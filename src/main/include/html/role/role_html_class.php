@@ -65,7 +65,7 @@ class RoleHTML {
   public static function OutputPossessed() {
     $type  = 'possessed_target';
     $stack = DB::$SELF->GetPartner($type);
-    if (is_null($stack)) {
+    if (null === $stack) {
       return;
     }
 
@@ -83,7 +83,7 @@ class RoleHTML {
     }
 
     $vote_count = sprintf(RoleAbilityMessage::VOTE_COUNT, DB::$ROOM->revote_count + 1);
-    if (is_null(DB::$SELF->target_no)) {
+    if (null === DB::$SELF->target_no) {
       $result = HTML::GenerateWarning(RoleAbilityMessage::NOT_VOTED);
       HTML::OutputDiv($vote_count . $result, 'self-vote');
       echo HTML::GenerateSpan(RoleAbilityMessage::VOTE_KILL, 'ability vote-do') . Text::BRLF;

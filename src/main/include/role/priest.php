@@ -20,7 +20,7 @@ class Role_priest extends Role {
 
   //司祭結果表示能力取得
   final protected function GetPriestResultType($role = null) {
-    if (is_null($role)) {
+    if (null === $role) {
       $role = $this->role;
     }
     return strtoupper($role) . '_RESULT';

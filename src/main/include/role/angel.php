@@ -11,7 +11,9 @@ class Role_angel extends Role_cupid {
     $list = $this->GetStack('target_list');
     $a = array_shift($list);
     $b = array_shift($list);
-    if ($this->IsSympathy($a, $b)) $this->SetSympathy($a, $b);
+    if ($this->IsSympathy($a, $b)) {
+      $this->SetSympathy($a, $b);
+    }
   }
 
   //共感者判定

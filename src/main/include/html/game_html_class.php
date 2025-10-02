@@ -152,8 +152,13 @@ class GameHTML {
       if ($stack->open) { //公開情報
 	$str .= self::GenerateOpenPlayer($id, $user, $stack);
       }
+      $str .= Text::BR . $live;
 
-      $str .= Text::LineFeed(Text::BR . $live . TableHTML::GenerateTdFooter());
+      if ($stack->before && $stack->temporary_gm && $id == $stack->temporary_gm_id) { //仮GM
+	$str .= Text::BR . HTML::GenerateSpan(Text::QuoteBracket(GameMessage::TEMPORARY_GM));
+      }
+
+      $str .= Text::LineFeed(TableHTML::GenerateTdFooter());
     }
     return Text::LineFeed($str . self::GetPlayerFooter());
   }
@@ -421,7 +426,7 @@ class GameHTML {
 
   //投票関連メッセージ出力
   public static function OutputVoteAnnounce($str = null) {
-    if (is_null($str)) {
+    if (null === $str) {
       switch (DB::$ROOM->scene) {
       case RoomScene::DAY:
 	$str = GameMessage::TIME_LIMIT_DAY;
@@ -523,6 +528,16 @@ class GameHTML {
       $stack->Set('sex', DB::$ROOM->IsFinished() && RQ::Get()->sex);
       if ($stack->sex) {
 	$stack->Set('sex_list', Sex::GetList());
+      }
+    }
+
+    if ($stack->before) {
+      //仮GM表示判定 (ログでは表示しない想定でステータスも参照しておく)
+      $option = 'temporary_gm';
+      $stack->Set($option, DB::$ROOM->IsOption($option) && false === DB::$ROOM->IsFinished());
+      if ($stack->$option) {
+	$filter = OptionLoader::Load($option);
+	$stack->Set('temporary_gm_id', $filter->GetTemporaryGMID());
       }
     }
 
@@ -736,7 +751,7 @@ class GameHTML {
     }
 
     $str  = Text::LineFeed(TableHTML::GenerateHeader('dead-type', false));
-    $str .= TableHTML::GenerateTrHeader(is_null($class) ? null : 'dead-type-' . $class);
+    $str .= TableHTML::GenerateTrHeader((null === $class) ? null : 'dead-type-' . $class);
     $str .= TableHTML::GenerateTd($name . DeadMessage::${true === $base ? 'deadman' : $action});
     if (isset($reason)) {
       $str .= TableHTML::GenerateTrLineFeed();
@@ -763,7 +778,7 @@ class GameHTML {
   //死因表示判定処理
   private static function FilterShowReason() {
     $flag = RoleManager::Stack()->Get('show_reason');
-    if (is_null($flag)) {
+    if (null === $flag) {
       $flag = DB::$SELF->IsLive() && DB::$SELF->IsRole(RoleFilterData::$show_reason);
       RoleManager::Stack()->Set('show_reason', $flag);
     }
@@ -773,7 +788,7 @@ class GameHTML {
   //蘇生失敗表示判定処理
   private static function FilterShowReviveFailed() {
     $flag = RoleManager::Stack()->Get('show_revive_failed');
-    if (is_null($flag)) {
+    if (null === $flag) {
       $flag = DB::$ROOM->IsFinished() || DB::$SELF->IsDead() ||
 	DB::$SELF->IsRole(RoleFilterData::$show_revive_failed);
       RoleManager::Stack()->Set('show_revive_failed', $flag);
@@ -784,7 +799,7 @@ class GameHTML {
   //人狼襲撃失敗表示判定
   private static function FilterShowWolfFailed() {
     $flag = RoleManager::Stack()->Get('show_wolf_failed');
-    if (is_null($flag)) {
+    if (null === $flag) {
       $flag = DB::$SELF->IsLive() && DB::$SELF->IsRole(RoleFilterData::$show_wolf_failed);
       RoleManager::Stack()->Set('show_wolf_failed', $flag);
     }

@@ -4,7 +4,7 @@ class RoomManagerHTML {
   //村作成画面表示
   public static function OutputCreate() {
     //パラメータセット
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       $url     = sprintf('?room_no=%d', RQ::Get()->room_no);
       $command = 'change_room';
       $submit  = RoomManagerMessage::SUBMIT_CHANGE;
@@ -15,7 +15,7 @@ class RoomManagerHTML {
     }
 
     //村作成パスワード
-    if (is_null(ServerConfig::ROOM_PASSWORD)) {
+    if (null === ServerConfig::ROOM_PASSWORD) {
       $password = '';
     } else {
       $label = 'room_password';
@@ -29,7 +29,7 @@ class RoomManagerHTML {
     Text::Printf(self::GetCreateHeader(), $url, $command);
     OptionForm::Output();
     Text::Printf(self::GetCreateFooter(), $password, $submit);
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       HTML::OutputFooter();
     }
   }

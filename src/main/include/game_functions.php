@@ -306,7 +306,7 @@ class Winner {
       $winner = $lovers > 1 ? WinCamp::LOVERS : ($fox > 0 ? WinCamp::FOX_WOLF  : WinCamp::WOLF);
     } elseif ($lovers >= $human + $wolf + $fox) { //恋人支配
       $winner = WinCamp::LOVERS;
-    } elseif (DB::$ROOM->IsQuiz() && $quiz == 0) { //クイズ村 GM 死亡
+    } elseif (DB::$ROOM->IsQuiz() && $quiz == 0) { //クイズ村GM死亡
       $winner = WinCamp::QUIZ_DEAD;
     } elseif (true === $draw && DB::$ROOM->revote_count >= GameConfig::DRAW) { //引き分け
       $winner = WinCamp::DRAW;
@@ -334,7 +334,7 @@ class Winner {
 
     case WinCamp::DRAW:		//引き分け
     case WinCamp::VANISH:	//全滅
-    case WinCamp::QUIZ_DEAD:	//クイズ村 GM 死亡
+    case WinCamp::QUIZ_DEAD:	//クイズ村GM死亡
       $class = WinCamp::DRAW;
       break;
 
@@ -347,7 +347,7 @@ class Winner {
 
     /* 個々の勝敗結果 */
     //スキップ判定 (勝敗未決定/観戦モード/ログ閲覧モード)
-    if (is_null($winner) || DB::$ROOM->IsOn(RoomMode::VIEW) ||
+    if ((null === $winner) || DB::$ROOM->IsOn(RoomMode::VIEW) ||
 	(DB::$ROOM->IsOn(RoomMode::LOG) &&
 	 DB::$ROOM->IsOff(RoomMode::SINGLE) &&
 	 DB::$ROOM->IsOff(RoomMode::PERSONAL))
@@ -370,7 +370,7 @@ class Winner {
       $class  = $result;
       break;
 
-    case WinCamp::QUIZ_DEAD:	//クイズ村 GM 死亡
+    case WinCamp::QUIZ_DEAD:	//クイズ村GM死亡
       $result = $camp == Camp::QUIZ ? self::LOSE : self::DRAW;
       $class  = $result;
       break;

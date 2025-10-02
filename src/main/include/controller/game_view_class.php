@@ -17,7 +17,7 @@ final class GameViewController extends JinrouController {
   protected static function LoadRoom() {
     DB::LoadRoom();
     DB::$ROOM->SetFlag(RoomMode::VIEW);
-    DB::$ROOM->system_time = Time::Get();
+    DB::$ROOM->SetTime();
 
     //シーン別調整
     if (DB::$ROOM->IsBeforeGame()) {

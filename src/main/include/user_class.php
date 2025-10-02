@@ -11,7 +11,7 @@ class User extends StackManager {
   protected $updated   = [];
 
   public function __construct($role = null) {
-    if (is_null($role)) {
+    if (null === $role) {
       return;
     }
 
@@ -177,7 +177,7 @@ class User extends StackManager {
   //日数に応じた憑依先の ID 取得
   public function GetPossessedTarget($type, $today) {
     $stack = $this->GetPartner($type);
-    if (is_null($stack)) {
+    if (null === $stack) {
       return false;
     }
 
@@ -200,7 +200,7 @@ class User extends StackManager {
   public function GetTalkCount($lock = false) {
     if (false === isset($this->talk_count) || true === $lock) {
       $stack = TalkDB::GetUserTalkCount($lock);
-      $this->talk_count = ($stack['date'] == DB::$ROOM->date) ? $stack['talk_count'] : 0;
+      $this->talk_count = (DB::$ROOM->IsDate($stack['date']) ? $stack['talk_count'] : 0);
     }
     return $this->talk_count;
   }
@@ -208,13 +208,13 @@ class User extends StackManager {
   //生存フラグ判定
   public function IsLive($strict = false) {
     $dead = $this->IsDeadFlag($strict);
-    return is_null($dead) ? $this->live == UserLive::LIVE : ! $dead;
+    return (null === $dead) ? $this->live == UserLive::LIVE : ! $dead;
   }
 
   //死亡フラグ判定
   public function IsDead($strict = false) {
     $dead = $this->IsDeadFlag($strict);
-    return is_null($dead) ? ($this->live == UserLive::DEAD || $this->IsDrop()) : $dead;
+    return (null === $dead) ? ($this->live == UserLive::DEAD || $this->IsDrop()) : $dead;
   }
 
   //蘇生辞退フラグ判定
@@ -319,7 +319,7 @@ class User extends StackManager {
   //拡張判定
   public function IsPartner($type, $target) {
     $partner = $this->GetPartner($type);
-    if (true === is_null($partner)) {
+    if (null === $partner) {
       return false;
     }
 
@@ -341,13 +341,13 @@ class User extends StackManager {
 
   //能力喪失判定
   public function IsActive($role = null) {
-    return (is_null($role) || $this->IsRole($role)) &&
+    return ((null === $role) || $this->IsRole($role)) &&
       $this->IsOff(UserMode::LOST) && ! $this->IsRole('lost_ability');
   }
 
   //期間限定表示役職
   public function IsDoomRole($role) {
-    return $this->IsRole($role) && $this->GetDoomDate($role) == DB::$ROOM->date;
+    return $this->IsRole($role) && DB::$ROOM->IsDate($this->GetDoomDate($role));
   }
 
   //所属陣営判別 (ラッパー)
@@ -522,14 +522,14 @@ class User extends StackManager {
   //個別 DB 更新処理
   public function Update($item, $value) {
     if (DB::$ROOM->IsTest()) {
-      if (is_null($value)) {
+      if (null === $value) {
 	$value = 'NULL (reset)';
       }
       Text::p($value, sprintf('★Change [%s] (%s)', $item, $this->uname));
       return true;
     }
 
-    $set = sprintf('%s = %s', $item, is_null($value) ? 'NULL' : "'{$value}'");
+    $set = sprintf('%s = %s', $item, (null === $value) ? 'NULL' : "'{$value}'");
     return UserDB::Update($set, [], $this->id);
   }
 
@@ -664,7 +664,7 @@ class User extends StackManager {
       return true;
     }
 
-    if (is_null($handle_name)) {
+    if (null === $handle_name) {
       $handle_name = $this->handle_name;
     }
     if (DB::$ROOM->IsTest()) {
@@ -673,7 +673,7 @@ class User extends StackManager {
     }
 
     $message = UserDB::GetLastWords($this->id);
-    if (is_null($message)) {
+    if (null === $message) {
       return true;
     }
 
@@ -738,7 +738,7 @@ class User extends StackManager {
 
   //デバッグ用
   public function p($data = null, $name = null) {
-    Text::p(is_null($data) ? $this : $this->$data, $name);
+    Text::p((null === $data) ? $this : $this->$data, $name);
   }
 
   //-- private --//
@@ -796,7 +796,7 @@ class UserLoader {
 
   //ユーザ情報取得 (ユーザ ID 経由)
   public function ByID($id) {
-    if (is_null($id)) {
+    if (null === $id) {
       return new User();
     }
 
@@ -996,7 +996,7 @@ class UserLoader {
 	}
       } elseif (RoleUser::IsDelayCopy($user)) {
 	//厳密には1日目の投票前に死亡した場合は公開可となるがレアケースなので対応しない
-	if (DB::$ROOM->IsDate(1) || false === is_null($user->GetMainRoleTarget())) {
+	if (DB::$ROOM->IsDate(1) || null !== $user->GetMainRoleTarget()) {
 	  return false;
 	}
       } elseif (RoleUser::IsRevive($user) || $user->IsRole('revive_mania')) {

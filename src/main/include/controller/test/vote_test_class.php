@@ -38,10 +38,10 @@ final class VoteTestController extends JinrouController {
 
   protected static function LoadRoom() {
     DevRoom::Load();
-    DB::$ROOM->date = VoteTestRoom::DATE;
+    DB::$ROOM->SetDate(VoteTestRoom::DATE);
     DB::$ROOM->SetScene(VoteTestRoom::SCENE);
     if (VoteTestRoom::TIME) {
-      DB::$ROOM->system_time = Time::Get(); //現在時刻を取得
+      DB::$ROOM->SetTime();
     }
     RQ::GetTest()->winner = VoteTestRoom::WINNER;
   }
@@ -186,7 +186,7 @@ final class VoteTestController extends JinrouController {
     DB::$USER->SetEvent();
     GameHTML::OutputDead();
 
-    //DB::$ROOM->status = RoomStatus::FINISHED;
+    //DB::$ROOM->SetStatus(RoomStatus::FINISHED);
     GameHTML::OutputPlayer();
     RoleHTML::OutputAbility();
     foreach (DB::$USER->Get() as $user) {

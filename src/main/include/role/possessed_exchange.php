@@ -17,7 +17,7 @@ class Role_possessed_exchange extends Role {
     }
 
     $target = DB::$USER->ByID(array_shift($stack))->handle_name;
-    if (is_null($target)) {
+    if (null === $target) {
       return;
     }
 

@@ -3,13 +3,15 @@
   ◆募集停止 (close_room)
 */
 class Option_close_room extends OptionCheckbox {
-  protected function Ingore() {
-    return false === OptionManager::IsChange();
-  }
-
   protected function LoadValue() {
     if (DB::ExistsRoom()) {
       $this->value = DB::$ROOM->IsClosing();
+    }
+  }
+
+  protected function FilterEnable() {
+    if (false === RoomOptionManager::IsChange()) {
+      $this->enable = false;
     }
   }
 

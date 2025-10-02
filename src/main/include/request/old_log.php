@@ -40,7 +40,9 @@ class Request_old_log extends Request {
     foreach ($stack as $i => $name) {
       $base_url = URL::GetRoom('old_log', $this->room_no);
       foreach (array_keys($stack) as $j) {
-	if ($j == $i) continue;
+	if ($j == $i) {
+	  continue;
+	}
 	$base_url .= $this->ToURL($j);
       }
       $base_url .= ($this->$i ? '' : URL::GetSwitch($i)) . URL::GetAddDB();

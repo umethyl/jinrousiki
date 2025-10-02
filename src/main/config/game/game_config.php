@@ -77,7 +77,7 @@ class GameConfig {
   ];
 
   /* その他 */
-  const POWER_GM = false; //強権 GM モード (ON：true / OFF：false)
+  const POWER_GM = false; //強権GMモード (ON：true / OFF：false)
 
   //天候の出現比設定 (番号と天候の対応は WeatherData::$list 参照)
   public static $weather_list = [

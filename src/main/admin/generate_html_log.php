@@ -3,7 +3,9 @@ require_once('init.php');
 Loader::LoadFile('admin_class');
 
 $disable = true; //使用時には false に変更する
-if ($disable) HTML::OutputUnusableError();
+if (true === $disable) {
+  HTML::OutputUnusableError();
+}
 
 RQ::LoadRequest('RequestOldLog'); //引数を取得
 RQ::Set('prefix', ''); //各ページの先頭につける文字列 (テスト / 上書き回避用)

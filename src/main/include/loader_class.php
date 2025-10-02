@@ -28,7 +28,7 @@ abstract class LoadManager {
 
     foreach ($name_list as $name) {
       //printf('◆LoadFile: %s: %s: <br>', static::CLASS_PREFIX, $name);
-      if (true === is_null($name)) {
+      if (null === $name) {
 	throw new InvalidArgumentException('Argument is NULL');
       } elseif (false === self::IsLoadedFile($name)) {
 	static::LoadDependence($name);
@@ -69,7 +69,7 @@ abstract class LoadManager {
 
     foreach ($name_list as $name) {
       //printf('◆LoadClass: %s: %s<br>', static::CLASS_PREFIX, $name);
-      if (true === is_null($name)) {
+      if (null === $name) {
 	throw new InvalidArgumentException('Argument is NULL');
       } elseif (false === self::IsLoadedClass($name)) {
 	static::LoadDependence($name);
@@ -156,7 +156,7 @@ final class Loader extends LoadManager {
   //オートロード
   public static function AutoLoad($name) {
     $file = self::GetFile($name);
-    if (true === is_null($file)) {
+    if (null === $file) {
       throw new RuntimeException("AutoLoad failed: {$name}");
     } else {
       self::LoadFile($file);
@@ -376,6 +376,7 @@ final class LoaderData {
     'OptionParser'	=> 'option_class',
     'OptionForm'	=> 'option_form_class',
     'RoomOption'	=> 'room_option_class',
+    'RoomOptionManager'	=> 'room_option_manager_class',
     //talk
     'Talk'		=> 'talk_class',
     'TalkParser'	=> 'talk_class',
@@ -598,9 +599,10 @@ final class LoaderData {
     'session_class'	=> 'request',
     'cookie_class'	=> 'request',
     //option
-    'option_class'	=> 'option',
-    'option_form_class'	=> 'option',
-    'room_option_class'	=> 'option',
+    'option_class'		=> 'option',
+    'option_form_class'		=> 'option',
+    'room_option_class'		=> 'option',
+    'room_option_manager_class'	=> 'option',
     //talk
     'talk_class'		=> 'talk',
     'game_play_talk_class'	=> 'talk',

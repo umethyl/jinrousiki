@@ -6,7 +6,7 @@ class Option_max_user extends OptionSelector {
   public $group = OptionGroup::NONE;
 
   protected function LoadValue() {
-    if (OptionManager::IsChange()) {
+    if (RoomOptionManager::IsChange()) {
       $this->value = DB::$ROOM->max_user;
     } else {
       $this->value = RoomConfig::$default_max_user;
