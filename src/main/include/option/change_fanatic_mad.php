@@ -6,5 +6,7 @@
 */
 OptionManager::Load('change_mad');
 class Option_change_fanatic_mad extends Option_change_mad {
-  function GetCaption() { return '狂信者村'; }
+  public function GetCaption() {
+    return '狂信者村';
+  }
 }

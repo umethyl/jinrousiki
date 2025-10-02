@@ -1,11 +1,10 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
-Loader::LoadFile('cache_config', 'message', 'user_icon_class', 'room_option_class');
+require_once('init.php');
+Loader::LoadFile('cache_config', 'dead_message', 'user_icon_class', 'room_option_class');
 Loader::LoadClass('InfoTime');
 InfoHTML::OutputHeader('仕様', 0, 'script_info');
 ?>
-<img src="../img/script_info_title.jpg" title="スクリプトの仕様" alt="スクリプトの仕様">
+<img src="../img/title/script_info.jpg" title="スクリプトの仕様" alt="スクリプトの仕様">
 <ul>
   <li><a href="#environment">ゲームに参加するために必要な環境</a></li>
   <li><a href="#difference">他のスクリプトとどこが違うの？</a></li>
@@ -125,8 +124,8 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 
 <h4 id="difference_deadman">死亡者の順序がランダム表示</h4>
 <div>
-<a href="rule.php#rule_role_wolf">人狼</a>に襲われて死亡した場合、<a href="rule.php#rule_role_fox">妖狐</a>が占われて死亡した場合、<a href="rule.php#rule_role_poison">埋毒者</a>に道連れにされた場合、表示されるメッセージは [ ～<?php echo Message::$deadman; ?> ] となります。<br>
-また、<a href="rule.php#rule_role_lovers">恋人</a>が後追いした場合、表示されるメッセージは [ ～<?php echo Message::$lovers_followed; ?> ] となります。<br>
+<a href="rule.php#rule_role_wolf">人狼</a>に襲われて死亡した場合、<a href="rule.php#rule_role_fox">妖狐</a>が占われて死亡した場合、<a href="rule.php#rule_role_poison">埋毒者</a>に道連れにされた場合、表示されるメッセージは [ ～<?php echo DeadMessage::$deadman; ?> ] となります。<br>
+また、<a href="rule.php#rule_role_lovers">恋人</a>が後追いした場合、表示されるメッセージは [ ～<?php echo DeadMessage::$lovers_followed; ?> ] となります。<br>
 表示される順番ですが、どの死に方をした人が上に表示されるということはなく順序がランダムに表示されます。<br>
 注意しなければいけないことはリロードするたびにランダムに順序が変更されるということです。
 </div>

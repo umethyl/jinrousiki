@@ -6,14 +6,17 @@
 */
 class Role_quiz extends Role {
   public $mix_in = 'decide';
+  public $vote_day_type = 'real';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->IsOptionGroup('chaos')) Image::Role()->Output('quiz_chaos');
+  protected function IgnoreResult() {
+    return ! DB::$ROOM->IsOptionGroup('chaos');
   }
 
-  function SetVoteDay($uname) {
-    if ($this->IsRealActor()) $this->AddStackName($uname);
+  protected function OutputAddResult() {
+    Image::Role()->Output('quiz_chaos');
   }
 
-  function DecideVoteKill() { $this->DecideVoteKillSame(); }
+  public function DecideVoteKill() {
+    $this->DecideVoteKillSame();
+  }
 }

@@ -1,9 +1,11 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
-Loader::LoadFile('game_config', 'room_config', 'time_config', 'message', 'feedengine',
-		 'image_class');
+require_once('init.php');
 
-DB::Connect(); // DB 接続
+$disable = true; //false にすると使用可能になる
+if ($disable) HTML::OutputUnusableError();
+
+Loader::LoadFile('game_config', 'room_config', 'time_config', 'feedengine', 'image_class');
+
+DB::Connect();
 $site_summary = FeedEngine::Initialize('site_summary.php');
 echo $site_summary->Export();

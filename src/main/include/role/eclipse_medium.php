@@ -10,9 +10,11 @@ class Role_eclipse_medium extends Role_medium {
   public $display_role = 'medium';
   public $sudden_death = 'SEALED';
 
-  function SuddenDeath() {
-    if (! $this->IgnoreSuddenDeath() && $this->GetVoteKill() == '' && $this->IsRealActor()) {
-      $this->SetSuddenDeath($this->sudden_death);
-    }
+  public function IgnoreSuddenDeath() {
+    return ! $this->IsRealActor() || $this->GetActor()->IsAvoidLovers(true);
+  }
+
+  public function IsSuddenDeath() {
+    return ! $this->IsVoteKill();
   }
 }

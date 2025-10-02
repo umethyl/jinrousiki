@@ -1,10 +1,9 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadClass('InfoTime');
 InfoHTML::OutputHeader('ルール', 0, 'rule');
 ?>
-<img src="../img/rule_title.jpg" alt="ルール" title="ルールの説明">
+<img src="../img/title/rule.jpg" alt="ルール" title="ルールの説明">
 <ul>
   <li><a href="#worning">ゲームに参加する上で重要なこと</a></li>
   <li><a href="#rule">「汝は人狼なりや？」の基本ルールについて</a></li>

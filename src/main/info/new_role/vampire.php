@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('吸血鬼陣営');
 ?>
@@ -14,22 +13,52 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 </p>
 
 <h2 id="rule">基本ルール</h2>
+<p>
+<a href="#rule_summary">概要</a>
+<a href="#rule_win">勝利条件</a>
+<a href="#rule_distinguish">判定</a>
+</p>
+
+<h3 id="rule_summary">概要</h3>
 <ol>
 <li>他国の「カルトリーダー」・「笛吹き」に相当します。</li>
-<li><a href="../spec.php#win">勝利条件</a>は「生存者が自分と自分の<a href="#infected">感染者</a>のみになっていること」で、本人だけが勝利扱いになります。</li>
-<li>生存者が自分一人だけになった場合も勝利となります。</li>
-<li>勝利条件を満たした時に恋人が生存していた場合は<a href="lovers.php">恋人陣営</a>勝利になります。</li>
-<li>吸血鬼陣営をコピーした変化前の<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>と<a href="mania.php#unknown_mania_group">鵺系</a>の勝利条件は<br>
-  例外的に「吸血鬼陣営の誰かが勝利」となります。コピー先の勝敗や自己の生存は不問です。
-</li>
 <li>2 日目以降の夜に誰か一人を襲撃して<a href="sub_role.php#infected">感染者</a>にすることができます。</li>
-<li>生存カウントは村人です。</li>
-<li><a href="human.php#psycho_mage">精神鑑定士</a>の判定は「正常」、<a href="human.php#sex_mage">ひよこ鑑定士</a>の判定は「性別」です。</li>
+</ol>
+
+<h3 id="rule_win">勝利条件</h3>
+<ol>
+<li>生存者が自分と自分の<a href="#infected">感染者</a>のみになっていることで、本人だけが勝利扱いになる。</li>
+<li>生存者が自分一人だけになった場合も勝利となる。</li>
+<li>勝利条件を満たした時に恋人が生存していた場合は<a href="lovers.php">恋人陣営</a>勝利になる。</li>
+<li>
+  吸血鬼陣営をコピーした<a href="mania.php#unknown_mania_group">鵺系</a>・変化前の<a href="ability.php#copy_delay">コピー能力者 (時間差型)</a> の勝利条件は<br>
+  例外的に「吸血鬼陣営の誰かが勝利」となる。<br>
+  コピー先の勝敗や自己の生存は不問。
+</li>
 </ol>
 <h5>Ver. 1.4.0 β19～</h5>
 <pre>
 コピー能力者の勝利条件を変更
 </pre>
+
+<h3 id="rule_distinguish">判定</h3>
+<table>
+<tr>
+  <th>生存カウント</th>
+  <th>占い</th>
+  <th>霊能</th>
+  <th>精神鑑定</th>
+  <th>性別鑑定</th>
+</tr>
+<tr>
+  <td>村人</td>
+  <td>蝙蝠</td>
+  <td>蝙蝠</td>
+  <td>正常</td>
+  <td>性別</td>
+</tr>
+</table>
+
 
 <h2 id="vampire_do">吸血の仕様</h2>
 <ol>
@@ -42,16 +71,20 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
   死亡メッセージは人狼の襲撃と同じで、死因は「血を吸い尽くされた」です。
 </li>
 <li>吸血鬼が吸血鬼を襲撃すると吸血死が発生します。相互襲撃の場合は相討ちとなります。</li>
-<li><a href="#incubus_vampire">青髭公</a>・<a href="#succubus_vampire">飛縁魔</a>は一定の条件で襲撃先を吸血死させます。<br>
-  <a href="ability.php#special_resist">特殊耐性能力者</a>を対象にした場合は発生しません。
+<li><a href="#incubus_vampire">青髭公</a>・<a href="#succubus_vampire">飛縁魔</a>は一定の条件で襲撃先を吸血死させます。
 </li>
 <li><a href="#doom_vampire">冥血鬼</a>は吸血鬼の襲撃を無効化します。</li>
 <li><a href="#soul_vampire">吸血姫</a>は吸血鬼の襲撃を反射し、襲撃した吸血鬼が吸血死します。<br>
   <a href="#soul_vampire">吸血姫</a>が相互襲撃した場合は互いに反射して相討ちとなります。
 </li>
-<li>吸血鬼をコピーした変化前の<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>が襲撃された場合は吸血死します。</li>
+<li>吸血鬼をコピーした変化前の<a href="ability.php#copy_delay">コピー能力者 (時間差型)</a> が襲撃された場合は吸血死します。</li>
+<li><a href="ability.php#special_resist">特殊耐性能力者</a>はあらゆる吸血死を無効化します。</li>
 <li><a href="mania.php#unknown_mania_group">鵺系</a>はコピー先に関係なく吸血できます。</li>
 </ol>
+<h5>Ver. 2.3.0 α2～</h5>
+<pre>
+<a href="ability.php#special_resist">特殊耐性能力者</a>はあらゆる吸血死を無効化します。
+</pre>
 <h5>Ver. 1.5.0 β12～</h5>
 <pre>
 コピー能力者に関する仕様を変更。
@@ -169,22 +202,18 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 </pre>
 
 <h3 id="step_vampire">文武王 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 2.2.0 α4～]</h3>
+<h4>[足音能力] タイプ：本人基点型 / キャンセル投票：無し</h4>
 <pre>
 夜の投票時に自分と投票先の間で足音が鳴る特殊な吸血鬼。
 足音システムの基本は<a href="human.php#step_mage">審神者</a>参照。
 また、処刑投票先を一定確率 (30%) 自分の<a href="sub_role.php#infected">感染者</a>にすることができる。
 </pre>
+<h4>処刑投票吸血能力</h4>
 <ol>
 <li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合でも有効。</li>
 <li>対象が死亡していた場合は無効 (例：処刑・毒死)。
 <li>自分が処刑された場合は無効。
 <li>吸血鬼系、吸血鬼をコピーした<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>には無効。
-</ol>
-<h4>足音能力補足</h4>
-<ol>
-<li>投票の始点は自分から (チェック不要) で、終点は実際に護衛したい人を選んでください。</li>
-<li>死者を通り道に選ぶ事もできますが、死者を襲撃することはできません。</li>
-<li>足音は始点と終点の間で鳴ります。</li>
 </ol>
 <h4>関連役職</h4>
 <pre>
@@ -200,10 +229,14 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 <h4>[耐性] 人狼襲撃：無効 / 狩り：有効 / 吸血襲撃：無効</h4>
 <pre>
 吸血先に<a href="sub_role.php#infected">感染者</a>と<a href="sub_role.php#death_warrant">死の宣告</a>を同時につけてしまう特殊な吸血鬼。
-<a href="sub_role.php#death_warrant">死の宣告</a>の発動日は投票した夜から数えて 4 日目後の昼。
 <a href="wolf.php#wolf_group">人狼</a>・<a href="#vampire_do">吸血鬼</a>の襲撃を無効化する。
 襲撃者が<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) だった場合は耐性無効。
 </pre>
+<h4>死の宣告能力</h4>
+<ol>
+<li><a href="sub_role.php#death_warrant">死の宣告</a>の発動日は投票した夜から数えて 4 日目後の昼。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>には無効 (吸血は有効)。</li>
+</ol>
 <h4>関連役職</h4>
 <pre>
 <a href="ability.php#doom">死の宣告能力者</a>・<a href="ability.php#resist_wolf">人狼襲撃耐性能力者</a>
@@ -242,7 +275,11 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 <h4>[耐性] 狩り：有効 / 吸血襲撃：反射 / 暗殺：反射</h4>
 <pre>
 <a href="#vampire_do">感染</a>させる事に成功した人の役職を知ることができる上位吸血鬼。
-<a href="human.php#assassin_spec">暗殺反射</a>・<a href="#vampire_do">吸血反射</a>を持つ。
+<a href="#vampire_do">吸血反射</a> (<a href="ability.php#special_resist">特殊耐性能力者</a>には無効)・<a href="human.php#assassin_spec">暗殺反射</a>を持つ。
+</pre>
+<h5>Ver. 2.3.0 α2～</h5>
+<pre>
+<a href="ability.php#special_resist">特殊耐性能力者</a>は吸血反射無効
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -262,11 +299,15 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 人狼に襲撃されて死亡した場合、一定確率 (40%) で蘇生する。
 </pre>
 <ol>
-<li>何度蘇生しても蘇生率は一定。</li>
+<li>何度蘇生しても蘇生率は一定 (<a href="../weather.php#weather_full_revive">天候</a>の影響は受ける)。</li>
 <li><a href="sub_role.php#lovers">恋人</a>になったら蘇生能力は無効。</li>
 <li>人狼の襲撃以外で死亡した場合 (例：<a href="ability.php#assassin">暗殺</a>)、蘇生能力は無効。</li>
 <li>身代わり君か、襲撃者が<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) だった場合、蘇生能力は無効。</li>
 </ol>
+<h5>Ver. 2.3.0～</h5>
+<pre>
+<a href="../weather.php#weather_full_revive">天候</a>の影響追加
+</pre>
 <h5>Ver. 1.5.0 β16～</h5>
 <pre>
 自己蘇生能力追加

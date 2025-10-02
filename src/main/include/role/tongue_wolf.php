@@ -2,14 +2,14 @@
 /*
   ◆舌禍狼 (tongue_wolf)
   ○仕様
-  ・襲撃：役職が分かる
+  ・襲撃：役職鑑定
 */
 RoleManager::LoadFile('wolf');
 class Role_tongue_wolf extends Role_wolf {
   public $result = 'TONGUE_WOLF_RESULT';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 1) $this->OutputAbilityResult($this->result);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 2;
   }
 
   protected function WolfKillAction(User $user) {

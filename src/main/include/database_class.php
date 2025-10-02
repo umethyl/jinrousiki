@@ -9,7 +9,7 @@ class DB {
   private static $statement   = null;
   private static $parameter   = null;
   private static $transaction = false;
-  private static $table_list = array(
+  private static $table_list  = array(
     'room', 'user_entry', 'player', 'talk', 'talk_beforegame', 'talk_aftergame', 'system_message',
     'result_ability', 'result_dead', 'result_lastwords', 'result_vote_kill', 'vote');
 
@@ -23,7 +23,13 @@ class DB {
     self::Check($header, $exit);
 
     //データベース名設定
-    $name = isset($id) ? @DatabaseConfig::$name_list[is_int($id) ? $id - 1 : $id] : null;
+    $name = null;
+    if (isset($id)) {
+      $offset = is_int($id) ? $id - 1 : $id;
+      if (isset(DatabaseConfig::$name_list[$offset])) {
+	$name = DatabaseConfig::$name_list[$offset];
+      }
+    }
     if (is_null($name)) $name = DatabaseConfig::NAME;
 
     //コンストラクタ用パラメータセット
@@ -39,12 +45,12 @@ class DB {
   //接続設定確認
   static function Check($header, $exit) {
     if (DatabaseConfig::DISABLE) {
-      return self::Output($header, $exit, '接続不可設定になっています');
+      return self::Output($header, $exit, Message::DISABLE_DB);
     }
   }
 
   //PDO インスタンス初期化
-  static function Initialize($dsn){
+  static function Initialize($dsn) {
     $pdo = new PDO($dsn, DatabaseConfig::USER, DatabaseConfig::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
@@ -103,7 +109,9 @@ class DB {
   }
 
   //最終 INSERT ID 取得
-  static function GetInsertID() { return self::$instance->lastInsertId(); }
+  static function GetInsertID() {
+    return self::$instance->lastInsertId();
+  }
 
   //Prepare 処理
   static function Prepare($query, $list = array()) {
@@ -141,13 +149,13 @@ class DB {
     $stack       = array($trace_stack['line'], $error, $query);
     $trace_stack = array_shift($backtrace);
     array_unshift($stack, $trace_stack['function'] . '()');
-    $str = sprintf("SQLエラー: %s<br>\n", implode(': ', $stack));
+    $str = sprintf('%s: %s' . Text::BRLF, Message::SQL_ERROR, implode(': ', $stack));
 
     foreach ($backtrace as $trace_stack) { //呼び出し元があるなら追加で出力
       $stack = array($trace_stack['function'] . '()', $trace_stack['line']);
-      $str .= sprintf("Caller: %s<br>\n", implode(': ', $stack));
+      $str .= sprintf('Caller: %s' . Text::BRLF, implode(': ', $stack));
     }
-    HTML::OutputResult(ServerConfig::TITLE . ' [エラー]', $str);
+    HTML::OutputResult(ServerConfig::TITLE . Message::ERROR_TITLE, $str);
   }
 
   //コミット付き実行
@@ -210,33 +218,6 @@ class DB {
     return self::FetchBool("INSERT INTO {$table}({$items}) VALUES({$values})");
   }
 
-  //ユーザ登録処理
-  static function InsertUser($room_no, $uname, $handle_name, $password, $user_no = 1, $icon_no = 0,
-			     $profile = null, $sex = 'male', $role = null, $session_id = null) {
-    $crypt_password = Text::Crypt($password);
-    $items  = 'room_no, user_no, uname, handle_name, icon_no, sex, password, live';
-    $values = "{$room_no}, {$user_no}, '{$uname}', '{$handle_name}', {$icon_no}, '{$sex}', " .
-      "'{$crypt_password}', 'live'";
-
-    if ($uname == 'dummy_boy') {
-      $profile    = Message::$dummy_boy_comment;
-      $last_words = Message::$dummy_boy_last_words;
-    }
-    else {
-      $ip_address = Security::GetIP(); //ユーザのIPアドレスを取得
-      $items  .= ', ip_address, last_load_scene';
-      $values .= ", '{$ip_address}', 'beforegame'";
-    }
-
-    foreach (array('profile', 'role', 'session_id', 'last_words') as $value) {
-      if (isset($$value)) {
-	$items  .= ", {$value}";
-	$values .= ", '{$$value}'";
-      }
-    }
-    return self::Insert('user_entry', $items, $values);
-  }
-
   //村削除
   static function DeleteRoom($room_no) {
     $query = 'DELETE FROM %s WHERE room_no = %d';
@@ -252,6 +233,36 @@ class DB {
     return self::ExecuteCommit('OPTIMIZE TABLE ' . $query);
   }
 
+  //村情報ロード
+  static function LoadRoom($lock = false) {
+    self::$ROOM = new Room(RQ::Get(), $lock);
+  }
+
+  //ユーザ情報ロード
+  static function LoadUser($lock = false) {
+    self::$USER = new UserData(RQ::Get(), $lock);
+  }
+
+  //本人情報ロード
+  static function LoadSelf($id = null) {
+    self::$SELF = is_null($id) ? DB::$USER->BySession() : DB::$USER->ByID($id);
+  }
+
+  //本人情報ロード (観戦者)
+  static function LoadViewer() {
+    self::$SELF = new User();
+  }
+
+  //本人情報ロード (身代わり君)
+  static function LoadDummyBoy() {
+    self::LoadSelf(1);
+  }
+
+  //村情報セット
+  static function SetRoom(Room $class) {
+    self::$ROOM = $class;
+  }
+
   //statement 表示設定 (デバッグ用)
   static function d($flag = true) {
     self::$display = $flag;
@@ -265,7 +276,7 @@ class DB {
 
   //データベース接続エラー出力 ($header, $exit は Connect() 参照)
   private static function Output($header, $exit, $str) {
-    $title = 'MySQL サーバ接続失敗';
+    $title = Message::DB_ERROR_CONNECT;
     $body  = $title . ': ' . $str;
     if ($header) {
       Text::d(sprintf('<font color="#FF0000">%s</font>', $body));

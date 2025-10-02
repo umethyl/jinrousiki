@@ -6,5 +6,7 @@
 */
 OptionManager::Load('replace_human');
 class Option_full_mad extends Option_replace_human {
-  function GetCaption() { return '狂人村'; }
+  public function GetCaption() {
+    return '狂人村';
+  }
 }

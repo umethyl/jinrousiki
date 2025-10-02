@@ -4,22 +4,30 @@
   ○仕様
 */
 class Role_sweet_status extends Role {
-  protected function OutputImage() {
-    if (DB::$ROOM->IsDate(2)) parent::OutputImage();
+  protected function IgnoreImage() {
+    return ! DB::$ROOM->IsDate(2);
   }
 
   protected function OutputPartner() {
-    $stack = array();
-    $actor = $this->GetActor();
-    if ($actor->IsRole('lovers')) return; //恋人持ちなら処理委託
+    if ($this->IgnoreOutputLovers()) return;
+
+    $target = $this->GetActor()->partner_list;
+    $stack  = array();
     foreach (DB::$USER->rows as $user) {
       if ($this->IsActor($user)) continue;
-      //夢求愛者対応
-      if ($actor->IsPartner('dummy_chiroptera', $user->id) ||
-	  (DB::$ROOM->IsDate(1) && $user->IsPartner($this->role, $actor->partner_list))) {
+      if ($this->IsLovers($user, $target)) {
 	$stack[] = $user->GetName(); //憑依追跡
       }
     }
     RoleHTML::OutputPartner($stack, 'partner_header', 'lovers_footer');
+  }
+
+  private function IgnoreOutputLovers() {
+    return $this->GetActor()->IsRole('lovers', 'fake_lovers');
+  }
+
+  private function IsLovers(User $user, array $target) {
+    return $this->GetActor()->IsPartner('dummy_chiroptera', $user->id) ||
+      (DB::$ROOM->IsDate(1) && $user->IsPartner($this->role, $target));
   }
 }

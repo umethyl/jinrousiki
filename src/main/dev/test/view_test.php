@@ -1,17 +1,13 @@
 <?php
-//error_reporting(E_ALL);
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 
-$disable = true; //使用時には false に変更する
-if ($disable) {
-  HTML::OutputResult('認証エラー', 'このスクリプトは使用できない設定になっています。');
-}
+$disable = true; //false にすると使用可能になる
+if ($disable) HTML::OutputUnusableError();
+
 Loader::LoadFile('test_class', 'cast_config');
-
-//-- 仮想村データをセット --//
 Loader::LoadRequest('RequestBaseGame', true);
 
+//-- 仮想村データをセット --//
 DevRoom::Initialize(array('name' => '表示テスト村', 'scene' => 'day'));
 DevUser::Initialize(11,
   array( 1 => 'mage',
@@ -36,15 +32,15 @@ DevUser::Complement();
 //DB::Connect(); //DB接続 (必要なときだけ設定する)
 DevRoom::Load();
 DB::$ROOM->date = 1;
-DB::$ROOM->scene = 'beforegame';
-#DB::$ROOM->scene = 'day';
-#DB::$ROOM->scene = 'night';
-#DB::$ROOM->scene = 'aftergame';
 switch (@$_GET['scene']) {
 case 'beforegame':
 case 'day':
 case 'night':
-  DB::$ROOM->scene = $_GET['scene'];
+  DB::$ROOM->SetScene($_GET['scene']);
+  break;
+
+default
+  DB::$ROOM->SetScene('beforegame');
   break;
 }
 DevUser::Load();
@@ -57,22 +53,22 @@ DB::$USER->rows[8]->live = 'dead';
 if (false) {
   switch (intval($_GET['dummy_boy'])) {
   case '1':
-    IconConfig::$dead = JINRO_ROOT . '/dev/skin/icon/normal/dummy_boy/dummy_boy_01.jpg';
+    IconConfig::$dead = JINROU_ROOT . '/dev/skin/icon/normal/dummy_boy/dummy_boy_01.jpg';
     break;
 
   case '2':
-    IconConfig::$dead = JINRO_ROOT . '/dev/skin/icon/normal/dummy_boy/dummy_boy_02.gif';
+    IconConfig::$dead = JINROU_ROOT . '/dev/skin/icon/normal/dummy_boy/dummy_boy_02.gif';
     break;
 
   case '3':
-    IconConfig::$dead = JINRO_ROOT . '/dev/skin/icon/normal/dummy_boy/gerd.jpg';
+    IconConfig::$dead = JINROU_ROOT . '/dev/skin/icon/normal/dummy_boy/gerd.jpg';
     break;
   }
 
   $dead_list = array();
   $dead = intval($_GET['dead']);
   if (array_key_exists($dead - 1, $dead_list)) {
-    IconConfig::$dead = JINRO_ROOT . '/dev/skin/normal/dead/' . $dead_list[$dead];
+    IconConfig::$dead = JINROU_ROOT . '/dev/skin/normal/dead/' . $dead_list[$dead];
   }
 
   $wolf = intval($_GET['wolf']) - 1;
@@ -85,32 +81,32 @@ if (false) {
   case '2':
   case '3':
   case '4':
-    IconConfig::$dead = JINRO_ROOT . '/dev/skin/normal/wolf/wolf_0' . $wolf . '.gif';
+    IconConfig::$dead = JINROU_ROOT . '/dev/skin/normal/wolf/wolf_0' . $wolf . '.gif';
     break;
   }
 
   $t_dummy_list = array();
   $t_dummy = is_null($_GET['t_dummy_boy']) ? -1 : intval($_GET['t_dummy_boy']);
   if (array_key_exists($t_dummy, $t_dummy_list)) {
-    IconConfig::$dead = JINRO_ROOT . '/dev/skin/icon/touhou/dummy_boy/' . $t_dummy_list[$t_dummy];
+    IconConfig::$dead = JINROU_ROOT . '/dev/skin/icon/touhou/dummy_boy/' . $t_dummy_list[$t_dummy];
   }
 
   $t_wolf_list = array();
   $t_wolf = is_null($_GET['t_wolf']) ? -1 : intval($_GET['t_wolf']);
   if (array_key_exists($t_wolf, $t_wolf_list)) {
-    IconConfig::$dead = JINRO_ROOT . '/dev/skin/icon/touhou/wolf/' . $t_wolf_list[$t_wolf];
+    IconConfig::$dead = JINROU_ROOT . '/dev/skin/icon/touhou/wolf/' . $t_wolf_list[$t_wolf];
   }
 
   $t_dead_list = array();
   $t_dead = is_null($_GET['t_dead']) ? -1 : intval($_GET['t_dead']);
   if (array_key_exists($t_dead, $t_dead_list)) {
-    IconConfig::$dead = JINRO_ROOT . '/dev/skin/icon/touhou/dead/' . $t_dead_list[$t_dead];
+    IconConfig::$dead = JINROU_ROOT . '/dev/skin/icon/touhou/dead/' . $t_dead_list[$t_dead];
   }
 }
 
 //-- データ出力 --//
 HTML::OutputHeader('表示テスト', 'game_play');
-HTML::OutputBodyHeader(sprintf('%s/game_%s', JINRO_CSS, DB::$ROOM->scene));
+HTML::OutputBodyHeader(sprintf('%s/game_%s', JINROU_CSS, DB::$ROOM->scene));
 //Text::p(DB::$ROOM->scene, $_GET['scene']);
 GameHTML::OutputPlayer();
 HTML::OutputFooter(true);

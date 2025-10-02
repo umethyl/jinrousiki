@@ -5,7 +5,7 @@
 class Option_sub_role_limit extends SelectorRoomOptionItem {
   public $type = 'group';
 
-  function __construct() {
+  public function __construct() {
     parent::__construct();
     $stack = array('no_sub_role' => 'no_sub_role');
     foreach (array('easy', 'normal', 'hard') as $name) {
@@ -25,7 +25,7 @@ class Option_sub_role_limit extends SelectorRoomOptionItem {
     }
   }
 
-  function LoadPost() {
+  public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
     if (is_null(RQ::Get()->{$this->name})) return false;
 
@@ -39,7 +39,7 @@ class Option_sub_role_limit extends SelectorRoomOptionItem {
     }
   }
 
-  function GetItem() {
+  public function GetItem() {
     $stack = array('no_sub_role' => OptionManager::GetClass('no_sub_role'),
 		   'easy'        => OptionManager::GetClass('sub_role_limit_easy'),
 		   'normal'      => OptionManager::GetClass('sub_role_limit_normal'),
@@ -53,7 +53,11 @@ class Option_sub_role_limit extends SelectorRoomOptionItem {
     return $stack;
   }
 
-  function GetCaption() { return 'サブ役職制限'; }
+  public function GetCaption() {
+    return 'サブ役職制限';
+  }
 
-  protected function GetURL() { return 'chaos.php#' . $this->name; }
+  protected function GetURL() {
+    return 'chaos.php#' . $this->name;
+  }
 }

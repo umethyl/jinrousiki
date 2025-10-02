@@ -11,7 +11,7 @@ class Role_wise_ogre extends Role_ogre {
   public $reduce_rate  =  2;
   public $reflect_rate = 40;
 
-  function Win($winner) {
+  public function Win($winner) {
     if ($this->IsDead()) return false;
     foreach (DB::$USER->rows as $user) {
       if ($user->IsLive() && $user->IsMainGroup('common', 'wolf', 'fox')) return false;

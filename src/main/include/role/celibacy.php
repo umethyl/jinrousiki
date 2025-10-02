@@ -8,13 +8,10 @@ RoleManager::LoadFile('chicken');
 class Role_celibacy extends Role_chicken {
   public $sudden_death = 'CELIBACY';
 
-  function SuddenDeath() {
-    if ($this->IgnoreSuddenDeath()) return;
+  public function IsSuddenDeath() {
     foreach ($this->GetVotedUname() as $uname) {
-      if (DB::$USER->ByRealUname($uname)->IsLovers()) {
-	$this->SetSuddenDeath($this->sudden_death);
-	break;
-      }
+      if (DB::$USER->ByRealUname($uname)->IsLovers()) return true;
     }
+    return false;
   }
 }

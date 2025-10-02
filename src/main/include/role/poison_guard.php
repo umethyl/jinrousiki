@@ -7,7 +7,11 @@
 */
 RoleManager::LoadFile('guard');
 class Role_poison_guard extends Role_guard {
-  function IgnoreGuard() { return null; }
+  public function IgnoreGuard() {
+    return null;
+  }
 
-  function IsPoison() { return DB::$ROOM->IsNight(); }
+  public function IsPoison() {
+    return DB::$ROOM->IsNight();
+  }
 }

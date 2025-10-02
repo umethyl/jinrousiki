@@ -9,7 +9,7 @@ RoleManager::LoadFile('yaksa');
 class Role_succubus_yaksa extends Role_yaksa {
   public $reduce_rate = 2;
 
-  function Win($winner) {
+  public function Win($winner) {
     if ($this->IsDead()) return false;
     foreach (DB::$USER->rows as $user) {
       if (! $this->IsActor($user) && $user->IsLive() && $user->IsMale()) return false;
@@ -17,5 +17,7 @@ class Role_succubus_yaksa extends Role_yaksa {
     return true;
   }
 
-  protected function IgnoreAssassin(User $user) { return ! $user->IsMale(); }
+  protected function IgnoreAssassin(User $user) {
+    return ! $user->IsMale();
+  }
 }

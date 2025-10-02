@@ -6,13 +6,12 @@
     - 判定は一文字毎で、空白、タブ、改行文字は対象外
 */
 class Role_invisible extends Role {
-  function ConvertSay() {
+  public function ConvertSay() {
     $say    = $this->GetStack('say');
     $result = '';
     $regex  = "/[\t\r\n\s]/";
     $count  = mb_strlen($say);
-    $stack  = range(0, $count);
-    shuffle($stack);
+    $stack  = Lottery::GetList(range(0, $count));
     $target_stack = array_slice($stack, 0, ceil($count * GameConfig::INVISIBLE_RATE / 100));
     for ($i = 0; $i < $count; $i++) {
       $str = mb_substr($say, $i, 1);
@@ -20,7 +19,7 @@ class Role_invisible extends Role {
 	$result .= $str;
       }
       elseif (in_array($i, $target_stack)) {
-	$result .= (strlen($str) == 2 ? '　' : '&nbsp;');
+	$result .= (strlen($str) == 2 ? Message::SPACER : '&nbsp;');
       }
       else {
 	$result .= $str;

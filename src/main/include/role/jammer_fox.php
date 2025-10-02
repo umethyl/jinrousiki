@@ -9,11 +9,19 @@ class Role_jammer_fox extends Role_child_fox {
   public $mix_in = 'jammer_mad';
   public $result = null;
 
-  function OutputAction() { $this->filter->OutputAction(); }
+  public function OutputAction() {
+    $this->filter->OutputAction();
+  }
 
-  function IsFinishVote(array $list) { return $this->filter->IsFinishVote($list); }
+  public function SetVoteNight() {
+    $this->filter->SetVoteNight();
+  }
 
-  function SetVoteNight() { $this->filter->SetVoteNight(); }
+  public function IsFinishVote(array $list) {
+    return $this->filter->IsFinishVote($list);
+  }
 
-  function IsJammer(User $user) { return $this->filter->IsJammer($user) && Lottery::Percent(70); }
+  public function IsJammer(User $user) {
+    return $this->filter->IsJammer($user) && Lottery::Percent(70);
+  }
 }

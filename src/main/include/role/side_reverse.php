@@ -5,7 +5,7 @@
   ・発言変換：左右置換 (行単位)
 */
 class Role_side_reverse extends Role {
-  function ConvertSay() {
+  public function ConvertSay() {
     $say    = $this->GetStack('say');
     $result = '';
     $line   = array();

@@ -5,7 +5,7 @@
 class Option_chaos_open_cast extends SelectorRoomOptionItem {
   public $type = 'group';
 
-  function __construct() {
+  public function __construct() {
     parent::__construct();
     foreach (array('camp', 'role', 'full') as $name) {
       $class  = sprintf('%s_%s', $this->name, $name);
@@ -22,7 +22,7 @@ class Option_chaos_open_cast extends SelectorRoomOptionItem {
     }
   }
 
-  function LoadPost() {
+  public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
     if (is_null(RQ::Get()->{$this->name})) return false;
 
@@ -36,7 +36,7 @@ class Option_chaos_open_cast extends SelectorRoomOptionItem {
     }
   }
 
-  function GetItem() {
+  public function GetItem() {
     $stack = array(''     => OptionManager::GetClass('chaos_open_cast_none'),
 		   'camp' => OptionManager::GetClass('chaos_open_cast_camp'),
 		   'role' => OptionManager::GetClass('chaos_open_cast_role'),
@@ -49,7 +49,11 @@ class Option_chaos_open_cast extends SelectorRoomOptionItem {
     return $stack;
   }
 
-  function GetCaption() { return '配役を通知する'; }
+  public function GetCaption() {
+    return '配役を通知する';
+  }
 
-  protected function GetURL() { return 'chaos.php#' . $this->name; }
+  protected function GetURL() {
+    return 'chaos.php#' . $this->name;
+  }
 }

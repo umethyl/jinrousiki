@@ -1,7 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
-Loader::LoadFile('info_functions');
+require_once('init.php');
 InfoHTML::OutputHeader('デバッグ情報', 1, 'debug');
 ?>
 <p>

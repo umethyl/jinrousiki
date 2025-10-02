@@ -15,13 +15,22 @@ class Role_common extends Role {
   }
 
   //仲間判定
-  protected function IsCommonPartner(User $user) { return $user->IsCommon(true); }
+  protected function IsCommonPartner(User $user) {
+    return $user->IsCommon(true);
+  }
 
   //囁き
-  function Whisper(TalkBuilder $builder, $voice) {
+  public function Whisper(TalkBuilder $builder, $voice) {
     if (! $builder->flag->common_whisper) return false; //スキップ判定
-    $str = Message::$common_talk;
-    $builder->AddRaw('', '共有者の小声', $str, $voice, '', 'talk-common', 'say-common');
-    return true;
+
+    $stack = array(
+      'str'        => RoleTalkMessage::COMMON_TALK,
+      'symbol'     => '',
+      'user_info'  => RoleTalkMessage::COMMON,
+      'voice'      => $voice,
+      'user_class' => 'talk-common',
+      'say_class'  => 'say-common'
+    );
+    return $builder->AddRaw($stack);
   }
 }

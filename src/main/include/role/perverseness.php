@@ -8,7 +8,7 @@ RoleManager::LoadFile('chicken');
 class Role_perverseness extends Role_chicken {
   public $sudden_death = 'PERVERSENESS';
 
-  function IsSuddenDeath() {
-    return ! $this->IgnoreSuddenDeath() && $this->GetVoteTargetCount() > 1;
+  public function IsSuddenDeath() {
+    return $this->GetVoteTargetCount() > 1;
   }
 }

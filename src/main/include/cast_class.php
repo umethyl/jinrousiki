@@ -5,10 +5,11 @@ class Cast {
   static function Get($user_count) {
     //人数に応じた配役リストを取得
     if (! isset(CastConfig::$role_list[$user_count])) { //リストの有無をチェック
-      self::Output($user_count . '人は設定されていません');
+      self::Output(sprintf(VoteMessage::NO_CAST_LIST, $user_count));
     }
     $role_list = CastConfig::$role_list[$user_count];
-    //Text::p(DB::$ROOM->option_list);
+    //Text::p(DB::$ROOM->option_list, '◆option_list');
+    //Text::p($role_list, '◆CastConfig');
 
     //お祭り村
     if (DB::$ROOM->IsOption('festival') && isset(CastConfig::$festival_role_list[$user_count])) {
@@ -33,27 +34,28 @@ class Cast {
       else { //通常村
 	OptionManager::SetRole($role_list, $user_count);
       }
+      //Text::p($role_list, '◆role_list [normal]');
       self::ReplaceRole($role_list); //村人置換村
     }
 
-    if (! is_array($role_list)) self::Output('不正な配役データです');
+    if (! is_array($role_list)) self::Output(VoteMessage::INVALID_CAST);
 
     //役職名を格納した配列を生成
     $role_fill_list = array();
     foreach ($role_list as $role => $count) {
       if ($count < 0) { //人数をチェック
-	self::Output(sprintf('「%s」の人数がマイナスになってます', $role));
+	self::Output(sprintf(VoteMessage::INVALID_ROLE_COUNT, $role));
       }
       for (; $count > 0; $count--) $role_fill_list[] = $role;
     }
     $role_count = count($role_fill_list);
 
     if ($role_count != $user_count) { //配列長をチェック
+      $str = sprintf(VoteMessage::CAST_MISMATCH_COUNT, $user_count, $role_count);
       if (DB::$ROOM->test_mode) {
-	Text::p($role_count, 'エラー：配役数');
+	Text::p($str);
 	return $role_fill_list;
       }
-      $str = sprintf('村人 (%d) と配役の数 (%d) が一致していません', $user_count, $role_count);
       self::Output($str);
     }
 
@@ -96,9 +98,8 @@ class Cast {
 
   //サブ役職配布
   static function SetSubRole(array &$fix_role_list) {
-    $rand_keys = array_keys($fix_role_list); //人数分の ID リストを取得
-    shuffle($rand_keys); //シャッフルしてランダムキーに変換
-    //Text::p($rand_keys, 'rand_keys');
+    $rand_keys = Lottery::GetList(array_keys($fix_role_list)); //人数分の ID リストをランダムに取得
+    //Text::p($rand_keys, '◆rand_keys');
 
     OptionManager::$stack = RoleFilterData::$disable_cast; //割り振り対象外役職のリスト
     //サブ役職テスト用
@@ -136,10 +137,10 @@ class Cast {
     else {
       $sub_role_keys = RoleData::GetList(true);
     }
-    //Text::p(OptionManager::$stack, 'DeleteRoleList');
+    //Text::p(OptionManager::$stack, '◆DeleteRoleList');
 
     $sub_role_keys = array_diff($sub_role_keys, OptionManager::$stack);
-    //Text::p($sub_role_keys, 'SubRoleList');
+    //Text::p($sub_role_keys, '◆SubRoleList');
     shuffle($sub_role_keys);
     foreach ($rand_keys as $id) {
       $fix_role_list[$id] .= ' ' . array_pop($sub_role_keys);
@@ -406,7 +407,8 @@ class Cast {
 	}
 	else { //共有者・狂人・キューピッド置換
 	  $target = array_pop(explode('_', $option, 2));
-	  $role   = $target == 'angel' ? 'cupid' : array_pop(explode('_', $target));
+	  $group  = RoleData::GetGroup($target);
+	  $role   = $group == 'angel' ? 'cupid' : array_pop(explode('_', $target));
 	}
 
 	$count = isset($list[$role]) ? $list[$role] : 0;
@@ -437,7 +439,6 @@ class Cast {
 
   //エラーメッセージ出力
   private static function Output($str) {
-    $format = 'ゲームスタート[配役設定エラー]：%s。<br>管理者に問い合わせて下さい。';
-    VoteHTML::OutputResult(sprintf($format, $str), true);
+    VoteHTML::OutputResult(sprintf(VoteMessage::ERROR_CAST, $str), ! DB::$ROOM->test_mode);
   }
 }

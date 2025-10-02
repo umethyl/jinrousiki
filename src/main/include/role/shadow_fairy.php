@@ -6,7 +6,12 @@
 */
 RoleManager::LoadFile('fairy');
 class Role_shadow_fairy extends Role_fairy {
-  function BadStatus(UserData $USERS, $base_date) {
+  public function BadStatus(UserData $USERS) {
+    $base_date = DB::$ROOM->date; //判定用の日付
+    if ((DB::$ROOM->watch_mode || DB::$ROOM->single_view_mode) && ! RQ::Get()->reverse_log) {
+      $base_date--;
+    }
+
     $stack = array();
     foreach ($USERS->rows as $user) {
       foreach ($user->GetPartner('bad_status', true) as $id => $date) {
@@ -17,6 +22,7 @@ class Role_shadow_fairy extends Role_fairy {
 	}
       }
     }
+
     foreach ($stack as $id => $list) {
       $user = $USERS->ByID($id);
       $user->color         = $list['color'];

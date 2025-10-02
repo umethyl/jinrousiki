@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 HTML::OutputHeader('情報一覧 - [メニュー]', 'info/menu', true);
 ?>
 <div class="menu">情報一覧</div>

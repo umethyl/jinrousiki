@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('蝙蝠陣営');
 ?>
@@ -11,16 +10,44 @@ InfoHTML::OutputRoleHeader('蝙蝠陣営');
 </p>
 
 <h2 id="rule">基本ルール</h2>
+<p>
+<a href="#rule_summary">概要</a>
+<a href="#rule_win">勝利条件</a>
+<a href="#rule_distinguish">判定</a>
+</p>
+
+<h3 id="rule_summary">概要</h3>
 <ol>
 <li>自分が生き残ったら勝利、死んだら敗北となる特殊陣営です。</li>
-<li>他陣営の勝敗と競合しません。<br>
+<li>他の蝙蝠がいても誰か分かりません。</li>
+</ol>
+
+<h3 id="rule_win">勝利条件</h3>
+<ol>
+<li>ゲーム終了時に自分が生存している事。</li>
+<li>他陣営の勝敗とは競合しない。<br>
   例) 村人陣営 + 生き残った蝙蝠が勝利
 </li>
-<li>自分以外の蝙蝠の生死と勝敗は無関係です。</li>
-<li>他の蝙蝠がいても誰か分かりません。</li>
-<li>生存カウントは村人です。</li>
-<li><a href="human.php#psycho_mage">精神鑑定士</a>の判定は「正常」、<a href="human.php#sex_mage">ひよこ鑑定士</a>の判定は「蝙蝠」です。</li>
+<li>自分以外の蝙蝠の生死と勝敗は無関係。</li>
 </ol>
+
+<h3 id="rule_distinguish">判定</h3>
+<table>
+<tr>
+  <th>生存カウント</th>
+  <th>占い</th>
+  <th>霊能</th>
+  <th>精神鑑定</th>
+  <th>性別鑑定</th>
+</tr>
+<tr>
+  <td>村人</td>
+  <td>村人</td>
+  <td>村人</td>
+  <td>正常</td>
+  <td>蝙蝠</td>
+</tr>
+</table>
 
 <h2 id="chiroptera_group">蝙蝠系</h2>
 <p>
@@ -30,6 +57,7 @@ InfoHTML::OutputRoleHeader('蝙蝠陣営');
 <a href="#boss_chiroptera">大蝙蝠</a>
 <a href="#elder_chiroptera">古蝙蝠</a>
 <a href="#cute_chiroptera">萌蝙蝠</a>
+<a href="#doom_chiroptera">蝉蝙蝠</a>
 <a href="#scarlet_chiroptera">紅蝙蝠</a>
 <a href="#dummy_chiroptera">夢求愛者</a>
 </p>
@@ -50,9 +78,13 @@ InfoHTML::OutputRoleHeader('蝙蝠陣営');
 
 <h3 id="poison_chiroptera">毒蝙蝠 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α21～]</h3>
 <h4>[耐性] 狩り：有効</h4>
-<h4>[毒能力] 処刑：人狼系 + 妖狐陣営 + 蝙蝠陣営 / 襲撃：有り / 薬師判定：有り</h4>
+<h4>[毒能力] 処刑：人狼系 + 妖狐カウント + 蝙蝠陣営 / 襲撃：有り / 薬師判定：有り</h4>
 <pre>
 劣化<a href="human.php#strong_poison">強毒者</a>相当の毒を持った蝙蝠。
+</pre>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+毒能力：処刑時「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
 </pre>
 <h5>Ver. 1.4.0 α22～</h5>
 <pre>
@@ -146,6 +178,25 @@ PP 要員に組み込まれることの多い蝙蝠陣営の花形と言える�
 霊能結果から、状況次第で<a href="vampire.php">吸血鬼</a>扱いされる可能性もあります。
 </pre>
 
+<h3 id="doom_chiroptera">蝉蝙蝠 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α3～]</h3>
+<pre>
+一定期間後 (7日目) の昼にショック死する蝙蝠。
+</pre>
+<ol>
+<li>常時、ショック死予定日が<a href="sub_role.php#death_warrant">死の宣告</a>同様に表示される (サブ役職はなし)。</li>
+<li>ショック死の死因は「封印された」で、<a href="ability.php#anti_sudden_death">ショック死抑制能力者</a>の能力は有効。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>はショック死無効。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="duelist.php#doom_duelist">黒幕</a>・<a href="ability.php#sudden_death">ショック死発動能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="duelist.php#doom_duelist">黒幕</a>の蝙蝠バージョンです。
+短期決戦を狙った戦略を練る必要があります。
+</pre>
+
 <h3 id="scarlet_chiroptera">紅蝙蝠 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β21～]</h3>
 <pre>
 <a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える蝙蝠。
@@ -174,7 +225,7 @@ PP 要員に組み込まれることの多い蝙蝠陣営の花形と言える�
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#dummy">夢能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#lovers">恋人表示役職</a>・<a href="ability.php#dummy">夢能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -328,7 +379,7 @@ PP 要員に組み込まれることの多い蝙蝠陣営の花形と言える�
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#sun_brownie">八咫烏</a>・<a href="human.php#soul_wizard">八卦見</a>
+<a href="human.php#soul_wizard">八卦見</a>・<a href="ability.php#mind_open">公開能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -345,7 +396,7 @@ PP 要員に組み込まれることの多い蝙蝠陣営の花形と言える�
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#sun_brownie">八咫烏</a>・<a href="human.php#astray_wizard">左道使い</a>
+<a href="human.php#astray_wizard">左道使い</a>・<a href="ability.php#blinder">目隠し能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -481,6 +532,7 @@ PP 要員に組み込まれることの多い蝙蝠陣営の花形と言える�
 <pre>
 悪戯先に<a href="sub_role.php#frostbite">凍傷</a>を付加する妖精。
 成功率は 70% で、失敗すると自分が<a href="sub_role.php#frostbite">凍傷</a>になる。
+<a href="sub_role.php#vega_lovers">織姫</a>を対象にすると反射される (常に失敗判定)。
 </pre>
 <h4>関連役職</h4>
 <pre>

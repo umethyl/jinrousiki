@@ -7,22 +7,24 @@ class Role_anti_voodoo extends Role {
   public $action = 'ANTI_VOODOO_DO';
   public $result = 'ANTI_VOODOO_SUCCESS';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 2 && ! DB::$ROOM->IsOption('seal_message')) {
-      $this->OutputAbilityResult($this->result);
-    }
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message');
   }
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('guard-do', 'anti_voodoo_do', $this->action);
   }
 
-  function IsVote() { return DB::$ROOM->date > 1; }
+  public function IsVote() {
+    return DB::$ROOM->date > 1;
+  }
 
-  function GetIgnoreMessage() { return '初日の厄払いはできません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+  }
 
   //厄払い先セット
-  function SetGuard(User $user) {
+  public function SetGuard(User $user) {
     $this->AddStack($user->id);
     if (count($stack = array_keys($this->GetStack('possessed'), $user->id)) > 0) { //憑依妨害判定
       foreach ($stack as $id) {
@@ -48,14 +50,14 @@ class Role_anti_voodoo extends Role {
   }
 
   //厄払い成立判定
-  function IsGuard($id) {
+  public function IsGuard($id) {
     if (! in_array($id, $this->GetStack())) return false;
     $this->AddSuccess($id, $this->role . '_success');
     return true;
   }
 
   //成功結果登録
-  final function SaveSuccess() {
+  public function SaveSuccess() {
     foreach ($this->GetStack($this->role . '_success') as $target_id => $flag) {
       $target = DB::$USER->ByVirtual($target_id)->handle_name;
       foreach (array_keys($this->GetStack(), $target_id) as $id) { //成功者を検出

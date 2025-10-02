@@ -4,42 +4,44 @@
   ○仕様
 */
 class Role_step_mad extends Role {
+  public $mix_in = 'step_mage';
   public $action     = 'STEP_DO';
   public $not_action = 'STEP_NOT_DO';
 
-
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('step-do', 'step_do', $this->action, $this->not_action);
   }
 
-  function IsVoteCheckbox(User $user, $live) { return true; }
+  public function IsVoteCheckbox(User $user, $live) {
+    return true;
+  }
 
-  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
+  protected function GetVoteCheckboxHeader() {
+    return '<input type="checkbox" name="target_no[]"';
+  }
 
-  function VoteNight() {
-    $stack = $this->GetVoteNightTarget();
-    //Text::p($stack);
-    sort($stack);
+  public function CheckVoteNightTarget(array $list) {
+    sort($list);
 
-    $id  = array_shift($stack);
+    $id  = array_shift($list);
     $max = count(DB::$USER->rows);
     $vector = null;
     $count  = 0;
     $root_list = array($id);
-    while (count($stack) > 0) {
+    while (count($list) > 0) {
       $chain = $this->GetChain($id, $max);
-      $point = array_intersect($chain, $stack);
-      if (count($point) != 1) return '通り道が一本に繋がっていません';
+      $point = array_intersect($chain, $list);
+      if (count($point) != 1) return VoteRoleMessage::UNCHAINED_ROUTE;
 
       $new_vector = array_shift(array_keys($point));
       if ($new_vector != $vector) {
-	if ($count++ > 0) return '通り道は直線にしてください';
+	if ($count++ > 0) return VoteRoleMessage::INVALID_ROUTE;
 	$vector = $new_vector;
       }
 
       $id = array_shift($point);
       $root_list[] = $id;
-      unset($stack[array_search($id, $stack)]);
+      unset($list[array_search($id, $list)]);
     }
 
     $target_stack = array();
@@ -55,7 +57,7 @@ class Role_step_mad extends Role {
   }
 
   //足音処理
-  function Step(array $list) {
+  public function Step(array $list) {
     $stack = array();
     foreach ($list as $id) {
       if (DB::$USER->IsVirtualLive($id)) $stack[] = $id;

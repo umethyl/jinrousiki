@@ -6,13 +6,19 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_possessed_wolf extends Role_wolf {
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 1) RoleHTML::OutputPossessed();
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 2;
   }
 
-  function IsMindReadPossessed(User $user) { return $this->GetTalkFlag('wolf'); }
+  protected function OutputAddResult() {
+    RoleHTML::OutputPossessed();
+  }
 
-  function WolfKill(User $user) {
+  public function IsMindReadPossessed(User $user) {
+    return $this->GetTalkFlag('wolf');
+  }
+
+  public function WolfKill(User $user) {
     if ($user->IsDummyBoy() || $user->IsCamp('fox') || $user->IsPossessedLimited()) { //スキップ判定
       parent::WolfKill($user);
       return;
@@ -24,7 +30,7 @@ class Role_possessed_wolf extends Role_wolf {
   }
 
   //憑依処理
-  function Possessed() {
+  public function Possessed() {
     $possessed_date = DB::$ROOM->date + 1; //憑依する日を取得
     $followed_list  = null; //恋人後追いリスト
     foreach ($this->GetStack('possessed') as $id => $target_id) {

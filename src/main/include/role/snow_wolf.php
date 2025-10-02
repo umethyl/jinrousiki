@@ -6,17 +6,19 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_snow_wolf extends Role_wolf {
-  function SetVoteDay($uname) {
-    $this->InitStack();
-    if ($this->IsRealActor()) $this->AddStackName($uname);
-  }
+  public $vote_day_type = 'init';
 
-  function VoteKillReaction() {
+  public function VoteKillReaction() {
     foreach (array_keys($this->GetStack()) as $uname) {
       if ($this->IsVoted($uname)) continue;
+
+      $user = DB::$USER->ByRealUname($uname);
+      if ($user->IsAvoidLovers(true)) continue;
+
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
 	if (DB::$USER->ByRealUname($voted_uname)->IsChildFox()) {
-	  DB::$USER->ByRealUname($uname)->AddDoom(1, 'frostbite');
+	  $user->AddDoom(1, 'frostbite');
+	  break;
 	}
       }
     }

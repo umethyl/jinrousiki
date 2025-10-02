@@ -12,15 +12,15 @@ RoleManager::LoadFile('strong_voice');
 class Role_speaker extends Role_strong_voice {
   public $mix_in = 'blinder';
 
-  function IgnoreTalk() {
-    return $this->filter->IgnoreTalk() || ! DB::$ROOM->IsPlaying();
-  }
-
-  function FilterTalk(User $user, &$name, &$voice, &$str) {
+  public function FilterTalk(User $user, &$name, &$voice, &$str) {
     if (! $this->IgnoreTalk()) $this->ShiftVoice($voice, $str);
   }
 
-  function FilterWhisper(&$voice, &$str) {
+  public function IgnoreTalk() {
+    return $this->filter->IgnoreTalk() || ! DB::$ROOM->IsPlaying();
+  }
+
+  public function FilterWhisper(&$voice, &$str) {
     if (! $this->IgnoreTalk()) $this->ShiftVoice($voice, $str);
   }
 }

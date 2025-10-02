@@ -6,5 +6,7 @@
 */
 OptionManager::Load('change_cupid');
 class Option_change_mind_cupid extends Option_change_cupid {
-  function GetCaption() { return '女神村'; }
+  public function GetCaption() {
+    return '女神村';
+  }
 }

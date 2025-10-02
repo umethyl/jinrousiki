@@ -15,33 +15,55 @@ class Role_dummy_chiroptera extends Role {
       $stack[] = $user->id;
       asort($stack);
       $pair = array();
-      foreach ($stack as $id) $pair[] = DB::$USER->ById($id)->handle_name;
+      foreach ($stack as $id) {
+	$pair[] = DB::$USER->ByID($id)->handle_name;
+      }
       RoleHTML::OutputPartner($pair, 'cupid_pair');
     }
-    //仮想恋人を表示 (憑依追跡 / 恋人・悲恋持ちなら処理委託)
-    if (! is_array($target) || $this->GetActor()->IsRole('lovers', 'sweet_status')) return;
-    $lovers = array();
-    foreach ($target as $id) {
-      $lovers[] = DB::$USER->ByVirtual($id)->handle_name;
-    }
-    RoleHTML::OutputPartner($lovers, 'partner_header', 'lovers_footer');
+    if (is_array($stack)) $this->OutputLovers($stack);
   }
 
-  function OutputAction() { $this->filter->OutputAction(); }
+  //仮想恋人表示
+  private function OutputLovers(array $list) {
+    if ($this->IgnoreOutputLovers()) return;
+    $stack = array();
+    foreach ($list as $id) {
+      $stack[] = DB::$USER->ByVirtual($id)->handle_name; //憑依追跡
+    }
+    RoleHTML::OutputPartner($stack, 'partner_header', 'lovers_footer');
+  }
 
-  function IsVote() { return DB::$ROOM->IsDate(1); }
+  //処理委託判定
+  private function IgnoreOutputLovers() {
+    return $this->GetActor()->IsRole('lovers', 'fake_lovers', 'sweet_status');
+  }
 
-  function IsFinishVote(array $list) { return $this->filter->IsFinishVote($list); }
+  public function OutputAction() {
+    $this->filter->OutputAction();
+  }
 
-  function SetVoteNight() { $this->filter->SetVoteNight(); }
+  public function IsVote() {
+    return DB::$ROOM->IsDate(1);
+  }
 
-  function GetVoteCheckbox(User $user, $id, $live) {
+  public function SetVoteNight() {
+    $this->filter->SetVoteNight();
+  }
+
+  public function GetVoteCheckbox(User $user, $id, $live) {
     return $this->filter->GetVoteCheckbox($user, $id, $live);
   }
 
-  function CheckVoteNight() { $this->filter->CheckVoteNight(); }
+  public function IsFinishVote(array $list) {
+    return $this->filter->IsFinishVote($list);
+  }
 
-  function VoteNightAction(array $list, $flag) {
+  public function CheckVoteNight() {
+    $this->filter->CheckVoteNight();
+  }
+
+  public function VoteNightAction() {
+    $list  = $this->GetStack('target_list');
     $stack = array();
     foreach ($list as $user) {
       $stack[] = $user->handle_name;

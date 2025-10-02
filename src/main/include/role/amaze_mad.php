@@ -8,7 +8,7 @@ RoleManager::LoadFile('critical_mad');
 class Role_amaze_mad extends Role_critical_mad {
   public $bad_status = 'blind_vote';
 
-  function VoteAction() {
+  public function VoteAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($target_uname)) {
 	DB::$ROOM->SystemMessage(DB::$ROOM->date, 'BLIND_VOTE');

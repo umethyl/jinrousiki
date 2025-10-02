@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('サブ役職');
 ?>
@@ -87,7 +86,7 @@ InfoHTML::OutputRoleHeader('サブ役職');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#flattery">ゴマすり</a>
+<a href="duelist.php#perverse_duelist">天探女</a>・<a href="#flattery">ゴマすり</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -126,7 +125,11 @@ InfoHTML::OutputRoleHeader('サブ役職');
 <h3 id="nervy">自信家 [Ver. 1.4.0 β9～]</h3>
 <pre>
 処刑投票時に同一陣営の人に投票するとショック死する。
-<a href="#lovers">恋人</a>の場合は恋人陣営と判定される。
+<a href="#lovers">恋人</a>・<a href="#fake_lovers">愛人</a>の場合は恋人陣営と判定される。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -229,7 +232,7 @@ InfoHTML::OutputRoleHeader('サブ役職');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ogre.php#poison_ogre">榊鬼</a>・<a href="#watcher">傍観者</a>・<a href="ability.php#authority">投票数変化能力者</a>
+<a href="ogre.php#poison_ogre">榊鬼</a>・<a href="#watcher">傍観者</a>・<a href="#vega_lovers">織姫</a>・<a href="ability.php#authority">投票数変化能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -631,7 +634,7 @@ RPG でよくある「クリティカルヒット」を再現してみました�
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#panelist">解答者</a>
+<a href="#panelist">解答者</a>・<a href="#vega_lovers">織姫</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -744,7 +747,7 @@ RPG でよくある「クリティカルヒット」を再現してみました�
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#critical_jealousy">人魚</a>・<a href="human.php#maple_brownie">紅葉神</a>・<a href="wolf.php#critical_mad">釣瓶落とし</a>・<a href="fox.php#critical_fox">寿羊狐</a>・<a href="duelist.php#critical_avenger">狂骨</a>
+<a href="human.php#critical_common">暴君</a>・<a href="ability.php#critical_luck">痛恨能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -920,7 +923,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#blind_guard">夜雀</a>・<a href="human.php#sun_brownie">八咫烏</a>・<a href="chiroptera.php#dark_fairy">闇妖精</a>
+<a href="ability.php#blinder">目隠し能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -967,7 +970,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#wise_wolf">賢狼</a>
+<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -978,6 +981,10 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 <pre>
 他人の独り言が人狼の遠吠えに見えるようになる。
 <a href="human.php#common_group">共有の囁き</a>・<a href="wolf.php#howl">人狼の遠吠え</a>・<a href="fox.php#talk">妖狐の念話</a>は「独り言」ではないので影響しない。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1100,7 +1107,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#leader_common">指導者</a>・<a href="human.php#sun_brownie">八咫烏</a>・<a href="chiroptera.php#light_fairy">光妖精</a>
+<a href="ability.php#mind_open">公開能力者</a>・<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1121,7 +1128,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="lovers.php#self_cupid">求愛者</a>・<a href="lovers.php#moon_cupid">かぐや姫</a>・<a href="lovers.php#mind_cupid">女神</a>・<a href="duelist.php#duelist">決闘者</a>
+<a href="ability.php#mind_receiver">受信能力者</a>・<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1138,7 +1145,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#emerald_wolf">翠狼</a>・<a href="wolf.php#revive_mad">尸解仙</a>・<a href="fox.php#emerald_fox">翠狐</a>・<a href="lovers.php#mind_cupid">女神</a>・<a href="lovers.php#sweet_cupid">弁財天</a>・<a href="mania.php#unknown_mania_group">鵺系</a>
+<a href="ability.php#mind_friend">共鳴能力者</a>・<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1156,7 +1163,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#widow_priest">未亡人</a>・<a href="lovers.php#angel_group">天使系</a>・<a href="#possessed_exchange">交換憑依</a>
+<a href="#possessed_exchange">交換憑依</a>・<a href="ability.php#mind_sympathy">共感能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1207,7 +1214,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#blue_wolf">蒼狼</a>・<a href="fox.php#blue_fox">蒼狐</a>
+<a href="ability.php#partner_blue">仲間情報妨害能力者(分断型)</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1328,40 +1335,59 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 
 
-<h2 id="lovers_group">恋人系</h2>
+<h2 id="lovers_group">恋人系 (恋人陣営専用)</h2>
 <p>
 <a href="#lovers">恋人</a>
 <a href="#challenge_lovers">難題</a>
+<a href="#vega_lovers">織姫</a>
+<a href="#fake_lovers">愛人</a>
 <a href="#possessed_exchange">交換憑依</a>
 </p>
 
 <h3 id="lovers">恋人 [Ver. 1.2.0～]</h3>
 <h4>[配役制限] 役職付加専用</h4>
+<h4>[耐性] 蘇生：不可 / 反魂：無効 / 宿敵：無効</h4>
 <pre>
 勝利条件が<a href="lovers.php">恋人陣営</a>に変化する。
-表示されている相手が死亡すると自分も死亡する (後追い)。
 </pre>
+<ol>
+<li>表示されている相手が死亡すると自分も死亡する (後追い)。</li>
+<li><a href="human.php#revive_rule">蘇生</a>・<a href="human.php#reverse_assassin">反魂</a>無効。</li>
+<li><a href="#rival">宿敵</a>無効。</li>
+</ol>
 <h4>関連役職</h4>
 <pre>
-<a href="#confession">告白</a>・<a href="#sweet_status">悲恋</a>
+<a href="#confession">告白</a>・<a href="ability.php#lovers">恋人表示役職</a>
 </pre>
 
 <h3 id="challenge_lovers">難題 [Ver. 1.4.0 β11～]</h3>
 <h4>[配役制限] 役職付加専用</h4>
-<h4>[耐性] 人狼襲撃：無効 / 暗殺：反射</h4>
+<h4>[耐性] 人狼襲撃：無効 / 毒：対象外 / 暗殺：反射</h4>
 <pre>
-4 日目までは以下の耐性を持つ。
+4 日目までは様々な特殊耐性を持つが、
+5 日目以降は恋人の相方と同じ人に投票しないとショック死する。
+複数の恋人がいる場合は誰か一人と同じならショック死しない。
 </pre>
+<h4>耐性一覧</h4>
 <ol>
 <li><a href="wolf.php#wolf_group">人狼</a>の襲撃無効</li>
-<li><a href="ability.php#poison">毒</a>・<a href="wolf.php#follow_mad">舟幽霊</a>・<a href="ability.php#vote_kill_counter_solo">処刑カウンター能力者(個別型)</a> の能力の対象外</li>
-<li><a href="human.php#cursed_brownie">祟神</a>・<a href="ability.php#vote_action_luck">処刑投票能力者(得票数変化型)</a>・<a href="ability.php#febris_active">熱病能力者(能動型)</a> の能力無効</li>
+<li><a href="ability.php#poison">毒</a>・<a href="wolf.php#follow_mad">舟幽霊</a>・<a href="ability.php#vote_kill_counter_solo">処刑カウンター能力者(個別型)</a> の能力の対象外 (処刑時)</li>
+<li>
+  <a href="human.php#cursed_brownie">祟神</a>・<a href="ability.php#doom_day_active">死の宣告能力者(処刑能動型)</a>・<a href="ability.php#vote_kill_counter_random">処刑カウンター能力者(確率付与型)</a><br>
+  <a href="ability.php#vote_action_luck">処刑投票能力者(得票数変化型)</a>・<a href="ability.php#febris_active">熱病能力者(能動型)</a> の能力無効 (処刑時)
+</li>
 <li><a href="human.php#assassin_spec">暗殺反射</a></li>
 <li><a href="vampire.php#vampire_do">吸血死</a>無効</li>
 </ol>
+<h5>Ver. 2.3.0 α3～</h5>
 <pre>
-5 日目以降は恋人の相方と同じ人に投票しないとショック死する。
-複数の恋人がいる場合は誰か一人と同じならショック死しない。
+<a href="ability.php#vote_kill_counter_random">処刑カウンター能力者(確率付与型)</a> の能力無効
+</pre>
+<h5>Ver. 2.3.0 α2～</h5>
+<pre>
+吸血死耐性強化
+例) 吸血鬼[難題] ← 吸血鬼
+上記の場合でも吸血死が無効化される
 </pre>
 <h5>Ver. 2.2.0 α7～</h5>
 <pre>
@@ -1379,6 +1405,62 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 <h4>[作成者からのコメント]</h4>
 <pre>
 かぐや姫の不老不死の秘薬の伝説がモチーフです。
+</pre>
+
+<h3 id="vega_lovers">織姫 [Ver. 2.3.0 α2～]</h3>
+<h4>[配役制限] 役職付加専用</h4>
+<h4>[耐性] 人狼襲撃：無効 / 毒：対象外 / 暗殺：反射</h4>
+<pre>
+様々な特殊耐性を持つが、2 日目昼に存在を告知される。
+耐性発動は 2 日目昼以降。
+</pre>
+<h4>耐性一覧</h4>
+<ol>
+<li><a href="#challenge_lovers">難題</a>の耐性全て</li>
+<li><a href="chiroptera.php#ice_fairy">氷妖精</a>の悪戯反射</li>
+<li><a href="human.php#mage_rule">呪殺</a>・<a href="human.php#voodoo_killer">陰陽師</a>の呪返し無効</li>
+<li><a href="human.php#guard_hunt">狩り</a>無効 (<a href="human.php#dummy_guard">夢守人</a>を含む)</li>
+<li><a href="wolf.php#dream_eater_mad">獏</a>の夢食い能力無効</li>
+<li><a href="ability.php#sacrifice">身代わり</a>能力無効 (<a href="fox.php#sacrifice_depraver">伊呂具秦公</a>を含む)</li>
+<li><a href="human.php#bacchus_medium">神主</a>・<a href="human.php#seal_medium">封印師</a>・<a href="wolf.php#snow_wolf">雪狼</a>・<a href="fox.php#snow_fox">雪狐</a>・<a href="lovers.php#snow_cupid">寒戸婆</a>の能力無効</li>
+<li><a href="human.php#snipe_poison">狙毒者</a>の毒能力無効 (処刑時に織姫に投票していた場合)</li>
+<li><a href="human.php#eclipse_medium">蝕巫女</a>・<a href="lovers.php#cursed_angel">堕天使</a>・<a href="chiroptera.php#doom_chiroptera">蝉蝙蝠</a>のショック死能力無効</li>
+<li><a href="human.php#doom_escaper">半鳥女</a>・<a href="vampire.php#doom_vampire">冥血鬼</a>の<a href="sub_role.php#death_warrant">死の宣告</a>能力無効</li>
+<li>処刑投票数・得票数ゼロ</li>
+<li>処刑者決定能力 (<a href="../spec.php#vote_day">優先順位</a>低め)</li>
+</ol>
+<h5>Ver. 2.3.0 α4～</h5>
+<pre>
+<a href="ability.php#sacrifice">身代わり</a>能力無効 (<a href="fox.php#sacrifice_depraver">伊呂具秦公</a>を含む)
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="lovers.php#altair_cupid">彦星</a>・<a href="#panelist">解答者</a>・<a href="#watcher">傍観者</a>・<a href="ability.php#anti_assassin">暗殺耐性能力者</a>・<a href="ability.php#decide">処刑者決定能力者</a>・<a href="ability.php#resist_wolf">人狼襲撃耐性能力者</a>
+<a href="ability.php#authority">投票数変化能力者</a>・<a href="ability.php#special_resist">特殊耐性能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>・<a href="ability.php#resist_poison">毒耐性能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+バーボンハウス鯖＠鉄村人狼の特殊村「シンデレラ村」の再現がコンセプトです。
+</pre>
+
+<h3 id="fake_lovers">愛人 [Ver. 2.3.0 α3～]</h3>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+勝利条件が<a href="lovers.php">恋人陣営</a>に変化する。
+</pre>
+<ol>
+<li>付加した<a href="lovers.php#nephila_cupid">絡新婦</a>と<a href="#lovers">恋人</a>であるように表示される。</li>
+<li>後追いは発生しない。</li>
+<li><a href="#rival">宿敵</a>は無効化されない。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="lovers.php#nephila_cupid">絡新婦</a>・<a href="ability.php#lovers">恋人表示役職</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+偽の恋人ですが、恋人陣営である事は保証されます。
+恋人を持たないキューピッド相当です。
 </pre>
 
 <h3 id="possessed_exchange">交換憑依 [Ver. 1.4.0 β11～]</h3>
@@ -1400,7 +1482,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="lovers.php#exchange_angel">魂移使</a>
+<a href="lovers.php#exchange_angel">魂移使</a>・<a href="ability.php#last_words_limit">遺言制限能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1408,7 +1490,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 
 
-<h2 id="infected_group">感染者系</h2>
+<h2 id="infected_group">感染者系 (吸血鬼陣営用)</h2>
 <p>
 <a href="#infected">感染者</a>
 <a href="#psycho_infected">洗脳者</a>
@@ -1451,7 +1533,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 
 
-<h2 id="joker_group">ジョーカー系</h2>
+<h2 id="joker_group">ジョーカー系 (特殊勝利条件)</h2>
 <p>
 <a href="#joker">ジョーカー</a>
 <a href="#rival">宿敵</a>
@@ -1624,7 +1706,7 @@ B：「恋人陣営の勝利」
 <a href="lovers.php">キューピッド</a>から見た自分の<a href="#lovers">恋人</a>や、<a href="mania.php#unknown_mania_group">鵺</a>から見たコピー先に相当します。
 </pre>
 
-<h2 id="death_note_group">デスノート系</h2>
+<h2 id="death_note_group">デスノート系 (特殊暗殺)</h2>
 <p>
 <a href="#death_note">デスノート</a>
 <a href="#death_selected">オシラ遊び</a>
@@ -1669,7 +1751,7 @@ B：「恋人陣営の勝利」
 </pre>
 
 
-<h2 id="bad_status_group">悪戯系</h2>
+<h2 id="bad_status_group">悪戯系 (妖精能力)</h2>
 <p>
 <a href="#bad_status">悪戯</a>
 <a href="#sweet_status">悲恋</a>
@@ -1703,13 +1785,17 @@ B：「恋人陣営の勝利」
 二日目以降は恋人表示が消え、二日目のみ、「あなたは恋人と別れました」という
 システムメッセージが表示される。
 </pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#lovers">恋人表示役職</a>
+</pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="chiroptera.php#sweet_fairy">恋妖精</a>用に実装されたサブ役職です。
 </pre>
 
 
-<h2 id="copied_group">元神話マニア系</h2>
+<h2 id="copied_group">元神話マニア系 (神話マニア系専用)</h2>
 <p>
 <a href="#copied">元神話マニア</a>
 <a href="#copied_trick">元奇術師</a>
@@ -1791,12 +1877,13 @@ B：「恋人陣営の勝利」
 </pre>
 
 
-<h2 id="other_group">その他</h2>
+<h2 id="other_group">その他 (未分類)</h2>
 <p>
 <a href="#possessed_target">憑依者</a>
 <a href="#possessed">憑依</a>
 <a href="#protected">庇護者</a>
 <a href="#aspirator">吸毒者</a>
+<a href="#penetration">護衛貫通</a>
 <a href="#lost_ability">能力喪失</a>
 <a href="#muster_ability">能力発現</a>
 <a href="#changed_disguise">元朔狼</a>
@@ -1867,6 +1954,26 @@ B：「恋人陣営の勝利」
 <a href="wolf.php#silver_wolf">銀狼</a>が仲間を襲撃した場合でも発動します。
 </pre>
 
+<h3 id="penetration">護衛貫通 [Ver. 2.3.0 α7～]</h3>
+<h4>[役職表示] 表示無し</h4>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+<a href="ability.php#guard">護衛能力</a>を完全無効化する。
+</pre>
+<ol>
+<li><a href="wolf.php#wolf_eat">対人狼</a>・<a href="vampire.php#vampire_do">対吸血鬼</a>共に有効。</li>
+<li><a href="human.php#guard_hunt">狩り</a>には影響しない。</li>
+<li><a href="human.php#gatekeeper_guard">門番</a>の対暗殺護衛には影響しない。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="human.php#wanderer_guard">一寸法師</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="human.php#wanderer_guard">一寸法師</a>用に実装されたサブ役職です。
+</pre>
+
 <h3 id="aspirator">吸毒者 [Ver. 2.2.0 α7～]</h3>
 <h4>[役職表示] 常時表示</h4>
 <h4>[配役制限] 役職付加専用</h4>
@@ -1898,7 +2005,7 @@ B：「恋人陣営の勝利」
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#revive_priest">天人</a>・<a href="human.php#fend_guard">忍者</a>・<a href="human.php#revive_pharmacist">仙人</a>・<a href="human.php#revive_brownie">蛇神</a>・<a href="human.php#awake_wizard">比丘尼</a>・<a href="human.php#phantom_doll">倫敦人形</a>・<a href="human.php#revive_doll">西蔵人形</a>
+<a href="human.php#prince">ろくろ首</a>・<a href="human.php#revive_priest">天人</a>・<a href="human.php#fend_guard">忍者</a>・<a href="human.php#revive_pharmacist">仙人</a>・<a href="human.php#revive_brownie">蛇神</a>・<a href="human.php#awake_wizard">比丘尼</a>・<a href="human.php#phantom_doll">倫敦人形</a>・<a href="human.php#revive_doll">西蔵人形</a>
 <a href="wolf.php#phantom_wolf">幻狼</a>・<a href="wolf.php#resist_wolf">抗毒狼</a>・<a href="wolf.php#revive_wolf">仙狼</a>・<a href="wolf.php#step_wolf">響狼</a>・<a href="wolf.php#tongue_wolf">舌禍狼</a>・<a href="wolf.php#possessed_mad">犬神</a>・<a href="wolf.php#trap_mad">罠師</a>・<a href="wolf.php#revive_mad">尸解仙</a>
 <a href="fox.php#phantom_fox">幻狐</a>・<a href="fox.php#spell_fox">宙狐</a>・<a href="fox.php#emerald_fox">翠狐</a>・<a href="fox.php#revive_fox">仙狐</a>・<a href="fox.php#possessed_fox">憑狐</a>・<a href="fox.php#trap_fox">狡狐</a>
 <a href="lovers.php#revive_cupid">邪仙</a>・<a href="duelist.php#revive_avenger">夜刀神</a>

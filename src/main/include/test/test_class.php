@@ -4,9 +4,9 @@ class CastTest {
   static function Output() {
     HTML::OutputHeader('配役テスト', 'game_play', true);
     GameHTML::OutputPlayer();
-    Vote::AggregateGameStart();
+    VoteGameStart::Aggregate();
     DB::$ROOM->date++;
-    DB::$ROOM->scene = 'night';
+    DB::$ROOM->SetScene('night');
     foreach (DB::$USER->rows as $user) $user->Reparse();
     GameHTML::OutputPlayer();
     HTML::OutputFooter();
@@ -77,9 +77,11 @@ class RoleTest {
     $stack = array(
       'gerd' => 'ゲルト君', 'poison' => '毒', 'assassin' => '暗殺', 'wolf' => '人狼',
       'boss_wolf' => '白狼', 'poison_wolf' => '毒狼', 'tongue_wolf' => '舌禍狼',
-      'possessed_wolf' => '憑狼', 'sirius_wolf' => '天狼', 'fox' => '妖狐', 'child_fox' => '子狐',
-      'cupid' => 'QP', 'medium' => '巫女', 'mania' => 'マニア', 'detective' => '探偵',
-      'festival' => 'お祭り', 'limit_off' => 'リミッタオフ');
+      'possessed_wolf' => '憑狼', 'sirius_wolf' => '天狼', 'mad' => '狂人', 'fox' => '妖狐',
+      'no_fox' => '妖狐なし', 'child_fox' => '子狐', 'depraver' => '背徳者', 'cupid' => 'QP',
+      'medium' => '巫女', 'mania' => 'マニア', 'detective' => '探偵',
+      'festival' => 'お祭り', 'chaos_open_cast_camp' => '陣営通知',
+      'chaos_open_cast_role' => '系列通知', 'limit_off' => 'リミッタオフ');
     $count = 0;
     foreach ($stack as $option => $name) {
       if (++$count % 14 == 0) Text::d();
@@ -141,8 +143,8 @@ class RoleTest {
     //普通村向けオプション
     $option_stack = array(
       'gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf',
-      'possessed_wolf', 'sirius_wolf', 'fox', 'child_fox', 'cupid', 'medium', 'mania',
-      'detective');
+      'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver',
+      'cupid', 'medium', 'mania', 'detective');
     RQ::Get()->Parse('post', 'IsOn', $option_stack);
     foreach ($option_stack as $option) {
       if (RQ::Get()->$option) $stack->option_role[] = $option;
@@ -152,9 +154,16 @@ class RoleTest {
       RQ::Get()->ParsePostOn($option);
       if (RQ::Get()->$option) $stack->game_option[] = $option;
     }
+
+    //陣営通知オプション
+    $option_stack = array('chaos_open_cast_camp', 'chaos_open_cast_role');
+    RQ::Get()->Parse('post', 'IsOn', $option_stack);
+    foreach ($option_stack as $option) {
+      if (RQ::Get()->$option) $stack->option_role[] = $option;
+    }
+
     RQ::Get()->ParsePostOn('limit_off');
     if (RQ::Get()->limit_off) ChaosConfig::$role_group_rate_list = array();
-
     DevRoom::Cast($stack);
   }
 }
@@ -267,7 +276,7 @@ class ObjectionTest {
 </form></td></tr>
 
 EOF;
-    $image = JINRO_ROOT . '/' . GameConfig::OBJECTION_IMAGE;
+    $image = JINROU_ROOT . '/' . GameConfig::OBJECTION_IMAGE;
     $stack = array(
       'entry'            => '入村',
       'full'             => '定員',
@@ -384,10 +393,10 @@ class VoteTest {
 	HTML::OutputResult('空投票', '投票先を指定してください');
       }
       elseif (DB::$ROOM->IsDay()) { //昼の処刑投票処理
-	//Vote::VoteDay();
+	//VoteDay::Execute();
       }
       elseif (DB::$ROOM->IsNight()) { //夜の投票処理
-	Vote::VoteNight();
+	VoteNight::Execute();
       }
       else { //ここに来たらロジックエラー
 	VoteHTML::OutputError('投票コマンドエラー', '投票先を指定してください');
@@ -420,7 +429,7 @@ class VoteTest {
 	}
       }
     }
-    DB::$SELF = DB::$USER->ByID(1);
+    DB::LoadDummyBoy();
     GameHTML::OutputPlayer();
     HTML::OutputFooter(true);
   }
@@ -493,6 +502,74 @@ class VoteTest {
     }
     HTML::OutputFooter(true);
   }
+
+  //投票処理結果後表示
+  static function OutputResult() {
+    foreach (DB::$USER->rows as $user) {
+      unset($user->virtual_role);
+      $user->live = $user->IsLive(true) ? 'live' : 'dead';
+      $user->Reparse();
+      $user->target_no = 0;
+    }
+    DevHTML::OutputAbilityAction();
+
+    DB::$ROOM->LoadEvent();
+    DB::$USER->SetEvent();
+    GameHTML::OutputDead();
+
+    //DB::$ROOM->status = 'finished';
+    GameHTML::OutputPlayer();
+    RoleHTML::OutputAbility();
+    foreach (DB::$USER->rows as $user) {
+      DB::$SELF = $user;
+      RoleHTML::OutputAbility();
+    }
+  }
+
+  //勝敗結果表示
+  static function OutputWinner() {
+    Loader::LoadFile('winner_message');
+    DB::$ROOM->log_mode      = false;
+    DB::$ROOM->personal_mode = false;
+    Winner::Output();
+    HTML::OutputFooter();
+  }
+
+  //発言変換テスト
+  static function ConvertTalk() {
+    if (RQ::Get()->say == '') return;
+    RoleTalk::Convert(RQ::Get()->say);
+    RoleTalk::Save(RQ::Get()->say, 'day', 0);
+  }
+
+  //投票集計処理 (昼)
+  static function AggregateDay() {
+    $self_id = DB::$SELF->id;
+    RQ::Get()->situation = 'VOTE_KILL';
+    RQ::Get()->back_url = '';
+    foreach (RQ::GetTest()->vote_target_day as $stack) {
+      DB::LoadSelf($stack['id']);
+      RQ::Set('target_no', $stack['target_no']);
+      VoteDay::Execute();
+    }
+
+    $vote_message_list = VoteDay::Aggregate();
+    if (! is_array($vote_message_list)) $vote_message_list = array();
+
+    $stack = array();
+    foreach ($vote_message_list as $uname => $vote_data) {
+      $vote_data['handle_name'] = DB::$USER->ByUname($uname)->handle_name;
+      $vote_data['count'] = DB::$ROOM->revote_count + 1;
+      $stack[] = $vote_data;
+    }
+    echo GameHTML::ParseVote($stack, DB::$ROOM->date);
+
+    DB::$ROOM->date++;
+    DB::$ROOM->log_mode = false; //イベント確認用
+    DB::$ROOM->SetScene('day'); //イベント確認用
+    //DB::$ROOM->SetScene('night');
+    DB::LoadSelf($self_id);
+  }
 }
 
 //足音投票テスト
@@ -513,10 +590,10 @@ class StepVoteTest {
 	HTML::OutputResult('空投票', '投票先を指定してください');
       }
       elseif (DB::$ROOM->IsDay()) { //昼の処刑投票処理
-	//Vote::VoteDay();
+	//VoteDay::Execute();
       }
       elseif (DB::$ROOM->IsNight()) { //夜の投票処理
-	Vote::VoteNight();
+	VoteNight::Execute();
       }
       else { //ここに来たらロジックエラー
 	VoteHTML::OutputError('投票コマンドエラー', '投票先を指定してください');
@@ -530,7 +607,7 @@ class StepVoteTest {
 	DB::$SELF->IsDummyBoy() ? VoteHTML::OutputDummyBoy() : VoteHTML::OutputHeaven();
       }
       else {
-	switch(DB::$ROOM->scene) {
+	switch (DB::$ROOM->scene) {
 	case 'beforegame':
 	  VoteHTML::OutputBeforeGame();
 	  break;
@@ -549,7 +626,7 @@ class StepVoteTest {
 	}
       }
     }
-    DB::$SELF = DB::$USER->ByID(1);
+    DB::LoadDummyBoy();
     GameHTML::OutputPlayer();
     HTML::OutputFooter(true);
   }

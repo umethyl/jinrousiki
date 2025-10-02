@@ -1,7 +1,7 @@
 <?php
 //-- 発言処理クラス --//
 class Talk {
-  //会話情報取得
+  //会話取得
   static function Get() {
     $builder = new TalkBuilder('talk');
     foreach (TalkDB::Get() as $talk) $builder->Generate($talk);
@@ -9,30 +9,26 @@ class Talk {
     return $builder;
   }
 
-  //霊界の会話取得
+  //会話取得 (霊界用)
   static function GetHeaven() {
     //出力条件をチェック
     //if (DB::$SELF->IsDead()) return false; //呼び出し側でチェックするので現在は不要
 
-    $is_open = DB::$ROOM->IsOpenCast(); //霊界公開判定
     $builder = new TalkBuilder('talk');
-    foreach (TalkDB::Get(true) as $talk) { //速度を取るため sprintf() を使わない
-      $user = DB::$USER->ByUname($talk->uname); //ユーザを取得
-
-      $symbol = '<font color="' . $user->color . '">◆</font>';
-      $handle_name = $user->handle_name;
-      if ($is_open) $handle_name .= '<span>(' . $talk->uname . ')</span>'; //HN 追加処理
-
-      $builder->AddRaw($symbol, $handle_name, $talk->sentence, $talk->font_type);
-    }
+    $builder->flag->open_cast = DB::$ROOM->IsOpenCast(); //霊界公開判定
+    foreach (TalkDB::Get(true) as $talk) $builder->GenerateHeaven($talk);
     return $builder;
   }
 
   //会話出力
-  static function Output() { return self::Get()->Output(); }
+  static function Output() {
+    return self::Get()->Output();
+  }
 
-  //霊界の会話出力
-  static function OutputHeaven() { return self::GetHeaven()->Output(); }
+  //会話出力 (霊界用)
+  static function OutputHeaven() {
+    return self::GetHeaven()->Output();
+  }
 }
 
 //-- 発言パーサ --//
@@ -46,181 +42,178 @@ class TalkParser {
   public $time;
   public $date_time;
 
-  function __construct($list = null) {
+  public function __construct($list = null) {
     if (is_array($list)) {
-      foreach ($list as $key => $data) $this->$key = $data;
+      foreach ($list as $key => $data) {
+	$this->$key = $data;
+      }
     }
-    if (isset($this->time)) $this->date_time = Time::GetDate('(Y/m/d (D) H:i:s)', $this->time);
+    if (isset($this->time)) $this->date_time = Time::GetDate('Y/m/d (D) H:i:s', $this->time);
     $this->Parse();
   }
 
   //データ解析
-  private function Parse($sentence = null) {
-    is_null($sentence) ? $sentence = $this->sentence : $this->sentence = $sentence; //初期化処理
-
+  private function Parse() {
     switch ($this->uname) { //システムユーザ系の処理
     case 'system':
       switch ($this->action) {
       case 'MORNING':
-	$this->sentence = sprintf(Message::$morning, $sentence);
+	$this->sentence = sprintf(TalkMessage::MORNING, $this->sentence);
 	return;
 
       case 'NIGHT':
-	$this->sentence = Message::$night;
+	$this->sentence = TalkMessage::NIGHT;
 	return;
       }
       return;
 
     case 'dummy_boy':
-      if ($this->location == 'system') break;
+      if ($this->location == 'system') $this->ParseSystem();
       return;
     }
 
-    if ($this->location == 'system') { //投票データ系
-      $action = strtolower($this->action);
-      switch ($this->action) { //大文字小文字をきちんと区別してマッチングする
-      case 'OBJECTION':
-	$this->sentence .= Message::$objection;
-	return;
+    if ($this->location == 'system') $this->ParseSystem();
+  }
 
-      case 'GAMESTART_DO':
-	return;
-
-      case 'STEP_MAGE_DO':
-      case 'CHILD_FOX_DO':
-	$action = 'mage_do';
-	$this->class = 'mage-do';
-	break;
-
-      case 'VOODOO_KILLER_DO':
-	$this->class = 'mage-do';
-	break;
-
-      case 'STEP_GUARD_DO':
-	$action = 'guard_do';
-	$this->class = 'guard-do';
-	break;
-
-      case 'REPORTER_DO':
-      case 'ANTI_VOODOO_DO':
-	$this->class = 'guard-do';
-	break;
-
-      case 'POISON_CAT_DO':
-	$action = 'revive_do';
-	$this->class = 'revive-do';
-	break;
-
-      case 'SPREAD_WIZARD_DO':
-	$action = 'wizard_do';
-	$this->class = 'wizard-do';
-	break;
-
-      case 'STEP_WOLF_EAT':
-	$action = 'wolf_eat';
-	$this->class = 'wolf-eat';
-	break;
-
-      case 'STEP_VAMPIRE_DO':
-	$action = 'vampire_do';
-	$this->class = 'vampire-do';
-	break;
-
-      case 'JAMMER_MAD_DO':
-      case 'VOODOO_MAD_DO':
-      case 'VOODOO_FOX_DO':
-      case 'TRAP_MAD_DO':
-      case 'POSSESSED_DO':
-	$action = array_shift(explode('_', $action)) . '_do';
-	$this->class = 'wolf-eat';
-	break;
-
-      case 'SILENT_WOLF_EAT':
-      case 'DREAM_EAT':
-	$this->class = 'wolf-eat';
-	break;
-
-      case 'POISON_CAT_NOT_DO':
-	$this->class = 'revive-do';
-	$this->sentence .= Message::$revive_not_do;
-	return;
-
-      case 'ASSASSIN_NOT_DO':
-	$this->class = 'assassin-do';
-	$this->sentence .= Message::$assassin_not_do;
-	return;
-
-      case 'STEP_NOT_DO':
-	$this->class = 'step-do';
-	$this->sentence .= Message::$step_not_do;
-	return;
-
-      case 'TRAP_MAD_NOT_DO':
-	$this->class = 'wolf-eat';
-	$this->sentence .= Message::$trap_not_do;
-	return;
-
-      case 'POSSESSED_NOT_DO':
-	$this->class = 'wolf-eat';
-	$this->sentence .= Message::$possessed_not_do;
-	return;
-
-      case 'OGRE_NOT_DO':
-	$this->class = 'ogre-do';
-	$this->sentence .= Message::$ogre_not_do;
-	return;
-
-      case 'DEATH_NOTE_NOT_DO':
-	$this->class = 'death-note-do';
-	$this->sentence .= Message::$death_note_not_do;
-	return;
-
-      default:
-	$this->class = strtr($action, '_', '-');
-	break;
-      }
-      $this->sentence = ' は ' . $this->sentence . Message::$$action;
+  //投票データ解析
+  private function ParseSystem() {
+    $action = $this->action;
+    switch ($this->action) { //大文字小文字をきちんと区別してマッチングする
+    case 'OBJECTION':
+      $this->sex      = $this->sentence;
+      $this->sentence = VoteTalkMessage::${$this->action};
       return;
+
+    case 'STEP_MAGE_DO':
+    case 'CHILD_FOX_DO':
+      $action = 'MAGE_DO';
+      $this->class = 'mage-do';
+      break;
+
+    case 'VOODOO_KILLER_DO':
+      $this->class = 'mage-do';
+      break;
+
+    case 'STEP_GUARD_DO':
+      $action = 'GUARD_DO';
+      $this->class = 'guard-do';
+      break;
+
+    case 'REPORTER_DO':
+    case 'ANTI_VOODOO_DO':
+      $this->class = 'guard-do';
+      break;
+
+    case 'POISON_CAT_DO':
+      $action = 'REVIVE_DO';
+      $this->class = 'revive-do';
+      break;
+
+    case 'STEP_ASSASSIN_DO':
+      $action = 'ASSASSIN_DO';
+      $this->class = 'assassin-do';
+      break;
+
+    case 'STEP_SCANNER_DO':
+      $action = 'MIND_SCANNER_DO';
+      $this->class = 'mind-scanner-do';
+      break;
+
+    case 'SPREAD_WIZARD_DO':
+      $action = 'WIZARD_DO';
+      $this->class = 'wizard-do';
+      break;
+
+    case 'STEP_WOLF_EAT':
+      $action = 'WOLF_EAT';
+      $this->class = 'wolf-eat';
+      break;
+
+    case 'STEP_VAMPIRE_DO':
+      $action = 'VAMPIRE_DO';
+      $this->class = 'vampire-do';
+      break;
+
+    case 'JAMMER_MAD_DO':
+    case 'VOODOO_MAD_DO':
+    case 'VOODOO_FOX_DO':
+    case 'TRAP_MAD_DO':
+    case 'POSSESSED_DO':
+      $action = array_shift(explode('_', $action)) . '_DO';
+      $this->class = 'wolf-eat';
+      break;
+
+    case 'SILENT_WOLF_EAT':
+    case 'DREAM_EAT':
+      $this->class = 'wolf-eat';
+      break;
+
+    case 'POISON_CAT_NOT_DO':
+      $this->class = 'revive-do';
+      $this->sentence .= VoteTalkMessage::$REVIVE_NOT_DO;
+      return;
+
+    case 'ASSASSIN_NOT_DO':
+      $this->class = 'assassin-do';
+      $this->sentence .= VoteTalkMessage::${$this->action};
+      return;
+
+    case 'STEP_NOT_DO':
+      $this->class = 'step-do';
+      $this->sentence .= VoteTalkMessage::${$this->action};
+      return;
+
+    case 'TRAP_MAD_NOT_DO':
+      $this->class = 'wolf-eat';
+      $this->sentence .= VoteTalkMessage::$TRAP_NOT_DO;
+      return;
+
+    case 'POSSESSED_NOT_DO':
+      $this->class = 'wolf-eat';
+      $this->sentence .= VoteTalkMessage::${$this->action};
+      return;
+
+    case 'OGRE_NOT_DO':
+      $this->class = 'ogre-do';
+      $this->sentence .= VoteTalkMessage::${$this->action};
+      return;
+
+    case 'DEATH_NOTE_NOT_DO':
+      $this->class = 'death-note-do';
+      $this->sentence .= VoteTalkMessage::${$this->action};
+      return;
+
+    default:
+      $this->class = strtolower(strtr($action, '_', '-'));
+      break;
     }
+    $this->sentence = sprintf(VoteTalkMessage::FORMAT, $this->sentence . VoteTalkMessage::$$action);
+    return;
   }
 }
 
 //-- 会話生成クラス --//
 class TalkBuilder {
-  const HEADER = "<table%s class=\"%s\">\n";
-  public $cache;
-  public $actor;
-  public $filter = array();
-  public $flag;
+  public  $filter = array();
+  public  $flag;
+  private $actor;
+  private $cache;
 
-  function __construct($class, $id = null) {
+  public function __construct($class, $id = null) {
     $this->actor = DB::$SELF->GetVirtual(); //仮想ユーザを取得
-
-    //観戦モード判定
-    if ((is_null($this->actor->live) || ! DB::$ROOM->IsOpenCast()) && ! DB::$ROOM->IsFinished()) {
-      //本人視点が変化するタイプに仮想役職をセットする
-      $is_day = DB::$ROOM->IsDay();
-      $stack  = array('blinder' => $is_day, 'earplug' => $is_day, 'deep_sleep' => true);
-      foreach ($stack as $role => $flag) {
-	if (($flag && DB::$ROOM->IsEvent($role)) || DB::$ROOM->IsOption($role)) {
-	  $this->actor->virtual_live = true;
-	  $this->actor->role_list[]  = $role;
-	}
-      }
-    }
-
+    $this->LoadVirtualRole();
     $this->LoadFilter();
-    $this->SetFlag();
+    $this->LoadFlag();
     $this->Begin($class, $id);
   }
 
   //テーブルヘッダ生成
-  function Begin($class, $id = null) {
-    $this->cache = sprintf(self::HEADER, is_null($id) ? '' : ' id="' . $id . '"', $class);
+  public function Begin($class, $id = null) {
+    $this->cache = TalkHTML::GenerateHeader($class, $id);
   }
 
   //発言生成
-  function Generate(TalkParser $talk) {
+  public function Generate(TalkParser $talk) {
     //Text::p($talk);
     //発言ユーザを取得
     /*
@@ -235,7 +228,7 @@ class TalkBuilder {
       if ($actor->ChangePlayer($talk->role_id) && $actor->IsSame($this->actor)) {
 	//Text::p($talk->role_id, 'Switch');
 	$this->LoadFilter();
-	$this->SetFlag();
+	$this->LoadFlag();
       }
     }
     switch ($talk->scene) {
@@ -248,13 +241,12 @@ class TalkBuilder {
 
     //基本パラメータを取得
     if ($talk->uname == 'system') {
-      $symbol = '';
-      $name   = '';
+      $symbol    = '';
+      $name      = '';
       $actor->id = 0;
     }
     else {
-      $color  = isset($talk->color) ? $talk->color : $actor->color;
-      $symbol = '<font color="' . $color . '">◆</font>';
+      $symbol = TalkHTML::GenerateSymbol(isset($talk->color) ? $talk->color : $actor->color);
       $name   = isset($talk->handle_name) ? $talk->handle_name : $actor->handle_name;
     }
 
@@ -270,34 +262,30 @@ class TalkBuilder {
     switch ($talk->location) {
     case 'system': //システムメッセージ
       $str = $talk->sentence;
-      if (isset($talk->time)) {
-	$str .= ' <span class="date-time">' . $talk->date_time . '</span>';
-      }
+      if (isset($talk->time)) $str .= TalkHTML::GenerateTime($talk->date_time);
 
       if (! isset($talk->action)) return $this->AddSystem($str); //標準
       switch ($talk->action) { //投票情報
-      case 'GAMESTART_DO': //現在は不使用
-	return true;
-
       case 'OBJECTION': //「異議」ありは常時表示
-	return $this->AddSystemMessage('objection-' . $actor->sex, $name . $str);
+	$sex = empty($talk->sex) ? $actor->sex : $talk->sex;
+	return $this->AddSystemMessage($name . $str, 'objection-' . $sex);
 
       case 'MORNING':
       case 'NIGHT':
 	return $this->AddSystem($str);
 
       default: //ゲーム開始前の投票 (例：KICK) は常時表示
-	return $this->flag->open_talk || DB::$ROOM->IsBeforeGame() ?
-	  $this->AddSystemMessage($talk->class, $name . $str) : false;
+	if ($this->flag->open_talk || DB::$ROOM->IsBeforeGame()) {
+	  return $this->AddSystemMessage($name . $str, $talk->class);
+	}
+	return false;
       }
       return false;
 
     case 'dummy_boy': //身代わり君専用システムメッセージ
-      $str = sprintf('◆%s　%s', $real_user->handle_name, $talk->sentence);
-      if (GameConfig::QUOTE_TALK) $str = sprintf('「%s」', $str);
-      if (isset($talk->time)) {
-	$str .= ' <span class="date-time">' . $talk->date_time . '</span>';
-      }
+      $str = Message::SYMBOL . $real_user->handle_name . Message::SPACER . $talk->sentence;
+      if (GameConfig::QUOTE_TALK) $str = sprintf(TalkMessage::QUOTE, $str);
+      if (isset($talk->time)) $str .= TalkHTML::GenerateTime($talk->date_time);
       return $this->AddSystem($str, 'dummy-boy');
     }
 
@@ -313,7 +301,7 @@ class TalkBuilder {
 	    ! (abs($target - $viewer) == 5 ||
 	       ($target == $viewer - 1 && ($target % 5) != 0) ||
 	       ($target == $viewer + 1 && ($viewer % 5) != 0))) {
-	  $talk->sentence = Message::$common_talk;
+	  $talk->sentence = RoleTalkMessage::COMMON_TALK;
 	}
       }
       return $this->Add($actor, $talk, $real);
@@ -324,63 +312,49 @@ class TalkBuilder {
 	$voice = $talk->font_type;
 	switch ($talk->location) {
 	case 'common':
-	  $name .= '<span>(共有者)</span>';
-	  $class = 'night-common';
+	  $class  = 'night-common';
+	  $name  .= TalkHTML::GenerateInfo(TalkMessage::COMMON);
 	  $voice .= ' ' . $class;
 	  break;
 
 	case 'wolf':
-	  $name .= '<span>(人狼)</span>';
-	  $class = 'night-wolf';
+	  $class  = 'night-wolf';
+	  $name  .= TalkHTML::GenerateInfo(TalkMessage::WOLF);
 	  $voice .= ' ' . $class;
 	  break;
 
 	case 'mad':
-	  $name .= '<span>(囁き狂人)</span>';
-	  $class = 'night-wolf';
+	  $class  = 'night-wolf';
+	  $name  .= TalkHTML::GenerateInfo(TalkMessage::MAD);
 	  $voice .= ' ' . $class;
 	  break;
 
 	case 'fox':
-	  $name .= '<span>(妖狐)</span>';
-	  $class = 'night-fox';
+	  $class  = 'night-fox';
+	  $name  .= TalkHTML::GenerateInfo(TalkMessage::FOX);
 	  $voice .= ' ' . $class;
 	  break;
 
 	case 'self_talk':
-	  $name .= '<span>の独り言</span>';
-	  $class = 'night-self-talk';
+	  $class  = 'night-self-talk';
+	  $name  .= TalkHTML::GenerateSelfTalk();
 	  break;
 	}
 	$str = $talk->sentence; //改行を入れるため再セット
-	if (isset($talk->time)) $name .= '<br><span>' . $talk->date_time . '</span>';
+	if (isset($talk->time)) $name .= Text::BR . TalkHTML::GenerateInfo($talk->date_time);
 	if (RQ::Get()->icon) $symbol = Icon::GetUserIcon($actor) . $symbol;
-	return $this->AddRaw($symbol, $name, $str, $voice, '', $class);
+
+	$stack = array(
+	  'str'        => $str,
+	  'symbol'     => $symbol,
+	  'user_info'  => $name,
+	  'voice'      => $voice,
+	  'user_class' => $class
+        );
+	return $this->AddRaw($stack);
       }
       else {
-	$mind_read = false; //特殊発言透過判定
-	RoleManager::SetActor($actor);
-	foreach (RoleManager::Load('mind_read') as $filter) {
-	  $mind_read |= $filter->IsMindRead();
-	  if ($mind_read) break;
-	}
-
-	if (! $mind_read) {
-	  RoleManager::SetActor($this->actor);
-	  foreach (RoleManager::Load('mind_read_active') as $filter) {
-	    $mind_read |= $filter->IsMindReadActive($actor);
-	    if ($mind_read) break;
-	  }
-	}
-
-	if (! $mind_read) {
-	  RoleManager::SetActor($real_user);
-	  foreach (RoleManager::Load('mind_read_possessed') as $filter) {
-	    $mind_read |= $filter->IsMindReadPossessed($actor);
-	    if ($mind_read) break;
-	  }
-	}
-
+	$mind_read = $this->IsMindRead($actor, $real_user); //特殊発言透過判定
 	RoleManager::SetActor($actor);
 	switch ($talk->location) {
 	case 'common': //共有者
@@ -449,31 +423,64 @@ class TalkBuilder {
 
     case 'heaven':
       if (! $this->flag->open_talk) return false;
-      if (isset($talk->time)) $name .= '<br><span>' . $talk->date_time . '</span>';
-      return $this->AddRaw($symbol, $name, $talk->sentence, $talk->font_type, $talk->scene);
+      if (isset($talk->time)) $name .= Text::BR . TalkHTML::GenerateInfo($talk->date_time);
+
+      $stack = array(
+	'str'       => $talk->sentence,
+	'symbol'    => $symbol,
+	'user_info' => $name,
+	'voice'     => $talk->font_type,
+	'row_class' => $talk->scene
+      );
+      return $this->AddRaw($stack);
 
     default:
       return $this->Add($actor, $talk, $real);
     }
   }
 
-  //[村立て / ゲーム開始 / ゲーム終了] 時刻生成
-  function GenerateTimeStamp() {
+  //発言生成 (霊界用)
+  public function GenerateHeaven(TalkParser $talk) {
+    $user = DB::$USER->ByUname($talk->uname); //ユーザを取得
+
+    if ($this->flag->open_cast) {
+      $handle_name = $user->handle_name . TalkHTML::GenerateInfo($talk->uname); //HN 追加処理
+    } else {
+      $handle_name = $user->handle_name;
+    }
+
+    $stack = array(
+      'str'       => $talk->sentence,
+      'symbol'    => TalkHTML::GenerateSymbol($user->color),
+      'user_info' => $handle_name,
+      'voice'     => $talk->font_type
+    );
+    return $this->AddRaw($stack);
+  }
+
+  //時刻生成
+  public function GenerateTimeStamp() {
     switch (DB::$ROOM->scene) {
+    case 'day': //OP の昼限定
+      if (! DB::$ROOM->IsDate(1)) return false;
+      $type     = 'start_datetime'; //ゲーム開始時刻
+      $sentence = TalkMessage::GAME_START;
+      break;
+
     case 'beforegame':
       $type     = 'establish_datetime'; //村立て時刻
-      $sentence = '村作成';
+      $sentence = TalkMessage::ESTABLISH;
       break;
 
     case 'night':
       if (! DB::$ROOM->IsDate(1)) return false;
       $type     = 'start_datetime'; //ゲーム開始時刻
-      $sentence = 'ゲーム開始';
+      $sentence = TalkMessage::GAME_START;
       break;
 
     case 'aftergame':
       $type     = 'finish_datetime'; //ゲーム終了時刻
-      $sentence = 'ゲーム終了';
+      $sentence = TalkMessage::GAME_END;
       break;
 
     default:
@@ -482,7 +489,7 @@ class TalkBuilder {
 
     if (is_null($time = RoomDB::Fetch($type))) return false;
     $talk = new TalkParser();
-    $talk->sentence = $sentence . '：' . Time::ConvertTimeStamp($time);
+    $talk->sentence = $sentence . Time::ConvertTimeStamp($time);
     $talk->uname    = 'system';
     $talk->scene    = DB::$ROOM->scene;
     $talk->location = 'system';
@@ -490,85 +497,62 @@ class TalkBuilder {
   }
 
   //基礎発言
-  function AddRaw($symbol, $user_info, $str, $voice, $row_class = '', $user_class = '',
-		  $say_class = '') {
-    if ($row_class  != '') $row_class  = ' ' . $row_class;
-    if ($user_class != '') $user_class = ' ' . $user_class;
-    if ($say_class  != '') $say_class  = ' ' . $say_class;
+  public function AddRaw(array $list) {
+    extract($list);
+
+    $stack = array();
+    foreach (array('row_class', 'user_class', 'say_class') as $key) {
+      if (isset($$key) && $$key != '') {
+	$$key = ' ' . $$key;
+      } else {
+	$$key = '';
+      }
+      $stack[$key] = $$key;
+    }
     Text::Line($str);
-    if (GameConfig::QUOTE_TALK) $str = '「' . $str . '」';
+    if (GameConfig::QUOTE_TALK) $str = sprintf(TalkMessage::QUOTE, $str);
 
-    $this->cache .= <<<EOF
-<tr class="user-talk{$row_class}">
-<td class="user-name{$user_class}">{$symbol}{$user_info}</td>
-<td class="say{$say_class} {$voice}">{$str}</td>
-</tr>
-
-EOF;
+    foreach (array('str', 'symbol', 'user_info', 'voice') as $key) {
+      $stack[$key] = $$key;
+    }
+    $this->cache .= TalkHTML::Generate($stack);
     return true;
   }
 
-  //標準発言
-  function Add(User $user, TalkParser $talk, $real = null) {
-    //表示情報を抽出
-    $color  = isset($talk->color) ? $talk->color : $user->color;
-    $symbol = '<font style="color:' . $color . '">◆</font>';
-    $name   = isset($talk->handle_name) ? $talk->handle_name : $user->handle_name;
-    if (RQ::Get()->add_role && $user->id != 0) { //役職表示モード対応
-      $real = $talk->scene == 'heaven' ? $user :
-	(isset($real) ? $real : DB::$USER->ByReal($user->id));
-      $name .= $real->GenerateShortRoleName();
-    }
-    elseif (DB::$ROOM->IsFinished() && RQ::Get()->name) { //ユーザ名表示モード
-      $name .= $user->GenerateShortRoleName();
-    }
-    if (DB::$ROOM->IsNight() &&
-	(($talk->location == 'self_talk' && ! $user->IsRole('dummy_common')) ||
-	 $user->IsRole('leader_common', 'mind_read', 'mind_open'))) {
-      $name .= '<span>の独り言</span>';
-    }
-    $str   = $talk->sentence;
-    $voice = $talk->font_type;
-    //発言フィルタ処理
-    foreach ($this->filter as $filter) $filter->FilterTalk($user, $name, $voice, $str);
-    if (RQ::Get()->icon && $name != '') $symbol = Icon::GetUserIcon($user) . $symbol;
-    if (isset($talk->date_time)) $name .= '<br><span>' . $talk->date_time . '</span>';
-    return $this->AddRaw($symbol, $name, $str, $voice);
-  }
-
-  //システムユーザ発言
-  function AddSystem($str, $class = 'system-user') {
-    Text::Line($str);
-    $this->cache .= <<<EOF
-<tr>
-<td class="{$class}" colspan="2">{$str}</td>
-</tr>
-
-EOF;
-    return true;
-  }
-
-  //システムメッセージ
-  function AddSystemMessage($class, $str, $add_class = '') {
-    if ($add_class != '') $add_class = ' ' . $add_class;
-    $this->cache .= <<<EOF
-<tr class="system-message{$add_class}">
-<td class="{$class}" colspan="2">{$str}</td>
-</tr>
-
-EOF;
-    return true;
+  //デバッグ用
+  public function AddDebug($str) {
+    $stack = array('str' => $str, 'symbol' => '', 'user_info' => '', 'voice' => null);
+    return $this->AddRaw($stack);
   }
 
   //キャッシュリセット
-  function Refresh() {
-    $str = $this->cache.'</table>'."\n";
+  public function Refresh() {
+    $str = $this->cache . TalkHTML::GenerateFooter();
     $this->cache = '';
     return $str;
   }
 
   //出力処理
-  function Output() { echo $this->Refresh(); }
+  public function Output() {
+    echo $this->Refresh();
+  }
+
+  //仮想役職セット (本人視点が変化するタイプにセットする)
+  private function LoadVirtualRole() {
+    //観戦モード判定
+    if (DB::$ROOM->IsFinished() || (isset($this->actor->live) && DB::$ROOM->IsOpenCast())) {
+      return;
+    }
+
+    $is_day = DB::$ROOM->IsDay();
+    $stack  = array('blinder' => $is_day, 'earplug' => $is_day, 'deep_sleep' => true);
+    foreach ($stack as $role => $flag) {
+      if (($flag && DB::$ROOM->IsEvent($role)) || DB::$ROOM->IsOption($role)) {
+	$this->actor->virtual_live = true;
+	$this->actor->role_list[]  = $role;
+      }
+    }
+  }
 
   //役職情報ロード
   private function LoadFilter() {
@@ -580,54 +564,124 @@ EOF;
   }
 
   //フィルタ用フラグセット
-  private function SetFlag() {
-    $this->flag->dummy_boy  = DB::$SELF->IsDummyBoy();
-    $this->flag->common     = $this->actor->IsCommon(true);
-    $this->flag->wolf       = DB::$SELF->IsWolf(true) || $this->actor->IsRole('whisper_mad');
-    $this->flag->fox        = DB::$SELF->IsFox(true);
-    $this->flag->lovers     = DB::$SELF->IsLovers();
-    $this->flag->mind_read  = DB::$ROOM->date > 1 &&
-      (DB::$ROOM->single_view_mode || DB::$SELF->IsLive());
+  private function LoadFlag() {
+    $flag = new StdClass();
 
-    $this->flag->deep_sleep = $this->actor->IsRole('deep_sleep');
-    foreach (array('whisper_ringing', 'howl_ringing', 'sweet_ringing') as $role) { //耳鳴
-      $this->flag->$role = $this->actor->IsRole($role) && ! $this->flag->deep_sleep;
-    }
-    $this->flag->sweet_ringing  = $this->flag->sweet_ringing && DB::$ROOM->date > 1;
-    $this->flag->common_whisper = ! DB::$SELF->IsRole('dummy_common') && ! $this->flag->deep_sleep;
-    $this->flag->wolf_howl      = ! DB::$SELF->IsRole('mind_scanner') && ! $this->flag->deep_sleep;
-    if (DB::$ROOM->watch_mode) $this->flag->wolf |= RQ::Get()->wolf_sight; //狼視点モード
+    /* 基本情報 */
+    $flag->dummy_boy = DB::$SELF->IsDummyBoy();
+    $flag->common    = $this->actor->IsCommon(true);
+    $flag->wolf      = DB::$SELF->IsWolf(true) || $this->actor->IsRole('whisper_mad');
+    $flag->fox       = DB::$SELF->IsFox(true);
+    $flag->lovers    = DB::$SELF->IsLovers();
+    $flag->mind_read = DB::$ROOM->date > 1 && (DB::$ROOM->single_view_mode || DB::$SELF->IsLive());
+    $flag->open_talk = DB::$ROOM->IsOpenData();
 
-    //発言完全公開フラグ
-    /*
-      + ゲーム終了後は全て表示
-      + 霊界表示オン状態の死者には全て表示
-      + 霊界表示オフ状態は観戦者と同じ (投票情報は表示しない)
-    */
-    $this->flag->open_talk = DB::$ROOM->IsOpenData();
-
+    if (DB::$ROOM->watch_mode) $flag->wolf |= RQ::Get()->wolf_sight; //狼視点モード
     foreach (array('common', 'wolf', 'fox') as $type) { //身代わり君の上書き判定
-      $this->flag->$type |= $this->flag->dummy_boy;
+      $flag->$type |= $flag->dummy_boy;
     }
+
+    /* 耳鳴り関連 */
+    $flag->deep_sleep = $this->actor->IsRole('deep_sleep');
+    foreach (array('whisper_ringing', 'howl_ringing', 'sweet_ringing') as $role) { //耳鳴
+      $flag->$role = $this->actor->IsRole($role) && ! $flag->deep_sleep;
+    }
+    $flag->sweet_ringing  = $flag->sweet_ringing && DB::$ROOM->date > 1;
+    $flag->common_whisper = ! DB::$SELF->IsRole('dummy_common') && ! $flag->deep_sleep;
+    $flag->wolf_howl      = ! DB::$SELF->IsRole('mind_scanner') && ! $flag->deep_sleep;
+
+    $this->flag = $flag;
+  }
+
+  //特殊発言透過判定
+  private function IsMindRead(User $actor, User $real) {
+    RoleManager::SetActor($actor);
+    foreach (RoleManager::Load('mind_read') as $filter) {
+      if ($filter->IsMindRead()) return true;
+    }
+
+    RoleManager::SetActor($this->actor);
+    foreach (RoleManager::Load('mind_read_active') as $filter) {
+      if ($filter->IsMindReadActive($actor)) return true;
+    }
+
+    RoleManager::SetActor($real);
+    foreach (RoleManager::Load('mind_read_possessed') as $filter) {
+      if ($filter->IsMindReadPossessed($actor)) return true;
+    }
+
+    return false;
+  }
+
+  //標準発言
+  private function Add(User $user, TalkParser $talk, $real = null) {
+    //表示情報を抽出
+    $symbol = TalkHTML::GenerateSymbol(isset($talk->color) ? $talk->color : $user->color);
+    $name   = isset($talk->handle_name) ? $talk->handle_name : $user->handle_name;
+    if (RQ::Get()->add_role && $user->id != 0) { //役職表示モード対応
+      if ($talk->scene == 'heaven') {
+	$real = $user;
+      } elseif (is_null($real)) {
+	$real = DB::$USER->ByReal($user->id);
+      }
+      $name .= $real->GenerateShortRoleName();
+    }
+    elseif (RQ::Get()->name && DB::$ROOM->IsFinished()) { //ユーザ名表示モード
+      $name .= $user->GenerateShortRoleName();
+    }
+
+    if (DB::$ROOM->IsNight() &&
+	(($talk->location == 'self_talk' && ! $user->IsRole('dummy_common')) ||
+	 $user->IsRole('leader_common', 'mind_read', 'mind_open'))) {
+      $name .= TalkHTML::GenerateSelfTalk();
+    }
+    $str   = $talk->sentence;
+    $voice = $talk->font_type;
+    //発言フィルタ処理
+    foreach ($this->filter as $filter) $filter->FilterTalk($user, $name, $voice, $str);
+
+    if (RQ::Get()->icon && $name != '') $symbol = Icon::GetUserIcon($user) . $symbol;
+    if (isset($talk->time)) $name .= Text::BR . TalkHTML::GenerateInfo($talk->date_time);
+
+    $stack = array(
+      'str'        => $str,
+      'symbol'     => $symbol,
+      'user_info'  => $name,
+      'voice'      => $voice
+    );
+    return $this->AddRaw($stack);
+  }
+
+  //システムユーザ発言
+  private function AddSystem($str, $class = 'system-user') {
+    Text::Line($str);
+    $this->cache .= TalkHTML::GenerateSystem($str, $class);
+    return true;
+  }
+
+  //システムメッセージ
+  private function AddSystemMessage($str, $class) {
+    $this->cache .= TalkHTML::GenerateSystemMessage($str, $class);
+    return true;
   }
 }
 
 //-- DB アクセス (Talk 拡張) --//
 class TalkDB {
   //発言取得
-  function Get($heaven = false) {
+  static function Get($heaven = false) {
     if (RQ::Get()->IsVirtualRoom()) return RQ::GetTest()->talk;
 
     $format = 'SELECT %s FROM %s WHERE room_no = ?';
     $select = 'scene, location, uname, action, sentence, font_type';
     switch (DB::$ROOM->scene) {
     case 'beforegame':
-      $table = sprintf('talk_%s', DB::$ROOM->scene);
+      $table = 'talk_' . DB::$ROOM->scene;
       $select .= ', handle_name, color';
       break;
 
     case 'aftergame':
-      $table = sprintf('talk_%s', DB::$ROOM->scene);
+      $table = 'talk_' . DB::$ROOM->scene;
       break;
 
     default:
@@ -724,9 +778,79 @@ EOF;
   }
 
   //最終シーンの夜の発言の有無を検出
-  function ExistsLastNight() {
+  static function ExistsLastNight() {
     $query = 'SELECT id FROM talk WHERE room_no = ? AND date = ? AND scene = ?';
     DB::Prepare($query, array(DB::$ROOM->id, DB::$ROOM->date, 'night'));
     return DB::Count() > 0;
+  }
+}
+
+//-- HTML 生成クラス (Talk 拡張) --//
+class TalkHTML {
+  /* 発言データ */
+  //発言生成
+  static function Generate(array $list) {
+    extract($list);
+    $format = <<<EOF
+<tr class="user-talk%s">
+<td class="user-name%s">%s%s</td>
+<td class="say%s %s">%s</td>
+</tr>
+EOF;
+    return sprintf($format . Text::LF, $row_class,
+		   $user_class, $symbol, $user_info,
+		   $say_class, $voice, $str);
+  }
+
+  //システムユーザ
+  static function GenerateSystem($str, $class) {
+    $format = <<<EOF
+<tr>
+<td class="%s" colspan="2">%s</td>
+</tr>
+EOF;
+    return sprintf($format . Text::LF, $class, $str);
+  }
+
+  //システムメッセージ
+  static function GenerateSystemMessage($str, $class) {
+    $format = <<<EOF
+<tr class="system-message">
+<td class="%s" colspan="2">%s</td>
+</tr>
+EOF;
+    return sprintf($format . Text::LF, $class, $str);
+  }
+
+  /* 個別データ */
+  //ヘッダー生成
+  static function GenerateHeader($class, $id = null) {
+    $id = is_null($id) ? '' : sprintf(' id="%s"', $id);
+    return sprintf('<table%s class="%s">' . Text::LF, $id, $class);
+  }
+
+  //フッター生成
+  static function GenerateFooter() {
+    return '</table>' . Text::LF;
+  }
+
+  //ユーザ名生成
+  static function GenerateSymbol($color) {
+    return '<font color="' . $color . '">' . Message::SYMBOL . '</font>';
+  }
+
+  //追加情報生成
+  static function GenerateInfo($str) {
+    return '<span>(' . $str . ')</span>';
+  }
+
+  //追加情報生成 (独り言)
+  static function GenerateSelfTalk() {
+    return '<span>' . TalkMessage::SELF_TALK . '</span>';
+  }
+
+  //時刻生成
+  static function GenerateTime($time) {
+    return ' <span class="date-time">(' . $time . ')</span>';
   }
 }

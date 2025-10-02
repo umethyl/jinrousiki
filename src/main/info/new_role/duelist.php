@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('決闘者陣営');
 ?>
@@ -15,17 +14,45 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 </p>
 
 <h2 id="rule">基本ルール</h2>
+<p>
+<a href="#rule_summary">概要</a>
+<a href="#rule_win">勝利条件</a>
+<a href="#rule_distinguish">判定</a>
+</p>
+
+<h3 id="rule_summary">概要</h3>
 <ol>
 <li>初日の夜に「<a href="sub_role.php#rival">宿敵</a>・<a href="sub_role.php#enemy">仇敵</a>・<a href="sub_role.php#supported">受援者</a>」などの自分だけの勝利条件対象者を作る特殊陣営です。</li>
-<li>勝利条件は系統毎に設定され、基本的に自身の生死は不問です。</li>
-<li><a href="chiroptera.php">蝙蝠陣営</a>同様、他陣営の勝敗と競合しません。</li>
-<li>決闘者陣営をコピーした<a href="mania.php#unknown_mania_group">鵺系</a>の勝利条件は「自身の生存のみ」です。</li>
-<li>なんらかの理由で自分の<a href="sub_role.php#rival">宿敵</a>・<a href="sub_role.php#enemy">仇敵</a>・<a href="sub_role.php#supported">受援者</a>を持っていない場合 (例：<a href="mania.php#mania_group">神話マニア系</a>のコピー) は、<br>
-  例外的に勝利条件は「自身の生存のみ」となります。
-</li>
-<li>生存カウントは村人です。</li>
-<li><a href="human.php#psycho_mage">精神鑑定士</a>の判定は「正常」、<a href="human.php#sex_mage">ひよこ鑑定士</a>の判定は「性別」です。</li>
 </ol>
+
+<h3 id="rule_win">勝利条件</h3>
+<ol>
+<li>勝利条件は系統毎に設定される。</li>
+<li><a href="chiroptera.php">蝙蝠陣営</a>同様、他陣営の勝敗と競合しない。</li>
+<li>基本的に自身の生死は不問。</li>
+<li>決闘者陣営をコピーした<a href="mania.php#unknown_mania_group">鵺系</a>の勝利条件は「自身の生存のみ」。</li>
+<li>なんらかの理由で自分の<a href="sub_role.php#rival">宿敵</a>・<a href="sub_role.php#enemy">仇敵</a>・<a href="sub_role.php#supported">受援者</a>を持っていない場合 (例：<a href="mania.php#mania_group">神話マニア系</a>のコピー) は、<br>
+  例外的に勝利条件は「自身の生存のみ」となる。
+</li>
+</ol>
+
+<h3 id="rule_distinguish">判定</h3>
+<table>
+<tr>
+  <th>生存カウント</th>
+  <th>占い</th>
+  <th>霊能</th>
+  <th>精神鑑定</th>
+  <th>性別鑑定</th>
+</tr>
+<tr>
+  <td>村人</td>
+  <td>村人</td>
+  <td>村人</td>
+  <td>正常</td>
+  <td>性別</td>
+</tr>
+</table>
 
 <h2 id="duelist_do">投票の仕様</h2>
 <ol>
@@ -44,6 +71,7 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 <a href="#cowboy_duelist">無鉄砲者</a>
 <a href="#triangle_duelist">舞首</a>
 <a href="#doom_duelist">黒幕</a>
+<a href="#perverse_duelist">天探女</a>
 <a href="#sea_duelist">海御前</a>
 </p>
 
@@ -63,7 +91,7 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="lovers.php#self_cupid">求愛者</a>
+<a href="lovers.php#self_cupid">求愛者</a>・<a href="ability.php#mind_receiver">受信能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -148,13 +176,28 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#doom">死の宣告能力者</a>
+<a href="chiroptera.php#doom_chiroptera">蝉蝙蝠</a>・<a href="ability.php#doom">死の宣告能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 「一週間戦争」がテーマです。
 <a href="sub_role.php#death_warrant">死の宣告</a>は適用直後に表示されるので対象者はすぐ自覚できます。
 一部のレアケースを除いて短期決戦が必要となるので難易度は高めです。
+</pre>
+
+<h3 id="perverse_duelist">天探女 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α6～]</h3>
+<h4>[宿敵作成能力] 自分撃ち固定：無し / 付加：天邪鬼</h4>
+<pre>
+<a href="sub_role.php#rival">宿敵</a>に加えて、<a href="sub_role.php#perverseness">天邪鬼</a>を付加する特殊な決闘者。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#sudden_death">ショック死発動能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#doom_duelist">黒幕</a>の<a href="sub_role.php#perverseness">天邪鬼</a>バージョンで、「あまのさぐめ」と読みます。
+東方 Project の鬼神正邪がモチーフです。
 </pre>
 
 <h3 id="sea_duelist">海御前 (占い結果：村人 / 霊能結果：村人) [Ver. 2.2.0 α6～]</h3>
@@ -207,11 +250,15 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 </pre>
 
 <h3 id="poison_avenger">山わろ (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β4～]</h3>
-<h4>[毒能力] 処刑：人狼系 + 妖狐陣営 + 自分の仇敵 / 襲撃：有り / 薬師判定：有り</h4>
+<h4>[毒能力] 処刑：人狼系 + 妖狐カウント + 自分の仇敵 / 襲撃：有り / 薬師判定：有り</h4>
 <pre>
 毒を持った特殊な復讐者。
-毒の対象は、人狼系・妖狐陣営・自分の仇敵のいずれか。
+毒の対象は、人狼系・妖狐カウント・自分の仇敵のいずれか。
 自分の仇敵であっても、毒の対象外だった場合は中らない。
+</pre>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+毒能力：処刑時「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -226,18 +273,18 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 <h3 id="cursed_avenger">がしゃどくろ (占い結果：村人(呪返し) / 霊能結果：村人) [Ver. 1.5.0 β4～]</h3>
 <h4>[耐性] 狩り：有効 / 占い：呪返し / 陰陽師：死亡</h4>
 <pre>
-呪いを持った特殊な復讐者。処刑投票先が<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐</a>なら<a href="sub_role.php#death_warrant">死の宣告</a> (4日後)を付加する。
+呪いを持った特殊な復讐者。処刑投票先が<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐カウント</a>なら<a href="sub_role.php#death_warrant">死の宣告</a> (4日後)を付加する。
 </pre>
 <ol>
 <li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合でも有効。</li>
 <li>対象が死亡していた場合は無効 (例：処刑・毒死)。</li>
 <li>自分が処刑された場合は無効。</li>
-<li><a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態)・<a href="sub_role.php#challenge_lovers">難題</a>には無効。</li>
-<li>変化前の<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>、<a href="mania.php#unknown_mania_group">鵺系</a>は対象外。</li>
+<li><a href="ability.php#special_resist">特殊耐性能力者</a>には無効。</li>
+<li><a href="mania.php#unknown_mania_group">鵺系</a>・変化前の<a href="ability.php#copy_delay">コピー能力者 (時間差型)</a> は対象外。</li>
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#cursed_group">呪い能力者</a>
+<a href="ability.php#doom">死の宣告能力者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#cursed_group">呪い能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -252,7 +299,7 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
+<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#critical_luck">痛恨能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

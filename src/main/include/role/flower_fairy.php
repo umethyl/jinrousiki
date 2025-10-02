@@ -8,7 +8,7 @@ RoleManager::LoadFile('fairy');
 class Role_flower_fairy extends Role_fairy {
   public $result = 'FLOWERED';
 
-  function FairyAction(User $user) {
+  protected function FairyAction(User $user) {
     DB::$ROOM->ResultDead($user->GetName(), $this->result, Lottery::GetRange('A', 'Z'));
   }
 }

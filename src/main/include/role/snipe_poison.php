@@ -6,7 +6,8 @@
 */
 RoleManager::LoadFile('poison');
 class Role_snipe_poison extends Role_poison {
-  function IsPoisonTarget(User $user) {
-    return $user->IsCamp($this->GetVoteUser()->GetCamp(true), true);
+  public function IsPoisonTarget(User $user) {
+    $target = $this->GetVoteUser();
+    return ! $target->IsAvoidLovers(true) && $user->IsCamp($target->GetCamp(true), true);
   }
 }

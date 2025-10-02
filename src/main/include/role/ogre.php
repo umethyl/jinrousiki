@@ -9,27 +9,32 @@ class Role_ogre extends Role {
   public $action     = 'OGRE_DO';
   public $not_action = 'OGRE_NOT_DO';
   public $resist_rate  = 30;
+  public $reduce_base  =  1;
   public $reduce_rate  =  5;
   public $reflect_rate = 30;
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('ogre-do', 'ogre_do', $this->action, $this->not_action);
   }
 
-  function IsVote() { return DB::$ROOM->date > 1; }
+  public function IsVote() {
+    return DB::$ROOM->date > 1;
+  }
 
-  function GetIgnoreMessage() { return '初日は人攫いできません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+  }
 
-  function ExistsActionFilter(array $list) {
+  protected function SetVoteNightFilter() {
+    if (DB::$ROOM->IsEvent('force_assassin_do')) $this->SetStack(null, 'not_action');
+  }
+
+  protected function ExistsActionFilter(array $list) {
     if (DB::$ROOM->IsEvent('force_assassin_do')) unset($list[$this->not_action]);
     return $list;
   }
 
-  function SetVoteNightFilter() {
-    if (DB::$ROOM->IsEvent('force_assassin_do')) $this->SetStack(null, 'not_action');
-  }
-
-  function Win($winner) {
+  public function Win($winner) {
     if ($this->IsDead()) return false;
     if ($winner == 'wolf') return true;
     foreach (DB::$USER->rows as $user) {
@@ -39,7 +44,7 @@ class Role_ogre extends Role {
   }
 
   //人攫い情報セット
-  function SetAssassin(User $user) {
+  public function SetAssassin(User $user) {
     foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
       if ($filter->DelayTrap($this->GetActor(), $user->id)) return;
     }
@@ -56,7 +61,12 @@ class Role_ogre extends Role {
     //人攫い成功判定
     $count = (int)$this->GetActor()->GetMainRoleTarget();
     $event = $this->GetEvent();
-    $rate  = is_null($event) ? ceil(100 * pow($this->GetReduceRate(), $count)) : $event;
+    if (is_null($event)) {
+      $rate = ceil(100 * pow($this->reduce_base / $this->reduce_rate, $count));
+    } else {
+      $rate = $event;
+    }
+    //Text::p($rate, '◆Assassin Rate [ogre]');
     if (! Lottery::Percent($rate)) return; //成功判定
     $this->Assassin($user);
 
@@ -67,29 +77,31 @@ class Role_ogre extends Role {
   }
 
   //人攫い失敗判定
-  protected function IgnoreAssassin(User $user) { return false; }
+  protected function IgnoreAssassin(User $user) {
+    return false;
+  }
 
   //天候情報取得
-  protected function GetEvent() {
+  final protected function GetEvent() {
     return DB::$ROOM->IsEvent('full_ogre') ? 100 : (DB::$ROOM->IsEvent('seal_ogre') ? 0 : null);
   }
 
-  //人攫い成功減衰率取得
-  protected function GetReduceRate() { return 1 / $this->reduce_rate; }
-
   //人攫い
-  protected function Assassin(User $user) { $this->AddSuccess($user->id, 'ogre'); }
+  protected function Assassin(User $user) {
+    $this->AddSuccess($user->id, 'ogre');
+  }
 
   //人攫い死
-  function AssassinKill() {
-    foreach ($this->GetStack() as $id => $flag) DB::$USER->Kill($id, 'OGRE_KILLED');
+  final public function AssassinKill() {
+    foreach ($this->GetStack() as $id => $flag) {
+      DB::$USER->Kill($id, 'OGRE_KILLED');
+    }
   }
 
   //人狼襲撃耐性判定
-  final function WolfEatResist() { return Lottery::Percent($this->GetResistRate()); }
-
-  //人狼襲撃耐性率取得
-  protected function GetResistRate() {
-    return is_null($event = $this->GetEvent()) ? $this->resist_rate : $event;
+  final public function WolfEatResist() {
+    $rate = is_null($event = $this->GetEvent()) ? $this->resist_rate : $event;
+    //Text::p($rate, '◆Resist Rate [ogre]');
+    return Lottery::Percent($rate);
   }
 }

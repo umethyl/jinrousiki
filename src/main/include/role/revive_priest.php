@@ -6,18 +6,26 @@
 */
 RoleManager::LoadFile('priest');
 class Role_revive_priest extends Role_priest {
-  protected function GetOutputRole() { return null; }
+  protected function IgnoreResult() {
+    return true;
+  }
 
-  function Priest(StdClass $role_flag) {
-    $data = $this->GetStack('priest');
-    if (! DB::$ROOM->IsDate(4) && ! isset($data->crisis) && $data->count['wolf'] != 1 &&
-	count(DB::$USER->rows) < $data->count['total'] * 2) {
-      return false;
+  protected function IgnoreSetPriest() {
+    if (DB::$ROOM->IsOpenCast()) return true;
+
+    foreach (DB::$USER->GetRoleUser($this->role) as $user) {
+      if ($user->IsActive()) return false;
     }
+    return true;
+  }
 
-    foreach ($role_flag->{$this->role} as $id) {
-      $user = DB::$USER->ByID($id);
-      if ($user->IsLovers() || (DB::$ROOM->date > 3 && $user->IsLive(true))) {
+  public function Priest() {
+    if (! $this->IsPriestReturn()) return;
+
+    foreach (DB::$USER->GetRoleUser($this->role) as $user) {
+      if ($user->IsDummyBoy() || ! $user->IsActive()) continue;
+
+      if ($user->IsLovers(true) || (DB::$ROOM->date > 3 && $user->IsLive(true))) {
 	$user->LostAbility();
       }
       elseif ($user->IsDead(true)) {
@@ -28,14 +36,21 @@ class Role_revive_priest extends Role_priest {
   }
 
   //帰還
-  final function PriestReturn() {
+  public function PriestReturn() {
     $user = $this->GetActor();
     if ($user->IsDummyBoy()) return;
-    if ($user->IsLovers()) {
+    if ($user->IsLovers(true)) {
       $user->LostAbility();
     }
     elseif ($user->IsLive(true)) {
       DB::$USER->Kill($user->id, 'PRIEST_RETURNED');
     }
+  }
+
+  //蘇生判定
+  private function IsPriestReturn() {
+    $data = $this->GetStack('priest');
+    return DB::$ROOM->IsDate(4) || isset($data->crisis) || $data->count['wolf'] == 1 ||
+      count(DB::$USER->rows) >= $data->count['total'] * 2;
   }
 }

@@ -5,13 +5,11 @@ class SharedServerConfig {
 
   //表示する他のサーバのリスト
   static public $server_list = array(
-    //-- 設定例 --//
-    /*
     'cirno' => array('name' => '真・チルノ鯖',
 		      'url' => 'http://jinrousiki.sourceforge.jp/cirno/',
 		      'encode' => 'UTF-8',
-		      'separator' => '',
-		      'footer' => '',
+		      'separator' => '<!-- atpages banner tag -->',
+		      'footer' => '</a><br>',
 		      'disable' => false),
 
     'mystia' => array('name' => 'ミスティア鯖',
@@ -20,13 +18,5 @@ class SharedServerConfig {
 		   'separator' => '',
 		   'footer' => '',
 		   'disable' => false),
-
-    'kaguya' => array('name' => '輝夜鯖',
-		      'url' => 'http://www42.atpages.jp/houraisankaguya/',
-		      'encode' => 'UTF-8',
-		      'separator' => '<!-- atpages banner tag -->',
-		      'footer' => '</a><br>',
-		      'disable' => false),
-    */
 				     );
 }

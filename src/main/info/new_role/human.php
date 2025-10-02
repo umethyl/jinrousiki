@@ -1,10 +1,12 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('村人陣営');
 ?>
-<p><a href="#change_group">所属変更</a></p>
+<p>
+<a href="#rule">基本ルール</a>
+<a href="#change_group">所属変更</a>
+</p>
 <p>
 <a href="#human_group">村人系</a>
 <a href="#mage_group">占い師系</a>
@@ -26,6 +28,45 @@ InfoHTML::OutputRoleHeader('村人陣営');
 <a href="#doll_group">上海人形系</a>
 <a href="#escaper_group">逃亡者系</a>
 </p>
+
+<h2 id="rule">基本ルール</h2>
+<p>
+<a href="#rule_summary">概要</a>
+<a href="#rule_win">勝利条件</a>
+<a href="#rule_distinguish">判定</a>
+<a href="#rule_"></a>
+</p>
+
+<h3 id="rule_summary">概要</h3>
+<ol>
+<li>村に紛れ込んだ人外達を全て全滅することを目指します。</li>
+</ol>
+
+<h3 id="rule_win">勝利条件</h3>
+<ol>
+<li><a href="wolf.php">人狼</a>・<a href="fox.php">妖狐</a>・<a href="lovers.php">恋人</a>を全滅させる。</li>
+<li><a href="quiz.php">出題者</a>以外の生存者が存在する。</li>
+<li>勝利条件を満たした<a href="vampire.php">吸血鬼</a>が存在しない。</li>
+<li>自分の生死は基本的には不問。</li>
+</ol>
+
+<h3 id="rule_distinguish">判定</h3>
+<table>
+<tr>
+  <th>生存カウント</th>
+  <th>占い</th>
+  <th>霊能</th>
+  <th>精神鑑定</th>
+  <th>性別鑑定</th>
+</tr>
+<tr>
+  <td>村人</td>
+  <td>村人</td>
+  <td>村人</td>
+  <td>正常</td>
+  <td>性別</td>
+</tr>
+</table>
 
 <h2 id="change_group">所属変更</h2>
 <h3>Ver. 1.4.0 β22～</h3>
@@ -56,6 +97,7 @@ InfoHTML::OutputRoleHeader('村人陣営');
 <a href="#scripter">執筆者</a>
 <a href="#eccentricer">傾奇者</a>
 <a href="#tough">益荒男</a>
+<a href="#prince">ろくろ首</a>
 <a href="#suspect">不審者</a>
 <a href="#unconscious">無意識</a>
 </p>
@@ -95,7 +137,7 @@ InfoHTML::OutputRoleHeader('村人陣営');
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#decide">処刑者決定能力者</a>
+<a href="ability.php#decide">処刑者決定能力者</a>・<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -129,7 +171,7 @@ InfoHTML::OutputRoleHeader('村人陣営');
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#decide">処刑者決定能力者</a>
+<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#decide">処刑者決定能力者</a>・<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -207,6 +249,27 @@ PP ラインの計算を複雑にするために作成してみました。
 <h4>[作成者からのコメント]</h4>
 <pre>
 他国のタフガイに相当します。
+半日の猶予をどう活かすかはあなた次第です。
+</pre>
+
+<h3 id="prince">ろくろ首 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α6～]</h3>
+<h4>[耐性] 処刑：無効 (一回限定) /  護衛制限：有り</h4>
+<pre>
+一度だけ処刑を無かったことにできる村人。
+</pre>
+<ol>
+<li>一度発動すると能力を失う (<a href="sub_role.php#lost_ability">能力喪失</a>)。</li>
+<li>発動すると<a href="../spec.php#dead_day">専用メッセージ</a>が表示される。</li>
+<li>処刑キャンセル判定は<a href="../spec.php#vote_day">天候処理</a>の後。</li>
+<li>処刑キャンセルされるまでは処刑死した者として処理される。<br>
+ (例：霊能結果は普通に出る)
+</li>
+<li><a href="lovers.php">恋人陣営</a>になったら能力無効。</li>
+</ol>
+<h4>[作成者からのコメント]</h4>
+<pre>
+他国の王子様に相当します。東方 Project の赤蛮奇がモチーフです。
+上手くタイミングを合わせるとショック死などを回避することが出来ます。
 </pre>
 
 <h3 id="suspect">不審者 (占い結果：人狼 / 霊能結果：村人) [Ver. 1.4.0 α9～]</h3>
@@ -280,6 +343,7 @@ PP ラインの計算を複雑にするために作成してみました。
   <li>占い対象先が同様の理由で事前に死亡していた場合、対象の能力は無効。<br>
     例) 暗殺された<a href="wolf.php#cursed_wolf">呪狼</a>を占っても呪返しは受けない。
   </li>
+  <li><a href="sub_role.php#vega_lovers">織姫</a>には呪殺無効。</li>
 </ol>
 
 <h3 id="mage">占い師 (占い結果：村人 / 霊能結果：村人)</h3>
@@ -316,24 +380,34 @@ PP ラインの計算を複雑にするために作成してみました。
 <h3 id="step_mage">審神者 (占い結果：村人 / 霊能結果：村人) [Ver. 2.2.0 α3～]</h3>
 <h4>[耐性] 護衛制限：有り</h4>
 <h4>[占い能力] 呪殺：有り / 憑依妨害：有り / 占い妨害：有効 / 呪い：有効</h4>
+<h4>[足音能力] タイプ：本人基点型 / キャンセル投票：無し</h4>
 <pre>
 夜の投票時に自分と投票先の間で足音が鳴る特殊な占い師。
 </pre>
-<ol>
-<li>投票の始点は自分から (チェック不要) で、終点は実際に占いたい人を選んでください。</li>
-<li>死者を通り道に選ぶ事もできますが、死者を占うことはできません。</li>
-<li>足音は始点と終点の間で鳴ります。</li>
-</ol>
 <h4>足音能力者投票システム</h4>
+<h5>共通</h5>
 <ol>
 <li>通常の投票と違い、始点から終点までの「通り道」を全てチェックする必要があります。</li>
 <li>「通り道」とは参加者の位置で、生死は無関係に選択できます。</li>
+<li>通り道を斜めに進むことはできません。</li>
+<li>死者を通り道に選ぶ事もできます。</li>
+<li><a href="#clairvoyance_scanner">猩々</a>が透視した場合は全ての投票先が表示されます。</li>
+</ol>
+<h5>本人基点型</h5>
+<ol>
+<li>投票の始点は自分から (チェック不要) で、終点は実際に投票したい人を選んでください。</li>
 <li>直線で到達できない場合は通り道から上下左右のどれかで曲がる事ができます (方向転換)。</li>
 <li>方向転換は一度しかできません。</li>
 <li>通り道を斜めに進むことはできません。</li>
 <li>通り道は必ず最短で選ぶ必要があります。</li>
 <li>最短ルートが複数ある場合は任意の通り方を一つ選ぶ事ができます。</li>
-<li><a href="#clairvoyance_scanner">猩々</a>が透視した場合は全ての投票先が表示される。</li>
+<li>足音は始点と終点の間で鳴ります。</li>
+</ol>
+<h5>直線型</h5>
+<ol>
+<li>投票の始点、終点は任意の場所を選ぶ事ができます。</li>
+<li>始点と終点は必ず一本の直線で繋がっている必要があります。</li>
+<li>足音は選んだ場所全てで鳴ります。</li>
 </ol>
 <h4>足音システム</h4>
 <ol>
@@ -458,6 +532,7 @@ PP ラインの計算を複雑にするために作成してみました。
 占った人が<a href="ability.php#cursed">呪い所持者</a>や<a href="ability.php#possessed_direct">憑依能力者(直接型)</a>の場合は呪殺し(死因は「呪返し」)、
 <a href="ability.php#voodoo">呪術能力者</a>に呪いをかけられていた場合は解呪(呪返しが発動しない)する。
 呪殺か解呪が成功した場合のみ、次の日に専用のシステムメッセージが表示される。
+<a href="sub_role.php#vega_lovers">織姫</a>には呪殺無効。
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -581,6 +656,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <li><a href="sub_role.php#copied_group">元神話マニア系</a> → 神話マニア</li>
 <li><a href="sub_role.php#changed_therian">元獣人</a> → 狂人</li>
 <li><a href="sub_role.php#changed_vindictive">元昼狐</a> → 子狐</li>
+<li><a href="fox.php#depraver_group">背徳者系</a> → 妖狐</li>
 <li><a href="wolf.php#mad_group">狂人系</a> → 人狼</li>
 <li><a href="#psycho_mage">精神鑑定士</a>の結果が「嘘つき」 → 狂人</li>
 <li>それ以外 → 村人</li>
@@ -606,11 +682,11 @@ PP ラインの計算を複雑にするために作成してみました。
 処刑者と処刑者の投票先の人の陣営が同じかどうか分かる特殊な霊能者。
 霊能結果は「～さんの死顔は安らかな/苦悶の表情でした」の二種類で、
 違う陣営なら「安らかな～」、同一陣営なら「苦悶の～」と判定される。
-<a href="sub_role.php#lovers">恋人</a>は恋人陣営と判定される。
+<a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>は恋人陣営と判定される。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#emissary_necromancer">密偵</a>・<a href="#snipe_poison">狙毒者</a>・<a href="#spiritism_wizard">交霊術師</a>
+<a href="#spiritism_wizard">交霊術師</a>・<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -624,7 +700,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <h4>[霊能能力] 処刑者情報：無し / 火車：無効</h4>
 <pre>
 処刑者に投票した人に処刑者と同一陣営の人が何人いるか分かる特殊な霊能者。
-<a href="sub_role.php#lovers">恋人</a>は恋人陣営と判定される。
+<a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>は恋人陣営と判定される。
 通常の<a href="#necromancer">霊能者</a>の能力は持っていない。
 </pre>
 <h5>Ver. 1.5.0 α6～</h5>
@@ -633,7 +709,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#embalm_necromancer">死化粧師</a>
+<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -781,7 +857,8 @@ PP ラインの計算を複雑にするために作成してみました。
 <li>ショック死させた場合の死因は「神主に酔い潰された」で、<a href="ability.php#anti_sudden_death">ショック死抑制能力者</a>の能力は無効。</li>
 <li>対象が死亡していた場合は無効 (例：処刑・毒死)。</li>
 <li>自分が処刑された場合は無効。</li>
-<li>変化前の<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>、<a href="mania.php#unknown_mania_group">鵺系</a>は対象外。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>には無効。</li>
+<li><a href="mania.php#unknown_mania_group">鵺系</a>・変化前の<a href="ability.php#copy_delay">コピー能力者 (時間差型)</a> は対象外。</li>
 </ol>
 <h4>関連役職</h4>
 <pre>
@@ -804,6 +881,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <li>ショック死させた場合の死因は「封印された」で、<a href="ability.php#anti_sudden_death">ショック死抑制能力者</a>の能力は無効。</li>
 <li>対象が死亡していた場合は無効 (例：処刑・毒死)。</li>
 <li>自分が処刑された場合は無効。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>には無効。</li>
 </ol>
 <h4>封印対象</h4>
 <pre>
@@ -849,6 +927,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <ol>
 <li><a href="../spec.php#vote_day">判定</a>はショック死処理内部で行う。</li>
 <li>ショック死した場合の死因は「封印された」。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>はショック死無効。</li>
 </ol>
 <h4>関連役職</h4>
 <pre>
@@ -917,6 +996,10 @@ PP ラインの計算を複雑にするために作成してみました。
 <pre>
 <a href="#dummy_priest">夢司祭</a>・<a href="#priest_jealousy">恋司祭</a>
 </pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#camp">陣営判定能力者</a>
+</pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 他国に実在する役職で、<a href="http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1246414115/72" target="_top">新役職考案スレ(72)</a> が原型です。
@@ -932,8 +1015,12 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <ol>
 <li>判定が出るのは 3 日目以降の奇数日 (3 → 5 → 7 →...)。</li>
-<li><a href="#medium_rule">巫女</a>の判定と違い、<a href="sub_role.php#lovers">恋人</a>も「村人陣営以外」と判定される。</li>
+<li><a href="#medium_rule">巫女</a>の判定と違い、<a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>も「村人陣営以外」と判定される。</li>
 </ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#camp">陣営判定能力者</a>
+</pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="#priest">司祭</a>の亜種で、こちらは死者の内訳を推測することができます。
@@ -970,7 +1057,7 @@ PP ラインの計算を複雑にするために作成してみました。
 また、一定条件を満たすと<a href="../weather.php">天候</a>を引き起こすことができる。
 </pre>
 <ol>
-<li>発動条件式は、生存者 - 村人陣営(恋人を含む) &gt; 人狼系 × 2。</li>
+<li>発動条件式は、生存者 - 村人陣営(<a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>を含む) &gt; 人狼系 × 2。</li>
 <li>判定は 3 の倍数の日の夜 (3 → 6 → 9 →...) で、発動はその 2 日後 (5 → 8 → 11 →...)。</li>
 <li>判定を実施するタイミングは<a href="#crisis_priest_rule">人外勝利前日判定</a>と同じ。</li>
 <li>発生する天候はランダムで、<a href="../game_option.php#weather">天候あり</a>オプションがオフでも発生する。</li>
@@ -980,6 +1067,10 @@ PP ラインの計算を複雑にするために作成してみました。
 <h5>Ver. 1.5.0 α6～</h5>
 <pre>
 生存している祈祷師がいなければ天候は発動しない。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -995,7 +1086,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#soul_mania">覚醒者</a>
+<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1008,6 +1099,10 @@ PP ラインの計算を複雑にするために作成してみました。
 <pre>
 <a href="#crisis_priest_rule">人外勝利前日</a>を判定する特殊な司祭。本人表記は「<a href="#human">村人</a>」。
 条件を満たした場合のみ、どの陣営が有利なのかメッセージが表示される。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1029,7 +1124,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#soul">役職鑑定能力者</a>
+<a href="ability.php#mind_sympathy">共感能力者</a>・<a href="ability.php#soul">役職鑑定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1044,7 +1139,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <ol>
 <li>能力の発動は 4 日目夜で、結果は 5 日目にのみ表示される。</li>
-<li><a href="sub_role.php#lovers">恋人</a>は「恋人陣営」と判定される。</li>
+<li><a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>は「恋人陣営」と判定される。</li>
 <li>該当者が憑依されていても憑依元を追跡しない (該当者の陣営で判定する)。</li>
 </ol>
 <h4>判定例</h4>
@@ -1059,7 +1154,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#ascetic_assassin">修験者</a>・<a href="wolf.php#ascetic_wolf">印狼</a>
+<a href="ability.php#position">位置能力者</a>・<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1084,7 +1179,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <li>「<a href="../game_option.php#not_open_cast">霊界で配役を公開しない</a>」オプションが有効になっていないと死亡も蘇生もしない。</li>
 <li>2 日目の朝の死亡メッセージは「～は無惨な～」で、死因は「天に帰った」。</li>
 <li>一度蘇生すると能力を失う (<a href="sub_role.php#lost_ability">能力喪失</a>)。</li>
-<li><a href="sub_role.php#lovers">恋人</a>になると能力を失う (2 日目朝の死亡も起こらない)。</li>
+<li><a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>になると能力を失う (2 日目朝の死亡も起こらない)。</li>
 <li><a href="mania.php#mania_group">神話マニア</a>がコピーした場合は 2 日目朝の死亡処理は起こらない。</li>
 <li>2 日目朝以降に死んでも蘇生判定を満たせば蘇生する。</li>
 <li>5 日目になると能力を失う。</li>
@@ -1097,7 +1192,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#revive">蘇生能力者</a>・<a href="ability.php#possessed_limit">憑依制限能力者</a>
+<a href="ability.php#camp">陣営判定能力者</a>・<a href="ability.php#revive">蘇生能力者</a>・<a href="ability.php#possessed_limit">憑依制限能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1156,23 +1251,25 @@ PP ラインの計算を複雑にするために作成してみました。
 <a href="#blind_guard">夜雀</a>
 <a href="#gatekeeper_guard">門番</a>
 <a href="#step_guard">山立</a>
+<a href="#wanderer_guard">一寸法師</a>
 <a href="#reflect_guard">侍</a>
 <a href="#poison_guard">騎士</a>
 <a href="#fend_guard">忍者</a>
 <a href="#reporter">ブン屋</a>
-<a href="#anti_voodoo">厄神</a>
 </p>
 <p>
+<a href="#anti_voodoo">厄神</a>
 <a href="#elder_guard">老兵</a>
 <a href="#dummy_guard">夢守人</a>
 </p>
 
 <h3 id="guard_limit">護衛制限</h3>
 <ol>
-<li>制限対象は、<a href="#step_mage">審神者</a>・<a href="#emissary_necromancer">密偵</a>・<a href="#priest_group">司祭系</a> (<a href="#crisis_priest">預言者</a>・<a href="#widow_priest">未亡人</a>・<a href="#revive_priest">天人</a>を除く)・<a href="#reporter">ブン屋</a>・<a href="#detective_common">探偵</a>・<a href="#sacrifice_common">首領</a>・<a href="#spell_common">葛の葉</a><br>
+<li>制限対象は、<a href="#prince">ろくろ首</a>・<a href="#step_mage">審神者</a>・<a href="#emissary_necromancer">密偵</a>・<a href="#priest_group">司祭系</a> (<a href="#crisis_priest">預言者</a>・<a href="#widow_priest">未亡人</a>・<a href="#revive_priest">天人</a>を除く)・<a href="#reporter">ブン屋</a>・<a href="#detective_common">探偵</a>・<a href="#sacrifice_common">首領</a>・<a href="#spell_common">葛の葉</a><br>
   <a href="#assassin_group">暗殺者系</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#priest_jealousy">恋司祭</a>・<a href="#soul_wizard">八卦見</a>・<a href="#barrier_wizard">結界師</a>・<a href="#pierrot_wizard">道化師</a>・<a href="#doll_master">人形遣い</a>。</li>
 <li>対象を護衛して襲撃された場合、狩人に「護衛成功」のメッセージは出るが、護衛先は死亡する。</li>
 <li>影響を受けるのは<a href="ability.php#guard">護衛能力者</a>のみで、<a href="#blind_guard">夜雀</a>・<a href="#step_guard">山立</a>・<a href="#poison_guard">騎士</a>・<a href="#elder_guard">老兵</a>には適用されない。</li>
+<li>対象に<a href="sub_role.php#penetration">護衛貫通</a>がついている場合はあらゆる護衛が無効化される。</a>
 </ol>
 <h5>Ver. 2.2.0 α4～</h5>
 <pre>
@@ -1203,6 +1300,7 @@ PP ラインの計算を複雑にするために作成してみました。
 5. <a href="#dummy_guard">夢守人</a>は<a href="chiroptera.php#fairy_group">妖精系</a>を狩ることができる。
 6. <a href="wolf.php#dream_eater_mad">獏</a>と<a href="#dummy_guard">夢守人</a>の関係は<a href="wolf.php#dream_eater_mad">獏</a>を参照。
 7. 対象が身代わり死していた場合は狩りが発生しない (<a href="chiroptera.php#boss_chiroptera">大蝙蝠</a>など)。
+8. <a href="sub_role.php#vega_lovers">織姫</a>には無効
 </pre>
 <h5>Ver. 1.5.0 β6～</h5>
 <pre>
@@ -1232,12 +1330,16 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 
 <h3 id="hunter_guard">猟師 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β13～]</h3>
-<h4>[狩人能力] 護衛：身代わり / 護衛制限：有り / 狩り：有り + 妖狐陣営 / 罠：有効</h4>
+<h4>[狩人能力] 護衛：身代わり / 護衛制限：有り / 狩り：有り + 妖狐カウント / 罠：有効</h4>
 <pre>
 <a href="#guard_hunt">狩り能力</a>に特化した特殊な狩人。
-通常の<a href="#guard_hunt">狩り能力</a>に加えて、<a href="fox.php">妖狐陣営</a>も狩る事ができる。
-護衛先が<a href="wolf.php#wolf_group">人狼</a> (種類を問わない) に襲撃された場合は本人が死亡する (死因は「人狼の襲撃」)。
+通常の<a href="#guard_hunt">狩り能力</a>に加えて、<a href="fox.php">妖狐カウント</a>も狩る事ができる。
+護衛先が<a href="wolf.php#wolf_group">人狼</a> (種類を問わない) に襲撃された場合は本人が死亡する (<a href="../spec.php#dead_night">死因</a>は「人狼の襲撃」)。
 <a href="vampire.php">吸血鬼</a>の襲撃から護衛した場合は死亡しない。
+</pre>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+狩り：「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1250,6 +1352,10 @@ PP ラインの計算を複雑にするために作成してみました。
 <pre>
 <a href="#guard_hunt">狩り能力</a>は持たないが、護衛先を襲撃した<a href="wolf.php#wolf_group">人狼</a>・<a href="vampire.php">吸血鬼</a>に<a href="sub_role.php#blinder">目隠し</a>を付加する特殊な狩人。
 <a href="#guard_limit">護衛制限</a>の影響を受けない。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#blinder">目隠し能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1275,15 +1381,11 @@ PP ラインの計算を複雑にするために作成してみました。
 
 <h3 id="step_guard">山立 (占い結果：村人 / 霊能結果：村人) [Ver. 2.2.0 α3～]</h3>
 <h4>[狩人能力] 護衛：通常 / 護衛制限：無し / 狩り：有り / 罠：有効</h4>
+<h4>[足音能力] タイプ：本人基点型 / キャンセル投票：無し</h4>
 <pre>
 夜の投票時に自分と投票先の間で足音が鳴る特殊な狩人。
 足音システムの基本は<a href="#step_mage">審神者</a>参照。
 </pre>
-<ol>
-<li>投票の始点は自分から (チェック不要) で、終点は実際に護衛したい人を選んでください。</li>
-<li>死者を通り道に選ぶ事もできますが、死者を護衛することはできません。</li>
-<li>足音は始点と終点の間で鳴ります。</li>
-</ol>
 <h5>Ver. 2.2.0 α4～</h5>
 <pre>
 護衛制限：有り → 無し
@@ -1296,6 +1398,26 @@ PP ラインの計算を複雑にするために作成してみました。
 <pre>
 <a href="#step_mage">審神者</a>の狩人バージョンで、「やまだち」と読みます。
 マタギの別称で、熊鈴を音の発生源に見立てています。
+</pre>
+
+<h3 id="wanderer_guard">一寸法師 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α7～]</h3>
+<h4>[狩人能力] 護衛：通常 / 護衛制限：有り / 狩り：有り / 罠：有効</h4>
+<pre>
+人狼の襲撃先が生存していた場合に、護衛先に<a href="sub_role.php#penetration">護衛貫通</a>を付加してしまう特殊な狩人。
+</pre>
+<ol>
+<li>生存していれば、理由は問わない (例：護衛成功・妖狐襲撃・雛狼・自己蘇生)。</li>
+<li>一寸法師が生存している場合のみ付加される (例：暗殺されたら無効)。</li>
+<li>複数の一寸法師がいた場合はそれぞれ付加される。</li>
+<li><a href="sub_role.php#penetration">護衛貫通</a>を付加した場合は翌日、本人に専用のシステムメッセージが表示される<br>
+  (本人が付加した対象のみ)。
+</li>
+</ol>
+<h4>[作成者からのコメント]</h4>
+<pre>
+他国の風来狩人に相当します。東方 Project の少名針妙丸がモチーフです。
+護衛能力者としては劣化種に属しますが、人狼の襲撃状況を細かく把握できるとも言えます。
+また、狩人騙りの欠点である「護衛されるべき人が死んでしまう」状況をフォローする事ができます。
 </pre>
 
 <h3 id="reflect_guard">侍 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β22～]</h3>
@@ -1367,7 +1489,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#presage_scanner">件</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#escaper">逃亡者</a>
+<a href="#presage_scanner">件</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#escaper">逃亡者</a>・<a href="ability.php#last_words_limit">遺言制限能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1434,10 +1556,14 @@ PP ラインの計算を複雑にするために作成してみました。
 <pre>
 本人には「<a href="#guard">狩人</a>」と表示されており、護衛行動を取ることができる。
 必ず護衛成功メッセージが表示されるが、表示されるだけで誰も護衛していない。
-<a href="wolf.php#dream_eater_mad">獏</a>には圧倒的なアドバンテージを持っており、何らかの形で遭遇すると
-一方的に狩ることができる。
-<a href="chiroptera.php#fairy_group">妖精系</a>を護衛すると狩ることができる。
 </pre>
+<h4>狩りの仕様</h4>
+<ol>
+<li><a href="wolf.php#dream_eater_mad">獏</a>には圧倒的なアドバンテージを持っており、何らかの形で遭遇すると
+一方的に狩ることができる。</li>
+<li><a href="chiroptera.php#fairy_group">妖精系</a>を護衛すると狩ることができる。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>には無効。</li>
+</ol>
 <h5>Ver. 1.4.0 β9～</h5>
 <pre>
 <a href="chiroptera.php#fairy_group">妖精系</a>を護衛すると狩ることができる
@@ -1488,7 +1614,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#howl_scanner">吠騒霊</a>・<a href="#telepath_scanner">念騒霊</a>
+<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1502,14 +1628,22 @@ PP ラインの計算を複雑にするために作成してみました。
 <pre>
 様々な特殊耐性を持つ上位共有者。
 </pre>
+<h4>耐性一覧</h4>
 <ol>
 <li><a href="ability.php#poison">毒</a>・<a href="wolf.php#follow_mad">舟幽霊</a>・<a href="ability.php#vote_kill_counter_solo">処刑カウンター能力者(個別型)</a> の能力の対象外</li>
-<li><a href="#cursed_brownie">祟神</a>・<a href="ability.php#vote_action_luck">処刑投票能力者(得票数変化型)</a>・<a href="ability.php#febris_active">熱病能力者(能動型)</a> の能力無効</li>
+<li>
+  <a href="#cursed_brownie">祟神</a>・<a href="ability.php#doom_day_active">死の宣告能力者(処刑能動型)</a>・<a href="ability.php#vote_kill_counter_random">処刑カウンター能力者(確率付与型)</a><br>
+  <a href="ability.php#vote_action_luck">処刑投票能力者(得票数変化型)</a>・<a href="ability.php#febris_active">熱病能力者(能動型)</a> の能力無効
+</li>
 <li><a href="#assassin_spec">暗殺反射</a></li>
 <li><a href="#revive_rule">蘇生</a>不可</li>
 <li>憑依無効</li>
 <li><a href="vampire.php#vampire_do">吸血死</a>無効</li>
 </ol>
+<h5>Ver. 2.3.0 α3～</h5>
+<pre>
+<a href="ability.php#vote_kill_counter_random">処刑カウンター能力者(確率付与型)</a> の能力無効
+</pre>
 <h5>Ver. 2.2.0 α7～</h5>
 <pre>
 <a href="#miasma_jealousy">蛇姫</a>の能力無効
@@ -1539,6 +1673,10 @@ PP ラインの計算を複雑にするために作成してみました。
 <li>自分が処刑されたり、再投票になっても有効。</li>
 <li>自分が<a href="sub_role.php#lovers">恋人</a>になった場合は自分自身が「非村人陣営」になるので発動できない。</li>
 </ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#camp">陣営判定能力者</a>・<a href="ability.php#trap">罠能力者</a>
+</pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 圧倒的不利な状況をたった一回の処刑投票でひっくり返す、究極の対 PP 兵器です。
@@ -1675,11 +1813,15 @@ PP ラインの計算を複雑にするために作成してみました。
 
 <h3 id="strong_poison">強毒者 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α17～]</h3>
 <h4>[役職表示] <a href="#poison">埋毒者</a></h4>
-<h4>[毒能力] 処刑：人狼系 + 妖狐陣営 / 襲撃：有り / 薬師判定：強い毒</h4>
+<h4>[毒能力] 処刑：人狼系 + 妖狐カウント / 襲撃：有り / 薬師判定：強い毒</h4>
 <pre>
-処刑された時の毒の対象が人外 (<a href="wolf.php#wolf_group">人狼系</a>と<a href="fox.php">妖狐陣営</a>) 限定の上位埋毒者。本人表記は「<a href="#poison">埋毒者</a>」。
+処刑された時の毒の対象が人外 (<a href="wolf.php#wolf_group">人狼系</a>と<a href="fox.php">妖狐カウント</a>) 限定の上位埋毒者。本人表記は「<a href="#poison">埋毒者</a>」。
 毒の巻き込み対象設定 (<a href="../script_info.php#difference_poison_vote" target="_top">特徴と仕様</a>参照) が「投票者ランダム」だった場合、
 対象者が投票していなければ毒は不発になる。
+</pre>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+毒能力：処刑時「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -1693,10 +1835,14 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 
 <h3 id="incubate_poison">潜毒者 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α17～]</h3>
-<h4>[毒能力] 処刑：無し → 人狼系 + 妖狐陣営 / 襲撃：無し → 有り / 薬師判定：無し → 強い毒</h4>
+<h4>[毒能力] 処刑：無し → 人狼系 + 妖狐カウント / 襲撃：無し → 有り / 薬師判定：無し → 強い毒</h4>
 <pre>
 一定期間後 (5 日目以降) に<a href="#strong_poison">強毒者</a>相当の毒を持つ特殊な埋毒者。
 毒を持ったら本人に追加のシステムメッセージが表示される。
+</pre>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+毒能力：処刑時「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
 </pre>
 <h5>Ver. 1.4.0 α20～</h5>
 <pre>
@@ -1727,11 +1873,12 @@ PP ラインの計算を複雑にするために作成してみました。
 <h4>[毒能力] 処刑：特殊 / 襲撃：有り / 薬師判定：有り</h4>
 <pre>
 処刑された場合、処刑投票先と同陣営の人のみに中る特殊な埋毒者。
-<a href="sub_role.php#lovers">恋人</a>は恋人陣営と判定する。
+<a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>は恋人陣営と判定する。
+<a href="sub_role.php#vega_lovers">織姫</a>に投票して処刑された場合は毒能力無効。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#embalm_necromancer">死化粧師</a>
+<a href="#embalm_necromancer">死化粧師</a>・<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2038,7 +2185,7 @@ A[河童] → B[村人][小心者]
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#philosophy_wizard">賢者</a>・<a href="mania.php#soul_mania">覚醒者</a>
+<a href="#philosophy_wizard">賢者</a>・<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2077,6 +2224,7 @@ A[河童] → B[村人][小心者]
 <a href="#assassin">暗殺者</a>
 <a href="#doom_assassin">死神</a>
 <a href="#select_assassin">おしら様</a>
+<a href="#step_assassin">風神</a>
 <a href="#sweep_assassin">掃除屋</a>
 <a href="#professional_assassin">仕事人</a>
 <a href="#ascetic_assassin">修験者</a>
@@ -2150,7 +2298,7 @@ A[河童] → B[村人][小心者]
 <a href="http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1246414115/85" target="_top">新役職考案スレ(85)</a> が原型です。
 </pre>
 
-<h3 id="select_assassin">おしら様 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β11～]</h3>
+<h3 id="select_assassin">おしら様 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β11〜]</h3>
 <h4>[耐性] 罠：有効 / 護衛制限：有り</h4>
 <pre>
 暗殺成立時に<a href="sub_role.php#death_selected">オシラ遊び</a>を付加する特殊な暗殺者。
@@ -2160,6 +2308,37 @@ A[河童] → B[村人][小心者]
 <pre>
 時間差暗殺能力者です。
 主に<a href="../game_option.php#duel">決闘村</a>で「最期の夜を迎えた恋人」を演出するのが狙いです。
+</pre>
+
+<h3 id="step_assassin">風神 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α7～]</h3>
+<h4>[耐性] 罠：有効 / 護衛制限：有り</h4>
+<h4>[足音能力] タイプ：直線型 / キャンセル投票：有り</h4>
+<pre>
+夜の投票時に自分の投票先で足音が鳴る特殊な暗殺者。
+暗殺成立時には<a href="sub_role.php#febris">熱病</a>を付加する。
+足音システムの基本は<a href="#step_mage">審神者</a>参照。
+</pre>
+<h4>足音能力</h4>
+<ol>
+<li>自分にも投票可能。</li>
+<li>対象が全員死者であっても投票は成立する (暗殺は成立しない)。</li>
+</ol>
+<h4>暗殺能力</h4>
+<ol>
+<li>暗殺成立確率は 100 - (投票人数 × 15) % (最小は 1%)。</li>
+<li>暗殺成立・罠・暗殺反射判定は個別に行う。</li>
+<li>暗殺成立確率 ＞ 通常の暗殺者の判定の順に処理される。</li>
+<li>投票先のいずれかで死亡判定 (罠など) が発生しても全ての投票先の処理は有効。</li>
+<li>自分自身への投票も通常通り処理される。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#step">足音能力者</a>・<a href="ability.php#febris">熱病能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+限定的広範囲暗殺能力者です。
+風神は風邪の由来である、という伝承が能力の見立てです。
 </pre>
 
 <h3 id="sweep_assassin">掃除屋 (占い結果：村人 / 霊能結果：村人) [Ver. 2.1.0 α6～]</h3>
@@ -2175,13 +2354,21 @@ A[河童] → B[村人][小心者]
 <h3 id="professional_assassin">仕事人 (占い結果：村人 / 霊能結果：村人) [Ver. 2.1.0 α6～]</h3>
 <h4>[耐性] 罠：有効 / 護衛制限：有り</h4>
 <pre>
-村人陣営・<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐陣営</a>を暗殺できない特殊な暗殺者。
+村人陣営・<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐カウント</a>を暗殺できない特殊な暗殺者。
 </pre>
 <ol>
-<li><a href="sub_role.php#lovers">恋人</a>は<a href="lovers.php">恋人陣営</a>と判定される。</li>
+<li><a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>は<a href="lovers.php">恋人陣営</a>と判定される。</li>
 <li>変化前の<a href="wolf.php#therian_mad">獣人</a>・<a href="mania.php">神話マニア陣営</a>は暗殺可能。</li>
-<li><a href="fox.php">妖狐</a>についた<a href="mania.php#unknown_mania_group">鵺系</a>は暗殺可能。</li>
+<li><a href="fox.php">妖狐陣営</a>についた<a href="mania.php#unknown_mania_group">鵺系</a>は暗殺可能。</li>
 </ol>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+暗殺不可対象：「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#camp">陣営判定能力者</a>
+</pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 「失敗」しない暗殺能力者ですが、対象は全て村人カウントなので
@@ -2202,7 +2389,7 @@ A[河童] → B[村人][小心者]
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="#holy_priest">聖徳道士</a>・<a href="wolf.php#ascetic_wolf">印狼</a>・<a href="ability.php#resist_wolf">人狼襲撃耐性能力者</a>
+<a href="ability.php#position">位置能力者</a>・<a href="ability.php#resist_wolf">人狼襲撃耐性能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2218,7 +2405,7 @@ A[河童] → B[村人][小心者]
 </pre>
 <ol>
 <li>一度死亡した人の能力発動はキャンセルされる。</li>
-<li>「反魂」可能な対象は<a href="sub_role.php#lovers">恋人</a>以外全て。</li>
+<li>「反魂」可能な対象は<a href="ability.php#reverse_limit">反魂制限能力者</a>以外全て。</li>
 <li>自分が暗殺されても投票は有効 (暗殺系の処理は同時並行処理扱い)。</li>
 <li>「反魂」先が憑依されていた場合は、元の人が蘇生する (<a href="wolf.php#possessed_wolf_revive">憑狼</a>の処理と同じ)。</li>
 </ol>
@@ -2263,7 +2450,7 @@ Bの蘇生処理はキャンセル
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#soul_wizard">八卦見</a>・<a href="wolf.php#sharp_wolf">鋭狼</a>・<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#soul">役職鑑定能力者</a>
+<a href="#soul_wizard">八卦見</a>・<a href="wolf.php#sharp_wolf">鋭狼</a>・<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#soul">役職鑑定能力者</a>・<a href="ability.php#last_words_limit">遺言制限能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2294,6 +2481,7 @@ Bの蘇生処理はキャンセル
 <a href="#mind_scanner">さとり</a>
 <a href="#evoke_scanner">イタコ</a>
 <a href="#presage_scanner">件</a>
+<a href="#step_scanner">雷神</a>
 <a href="#clairvoyance_scanner">猩々</a>
 <a href="#whisper_scanner">囁騒霊</a>
 <a href="#howl_scanner">吠騒霊</a>
@@ -2320,7 +2508,7 @@ Bの蘇生処理はキャンセル
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#dummy_mania">夢語部</a>
+<a href="sub_role.php#deep_sleep">爆睡者</a>・<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2346,6 +2534,10 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 <h5>Ver. 1.4.0 β17～</h5>
 <pre>
 身代わり君を対象に選ぶことはできない。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#last_words_limit">遺言制限能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2373,6 +2565,61 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 能力を制限した<a href="#reporter">ブン屋</a>のさとりバージョンです。「くだん」と読みます。
 メッセージが届く相手が人外の可能性もあるので件であることを信用されても
 さらなる悲劇が起こる可能性があるのがポイントです。
+</pre>
+
+<h3 id="step_scanner">雷神 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α7～]</h3>
+<h4>[耐性] 罠：有効</h4>
+<h4>[足音能力] タイプ：直線型 / キャンセル投票：無し</h4>
+<pre>
+夜の投票先の周囲に会話能力者が居た場合は一定確率で足音が鳴る特殊なさとり。
+足音システムの基本は<a href="#step_mage">審神者</a>参照。
+</pre>
+<h4>足音能力</h4>
+<ol>
+<li>投票できるのは 2 日目以降。</li>
+<li>投票先のいずれかに<a href="wolf.php#trap_mad">罠師</a>の罠が設置されていたら死亡する。</a></li>
+<li><a href="../spec.php#vote_night">判定時</a>に死亡していた場合は無効。</li>
+</ol>
+<h4>足音発動条件</h4>
+<ol>
+<li>判定の対象者は投票先の上下左右 (投票先を除く)。</li>
+<li>対象者が判定時に死亡していた場合は判定の対象外。</li>
+<li>対象者のいずれかに以下の会話能力者が存在していた場合に足音が鳴る。
+<ol>
+  <li><a href="#common_group">共有者系</a> (<a href="#dummy_common">夢共有者</a>を除く)</li>
+  <li>判定時に<a href="wolf.php#talk">会話可能<a>な<a href="wolf.php#wolf_group">人狼系</a></li>
+  <li>判定時に<a href="fox.php#talk">会話可能<a>な<a href="fox.php#fox_group">妖狐系</a></li>
+  <li><a href="sub_role.php#mind_friend">共鳴者<a></li>
+</ol>
+</li>
+<li>実施発動率は、対象人数 × 10 % (最大 80 %)。</li>
+<li>実施発動確率判定をクリアした時のみ有効。</li>
+</ol>
+<h4>判定例</h4>
+<pre>
+ 1(死)  2(生)  3(生)  4(死)  5(生)
+ 6(死)  7(死)  8(生)  9(生) 10(生)
+11(生) 12(生) 13(生) 14(生) 15(生)
+16(死) 17(生)
+
+例1) 12 に投票
+→ 11, 13, 17 が対象 (30 %)
+
+例2) 7, 8, 9 に投票
+→ 2, 3, 10, 12, 13, 14 が対象 (60 %)
+
+例3) 10, 15 に投票
+→ 5, 9, 14 が対象 (30 %)
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#step">足音能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="wolf.php#step_mad">家鳴</a>・<a href="fox.php#step_fox">響狐</a>の騙り先としてデザインしました。
+東方 Project の堀川雷鼓が名前のモチーフです。
+限定的ですが、<a href="sub_role.php#mind_friend">共鳴者</a>の位置から恋人を割り出せる可能性があります。
 </pre>
 
 <h3 id="clairvoyance_scanner">猩々 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β22～]</h3>
@@ -2407,7 +2654,7 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="lovers.php#minstrel_cupid">吟遊詩人</a>
+<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2423,7 +2670,7 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#leader_common">指導者</a>
+<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2438,7 +2685,7 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#leader_common">指導者</a>
+<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2602,7 +2849,7 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#critical_luck">痛恨能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2709,13 +2956,18 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 </pre>
 <ol>
 <li><a href="../spec.php#vote_day">判定</a>は処刑対象が決定された後。</li>
-<li><a href="sub_role.php#lovers">恋人</a>は恋人陣営と判定する。</li>
+<li><a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>は恋人陣営と判定する。</li>
 <li>自分が処刑されたら<a href="sub_role.php#critical_voter">会心</a>付加は無効。</li>
 <li><a href="sub_role.php#frostbite">凍傷</a>付加判定は個々で行う (例：5人投票してきたら5回、個々で判定)。</li>
+<li><a href="ability.php#special_resist">特殊耐性能力者</a>は能力の対象外。</li>
 </ol>
+<h5>Ver. 2.3.0 α3～</h5>
+<pre>
+<a href="ability.php#special_resist">特殊耐性能力者</a>は能力の対象外。
+</pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#vote_reaction">処刑得票能力者</a>・<a href="ability.php#frostbite">凍傷能力者</a>・<a href="ability.php#authority">投票数変化能力者</a>
+<a href="ability.php#vote_kill_counter">処刑カウンター能力者</a>・<a href="ability.php#vote_reaction">処刑得票能力者</a>・<a href="ability.php#camp">陣営判定能力者</a>・<a href="ability.php#frostbite">凍傷能力者</a>・<a href="ability.php#authority">投票数変化能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2733,13 +2985,19 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 </pre>
 <ol>
 <li><a href="../spec.php#vote_day">判定</a>は処刑対象が決定された後。</li>
-<li><a href="sub_role.php#lovers">恋人</a>は恋人陣営と判定する。</li>
+<li><a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>は恋人陣営と判定する。</li>
 <li>自分が処刑対象になった場合でも<a href="sub_role.php#critical_luck">痛恨</a>付加は有効。</li>
 <li><a href="sub_role.php#frostbite">凍傷</a>付加判定は<a href="sub_role.php#critical_luck">痛恨</a>付加判定とは別に行う。</li>
+<li><a href="ability.php#special_resist">特殊耐性能力者</a>は能力の対象外。</li>
 </ol>
+<h5>Ver. 2.3.0 α3～</h5>
+<pre>
+<a href="ability.php#special_resist">特殊耐性能力者</a>は能力の対象外。
+</pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_reaction">処刑得票能力者</a>・<a href="ability.php#frostbite">凍傷能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>
+<a href="ability.php#vote_kill_counter">処刑カウンター能力者</a>・<a href="ability.php#vote_reaction">処刑得票能力者</a>・<a href="ability.php#camp">陣営判定能力者</a>・<a href="ability.php#critical_luck">痛恨能力者</a>・<a href="ability.php#frostbite">凍傷能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2785,7 +3043,7 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="chiroptera.php#light_fairy">光妖精</a>・<a href="chiroptera.php#dark_fairy">闇妖精</a>・<a href="ability.php#vote_kill_counter">処刑カウンター能力者</a>・<a href="ability.php#wolf_kill_counter">人狼襲撃カウンター能力者</a>
+<a href="ability.php#mind_open">公開能力者</a>・<a href="ability.php#vote_kill_counter">処刑カウンター能力者</a>・<a href="ability.php#wolf_kill_counter">人狼襲撃カウンター能力者</a>・<a href="ability.php#blinder">目隠し能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -3333,9 +3591,12 @@ Pixiv 人狼のプレイヤーさんの誕生日プレゼントです。
 <h4>[耐性] 人狼襲撃：特殊 / 罠：有効 / 暗殺：無効 / 遺言：不可</h4>
 <pre>
 逃亡先が<a href="sub_role.php#death_warrant">死の宣告</a>を受けていた場合は死亡する、特殊な逃亡者。
-宣告日がすでに過ぎている場合でも死亡する。
 逃亡先に<a href="sub_role.php#death_warrant">死の宣告</a>を行う (発動日は投票した夜から数えて 4 日後の昼)。
 </pre>
+<ol>
+<li>宣告日がすでに過ぎている場合でも死亡する。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>には<a href="sub_role.php#death_warrant">死の宣告</a>無効 (逃亡は可能)。</li>
+</ol>
 <h4>関連役職</h4>
 <pre>
 <a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#doom">死の宣告能力者</a>
@@ -3350,11 +3611,11 @@ Pixiv 人狼のプレイヤーさんの誕生日プレゼントです。
 <h4>[耐性] 人狼襲撃：特殊 / 罠：有効 / 暗殺：無効 / 遺言：不可</h4>
 <pre>
 逃亡先が<a href="wolf.php#wolf_group">人狼系</a>・<a href="#assassin_group">暗殺者系</a>・<a href="ogre.php">鬼陣営</a>だった場合は死亡する、特殊な逃亡者。
-逃亡先が村人陣営 (<a href="sub_role.php#lovers">恋人</a>も含む) なら、翌日発動の<a href="sub_role.php#day_voter">一日村長</a>を付加する。
+逃亡先が村人陣営 (<a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>も含む) なら、翌日発動の<a href="sub_role.php#day_voter">一日村長</a>を付加する。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ogre.php#cow_ogre">牛頭鬼</a>・<a href="mania.php#soul_mania">覚醒者</a>
+<a href="ogre.php#cow_ogre">牛頭鬼</a>・<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

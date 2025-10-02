@@ -9,5 +9,7 @@ class Role_voodoo_fox extends Role_fox {
   public $action = 'VOODOO_FOX_DO';
   public $submit = 'voodoo_do';
 
-  function OutputAction() { RoleHTML::OutputVote('wolf-eat', $this->submit, $this->action); }
+  public function OutputAction() {
+    RoleHTML::OutputVote('wolf-eat', $this->submit, $this->action);
+  }
 }

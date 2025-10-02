@@ -4,7 +4,7 @@
   ○仕様
   ・処刑者決定：除外 (自分の投票先)
 */
-RoleManager::LoadFile('decide');
-class Role_plague extends Role_decide {
-  function DecideVoteKill() { $this->DecideVoteKillEscape(); }
+RoleManager::LoadFile('good_luck');
+class Role_plague extends Role_good_luck {
+  public $vote_day_type = 'target';
 }

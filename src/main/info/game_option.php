@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('cast_config', 'role_data_class', 'room_option_class', 'info_functions');
 InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 ?>
@@ -60,14 +59,19 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 <li>対象となるのは以下です
   <ul>
     <li><a href="new_role/human.php#voodoo_killer">陰陽師</a>の解呪成功</li>
+    <li><a href="new_role/ability.php#guard">護衛能力者</a>・<a href="new_role/human.php#dummy_guard">夢守人</a>の護衛成功</li>
     <li><a href="new_role/human.php#guard_hunt">狩り</a>成功</li>
+    <li><a href="new_role/human.php#wanderer_guard">一寸法師</a>の<a href="new_role/sub_role.php#penetration">護衛貫通</a>付加</li>
     <li><a href="new_role/human.php#anti_voodoo">厄神</a>の厄払い成功</li>
     <li><a href="new_role/wolf.php#sharp_wolf">鋭狼</a>の襲撃回避</li>
     <li><a href="new_role/fox.php">妖狐</a>への人狼襲撃</li>
-    <li><a href="new_role/ability.php#guard">護衛能力者</a>の護衛成功</li>
     <li><a href="new_role/ability.php#revive_other">蘇生能力者</a>の蘇生結果</li>
   </ul>
 </li>
+</ul>
+<h4>Ver. 2.2.0 α4～</h4>
+<ul>
+<li><a href="new_role/human.php#dummy_guard">夢守人</a>の護衛成功を対象に追加</li>
 </ul>
 
 <h3 id="open_day"><?php OptionManager::OutputCaption('open_day'); ?> [Ver. 1.4.0 β12～]</h3>
@@ -163,74 +167,81 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 'tongue_wolf', 'possessed_wolf', 'sirius_wolf')); ?>
 </p>
 <p>
-<?php InfoHTML::OutputCategory(array('fox', 'child_fox', 'cupid', 'medium', 'mania',
-'decide', 'authority')); ?>
+<?php InfoHTML::OutputCategory(array('mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'cupid',
+'medium', 'mania')); ?>
+</p>
+<p>
+<?php InfoHTML::OutputCategory(array('decide', 'authority')); ?>
 </p>
 
 <h3 id="poison"><?php OptionManager::OutputCaption('poison'); ?></h3>
 <ul>
 <li><?php Info::OutputAddRole('poison'); ?></li>
-<li><?php OptionManager::OutputExplain('poison'); ?></li>
 </ul>
 
 <h3 id="assassin"><?php OptionManager::OutputCaption('assassin'); ?> [Ver. 1.4.0 β4～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('assassin'); ?></li>
-<li><?php OptionManager::OutputExplain('assassin'); ?></li>
 </ul>
 
 <h3 id="wolf"><?php OptionManager::OutputCaption('wolf'); ?> [Ver. 1.5.0 β14～]</h3>
 <ul>
-<li><?php Info::OutputAddRole('wolf', true); ?></li>
-<li><?php OptionManager::OutputExplain('wolf'); ?></li>
+<li><?php Info::OutputAddRole('wolf'); ?></li>
 </ul>
 
 <h3 id="boss_wolf"><?php OptionManager::OutputCaption('boss_wolf'); ?> [Ver. 1.4.0 α3-7～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('boss_wolf'); ?></li>
-<li><?php OptionManager::OutputExplain('boss_wolf'); ?></li>
 </ul>
 
 <h3 id="poison_wolf"><?php OptionManager::OutputCaption('poison_wolf'); ?> [Ver. 1.4.0 α14～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('poison_wolf'); ?></li>
-<li><?php OptionManager::OutputExplain('poison_wolf'); ?></li>
 </ul>
 
 <h3 id="tongue_wolf"><?php OptionManager::OutputCaption('tongue_wolf'); ?> [Ver. 2.1.0 β3～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('tongue_wolf'); ?></li>
-<li><?php OptionManager::OutputExplain('tongue_wolf'); ?></li>
 </ul>
 
 <h3 id="possessed_wolf"><?php OptionManager::OutputCaption('possessed_wolf'); ?> [Ver. 1.4.0 β4～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('possessed_wolf'); ?></li>
-<li><?php OptionManager::OutputExplain('possessed_wolf'); ?></li>
 </ul>
 
 <h3 id="sirius_wolf"><?php OptionManager::OutputCaption('sirius_wolf'); ?> [Ver. 1.4.0 β9～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('sirius_wolf'); ?></li>
-<li><?php OptionManager::OutputExplain('sirius_wolf'); ?></li>
+</ul>
+
+<h3 id="mad"><?php OptionManager::OutputCaption('mad'); ?> [Ver. 2.3.0 β1～]</h3>
+<ul>
+<li><?php Info::OutputAddRole('mad'); ?></li>
 </ul>
 
 <h3 id="fox"><?php OptionManager::OutputCaption('fox'); ?> [Ver. 1.5.0 β12～]</h3>
 <ul>
-<li><?php Info::OutputAddRole('fox', true); ?></li>
-<li><?php OptionManager::OutputExplain('fox'); ?></li>
+<li><?php Info::OutputAddRole('fox'); ?></li>
+</ul>
+
+<h3 id="no_fox"><?php OptionManager::OutputCaption('no_fox'); ?> [Ver. 2.3.0 β1～]</h3>
+<ul>
+<li><?php Info::OutputAddRole('no_fox'); ?></li>
 </ul>
 
 <h3 id="child_fox"><?php OptionManager::OutputCaption('child_fox'); ?> [Ver. 1.5.0 β12～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('child_fox'); ?></li>
-<li><?php OptionManager::OutputExplain('child_fox'); ?></li>
+</ul>
+
+<h3 id="depraver"><?php OptionManager::OutputCaption('depraver'); ?> [Ver. 2.3.0 β1～]</h3>
+<ul>
+<li><?php Info::OutputAddRole('depraver'); ?></li>
 </ul>
 
 <h3 id="cupid"><?php OptionManager::OutputCaption('cupid'); ?> [Ver. 1.2.0～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('cupid'); ?></li>
-<li><?php OptionManager::OutputExplain('cupid'); ?></li>
 </ul>
 <h4>Ver. 1.4.0 β17～</h4>
 <ul>
@@ -240,26 +251,22 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 <h3 id="medium"><?php OptionManager::OutputCaption('medium'); ?> [Ver. 1.4.0 α14～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('medium'); ?></li>
-<li><?php OptionManager::OutputExplain('medium'); ?></li>
 </ul>
 
 <h3 id="mania"><?php OptionManager::OutputCaption('mania'); ?> [Ver. 1.4.0 α14～]</h3>
 <ul>
 <li><?php Info::OutputAddRole('mania') ?></li>
-<li><?php OptionManager::OutputExplain('mania'); ?></li>
 </ul>
 
 <h3 id="decide"><?php OptionManager::OutputCaption('decide'); ?></h3>
 <ul>
 <li><?php Info::OutputAddRole('decide') ?></li>
-<li><?php OptionManager::OutputExplain('decide'); ?></li>
 <li>自分が決定者であることはわかりません</li>
 </ul>
 
 <h3 id="authority"><?php OptionManager::OutputCaption('authority'); ?></h3>
 <ul>
 <li><?php Info::OutputAddRole('authority') ?></li>
-<li><?php OptionManager::OutputExplain('authority'); ?></li>
 <li>自分が権力者であることはわかります</li>
 </ul>
 
@@ -274,14 +281,14 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 </p>
 <p>
 <?php InfoHTML::OutputCategory(array('replace_human', 'full_mad', 'full_cupid', 'full_quiz',
-'full_vampire', 'full_chiroptera', 'full_mania', 'full_unknown_mania')); ?>
+'full_vampire', 'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania')); ?>
 <p>
 <?php InfoHTML::OutputCategory(array('change_common', 'change_hermit_common', 'change_mad',
 'change_fanatic_mad','change_whisper_mad','change_immolate_mad')); ?>
 </p>
 <p>
 <?php InfoHTML::OutputCategory(array('change_cupid', 'change_mind_cupid','change_triangle_cupid',
-'change_angel')); ?>
+'change_angel', 'change_exchange_angel')); ?>
 </p>
 
 <h3 id="detective"><?php OptionManager::OutputCaption('detective'); ?> [Ver. 1.4.0 β10～]</h3>
@@ -427,6 +434,11 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 <li>村人が全員<a href="new_role/chiroptera.php#chiroptera">蝙蝠</a>になります</li>
 </ul>
 
+<h4 id="full_patron"><?php OptionManager::OutputCaption('full_patron'); ?> [Ver. 2.3.0 β2～]</h4>
+<ul>
+<li>村人が全員<a href="new_role/duelist.php#patron">後援者</a>になります</li>
+</ul>
+
 <h4 id="full_mania"><?php OptionManager::OutputCaption('full_mania'); ?> [Ver. 1.4.0 α17～]</h4>
 <ul>
 <li>村人が全員<a href="new_role/mania.php#mania">神話マニア</a>になります</li>
@@ -476,6 +488,10 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 <li>「<?php OptionManager::OutputCaption('change_cupid'); ?>」<?php Info::OutputReplaceRole('change_cupid'); ?></li>
 <li><a href="#full_cupid"><?php OptionManager::OutputCaption('full_cupid'); ?></a>の処理が先に適用されます</li>
 </ul>
+<h5>Ver. 2.3.0 α2～</h5>
+<pre>
+初期値変更：<a href="new_role/lovers.php#exchange_angel">魂移使</a>→<a href="new_role/lovers.php#altair_cupid">彦星</a>
+</pre>
 
 <h4 id="change_mind_cupid"><?php OptionManager::OutputCaption('change_mind_cupid'); ?> [Ver. 1.5.0 β17～]</h4>
 <ul>
@@ -490,6 +506,11 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 <h4 id="change_angel"><?php OptionManager::OutputCaption('change_angel'); ?> [Ver. 1.5.0 β17～]</h4>
 <ul>
 <li>キューピッドが全員<a href="new_role/lovers.php#angel">天使</a>になります</li>
+</ul>
+
+<h4 id="change_exchange_angel"><?php OptionManager::OutputCaption('change_exchange_angel'); ?> [Ver. 2.3.0 α2～]</h4>
+<ul>
+<li>キューピッドが全員<a href="new_role/lovers.php#exchange_angel">魂移使</a>になります</li>
 </ul>
 
 <h2 id="special_role_option">特殊配役設定</h2>

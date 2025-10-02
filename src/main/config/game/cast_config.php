@@ -87,19 +87,22 @@ class CastConfig {
 
   /* 役職出現人数 */
   //各役職の出現に必要な人数を設定する
-  static $poison         = 20; //埋毒者 [村人2 → 埋毒者1、人狼1]
-  static $assassin       = 22; //暗殺者 [村人2 → 暗殺者1、人狼1]
-  static $wolf           = 20; //人狼追加 [村人1 → 人狼1]
-  static $boss_wolf      = 18; //白狼 [人狼1 → 白狼]
-  static $poison_wolf    = 20; //毒狼 (+ 薬師) [人狼1 → 毒狼1、村人1 → 薬師1]
-  static $tongue_wolf    =  8; //舌禍狼 [人狼1 → 舌禍狼1]
-  static $possessed_wolf =  8; //憑狼 [人狼1 → 憑狼1]
-  static $sirius_wolf    =  8; //天狼 [人狼1 → 天狼1]
-  static $fox            =  8; //妖狐追加 [村人1 → 妖狐1]
-  static $child_fox      =  8; //子狐 [妖狐1 → 子狐1]
-  static $cupid          = 16; //キューピッド [村人1 → キューピッド1]
-  static $medium         = 20; //巫女 (+ 女神) [村人2 → 巫女1、女神1]
-  static $mania          = 16; //神話マニア [村人1 → 神話マニア1]
+  static $poison         = 20; //埋毒者		[村人2 → 埋毒者1、人狼1]
+  static $assassin       = 22; //暗殺者		[村人2 → 暗殺者1、人狼1]
+  static $wolf           = 20; //人狼追加	[村人1 → 人狼1]
+  static $boss_wolf      = 18; //白狼		[人狼1 → 白狼1]
+  static $poison_wolf    = 20; //毒狼 (+ 薬師)	[人狼1 → 毒狼1、村人1 → 薬師1]
+  static $tongue_wolf    =  8; //舌禍狼		[人狼1 → 舌禍狼1]
+  static $possessed_wolf =  8; //憑狼		[人狼1 → 憑狼1]
+  static $sirius_wolf    =  8; //天狼		[人狼1 → 天狼1]
+  static $mad            = 10; //狂人追加	[村人1 → 狂人1]
+  static $fox            =  8; //妖狐追加	[村人1 → 妖狐1]
+  static $no_fox         = 15; //妖狐なし	[妖狐1 → 村人1]
+  static $child_fox      =  8; //子狐		[妖狐1 → 子狐1]
+  static $depraver       =  8; //背徳者		[村人1 → 背徳者1]
+  static $cupid          = 16; //キューピッド	[村人1 → キューピッド1]
+  static $medium         = 20; //巫女 (+ 女神)	[村人2 → 巫女1、女神1]
+  static $mania          = 16; //神話マニア	[村人1 → 神話マニア1]
   static $decide         = 16; //決定者 [兼任]
   static $authority      = 16; //権力者 [兼任]
 
@@ -112,7 +115,7 @@ class CastConfig {
     'replace_human' => 'escaper',
     'change_common' => 'leader_common',
     'change_mad'    => 'jammer_mad',
-    'change_cupid'  => 'exchange_angel');
+    'change_cupid'  => 'altair_cupid');
 
   /* 関数 */
   //決闘村の配役初期化処理

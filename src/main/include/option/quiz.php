@@ -7,11 +7,15 @@
 class Option_quiz extends CheckRoomOptionItem {
   public $group = RoomOption::GAME_OPTION;
 
-  function GetCaption() { return 'クイズ村'; }
+  public function GetCaption() {
+    return 'クイズ村';
+  }
 
-  function GetExplain() { return 'GM が出題者になり、プレイヤー全員に回答者がつきます。'; }
+  public function GetExplain() {
+    return 'GM が出題者になり、プレイヤー全員に回答者がつきます。';
+  }
 
-  function Cast(array &$list, &$rand) {
+  public function Cast(array &$list, &$rand) {
     $role  = 'panelist';
     $stack = RoleManager::GetStack('uname_list');
     foreach (array_keys($list) as $id) {

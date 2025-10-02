@@ -5,7 +5,7 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_sirius_wolf extends Role_wolf {
-  protected function OutputResult() {
+  protected function OutputAddResult() {
     switch (strval(count(DB::$USER->GetLivingWolves()))) { //覚醒状態
     case '2':
       RoleHTML::OutputAbilityResult('ability_sirius_wolf', null);

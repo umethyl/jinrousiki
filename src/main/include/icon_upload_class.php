@@ -1,22 +1,20 @@
 <?php
 //-- アイコンアップロード処理クラス --//
 class IconUpload {
-  const TITLE = 'アイコン登録エラー';
-  const URL   = "<br>\n<a href=\"icon_upload.php\">戻る</a>";
+  const URL = 'icon_upload.php';
 
   //実行処理
   static function Execute() {
     if (UserIconConfig::DISABLE) {
-      HTML::OutputResult('ユーザアイコンアップロード', '現在アップロードは停止しています');
+      HTML::OutputResult(IconUploadMessage::TITLE, IconUploadMessage::DISABLE);
     }
-    Loader::LoadRequest('RequestIconUpload');
     isset(RQ::Get()->command) ? self::Upload() : self::Output();
   }
 
-  //投稿処理
+  //登録処理
   private static function Upload() {
-    if (Security::CheckReferer('icon_upload.php')) { //リファラチェック
-      HTML::OutputResult('ユーザアイコンアップロード', '無効なアクセスです');
+    if (Security::CheckReferer(self::URL)) { //リファラチェック
+      HTML::OutputResult(IconUploadMessage::TITLE, IconUploadMessage::REFERER);
     }
 
     switch (RQ::Get()->command) {
@@ -24,70 +22,37 @@ class IconUpload {
       break;
 
     case 'success': //セッション ID 情報を DB から削除
-      $url = 'icon_view.php';
-      $str = '登録完了：アイコン一覧のページに飛びます。' . Text::BRLF .
-	'切り替わらないなら <a href="%s">ここ</a> 。';
-      DB::Connect();
-      if (! IconDB::ClearSession(RQ::Get()->icon_no)) {
-	$str .= Text::BRLF . 'セッションの削除に失敗しました。';
-      }
-      HTML::OutputResult('アイコン登録完了', sprintf($str, $url), $url);
+      self::UploadSuccess();
       break;
 
     case 'cancel': //アイコン削除
-      //負荷エラー用
-      $str = 'サーバが混雑しているため、削除に失敗しました。' . Text::BRLF .
-	'管理者に問い合わせてください。';
-
-      //トランザクション開始
-      DB::Connect();
-      if (! DB::Lock('icon')) HTML::OutputResult(self::TITLE, $str . self::URL);
-
-      //アイコンのファイル名と登録時のセッション ID を取得
-      $stack = IconDB::GetSession(RQ::Get()->icon_no);
-      if (count($stack) < 1) HTML::OutputResult(self::TITLE, $str . self::URL);
-      extract($stack);
-
-      if ($session_id != Session::GetID()) { //セッション ID 確認
-	$str = '削除失敗：アップロードセッションが一致しません';
-	HTML::OutputResult('アイコン削除失敗', $str . self::URL);
-      }
-
-      if (! IconDB::Delete(RQ::Get()->icon_no, $icon_filename)) { //削除処理
-	HTML::OutputResult(self::TITLE, $str . self::URL);
-      }
-      DB::Disconnect();
-
-      $url = 'icon_upload.php';
-      $str = '削除完了：登録ページに飛びます。' . Text::BRLF .
-	'切り替わらないなら <a href="%s">ここ</a> 。';
-      HTML::OutputResult('アイコン削除完了', sprintf($str, $url), $url);
+      self::UploadCancel();
       break;
 
     default:
-      HTML::OutputResult(self::TITLE, '無効なコマンドです' . self::URL);
+      self::OutputResult(IconUploadMessage::COMMAND);
       break;
     }
 
     //アップロードされたファイルのエラーチェック
     if (@$_FILES['upfile']['error'][$i] != 0) {
-      $str = 'ファイルのアップロードエラーが発生しました。' . Text::BRLF .
-	'再度実行してください。';
-      HTML::OutputResult(self::TITLE, $str . self::URL);
+      self::OutputResult(IconUploadMessage::FILE_UPLOAD . Text::BRLF . IconUploadMessage::RETRY);
     }
     extract(RQ::ToArray()); //引数を展開
+    $back_url = self::GetURL();
 
-    //空白チェック
-    if ($icon_name == '') {
-      HTML::OutputResult(self::TITLE, 'アイコン名を入力してください' . self::URL);
+    if ($icon_name == '') { //空白チェック
+      self::OutputResult(IconUploadMessage::NAME);
     }
-    UserIcon::CheckText(self::TITLE, self::URL); //アイコン名の文字列長のチェック
-    $color = UserIcon::CheckColor($color, self::TITLE, self::URL); //色指定のチェック
+    UserIcon::CheckText(IconUploadMessage::TITLE, $back_url); //アイコン名の文字列長のチェック
+    $color = UserIcon::CheckColor($color, IconUploadMessage::TITLE, $back_url); //色指定のチェック
 
     //ファイルサイズのチェック
-    if ($size == 0) HTML::OutputResult(self::TITLE, 'ファイルが空です' . self::URL);
+    if ($size == 0) {
+      self::OutputResult(IconUploadMessage::FILE_EMPTY);
+    }
     if ($size > UserIconConfig::FILE) {
-      HTML::OutputResult(self::TITLE, 'ファイルサイズは ' . UserIcon::GetFileLimit() . self::URL);
+      self::OutputResult(IconUploadMessage::FILE_SIZE. UserIcon::GetFileLimit());
     }
 
     //ファイルの種類のチェック
@@ -107,43 +72,38 @@ class IconUpload {
       break;
 
     default:
-      $str = $type . ' : jpg、gif、png 以外のファイルは登録できません';
-      HTML::OutputResult(self::TITLE, $str . self::URL);
+      self::OutputResult($type . IconUploadMessage::FILE_FORMAT);
       break;
     }
 
     //アイコンの高さと幅をチェック
     list($width, $height) = getimagesize($tmp_name);
     if ($width > UserIconConfig::WIDTH || $height > UserIconConfig::HEIGHT) {
-      $format = 'アイコンは %s しか登録できません。<br>'."\n" .
-	'送信されたファイル → <span class="color">幅 %d、高さ %d</span>';
-      $str = sprintf($format, UserIcon::GetSizeLimit(), $width, $height);
-      HTML::OutputResult(self::TITLE, $str . self::URL);
+      $str = sprintf(IconUploadMessage::SIZE_LIMIT, UserIcon::GetSizeLimit()) . Text::BRLF .
+	sprintf(IconUploadMessage::UPLOAD_SIZE, $width, $height);
+      self::OutputResult($str);
     }
 
-    //負荷エラー用
-    $str = "サーバが混雑しています。<br>\n時間を置いてから再登録をお願いします。" . self::URL;
-
     DB::Connect();
-    if (! DB::Lock('icon')) HTML::OutputResult(self::TITLE, $str); //トランザクション開始
+    if (! DB::Lock('icon')) { //トランザクション開始
+      self::OutputResult(Message::DB_ERROR_LOAD);
+    }
 
-    //登録数上限チェック
-    if (IconDB::IsOver()) HTML::OutputResult(self::TITLE, 'これ以上登録できません');
+    if (IconDB::IsOver()) { //登録数上限チェック
+      HTML::OutputResult(IconUploadMessage::TITLE, IconUploadMessage::OVER);
+    }
 
-    //アイコン名チェック
-    if (IconDB::ExistsName($icon_name)) {
-      $str = sprintf('アイコン名 "%s" は既に登録されています', $icon_name);
-      HTML::OutputResult(self::TITLE, $str . self::URL);
+    if (IconDB::ExistsName($icon_name)) { //アイコン名チェック
+      self::OutputResult(sprintf(IconUploadMessage::DUPLICATE, $icon_name));
     }
 
     $icon_no = IconDB::GetNumber(); //次のアイコン番号取得
-    if ($icon_no === false) HTML::OutputResult(self::TITLE, $str); //負荷エラー対策
+    if ($icon_no === false) self::OutputResult(Message::DB_ERROR_LOAD); //負荷エラー対策
 
     //ファイルをテンポラリからコピー
     $file_name = sprintf('%03s.%s', $icon_no, $ext); //ファイル名の桁を揃える
     if (! move_uploaded_file($tmp_name, Icon::GetFile($file_name))) {
-      $str = "ファイルのコピーに失敗しました。<br>\n再度実行してください。";
-      HTML::OutputResult(self::TITLE, $str . self::URL);
+      self::OutputResult(IconUploadMessage::FILE_COPY . Text::BRLF . IconUploadMessage::RETRY);
     }
 
     //データベースに登録
@@ -175,97 +135,180 @@ class IconUpload {
       DB::Disconnect();
     }
     else {
-      HTML::OutputResult(self::TITLE, $str);
+      self::OutputResult(Message::DB_ERROR_LOAD);
     }
 
     //確認ページを出力
-    HTML::OutputHeader('ユーザアイコンアップロード処理[確認]', 'icon_upload_check', true);
-    $path = Icon::GetFile($file_name);
-    echo <<<EOF
-<p>ファイルをアップロードしました。<br>今だけやりなおしできます</p>
-<p>[S] 出典 / [C] カテゴリ / [A] アイコンの作者</p>
+    $format = <<<EOF
+<p>%s</p>
+<p>[S] %s / [C] %s / [A] %s</p>
 <table><tr>
-<td><img src="{$path}" width="{$width}" height="{$height}"></td>
-<td class="name">No. {$icon_no} {$icon_name}<br><font color="{$color}">◆</font>{$color}{$data}</td>
+<td><img src="%s" width="%d" height="%d"></td>
+<td class="name">No. %d %s<br><font color="%s">%s</font>%s%s</td>
 </tr>
-<tr><td colspan="2">よろしいですか？</td></tr>
+<tr><td colspan="2">%s</td></tr>
 <tr><td><form method="post" action="icon_upload.php">
   <input type="hidden" name="command" value="cancel">
   <input type="hidden" name="icon_no" value="$icon_no">
-  <input type="submit" value="やりなおし">
+  <input type="submit" value="%s">
 </form></td>
 <td><form method="post" action="icon_upload.php">
   <input type="hidden" name="command" value="success">
   <input type="hidden" name="icon_no" value="{$icon_no}">
-  <input type="submit" value="登録完了">
+  <input type="submit" value="%s">
 </form></td></tr></table>
-
 EOF;
+
+    $title = IconUploadMessage::TITLE . IconUploadMessage::CHECK;
+    HTML::OutputHeader($title, 'icon_upload_check', true);
+    printf($format . Text::LF, IconUploadMessage::MESSAGE,
+	   IconMessage::APPEARANCE, IconMessage::CATEGORY, IconMessage::AUTHOR,
+	   Icon::GetFile($file_name), $width, $height,
+	   $icon_no, $icon_name, $color, Message::SYMBOL, $color, $data,
+	   IconUploadMessage::CONFIRM,
+	   IconUploadMessage::CHECK_NG, IconUploadMessage::CHECK_OK);
     HTML::OutputFooter();
+  }
+
+  //アイコン登録完了処理
+  private static function UploadSuccess() {
+    $url = 'icon_view.php';
+    $str = IconUploadMessage::SUCCESS . IconUploadMessage::JUMP_VIEW . Text::BRLF;
+
+    DB::Connect();
+    if (! IconDB::ClearSession(RQ::Get()->icon_no)) {
+      $str .= IconUploadMessage::SESSION_DELETE . Text::BRLF;
+    }
+    HTML::OutputResult(IconUploadMessage::SUCCESS, $str . sprintf(Message::JUMP, $url), $url);
+  }
+
+  //アイコン削除処理
+  private static function UploadCancel() {
+     DB::Connect();
+    if (! DB::Lock('icon')) { //トランザクション開始
+      self::OutputResult(IconUploadMessage::DB_ERROR);
+    }
+
+    //アイコンのファイル名と登録時のセッション ID を取得
+    $stack = IconDB::GetSession(RQ::Get()->icon_no);
+    if (count($stack) < 1) { //アイコン情報取得エラー
+      self::OutputResult(IconUploadMessage::DB_ERROR);
+    }
+    extract($stack);
+
+    if ($session_id != Session::GetID()) { //セッション ID 確認
+      self::OutputResult(IconUploadMessage::SESSION);
+    }
+
+    if (! IconDB::Delete(RQ::Get()->icon_no, $icon_filename)) { //削除処理
+      self::OutputResult(IconUploadMessage::DB_ERROR);
+    }
+    DB::Disconnect();
+
+    $url = 'icon_upload.php';
+    $str = IconUploadMessage::DELETE . IconUploadMessage::JUMP_UPLOAD . Text::BRLF;
+    HTML::OutputResult(IconUploadMessage::DELETE, $str . sprintf(Message::JUMP, $url), $url);
   }
 
   //アップロードフォーム出力
   private static function Output() {
-    HTML::OutputHeader('ユーザアイコンアップロード', 'icon_upload', true);
-    $file      = UserIcon::GetFileLimit();
-    $length    = UserIcon::GetMaxLength(true);
-    $size      = UserIcon::GetSizeLimit();
-    $caution   = UserIcon::GetCaution();
-    $file_size = UserIconConfig::FILE;
-    echo <<<EOF
-<div class="link"><a href="./">←TOP</a></div>
-<img class="title" src="img/icon_upload_title.jpg" title="アイコン登録" alt="アイコン登録">
+    HTML::OutputHeader(IconUploadMessage::TITLE, 'icon_upload', true);
+    self::OutputHeader();
+    self::OutputForm();
+    self::OutputColor();
+    self::OutputFooter();
+    HTML::OutputFooter();
+  }
+
+  //ヘッダー出力
+  private static function OutputHeader() {
+    $format = <<<EOF
+<div class="link"><a href="./">%s</a></div>
+<img class="title" src="img/title/icon_upload.jpg" title="%s" alt="%s">
+EOF;
+    printf($format . Text::LF, IconMessage::TOP, IconMessage::UPLOAD, IconMessage::UPLOAD);
+  }
+
+  //フォーム出力
+  private static function OutputForm() {
+    $format = <<<EOF
 <table align="center">
-<tr><td class="link"><a href="icon_view.php">→アイコン一覧</a></td></tr>
-<tr><td class="caution">＊あらかじめ指定する大きさ ({$size}) にリサイズしてからアップロードしてください。{$caution}</td></tr>
+<tr><td class="link"><a href="icon_view.php">%s</a></td></tr>
+<tr><td class="caution">%s%s</td></tr>
 <tr><td>
-<fieldset><legend>アイコン指定 (jpg / gif / png 形式で登録して下さい。{$file})</legend>
+<fieldset><legend>%s</legend>
 <form method="post" action="icon_upload.php" enctype="multipart/form-data">
 <table>
-<tr><td><label>ファイル選択</label></td>
+<tr><td><label>%s</label></td>
 <td>
 <input type="file" name="file" size="80">
-<input type="hidden" name="max_file_size" value="{$file_size}">
+<input type="hidden" name="max_file_size" value="%s">
 <input type="hidden" name="command" value="upload">
-<input type="submit" value="登録">
+<input type="submit" value="%s">
 </td></tr>
-<tr><td><label>アイコンの名前</label></td>
-<td><input type="text" name="icon_name" {$length}</td></tr>
-<tr><td><label>出典</label></td>
-<td><input type="text" name="appearance" {$length}</td></tr>
-<tr><td><label>カテゴリ</label></td>
-<td><input type="text" name="category" {$length}</td></tr>
-<tr><td><label>アイコンの作者</label></td>
-<td><input type="text" name="author" {$length}</td></tr>
-<tr><td><label>アイコン枠の色</label></td>
+<tr><td><label>%s</label></td>
+<td><input type="text" name="icon_name" %s</td></tr>
+<tr><td><label>%s</label></td>
+<td><input type="text" name="appearance" %s</td></tr>
+<tr><td><label>%s</label></td>
+<td><input type="text" name="category" %s</td></tr>
+<tr><td><label>%s</label></td>
+<td><input type="text" name="author" %s</td></tr>
+<tr><td><label>%s</label></td>
 <td>
-<input id="fix_color" type="radio" name="color"><label for="fix_color">手入力</label>
-<input type="text" name="color" size="10px" maxlength="7">(例：#6699CC)
+<input id="fix_color" type="radio" name="color"><label for="fix_color">%s</label>
+<input type="text" name="color" size="10px" maxlength="7">(%s)
 </td></tr>
 <tr><td colspan="2">
 <table class="color" align="center">
 <tr>
-
 EOF;
 
-    $count  = 0;
-    $format = '<td bgcolor="%s"><label for="%s">' .
-      '<input type="radio" id="%s" name="color" value="%s">%s</label></td>' . Text::LF;
+    $length = UserIcon::GetMaxLength(true);
+    printf($format, IconUploadMessage::LINK,
+	   sprintf(IconUploadMessage::CAUTION, UserIcon::GetSizeLimit()), UserIcon::GetCaution(),
+	   sprintf(IconUploadMessage::ICON_FORMAT, UserIcon::GetFileLimit()),
+	   IconUploadMessage::FILE_SELECT, UserIconConfig::FILE, IconUploadMessage::SUBMIT,
+	   IconMessage::NAME, $length,
+	   IconMessage::APPEARANCE, $length,
+	   IconMessage::CATEGORY, $length,
+	   IconMessage::AUTHOR, $length,
+	   IconMessage::COLOR, IconUploadMessage::FIX_COLOR, IconMessage::EXAMPLE);
+  }
+
+  //色情報出力
+  private static function OutputColor() {
+    $format = <<<EOF
+<td bgcolor="%s"><label for="%s">
+<input type="radio" id="%s" name="color" value="%s">%s</label></td>
+EOF;
+
     $color_base = array();
-    for ($i = 0; $i < 256; $i += 51) $color_base[] = sprintf('%02X', $i);
+    for ($i = 0; $i < 256; $i += 51) {
+      $color_base[] = sprintf('%02X', $i);
+    }
+
+    $count = 0;
     foreach ($color_base as $i => $r) {
       foreach ($color_base as $j => $g) {
 	foreach ($color_base as $k => $b) {
 	  if ($count > 0 && $count % 6 == 0) Text::Output(Text::TR); //6個ごとに改行
+
 	  $color = "#{$r}{$g}{$b}";
-	  $name  = ($i + $j + $k) < 8  && ($i + $j) < 5 ?
-	    sprintf('<font color="#FFFFFF">%s</font>', $color) : $color;
-	  printf($format, $color, $color, $color, $color, $name);
+	  if (($i + $j + $k) < 8 && ($i + $j) < 5) {
+	    $name = sprintf('<font color="#FFFFFF">%s</font>', $color);
+	  } else {
+	    $name = $color;
+	  }
+	  printf($format . Text::LF, $color, $color, $color, $color, $name);
 	  $count++;
 	}
       }
     }
+  }
 
+  //フッター出力
+  private static function OutputFooter() {
     echo <<<EOF
 </tr>
 </table>
@@ -273,6 +316,16 @@ EOF;
 </td></tr></table>
 
 EOF;
-    HTML::OutputFooter();
+  }
+
+  //バックリンク取得
+  private static function GetURL($return = false) {
+    $url = sprintf('<a href="%s">%s</a>', self::URL, Message::BACK);
+    return $return ? Text::BRLF . $url : $url;
+  }
+
+  //エラー処理
+  private static function OutputResult($str) {
+    HTML::OutputResult(IconUploadMessage::TITLE, $str . self::GetURL(true));
   }
 }

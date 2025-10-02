@@ -3,7 +3,7 @@
   ◆固定配役追加モード (topping)
 */
 class Option_topping extends SelectorRoomOptionItem {
-  function  __construct() {
+  public function  __construct() {
     parent::__construct();
     $this->form_list = GameOptionConfig::${$this->source};
     if (OptionManager::$change && DB::$ROOM->IsOption($this->name)) {
@@ -11,7 +11,7 @@ class Option_topping extends SelectorRoomOptionItem {
     }
   }
 
-  function LoadPost() {
+  public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
     if (is_null(RQ::Get()->{$this->name})) return false;
 
@@ -21,32 +21,39 @@ class Option_topping extends SelectorRoomOptionItem {
     RQ::Set($this->name, $flag);
   }
 
-  function GetCaption() { return '固定配役追加モード'; }
-
-  function GetExplain() { return '固定配役に追加する役職セットです'; }
-
-  function GenerateImage() {
-    $str = $this->GetRoomImageFooter();
-    return Image::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
+  public function GetCaption() {
+    return '固定配役追加モード';
   }
 
-  function GenerateRoomCaption() {
-    $format  = '<div>%s：<a href="info/%s">%s</a>：%s</div>' . Text::LF;
-    $image   = $this->GenerateImage();
-    $url     = sprintf('%s_%s', $this->GetURL(), $this->GetRoomType());
-    $caption = parent::GetRoomCaption() . $this->GetRoomImageFooter();
-    $explain = $this->GetExplain() . $this->GetRoomCaptionFooter();
-    return sprintf($format, $image, $url, $caption, $explain);
+  public function GetExplain() {
+    return '固定配役に追加する役職セットです';
   }
 
   protected function GetRoomCaption() {
     return parent::GetRoomCaption() . $this->GetRoomCaptionFooter();
   }
 
-  protected function GetURL() { return 'chaos.php#' . $this->name; }
+  protected function GetURL() {
+    return 'chaos.php#' . $this->name;
+  }
+
+  public function GenerateImage() {
+    $str = $this->GetRoomImageFooter();
+    return Image::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
+  }
+
+  public function GenerateRoomCaption() {
+    $image   = $this->GenerateImage();
+    $url     = sprintf('%s_%s', $this->GetURL(), $this->GetRoomType());
+    $caption = parent::GetRoomCaption() . $this->GetRoomImageFooter();
+    $explain = $this->GetExplain() . $this->GetRoomCaptionFooter();
+    return OptionHTML::GenerateRoomCaption($image, $url, $caption, $explain);
+  }
 
   //村用個別オプション取得
-  protected function GetRoomType() { return array_shift($this->GetStack()); }
+  protected function GetRoomType() {
+    return array_shift($this->GetStack());
+  }
 
   //村用キャプション追加メッセージ取得
   protected function GetRoomCaptionFooter() {

@@ -20,5 +20,7 @@ class Role_scarlet_angel extends Role_angel {
     RoleHTML::OutputPartner($stack, 'unconscious_list');
   }
 
-  protected function IsSympathy(User $a, User $b) { return true; }
+  protected function IsSympathy(User $a, User $b) {
+    return true;
+  }
 }

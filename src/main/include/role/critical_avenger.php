@@ -6,4 +6,5 @@
 RoleManager::LoadFile('avenger');
 class Role_critical_avenger extends Role_avenger {
   public $mix_in = 'critical_mad';
+  public $vote_day_type = 'init';
 }

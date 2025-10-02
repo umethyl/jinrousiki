@@ -6,16 +6,20 @@
 class Role_dream_eater_mad extends Role {
   public $action = 'DREAM_EAT';
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('wolf-eat', 'dream_eat', $this->action);
   }
 
-  function IsVote() { return DB::$ROOM->date > 1; }
+  public function IsVote() {
+    return DB::$ROOM->date > 1;
+  }
 
-  function GetIgnoreMessage() { return '初日は襲撃できません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+  }
 
   //夢食い処理
-  final function DreamEat(User $user) {
+  public function DreamEat(User $user) {
     $actor = $this->GetActor();
     if ($user->IsLiveRole('dummy_guard', true)) { //対象が夢守人なら返り討ちに合う
       DB::$USER->Kill($actor->id, 'HUNTED');
@@ -26,10 +30,11 @@ class Role_dream_eater_mad extends Role {
     }
 
     foreach (RoleManager::LoadFilter('guard_dream') as $filter) { //対夢食い護衛判定
-      if ($filter->GuardDream($actor, $user->id)) return;
+      if ($filter->GuardDreamEat($actor, $user->id)) return;
     }
 
     //夢食い判定 (夢系能力者・妖精系)
+    if ($user->IsAvoidLovers(true)) return;
     if ($user->IsRoleGroup('dummy') || $user->IsMainGroup('fairy')) {
       DB::$USER->Kill($user->id, 'DREAM_KILLED');
     }

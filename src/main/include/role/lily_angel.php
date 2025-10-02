@@ -6,5 +6,7 @@
 */
 RoleManager::LoadFile('angel');
 class Role_lily_angel extends Role_angel {
-  protected function IsSympathy(User $a, User $b) { return $a->IsFemale() && $b->IsFemale(); }
+  protected function IsSympathy(User $a, User $b) {
+    return $a->IsFemale() && $b->IsFemale();
+  }
 }

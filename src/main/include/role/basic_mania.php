@@ -8,5 +8,7 @@ RoleManager::LoadFile('mania');
 class Role_basic_mania extends Role_mania {
   public $copied = 'copied_basic';
 
-  protected function GetManiaRole(User $user) { return $user->DistinguishRoleGroup(); }
+  protected function GetManiaRole(User $user) {
+    return $user->DistinguishRoleGroup();
+  }
 }

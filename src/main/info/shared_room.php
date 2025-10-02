@@ -1,9 +1,9 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('shared_server_config');
 Loader::LoadRequest('RequestSharedRoom');
 
+//-- ◆ 文字化け抑制 --//
 if (0 < RQ::Get()->id && RQ::Get()->id <= count(SharedServerConfig::$server_list)) {
   InfoHTML::OutputSharedRoom(RQ::Get()->id);
 }

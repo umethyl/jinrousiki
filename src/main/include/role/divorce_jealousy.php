@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('jealousy');
 class Role_divorce_jealousy extends Role_jealousy {
-  function VoteKillReaction() {
+  public function VoteKillReaction() {
     foreach (array_keys($this->GetStack()) as $uname) {
       if ($this->IsVoted($uname)) continue;
       foreach ($this->GetVotedUname($uname) as $voted_uname) {

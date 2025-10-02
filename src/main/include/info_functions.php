@@ -31,11 +31,11 @@ class Info {
     echo Image::Room()->Generate('real_time', $str);
   }
 
-  //追加役職の人数と説明ページリンク出力
-  static function OutputAddRole($role, $add = false) {
-    $format = '村の人口が%d人以上になったら%s%sします';
-    $str = RoleDataHTML::GenerateLink($role);
-    printf($format, CastConfig::$$role, $str, $add ? 'を追加' : 'が登場');
+  //追加役職の説明を出力
+  static function OutputAddRole($role) {
+    OptionManager::OutputExplain($role);
+    $format = ' (村の人口が%d人以上)';
+    printf($format, CastConfig::$$role);
   }
 
   //村人置換系オプションのサーバ設定出力
@@ -173,33 +173,48 @@ EOF;
   }
 
   //他のサーバの部屋画面ロード用データを出力
-  static function OutputSharedRoomList() {
-    if (SharedServerConfig::DISABLE) return false;
+  static function OutputSharedRoomList($top = false) {
+    if ($top) {
+      if (TopPageConfig::DISABLE_SHARED_SERVER) return false;
+      $stack   = TopPageConfig::$server_list;
+      $arg_url = 'index';
+    } else {
+      if (SharedServerConfig::DISABLE) return false;
+      $stack   = SharedServerConfig::$server_list;
+      $arg_url = 'shared_room';
+    }
 
     $format = <<<EOF
 <div id="server%d"></div>
-<script language="javascript"><!--
-output_shared_room(%d, "server%d");
---></script>
-
+%soutput_shared_room(%d, "server%d", "%s");
+%s
 EOF;
-    $str   = HTML::LoadJavaScript('shared_room');
-    $count = 0;
-    foreach (SharedServerConfig::$server_list as $server => $array) {
+    $str     = HTML::LoadJavaScript('shared_room');
+    $count   = 0;
+    foreach ($stack as $server => $array) {
       $count++;
       extract($array);
       if ($disable) continue;
-      $str .= sprintf($format, $count, $count, $count);
+      $str .= sprintf($format . Text::LF, $count,
+		      HTML::GenerateJavaScriptHeader(),
+		      $count, $count, $arg_url,
+		      HTML::GenerateJavaScriptFooter());
     }
     echo $str;
   }
 
   //他のサーバの部屋画面を出力
-  static function OutputSharedRoom($id) {
-    if (SharedServerConfig::DISABLE) return false;
+  static function OutputSharedRoom($id, $top = false) {
+    if ($top) {
+      if (TopPageConfig::DISABLE_SHARED_SERVER) return false;
+      $stack = TopPageConfig::$server_list;
+    } else {
+      if (SharedServerConfig::DISABLE) return false;
+      $stack = SharedServerConfig::$server_list;
+    }
 
     $count = 0;
-    foreach (SharedServerConfig::$server_list as $server => $array) {
+    foreach ($stack as $server => $array) {
       if (++$count == $id) break;
     }
     //Text::p($server, $id);

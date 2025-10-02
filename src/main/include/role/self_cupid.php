@@ -8,7 +8,7 @@ RoleManager::LoadFile('cupid');
 class Role_self_cupid extends Role_cupid {
   public $self_shoot = true;
 
-  protected function AddCupidRole(User $user, $flag) {
+  protected function AddCupidRole(User $user) {
     if (! $this->IsActor($user)) $user->AddRole($this->GetActor()->GetID('mind_receiver'));
   }
 }

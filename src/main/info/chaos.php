@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('room_option_class', 'info_functions');
 InfoHTML::OutputHeader('闇鍋モード');
 ?>
@@ -620,12 +619,12 @@ InfoHTML::OutputHeader('闇鍋モード');
 <?php InfoHTML::OutputItemList('topping', range('i', 'p')); ?>
 </p>
 <p>
-<?php InfoHTML::OutputItemList('topping', array('q', 'r')); ?>
+<?php InfoHTML::OutputItemList('topping', range('q', 's')); ?>
 </p>
 
 <?php InfoHTML::OutputItem('topping', 'a', 'Ver. 1.4.0 β19'); ?>
 <pre>
-<a href="new_role/human.php#doll_group">上海人形系</a>(<a href="new_role/human.php#doll_master">人形遣い</a>以外)1　<a href="new_role/human.php#doll_rule">人形遣い枠</a>2 (<a href="new_role/human.php#doll_master">人形遣い</a>1・それ以外1)
+<a href="new_role/human.php#doll_group">上海人形系</a>1 (<a href="new_role/human.php#doll_master">人形遣い</a>以外)　<a href="new_role/human.php#doll_rule">人形遣い枠</a>2 (<a href="new_role/human.php#doll_master">人形遣い</a>1・それ以外1)
 </pre>
 <h4>Ver. 1.5.0 β8～</h4>
 <pre>
@@ -634,7 +633,7 @@ InfoHTML::OutputHeader('闇鍋モード');
 
 <h4>Ver. 1.4.0 RC1～</h4>
 <pre>
-上海人形1 → 上海人形系(人形遣い以外)1
+上海人形1 → 上海人形系1 (人形遣い以外)
 </pre>
 
 <?php InfoHTML::OutputItem('topping', 'b', 'Ver. 1.4.0 β19'); ?>
@@ -644,7 +643,11 @@ InfoHTML::OutputHeader('闇鍋モード');
 
 <?php InfoHTML::OutputItem('topping', 'c', 'Ver. 1.4.0 β19'); ?>
 <pre>
-<a href="new_role/vampire.php">吸血鬼陣営</a>1
+<a href="new_role/vampire.php">吸血鬼陣営</a>1　霧系1 (<a href="new_role/wolf.php#mist_wolf">霧狼</a>・<a href="new_role/fox.php#mist_fox">霧狐</a>・<a href="new_role/chiroptera.php#boss_chiroptera">大蝙蝠</a>)
+</pre>
+<h4>Ver. 2.3.0 β1～</h4>
+<pre>
+霧系1 追加
 </pre>
 <h4>Ver. 1.4.0 RC1～</h4>
 <pre>
@@ -702,9 +705,13 @@ InfoHTML::OutputHeader('闇鍋モード');
 
 人狼：<a href="new_role/wolf.php#boss_wolf">白狼</a>・<a href="new_role/wolf.php#resist_wolf">抗毒狼</a>・<a href="new_role/wolf.php#sharp_wolf">鋭狼</a>・<a href="new_role/wolf.php#tongue_wolf">舌禍狼</a>・<a href="new_role/wolf.php#possessed_wolf">憑狼</a>・<a href="new_role/wolf.php#sirius_wolf">天狼</a>・<a href="new_role/wolf.php#whisper_mad">囁き狂人</a>
 
-他：<a href="new_role/fox.php#cursed_fox">天狐</a>・<a href="new_role/fox.php#jammer_fox">月狐</a>・<a href="new_role/lovers.php#minstrel_cupid">吟遊詩人</a>・<a href="new_role/lovers.php#sacrifice_angel">守護天使</a>・<a href="new_role/quiz.php#quiz">出題者</a>・<a href="new_role/vampire.php#soul_vampire">吸血姫</a>
+他：<a href="new_role/fox.php#cursed_fox">天狐</a>・<a href="new_role/fox.php#jammer_fox">月狐</a>・<a href="new_role/fox.php#sacrifice_depraver">伊呂具秦公</a>・<a href="new_role/lovers.php#minstrel_cupid">吟遊詩人</a>・<a href="new_role/lovers.php#sacrifice_angel">守護天使</a>・<a href="new_role/quiz.php#quiz">出題者</a>・<a href="new_role/vampire.php#soul_vampire">吸血姫</a>
 　　<a href="new_role/chiroptera.php#boss_chiroptera">大蝙蝠</a>・<a href="new_role/chiroptera.php#ice_fairy">氷妖精</a>・<a href="new_role/ogre.php#sacrifice_ogre">酒呑童子</a>・<a href="new_role/ogre.php#dowser_yaksa">毘沙門天</a>・<a href="new_role/duelist.php#critical_duelist">剣闘士</a>・<a href="new_role/duelist.php#revive_avenger">夜刀神</a>・<a href="new_role/duelist.php#sacrifice_patron">身代わり地蔵</a>
 　　<a href="new_role/mania.php#soul_mania">覚醒者</a>・<a href="new_role/mania.php#sacrifice_mania">影武者</a>
+</pre>
+<h4>Ver. 2.3.0 α4～</h4>
+<pre>
+他：<a href="new_role/fox.php#sacrifice_depraver">伊呂具秦公</a>追加
 </pre>
 <h4>Ver. 2.1.0 α4～</h4>
 <pre>
@@ -712,12 +719,12 @@ InfoHTML::OutputHeader('闇鍋モード');
 </pre>
 <h4>Ver. 1.5.0 β9～</h4>
 <pre>
-村人：<a href="new_role/human.php#poison_jealousy">毒橋姫</a>→<a href="new_role/human.php#miasma_jealousy">蛇姫</a>
+村人：<a href="new_role/human.php#poison_jealousy">毒橋姫</a> → <a href="new_role/human.php#miasma_jealousy">蛇姫</a>
 </pre>
 <h4>Ver. 1.5.0 β4～</h4>
 <pre>
-村人：<a href="new_role/human.php#escaper">逃亡者</a>→<a href="new_role/human.php#divine_escaper">麒麟</a>
-他：<a href="new_role/duelist.php#valkyrja_duelist">戦乙女</a>→<a href="new_role/duelist.php#critical_duelist">剣闘士</a>、<a href="new_role/duelist.php#avenger">復讐者</a>→<a href="new_role/duelist.php#revive_avenger">夜刀神</a>、<a href="new_role/duelist.php#patron">後援者</a>→<a href="new_role/duelist.php#sacrifice_patron">身代わり地蔵</a>
+村人：<a href="new_role/human.php#escaper">逃亡者</a> → <a href="new_role/human.php#divine_escaper">麒麟</a>
+他：<a href="new_role/duelist.php#valkyrja_duelist">戦乙女</a> → <a href="new_role/duelist.php#critical_duelist">剣闘士</a>、<a href="new_role/duelist.php#avenger">復讐者</a> → <a href="new_role/duelist.php#revive_avenger">夜刀神</a>、<a href="new_role/duelist.php#patron">後援者</a> → <a href="new_role/duelist.php#sacrifice_patron">身代わり地蔵</a>
 </pre>
 <h4>Ver. 1.5.0 β3～</h4>
 <pre>
@@ -731,7 +738,11 @@ InfoHTML::OutputHeader('闇鍋モード');
 
 <?php InfoHTML::OutputItem('topping', 'm', 'Ver. 2.1.0 α6'); ?>
 <pre>
-<a href="new_role/human.php#sweep_assassin">掃除屋</a>2　<a href="new_role/wolf.php#trap_wolf">狡狼</a>1　<a href="new_role/fox.php#doom_fox">冥狐</a>1
+暗殺枠2 (<a href="new_role/human.php#step_assassin">風神</a>・<a href="new_role/human.php#sweep_assassin">掃除屋</a>)　<a href="new_role/wolf.php#trap_wolf">狡狼</a>1　<a href="new_role/fox.php#doom_fox">冥狐</a>1
+</pre>
+<h4>Ver. 2.3.0 α7～</h4>
+<pre>
+掃除屋2 → 暗殺枠2
 </pre>
 
 <?php InfoHTML::OutputItem('topping', 'n', 'Ver. 2.1.0 β3'); ?>
@@ -759,6 +770,11 @@ InfoHTML::OutputHeader('闇鍋モード');
 <a href="new_role/chiroptera.php#fairy_group">妖精系</a>1　対妖精枠1 (<a href="new_role/human.php#dummy_guard">夢守人</a>・<a href="new_role/human.php#dummy_poison">夢毒者</a>・<a href="new_role/wolf.php#dream_eater_mad">獏</a>)
 </pre>
 
+<?php InfoHTML::OutputItem('topping', 's', 'Ver. 2.3.0 β1'); ?>
+<pre>
+霊能枠1 (<a href="new_role/human.php#necromancer">霊能者</a>・<a href="new_role/human.php#soul_necromancer">雲外鏡</a>・<a href="new_role/human.php#dummy_necromancer">夢枕人</a>)　<a href="new_role/wolf.php#boss_wolf">白狼</a>1　特殊霊能判定枠1 (<a href="new_role/fox.php#white_fox">白狐</a>・<a href="new_role/fox.php#black_fox">黒狐</a>・<a href="new_role/chiroptera.php#cute_chiroptera">萌蝙蝠</a>)
+</pre>
+
 
 <h2 id="boost_rate"><?php OptionManager::OutputCaption('boost_rate'); ?> [Ver. 1.5.0 β7～]</h2>
 <ol>
@@ -768,6 +784,9 @@ InfoHTML::OutputHeader('闇鍋モード');
 </ol>
 <p>
 <?php InfoHTML::OutputItemList('boost_rate', range('a', 'h')); ?>
+</p>
+<p>
+<?php InfoHTML::OutputItemList('boost_rate', range('i', 'k')); ?>
 </p>
 
 <?php InfoHTML::OutputItem('boost_rate', 'a', 'Ver. 1.5.0 β7'); ?>
@@ -789,7 +808,11 @@ InfoHTML::OutputHeader('闇鍋モード');
 
 <?php InfoHTML::OutputItem('boost_rate', 'd', 'Ver. 1.5.0 β9'); ?>
 <pre>
-<a href="new_role/ability.php#revive_other">他者蘇生能力者</a>の出現率が 0 になります。
+<a href="new_role/ability.php#revive_other">他者蘇生能力者</a>・<a href="new_role/wolf.php#possessed_mad">犬神</a>・<a href="new_role/fox.php#possessed_fox">憑狐</a>の出現率が 0 になります。
+</pre>
+<h4>Ver. 2.3.0 α7～</h4>
+<pre>
+<a href="new_role/wolf.php#possessed_mad">犬神</a>・<a href="new_role/fox.php#possessed_fox">憑狐</a>追加
 </pre>
 
 <?php InfoHTML::OutputItem('boost_rate', 'e', 'Ver. 1.5.0 β9'); ?>
@@ -799,7 +822,7 @@ InfoHTML::OutputHeader('闇鍋モード');
 
 <?php InfoHTML::OutputItem('boost_rate', 'f', 'Ver. 1.5.0 β12'); ?>
 <pre>
-<a href="new_role/chiroptera.php">蝙蝠陣営</a>・<a href="new_role/ogre.php">鬼陣営</a>・<a href="new_role/duelist.php">決闘者陣営</a>の出現率が 0 になります。
+<a href="new_role/fox.php#depraver">背徳者系</a>・<a href="new_role/chiroptera.php">蝙蝠陣営</a>・<a href="new_role/ogre.php">鬼陣営</a>・<a href="new_role/duelist.php">決闘者陣営</a>の出現率が 0 になります。
 </pre>
 
 <?php InfoHTML::OutputItem('boost_rate', 'g', 'Ver. 2.0.0'); ?>
@@ -810,6 +833,21 @@ InfoHTML::OutputHeader('闇鍋モード');
 <?php InfoHTML::OutputItem('boost_rate', 'h', 'Ver. 2.1.0 α5'); ?>
 <pre>
 <a href="new_role/wolf.php#resist_wolf">抗毒狼</a>・<a href="new_role/ogre.php#horse_ogre">馬頭鬼</a>・<a href="new_role/duelist.php#plumage_patron">鬼車鳥</a>・<a href="new_role/human.php#pharmacist">薬師系</a>・<a href="new_role/ability.php#poison">毒能力者</a>の出現率が 0 になります。
+</pre>
+
+<?php InfoHTML::OutputItem('boost_rate', 'i', 'Ver. 2.3.0 β2'); ?>
+<pre>
+<a href="new_role/human.php#medium_group">巫女系</a>・<a href="new_role/ability.php#sudden_death">ショック死発動者</a>・<a href="new_role/ability.php#anti_sudden_death">ショック死抑制能力者</a>に属するメイン役職の出現率が 0 になります。
+</pre>
+
+<?php InfoHTML::OutputItem('boost_rate', 'j', 'Ver. 2.3.0 β2'); ?>
+<pre>
+<a href="new_role/human.php#voodoo_killer">陰陽師</a>・<a href="new_role/human.php#anti_voodoo">厄神</a>・<a href="new_role/ability.php#cursed_group">呪い能力者</a>の出現率が 0 になります。
+</pre>
+
+<?php InfoHTML::OutputItem('boost_rate', 'k', 'Ver. 2.3.0 β2'); ?>
+<pre>
+<a href="new_role/wolf.php#dream_eater_mad">獏</a>・<a href="new_role/mania.php#dummy_mania">夢語部</a>・<a href="new_role/mania.php#dummy_mania">夢語部</a>のコピー先 (<a href="new_role/human.php#human">村人</a>以外) の出現率が 0 になります。
 </pre>
 
 <h2 id="chaos_open_cast"><?php OptionManager::OutputCaption('chaos_open_cast'); ?> [Ver. 1.4.0 α14～]</h2>

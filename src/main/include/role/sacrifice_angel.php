@@ -4,15 +4,19 @@
   ○仕様
   ・追加役職：庇護者 (自分以外)
   ・共感者判定：常時有効
-  ・人狼襲撃耐性：常時無効
+  ・人狼襲撃耐性：無効
 */
 RoleManager::LoadFile('angel');
 class Role_sacrifice_angel extends Role_angel {
-  protected function AddCupidRole(User $user, $flag) {
+  protected function AddCupidRole(User $user) {
     if (! $this->IsActor($user)) $user->AddRole($this->GetActor()->GetID('protected'));
   }
 
-  protected function IsSympathy(User $a, User $b) { return true; }
+  protected function IsSympathy(User $a, User $b) {
+    return true;
+  }
 
-  function WolfEatResist() { return true; }
+  public function WolfEatResist() {
+    return true;
+  }
 }

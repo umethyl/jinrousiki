@@ -2,7 +2,10 @@
 /*
   ◆羊皮 (sheep_wisp)
   ○仕様
+  ・表示：当日限定
 */
 class Role_sheep_wisp extends Role {
-  protected function IgnoreAbility() { return ! $this->IsDoom(); }
+  protected function IgnoreAbility() {
+    return ! $this->IsDoom();
+  }
 }

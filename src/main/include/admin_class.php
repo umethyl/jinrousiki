@@ -3,90 +3,88 @@
 class JinrouAdmin {
   //村削除
   static function DeleteRoom() {
-    if (! ServerConfig::DEBUG_MODE) {
-      HTML::OutputResult('認証エラー', 'このスクリプトは使用できない設定になっています。');
-    }
-    extract($_GET, EXTR_PREFIX_ALL, 'unsafe');
-    $room_no = intval($unsafe_room_no);
-    $title   = '部屋削除[エラー]';
-    if ($room_no < 1) HTML::OutputResult($title, '無効な村番号です。');
+    if (! ServerConfig::DEBUG_MODE) HTML::OutputUnusableError();
+    Loader::LoadRequest();
+    RQ::Get()->ParseGetRoomNo();
 
     DB::Connect();
-    if (DB::Lock('room') && DB::DeleteRoom($room_no)) {
+    if (DB::Lock('room') && DB::DeleteRoom(RQ::Get()->room_no)) {
       DB::Optimize();
-      $str = $room_no . ' 番地を削除しました。トップページに戻ります。';
-      HTML::OutputResult('部屋削除', $str, '../');
+      $str = RQ::Get()->room_no . AdminMessage::DELETE_ROOM_SUCCESS;
+      HTML::OutputResult(AdminMessage::DELETE_ROOM, $str, '../');
     }
     else {
-      HTML::OutputResult($title, $room_no . ' 番地の削除に失敗しました。');
+      $title = AdminMessage::DELETE_ROOM . ' ' . Message::ERROR_TITLE;
+      HTML::OutputResult($title, RQ::Get()->room_no . AdminMessage::DELETE_ROOM_FAILED);
     }
   }
 
   //アイコン削除
   static function DeleteIcon() {
-    if (! ServerConfig::DEBUG_MODE) {
-      HTML::OutputResult('認証エラー', 'このスクリプトは使用できない設定になっています。');
+    if (! ServerConfig::DEBUG_MODE) HTML::OutputUnusableError();
+    Loader::LoadRequest();
+    RQ::Get()->ParseGetInt('icon_no');
+    $icon_no = RQ::Get()->icon_no;
+    $title   = AdminMessage::DELETE_ICON . ' ' . Message::ERROR_TITLE;
+    if ($icon_no < 1) {
+      HTML::OutputResult($title, sprintf(IconEditMessage::NOT_EXISTS, $icon_no));
     }
-    extract($_GET, EXTR_PREFIX_ALL, 'unsafe');
-    $icon_no = intval($unsafe_icon_no);
-    $title   = 'アイコン削除[エラー]';
-    if ($icon_no < 1) HTML::OutputResult($title, '無効なアイコン番号です。');
 
     Loader::LoadFile('icon_functions');
     DB::Connect();
-    $error = "サーバが混雑しています。<br>\n時間を置いてから再度アクセスしてください。";
-    if (! DB::Lock('icon')) HTML::OutputResult($title, $error); //トランザクション開始
-    if (IconDB::IsUsing($icon_no)) { //使用中判定
-      HTML::OutputResult($title, '募集中・プレイ中の村で使用されているアイコンは削除できません。');
-    }
+    if (! DB::Lock('icon')) HTML::OutputResult($title, Message::DB_ERROR_LOAD);
 
-    $file = IconDB::GetFile($icon_no);
-    if ($file === false || is_null($file)) HTML::OutputResult($title, 'ファイルが存在しません');
+    //使用中判定
+    if (IconDB::IsUsing($icon_no)) HTML::OutputResult($title, IconEditMessage::USING);
+
+    $file = IconDB::GetFile($icon_no); //存在判定
+    if ($file === false || is_null($file)) {
+      HTML::OutputResult($title, AdminMessage::DELETE_ICON_NOTHING);
+    }
 
     if (IconDB::Delete($icon_no, $file)) {
       $url = '../icon_upload.php';
-      $str = '削除完了：登録ページに飛びます。<br>'."\n" .
-	'切り替わらないなら <a href="' . $url . '">ここ</a> 。';
-      HTML::OutputResult('アイコン削除完了', $str, $url);
+      $str = AdminMessage::DELETE_ICON_SUCCESS . Text::BRLF . sprintf(Message::JUMP, $url);
+      HTML::OutputResult(AdminMessage::DELETE_ICON, $str, $url);
     }
     else {
-      HTML::OutputResult($title, $error);
+      HTML::OutputResult($title, Message::DB_ERROR_LOAD);
     }
   }
 
   //ログ生成
   static function GenerateLog() {
     $format = sprintf('../log_test/%s', RQ::Get()->prefix) . '%d%s.html';
-    $footer = HTML::FOOTER . "\n";
+    $footer = HTML::FOOTER . Text::LF;
     for ($i = RQ::Get()->min_room_no; $i <= RQ::Get()->max_room_no; $i++) {
       RQ::Set('room_no', $i);
       foreach (array(false, true) as $flag) {
 	RQ::Set('reverse_log', $flag);
 
-	DB::$ROOM = new Room(RQ::Get());
-	DB::$ROOM->log_mode  = true;
+	DB::LoadRoom();
+	DB::$ROOM->SetFlag('log_mode');
 	DB::$ROOM->last_date = DB::$ROOM->date;
 
-	DB::$USER = new UserData(RQ::Get());
-	DB::$SELF = new User();
+	DB::LoadUser();
+	DB::LoadViewer();
 
 	$file = sprintf($format, $i, $flag ? 'r' : '');
 	file_put_contents($file, OldLogHTML::Generate() . $footer);
       }
     }
 
-    $format = '%d 番地から %d 番地までを HTML 化しました';
-    $str = sprintf($format, RQ::Get()->min_room_no, RQ::Get()->max_room_no);
-    HTML::OutputResult('ログ生成', $str);
+    $title  = AdminMessage::GENERATE_LOG;
+    $format = AdminMessage::GENERATE_LOG_FORMAT;
+    HTML::OutputResult($title, sprintf($format, RQ::Get()->min_room_no, RQ::Get()->max_room_no));
   }
 
   //ログ削除
   static function DeleteLog($from, $to) {
     DB::Connect(RQ::Get()->db_no);
-    HTML::OutputHeader('DB削除モード', null, true);
+    HTML::OutputHeader(AdminMessage::DELETE_LOG, null, true);
     for ($i = $from; $i <= $to; $i++) {
       DB::DeleteRoom($i);
-      printf('%d 番地を削除しました<br>', $i);
+      printf(AdminMessage::DELETE_LOG_FORMAT . Text::BR, $i);
     }
     DB::Optimize();
     HTML::OutputFooter(true);

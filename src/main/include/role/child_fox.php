@@ -14,15 +14,15 @@ class Role_child_fox extends Role_fox {
   public $submit = 'mage_do';
   public $mage_failed = 'failed';
 
-  protected function OutputResult() {
-    if (isset($this->result) && DB::$ROOM->date > 1) $this->OutputAbilityResult($this->result);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 2;
   }
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('mage-do', $this->submit, $this->action);
   }
 
-  function Mage(User $user) {
+  public function Mage(User $user) {
     if ($this->IsJammer($user)) {
       return $this->SaveMageResult($user, $this->mage_failed, $this->result);
     }
@@ -31,5 +31,7 @@ class Role_child_fox extends Role_fox {
     $this->SaveMageResult($user, $result, $this->result);
   }
 
-  protected function GetMageResult(User $user) { return $this->DistinguishMage($user); }
+  protected function GetMageResult(User $user) {
+    return $this->DistinguishMage($user);
+  }
 }

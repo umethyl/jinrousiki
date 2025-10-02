@@ -7,8 +7,9 @@
 RoleManager::LoadFile('necromancer');
 class Role_dummy_necromancer extends Role_necromancer {
   public $display_role = 'necromancer';
+  public $result = 'DUMMY_NECROMANCER_RESULT';
 
-  function Necromancer(User $user, $flag) {
-    return DB::$ROOM->IsEvent('no_dream') ? null : $user->DistinguishNecromancer(true);
+  public function Necromancer(User $user, $flag) {
+    return DB::$ROOM->IsEvent('no_dream') ? null : $this->DistinguishNecromancer($user, true);
   }
 }

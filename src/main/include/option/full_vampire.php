@@ -6,5 +6,7 @@
 */
 OptionManager::Load('replace_human');
 class Option_full_vampire extends Option_replace_human {
-  function GetCaption() { return '吸血鬼村'; }
+  public function GetCaption() {
+    return '吸血鬼村';
+  }
 }

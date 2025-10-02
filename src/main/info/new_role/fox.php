@@ -1,31 +1,92 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('妖狐陣営');
 ?>
 <p>
+<a href="#rule">基本ルール</a>
 <a href="#partner">仲間表示</a>
 <a href="#talk">夜の会話 (念話)</a>
 </p>
 <p>
 <a href="#fox_group">妖狐系</a>
 <a href="#child_fox_group">子狐系</a>
+<a href="#depraver_group">背徳者系</a>
 </p>
+
+<h2 id="rule">基本ルール</h2>
+<p>
+<a href="#rule_summary">概要</a>
+<a href="#rule_win">勝利条件</a>
+<a href="#rule_distinguish">判定</a>
+</p>
+
+<h3 id="rule_summary">概要</h3>
+<ol>
+<li>村に紛れ、村を我が物にしようと隙を窺っています。</li>
+<li>背徳者は妖狐の協力者です。</li>
+</ol>
+
+<h3 id="rule_win">勝利条件</h3>
+<ol>
+<li>ゲーム終了時に妖狐カウントが生存している。</li>
+<li><a href="wolf.php">人狼</a>を全滅させるか、生存カウントの村人の生存数を人狼の生存数以下にする。</li>
+<li><a href="lovers.php">恋人</a>を全滅させる。</li>
+<li>勝利条件を満たした<a href="vampire.php">吸血鬼</a>が存在しない。</li>
+<li>自分の生死は基本的には不問。</li>
+</ol>
+
+<h3 id="rule_distinguish">判定</h3>
+<table>
+<tr>
+  <th>系</th>
+  <th>生存カウント</th>
+  <th>占い</th>
+  <th>霊能</th>
+  <th>精神鑑定</th>
+  <th>性別鑑定</th>
+</tr>
+<tr>
+  <td><a href="#fox_group">妖狐系</a></td>
+  <td>妖狐</td>
+  <td>村人(呪殺)</td>
+  <td>村人</td>
+  <td>正常</td>
+  <td>性別</td>
+</tr>
+<tr>
+  <td><a href="#child_fox_group">子狐系</a></td>
+  <td>妖狐</td>
+  <td>村人</td>
+  <td>子狐</td>
+  <td>正常</td>
+  <td>性別</td>
+</tr>
+<tr>
+  <td><a href="#depraver_group">背徳者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td>村人</td>
+  <td>嘘つき</td>
+  <td>性別</td>
+</tr>
+</table>
 
 <h2 id="partner">仲間表示</h2>
 <ol>
 <li><a href="#silver_fox">銀狐</a>・<a href="#critical_fox">寿羊弧</a>以外の全ての妖狐は<a href="#silver_fox">銀狐</a>以外の<a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>が誰か分かる。</li>
+<li><a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>からは<a href="#depraver_group">背徳者系</a>は分からない。</li>
+<li><a href="#fox_group">妖狐系</a>と<a href="#child_fox_group">子狐系</a>は別枠で表示される (<a href="wolf.php">人狼陣営</a>における<a href="wolf.php#wolf_group">人狼系</a>と<a href="wolf.php#whisper_mad">囁き狂人</a>相当)。</li>
+<li><a href="#fox_group">妖狐系</a>は「深遠なる妖狐の智を持つ同胞は以下の人たちです」と表示され、<a href="#talk">念話</a>ができる。</li>
+<li>
+  <a href="#child_fox_group">子狐系</a>は「妖狐に与する仲間は以下の人たちです」と表示され、<br>
+  同じ枠に<a href="#scarlet_fox">紅狐</a>以外の<a href="ability.php#partner_scarlet">仲間情報妨害能力者 (混入型)</a> も混ざって表示される。
+</li>
+<li><a href="#depraver_group">背徳者系</a>からは<a href="#silver_fox">銀狐</a>以外の<a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>・<a href="ability.php#partner_scarlet">仲間情報妨害能力者 (混入型)</a> がまとめて表示される。</li>
+<li><a href="#possessed_fox">憑狐</a>が憑依すると仲間表示が憑依先の名前に変更される。</li>
 <li><a href="#silver_fox">銀狐</a>は仲間が一切表示されない。</li>
 <li><a href="#critical_fox">寿羊弧</a>は<a href="#fox_group">妖狐系</a>が表示されない。</li>
-<li><a href="#fox_group">妖狐系</a>と<a href="#child_fox_group">子狐系</a>は別枠で表示される (<a href="wolf.php">人狼陣営</a>における<a href="wolf.php#wolf_group">人狼系</a>と<a href="wolf.php#whisper_mad">囁き狂人</a>相当)。<br>
-
-</li>
-<li><a href="#fox_group">妖狐系</a>は「深遠なる妖狐の智を持つ同胞は以下の人たちです」と表示され、<a href="#talk">念話</a>ができる。</li>
-<li><a href="#child_fox_group">子狐系</a>は「妖狐に与する仲間は以下の人たちです」と表示され、<br>
-同じ枠に<a href="#scarlet_fox">紅狐</a>以外の<a href="ability.php#partner_scarlet">仲間情報妨害能力者 (混入型)</a> も混ざって表示される。</li>
 <li><a href="sub_role.php#mind_lonely">はぐれ者</a>になると仲間が分からなくなり、仲間リストからも消える (<a href="#silver_fox">銀狐</a>と同じ)。</li>
-<li><a href="#possessed_fox">憑狐</a>が憑依すると仲間表示が憑依先の名前に変更される。</li>
 </ol>
 <h5>Ver. 1.5.0 α8～</h5>
 <pre>
@@ -48,7 +109,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <li><a href="#silver_fox">銀狐</a>以外の<a href="#fox_group">妖狐系</a>は夜に会話 (念話) できる。</li>
 <li>2日目以降は<a href="human.php#telepath_scanner">念騒霊</a>の独り言も表示される。<a href="human.php#leader_common">指導者</a>の発言とは区別できない。</li>
 <li>他人からはいっさい見えない。</li>
-<li><a href="#child_fox_group">子狐系</a>は念話を見ることも参加することもできない。</li>
+<li><a href="#child_fox_group">子狐系</a>・<a href="#depraver_group">背徳者系</a>は念話を見ることも参加することもできない。</li>
 <li><a href="wolf.php#wise_wolf">賢狼</a>・<a href="ogre.php#wise_ogre">夜行鬼</a>には念話が<a href="human.php#common_group">共有者</a>の囁きに変換されて表示される。</li>
 <li><a href="sub_role.php#mind_lonely">はぐれ者</a>になると夜の発言が独り言になり、念話に参加できなくなる (<a href="#silver_fox">銀狐</a>と同じ)。</li>
 </ol>
@@ -186,7 +247,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 処刑投票先が<a href="wolf.php">人狼陣営</a>だった場合は自分に<a href="sub_role.php#death_warrant">死の宣告</a>を付加してしまう妖狐。
 </pre>
 <ol>
-<li><a href="sub_role.php#lovers">恋人</a>は恋人陣営と判定する。</li>
+<li><a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>は恋人陣営と判定する。</li>
 <li><a href="sub_role.php#death_warrant">死の宣告</a>の発動日は投票した昼から数えて 3 日後の昼。</li>
 <li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合は無効。</li>
 <li>対象が死亡していた場合は無効 (例：処刑・毒死)。</li>
@@ -194,7 +255,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#doom">死の宣告能力者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>
+<a href="ability.php#doom">死の宣告能力者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#camp">陣営判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -211,6 +272,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <li><a href="sub_role.php#frostbite">凍傷</a>の発動日は投票された翌日の昼。</li>
 <li><a href="../spec.php#vote_day">判定</a>は処刑者決定後。</li>
 <li>自分が処刑された場合は無効。</li>
+<li>自分が<a href="sub_role.php#vega_lovers">織姫</a>の場合は能力無効。</li>
 </ol>
 <h4>関連役職</h4>
 <pre>
@@ -225,10 +287,14 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 
 <h3 id="poison_fox">管狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 1.4.0 α17～]</h3>
 <h4>[耐性] 人狼襲撃：死亡 + 毒</h4>
-<h4>[毒能力] 処刑：妖狐陣営以外 / 襲撃：有り / 薬師判定：有り</h4>
+<h4>[毒能力] 処刑：妖狐カウント以外 / 襲撃：有り / 薬師判定：有り</h4>
 <pre>
-毒を持った妖狐。毒の対象は妖狐陣営以外。
+毒を持った妖狐。毒の対象は妖狐カウント以外。
 <a href="wolf.php#wolf_group">人狼</a>に襲撃されたら死亡して毒が発動する。
+</pre>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+毒能力：処刑時「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -247,7 +313,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#blue_wolf">蒼狼</a>・<a href="#spell_fox">宙狐</a>・<a href="#emerald_fox">翠狐</a>
+<a href="#spell_fox">宙狐</a>・<a href="#emerald_fox">翠狐</a>・<a href="ability.php#partner">仲間情報妨害能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -311,7 +377,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#emerald_wolf">翠狼</a>・<a href="#blue_fox">蒼狐</a>・<a href="ability.php#seal">封印対象者</a>
+<a href="#blue_fox">蒼狐</a>・<a href="ability.php#mind_friend">共鳴能力者</a>・<a href="ability.php#seal">封印対象者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -338,9 +404,10 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 
 <h3 id="step_fox">響狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 2.2.0 α3～]</h3>
 <h4>[耐性] 人狼襲撃：無効</h4>
+<h4>[足音能力] タイプ：直線型 / キャンセル投票：有り</h4>
 <pre>
 夜の投票先 (徘徊) の間で足音が鳴る妖狐。
-徘徊能力は<a href="wolf.php#step_mad">家鳴</a>参照。
+足音システムの基本は<a href="human.php#step_mage">審神者</a>参照。
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -349,6 +416,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="wolf.php#step_mad">家鳴</a>の妖狐バージョンです。
+存在を示すタイプなので妖狐には使い所が難しい能力ですね。
 </pre>
 
 <h3 id="revive_fox">仙狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 1.4.0 β2～]</h3>
@@ -555,6 +623,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 襲撃されて生き残ることは難しいので難易度は高めです。
 </pre>
 
+
 <h2 id="child_fox_group">子狐系</h2>
 <p>
 <a href="#child_fox_rule">基本ルール</a>
@@ -573,9 +642,9 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 
 <h3 id="child_fox_rule">基本ルール</h3>
 <ol>
-  <li>呪殺されない代わりに<a href="wolf.php#wolf_group">人狼</a>に襲撃されると死亡する。</li>
-  <li><a href="ability.php#necromancer">霊能</a>結果は「子狐」。</li>
-  <li>夜の投票能力を持っている場合、成功率は 70%。</li>
+<li>呪殺されない代わりに<a href="wolf.php#wolf_group">人狼</a>に襲撃されると死亡する。</li>
+<li><a href="ability.php#necromancer">霊能</a>結果は「子狐」。</li>
+<li>夜の投票能力を持っている場合、成功率は 70%。</li>
 </ol>
 
 <h3 id="child_fox">子狐 (占い結果：村人(呪殺無し) / 霊能結果：子狐) [Ver. 1.4.0 α3-7～]</h3>
@@ -661,10 +730,14 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 人狼に襲撃された場合は襲撃した人狼に付加する。
 </pre>
 <ol>
-<li>処刑時は妖狐陣営・<a href="ability.php#special_resist">特殊耐性能力者</a>は能力の対象外。</li>
+<li>処刑時は妖狐カウント・<a href="ability.php#special_resist">特殊耐性能力者</a>は能力の対象外。</li>
 <li>人狼襲撃時は<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) には無効。</li>
 <li>対象者が誰もいなかった場合は不発となる。</li>
 </ol>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+熱病の対象：「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
+</pre>
 <h5>Ver. 1.5.0 α5～</h5>
 <pre>
 処刑された時に<a href="sub_role.php#febris">熱病</a>を付加する対象から妖狐陣営を除外
@@ -688,7 +761,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#silver_wolf">銀狼</a>
+<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -724,11 +797,99 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#emperor_wolf">帝狼</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>
+<a href="wolf.php#emperor_wolf">帝狼</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#critical_luck">痛恨能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 妲己の妖狐伝承がモチーフです。寿羊は「じゅよう」と読みます。
+</pre>
+
+
+<h2 id="depraver_group">背徳者系</h2>
+<p>
+<a href="#depraver_rule">基本ルール</a>
+<a href="#depraver_followed">後追い</a>
+</p>
+<p>
+<a href="#depraver">背徳者</a>
+<a href="#sacrifice_depraver">伊呂具秦公</a>
+<a href="#silver_depraver">頭人</a>
+</p>
+
+<h3 id="depraver_rule">基本ルール</h3>
+<ol>
+<li>生存カウントは「村人」。</li>
+<li><a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>が全滅すると自分も死亡する (後追い)。</li>
+<li><a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>が出現していなかった場合に限り、自分自身の生存が勝利条件となる。</li>
+<li>呪殺されず、<a href="wolf.php#wolf_group">人狼</a>に襲撃されると死亡する。</li>
+<li><a href="ability.php#revive_limit">蘇生不可</a>。</li>
+<li><a href="human.php#reverse_assassin">反魂</a>無効。</li>
+</ol>
+
+<h3 id="depraver_followed">後追い</h3>
+<ol>
+<li><a href="sub_role.php#lovers">恋人</a>の後追いと同時・連鎖して処理される。</li>
+<li>変化前の<a href="ability.php#copy_delay">コピー能力者 (時間差型)</a> は<a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>とはカウントしない。</li>
+<li><a href="#depraver">背徳者系</a>が死亡しても<a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>は後追いしない。</li>
+<li><a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>が出現していなかった場合は後追いしない。</li>
+<li><a href="#depraver_group">背徳者系</a>をコピーした<a href="ability.php#copy_delay">コピー能力者 (時間差型)</a> は変化前であっても後追いする。</li>
+<li>身代わり君・<a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>だった場合は後追いしない。</li>
+</ol>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+身代わり君は後追いしない
+</pre>
+
+<h3 id="depraver">背徳者 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α4～]</h3>
+<h4>[耐性] 蘇生：不可 / 反魂：無効</h4>
+<pre>
+背徳者系の基本種。
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+他国に実在する役職です。
+</pre>
+
+<h3 id="sacrifice_depraver">伊呂具秦公 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α4～]</h3>
+<h4>[耐性] 蘇生：不可 / 反魂：無効</h4>
+<pre>
+<a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>の呪殺に対して身代わりになる背徳者。
+</pre>
+<ol>
+<li><a href="../spec.php#vote_night">呪殺成立</a>時に生存している伊呂具秦公がいる場合のみ有効。</li>
+<li>身代わりが発生した場合の死因は「呪殺された」。</li>
+<li>身代わり候補が複数いる場合はランダムで一人選ばれる。</li>
+<li>
+  同時に複数の呪殺が発生しても身代わりできるのは一度だけ。<br>
+  例) A[占い師] → B[妖狐] ← C[占い師] / D[伊呂具秦公]<br>
+  => A の呪殺に対し、D が身代わり + C が B を呪殺。
+</li>
+<li><a href="sub_role.php#spell_wisp">狐火</a>による呪殺でも有効。</li>
+<li>自分が<a href="sub_role.php#vega_lovers">織姫</a>の場合は能力無効。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="mania.php#soul_mania">覚醒者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+対呪殺の身代わり能力を持った、背徳者系最上位種としてデザインしました。
+名称は稲荷伝承が出展です。「いろぐの はたのきみ」と読みます。
+</pre>
+
+<h3 id="silver_depraver">頭人 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α4～]</h3>
+<h4>[耐性] 蘇生：不可 / 反魂：無効</h4>
+<pre>
+<a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>が誰か分からない背徳者
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#partner_silver">仲間情報妨害能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+「ヤッテイ様」という岡山県に伝わる稲荷信仰に似た、狐の神を祀る祠の主人の伝承が出展です。
+「とうにん」と読みます。
 </pre>
 </body>
 </html>

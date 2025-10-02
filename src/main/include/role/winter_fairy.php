@@ -6,5 +6,5 @@
 */
 RoleManager::LoadFile('fairy');
 class Role_winter_fairy extends Role_fairy {
-  public $bad_status = '冬ですよー';
+  public $bad_status = RoleTalkMessage::WINTER_FAIRY;
 }

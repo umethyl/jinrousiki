@@ -4,15 +4,21 @@
   ○仕様
   ・勝利：通常
   ・仲間表示：なし
-  ・身代わり対象者：人形
+  ・身代わり：人形
 */
 RoleManager::LoadFile('doll');
 class Role_doll_master extends Role_doll {
   public $mix_in = 'protected';
 
-  protected function OutputPartner() { return; }
+  protected function OutputPartner() {
+    return;
+  }
 
-  function Win($winner) { return true; }
+  public function Win($winner) {
+    return true;
+  }
 
-  function IsSacrifice(User $user) { return Role_doll::IsDoll($user); }
+  public function IsSacrifice(User $user) {
+    return $this->IsDoll($user);
+  }
 }

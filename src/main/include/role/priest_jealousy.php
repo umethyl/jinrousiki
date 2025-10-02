@@ -9,7 +9,15 @@ class Role_priest_jealousy extends Role {
   public $mix_in = 'priest';
   public $display_role = 'priest';
 
-  function OutputResult() { $this->filter->OutputResult(); }
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 3 || DB::$ROOM->date % 2 == 1;
+  }
 
-  function GetPriestType() { return 'lovers'; }
+  protected function OutputAddResult() {
+    $this->filter->OutputPriestResult();
+  }
+
+  public function GetPriestType() {
+    return 'lovers';
+  }
 }

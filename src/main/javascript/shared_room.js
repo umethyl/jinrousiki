@@ -1,4 +1,4 @@
-function output_shared_room(id, display) {
+function output_shared_room(id, display, url) {
   var message  = 'Now loading ... ';
   document.getElementById(display).innerHTML = message;
 
@@ -16,7 +16,7 @@ function output_shared_room(id, display) {
     return false;
   }
 
-  xml_http.open('GET', 'shared_room.php?id=' + id);
+  xml_http.open('GET', url + '.php?id=' + id);
   xml_http.onreadystatechange = function() {
     if (xml_http.readyState == 4 && xml_http.status == 200) {
       document.getElementById(display).innerHTML = xml_http.responseText;

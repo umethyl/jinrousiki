@@ -6,26 +6,24 @@ class Login {
     DB::Connect();
     if (RQ::Get()->login_manually) { //ユーザ名とパスワードで手動ログイン
       if (self::LoginManually()) {
-	self::Output('ログインしました', 'game_frame');
-      }
-      else {
-	$str = 'ユーザ名とパスワードが一致しません。<br>' .
-	  '(空白と改行コードは登録時に自動で削除されている事に注意してください)';
-	self::Output('ログイン失敗', null, $str);
+	self::Output(LoginMessage::MANUALLY_TITLE, LoginMessage::MANUALLY_BODY, 'game_frame');
+      } else {
+	$body = LoginMessage::FAILED_BODY . Text::BRLF . LoginMessage::FAILED_CAUTION;
+	self::Output(LoginMessage::FAILED_TITLE, $body);
       }
     }
-
-    if (Session::Certify(false)) { //セッション ID から自動ログイン
-      self::Output('ログインしています', 'game_frame');
-    } else { //単に呼ばれただけなら観戦ページに移動させる
-      self::Output('観戦ページにジャンプ', 'game_view', '観戦ページに移動します');
+    elseif (Session::Certify(false)) { //セッション ID から自動ログイン
+      self::Output(LoginMessage::AUTO_TITLE, LoginMessage::AUTO_BODY, 'game_frame');
+    }
+    else { //単に呼ばれただけなら観戦ページに移動させる
+      self::Output(Message::VIEW_TITLE, Message::VIEW_BODY, 'game_view');
     }
   }
 
-  //手動ログイン処理
+  //手動ログイン
   /*
     セッションを失った場合、ユーザ名とパスワードでログインする
-    ログイン成功/失敗を true/false で返す
+    返り値：bool (ログイン成否)
   */
   private static function LoginManually() {
     extract(RQ::ToArray()); //引数を展開
@@ -42,19 +40,17 @@ class Login {
 
     $crypt = Text::Crypt($password);
     //$crypt = $password; //デバッグ用
+
     return LoginDB::Certify($uname, $crypt) && LoginDB::Update($uname, $crypt); //認証＆再登録処理
   }
 
-  //結果出力関数
-  private static function Output($title, $jump, $body = null) {
-    if (is_null($body)) $body = $title;
+  //結果出力
+  private static function Output($title, $body, $jump = null) {
     if (is_null($jump)) {
       $url = '';
-    }
-    else {
+    } else {
       $url = sprintf('%s.php?room_no=%s', $jump, RQ::Get()->room_no);
-      $str = "。<br>\n".'切り替わらないなら <a href="%s" target="_top">ここ</a> 。';
-      $body .= sprintf($str, $url);
+      $body .= Text::BRLF . sprintf(Message::JUMP, $url);
     }
     HTML::OutputResult($title, $body, $url);
   }

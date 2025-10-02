@@ -8,7 +8,7 @@ RoleManager::LoadFile('unknown_mania');
 class Role_resurrect_mania extends Role_unknown_mania {
   public $mix_in = 'revive_pharmacist';
 
-  function Resurrect() {
+  public function Resurrect() {
     if ($this->IsResurrect($this->GetActor()) && $this->IsLivePartner() &&
 	Lottery::Percent(DB::$ROOM->IsEvent('full_revive') ? 100 : 40)) {
       $this->GetActor()->Revive();

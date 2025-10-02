@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('fox');
 class Role_blue_fox extends Role_fox {
-  function FoxEatCounter(User $user) {
+  public function FoxEatCounter(User $user) {
     if (! $user->IsLonely()) $user->AddRole('mind_lonely');
   }
 }

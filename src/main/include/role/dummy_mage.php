@@ -9,7 +9,7 @@ RoleManager::LoadFile('mage');
 class Role_dummy_mage extends Role_mage {
   public $display_role = 'mage';
 
-  function Mage(User $user) {
+  public function Mage(User $user) {
     if (DB::$ROOM->IsEvent('no_dream')) return; //熱帯夜ならスキップ
     $this->SaveMageResult($user, $this->DistinguishMage($user, true), $this->result);
   }

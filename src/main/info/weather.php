@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('role_data_class', 'room_option_class', 'info_functions');
 InfoHTML::OutputHeader('天候システム');
 ?>
@@ -29,7 +28,9 @@ Ver. 1.5.0
 <a href="#ver150a8">α8</a>
 <a href="#ver150a9">α9</a><br>
 Ver. 2.2.0
-<a href="#ver220a4">α4</a>
+<a href="#ver220a4">α4</a><br>
+Ver. 2.3.0
+<a href="#ver230rc1">RC1</a>
 </p>
 <table>
 <tr>
@@ -398,6 +399,36 @@ Ver. 2.2.0
   <td><?php WeatherData::OutputCaption(59); ?></td>
   <td>Ver. 2.2.0 α4</td>
 </tr>
+<tr id="ver230rc1">
+  <td><a href="#weather_liar"><?php WeatherData::OutputName(60); ?></a></td>
+  <td><a href="#type_talk">会話妨害</a></td>
+  <td><?php WeatherData::OutputCaption(60); ?></td>
+  <td>Ver. 2.3.0 RC1</td>
+</tr>
+<tr>
+  <td><a href="#weather_boost_reflect"><?php WeatherData::OutputName(61); ?></a></td>
+  <td><a href="#type_ability">能力強化・封印</a></td>
+  <td><?php WeatherData::OutputCaption(61); ?></td>
+  <td>Ver. 2.3.0 RC1</td>
+</tr>
+<tr>
+  <td><a href="#weather_no_cute"><?php WeatherData::OutputName(62); ?></a></td>
+  <td><a href="#type_talk">会話妨害</a></td>
+  <td><?php WeatherData::OutputCaption(62); ?></td>
+  <td>Ver. 2.3.0 RC1</td>
+</tr>
+<tr>
+  <td><a href="#weather_strong_voice"><?php WeatherData::OutputName(63); ?></a></td>
+  <td><a href="#type_talk">会話妨害</a></td>
+  <td><?php WeatherData::OutputCaption(63); ?></td>
+  <td>Ver. 2.3.0 RC1</td>
+</tr>
+<tr>
+  <td><a href="#weather_weak_voice"><?php WeatherData::OutputName(64); ?></a></td>
+  <td><a href="#type_talk">会話妨害</a></td>
+  <td><?php WeatherData::OutputCaption(64); ?></td>
+  <td>Ver. 2.3.0 RC1</td>
+</tr>
 </table>
 
 <h2 id="boost">確率変動 [Ver. 1.5.0 α8～]</h2>
@@ -429,6 +460,11 @@ Ver. 2.2.0
   <th>設定変更</th>
 </tr>
 <tr>
+  <td><a href="#weather_liar">宵月</a></td>
+  <td><a href="new_role/wolf.php#mad">狂人</a>・<a href="new_role/wolf.php#swindle_mad">因幡兎</a></td>
+  <td>Ver. 2.3.0 RC1～</td>
+</tr>
+<tr>
   <td><a href="#weather_sweet_ringing">流星群</a></td>
   <td><a href="new_role/human.php#jealousy_group">橋姫系</a></td>
   <td></td>
@@ -450,8 +486,8 @@ Ver. 2.2.0
 </tr>
 <tr>
   <td><a href="#weather_critical">烈日</a></td>
-  <td><a href="new_role/wolf.php#critical_mad">釣瓶落とし</a>・<a href="new_role/duelist.php#critical_avenger">狂骨</a></td>
-  <td>Ver. 1.5.0 β6～</td>
+  <td><a href="new_role/ability.php#critical_luck">痛恨能力者 (能動型)</a></td>
+  <td>Ver. 2.3.0 RC1～</td>
 </tr>
 <tr>
   <td><a href="#weather_frostbite">雪</a></td>
@@ -474,6 +510,11 @@ Ver. 2.2.0
   <td></td>
 </tr>
 <tr>
+  <td><a href="#weather_no_fox_dead">天気雨</a></td>
+  <td><a href="new_role/fox.php#depraver_group">背徳者系</a></td>
+  <td>Ver. 2.3.0 RC1～</td>
+</tr>
+<tr>
   <td><a href="#weather_half_moon">半月</a></td>
   <td><a href="new_role/wolf.php#jammer_mad">月兎</a></td>
   <td></td>
@@ -481,6 +522,11 @@ Ver. 2.2.0
 <tr>
   <td><a href="#weather_half_guard">曇天</a></td>
   <td><a href="new_role/wolf.php#trap_mad">罠師</a></td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="#weather_seal_ogre">叢雲</a></td>
+  <td><a href="new_role/human.php#bacchus_medium">神主</a></td>
   <td></td>
 </tr>
 <tr>
@@ -497,6 +543,7 @@ Ver. 2.2.0
 
 <h2 id="type_talk">会話妨害</h2>
 <p>
+<a href="#weather_liar">宵月</a>
 <a href="#weather_actor">スポットライト</a>
 <a href="#weather_passion">箒星</a>
 <a href="#weather_rainbow">虹</a>
@@ -506,9 +553,11 @@ Ver. 2.2.0
 <a href="#weather_line_reverse">バナナの皮</a>
 <a href="#weather_gentleman">春一番</a>
 <a href="#weather_lady">桜吹雪</a>
-<a href="#weather_confession">月虹</a>
 </p>
 <p>
+<a href="#weather_confession">月虹</a>
+<a href="#weather_strong_voice">時化</a>
+<a href="#weather_weak_voice">細雪</a>
 <a href="#weather_blinder">宵闇</a>
 <a href="#weather_whisper_ringing">波風</a>
 <a href="#weather_howl_ringing">小夜嵐</a>
@@ -516,14 +565,20 @@ Ver. 2.2.0
 <a href="#weather_deep_sleep">春時雨</a>
 <a href="#weather_silent">木漏れ日</a>
 <a href="#weather_mower">酸性雨</a>
+</p>
+<p>
 <a href="#weather_mind_open">白夜</a>
 <a href="#weather_aurora">極光</a>
 <a href="#weather_boost_cute">萌動</a>
-</p>
-<p>
+<a href="#weather_no_cute">野分</a>
 <a href="#weather_blind_talk_day">強風</a>
 <a href="#weather_blind_talk_night">風雨</a>
 </p>
+
+<h3 id="weather_liar">宵月 [Ver. 2.3.0 RC1～]</h3>
+<ul>
+  <li>全員に<a href="new_role/sub_role.php#liar">狼少年</a>がつきます。</li>
+</ul>
 
 <h3 id="weather_actor">スポットライト [Ver. 1.5.0 α3～]</h3>
 <ul>
@@ -573,6 +628,16 @@ Ver. 2.2.0
 <h3 id="weather_confession">月虹 [Ver. 2.2.0 α4～]</h3>
 <ul>
   <li>全員に<a href="new_role/sub_role.php#confession">告白</a>がつきます (昼限定)。</li>
+</ul>
+
+<h3 id="weather_strong_voice">時化 [Ver. 2.3.0 RC1～]</h3>
+<ul>
+  <li>全員に<a href="new_role/sub_role.php#strong_voice">大声</a>がつきます。</li>
+</ul>
+
+<h3 id="weather_weak_voice">細雪 [Ver. 2.3.0 RC1～]</h3>
+<ul>
+  <li>全員に<a href="new_role/sub_role.php#weak_voice">小声</a>がつきます。</li>
 </ul>
 
 <h3 id="weather_blinder">宵闇 [Ver. 1.5.0 α9～]</h3>
@@ -625,10 +690,21 @@ Ver. 2.2.0
   <li><a href="new_role/ability.php#talk_convert_cute">発言変換能力者 (遠吠え置換型)</a> に属するメイン役職の発言変換発動率が 5 倍になります。</li>
 </ul>
 
+<h3 id="weather_no_cute">野分 [Ver. 2.3.0 RC1～]</h3>
+<ul>
+  <li><a href="new_role/ability.php#talk_convert_cute">発言変換能力者 (遠吠え置換型)</a> に属する役職の発言変換発動率が 0 になります。</li>
+  <li>サブ役職も含まれます。</li>
+</ul>
+
 <h3 id="weather_blind_talk_day">強風 [Ver. 1.5.0 α2～]</h3>
 <ul>
   <li>自分の入村位置の上下左右の人以外の昼の発言が共有者の囁きに変換されて見えます。</li>
   <li>霊界からのログでは通常通り見ることができます。</li>
+  <li><a href="new_role/human.php#detective_common">探偵</a>が出現している場合は発動しません。</li>
+</ul>
+<h5>Ver. 2.3.0 α3～</h5>
+<ul>
+  <li><a href="new_role/human.php#detective_common">探偵</a>が出現している場合は発動しません。</li>
 </ul>
 <h5>Ver. 1.5.0 α3～</h5>
 <ul>
@@ -669,11 +745,21 @@ Ver. 2.2.0
 <h3 id="weather_critical_luck">タライ [Ver. 1.5.0 α3～]</h3>
 <ul>
   <li>全員に<a href="new_role/sub_role.php#critical_luck">痛恨</a>がつきます (昼限定)。</li>
+  <li><a href="new_role/human.php#detective_common">探偵</a>が出現している場合は発動しません。</li>
+</ul>
+<h5>Ver. 2.3.0 α3～</h5>
+<ul>
+  <li><a href="new_role/human.php#detective_common">探偵</a>が出現している場合は発動しません。</li>
 </ul>
 
 <h3 id="weather_hyper_critical">台風 [Ver. 1.5.0 α8～]</h3>
 <ul>
   <li>全員に<a href="new_role/sub_role.php#critical_voter">会心</a>・<a href="new_role/sub_role.php#critical_luck">痛恨</a>がつきます (昼限定)。</li>
+  <li><a href="new_role/human.php#detective_common">探偵</a>が出現している場合は発動しません。</li>
+</ul>
+<h5>Ver. 2.3.0 α3～</h5>
+<ul>
+  <li><a href="new_role/human.php#detective_common">探偵</a>が出現している場合は発動しません。</li>
 </ul>
 
 <h3 id="weather_hyper_random_voter">雹 [Ver. 1.5.0 α4～]</h3>
@@ -750,6 +836,7 @@ Ver. 2.2.0
 <p>
 <a href="#weather_no_sacrifice">蛍火</a>
 <a href="#weather_force_assassin_do">紅月</a>
+<a href="#weather_boost_reflect">寒波</a>
 <a href="#weather_no_reflect_assassin">日蝕</a>
 <a href="#weather_full_ogre">朧月</a>
 <a href="#weather_seal_ogre">叢雲</a>
@@ -757,9 +844,9 @@ Ver. 2.2.0
 <a href="#weather_no_contact">花曇</a>
 <a href="#weather_no_poison">旱魃</a>
 <a href="#weather_full_revive">雷雨</a>
-<a href="#weather_missfire_revive">疎雨</a>
 </p>
 <p>
+<a href="#weather_missfire_revive">疎雨</a>
 <a href="#weather_no_revive">快晴</a>
 <a href="#weather_no_dream">熱帯夜</a>
 <a href="#weather_psycho_infected">濃霧</a>
@@ -837,6 +924,11 @@ Ver. 2.2.0
   <li><a href="new_role/ability.php#assassin">暗殺能力者</a>がキャンセル投票を選択できなくなります。</li>
 </ul>
 
+<h3 id="weather_boost_reflect">寒波 [Ver. 2.3.0 RC1～]</h3>
+<ul>
+  <li>全員の<a href="new_role/human.php#assassin_spec">暗殺反射</a>率が +30% されます。</li>
+</ul>
+
 <h3 id="weather_no_reflect_assassin">日蝕 [Ver. 1.5.0 α9～]</h3>
 <ul>
   <li><a href="new_role/human.php#assassin_spec">暗殺反射</a>が無効化されます。</li>
@@ -879,10 +971,14 @@ Ver. 2.2.0
 
 <h3 id="weather_full_revive">雷雨 [Ver. 1.5.0 α3～]</h3>
 <ul>
-  <li><a href="new_role/ability.php#revive_other">他者蘇生能力者</a>・<a href="new_role/mania.php#resurrect_mania">僵尸</a>の蘇生率が 100%、誤爆率が 0% になります。</li>
+  <li><a href="new_role/ability.php#revive_other">他者蘇生能力者</a>・<a href="new_role/vampire.php#scarlet_vampire">屍鬼</a>・<a href="new_role/mania.php#resurrect_mania">僵尸</a>の蘇生率が 100%、誤爆率が 0% になります。</li>
   <li>蘇生が成立してもカウントされません。<br>
     (<a href="new_role/human.php#revive_cat">仙狸</a>の成功率低下・<a href="new_role/human.php#sacrifice_cat">猫神</a>の身代わり死・<a href="new_role/fox.php#revive_fox">仙狐</a>の能力喪失が発生しない)
   </li>
+</ul>
+<h5>Ver. 2.3.0～</h5>
+<ul>
+  <li><a href="new_role/vampire.php#scarlet_vampire">屍鬼</a>の蘇生率が 100% になります。</li>
 </ul>
 
 <h3 id="weather_missfire_revive">疎雨 [Ver. 1.5.0 α4～]</h3>

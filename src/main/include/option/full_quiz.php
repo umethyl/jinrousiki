@@ -6,5 +6,7 @@
 */
 OptionManager::Load('replace_human');
 class Option_full_quiz extends Option_replace_human {
-  function GetCaption() { return '出題者村'; }
+  public function GetCaption() {
+    return '出題者村';
+  }
 }

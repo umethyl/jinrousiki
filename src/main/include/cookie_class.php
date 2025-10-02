@@ -44,6 +44,16 @@ class JinrouCookie {
     self::$objection_list = $objection_list;
   }
 
+  //ユーザー登録時の初期化処理
+  static function Initialize() {
+    DB::$ROOM->system_time = Time::Get(); //現在時刻を取得
+    $time = DB::$ROOM->system_time - self::TIME;
+    setcookie('scene',      '', $time);
+    setcookie('objection',  '', $time);
+    setcookie('vote_count', '', $time);
+    setcookie('user_count', '', $time);
+  }
+
   //データロード
   private static function Load() {
     self::$scene      = @$_COOKIE['scene'];

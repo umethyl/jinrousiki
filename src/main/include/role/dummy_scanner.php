@@ -11,8 +11,11 @@ class Role_dummy_scanner extends Role_mind_scanner {
   public $action    = null;
   public $mind_role = null;
 
-  protected function OutputResult() {
-    $role = 'mind_read';
-    if (DB::$ROOM->date > 1 && ! $this->GetActor()->IsRole($role)) Image::Role()->Output($role);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 2 || $this->GetActor()->IsRole('mind_read');
+  }
+
+  protected function OutputAddResult() {
+    Image::Role()->Output('mind_read');
   }
 }

@@ -6,16 +6,15 @@
 */
 RoleManager::LoadFile('common');
 class Role_trap_common extends Role_common {
-  function SetVoteDay($uname) {
-    if ($this->IsRealActor()) $this->AddStackName($uname);
-  }
+  public $vote_day_type = 'real';
 
-  function VotedReaction() {
+  public function VotedReaction() {
     if (! is_array($stack = $this->GetStack())) return;
     if (count($stack) < 1) return;
+
     $target_list = array();
     //非村人陣営の ID と仮想ユーザ名を収集
-    foreach (array_keys($this->GetStack('target')) as $uname) {
+    foreach (array_keys($this->GetStack('vote_target')) as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       if (! $user->IsCamp('human', true)) {
 	$target_list[$user->id] = $user->GetVirtual()->uname;

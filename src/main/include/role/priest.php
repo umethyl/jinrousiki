@@ -7,63 +7,68 @@
 class Role_priest extends Role {
   public $priest_type = 'human_side';
 
-  //Mixin あり
-  function OutputResult() {
-    if (is_null($role = $this->GetOutputRole())) return;
-    $this->OutputAbilityResult($this->GetEvent($role));
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 3 || DB::$ROOM->date % 2 == 1;
+  }
+
+  protected function OutputAddResult() {
+    $this->OutputPriestResult();
+  }
+
+  //司祭結果表示 (Mixin あり)
+  public function OutputPriestResult() {
+    $role = $this->GetOutputPriestRole();
+    $this->OutputAbilityResult($this->GetResult($role));
   }
 
   //司祭結果表示役職取得
-  protected function GetOutputRole() {
-    return DB::$ROOM->date > 3 && DB::$ROOM->date % 2 == 0 ? $this->role : null;
+  protected function GetOutputPriestRole() {
+    return $this->role;
   }
 
   //イベント名取得
-  protected function GetEvent($role = null) {
-    return strtoupper(isset($role) ? $role : $this->role) . '_RESULT';
+  final protected function GetResult($role = null) {
+    if (is_null($role)) $role = $this->role;
+    return strtoupper($role) . '_RESULT';
   }
 
-  //司祭能力
-  function Priest(StdClass $role_flag) {
-    $data = $this->GetStack('priest');
-    if (is_null($role = $this->GetPriestRole($data->list))) return;
-    $class = $this->GetClass($method = 'GetPriestType');
-    DB::$ROOM->ResultAbility($this->GetEvent($role), $data->count[$class->$method()]);
-  }
-
-  //司祭能力発動判定
-  protected function GetPriestRole(array $list) {
-    return DB::$ROOM->date > 2 && DB::$ROOM->date % 2 == 1 ? $this->role : null;
-  }
-
-  //司祭能力対象取得
-  function GetPriestType() { return $this->priest_type; }
-
-  //情報収集
-  final function AggregatePriest(StdClass $role_flag) {
+  //司祭情報収集
+  final public function AggregatePriest() {
+    //-- 初期化 --//
     $flag = false;
     $data = new StdClass();
     $data->list  = array();
     $data->count = array('total' => 0, 'human' => 0, 'wolf' => 0, 'fox' => 0, 'lovers' => 0,
 			 'human_side' => 0, 'dead' => 0, 'dream' => 0, 'sub_role' => 0);
     $this->SetStack($data);
-    foreach ($role_flag as $role => $stack) { //司祭系の出現判定
+
+    //-- 司祭系の出現判定 --//
+    foreach (DB::$USER->role as $role => $stack) {
       $user = new User($role);
-      if ($user->IsRoleGroup('priest')) $flag |= RoleManager::LoadMain($user)->SetPriest();
+      if ($user->IsRoleGroup('priest')) {
+	$filter = RoleManager::LoadMain($user);
+	$filter->SetPriest();
+	$flag |= $filter->IsAggregatePriest();
+      }
     }
     $data = $this->GetStack();
-    if (DB::$ROOM->IsOption('weather') && (DB::$ROOM->date % 3) == 1) { //天候判定
+
+    //-- 天候判定 --//
+    if (DB::$ROOM->IsOption('weather') && DB::$ROOM->date % 3 == 1) {
       $role = 'weather_priest';
       $flag = true;
       $data->$role = true;
       if (! in_array($role, $data->list)) $data->list[] = $role;
     }
+
+    //-- 司祭情報収集判定 --//
     if (! $flag) {
       $this->SetStack($data);
       return;
     }
 
-    foreach (DB::$USER->rows as $user) { //陣営情報収集
+    //-- 陣営情報収集 --//
+    foreach (DB::$USER->rows as $user) {
       if ($user->IsDead(true)) {
 	if (! $user->IsCamp('human', true)) $data->count['dead']++;
 	continue;
@@ -94,6 +99,7 @@ class Role_priest extends Role {
       }
     }
 
+    //-- 人外勝利前日判定 --//
     if (in_array('crisis_priest', $data->list) || in_array('revive_priest', $data->list)) {
       if ($data->count['total'] - $data->count['lovers'] <= 2) {
 	$data->crisis = 'lovers';
@@ -113,11 +119,45 @@ class Role_priest extends Role {
     $this->SetStack($data);
   }
 
-  //司祭情報セット
-  protected function SetPriest() {
+  //司祭能力発動情報セット
+  public function SetPriest() {
+    if ($this->IgnoreSetPriest()) return;
     $stack = $this->GetStack('priest');
     $stack->list[] = $this->role;
     $this->SetStack($stack, 'priest');
+  }
+
+  //司祭能力発動情報スキップ判定
+  protected function IgnoreSetPriest() {
+    return DB::$ROOM->date < 3 || DB::$ROOM->date % 2 == 0;
+  }
+
+  //司祭陣営情報セット判定
+  public function IsAggregatePriest() {
     return true;
+  }
+
+  //司祭能力
+  public function Priest() {
+    if ($this->IgnorePriest()) return;
+    $data  = $this->GetStack('priest');
+    $role  = $this->GetPriestRole();
+    $class = $this->GetClass($method = 'GetPriestType');
+    DB::$ROOM->ResultAbility($this->GetResult($role), $data->count[$class->$method()]);
+  }
+
+  //司祭能力スキップ判定
+  protected function IgnorePriest() {
+    return false;
+  }
+
+  //司祭能力発動対象役職取得
+  protected function GetPriestRole() {
+    return $this->role;
+  }
+
+  //司祭能力対象取得
+  public function GetPriestType() {
+    return $this->priest_type;
   }
 }

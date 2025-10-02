@@ -6,15 +6,19 @@
 */
 RoleManager::LoadFile('cupid');
 class Role_angel extends Role_cupid {
-  function VoteNightAction(array $list, $flag) {
-    parent::VoteNightAction($list, $flag);
+  public function VoteNightAction() {
+    parent::VoteNightAction();
+
     //共感者判定
+    $list = $this->GetStack('target_list');
     $a = array_shift($list);
     $b = array_shift($list);
     if ($this->IsSympathy($a, $b)) $this->SetSympathy($a, $b);
   }
 
-  protected function IsSympathy(User $a, User $b) { return $a->sex != $b->sex; }
+  protected function IsSympathy(User $a, User $b) {
+    return $a->sex != $b->sex;
+  }
 
   //共感者処理
   protected function SetSympathy(User $a, User $b) {

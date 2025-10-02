@@ -13,40 +13,47 @@ class Role_revive_fox extends Role_fox {
   public $submit     = 'revive_do';
   public $not_submit = 'revive_not_do';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 2 && ! DB::$ROOM->IsOption('seal_message')) {
-      $this->OutputAbilityResult('POISON_CAT_RESULT');
-    }
-    parent::OutputResult();
+  protected function OutputAddResult() {
+    if (DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message')) return;
+    $this->OutputAbilityResult('POISON_CAT_RESULT');
   }
 
-  function OutputAction() {
+  public function OutputAction() {
     if ($this->GetActor()->IsActive() && ! DB::$ROOM->IsOpenCast()) {
       RoleHTML::OutputVote('revive-do', $this->submit, $this->action, $this->not_action);
     }
   }
 
-  function IsVote() { return $this->filter->IsVote() && $this->GetActor()->IsActive(); }
-
-  function SetVoteNight() { $this->filter->SetVoteNight(); }
-
-  function IgnoreVoteAction() {
-    return $this->GetActor()->IsActive() ? null : '能力喪失しています';
+  public function IsVote() {
+    return $this->filter->IsVote() && $this->GetActor()->IsActive();
   }
 
-  function GetVoteIconPath(User $user, $live) {
+  public function SetVoteNight() {
+    $this->filter->SetVoteNight();
+  }
+
+  //投票無効追加判定
+  public function IgnoreVoteAction() {
+    return $this->GetActor()->IsActive() ? null : VoteRoleMessage::LOST_ABILITY;
+  }
+
+  public function GetVoteIconPath(User $user, $live) {
     return $this->filter->GetVoteIconPath($user, $live);
   }
 
-  function IsVoteCheckbox(User $user, $live) {
+  public function IsVoteCheckbox(User $user, $live) {
     return $this->filter->IsVoteCheckbox($user, $live);
   }
 
-  function IgnoreVoteNight(User $user, $live) {
+  public function IgnoreVoteNight(User $user, $live) {
     return $this->filter->IgnoreVoteNight($user, $live);
   }
 
-  function GetReviveRate() { return 100; }
+  public function GetReviveRate() {
+    return 100;
+  }
 
-  function ReviveAction() { $this->GetActor()->LostAbility(); }
+  public function ReviveAction() {
+    $this->GetActor()->LostAbility();
+  }
 }

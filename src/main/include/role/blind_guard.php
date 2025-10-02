@@ -8,9 +8,13 @@
 */
 RoleManager::LoadFile('guard');
 class Role_blind_guard extends Role_guard {
-  function IgnoreGuard() { return null; }
+  public $hunt = false;
 
-  function GuardAction() { $this->GetVoter()->AddRole('blinder'); }
+  public function IgnoreGuard() {
+    return null;
+  }
 
-  protected function IsHunt(User $user) { return false; }
+  public function GuardAction() {
+    $this->GetVoter()->AddRole('blinder');
+  }
 }

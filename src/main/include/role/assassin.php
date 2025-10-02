@@ -9,25 +9,29 @@ class Role_assassin extends Role {
   public $action     = 'ASSASSIN_DO';
   public $not_action = 'ASSASSIN_NOT_DO';
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('assassin-do', 'assassin_do', $this->action, $this->not_action);
   }
 
-  function IsVote() { return DB::$ROOM->date > 1; }
+  public function IsVote() {
+    return DB::$ROOM->date > 1;
+  }
 
-  function GetIgnoreMessage() { return '初日は暗殺できません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+  }
 
-  function ExistsActionFilter(array $list) {
+  protected function SetVoteNightFilter() {
+    if (DB::$ROOM->IsEvent('force_assassin_do')) $this->SetStack(null, 'not_action');
+  }
+
+  protected function ExistsActionFilter(array $list) {
     if (DB::$ROOM->IsEvent('force_assassin_do')) unset($list[$this->not_action]);
     return $list;
   }
 
-  function SetVoteNightFilter() {
-    if (DB::$ROOM->IsEvent('force_assassin_do')) $this->SetStack(null, 'not_action');
-  }
-
   //暗殺先セット
-  function SetAssassin(User $user) {
+  public function SetAssassin(User $user) {
     $actor = $this->GetActor();
     foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
       if ($filter->TrapStack($actor, $user->id)) return;
@@ -36,6 +40,7 @@ class Role_assassin extends Role {
       if ($filter->GuardAssassin($user->id)) return;
     }
     if ($user->IsMainGroup('escaper')) return; //逃亡者は無効
+
     if ($user->IsReflectAssassin() || $this->IsReflectAssassin()) { //反射判定
       $this->AddSuccess($actor->id, 'assassin');
       return;
@@ -48,7 +53,7 @@ class Role_assassin extends Role {
   protected function IsReflectAssassin() { return false; }
 
   //暗殺処理
-  function Assassin(User $user) {
+  public function Assassin(User $user) {
     if ($user->IsDead(true) || $this->IgnoreAssassin($user)) return false;
     $this->SetAssassinTarget($user);
     $this->AssassinAction($user);
@@ -59,13 +64,17 @@ class Role_assassin extends Role {
   protected function IgnoreAssassin(User $user) { return false; }
 
   //暗殺死対象セット
-  protected function SetAssassinTarget(User $user) { $this->AddSuccess($user->id, 'assassin'); }
+  protected function SetAssassinTarget(User $user) {
+    $this->AddSuccess($user->id, 'assassin');
+  }
 
   //暗殺追加処理
   protected function AssassinAction(User $user) {}
 
   //暗殺死処理
-  function AssassinKill() {
-    foreach ($this->GetStack() as $id => $flag) DB::$USER->Kill($id, 'ASSASSIN_KILLED');
+  public function AssassinKill() {
+    foreach ($this->GetStack() as $id => $flag) {
+      DB::$USER->Kill($id, 'ASSASSIN_KILLED');
+    }
   }
 }

@@ -8,5 +8,7 @@ RoleManager::LoadFile('poison');
 class Role_strong_poison extends Role_poison {
   public $display_role = 'poison';
 
-  function IsPoisonTarget(User $user) { return $user->IsInhuman(); }
+  public function IsPoisonTarget(User $user) {
+    return $user->IsInhuman();
+  }
 }

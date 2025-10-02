@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_emperor_wolf extends Role_wolf {
-  function Win($winner) {
+  public function Win($winner) {
     foreach (DB::$USER->rows as $user) {
       if ($user->IsLive() && $user->IsMainGroup('mad')) return false;
     }

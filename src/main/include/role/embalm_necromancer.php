@@ -6,7 +6,9 @@
 */
 RoleManager::LoadFile('necromancer');
 class Role_embalm_necromancer extends Role_necromancer {
-  function Necromancer(User $user, $flag) {
+  public $result = 'EMBALM_NECROMANCER_RESULT';
+
+  public function Necromancer(User $user, $flag) {
     if ($flag) return 'stolen';
     $camp = $this->GetVoteUser($user->uname)->GetCamp(true);
     return 'embalm_' . ($user->GetCamp(true) == $camp ? 'agony' : 'reposeful');

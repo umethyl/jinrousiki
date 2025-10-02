@@ -11,16 +11,20 @@ class Role_mania extends Role {
   public $delay_copy = false;
   public $camp_copy  = false;
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('mania-do', 'mania_do', $this->action);
   }
 
-  function IsVote() { return DB::$ROOM->IsDate(1); }
+  public function IsVote() {
+    return DB::$ROOM->IsDate(1);
+  }
 
-  function GetIgnoreMessage() { return '初日以外は投票できません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
+  }
 
   //コピー処理
-  function Copy(User $user) {
+  public function Copy(User $user) {
     $actor = $this->GetActor();
     $role  = $this->GetRole($user);
     $this->CopyAction($user, $role);
@@ -42,11 +46,15 @@ class Role_mania extends Role {
   }
 
   //コピー役職取得
-  protected function GetManiaRole(User $user) { return $user->main_role; }
+  protected function GetManiaRole(User $user) {
+    return $user->main_role;
+  }
 
   //特殊コピー処理
   protected function CopyAction(User $user, $role) {}
 
   //コピー変化後役職取得
-  protected function GetCopiedRole() { return $this->copied; }
+  protected function GetCopiedRole() {
+    return $this->copied;
+  }
 }

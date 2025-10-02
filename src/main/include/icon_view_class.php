@@ -1,25 +1,42 @@
 <?php
 //-- アイコン表示出力クラス --//
 class IconView {
-  static function Output() {
+  //実行
+  static function Execute() {
+    self::Load();
+    self::Output();
+  }
+
+  //データロード
+  private static function Load() {
     DB::Connect();
     Session::Start();
+  }
 
-    HTML::OutputHeader('ユーザアイコン一覧', 'icon_view');
+  //出力
+  private static function Output() {
+    HTML::OutputHeader(IconMessage::TITLE, 'icon_view');
     HTML::OutputJavaScript('submit_icon_search');
     HTML::OutputBodyHeader();
-    echo <<<EOF
-<div class="link">
-<a href="./">←TOP</a>
-<a href="icon_upload.php">アイコン登録</a>
-</div>
-<img class="title" src="img/icon_view_title.jpg" title="アイコン一覧" alt="アイコン一覧">
-<table align="center">
-<tr><td>
-
-EOF;
+    self::OutputHeader();
     IconHTML::Output();
     Text::Output('</td></tr></table>');
     HTML::OutputFooter();
+  }
+
+  //ヘッダ出力
+  private static function OutputHeader() {
+    $format = <<<EOF
+<div class="link">
+<a href="./">%s</a>
+<a href="icon_upload.php">%s</a>
+</div>
+<img class="title" src="img/title/icon_view.jpg" title="%s" alt="%s">
+<table align="center">
+<tr><td>
+EOF;
+
+    printf($format . Text::LF,
+	   IconMessage::TOP, IconMessage::UPLOAD, IconMessage::VIEW, IconMessage::VIEW);
   }
 }

@@ -6,11 +6,14 @@
   ・仲間表示：洗脳者
   ・人攫い無効：吸血鬼陣営
   ・人攫い：洗脳者付加
-  ・身代わり対象者：洗脳者
+  ・身代わり：洗脳者
 */
 RoleManager::LoadFile('ogre');
 class Role_sacrifice_ogre extends Role_ogre {
   public $mix_in = 'protected';
+  public $resist_rate  =  0;
+  public $reduce_base  =  3;
+  public $reduce_rate  =  5;
   public $reflect_rate = 50;
 
   protected function OutputPartner() {
@@ -23,17 +26,19 @@ class Role_sacrifice_ogre extends Role_ogre {
     RoleHTML::OutputPartner($stack, 'psycho_infected_list');
   }
 
-  function Win($winner) { return $winner != 'human' && $this->IsLive(); }
+  public function Win($winner) {
+    return $winner != 'human' && $this->IsLive();
+  }
 
-  protected function GetResistRate() { return 0; }
+  protected function IgnoreAssassin(User $user) {
+    return $user->IsCamp('vampire');
+  }
 
-  protected function GetReduceRate() { return 3 / 5; }
+  protected function Assassin(User $user) {
+    $user->AddRole('psycho_infected');
+  }
 
-  protected function IgnoreAssassin(User $user) { return $user->IsCamp('vampire'); }
-
-  protected function Assassin(User $user) { $user->AddRole('psycho_infected'); }
-
-  function IsSacrifice(User $user) {
+  public function IsSacrifice(User $user) {
     return ! $this->IsActor($user) && $user->IsRole('psycho_infected');
   }
 }

@@ -8,9 +8,11 @@ RoleManager::LoadFile('poison');
 class Role_dummy_poison extends Role_poison {
   public $display_role = 'poison';
 
-  function IsPoison() { return DB::$ROOM->IsDay(); }
+  public function IsPoison() {
+    return DB::$ROOM->IsDay();
+  }
 
-  function IsPoisonTarget(User $user) {
+  public function IsPoisonTarget(User $user) {
     return $user->IsRole('dream_eater_mad') || $user->IsMainGroup('fairy');
   }
 }

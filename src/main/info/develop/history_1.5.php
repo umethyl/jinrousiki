@@ -1,7 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
-Loader::LoadFile('info_functions');
+require_once('init.php');
 InfoHTML::OutputHeader('開発履歴 / 1.5', 1, 'develop_history');
 ?>
 <p><a href="history.php">最新情報</a></p>

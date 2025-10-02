@@ -8,22 +8,22 @@ class Role_strong_voice extends Role {
   public $voice_list = array('weak', 'normal', 'strong');
 
   //声量変換
-  function FilterVoice(&$voice, &$str) {
+  public function FilterVoice(&$voice, &$str) {
     $voice = array_shift(explode('_', $this->role));
   }
 
   //声量シフト
-  function ShiftVoice(&$voice, &$str, $up = true) {
+  protected function ShiftVoice(&$voice, &$str, $up = true) {
     if (($key = array_search($voice, $this->voice_list)) === false) return;
     if ($up) {
       if (++$key >= count($this->voice_list)) {
-	$str = Message::$howling;
+	$str = RoleTalkMessage::HOWLING;
 	return;
       }
     }
     else {
       if (--$key < 0) {
-	$str = Message::$common_talk;
+	$str = RoleTalkMessage::COMMON_TALK;
 	return;
       }
     }

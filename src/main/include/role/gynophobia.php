@@ -8,7 +8,7 @@ RoleManager::LoadFile('chicken');
 class Role_gynophobia extends Role_chicken {
   public $sudden_death = 'GYNOPHOBIA';
 
-  function IsSuddenDeath() {
-    return ! $this->IgnoreSuddenDeath() && $this->GetVoteUser()->IsFemale();
+  public function IsSuddenDeath() {
+    return $this->GetVoteUser()->IsFemale();
   }
 }

@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('fox');
 class Role_spell_fox extends Role_fox {
-  function FoxEatCounter(User $user) {
+  public function FoxEatCounter(User $user) {
     if (! $this->GetActor()->IsActive()) return false;
     $user->AddRole('spell_wisp');
     $this->GetActor()->LostAbility();

@@ -6,5 +6,7 @@
 */
 OptionManager::Load('replace_human');
 class Option_full_mania extends Option_replace_human {
-  function GetCaption() { return '神話マニア村'; }
+  public function GetCaption() {
+    return '神話マニア村';
+  }
 }

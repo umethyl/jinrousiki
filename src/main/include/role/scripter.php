@@ -7,13 +7,20 @@
 class Role_scripter extends Role {
   public $ability = 'ability_scripter';
 
-  function OutputResult() {
-    if ($this->IsActive()) RoleHTML::OutputAbilityResult($this->ability, null);
+  protected function IgnoreResult() {
+    return ! $this->IsActive();
   }
 
-  function FilterVoteDo(&$count) {
+  protected function OutputAddResult() {
+    RoleHTML::OutputAbilityResult($this->ability, null);
+  }
+
+  public function FilterVoteDo(&$count) {
     if ($this->IsActive()) $count++;
   }
 
-  private function IsActive() { return DB::$ROOM->date > 4; }
+  //能力発動判定
+  private function IsActive() {
+    return DB::$ROOM->date > 4;
+  }
 }

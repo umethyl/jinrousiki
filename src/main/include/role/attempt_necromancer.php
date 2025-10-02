@@ -6,9 +6,16 @@
 */
 RoleManager::LoadFile('necromancer');
 class Role_attempt_necromancer extends Role_necromancer {
-  function Necromancer(User $user, $data) {
+  public $result = 'ATTEMPT_NECROMANCER_RESULT';
+
+  //霊能 (夜発動型)
+  public function NecromancerNight() {
     $stack = array();
+
+    $user = RoleManager::GetStack('wolf_target');
     if ($user->IsLive(true)) $stack[$user->id] = true; //人狼襲撃
+
+    $data = RoleManager::GetStack('vote_data');
     foreach (array('ASSASSIN_DO', 'OGRE_DO') as $action) { //暗殺・人攫い
       foreach ($data[$action] as $id) {
 	if (DB::$USER->ByID($id)->IsLive(true)) $stack[$id] = true;
@@ -21,7 +28,9 @@ class Role_attempt_necromancer extends Role_necromancer {
       $str_stack[$user->id] = $user->handle_name;
     }
     ksort($str_stack);
-    $action = 'ATTEMPT_NECROMANCER_RESULT';
-    foreach ($str_stack as $target) DB::$ROOM->ResultAbility($action, 'attempt', $target);
+
+    foreach ($str_stack as $target) {
+      DB::$ROOM->ResultAbility($this->result, 'attempt', $target);
+    }
   }
 }

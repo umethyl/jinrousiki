@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 HTML::OutputHeader('新役職情報 - [一覧]', 'new_role');
 HTML::OutputBodyHeader();
 ?>
@@ -107,7 +106,14 @@ Ver. 2.2.0
 <a href="#ver220a5">α5</a>
 <a href="#ver220a6">α6</a>
 <a href="#ver220a7">α7</a>
-<a href="#ver220a8">α8</a>
+<a href="#ver220a8">α8</a><br>
+Ver. 2.3.0
+<a href="#ver230a2">α2</a>
+<a href="#ver230a3">α3</a>
+<a href="#ver230a4">α4</a>
+<a href="#ver230a5">α5</a>
+<a href="#ver230a6">α6</a>
+<a href="#ver230a7">α7</a>
 </p>
 
 <p>
@@ -153,7 +159,11 @@ Ver. 2.1.0
 <a href="#sub_ver210a3">α3</a>
 <a href="#sub_ver210a6">α6</a><br>
 Ver. 2.2.0
-<a href="#sub_ver220a7">α7</a>
+<a href="#sub_ver220a7">α7</a><br>
+Ver. 2.3.0
+<a href="#sub_ver230a2">α2</a>
+<a href="#sub_ver230a3">α3</a>
+<a href="#sub_ver230a7">α7</a>
 </p>
 
 <table id="main_role">
@@ -365,7 +375,7 @@ Ver. 2.2.0
   <td><a href="human.php#poison_group">埋毒者系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">処刑された時の毒の対象が人外 (<a href="wolf.php#wolf_group">人狼系</a>と<a href="fox.php">妖狐陣営</a>) 限定の上位埋毒者 (本人表記は「<a href="human.php#poison">埋毒者</a>」)。</td>
+  <td class="ability">処刑された時の毒の対象が人外 (<a href="wolf.php#wolf_group">人狼系</a>と<a href="fox.php">妖狐カウント</a>) 限定の上位埋毒者 (本人表記は「<a href="human.php#poison">埋毒者</a>」)。</td>
   <td>Ver. 1.4.0 α17</td>
 </tr>
 <tr>
@@ -419,7 +429,7 @@ Ver. 2.2.0
   <td><a href="fox.php#fox_group">妖狐系</a></td>
   <td>村人<br>(呪殺)</td>
   <td>村人</td>
-  <td class="ability">毒を持った妖狐。毒の対象は<a href="fox.php">妖狐陣営</a>以外。</td>
+  <td class="ability">毒を持った妖狐。毒の対象は<a href="fox.php">妖狐カウント</a>以外。</td>
   <td>Ver. 1.4.0 α17</td>
 </tr>
 <tr>
@@ -1318,7 +1328,7 @@ Ver. 2.2.0
   <td><a href="wolf.php#wolf_group">人狼系</a></td>
   <td>人狼</td>
   <td>人狼</td>
-  <td class="ability"><a href="wolf.php#wolf_group">人狼系</a>と<a href="fox.php">妖狐陣営</a>しか噛み殺せない人狼。</td>
+  <td class="ability"><a href="wolf.php#wolf_group">人狼系</a>と<a href="fox.php">妖狐カウント</a>しか噛み殺せない人狼。</td>
   <td>Ver. 1.4.0 β12</td>
 </tr>
 <tr>
@@ -2389,7 +2399,7 @@ Ver. 2.2.0
   <td><a href="duelist.php#avenger_group">復讐者系</a></td>
   <td>村人<br>(呪返し)</td>
   <td>村人</td>
-  <td class="ability">呪いを持った特殊な復讐者。処刑投票先が<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐</a>なら<a href="sub_role.php#death_warrant">死の宣告</a> (4日後)を付加する。<br><a href="human.php#voodoo_killer">陰陽師</a>の占い・<a href="human.php#guard_hunt">狩人の護衛</a>で死亡する。</td>
+  <td class="ability">呪いを持った特殊な復讐者。処刑投票先が<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐カウント</a>なら<a href="sub_role.php#death_warrant">死の宣告</a> (4日後)を付加する。<br><a href="human.php#voodoo_killer">陰陽師</a>の占い・<a href="human.php#guard_hunt">狩人の護衛</a>で死亡する。</td>
   <td>Ver. 1.5.0 β4</td>
 </tr>
 <tr>
@@ -2974,7 +2984,7 @@ Ver. 2.2.0
   <td><a href="human.php#assassin_group">暗殺者系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability"><a href="human.php">村人陣営</a>・<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐陣営</a>を暗殺できない特殊な暗殺者。</td>
+  <td class="ability"><a href="human.php">村人陣営</a>・<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐カウント</a>を暗殺できない特殊な暗殺者。</td>
   <td>Ver. 2.1.0 α6</td>
 </tr>
 <tr>
@@ -3147,6 +3157,132 @@ Ver. 2.2.0
   <td>村人</td>
   <td class="ability"><a href="wolf.php#wolf_group">人狼</a> (種類を問わない) の襲撃に耐えることができるが、<a href="sub_role.php#death_warrant">死の宣告</a>を受けてしまう村人。</td>
   <td>Ver. 2.2.0 α8</td>
+</tr>
+<tr id="ver230a2">
+  <td><a href="lovers.php#altair_cupid">彦星</a></td>
+  <td><a href="lovers.php">恋人</a></td>
+  <td><a href="lovers.php#cupid_group">キューピッド系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">自分撃ち固定で、矢を撃った二人に<a href="sub_role.php#mind_friend">共鳴者</a>を付加するキューピッド。矢を撃った相手に<a href="sub_role.php#vega_lovers">織姫</a>が付く。</td>
+  <td>Ver. 2.3.0 α2</td>
+</tr>
+<tr id="ver230a3">
+  <td><a href="chiroptera.php#doom_chiroptera">蝉蝙蝠</a></td>
+  <td><a href="chiroptera.php">蝙蝠</a></td>
+  <td><a href="chiroptera.php#chiroptera_group">蝙蝠系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">一定期間後 (7日目) の昼にショック死する蝙蝠。</td>
+  <td>Ver. 2.3.0 α3</td>
+</tr>
+<tr>
+  <td><a href="lovers.php#nephila_cupid">絡新婦</a></td>
+  <td><a href="lovers.php">恋人</a></td>
+  <td><a href="lovers.php#cupid_group">キューピッド系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">自分を含めて矢を三本撃ち、<a href="sub_role.php#fake_lovers">愛人</a>を作る特殊なキューピッド。</td>
+  <td>Ver. 2.3.0 α3</td>
+</tr>
+<tr id="ver230a4">
+  <td><a href="fox.php#depraver">背徳者</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#depraver_group">背徳者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability"><a href="fox.php">妖狐</a>が全滅すると自分も後追いする。</td>
+  <td>Ver. 2.3.0 α4</td>
+</tr>
+<tr>
+  <td><a href="fox.php#silver_depraver">頭人</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#depraver_group">背徳者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability"><a href="fox.php">妖狐</a>が誰か分からない背徳者。</td>
+  <td>Ver. 2.3.0 α4</td>
+</tr>
+<tr>
+  <td><a href="fox.php#sacrifice_depraver">伊呂具秦公</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#depraver_group">背徳者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability"><a href="fox.php#fox_group">妖狐系</a>・<a href="fox.php#child_fox_group">子狐系</a>の呪殺に対して身代わりになる背徳者。</td>
+  <td>Ver. 2.3.0 α4</td>
+</tr>
+<tr id="ver230a5">
+  <td><a href="wolf.php#honey_wolf">蜜狼</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#wolf_group">人狼系</a></td>
+  <td>人狼</td>
+  <td>人狼</td>
+  <td class="ability">襲撃に成功したら自分も死亡してしまう人狼。</td>
+  <td>Ver. 2.3.0 α5</td>
+</tr>
+<tr>
+  <td><a href="mania.php#lute_mania">琵琶牧々</a></td>
+  <td><a href="mania.php">神話マニア</a></td>
+  <td><a href="mania.php#unknown_mania_group">鵺系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">コピー先の周辺縦軸で足音が鳴る特殊な鵺。</td>
+  <td>Ver. 2.3.0 α5</td>
+</tr>
+<tr>
+  <td><a href="mania.php#harp_mania">琴古主</a></td>
+  <td><a href="mania.php">神話マニア</a></td>
+  <td><a href="mania.php#unknown_mania_group">鵺系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">コピー先の周辺横軸で足音が鳴る特殊な鵺。</td>
+  <td>Ver. 2.3.0 α5</td>
+</tr>
+<tr id="ver230a6">
+  <td><a href="human.php#prince">ろくろ首</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#human_group">村人系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">一度だけ処刑を無かったことにできる村人。</td>
+  <td>Ver. 2.3.0 α6</td>
+</tr>
+<tr>
+  <td><a href="duelist.php#perverse_duelist">天探女</a></td>
+  <td><a href="duelist.php">決闘者</a></td>
+  <td><a href="duelist.php#duelist_group">決闘者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability"><a href="sub_role.php#rival">宿敵</a>に加えて、<a href="sub_role.php#perverseness">天邪鬼</a>を付加する特殊な決闘者。</td>
+  <td>Ver. 2.3.0 α6</td>
+</tr>
+<tr id="ver230a7">
+  <td><a href="human.php#wanderer_guard">一寸法師</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#guard_group">狩人系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">人狼の襲撃先が生存していた場合に、護衛先に<a href="sub_role.php#penetration">護衛貫通</a>を付加してしまう特殊な狩人。</td>
+  <td>Ver. 2.3.0 α7</td>
+</tr>
+<tr>
+  <td><a href="human.php#step_scanner">雷神</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#mind_scanner_group">さとり系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">夜の投票先の周囲に会話能力者が居た場合は一定確率で足音が鳴る特殊なさとり。</td>
+  <td>Ver. 2.3.0 α7</td>
+</tr>
+<tr>
+  <td><a href="human.php#step_assassin">風神</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#assassin_group">暗殺者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">夜の投票時に自分の投票先で足音が鳴る特殊な暗殺者。<br>暗殺成立時には<a href="sub_role.php#febris">熱病</a>を付加する。</td>
+  <td>Ver. 2.3.0 α7</td>
 </tr>
 </table>
 
@@ -3908,6 +4044,27 @@ Ver. 2.2.0
     <td>強制</td>
     <td class="ability">処刑時の毒中り候補になった場合、優先的に中る。</td>
     <td>Ver. 2.2.0 α7</td>
+  </tr>
+  <tr id="sub_ver230a2">
+    <td><a href="sub_role.php#vega_lovers">織姫</a></td>
+    <td><a href="sub_role.php#lovers_group">恋人系</a></td>
+    <td>強制</td>
+    <td class="ability">様々な特殊耐性を持つが、2 日目昼に存在を告知される。</td>
+    <td>Ver. 2.3.0 α2</td>
+  </tr>
+  <tr id="sub_ver230a3">
+    <td><a href="sub_role.php#fake_lovers">愛人</a></td>
+    <td><a href="sub_role.php#lovers_group">恋人系</a></td>
+    <td>強制</td>
+    <td class="ability"><a href="sub_role.php#lovers">恋人</a>であるように表示され、勝利条件が<a href="lovers.php">恋人陣営</a>に変化する。</td>
+    <td>Ver. 2.3.0 α3</td>
+  </tr>
+  <tr id="sub_ver230a7">
+    <td><a href="sub_role.php#penetration">護衛貫通</a></td>
+    <td><a href="sub_role.php#other_group">その他</a></td>
+    <td>無し</td>
+    <td class="ability"><a href="ability.php#guard">護衛能力</a>を完全無効化する。</td>
+    <td>Ver. 2.3.0 α7</td>
   </tr>
 </table>
 

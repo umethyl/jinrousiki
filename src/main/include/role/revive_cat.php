@@ -9,13 +9,17 @@ RoleManager::LoadFile('poison_cat');
 class Role_revive_cat extends Role_poison_cat {
   public $revive_rate = 80;
 
-  function GetReviveRate() { return ceil(parent::GetReviveRate() / pow(4, $this->GetTimes())); }
-
-  function ReviveAction() {
-    $times = $this->GetTimes();
-    $role  = $times > 0 ? $this->role . '[' . $times . ']' : $this->role;
-    $this->GetActor()->ReplaceRole($role, $this->role . '[' . ++$times . ']');
+  public function GetReviveRate() {
+    return ceil(parent::GetReviveRate() / pow(4, $this->GetReviveCount()));
   }
 
-  private function GetTimes() { return (int)$this->GetActor()->GetMainRoleTarget(); }
+  public function ReviveAction() {
+    $count = $this->GetReviveCount();
+    $role  = $count > 0 ? sprintf('%s[%s]', $this->role, $count) : $this->role;
+    $this->GetActor()->ReplaceRole($role, sprintf('%s[%s]', $this->role, ++$count));
+  }
+
+  private function GetReviveCount() {
+    return (int)$this->GetActor()->GetMainRoleTarget();
+  }
 }

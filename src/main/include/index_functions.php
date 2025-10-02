@@ -1,78 +1,157 @@
 <?php
 //-- HTML 生成クラス (index 拡張) --//
 class IndexHTML {
-  const BACK_PAGE   = "<a href=\"%s\">←戻る</a><br>\n";
-  const MENU_HEADER = "<div class=\"menu\">%s</div>\n<ul>\n";
-  const MENU_GROUP  = "  <li class=\"menu-name\"><a href=\"javascript:void(0)\">▼%s</a></li>\n";
-  const MENU_LINK   = "  <li class=\"menu-link\"><a href=\"%s\">%s</a></li>\n";
-  const MENU_FOOTER = "</ul>\n";
-  const SUB_MENU    = "<ul class=\"submenu\" onClick=\"fold_menu(this)\">\n";
-  const BBS_TITLE   = '<a href="%s%sl50">告知スレッド情報</a>';
-  const BBS_URL     = '%s%sl%dn';
-  const BBS_RES     = "<dt>%s : <span>%s</span> : %s ID : %s</dt>\n<dd>%s</dd>";
-  const VERSION     = 'Powered by %s %s from %s';
-  const ADMIN       = "<br>\nFounded by: %s";
-  const FOOTER      = "<div id=\"footer\">\n%s\n</div>\n";
+  //実行
+  static function Execute() {
+    if (0 < RQ::Get()->id && RQ::Get()->id <= count(TopPageConfig::$server_list)) {
+      InfoHTML::OutputSharedRoom(RQ::Get()->id, true);
+    } else {
+      self::Output();
+    }
+  }
+
+  //出力
+  private static function Output() {
+    self::OutputHeader();
+    self::OutputMenu();
+    self::OutputBody();
+    self::OutputFooter();
+  }
 
   //ヘッダー出力
-  static function OutputHeader() {
+  private static function OutputHeader() {
     HTML::OutputHeader(ServerConfig::TITLE . ServerConfig::COMMENT, 'index');
     HTML::OutputJavaScript('index');
     HTML::OutputJavaScript('room_manager');
-    if (ServerConfig::BACK_PAGE != '') printf(self::BACK_PAGE, ServerConfig::BACK_PAGE);
+    HTML::OutputBodyHeader();
+
+    if (ServerConfig::BACK_PAGE != '') {
+      echo HTML::GenerateLink(ServerConfig::BACK_PAGE, Message::BACK) . Text::BRLF;
+    }
+    $format = <<<EOF
+<a href="./"><img src="img/title/top.jpg" title="%s" alt="%s"></a>
+<div class="comment">%s</div>
+<noscript>%s</noscript>
+EOF;
+
+    printf($format . Text::LF, TopPageMessage::TITLE, TopPageMessage::TITLE,
+	   ServerConfig::COMMENT, TopPageMessage::CAUTION_JAVASCRIPT);
   }
 
   //メニュー出力
-  static function OutputMenu() {
-    $str = sprintf(self::MENU_HEADER, '交流用サイト');
-    foreach (MenuConfig::$list as $name => $url) $str .= sprintf(self::MENU_LINK, $url, $name);
-    $str .= self::MENU_FOOTER;
+  private static function OutputMenu() {
+    Text::Output('<table id="main"><tr>' . Text::LF . '<td>');
+    include_once('top/menu.html');
+
+    $tag_header = '<div class="menu">%s</div>%s<ul>' . Text::LF;
+    $tag_link   = '  <li class="menu-link"><a href="%s">%s</a></li>' . Text::LF;
+    $tag_footer = '</ul>' . Text::LF;
+
+    $str = sprintf($tag_header, TopPageMessage::MENU_COMMUNICATION, Text::LF);
+    foreach (MenuConfig::$list as $name => $url) {
+      $str .= sprintf($tag_link, $url, $name);
+    }
+    $str .= $tag_footer;
 
     if (count(MenuConfig::$add_list) > 0) {
-      $str .= sprintf(self::MENU_HEADER, '外部リンク');
+      $tag_menu  = '<ul class="submenu" onClick="fold_menu(this)">' . Text::LF;
+      $tag_group = '  <li class="menu-name"><a href="javascript:void(0)">▼%s</a></li>' . Text::LF;
+
+      $str .= sprintf($tag_header, TopPageMessage::MENU_OUTER, Text::LF);
       foreach (MenuConfig::$add_list as $group => $list) {
-	$str .= self::SUB_MENU;
-	$str .= sprintf(self::MENU_GROUP, $group);
-	foreach ($list as $name => $url) $str .= sprintf(self::MENU_LINK, $url, $name);
-	$str .= self::MENU_FOOTER;
+	$str .= $tag_menu . sprintf($tag_group, $group);
+	foreach ($list as $name => $url) {
+	  $str .= sprintf($tag_link, $url, $name);
+	}
+	$str .= $tag_footer;
       }
-      $str .= self::MENU_FOOTER;
+      $str .= $tag_footer;
     }
     echo $str;
   }
 
+  //メイン情報出力
+  private static function OutputBody() {
+    Text::Output('</td>' . Text::LF . '<td>');
+    self::OutputInformation();
+    self::OutputGameList();
+    if (! TopPageConfig::DISABLE_SHARED_SERVER) InfoHTML::OutputSharedRoomList(true);
+    self::OutputBBS();
+    self::OutputCreateRoom();
+    Text::Output('</td>' . Text::LF . '</tr></table>');
+  }
+
+  //情報一覧出力
+  private static function OutputInformation() {
+    $format = <<<EOF
+  <fieldset>
+    <legend>%s</legend>
+    <div class="information">
+EOF;
+    printf($format, TopPageMessage::INFORMATION);
+    include_once('top/information.html');
+    Text::Output('</div>' . Text::LF . '  </fieldset>');
+  }
+
+  //ゲーム一覧出力
+  private static function OutputGameList() {
+    $format = <<<EOF
+  <fieldset>
+    <legend>%s</legend>
+    <div class="game-list">
+EOF;
+    printf($format, TopPageMessage::GAME_LIST);
+    include_once('room_manager.php');
+    Text::Output('</div>' . Text::LF . '  </fieldset>');
+  }
+
   //掲示板情報出力
-  static function OutputBBS() {
+  private static function OutputBBS() {
     if (BBSConfig::DISABLE) return;
     if (! ExternalLinkBuilder::CheckConnection(BBSConfig::RAW_URL)) {
-      $title = sprintf(self::BBS_TITLE, BBSConfig::VIEW_URL, BBSConfig::THREAD);
+      $title = sprintf(TopPageMessage::BBS_TITLE, BBSConfig::VIEW_URL, BBSConfig::THREAD);
       ExternalLinkBuilder::OutputTimeOut($title, BBSConfig::RAW_URL);
       return;
     }
 
     //スレッド情報を取得
-    $url = sprintf(self::BBS_URL, BBSConfig::RAW_URL, BBSConfig::THREAD, BBSConfig::SIZE);
+    $url = sprintf('%s%sl%dn', BBSConfig::RAW_URL, BBSConfig::THREAD, BBSConfig::SIZE);
     if (($data = @file_get_contents($url)) == '') return;
     if (BBSConfig::ENCODE != ServerConfig::ENCODE) {
       $data = mb_convert_encoding($data, ServerConfig::ENCODE, BBSConfig::ENCODE);
     }
 
+    $format = "<dt>%s : <span>%s</span> : %s ID : %s</dt>\n<dd>%s</dd>";
     $str = '';
     $str_stack = explode(Text::LF, $data);
     array_pop($str_stack);
     foreach ($str_stack as $res_stack) {
       $res = explode('<>', $res_stack);
-      $str .= sprintf(self::BBS_RES, $res[0], $res[1], $res[3], $res[6], $res[4]);
+      $str .= sprintf($format, $res[0], $res[1], $res[3], $res[6], $res[4]);
     }
-    $title = sprintf(self::BBS_TITLE, BBSConfig::VIEW_URL, BBSConfig::THREAD);
+    $title = sprintf(TopPageMessage::BBS_TITLE, BBSConfig::VIEW_URL, BBSConfig::THREAD);
     ExternalLinkBuilder::Output($title, $str);
   }
 
+  //村作成フォーム出力
+  private static function OutputCreateRoom() {
+    $format = <<<EOF
+  <fieldset>
+    <legend>%s</legend>
+EOF;
+    printf($format, TopPageMessage::CREATE_ROOM);
+    RoomManager::OutputCreate();
+    Text::Output('</fieldset>');
+  }
+
   //フッター出力
-  static function OutputFooter() {
-    $str = sprintf(self::VERSION, ScriptInfo::PACKAGE, ScriptInfo::VERSION, ScriptInfo::DEVELOPER);
-    if (ServerConfig::ADMIN) $str .= sprintf(self::ADMIN, ServerConfig::ADMIN);
-    printf(self::FOOTER, $str);
+  private static function OutputFooter() {
+    $format = 'Powered by %s %s from %s';
+    $str    = sprintf($format, ScriptInfo::PACKAGE, ScriptInfo::VERSION, ScriptInfo::DEVELOPER);
+    if (ServerConfig::ADMIN) {
+      $str .= sprintf(Text::BRLF . 'Founded by: %s', ServerConfig::ADMIN);
+    }
+    printf('<div id="footer">%s%s%s</div>' . Text::LF, Text::LF, $str, Text::LF);
     HTML::OutputFooter();
   }
 }

@@ -7,7 +7,11 @@
 */
 RoleManager::LoadFile('escaper');
 class Role_doom_escaper extends Role_escaper {
-  protected function EscapeFailed(User $user) { return $user->IsRole('death_warrant'); }
+  protected function EscapeFailed(User $user) {
+    return $user->IsRole('death_warrant');
+  }
 
-  protected function EscapeAction(User $user) { $user->AddDoom(4); }
+  protected function EscapeAction(User $user) {
+    if (! $user->IsAvoidLovers(true)) $user->AddDoom(4);
+  }
 }

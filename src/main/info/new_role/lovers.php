@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('恋人陣営');
 ?>
@@ -14,14 +13,42 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </p>
 
 <h2 id="rule">基本ルール</h2>
+<p>
+<a href="#rule_summary">概要</a>
+<a href="#rule_win">勝利条件</a>
+<a href="#rule_distinguish">判定</a>
+</p>
+
+<h3 id="rule_summary">概要</h3>
 <ol>
-<li>初日の夜に「<a href="sub_role.php#lovers">恋人</a>」を作る陣営です。</li>
-<li><a href="../spec.php#win">勝利条件</a>は「人狼が全滅、または村人カウントが人狼以下になった時に恋人が生存していること」です。</li>
-<li><a href="vampire.php">吸血鬼陣営</a>が勝利条件を満たした時に恋人が生存していた場合は恋人陣営勝利になります。</li>
-<li>恋人陣営が勝利していれば自身や自分の作った恋人の生死は不問です。</li>
-<li>生存カウントは村人です。</li>
-<li><a href="human.php#psycho_mage">精神鑑定士</a>の判定は「正常」、<a href="human.php#sex_mage">ひよこ鑑定士</a>の判定は「性別」です。</li>
+<li>初日の夜に「<a href="sub_role.php#lovers">恋人</a>」を作り、生存を目指します。</li>
 </ol>
+
+<h3 id="rule_win">勝利条件</h3>
+<ol>
+<li>ゲーム終了時に恋人が二人以上生存している。</li>
+<li><a href="wolf.php">人狼</a>を全滅させるか、生存カウントの村人の生存数を人狼の生存数以下にする。</li>
+<li>勝利条件を満たした<a href="vampire.php">吸血鬼</a>が存在する場合は恋人陣営勝利となる。</li>
+<li>自身や自分の作った恋人の生死は不問。</li>
+</ol>
+
+<h3 id="rule_distinguish">判定</h3>
+<table>
+<tr>
+  <th>生存カウント</th>
+  <th>占い</th>
+  <th>霊能</th>
+  <th>精神鑑定</th>
+  <th>性別鑑定</th>
+</tr>
+<tr>
+  <td>村人</td>
+  <td>村人</td>
+  <td>村人</td>
+  <td>正常</td>
+  <td>性別</td>
+</tr>
+</table>
 
 <h2 id="cupid_do">投票の仕様</h2>
 <ol>
@@ -36,10 +63,12 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <a href="#cupid">キューピッド</a>
 <a href="#self_cupid">求愛者</a>
 <a href="#moon_cupid">かぐや姫</a>
+<a href="#altair_cupid">彦星</a>
 <a href="#mind_cupid">女神</a>
 <a href="#sweet_cupid">弁財天</a>
 <a href="#minstrel_cupid">吟遊詩人</a>
 <a href="#triangle_cupid">小悪魔</a>
+<a href="#nephila_cupid">絡新婦</a>
 <a href="#revive_cupid">邪仙</a>
 <a href="#snow_cupid">寒戸婆</a>
 </p>
@@ -70,7 +99,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="duelist.php#duelist">決闘者</a>
+<a href="duelist.php#duelist">決闘者</a>・<a href="ability.php#mind_receiver">受信能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -80,10 +109,14 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="moon_cupid">かぐや姫 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β11～]</h3>
-<h4>[恋人作成能力] 自分撃ち固定：有り / 付加：受信者 (自分限定) + 難題</h4>
+<h4>[恋人作成能力] 自分撃ち固定：有り / 付加：難題 + 受信者 (自分限定)</h4>
 <pre>
 自分撃ち固定で、矢を撃った二人に<a href="sub_role.php#challenge_lovers">難題</a>を付加するキューピッド。
 自分に矢を撃った相手を対象にした<a href="sub_role.php#mind_receiver">受信者</a>が付く。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#mind_receiver">受信能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -92,11 +125,36 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 (死亡する) 可能性が高くなるカップルを再現してみました。
 </pre>
 
+<h3 id="altair_cupid">彦星 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α2～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：有り / 付加：共鳴者 + 織姫 (相手限定)</h4>
+<pre>
+自分撃ち固定で、矢を撃った二人に<a href="sub_role.php#mind_friend">共鳴者</a>を付加するキューピッド。
+矢を撃った相手に<a href="sub_role.php#vega_lovers">織姫</a>が付く。
+</pre>
+<ol>
+<li><a href="sub_role.php#vega_lovers">織姫</a>が付加されるのは一つの村で一人だけ。</li>
+<li>彦星が複数居た場合は抽選が発生し、一人だけが選出される。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>の名前は 2 日目昼の死亡メッセージ欄に表示される。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#mind_friend">共鳴能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="sub_role.php#vega_lovers">織姫</a>の実装用に作成された役職です。
+<a href="sub_role.php#vega_lovers">織姫</a>は実質無敵なので、彦星の生存力が勝利の鍵となります。
+</pre>
+
 <h3 id="mind_cupid">女神 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α23～]</h3>
-<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：受信者 (他人撃ち + 自分限定) + 共鳴者</h4>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：共鳴者 + 受信者 (他人撃ち + 自分限定)</h4>
 <pre>
 矢を撃った二人を<a href="sub_role.php#mind_friend">共鳴者</a>にする上位キューピッド。
 他人撃ちの場合は、さらに自分が二人を対象にした<a href="sub_role.php#mind_receiver">受信者</a>になる。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#mind_friend">共鳴能力者</a>・<a href="ability.php#mind_receiver">受信能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -119,7 +177,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#philosophy_wizard">賢者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>
+<a href="human.php#philosophy_wizard">賢者</a>・<a href="ability.php#mind_friend">共鳴能力者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -136,7 +194,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#soul_mania">覚醒者</a>
+<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -157,6 +215,25 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <h4>[作成者からのコメント]</h4>
 <pre>
 翠星石鯖＠やる夫人狼で一時的に施されていた改造に別名を与えてみました。
+</pre>
+
+<h3 id="nephila_cupid">絡新婦 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α3～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：有り / 付加：愛人 + 受信者 (自分限定)</h4>
+<pre>
+自分を含めて矢を三本撃ち、<a href="sub_role.php#fake_lovers">愛人</a>を作る特殊なキューピッド。
+</pre>
+<ol>
+<li>自分と矢を撃った二人のうちどちらか一人 (ランダム) と<a href="sub_role.php#lovers">恋人</a>同士になる。</li>
+<li>自分以外の二人に<a href="sub_role.php#fake_lovers">愛人</a>を付加する。</li>
+<li>自分が二人を対象にした<a href="sub_role.php#mind_receiver">受信者</a>になる。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#mind_receiver">受信能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+他国の「悪女」をベースにカスタムしてみました。「じょろうぐも」と読みます。
 </pre>
 
 <h3 id="revive_cupid">邪仙 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β13～]</h3>
@@ -185,6 +262,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合でも有効。</li>
 <li>対象が死亡していた場合は無効 (例：処刑・毒死)。</li>
 <li>自分が処刑された場合は無効。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>には無効。</li>
 </ol>
 <h4>関連役職</h4>
 <pre>
@@ -341,6 +419,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <ol>
 <li><a href="../spec.php#vote_day">判定</a>はショック死処理内部で行う。</li>
 <li>ショック死した場合の死因は「封印された」。</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>はショック死無効。</li>
 </ol>
 <h5>Ver. 1.5.0 β9～</h5>
 <pre>
@@ -348,7 +427,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#sudden_death">ショック死発動能力者</a>・<a href="ability.php#cursed_group">呪い能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#sudden_death">ショック死発動能力者</a>・<a href="ability.php#camp">陣営判定能力者</a>・<a href="ability.php#cursed_group">呪い能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

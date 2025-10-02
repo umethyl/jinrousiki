@@ -9,11 +9,11 @@ RoleManager::LoadFile('chicken');
 class Role_panelist extends Role_chicken {
   public $sudden_death = 'PANELIST';
 
-  function IsSuddenDeath() {
-    return ! $this->IgnoreSuddenDeath() && $this->GetVoteUser()->IsRole('quiz');
+  public function IsSuddenDeath() {
+    return $this->GetVoteUser()->IsRole('quiz');
   }
 
-  function FilterVoteDo(&$count) {
+  public function FilterVoteDo(&$count) {
     $count = 0;
   }
 }

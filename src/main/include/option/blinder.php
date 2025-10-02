@@ -7,9 +7,15 @@
 class Option_blinder extends CheckRoomOptionItem {
   public $group = RoomOption::GAME_OPTION;
 
-  function GetCaption() { return '宵闇村'; }
+  public function GetCaption() {
+    return '宵闇村';
+  }
 
-  function GetExplain() { return '全員に「目隠し」がつきます'; }
+  public function GetExplain() {
+    return '全員に「目隠し」がつきます';
+  }
 
-  function Cast(&$list, &$rand) { return $this->CastAll($list); }
+  public function Cast(array &$list, &$rand) {
+    return $this->CastAll($list);
+  }
 }

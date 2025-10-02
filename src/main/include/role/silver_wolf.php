@@ -6,9 +6,11 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_silver_wolf extends Role_wolf {
-  protected function IsWolfPartner($id) { return false; }
-
-  function Whisper(TalkBuilder $builder, $voice) {
+  public function Whisper(TalkBuilder $builder, $voice) {
     return DB::$ROOM->date > 1 && $this->Howl($builder, $voice);
+  }
+
+  protected function IsWolfPartner($id) {
+    return false;
   }
 }

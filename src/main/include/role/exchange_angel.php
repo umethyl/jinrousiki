@@ -6,10 +6,12 @@
 */
 RoleManager::LoadFile('angel');
 class Role_exchange_angel extends Role_angel {
-  protected function IsSympathy(User $a, User $b) { return false; }
+  protected function IsSympathy(User $a, User $b) {
+    return false;
+  }
 
   //交換憑依処理
-  final function Exchange() {
+  public function LotteryLovers() {
     //変数を初期化
     $angel_list    = array();
     $lovers_list   = array();
@@ -18,7 +20,7 @@ class Role_exchange_angel extends Role_angel {
     foreach (DB::$USER->rows as $user) { //魂移使が打った恋人の情報を収集
       if ($user->IsDummyBoy() || ! $user->IsLovers()) continue;
       foreach ($user->GetPartner('lovers') as $cupid_id) {
-	if (DB::$USER->ById($cupid_id)->IsRole('exchange_angel')) {
+	if (DB::$USER->ByID($cupid_id)->IsRole('exchange_angel')) {
 	  $angel_list[$cupid_id][]  = $user->id;
 	  $lovers_list[$user->id][] = $cupid_id;
 	  if ($user->IsPossessedGroup()) $fix_list[$cupid_id] = true; //憑依能力者なら対象外

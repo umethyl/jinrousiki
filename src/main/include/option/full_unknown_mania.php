@@ -6,5 +6,7 @@
 */
 OptionManager::Load('replace_human');
 class Option_full_unknown_mania extends Option_replace_human {
-  function GetCaption() { return '鵺村'; }
+  public function GetCaption() {
+    return '鵺村';
+  }
 }

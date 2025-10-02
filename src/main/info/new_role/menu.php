@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 HTML::OutputHeader('新役職情報 - [メニュー]', 'info/menu', true);
 ?>
 <div class="menu">新役職情報</div>
@@ -36,6 +35,7 @@ HTML::OutputHeader('新役職情報 - [メニュー]', 'info/menu', true);
 <li><a target="body" href="fox.php">&lt;妖狐陣営&gt;</a></li>
 <li><a target="body" href="fox.php#fox_group">妖狐系</a></li>
 <li><a target="body" href="fox.php#child_fox_group">子狐系</a></li>
+<li><a target="body" href="fox.php#depraver_group">背徳者系</a></li>
 <li>★☆★☆★☆★</li>
 <li><a target="body" href="lovers.php">&lt;恋人陣営&gt;</a></li>
 <li><a target="body" href="lovers.php#cupid_group">キューピッド系</a></li>
@@ -82,4 +82,5 @@ HTML::OutputHeader('新役職情報 - [メニュー]', 'info/menu', true);
 <li><a target="body" href="sub_role.php#copied_group">元神話マニア系</a></li>
 <li><a target="body" href="sub_role.php#other_group">その他</a></li>
 </ul>
-</body></html>
+</body>
+</html>

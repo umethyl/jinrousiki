@@ -5,7 +5,7 @@
   ・投票数：0
 */
 class Role_watcher extends Role {
-  function FilterVoteDo(&$count) {
+  public function FilterVoteDo(&$count) {
     $count = 0;
   }
 }

@@ -29,6 +29,7 @@ class WishRoleList {
   public $role_trap_mad         = array('message' => '←罠師');
   public $role_fox              = array('message' => '←妖狐');
   public $role_child_fox        = array('message' => '←子狐');
+  public $role_depraver         = array('message' => '←背徳者');
   public $role_cupid            = array('message' => '←キューピッド');
   public $role_angel            = array('message' => '←天使');
   public $role_mind_cupid       = array('message' => '←女神');

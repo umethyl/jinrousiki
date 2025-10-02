@@ -7,9 +7,13 @@
 */
 RoleManager::LoadFile('angel');
 class Role_ark_angel extends Role_angel {
-  protected function OutputResult() {
-    if (DB::$ROOM->IsDate(2)) $this->OutputAbilityResult('SYMPATHY_RESULT');
+  public $result = 'SYMPATHY_RESULT';
+
+  protected function IgnoreResult() {
+    return ! DB::$ROOM->IsDate(2);
   }
 
-  protected function IsSympathy(User $a, User $b) { return false; }
+  protected function IsSympathy(User $a, User $b) {
+    return false;
+  }
 }

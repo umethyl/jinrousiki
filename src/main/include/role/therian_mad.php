@@ -2,10 +2,10 @@
 /*
   ◆獣人 (therian_mad)
   ○仕様
-  ・人狼襲撃得票カウンター：人狼変化
+  ・人狼襲撃得票：人狼変化
 */
 class Role_therian_mad extends Role {
-  function WolfEatReaction() {
+  public function WolfEatReaction() {
     $user = $this->GetActor();
     $user->ReplaceRole($user->main_role, 'wolf');
     $user->AddRole('changed_therian');

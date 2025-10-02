@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('鬼陣営');
 ?>
@@ -14,18 +13,46 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </p>
 
 <h2 id="rule">基本ルール</h2>
+<p>
+<a href="#rule_summary">概要</a>
+<a href="#rule_win">勝利条件</a>
+<a href="#rule_distinguish">判定</a>
+</p>
+
+<h3 id="rule_summary">概要</h3>
 <ol>
 <li>勝利条件が個々によって違う特殊陣営です。</li>
-<li>共通の勝利条件は「自分自身の生存」で、<a href="chiroptera.php">蝙蝠陣営</a>同様、他陣営の勝敗と競合しません。</li>
-<li>鬼陣営をコピーした変化前の<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>と<a href="mania.php#unknown_mania_group">鵺系</a>の勝利条件は「自身の生存のみ」です。
-</li>
-<li><a href="sub_role.php#lovers">恋人</a>は<a href="lovers.php">恋人陣営</a>と判定します (例：恋人の人狼は人狼陣営とはカウントしない)。</li>
 <li>2 日目以降の夜に村人一人を攫う (<a href="human.php#assassin_spec">暗殺</a>の一種) ことができます。</li>
 <li><a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) 以外の人狼に襲撃されても一定確率で無効化します (襲撃は失敗扱い)。</li>
 <li><a href="human.php#assassin_spec">暗殺</a>を一定確率で反射します (<a href="ability.php#anti_assassin">暗殺耐性能力者</a>)。</li>
-<li>生存カウントは村人です。</li>
-<li><a href="human.php#psycho_mage">精神鑑定士</a>・<a href="human.php#sex_mage">ひよこ鑑定士</a>の判定は「鬼」です。</li>
 </ol>
+
+<h3 id="rule_win">勝利条件</h3>
+<ol>
+<li>共通の勝利条件は「自分自身の生存」で、<a href="chiroptera.php">蝙蝠陣営</a>同様、他陣営の勝敗と競合しない。</li>
+<li>鬼陣営をコピーした<a href="mania.php#unknown_mania_group">鵺系</a>・変化前の<a href="ability.php#copy_delay">コピー能力者 (時間差型)</a> の勝利条件は「自身の生存のみ」。
+</li>
+<li><a href="sub_role.php#lovers">恋人</a>は<a href="lovers.php">恋人陣営</a>と判定する (例：恋人の人狼は人狼陣営とはカウントしない)。</li>
+</ol>
+
+<h3 id="rule_distinguish">判定</h3>
+<table>
+<tr>
+  <th>生存カウント</th>
+  <th>占い</th>
+  <th>霊能</th>
+  <th>精神鑑定</th>
+  <th>性別鑑定</th>
+</tr>
+<tr>
+  <td>村人</td>
+  <td>鬼</td>
+  <td>鬼</td>
+  <td>鬼</td>
+  <td>鬼</td>
+</tr>
+</table>
+
 
 <h2 id="ogre_do">人攫いの仕様</h2>
 <ol>
@@ -148,13 +175,17 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 <h3 id="poison_ogre">榊鬼 (占い結果：鬼 / 霊能結果：鬼) [Ver. 1.4.0 β19～]</h3>
 <h4>[耐性] 人狼襲撃：無効 (30%) / 暗殺：反射 (30%)</h4>
 <h4>[人攫い能力] タイプ： <a href="sub_role.php#panelist">解答者</a>付加 / 成功率低下：1/3</h4>
-<h4>[毒能力] 処刑：人狼系 + 妖狐陣営 + 鬼陣営 / 襲撃：有り / 薬師判定：有り</h4>
+<h4>[毒能力] 処刑：人狼系 + 妖狐カウント + 鬼陣営 / 襲撃：有り / 薬師判定：有り</h4>
 <pre>
 鬼系の一種で、勝利条件は「<a href="quiz.php">出題者陣営</a>の勝利、または自分自身の生存」。
 <a href="quiz.php">出題者陣営</a>が出現して敗北しても自分が生存していれば勝利となる。
 逆に、<a href="quiz.php">出題者陣営</a>が勝利していれば死亡していても勝利となる。
 毒能力は劣化<a href="human.php#strong_poison">強毒者</a>相当。
 <a href="#ogre_do">人攫い</a>の効果は<a href="sub_role.php#panelist">解答者</a>の付加で、対象が<a href="quiz.php#quiz">出題者</a>だった場合は無効。
+</pre>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+毒能力：処刑時「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -175,7 +206,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
+<a href="ability.php#position">位置能力者</a>・<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -193,7 +224,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
+<a href="ability.php#position">位置能力者</a>・<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -210,7 +241,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
+<a href="ability.php#position">位置能力者</a>・<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -227,7 +258,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
+<a href="ability.php#position">位置能力者</a>・<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -262,7 +293,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#wise_wolf">賢狼</a>・<a href="fox.php#critical_fox">寿羊狐</a>・<a href="#ogre">鬼</a>・<a href="ability.php#ogre_anti_wolf">鬼陣営/対人狼陣営型</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>
+<a href="fox.php#critical_fox">寿羊狐</a>・<a href="#ogre">鬼</a>・<a href="ability.php#ogre_anti_wolf">鬼陣営/対人狼陣営型</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>・<a href="ability.php#talk_mind">発言閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

@@ -8,11 +8,19 @@ RoleManager::LoadFile('poison');
 class Role_incubate_poison extends Role_poison {
   public $ability = 'ability_poison';
 
-  function OutputResult() {
-    if ($this->IsPoison()) RoleHTML::OutputAbilityResult($this->ability, null);
+  protected function IgnoreResult() {
+    return ! $this->IsPoison();
   }
 
-  function IsPoison() { return DB::$ROOM->date > 4; }
+  protected function OutputAddResult() {
+    RoleHTML::OutputAbilityResult($this->ability, null);
+  }
 
-  function IsPoisonTarget(User $user) { return $user->IsInhuman(); }
+  public function IsPoison() {
+    return DB::$ROOM->date > 4;
+  }
+
+  public function IsPoisonTarget(User $user) {
+    return $user->IsInhuman();
+  }
 }

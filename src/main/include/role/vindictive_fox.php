@@ -11,7 +11,7 @@ class Role_vindictive_fox extends Role_child_fox {
   public $result = null;
 
   //変化処理 (トリガーは呼び出し側制御)
-  final function Change() {
+  final public function Change() {
     $user = $this->GetActor();
     $user->ReplaceRole($user->main_role, 'fox');
     $user->AddRole('changed_vindictive');

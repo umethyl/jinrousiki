@@ -6,5 +6,7 @@
 */
 RoleManager::LoadFile('common');
 class Role_hermit_common extends Role_common {
-  function Whisper(TalkBuilder $builder, $voice) { return false; }
+  public function Whisper(TalkBuilder $builder, $voice) {
+    return false;
+  }
 }

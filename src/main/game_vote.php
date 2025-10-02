@@ -1,5 +1,5 @@
 <?php
-require_once('include/init.php');
+require_once('init.php');
 Loader::LoadFile('game_vote_class');
 Loader::LoadRequest('RequestGameVote', true);
-GameVote::Output();
+GameVote::Execute();

@@ -8,8 +8,8 @@ RoleManager::LoadFile('assassin');
 class Role_soul_assassin extends Role_assassin {
   public $result = 'ASSASSIN_RESULT';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 2) $this->OutputAbilityResult($this->result);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 3;
   }
 
   protected function AssassinAction(User $user) {

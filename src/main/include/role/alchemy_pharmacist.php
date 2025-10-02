@@ -13,5 +13,7 @@ class Role_alchemy_pharmacist extends Role_pharmacist {
     if (! $this->GetActor()->detox) $this->GetActor()->{$this->role} = true;
   }
 
-  function IsPoisonTarget(User $user) { return ! $user->IsCamp('human'); }
+  public function IsPoisonTarget(User $user) {
+    return ! $user->IsCamp('human');
+  }
 }

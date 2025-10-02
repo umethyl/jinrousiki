@@ -1,5 +1,4 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
-Loader::LoadFile('admin_class');
+require_once('init.php');
+Loader::LoadFile('icon_edit_message', 'admin_class');
 JinrouAdmin::DeleteIcon();

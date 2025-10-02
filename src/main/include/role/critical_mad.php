@@ -2,15 +2,12 @@
 /*
   ◆釣瓶落とし (critical_mad)
   ○仕様
-  ・処刑投票：痛恨付加
+  ・処刑投票：痛恨
 */
 class Role_critical_mad extends Role {
-  function SetVoteDay($uname) {
-    $this->InitStack();
-    if ($this->IsRealActor()) $this->AddStackName($uname);
-  }
+  public $vote_day_type = 'init';
 
-  function VoteAction() {
+  public function VoteAction() {
     $class = $this->GetClass($method = 'SetVoteAction');
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
@@ -19,7 +16,7 @@ class Role_critical_mad extends Role {
     }
   }
 
-  function SetVoteAction(User $user) {
+  public function SetVoteAction(User $user) {
     if (! $user->IsAvoid()) $user->AddRole('critical_luck');
   }
 }

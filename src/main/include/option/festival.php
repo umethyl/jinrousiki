@@ -5,7 +5,11 @@
 class Option_festival extends CheckRoomOptionItem {
   public $group = RoomOption::GAME_OPTION;
 
-  function GetCaption() { return 'お祭り村'; }
+  public function GetCaption() {
+    return 'お祭り村';
+  }
 
-  function GetExplain() { return '管理人がカスタムする特殊設定です'; }
+  public function GetExplain() {
+    return '管理人がカスタムする特殊設定です';
+  }
 }

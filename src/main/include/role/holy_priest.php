@@ -6,28 +6,35 @@
 */
 RoleManager::LoadFile('priest');
 class Role_holy_priest extends Role_priest {
-  protected function GetOutputRole() {
-    return DB::$ROOM->IsDate(5) ? $this->role : null;
+  protected function IgnoreResult() {
+    return ! DB::$ROOM->IsDate(5);
   }
 
-  protected function SetPriest() {
-    if (DB::$ROOM->IsDate(4)) parent::SetPriest();
+  protected function IgnoreSetPriest() {
+    return ! DB::$ROOM->IsDate(4);
+  }
+
+  public function IsAggregatePriest() {
     return false;
   }
 
-  function Priest(StdClass $role_flag) {
-    $event = $this->GetEvent();
-    foreach ($role_flag->{$this->role} as $id) {
-      $user = DB::$USER->ByID($id);
+  public function Priest() {
+    $result = $this->GetResult();
+    foreach (DB::$USER->GetRoleUser($this->role) as $user) {
       $list = $user->GetAround();
-      if (DB::$ROOM->IsDummyBoy() && ! in_array(1, $list)) $list[] = 1; //身代わり君を追加
-      //Text::p($list, $num);
+      if (DB::$ROOM->IsDummyBoy()) {
+	$id = DB::$USER->GetDummyBoyID();
+	if (! in_array($id, $list)) $list[] = $id; //身代わり君を追加
+      }
+      //Text::p($list, "◆Around [{$this->role}]");
+
       $stack = array();
       foreach ($list as $id) {
 	$stack[DB::$USER->ByID($id)->GetCamp(true)][] = $id; //陣営カウント
       }
-      //Text::p($stack, $uname);
-      DB::$ROOM->ResultAbility($event, count(array_keys($stack)), null, $user->id);
+      //Text::p($stack, "◆Camp [{$this->role}]");
+
+      DB::$ROOM->ResultAbility($result, count(array_keys($stack)), null, $user->id);
     }
   }
 }

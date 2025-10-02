@@ -9,23 +9,33 @@ class Role_snow_trap_mad extends Role_trap_mad {
   public $trap_action = 'snow_trap';
   public $trap_result = 'frostbite';
 
-  protected function IgnoreTrap() { return false; }
+  protected function IgnoreTrap() {
+    return false;
+  }
 
-  protected function SetTrapAction() { return; }
+  protected function SetTrapAction() {
+    return;
+  }
 
-  protected function GetOtherTrap() { return 'trap'; }
+  protected function GetOtherTrap() {
+    return 'trap';
+  }
 
-  function TrapKill(User $user, $id) {
+  public function TrapKill(User $user, $id) {
     if ($this->IsTrap($id)) $user->AddDoom(1, $this->trap_result);
     return false;
   }
 
-  function DelayTrap(User $user, $id) {
+  public function DelayTrap(User $user, $id) {
     if ($this->IsTrap($id)) $this->AddSuccess($user->id, $this->trap_result);
     return false;
   }
 
-  function TrapStack(User $user, $id) { return $this->DelayTrap($user, $id); }
+  public function TrapStack(User $user, $id) {
+    return $this->DelayTrap($user, $id);
+  }
 
-  function DelayTrapKill() { return; }
+  public function DelayTrapKill() {
+    return;
+  }
 }

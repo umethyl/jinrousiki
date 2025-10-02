@@ -8,7 +8,9 @@ RoleManager::LoadFile('yaksa');
 class Role_hariti_yaksa extends Role_yaksa {
   public $reduce_rate = 2;
 
-  protected function IgnoreWin($winner) { return $winner == 'human'; }
+  protected function IgnoreWin($winner) {
+    return $winner == 'human';
+  }
 
   protected function IgnoreAssassin(User $user) {
     return ! ($user->IsChildFox() || $user->IsMainGroup('cupid', 'angel'));

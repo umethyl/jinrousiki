@@ -8,18 +8,29 @@ class Role_enchant_mad extends Role {
   public $mix_in = 'light_fairy';
   public $bad_status = 'same_face';
 
-  function OutputAction() { $this->filter->OutputAction(); }
+  public function OutputAction() {
+    $this->filter->OutputAction();
+  }
 
-  function IsVote() { return $this->filter->IsVote(); }
+  public function IsVote() {
+    return $this->filter->IsVote();
+  }
 
-  function IsFinishVote(array $list) { return $this->filter->IsFinishVote($list); }
+  public function SetVoteNight() {
+    $this->filter->SetVoteNight();
+  }
 
-  function SetVoteNight() { $this->filter->SetVoteNight(); }
+  public function IsFinishVote(array $list) {
+    return $this->filter->IsFinishVote($list);
+  }
 
-  function BadStatus(UserData $USERS) {
+  public function BadStatus(UserData $USERS) {
     if (! isset(DB::$ROOM->event->{$this->bad_status})) return;
+
     $target = $USERS->ByID(DB::$ROOM->event->{$this->bad_status});
     if (! isset($target->icon_filename)) return;
-    foreach ($USERS->rows as $user) $user->icon_filename = $target->icon_filename;
+    foreach ($USERS->rows as $user) {
+      $user->icon_filename = $target->icon_filename;
+    }
   }
 }

@@ -11,30 +11,46 @@ class Role_wizard extends Role {
     'assassin' => 'ASSASSIN_DO', 'sex_mage' => 'MAGE_DO');
   public $result_list = array('MAGE_RESULT', 'GUARD_SUCCESS', 'GUARD_HUNTED');
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 2) {
-      foreach ($this->result_list as $result) $this->OutputAbilityResult($result);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 3;
+  }
+
+  protected function OutputAddResult() {
+    foreach ($this->result_list as $result) {
+      $this->OutputAbilityResult($result);
     }
   }
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('wizard-do', 'wizard_do', $this->action);
   }
 
-  function IsVote() { return parent::IsVote() && DB::$ROOM->date > 1; }
+  public function IsVote() {
+    return parent::IsVote() && DB::$ROOM->date > 1;
+  }
 
-  function GetIgnoreMessage() { return '初日は魔法を使えません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+  }
 
   //魔法セット (返り値：昼：魔法 / 夜：投票タイプ)
-  function SetWizard() {
+  final public function SetWizard() {
     $list  = $this->GetWizard();
     $stack = is_null($this->action) ? $list : array_keys($list);
-    $role  = DB::$ROOM->IsEvent('full_wizard') ? array_shift($stack) :
-      (DB::$ROOM->IsEvent('debilitate_wizard') ? array_pop($stack) : Lottery::Get($stack));
+    if (DB::$ROOM->IsEvent('full_wizard')) {
+      $role = array_shift($stack);
+    } elseif (DB::$ROOM->IsEvent('debilitate_wizard')) {
+      $role = array_pop($stack);
+    } else {
+      $role = Lottery::Get($stack);
+    }
     $this->GetActor()->virtual_role = is_int($role) ? $this->role : $role; //仮想役職を登録
+
     return is_null($this->action) ? $role : $list[$role];
   }
 
   //魔法リスト取得
-  protected function GetWizard() { return $this->wizard_list; }
+  protected function GetWizard() {
+    return $this->wizard_list;
+  }
 }

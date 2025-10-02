@@ -8,7 +8,9 @@ RoleManager::LoadFile('yaksa');
 class Role_vajra_yaksa extends Role_yaksa {
   public $reduce_rate = 3;
 
-  protected function IgnoreWin($winner) { return $winner == 'human'; }
+  protected function IgnoreWin($winner) {
+    return $winner == 'human';
+  }
 
   protected function IgnoreAssassin(User $user) {
     return ! ($user->IsMainGroup('poison_cat') || $user->IsRoleGroup('revive') ||

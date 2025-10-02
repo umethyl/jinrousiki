@@ -9,11 +9,11 @@ class Role_sex_wolf extends Role_wolf {
   public $mix_in = 'sex_mage';
   public $result = 'SEX_WOLF_RESULT';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 1) $this->OutputAbilityResult($this->result);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 2;
   }
 
-  function WolfEatAction(User $user) {
+  public function WolfEatAction(User $user) {
     $result = $this->DistinguishSex($user);
     DB::$ROOM->ResultAbility($this->result, $result, $user->GetName(), $this->GetWolfVoter()->id);
 

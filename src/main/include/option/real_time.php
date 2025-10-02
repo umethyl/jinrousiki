@@ -6,7 +6,7 @@ class Option_real_time extends CheckRoomOptionItem {
   public $group = RoomOption::GAME_OPTION;
   public $type  = 'realtime';
 
-  function LoadPost() {
+  public function LoadPost() {
     RQ::Get()->ParsePostOn($this->name);
     if (RQ::Get()->{$this->name}) {
       RQ::Get()->ParsePostInt(sprintf('%s_day', $this->name), sprintf('%s_night', $this->name));
@@ -14,27 +14,30 @@ class Option_real_time extends CheckRoomOptionItem {
     return RQ::Get()->{$this->name};
   }
 
-  function GetCaption() { return 'リアルタイム制'; }
+  public function GetCaption() {
+    return 'リアルタイム制';
+  }
 
-  function GetExplain() { return '制限時間が実時間で消費されます'; }
+  public function GetExplain() {
+    return '制限時間が実時間で消費されます';
+  }
 
-  function GenerateImage() {
+  protected function GetRoomCaption() {
+    return parent::GetRoomCaption() . $this->GetRoomCaptionFooter();
+  }
+
+  public function GenerateImage() {
     list($day, $night) = $this->GetStack();
     $str = sprintf('[%d：%d]', $day, $night);
     return Image::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
   }
 
-  function GenerateRoomCaption() {
-    $format  = '<div>%s：<a href="info/%s">%s</a>：%s</div>' . Text::LF;
+  public function GenerateRoomCaption() {
     $image   = $this->GenerateImage();
     $url     = $this->GetURL();
     $caption = parent::GetRoomCaption();
     $explain = $this->GetExplain() . $this->GetRoomCaptionFooter();
-    return sprintf($format, $image, $url, $caption, $explain);
-  }
-
-  protected function GetRoomCaption() {
-    return parent::GetRoomCaption() . $this->GetRoomCaptionFooter();
+    return OptionHTML::GenerateRoomCaption($image, $url, $caption, $explain);
   }
 
   //村用キャプション追加メッセージ取得

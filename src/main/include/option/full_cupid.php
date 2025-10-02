@@ -6,5 +6,7 @@
 */
 OptionManager::Load('replace_human');
 class Option_full_cupid extends Option_replace_human {
-  function GetCaption() { return 'キューピッド村'; }
+  public function GetCaption() {
+    return 'キューピッド村';
+  }
 }

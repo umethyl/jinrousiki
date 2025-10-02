@@ -12,33 +12,36 @@ class Role_barrier_wizard extends Role_wizard {
   public $wizard_list = array('barrier_wizard' => 'SPREAD_WIZARD_DO');
   public $result_list = array('GUARD_SUCCESS');
 
-  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
+  protected function GetVoteCheckboxHeader() {
+    return '<input type="checkbox" name="target_no[]"';
+  }
 
-  function VoteNight() {
-    $stack = $this->GetVoteNightTarget();
-    //人数チェック
-    if (count($stack) < 1 || 4 < count($stack)) return '指定人数は1～4人にしてください';
+  public function CheckVoteNightTarget(array $list) {
+    if (count($list) < 1 || 4 < count($list)) return VoteRoleMessage::INVALID_TARGET_RANGE;
+    return null;
+  }
 
+  public function SetVoteNightUserList(array $list) {
     $target_stack = array();
     $handle_stack = array();
-    foreach ($stack as $id) {
+    foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
       //例外判定
-      if ($this->IsActor($user) || ! DB::$USER->IsVirtualLive($id) || $user->IsDummyBoy()) {
-	return '自分・死者・身代わり君には投票できません';
-      }
+      if (! DB::$USER->IsVirtualLive($id)) return VoteRoleMessage::TARGET_DEAD;
+      if ($user->IsDummyBoy())             return VoteRoleMessage::TARGET_DUMMY_BOY;
+      if ($this->IsActor($user))           return VoteRoleMessage::TARGET_MYSELF;
       $target_stack[$id] = DB::$USER->ByReal($id)->id;
       $handle_stack[$id] = $user->handle_name;
     }
+
     sort($target_stack);
     ksort($handle_stack);
-
     $this->SetStack(implode(' ', $target_stack), 'target_no');
     $this->SetStack(implode(' ', $handle_stack), 'target_handle');
     return null;
   }
 
-  final function SetGuard($list) {
+  public function SetGuard($list) {
     $actor     = $this->GetActor();
     $stack     = $this->GetStack(null, true);
     $trapped   = false;
@@ -50,6 +53,7 @@ class Role_barrier_wizard extends Role_wizard {
       $frostbite |= in_array($user->id, $this->GetStack('snow_trap')); //凍傷判定
     }
     $this->SetStack($stack);
+
     if ($trapped) {
       $this->AddSuccess($actor->id, 'trapped');
     }
@@ -58,7 +62,7 @@ class Role_barrier_wizard extends Role_wizard {
     }
   }
 
-  final function GetGuard($target_id) {
+  public function GetGuard($target_id) {
     $result = array();
     $rate   = $this->GetGuardRate();
     foreach ($this->GetStack() as $id => $stack) {
@@ -71,11 +75,18 @@ class Role_barrier_wizard extends Role_wizard {
 
   //護衛成功係数取得
   private function GetGuardRate() {
-    return DB::$ROOM->IsEvent('full_wizard') ? 1.25 :
-      (DB::$ROOM->IsEvent('debilitate_wizard') ? 0.75 : 1);
+    if (DB::$ROOM->IsEvent('full_wizard')) {
+      return 1.25;
+    } elseif (DB::$ROOM->IsEvent('debilitate_wizard')) {
+      return 0.75;
+    } else {
+      return 1;
+    }
   }
 
-  function IgnoreGuard() { return false; }
+  public function IgnoreGuard() {
+    return false;
+  }
 
-  function GuardAction() {}
+  public function GuardAction() {}
 }

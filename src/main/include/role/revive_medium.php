@@ -8,30 +8,35 @@ RoleManager::LoadFile('medium');
 class Role_revive_medium extends Role_medium {
   public $mix_in = 'poison_cat';
 
-  protected function OutputResult() {
-    parent::OutputResult();
-    $this->filter->OutputResult();
+  protected function OutputAddResult() {
+    $this->filter->OutputReviveResult();
   }
 
-  function OutputAction() { $this->filter->OutputAction(); }
+  public function OutputAction() {
+    $this->filter->OutputAction();
+  }
 
-  function IsVote() { return $this->filter->IsVote(); }
+  public function IsVote() {
+    return $this->filter->IsVote();
+  }
 
-  function SetVoteNight() { $this->filter->SetVoteNight(); }
+  public function SetVoteNight() {
+    $this->filter->SetVoteNight();
+  }
 
-  function GetVoteIconPath(User $user, $live) {
+  public function GetVoteIconPath(User $user, $live) {
     return $this->filter->GetVoteIconPath($user, $live);
   }
 
-  function IsVoteCheckbox(User $user, $live) {
+  public function IsVoteCheckbox(User $user, $live) {
     return $this->filter->IsVoteCheckbox($user, $live);
   }
 
-  function IsFinishVote(array $list) {
+  public function IsFinishVote(array $list) {
     return $this->filter->IsFinishVote($list);
   }
 
-  function IgnoreVoteNight(User $user, $live) {
+  public function IgnoreVoteNight(User $user, $live) {
     return $this->filter->IgnoreVoteNight($user, $live);
   }
 }

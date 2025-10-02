@@ -7,7 +7,7 @@ class Option_not_open_cast_selector extends SelectorRoomOptionItem {
   public $type = 'group';
   public $form_list = array('not_open_cast', 'auto_open_cast');
 
-  function __construct() {
+  public function __construct() {
     parent::__construct();
     $this->value = GameOptionConfig::$default_not_open_cast;
     if (OptionManager::$change) {
@@ -20,7 +20,7 @@ class Option_not_open_cast_selector extends SelectorRoomOptionItem {
     }
   }
 
-  function GetItem() {
+  public function GetItem() {
     $stack = array('' => OptionManager::GetClass('not_close_cast'));
     foreach ($this->form_list as $option) {
       $item = OptionManager::GetClass($option);
@@ -42,5 +42,7 @@ class Option_not_open_cast_selector extends SelectorRoomOptionItem {
     return $stack;
   }
 
-  function GetCaption() { return '霊界で配役を公開しない'; }
+  public function GetCaption() {
+    return '霊界で配役を公開しない';
+  }
 }

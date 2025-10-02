@@ -22,62 +22,63 @@ class Role_valkyrja_duelist extends Role {
     RoleHTML::OutputPartner($stack, $this->partner_header);
   }
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('duelist-do', 'duelist_do', $this->action);
   }
 
-  function IsVote() { return DB::$ROOM->IsDate(1); }
+  public function IsVote() {
+    return DB::$ROOM->IsDate(1);
+  }
 
-  function GetIgnoreMessage() { return '初日以外は投票できません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
+  }
 
-  function SetVoteNightFilter() {
+  protected function SetVoteNightFilter() {
     $flag = $this->check_self_shoot && DB::$USER->GetUserCount() < GameConfig::CUPID_SELF_SHOOT;
     $this->SetStack($flag, 'self_shoot');
   }
 
-  function IsVoteCheckbox(User $user, $live) { return $live && ! $user->IsDummyBoy(); }
+  public function IsVoteCheckbox(User $user, $live) {
+    return $live && ! $user->IsDummyBoy();
+  }
 
-  function IsVoteCheckboxChecked(User $user) {
+  protected function IsVoteCheckboxChecked(User $user) {
     return $this->IsSelfShoot() && $this->IsActor($user);
   }
 
-  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
+  protected function GetVoteCheckboxHeader() {
+    return '<input type="checkbox" name="target_no[]"';
+  }
 
-  //自分撃ち判定
-  function IsSelfShoot() { return $this->GetStack('self_shoot') || $this->self_shoot; }
+  protected function GetVoteNightNeedCount() {
+    return $this->shoot_count;
+  }
 
-  function VoteNight() {
-    $stack = $this->GetVoteNightTarget();
-    //人数チェック
-    $count = $this->GetVoteNightTargetCount();
-    if (count($stack) != $count) return sprintf('指定人数は %d 人にしてください', $count);
-
+  public function SetVoteNightUserList(array $list) {
     $self_shoot = false; //自分撃ちフラグ
     $user_list  = array();
-    sort($stack);
-    foreach ($stack as $id) {
+    sort($list);
+    foreach ($list as $id) {
       $user = DB::$USER->ByID($id); //投票先のユーザ情報を取得
-      //例外処理
-      if ($user->IsDead() || $user->IsDummyBoy()) return '死者と身代わり君には投票できません';
+      //例外判定
+      if ($user->IsDead())     return VoteRoleMessage::TARGET_DEAD;
+      if ($user->IsDummyBoy()) return VoteRoleMessage::TARGET_DUMMY_BOY;
       $user_list[$id] = $user;
       $self_shoot |= $this->IsActor($user); //自分撃ち判定
     }
 
     if (! $self_shoot) { //自分撃ちエラー判定
-      $str = '必ず自分を対象に含めてください';
-      if ($this->self_shoot)    return $str; //自分撃ち固定役職
-      if ($this->IsSelfShoot()) return '少人数村の場合は、' . $str; //参加人数
+      if ($this->self_shoot)    return VoteRoleMessage::TARGET_INCLUDE_MYSELF; //自分撃ち固定
+      if ($this->IsSelfShoot()) return VoteRoleMessage::TARGET_MYSELF_COUNT;   //参加人数
     }
-    $this->VoteNightAction($user_list, $self_shoot);
+    $this->SetStack($user_list, 'target_list');
     return null;
   }
 
-  //投票人数取得
-  function GetVoteNightTargetCount() { return $this->shoot_count; }
-
-  //決闘者陣営の投票処理
-  function VoteNightAction(array $list) {
+  public function VoteNightAction() {
     $role  = $this->GetActor()->GetID($this->partner_role);
+    $list  = $this->GetStack('target_list');
     $stack = array();
     foreach ($list as $user) {
       $stack[] = $user->handle_name;
@@ -88,11 +89,16 @@ class Role_valkyrja_duelist extends Role {
     $this->SetStack(implode(' ', $stack), 'target_handle');
   }
 
+  //自分撃ち判定
+  final protected function IsSelfShoot() {
+    return $this->GetStack('self_shoot') || $this->self_shoot;
+  }
+
   //役職追加処理
   protected function AddDuelistRole(User $user) {}
 
   //勝利判定
-  function Win($winner) {
+  public function Win($winner) {
     $actor  = $this->GetActor();
     $id     = $actor->id;
     $target = 0;

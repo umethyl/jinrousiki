@@ -8,10 +8,10 @@
 class Role_chain_poison extends Role {
   public $display_role = 'human';
 
-  function IsPoison() { return false; }
+  public function IsPoison() { return false; }
 
   //毒処理
-  function Poison(User $user) {
+  public function Poison(User $user) {
     $actor = $user->GetVirtual();
     $actor->detox = false;
 

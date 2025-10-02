@@ -8,8 +8,9 @@ RoleManager::LoadFile('vampire');
 class Role_scarlet_vampire extends Role_vampire {
   public $mix_in = 'revive_pharmacist';
 
-  function Resurrect() {
+  public function Resurrect() {
     $user = $this->GetActor();
-    if ($this->IsResurrect($user) && Lottery::Percent(40)) $user->Revive();
+    $rate = DB::$ROOM->IsEvent('full_revive') ? 100 : 40;
+    if ($this->IsResurrect($user) && Lottery::Percent($rate)) $user->Revive();
   }
 }

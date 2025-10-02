@@ -10,30 +10,30 @@ class Role_avenger extends Role_valkyrja_duelist {
   public $partner_header = 'avenger_target';
   public $check_self_shoot = false;
 
-  function IsVoteCheckbox(User $user, $live) {
+  public function IsVoteCheckbox(User $user, $live) {
     return parent::IsVoteCheckbox($user, $live) && ! $this->IsActor($user);
   }
 
-  function VoteNight() {
-    $stack = $this->GetVoteNightTarget();
-    //人数チェック
-    $count = floor(DB::$USER->GetUserCount() / 4);
-    if (count($stack) != $count) return sprintf('指定人数は %d 人にしてください', $count);
+  protected function GetVoteNightNeedCount() {
+    return floor(DB::$USER->GetUserCount() / 4);
+  }
 
-    $user_list  = array();
-    sort($stack);
-    foreach ($stack as $id) {
+  public function SetVoteNightUserList(array $list) {
+    $stack = array();
+    sort($list);
+    foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      if ($this->IsActor($user) || $user->IsDead() || $user->IsDummyBoy()) { //例外判定
-	return '自分・死者・身代わり君には投票できません';
-      }
-      $user_list[$id] = $user;
+      //例外判定
+      if ($user->IsDead())       return VoteRoleMessage::TARGET_DEAD;
+      if ($user->IsDummyBoy())   return VoteRoleMessage::TARGET_DUMMY_BOY;
+      if ($this->IsActor($user)) return VoteRoleMessage::TARGET_MYSELF;
+      $stack[$id] = $user;
     }
-    $this->VoteNightAction($user_list);
+    $this->SetStack($stack, 'target_list');
     return null;
   }
 
-  function Win($winner) {
+  public function Win($winner) {
     $actor = $this->GetActor();
     $id    = $actor->id;
     $count = 0;

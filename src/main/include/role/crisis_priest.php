@@ -9,12 +9,16 @@ RoleManager::LoadFile('priest');
 class Role_crisis_priest extends Role_priest {
   public $display_role = 'human';
 
-  protected function GetOutputRole() {
-    return DB::$ROOM->date > 1 ? $this->role : null;
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 2;
   }
 
-  function Priest(StdClass $role_flag) {
+  protected function IgnoreSetPriest() {
+    return false;
+  }
+
+  public function Priest() {
     $data = $this->GetStack('priest');
-    if (isset($data->crisis)) DB::$ROOM->ResultAbility($this->GetEvent(), $data->crisis);
+    if (isset($data->crisis)) DB::$ROOM->ResultAbility($this->GetResult(), $data->crisis);
   }
 }

@@ -7,19 +7,27 @@ RoleManager::LoadFile('fox');
 class Role_trap_fox extends Role_fox {
   public $mix_in = 'trap_mad';
 
-  function OutputAction() { $this->filter->OutputAction(); }
+  public function OutputAction() {
+    $this->filter->OutputAction();
+  }
 
-  function IsVote() { return $this->filter->IsVote(); }
+  public function IsVote() {
+    return $this->filter->IsVote();
+  }
 
-  function IsFinishVote(array $list) { return $this->filter->IsFinishVote($list); }
+  public function SetVoteNight() {
+    $this->filter->SetVoteNight();
+  }
 
-  function SetVoteNight() { $this->filter->SetVoteNight(); }
-
-  function IsVoteCheckbox(User $user, $live) {
+  public function IsVoteCheckbox(User $user, $live) {
     return $this->filter->IsVoteCheckbox($user, $live);
   }
 
-  function IgnoreVoteNight(User $user, $live) {
+  public function IsFinishVote(array $list) {
+    return $this->filter->IsFinishVote($list);
+  }
+
+  public function IgnoreVoteNight(User $user, $live) {
     return $this->filter->IgnoreVoteNight($user, $live);
   }
 }

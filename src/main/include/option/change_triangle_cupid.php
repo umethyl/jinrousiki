@@ -6,5 +6,7 @@
 */
 OptionManager::Load('change_cupid');
 class Option_change_triangle_cupid extends Option_change_cupid {
-  function GetCaption() { return '小悪魔村'; }
+  public function GetCaption() {
+    return '小悪魔村';
+  }
 }

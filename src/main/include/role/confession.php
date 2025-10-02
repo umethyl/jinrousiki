@@ -7,7 +7,7 @@
 class Role_confession extends Role {
   const SAY = '%s愛してる！！';
 
-  function ConvertSay() {
+  public function ConvertSay() {
     if (! DB::$ROOM->IsDay() || ! Lottery::Percent(3)) return false; //スキップ判定
 
     $target = $this->GetActor()->partner_list;

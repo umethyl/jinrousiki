@@ -8,9 +8,15 @@ RoleManager::LoadFile('wolf');
 class Role_trap_wolf extends Role_wolf {
   public $ability = 'ability_trap_wolf';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 2) RoleHTML::OutputAbilityResult($this->ability, null);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 3;
   }
 
-  final function SetTrap() { $this->AddStack($this->GetID(), 'trap'); }
+  protected function OutputAddResult() {
+    RoleHTML::OutputAbilityResult($this->ability, null);
+  }
+
+  final public function SetTrap() {
+    $this->AddStack($this->GetID(), 'trap');
+  }
 }

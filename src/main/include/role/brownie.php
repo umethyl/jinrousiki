@@ -5,7 +5,7 @@
   ・処刑：熱病
 */
 class Role_brownie extends Role {
-  function VoteKillCounter(array $list) {
+  public function VoteKillCounter(array $list) {
     $stack = array();
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);

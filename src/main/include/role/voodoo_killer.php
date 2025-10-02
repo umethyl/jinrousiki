@@ -8,20 +8,19 @@ class Role_voodoo_killer extends Role {
   public $action = 'VOODOO_KILLER_DO';
   public $result = 'VOODOO_KILLER_SUCCESS';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 1 && ! DB::$ROOM->IsOption('seal_message')) {
-      $this->OutputAbilityResult($this->result);
-    }
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 2 || DB::$ROOM->IsOption('seal_message');
   }
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('mage-do', 'voodoo_killer_do', $this->action);
   }
 
   //占い
-  function Mage(User $user) {
+  public function Mage(User $user) {
     //呪殺判定 (呪い所持者・憑依能力者)
-    if ($user->IsLive(true) && ($user->IsRoleGroup('cursed') || $user->IsPossessedGroup())) {
+    if ($user->IsLive(true) && ! $user->IsAvoidLovers(true) &&
+	($user->IsRoleGroup('cursed') || $user->IsPossessedGroup())) {
       DB::$USER->Kill($user->id, 'CURSED');
       $this->AddSuccess($user->id, $this->role . '_success');
     }
@@ -35,7 +34,7 @@ class Role_voodoo_killer extends Role {
   }
 
   //成功結果登録
-  final function SaveSuccess() {
+  public function SaveSuccess() {
     foreach ($this->GetStack($this->role . '_success') as $target_id => $flag) {
       $target = DB::$USER->ByVirtual($target_id)->handle_name;
       foreach (array_keys($this->GetStack(), $target_id) as $id) { //成功者を検出

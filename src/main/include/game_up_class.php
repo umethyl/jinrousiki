@@ -1,44 +1,63 @@
 <?php
 //-- GameUp 出力クラス --//
 class GameUp {
+  //出力
   static function Output() {
-    HTML::OutputHeader(ServerConfig::TITLE . '[発言]', 'game_up');
+    HTML::OutputHeader(ServerConfig::TITLE . GameUpMessage::TITLE, 'game_up');
     HTML::OutputJavaScript('game_up');
-    $format = <<<EOF
+    self::OutputHeader();
+    self::OutputFormHeader();
+    self::OutputForm();
+    HTML::OutputFooter();
+  }
+
+  //ヘッダ出力
+  private static function OutputHeader() {
+    echo <<<EOF
 <link rel="stylesheet" id="scene">
 </head>
 <body onLoad="set_focus(); reload_game();">
 <a id="game_top"></a>
-%s
-%s
-<table><tr>
-<td><textarea name="say" rows="3" cols="70" wrap="soft"></textarea></td>
-<td>
-<input type="submit" onclick="setTimeout(&quot;auto_clear()&quot;, 10)" value="送信/リロード"><br>
-<select name="font_type">
-<option value="strong">強く発言する</option>
-<option value="normal" selected>通常通り発言する</option>
-<option value="weak">弱く発言する</option>
-<option value="last_words">遺言を残す</option>
-</select><br>
-[<a class="vote" href="game_vote.php%s">投票/占う/護衛</a>]
-<a class="top-link" href="./" target="_top">TOP</a>
-</td>
-</tr></table>
-</form>
 
 EOF;
+  }
 
+  //フォームヘッダ出力
+  private static function OutputFormHeader() {
     //送信用フォーム
-    $form_header = '<form method="post" action="game_play.php%s" target="bottom" ';
-    $header = sprintf($form_header, RQ::Get()->url);
-    $reload = $header . 'name="reload_game"></form>'; //自動リロード用ダミー送信フォーム
+    $format = '<form method="post" action="game_play.php%s" target="bottom" ';
+    $header = sprintf($format, RQ::Get()->url);
+    Text::Output($header . 'name="reload_game"></form>'); //自動リロード用ダミー送信フォーム
 
     //霊話モードの時は発言用フレームでリロード・書き込みしたときに真ん中のフレームもリロードする
     $submit = $header . 'class="input-say" name="send" onSubmit="';
     if (RQ::Get()->heaven_mode) $submit .= 'reload_middle_frame();';
-    $submit .= 'set_focus();">';
-    printf($format, $reload, $submit, RQ::Get()->url);
-    HTML::OutputFooter();
+    Text::Output($submit . 'set_focus();">');
+  }
+
+  //フォーム本体出力
+  private static function OutputForm() {
+    $format = <<<EOF
+<table><tr>
+<td><textarea name="say" rows="3" cols="70" wrap="soft"></textarea></td>
+<td>
+<input type="submit" onclick="setTimeout(&quot;auto_clear()&quot;, 10)" value="%s"><br>
+<select name="font_type">
+<option value="strong">%s</option>
+<option value="normal" selected>%s</option>
+<option value="weak">%s</option>
+<option value="last_words">%s</option>
+</select><br>
+[<a class="vote" href="game_vote.php%s">%s</a>]
+<a class="top-link" href="./" target="_top">%s</a>
+</td>
+</tr></table>
+</form>
+EOF;
+
+    printf($format . Text::LF, GameUpMessage::SUBMIT,
+	   GameUpMessage::STRONG, GameUpMessage::NORMAL, GameUpMessage::WEAK,
+	   GameUpMessage::LAST_WORDS,
+	   RQ::Get()->url, GameUpMessage::VOTE, GameUpMessage::TOP);
   }
 }

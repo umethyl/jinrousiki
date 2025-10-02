@@ -7,10 +7,12 @@ class Role_voodoo_mad extends Role {
   public $action = 'VOODOO_MAD_DO';
   public $submit = 'voodoo_do';
 
-  function OutputAction() { RoleHTML::OutputVote('wolf-eat', $this->submit, $this->action); }
+  public function OutputAction() {
+    RoleHTML::OutputVote('wolf-eat', $this->submit, $this->action);
+  }
 
   //呪術対象セット
-  final function SetVoodoo(User $user) {
+  final public function SetVoodoo(User $user) {
     if ($user->IsCursed()) { //呪返し判定
       $actor = $this->GetActor();
       foreach ($this->GetGuardCurse() as $filter) { //厄払い判定
@@ -28,7 +30,7 @@ class Role_voodoo_mad extends Role {
   }
 
   //呪術能力者の呪返し処理
-  final function VoodooToVoodoo() {
+  final public function VoodooToVoodoo() {
     $stack       = $this->GetStack('voodoo');
     $count_list  = array_count_values($stack);
     $filter_list = $this->GetGuardCurse();

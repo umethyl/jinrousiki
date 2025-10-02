@@ -6,18 +6,14 @@
 */
 class Role_pharmacist extends Role {
   public $result = 'PHARMACIST_RESULT';
+  public $vote_day_type = 'init';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 2) $this->OutputAbilityResult($this->result);
-  }
-
-  function SetVoteDay($uname) {
-    $this->InitStack();
-    if ($this->IsRealActor()) $this->AddStackName($uname);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 3;
   }
 
   //毒能力情報セット
-  function SetDetox() {
+  public function SetDetox() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
       $str = $this->DistinguishPoison(DB::$USER->ByRealUname($target_uname));
@@ -26,7 +22,7 @@ class Role_pharmacist extends Role {
   }
 
   //毒能力鑑定
-  protected function DistinguishPoison(User $user) {
+  final protected function DistinguishPoison(User $user) {
     //非毒能力者・夢毒者
     if (! $user->IsRoleGroup('poison') || $user->IsRole('dummy_poison')) return 'nothing';
     if ($user->IsRole('strong_poison')) return 'strong'; //強毒者
@@ -40,7 +36,7 @@ class Role_pharmacist extends Role {
   }
 
   //解毒
-  function Detox() {
+  public function Detox() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
       if ($this->IsActor(DB::$USER->ByUname($target_uname))) $this->SetDetoxFlag($uname);
@@ -54,7 +50,7 @@ class Role_pharmacist extends Role {
   }
 
   //ショック死抑制
-  function Cure() {
+  final public function Cure() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname) || ! $this->IsActor(DB::$USER->ByUname($target_uname))) continue;
       $this->GetActor()->cured_flag = true;
@@ -63,7 +59,7 @@ class Role_pharmacist extends Role {
   }
 
   //鑑定結果登録
-  function SaveResult() {
+  final public function SaveResult() {
     foreach ($this->GetStack($this->role . '_result') as $uname => $result) {
       $user   = DB::$USER->ByUname($uname);
       $list   = $this->GetStack($user->GetMainRole(true));

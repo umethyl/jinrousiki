@@ -3,30 +3,38 @@
   ◆無鉄砲者 (cowboy_duelist)
   ○仕様
   ・投票数：-1
-  ・処刑投票補正：宿敵に投票 + 相互投票ではない場合に得票数 +5
+  ・得票数補正：+5 (宿敵に投票 & 相互投票ではない)
   ・処刑投票：退治 (宿敵限定 / 投票状況依存)
 */
 RoleManager::LoadFile('valkyrja_duelist');
 class Role_cowboy_duelist extends Role_valkyrja_duelist {
-  public $mix_in = 'critical_mad';
   public $self_shoot = true;
-  public $sudden_death = 'DUEL';
+  public $vote_day_type = 'init';
+  public $sudden_death  = 'DUEL';
 
-  function FilterVoteDo(&$count) { $count--; }
+  public function FilterVoteDo(&$count) { $count--; }
 
-  function VoteCorrect(array &$message_list, array &$count_list) {
+  public function VoteCorrect() {
+    //データ取得
+    $count_list   = $this->GetStack('vote_count');
+    $message_list = $this->GetStack('vote_message');
+
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($uname == $this->GetVoteTargetUname($target_uname)) continue; //相互投票判定
 
       $target = DB::$USER->ByRealUname($target_uname);
       if ($target->IsPartner($this->partner_role, DB::$USER->ByUname($uname)->id)) { //宿敵判定
-	$message_list[$uname]['poll'] += 5;
 	$count_list[$uname] += 5;
+	$message_list[$uname]['poll'] += 5;
       }
     }
+
+    //データ保存
+    $this->SetStack($count_list,   'vote_count');
+    $this->SetStack($message_list, 'vote_message');
   }
 
-  function VoteAction() {
+  public function VoteAction() {
     $stack = array(); //ショック死対象者リスト
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;

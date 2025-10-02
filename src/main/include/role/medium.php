@@ -5,12 +5,12 @@
 class Role_medium extends Role {
   public $result = 'MEDIUM_RESULT';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 1) $this->OutputAbilityResult($this->result);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 2;
   }
 
   //判定結果登録 (システムメッセージ)
-  final function InsertResult() {
+  final public function InsertResult() {
     $flag = false; //巫女の出現判定
     foreach (DB::$USER->role as $role => $list) {
       if (RoleData::IsMain($role) && RoleData::IsGroup($role, $this->role)) {

@@ -60,16 +60,8 @@ class Session {
   static function CertifyGamePlay() {
     if (self::Certify(false)) return true;
 
-    if (RoomDataDB::Exists()) { //村が存在するなら観戦ページにジャンプする
-      $url   = sprintf('game_view.php?room_no=%d', RQ::Get()->room_no);
-      $title = '観戦ページにジャンプ';
-      $body  = "観戦ページに移動します。<br>\n" .
-	'切り替わらないなら <a href="%s" target="_top">ここ</a> 。' . "\n" . '%s';
-      HTML::OutputResult($title, sprintf($body, $url, HTML::GenerateSetLocation()), $url);
-    }
-    else {
-      self::Output();
-    }
+    //村が存在するなら観戦ページにジャンプする
+    RoomDataDB::Exists() ? self::OutputJump() : self::Output();
   }
 
   //ID セット
@@ -87,9 +79,16 @@ class Session {
 
   //エラー出力
   private static function Output() {
-    $title = 'セッション認証エラー';
-    $body  = $title . '：<a href="./" target="_top">トップページ</a>からログインしなおしてください';
-    HTML::OutputResult($title, $body);
+    $title = Message::SESSION_ERROR;
+    HTML::OutputResult($title, $title . Message::TOP);
+  }
+
+  //観戦ページ移動
+  private static function OutputJump() {
+    $url  = sprintf('game_view.php?room_no=%d', RQ::Get()->room_no);
+    $jump = sprintf(Message::JUMP, $url);
+    $body = Message::VIEW_BODY . Text::BRLF . $jump . Text::LF . HTML::GenerateSetLocation();
+    HTML::OutputResult(Message::VIEW_TITLE, $body, $url);
   }
 }
 

@@ -5,11 +5,15 @@
 class Option_necessary_trip extends CheckRoomOptionItem {
   public $group = RoomOption::GAME_OPTION;
 
-  function __construct() {
+  public function __construct() {
     if (GameConfig::TRIP) parent::__construct();
   }
 
-  function GetCaption() { return 'トリップ必須'; }
+  public function GetCaption() {
+    return 'トリップ必須';
+  }
 
-  function GetExplain() { return 'ユーザ登録名にトリップが必須です'; }
+  public function GetExplain() {
+    return 'ユーザ登録名にトリップが必須です';
+  }
 }

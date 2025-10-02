@@ -8,7 +8,7 @@ RoleManager::LoadFile('ogre');
 class Role_cow_ogre extends Role_ogre {
   public $reflect_rate = 45;
 
-  function Win($winner) {
+  public function Win($winner) {
     if ($winner != 'human' || $this->IsDead()) return false;
     foreach (DB::$USER->rows as $user) {
       if ($user->IsLive() && $user->IsMainGroup('assassin')) return false;

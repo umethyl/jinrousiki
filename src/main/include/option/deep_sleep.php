@@ -7,9 +7,15 @@
 class Option_deep_sleep extends CheckRoomOptionItem {
   public $group = RoomOption::GAME_OPTION;
 
-  function GetCaption() { return '静寂村'; }
+  public function GetCaption() {
+    return '静寂村';
+  }
 
-  function GetExplain() { return '全員に「爆睡者」がつきます'; }
+  public function GetExplain() {
+    return '全員に「爆睡者」がつきます';
+  }
 
-  function Cast(&$list, &$rand) { return $this->CastAll($list); }
+  public function Cast(array &$list, &$rand) {
+    return $this->CastAll($list);
+  }
 }

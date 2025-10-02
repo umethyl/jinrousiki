@@ -9,7 +9,7 @@ abstract class RoomOptionItem {
   public $form_name;
   public $form_value;
 
-  function __construct() {
+  public function __construct() {
     $this->name = array_pop(explode('Option_', get_class($this)));
 
     $enable  = sprintf('%s_enable',  $this->name);
@@ -27,54 +27,63 @@ abstract class RoomOptionItem {
   }
 
   //フォームデータ取得
-  abstract function LoadPost();
+  abstract public function LoadPost();
+
+  //スタックからデータ取得
+  final protected function GetStack() {
+    return RoomOption::$stack[$this->name];
+  }
 
   //オプション名取得
-  function GetName() { return $this->GetCaption(); }
+  public function GetName() {
+    return $this->GetCaption();
+  }
 
   //キャプション取得
-  abstract function GetCaption();
+  abstract public function GetCaption();
 
   //説明文取得
-  function GetExplain() { return $this->GetCaption(); }
+  public function GetExplain() {
+    return $this->GetCaption();
+  }
+
+  //キャプション取得 (村用)
+  protected function GetRoomCaption () {
+    return $this->GetCaption();
+  }
+
+  //説明リンク取得
+  protected function GetURL() {
+    return 'game_option.php#' . $this->name;
+  }
 
   //村用画像生成
-  function GenerateImage() {
+  public function GenerateImage() {
     return Image::Room()->Generate($this->name, $this->GetRoomCaption());
   }
 
   //村用オプション説明メッセージ生成
-  function GenerateRoomCaption() {
-    $format  = '<div>%s：<a href="info/%s">%s</a>：%s</div>' . Text::LF;
+  public function GenerateRoomCaption() {
     $image   = $this->GenerateImage();
     $url     = $this->GetURL();
     $caption = $this->GetRoomCaption();
     $explain = $this->GetExplain();
-    return sprintf($format, $image, $url, $caption, $explain);
+    return OptionHTML::GenerateRoomCaption($image, $url, $caption, $explain);
   }
 
   //配役処理 (一人限定)
-  function CastOnce(array &$list, &$rand, $str = '') {
+  final protected function CastOnce(array &$list, &$rand, $str = '') {
     $list[array_pop($rand)] .= ' ' . $this->name . $str;
     return array($this->name);
   }
 
   //配役処理 (全員)
-  function CastAll(array &$list) {
+  final protected function CastAll(array &$list) {
     foreach (array_keys($list) as $id) {
       $list[$id] .= ' ' . $this->name;
     }
     return array($this->name);
   }
-
-  //スタックからデータ取得
-  protected function GetStack() { return RoomOption::$stack[$this->name]; }
-
-  //キャプション取得 (村用)
-  protected function GetRoomCaption () { return $this->GetCaption(); }
-
-  //説明リンク取得
-  protected function GetURL() { return 'game_option.php#' . $this->name; }
 }
 
 //-- チェックボックス型 --//
@@ -83,7 +92,7 @@ abstract class CheckRoomOptionItem extends RoomOptionItem {
   public $type  = 'checkbox';
   public $form_value = 'on';
 
-  function LoadPost() {
+  public function LoadPost() {
     RQ::Get()->ParsePostOn($this->name);
     if (RQ::Get()->{$this->name}) array_push(RoomOption::${$this->group}, $this->name);
     return RQ::Get()->{$this->name};
@@ -109,12 +118,12 @@ abstract class SelectorRoomOptionItem extends RoomOptionItem {
   public $form_list = array();
   public $on_change = '';
 
-  function __construct() {
+  public function __construct() {
     parent::__construct();
     $this->source = sprintf('%s_list', $this->name);
   }
 
-  function LoadPost() {
+  public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
     if (is_null(RQ::Get()->{$this->name})) return false;
 
@@ -128,7 +137,7 @@ abstract class SelectorRoomOptionItem extends RoomOptionItem {
   }
 
   //個別データ取得
-  function GetItem() {
+  public function GetItem() {
     if (! isset($this->item_list)) {
       $this->item_list = array();
       $stack = is_array($this->conf_name) ? $this->conf_name : GameOptionConfig::${$this->source};
@@ -163,5 +172,7 @@ abstract class TextRoomOptionItem extends RoomOptionItem {
   public $group = RoomOption::NOT_OPTION;
   public $type  = 'textbox';
 
-  function LoadPost() { RQ::Get()->ParsePost('Escape', $this->name); }
+  public function LoadPost() {
+    RQ::Get()->ParsePost('Escape', $this->name);
+  }
 }

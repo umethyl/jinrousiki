@@ -9,16 +9,20 @@
 class Role_escaper extends Role {
   public $action = 'ESCAPE_DO';
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('escape-do', 'escape_do', $this->action);
   }
 
-  function IsVote() { return DB::$ROOM->date > 1; }
+  public function IsVote() {
+    return DB::$ROOM->date > 1;
+  }
 
-  function GetIgnoreMessage() { return '初日は逃亡できません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+  }
 
   //逃亡
-  function Escape(User $user) {
+  final public function Escape(User $user) {
     $actor = $this->GetActor();
     if (in_array($user->id, $this->GetStack('trap'))) { //罠死判定
       DB::$USER->Kill($actor->id, 'TRAPPED');
@@ -36,12 +40,14 @@ class Role_escaper extends Role {
   }
 
   //逃亡失敗判定
-  protected function EscapeFailed(User $user) { return $user->IsWolf(); }
+  protected function EscapeFailed(User $user) {
+    return $user->IsWolf();
+  }
 
   //逃亡処理
   protected function EscapeAction(User $user) {}
 
-  function Win($winner) {
+  public function Win($winner) {
     $this->SetStack('escaper', 'class');
     return $this->IsLive();
   }

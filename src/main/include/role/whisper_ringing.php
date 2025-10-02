@@ -6,7 +6,7 @@
 class Role_whisper_ringing extends Role {
   public $mix_in = 'common';
 
-  function Whisper(TalkBuilder $builder, $voice) {
+  public function Whisper(TalkBuilder $builder, $voice) {
     return $builder->flag->{$this->role} && $this->filter->Whisper($builder, $voice);
   }
 }

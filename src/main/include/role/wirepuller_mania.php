@@ -6,5 +6,7 @@
 */
 RoleManager::LoadFile('unknown_mania');
 class Role_wirepuller_mania extends Role_unknown_mania {
-  protected function GetManiaRole(User $user) { return $user->GetID('wirepuller_luck'); }
+  protected function GetManiaRole(User $user) {
+    return $user->GetID('wirepuller_luck');
+  }
 }

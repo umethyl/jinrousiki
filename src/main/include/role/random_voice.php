@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('strong_voice');
 class Role_random_voice extends Role_strong_voice {
-  function FilterVoice(&$voice, &$str) {
+  public function FilterVoice(&$voice, &$str) {
     $voice = Lottery::Get($this->voice_list);
   }
 }

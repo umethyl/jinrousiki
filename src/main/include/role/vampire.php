@@ -24,16 +24,20 @@ class Role_vampire extends Role {
     RoleHTML::OutputPartner($role_list, $role . '_list');
   }
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('vampire-do', 'vampire_do', $this->action);
   }
 
-  function IsVote() { return DB::$ROOM->date > 1; }
+  public function IsVote() {
+    return DB::$ROOM->date > 1;
+  }
 
-  function GetIgnoreMessage() { return '初日は襲撃できません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+  }
 
   //吸血対象セット
-  function SetInfect(User $user) {
+  final public function SetInfect(User $user) {
     $actor = $this->GetActor();
     $this->SetStack($actor, 'voter');
     foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
@@ -52,8 +56,8 @@ class Role_vampire extends Role {
     if ($user->IsMainGroup('vampire')) {
       RoleManager::LoadMain($user)->InfectVampire($actor); //吸血鬼襲撃
     }
-    elseif ($user->IsRole('soul_mania', 'dummy_mania') && $user->IsCamp('vampire')) {
-      $this->AddSuccess($user->id, 'vampire_kill'); //覚醒コピー能力者
+    elseif ($user->IsDelayMania() && $user->IsCamp('vampire')) {
+      $this->AddSuccess($user->id, 'vampire_kill'); //時間差コピー能力者
     }
     else {
       $this->SetInfectTarget($user->id);
@@ -69,11 +73,13 @@ class Role_vampire extends Role {
 
   //対吸血処理
   protected function InfectVampire(User $user) {
-    $this->AddSuccess($this->GetID(), 'vampire_kill');
+    if (! $this->GetActor()->IsAvoid()) {
+      $this->AddSuccess($this->GetID(), 'vampire_kill');
+    }
   }
 
   //吸血死＆吸血処理
-  final function VampireKill() {
+  final public function VampireKill() {
     foreach ($this->GetStack('vampire_kill') as $id => $flag) { //吸血死処理
       DB::$USER->Kill($id, 'VAMPIRE_KILLED');
     }

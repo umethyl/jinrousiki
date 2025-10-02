@@ -35,5 +35,5 @@ class JinrouRSS {
   }
 
   //ファイル取得
-  private static function GetFile() { return JINRO_ROOT . self::FILE; }
+  private static function GetFile() { return JINROU_ROOT . self::FILE; }
 }

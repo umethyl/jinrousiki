@@ -5,13 +5,13 @@
   ・発言変換：完全置換 (生存者ユーザ名 (ランダム) + サーバ設定)
 */
 class Role_gentleman extends Role {
-  function ConvertSay() {
+  public function ConvertSay() {
     if (! Lottery::Percent(GameConfig::GENTLEMAN_RATE)) return false; //スキップ判定
 
     $stack = DB::$USER->GetLivingUsers(); //生存者のユーザ ID を取得
     unset($stack[$this->GetID()]); //自分を削除
     $target = DB::$USER->ByVirtual(Lottery::Get(array_keys($stack)))->handle_name;
-    $this->SetStack(sprintf(Message::${$this->role}, $target), 'say');
+    $this->SetStack(sprintf(RoleTalkMessage::${$this->role}, $target), 'say');
     return true;
   }
 }

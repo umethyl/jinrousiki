@@ -8,9 +8,11 @@
 */
 RoleManager::LoadFile('guard');
 class Role_elder_guard extends Role_guard {
-  function IgnoreGuard() { return Lottery::Percent(30) ? true : null; }
+  public $hunt = false;
 
-  protected function IsHunt(User $user) { return false; }
+  public function IgnoreGuard() {
+    return Lottery::Percent(30) ? true : null;
+  }
 
-  function FilterVoteDo(&$count) { $count++; }
+  public function FilterVoteDo(&$count) { $count++; }
 }

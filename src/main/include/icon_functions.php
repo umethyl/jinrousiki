@@ -163,16 +163,16 @@ class IconHTML {
     //編集フォームの表示
     if ($url == 'icon_view') {
       if (RQ::Get()->icon_no > 0) {
-	echo <<<EOF
-<div class="link"><a href="icon_view.php">←アイコン一覧に戻る</a></div>
-<fieldset><legend>アイコン設定の変更</legend>
-
+	$format = <<<EOF
+<div class="link"><a href="icon_view.php">%s</a></div>
+<fieldset><legend>%s</legend>
 EOF;
+	printf($format . Text::LF, IconMessage::BACK, IconMessage::EDIT);
 	self::OutputEdit(RQ::Get()->icon_no);
 	Text::Output('</fieldset>');
       }
       else {
-	Text::Output('<fieldset><legend>ユーザアイコン一覧</legend>');
+	Text::Output(sprintf('<fieldset><legend>%s</legend>', IconMessage::TITLE));
 	self::OutputConcrete($url);
 	Text::Output('</fieldset>');
       }
@@ -191,46 +191,56 @@ EOF;
     $url     = Icon::GetFile($icon_filename);
     $size    = UserIcon::GetMaxLength();
     $checked = $disable > 0 ? ' checked' : '';
-    echo <<<EOF
+    $format = <<<EOF
 <form method="post" action="icon_edit.php">
-<input type="hidden" name="icon_no" value="{$icon_no}">
+<input type="hidden" name="icon_no" value="%d">
 <table cellpadding="3">
 <tr>
-  <td rowspan="7"><img src="{$url}" style="border:3px solid {$color};"></td>
-  <td><label for="name">アイコンの名前</label></td>
-  <td><input type="text" id="name" name="icon_name" value="{$icon_name}" {$size}></td>
+  <td rowspan="7"><img src="%s" style="border:3px solid %s;"></td>
+  <td><label for="name">%s</label></td>
+  <td><input type="text" id="name" name="icon_name" value="%s" %s></td>
 </tr>
 <tr>
-  <td><label for="appearance">出典</label></td>
-  <td><input type="text" id="appearance" name="appearance" value="{$appearance}" {$size}></td>
+  <td><label for="appearance">%s</label></td>
+  <td><input type="text" id="appearance" name="appearance" value="%s" %s></td>
 </tr>
 <tr>
-  <td><label for="category">カテゴリ</label></td>
-  <td><input type="text" id="category" name="category" value="{$category}" {$size}></td>
+  <td><label for="category">%s</label></td>
+  <td><input type="text" id="category" name="category" value="%s" %s></td>
 </tr>
 <tr>
-  <td><label for="author">アイコンの作者</label></td>
-  <td><input type="text" id="author" name="author" value="{$author}" {$size}></td>
+  <td><label for="author">%s</label></td>
+  <td><input type="text" id="author" name="author" value="%s" %s></td>
 </tr>
 <tr>
-  <td><label for="color">アイコン枠の色</label></td>
-  <td><input type="text" id="color" name="color" value="{$color}" size="10px" maxlength="7"> (例：#6699CC)</td>
+  <td><label for="color">%s</label></td>
+  <td><input type="text" id="color" name="color" value="%s" size="10px" maxlength="7"> (%s)</td>
 </tr>
 <tr>
-  <td><label for="disable">非表示</label></td>
-  <td><input type="checkbox" id="disable" name="disable" value="on"{$checked}></td>
+  <td><label for="disable">%s</label></td>
+  <td><input type="checkbox" id="disable" name="disable" value="on"%s></td>
 </tr>
 <tr>
-  <td><label for="password">編集パスワード</label></td>
+  <td><label for="password">%s</label></td>
   <td><input type="password" id="password" name="password" size="20" value=""></td>
 </tr>
 <tr>
-  <td colspan="3"><input type="submit" value="変更"></td>
+  <td colspan="3"><input type="submit" value="%s"></td>
 </tr>
 </table>
 </form>
-
 EOF;
+
+    printf($format . Text::LF,
+	   $icon_no, $url, $color,
+	   IconMessage::NAME,       $icon_name,  $size,
+	   IconMessage::APPEARANCE, $appearance, $size,
+	   IconMessage::CATEGORY,   $category,   $size,
+	   IconMessage::AUTHOR,     $author,     $size,
+	   IconMessage::COLOR,      $color,      IconMessage::EXAMPLE,
+	   IconMessage::DISABLE,    $checked,
+	   IconMessage::PASSWORD,
+	   IconMessage::SUBMIT);
   }
 
   //アイコン情報を収集して表示する
@@ -248,25 +258,25 @@ EOF;
     //検索条件の表示
     $where = array();
     if ($base_url == 'user_manager') $where[] = 'disable IS NOT TRUE';
-    $stack = self::OutputByType('category', 'カテゴリ');
+    $stack = self::OutputByType('category', IconMessage::CATEGORY);
     if (0 < count($stack)) {
       foreach ($stack as $data) $url_option[] = sprintf("category[]={$data}");
       $where[] = IconDB::GetInClause('category', $stack);
     }
 
-    $stack = self::OutputByType('appearance', '出典');
+    $stack = self::OutputByType('appearance', IconMessage::APPEARANCE);
     if (0 < count($stack)) {
       foreach ($stack as $data) $url_option[] = "appearance[]={$data}";
       $where[] = IconDB::GetInClause('appearance', $stack);
     }
 
-    $stack = self::OutputByType('author', 'アイコン作者');
+    $stack = self::OutputByType('author', IconMessage::AUTHOR);
     if (0 < count($stack)) {
       foreach ($stack as $data) $url_option[] = "author[]={$data}";
       $where[] = IconDB::GetInClause('author', $stack);
     }
 
-    $stack = self::OutputByType('keyword', 'キーワード');
+    $stack = self::OutputByType('keyword', IconMessage::KEYWORD);
     if (0 < count($stack)) {
       $str = "LIKE '%{$stack[0]}%'";
       $where[] = "(category {$str} OR appearance {$str} OR author {$str} OR icon_name {$str})";
@@ -278,31 +288,37 @@ EOF;
 
     $colspan = UserIconConfig::COLUMN * 2;
     $checked = RQ::Get()->sort_by_name ? ' checked' : '';
-    echo <<<EOF
+    $format  = <<<EOF
 </tr>
 <tr>
-<td colspan="{$colspan}">
-<label for="sort_by_name"><input id="sort_by_name" name="sort_by_name" type="checkbox" value="on"{$checked}>名前順に並べ替える</label>
-<label for="keyword">キーワード：<input id="keyword" name="keyword" type="text" value="{$keyword}"></label>
+<td colspan="%s">
+<label for="sort_by_name"><input id="sort_by_name" name="sort_by_name" type="checkbox" value="on"%s>%s</label>
+<label for="keyword">%s<input id="keyword" name="keyword" type="text" value="%s"></label>
 <input id="page" name="page" type="hidden" value="1">
-<input id="search" name="search" type="submit" value="検索">
+<input id="search" name="search" type="submit" value="%s">
 </td></tr></table>
-
 EOF;
+
+    printf($format . Text::LF,
+	   $colspan,
+	   $checked, IconMessage::SORT_BY_NAME, IconMessage::KEYWORD_INPUT, $keyword,
+	   IconMessage::SEARCH);
 
     //検索結果の表示
     if (empty(RQ::Get()->room_no)) {
       $method = 'OutputDetailForIconView';
-      echo <<<EOF
+      $format = <<<EOF
 <table>
 <caption>
-[S] 出典 / [C] カテゴリ / [A] アイコンの作者<br>
-アイコンをクリックすると編集できます (要パスワード)
+[S] %s / [C] %s / [A] %s<br>
+%s
 </caption>
 <thead>
 <tr>
-
 EOF;
+      printf($format . Text::LF,
+	     IconMessage::APPEARANCE, IconMessage::CATEGORY, IconMessage::AUTHOR,
+	     IconMessage::SEARCH_EXPLAIN);
     }
     elseif (isset(RQ::Get()->room_no)) {
       $method = 'OutputDetailForUserEntry';
@@ -360,10 +376,9 @@ EOF;
 <td>
 <label for="%s[]">%s</label><br>
 <select name="%s[]" size="6" multiple>
-<option value="__all__">全て</option>
-
+<option value="__all__">%s</option>
 EOF;
-    printf($format, $type, $caption, $type);
+    printf($format . Text::LF, $type, $caption, $type, IconMessage::ALL);
 
     $list = IconDB::GetSelectionByType($type);
     array_unshift($list, '__null__');
@@ -371,9 +386,15 @@ EOF;
     $format = '<option value="%s"%s>%s</option>';
     $target = Session::Get('icon_view', $type);
     foreach ($list as $name) {
-      printf($format,
-	     $name, in_array($name, $target) ? ' selected' : '',
-	     $name == '__null__' ? 'データ無し' : (strlen($name) > 0 ? $name : '空欄'));
+      if ($name == '__null__') {
+	$space = IconMessage::NOTHING;
+      } elseif (strlen($name) > 0) {
+	$space = $name;
+      } else {
+	$space = IconMessage::SPACE;
+      }
+
+      printf($format, $name, in_array($name, $target) ? ' selected' : '', $space);
     }
     Text::Output("</select>\n</td>");
 
@@ -383,24 +404,28 @@ EOF;
   //アイコン詳細画面 (IconView 用)
   private static function OutputDetailForIconView(array $icon_list, $cell_width) {
     extract($icon_list);
-    $location      = Icon::GetFile($icon_filename);
-    $wrapper_width = $icon_width + 6;
-    $info_width    = $cell_width - $icon_width;
-    $edit_url      = "icon_view.php?icon_no={$icon_no}";
+    $edit_url = sprintf('icon_view.php?icon_no=%d', $icon_no);
     if ($disable > 0) $icon_name = sprintf('<s>%s</s>', $icon_name);
-    echo <<<EOF
+    $format = <<<EOF
 <td class="icon-details">
-<a href="{$edit_url}" class="icon_wrapper" style="width:{$wrapper_width}px">
-<img alt="{$icon_name}" src="{$location}" width="{$icon_width}" height="{$icon_height}" style="border:3px solid {$color};">
+<a href="%s" class="icon_wrapper" style="width:%dpx">
+<img alt="%s" src="%s" width="%d" height="%d" style="border:3px solid %s;">
 </a>
 </td>
 <td class="icon-details">
-<ul style="width:{$info_width}px;">
-<li><a href="{$edit_url}">No. {$icon_no}</a></li>
-<li><a href="{$edit_url}">{$icon_name}</a></li>
-<li><font color="{$color}">◆</font>{$color}</li>
-
+<ul style="width:%dpx;">
+<li><a href="%s">No. %d</a></li>
+<li><a href="%s">%s</a></li>
+<li><font color="%s">%s</font>%s</li>
 EOF;
+
+    printf($format . Text::LF,
+	   $edit_url, $icon_width + 6,
+	   $icon_name, Icon::GetFile($icon_filename), $icon_width, $icon_height, $color,
+	   $cell_width - $icon_width,
+	   $edit_url, $icon_no,
+	   $edit_url, $icon_name,
+	   $color, Message::SYMBOL, $color);
 
     $data = '';
     if (! empty($appearance)) $data .= '<li>[S]' . $appearance;
@@ -417,15 +442,18 @@ EOF;
   //アイコン詳細画面 (UserEntry 用)
   private static function OutputDetailForUserEntry(array $icon_list, $cell_width) {
     extract($icon_list);
-    $location      = Icon::GetFile($icon_filename);
     $wrapper_width = $icon_width + 6;
     $info_width    = $cell_width - $wrapper_width;
-    echo <<<EOF
-<td class="icon_details"><label for="icon_{$icon_no}"><img alt="{$icon_name}" src="{$location}" width="{$icon_width}" height="{$icon_height}" style="border:3px solid {$color};"><br clear="all">
-<input type="radio" id="icon_{$icon_no}" name="icon_no" value="{$icon_no}"> No. {$icon_no}<br>
-<font color="{$color}">◆</font>{$icon_name}</label></td>
-
+    $format = <<<EOF
+<td class="icon_details"><label for="icon_%d"><img alt="%s" src="%s" width="%d" height="%d" style="border:3px solid %s;"><br clear="all">
+<input type="radio" id="icon_%d" name="icon_no" value="%d"> No. %d<br>
+<font color="%s">%s</font>%s</label></td>
 EOF;
+
+    printf($format . Text::LF,
+	   $icon_no, $icon_name, Icon::GetFile($icon_filename), $icon_width, $icon_height, $color,
+	   $icon_no, $icon_no, $icon_no,
+	   $color, Message::SYMBOL, $icon_name);
   }
 
   //ページ送り用のリンクタグを出力する (PageLinkBuilder と統合できるかも)
@@ -457,17 +485,6 @@ EOF;
     }
     $url_stack[] = self::GeneratePageLink($CONFIG, 'all');
 
-    if ($CONFIG->url == 'old_log') {
-      $list = $CONFIG->option;
-      $list['page'] = 'page=' . $CONFIG->current;
-      $list['reverse'] = 'reverse=' . ($CONFIG->is_reverse ? 'off' : 'on');
-      $url_stack[] = '[表示順]';
-      $url_stack[] = $CONFIG->is_reverse ? '新↓古' : '古↓新';
-
-      $url = $url_header . implode('&', $list) . '">';
-      $name = ($CONFIG->is_reverse xor $CONFIG->reverse) ? '元に戻す' : '入れ替える';
-      $url_stack[] =  $url . $name . '</a>';
-    }
     echo implode(' ', $url_stack);
   }
 
@@ -480,7 +497,7 @@ EOF;
     $url = $CONFIG->url . '.php?' . implode('&', $list);
     $attributes = array();
     if (isset($CONFIG->attributes)) {
-      foreach($CONFIG->attributes as $attr => $value) {
+      foreach ($CONFIG->attributes as $attr => $value) {
 	$attributes[] = $attr . '="'. eval($value) . '"';
       }
     }

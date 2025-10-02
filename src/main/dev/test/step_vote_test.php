@@ -1,12 +1,11 @@
 <?php
+ini_set('display_errors', 'On');
 error_reporting(E_ALL);
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('test_class', 'image_class');
-
-//-- 仮想村データをセット --//
 Loader::LoadRequest('RequestBaseGame', true);
 
+//-- 仮想村データをセット --//
 DevRoom::Initialize(array('name' => '投票テスト村', 'status' => 'playing'));
 RQ::AddTestRoom('game_option', 'not_open_cast');
 RQ::AddTestRoom('game_option', 'open_vote death_note');
@@ -137,19 +136,11 @@ RQ::Set('font_type', 'normal');
 //DB::Connect(); //DB接続 (必要なときだけ設定する)
 DevRoom::Load();
 DB::$ROOM->date = $set_date;
-#DB::$ROOM->scene = 'beforegame';
-#DB::$ROOM->scene = 'day';
-DB::$ROOM->scene = 'night';
-#DB::$ROOM->scene = 'aftergame';
-//DB::$ROOM->system_time = Time::Get(); //現在時刻を取得
+DB::$ROOM->SetScene('night');
 
 DevUser::Load();
-if (DB::$ROOM->IsDate(1)) {
-  foreach (DB::$USER->rows as $user) $user->live = 'live'; //初日用
-}
 #DB::$USER->ByID(9)->live = 'live';
-DB::$SELF = DB::$USER->ByID(18);
-#DB::$SELF = DB::$USER->TraceExchange(14);
+DB::LoadSelf(18);
 foreach (DB::$USER->rows as $user) {
   if (! isset($user->target_no)) $user->target_no = 0;
 }

@@ -24,10 +24,9 @@ class DevRoom {
 
   //村データロード
   static function Load() {
-    DB::$ROOM = new Room(RQ::Get());
-    DB::$ROOM->test_mode    = true;
-    DB::$ROOM->log_mode     = true;
-    DB::$ROOM->scene        = 'beforegame';
+    DB::LoadRoom();
+    DB::$ROOM->SetFlag('test_mode', 'log_mode');
+    DB::$ROOM->SetScene('beforegame');
     DB::$ROOM->revote_count = 0;
     if (! isset(DB::$ROOM->vote)) DB::$ROOM->vote = array();
   }
@@ -76,7 +75,7 @@ class DevRoom {
     RQ::SetTestRoom('game_option', implode(' ', $stack->game_option));
     RQ::SetTestRoom('option_role', implode(' ', $stack->option_role));
 
-    DB::$ROOM = new Room(RQ::Get());
+    DB::LoadRoom();
     DB::$ROOM->LoadOption();
     //Text::p(DB::$ROOM);
 
@@ -87,7 +86,7 @@ class DevRoom {
       printf($str, $i);
       $role_list = Cast::Get($user_count);
       if ($role_list == '') break;
-      Text::p(Vote::GenerateRoleNameList(array_count_values($role_list), true));
+      Text::p(VoteGameStart::GenerateRoleNameList(array_count_values($role_list), true));
     }
   }
 }
@@ -188,11 +187,16 @@ class DevUser {
 
   //ユーザ情報をロード
   static function Load() {
-    DB::$USER = new UserData(RQ::Get());
-    DB::$SELF = DB::$USER->ByID(1);
+    DB::LoadUser();
+    DB::LoadDummyBoy();
     if (DB::$ROOM->IsBeforeGame()) {
       foreach (DB::$USER->rows as $user) {
 	if (! isset($user->vote_type)) $user->vote_type = 'GAME_START';
+      }
+    }
+    if (DB::$ROOM->IsDate(1)) { //初日は死亡者ゼロ
+      foreach (DB::$USER->rows as $user) {
+	if ($user->IsDead()) $user->live = 'live';
       }
     }
   }
@@ -287,27 +291,27 @@ EOF;
       case 'POSSESSED_NOT_DO':
       case 'OGRE_NOT_DO':
       case 'DEATH_NOTE_NOT_DO':
-	echo Message::${strtolower($stack['type'])};
+	echo VoteRoleMessage::$$stack['type'];
 	break;
 
       case 'POISON_CAT_DO':
-	echo Message::$revive_do;
+	echo VoteRoleMessage::$REVIVE_DO;
 	break;
 
       case 'POISON_CAT_NOT_DO':
-	echo Message::$revive_not_do;
+	echo VoteRoleMessage::$REVIVE_NOT_DO;
 	break;
 
       case 'SPREAD_WIZARD_DO':
-	echo Message::$wizard_do;
+	echo VoteRoleMessage::$WIZARD_DO;
 	break;
 
       case 'TRAP_MAD_DO':
-	echo Message::$trap_do;
+	echo VoteRoleMessage::$TRAP_DO;
 	break;
 
       case 'TRAP_MAD_NOT_DO':
-	echo Message::$trap_not_do;
+	echo VoteRoleMessage::$TRAP_NOT_DO;
 	break;
 
       case 'MAGE_DO':
@@ -321,7 +325,7 @@ EOF;
 	break;
 
       case 'STEP_GUARD_DO':
-	echo Message::$guard_do;
+	echo VoteRoleMessage::$GUARD_DO;
 	break;
 
       case 'ANTI_VOODOO_DO':

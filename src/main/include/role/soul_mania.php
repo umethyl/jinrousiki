@@ -31,6 +31,7 @@ class Role_soul_mania extends Role_mania {
     'mad'		=> 'whisper_mad',
     'fox'		=> 'cursed_fox',
     'child_fox'		=> 'jammer_fox',
+    'depraver'		=> 'sacrifice_depraver',
     'cupid'		=> 'minstrel_cupid',
     'angel'		=> 'sacrifice_angel',
     'quiz'		=> 'quiz',
@@ -43,14 +44,16 @@ class Role_soul_mania extends Role_mania {
     'avenger'		=> 'revive_avenger',
     'patron'		=> 'sacrifice_patron');
 
-  protected function OutputResult() {
-    if (DB::$ROOM->IsDate(2)) $this->OutputAbilityResult($this->result);
+  protected function IgnoreResult() {
+    return ! DB::$ROOM->IsDate(2);
   }
 
-  protected function GetManiaRole(User $user) { return $user->DistinguishRoleGroup(); }
+  protected function GetManiaRole(User $user) {
+    return $user->DistinguishRoleGroup();
+  }
 
   //覚醒コピー
-  function DelayCopy(User $user) {
+  public function DelayCopy(User $user) {
     $actor = $this->GetActor();
     if ($user->IsRoleGroup('mania', 'copied')) {
       $role = 'human';

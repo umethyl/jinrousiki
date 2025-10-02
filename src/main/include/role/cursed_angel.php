@@ -10,15 +10,18 @@ class Role_cursed_angel extends Role_angel {
   public $mix_in = 'chicken';
   public $sudden_death = 'SEALED';
 
-  protected function IsSympathy(User $a, User $b) { return $a->GetCamp() != $b->GetCamp(); }
+  protected function IsSympathy(User $a, User $b) {
+    return $a->GetCamp() != $b->GetCamp();
+  }
 
-  function SuddenDeath() {
-    if ($this->IgnoreSuddenDeath() || ! $this->IsRealActor()) return;
+  public function IgnoreSuddenDeath() {
+    return ! $this->IsRealActor() || $this->GetActor()->IsAvoidLovers(true);
+  }
+
+  public function IsSuddenDeath() {
     foreach ($this->GetVotedUname() as $uname) {
-      if (DB::$USER->ByRealUname($uname)->IsLovers()) {
-	$this->SetSuddenDeath($this->sudden_death);
-	break;
-      }
+      if (DB::$USER->ByRealUname($uname)->IsLovers()) return true;
     }
+    return false;
   }
 }

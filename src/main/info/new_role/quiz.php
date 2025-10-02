@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('出題者陣営');
 ?>
@@ -10,10 +9,39 @@ InfoHTML::OutputRoleHeader('出題者陣営');
 </p>
 
 <h2 id="rule">基本ルール</h2>
+<p>
+<a href="#rule_summary">概要</a>
+<a href="#rule_win">勝利条件</a>
+<a href="#rule_distinguish">判定</a>
+</p>
+
+<h3 id="rule_summary">概要</h3>
 <ol>
-<li><a href="../spec.php#win">勝利条件</a>は「生存者が出題者陣営のみになっていること」です。</li>
-<li>生存カウントは村人です。</li>
+<li>元々は<a href="../game_option.php#quiz">クイズ村</a>の GM です。</li>
 </ol>
+
+<h3 id="rule_win">勝利条件</h3>
+<ol>
+<li>生存者が出題者陣営のみになっている。</li>
+</ol>
+
+<h3 id="rule_distinguish">判定</h3>
+<table>
+<tr>
+  <th>生存カウント</th>
+  <th>占い</th>
+  <th>霊能</th>
+  <th>精神鑑定</th>
+  <th>性別鑑定</th>
+</tr>
+<tr>
+  <td>村人</td>
+  <td>村人</td>
+  <td>村人</td>
+  <td>正常</td>
+  <td>性別</td>
+</tr>
+</table>
 
 
 <h2 id="quiz_group">出題者系</h2>

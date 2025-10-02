@@ -6,5 +6,5 @@
 */
 RoleManager::LoadFile('decide');
 class Role_bad_luck extends Role_decide {
-  function SetVoteDay($uname) { $this->SetStack($this->GetUname()); }
+  public $vote_day_type = 'self';
 }

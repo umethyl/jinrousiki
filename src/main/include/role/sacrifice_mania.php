@@ -7,7 +7,11 @@
 */
 RoleManager::LoadFile('unknown_mania');
 class Role_sacrifice_mania extends Role_unknown_mania {
-  protected function GetManiaRole(User $user) { return $user->GetID('protected'); }
+  protected function GetManiaRole(User $user) {
+    return $user->GetID('protected');
+  }
 
-  function WolfEatResist() { return true; }
+  public function WolfEatResist() {
+    return true;
+  }
 }

@@ -10,7 +10,7 @@ class Role_south_ogre extends Role_ogre {
   public $reduce_rate  =  2;
   public $reflect_rate = 40;
 
-  function Win($winner) {
+  public function Win($winner) {
     if ($winner != 'human' || $this->IsDead()) return false;
     $id = $this->GetID();
     foreach (DB::$USER->rows as $user) {

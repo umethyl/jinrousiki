@@ -5,8 +5,8 @@
   ・役職表示：比丘尼のみ専用画像
 */
 class Role_lost_ability extends Role {
-  protected function OutputImage() {
+  protected function GetImage() {
     if ($this->GetActor()->IsRole('awake_wizard')) $this->display_role = 'ability_awake_wizard';
-    parent::OutputImage();
+    return parent::GetImage();
   }
 }

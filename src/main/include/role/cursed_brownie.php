@@ -6,12 +6,9 @@
   ・人狼襲撃：死の宣告
 */
 class Role_cursed_brownie extends Role {
-  function SetVoteDay($uname) {
-    $this->InitStack();
-    if ($this->IsRealActor()) $this->AddStackName($uname);
-  }
+  public $vote_day_type = 'init';
 
-  function VoteKillReaction() {
+  public function VoteKillReaction() {
     foreach (array_keys($this->GetStack()) as $uname) {
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
 	$user = DB::$USER->ByRealUname($voted_uname);
@@ -20,5 +17,7 @@ class Role_cursed_brownie extends Role {
     }
   }
 
-  function WolfEatCounter(User $user) { $user->AddDoom(2); }
+  public function WolfEatCounter(User $user) {
+    $user->AddDoom(2);
+  }
 }

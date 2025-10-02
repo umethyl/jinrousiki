@@ -60,7 +60,7 @@ class ImageManager {
 
   //画像のファイルパス取得
   private function GetPath($name) {
-    return sprintf(self::PATH, JINRO_IMG, $this->path, $name, $this->extension);
+    return sprintf(self::PATH, JINROU_IMG, $this->path, $name, $this->extension);
   }
 }
 

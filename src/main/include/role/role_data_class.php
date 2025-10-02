@@ -11,6 +11,7 @@ class RoleData {
     'scripter'              => '執筆者',
     'eccentricer'           => '傾奇者',
     'tough'                 => '益荒男',
+    'prince'                => 'ろくろ首',
     'suspect'               => '不審者',
     'unconscious'           => '無意識',
     'mage'                  => '占い師',
@@ -52,6 +53,7 @@ class RoleData {
     'blind_guard'           => '夜雀',
     'gatekeeper_guard'      => '門番',
     'step_guard'            => '山立',
+    'wanderer_guard'        => '一寸法師',
     'reflect_guard'         => '侍',
     'poison_guard'          => '騎士',
     'fend_guard'            => '忍者',
@@ -89,6 +91,7 @@ class RoleData {
     'assassin'              => '暗殺者',
     'doom_assassin'         => '死神',
     'select_assassin'       => 'おしら様',
+    'step_assassin'         => '風神',
     'sweep_assassin'        => '掃除屋',
     'professional_assassin' => '仕事人',
     'ascetic_assassin'      => '修験者',
@@ -98,6 +101,7 @@ class RoleData {
     'mind_scanner'          => 'さとり',
     'evoke_scanner'         => 'イタコ',
     'presage_scanner'       => '件',
+    'step_scanner'          => '雷神',
     'clairvoyance_scanner'  => '猩々',
     'whisper_scanner'       => '囁騒霊',
     'howl_scanner'          => '吠騒霊',
@@ -165,6 +169,7 @@ class RoleData {
     'decieve_wolf'          => '欺狼',
     'doom_wolf'             => '冥狼',
     'sex_wolf'              => '雛狼',
+    'honey_wolf'            => '蜜狼',
     'sharp_wolf'            => '鋭狼',
     'hungry_wolf'           => '餓狼',
     'tongue_wolf'           => '舌禍狼',
@@ -231,13 +236,18 @@ class RoleData {
     'howl_fox'              => '化狐',
     'vindictive_fox'        => '昼狐',
     'critical_fox'          => '寿羊狐',
+    'depraver'              => '背徳者',
+    'sacrifice_depraver'    => '伊呂具秦公',
+    'silver_depraver'       => '頭人',
     'cupid'                 => 'キューピッド',
     'self_cupid'            => '求愛者',
     'moon_cupid'            => 'かぐや姫',
+    'altair_cupid'          => '彦星',
     'mind_cupid'            => '女神',
     'sweet_cupid'           => '弁財天',
     'minstrel_cupid'        => '吟遊詩人',
     'triangle_cupid'        => '小悪魔',
+    'nephila_cupid'         => '絡新婦',
     'revive_cupid'          => '邪仙',
     'snow_cupid'            => '寒戸婆',
     'angel'                 => '天使',
@@ -265,6 +275,7 @@ class RoleData {
     'boss_chiroptera'       => '大蝙蝠',
     'elder_chiroptera'      => '古蝙蝠',
     'cute_chiroptera'       => '萌蝙蝠',
+    'doom_chiroptera'       => '蝉蝙蝠',
     'scarlet_chiroptera'    => '紅蝙蝠',
     'dummy_chiroptera'      => '夢求愛者',
     'fairy'                 => '妖精',
@@ -313,6 +324,7 @@ class RoleData {
     'cowboy_duelist'        => '無鉄砲者',
     'triangle_duelist'      => '舞首',
     'doom_duelist'          => '黒幕',
+    'perverse_duelist'      => '天探女',
     'sea_duelist'           => '海御前',
     'avenger'               => '復讐者',
     'poison_avenger'        => '山わろ',
@@ -337,7 +349,9 @@ class RoleData {
     'fire_mania'            => '青行灯',
     'sacrifice_mania'       => '影武者',
     'resurrect_mania'       => '僵尸',
-    'revive_mania'          => '五徳猫');
+    'revive_mania'          => '五徳猫',
+    'lute_mania'            => '琵琶牧々',
+    'harp_mania'            => '琴古主');
 
   //サブ役職のリスト (コード名 => 表示名)
   static public $sub_role_list = array(
@@ -425,6 +439,8 @@ class RoleData {
     'sheep_wisp'         => '羊皮',
     'lovers'             => '恋人',
     'challenge_lovers'   => '難題',
+    'vega_lovers'        => '織姫',
+    'fake_lovers'        => '愛人',
     'possessed_exchange' => '交換憑依',
     'infected'           => '感染者',
     'psycho_infected'    => '洗脳者',
@@ -439,6 +455,7 @@ class RoleData {
     'possessed_target'   => '憑依者',
     'possessed'          => '憑依',
     'protected'          => '庇護者',
+    'penetration'        => '護衛貫通',
     'aspirator'          => '吸毒者',
     'lost_ability'       => '能力喪失',
     'muster_ability'     => '能力発現',
@@ -461,6 +478,7 @@ class RoleData {
     'scripter'              => '執筆',
     'eccentricer'           => '傾',
     'tough'                 => '益',
+    'prince'                => '首',
     'suspect'               => '審',
     'unconscious'           => '無',
     'mage'                  => '占',
@@ -502,6 +520,7 @@ class RoleData {
     'blind_guard'           => '雀',
     'gatekeeper_guard'      => '門',
     'step_guard'            => '立',
+    'wanderer_guard'        => '寸',
     'reflect_guard'         => '侍',
     'poison_guard'          => '騎',
     'fend_guard'            => '忍',
@@ -539,6 +558,7 @@ class RoleData {
     'assassin'              => '暗',
     'doom_assassin'         => '死神',
     'select_assassin'       => 'お白',
+    'step_assassin'         => '風神',
     'sweep_assassin'        => '掃',
     'professional_assassin' => '仕',
     'ascetic_assassin'      => '修',
@@ -548,6 +568,7 @@ class RoleData {
     'mind_scanner'          => '覚',
     'evoke_scanner'         => 'イ',
     'presage_scanner'       => '件',
+    'step_scanner'          => '雷神',
     'clairvoyance_scanner'  => '猩',
     'whisper_scanner'       => '囁騒',
     'howl_scanner'          => '吠騒',
@@ -615,6 +636,7 @@ class RoleData {
     'decieve_wolf'          => '欺狼',
     'doom_wolf'             => '冥狼',
     'sex_wolf'              => '雛狼',
+    'honey_wolf'            => '蜜',
     'sharp_wolf'            => '鋭',
     'hungry_wolf'           => '餓',
     'tongue_wolf'           => '舌',
@@ -681,13 +703,18 @@ class RoleData {
     'howl_fox'              => '化',
     'vindictive_fox'        => '昼',
     'critical_fox'          => '寿',
+    'depraver'              => '背',
+    'sacrifice_depraver'    => '秦',
+    'silver_depraver'       => '頭',
     'cupid'                 => 'QP',
     'self_cupid'            => '求',
     'moon_cupid'            => '姫',
+    'altair_cupid'          => '彦星',
     'mind_cupid'            => '女神',
     'sweet_cupid'           => '弁',
     'minstrel_cupid'        => '吟',
     'triangle_cupid'        => '小悪',
+    'nephila_cupid'         => '絡',
     'revive_cupid'          => '邪仙',
     'snow_cupid'            => '寒',
     'angel'                 => '天使',
@@ -715,6 +742,7 @@ class RoleData {
     'boss_chiroptera'       => '大蝙',
     'elder_chiroptera'      => '古蝙',
     'cute_chiroptera'       => '萌蝙',
+    'doom_chiroptera'       => '蝉蝙',
     'scarlet_chiroptera'    => '紅蝙',
     'dummy_chiroptera'      => '夢愛',
     'fairy'                 => '精',
@@ -763,6 +791,7 @@ class RoleData {
     'cowboy_duelist'        => '無鉄',
     'triangle_duelist'      => '舞',
     'doom_duelist'          => '幕',
+    'perverse_duelist'      => '天探',
     'sea_duelist'           => '海御',
     'avenger'               => '讐',
     'poison_avenger'        => '山',
@@ -788,6 +817,8 @@ class RoleData {
     'sacrifice_mania'       => '影',
     'resurrect_mania'       => '僵',
     'revive_mania'          => '五',
+    'lute_mania'            => '琵',
+    'harp_mania'            => '琴',
     'chicken'               => '酉',
     'rabbit'                => '卯',
     'perverseness'          => '邪',
@@ -872,6 +903,8 @@ class RoleData {
     'sheep_wisp'            => '羊皮',
     'lovers'                => '恋',
     'challenge_lovers'      => '難',
+    'vega_lovers'           => '織',
+    'fake_lovers'           => '愛',
     'possessed_exchange'    => '換',
     'infected'              => '染',
     'psycho_infected'       => '洗',
@@ -886,6 +919,7 @@ class RoleData {
     'possessed_target'      => '憑',
     'possessed'             => '被憑',
     'protected'             => '庇',
+    'penetration'           => '貫',
     'aspirator'             => '吸毒',
     'lost_ability'          => '失',
     'muster_ability'        => '発',
@@ -907,6 +941,7 @@ class RoleData {
     'unknown_mania'   => 'unknown_mania', 'wirepuller_mania' => 'unknown_mania',
     'fire_mania'      => 'unknown_mania', 'sacrifice_mania'  => 'unknown_mania',
     'resurrect_mania' => 'unknown_mania', 'revive_mania'     => 'unknown_mania',
+    'lute_mania'      => 'unknown_mania', 'harp_mania'       => 'unknown_mania',
     'mania' => 'mania', //神話マニア系
     'chiroptera' => 'chiroptera', 'fairy' => 'fairy', //蝙蝠陣営
     'ogre' => 'ogre', 'yaksa' => 'yaksa', //鬼陣営
@@ -918,7 +953,7 @@ class RoleData {
     'child_fox' => 'child_fox', 'sex_fox'        => 'child_fox', 'stargazer_fox' => 'child_fox',
     'monk_fox'  => 'child_fox', 'jammer_fox'     => 'child_fox', 'miasma_fox'    => 'child_fox',
     'howl_fox'  => 'child_fox', 'vindictive_fox' => 'child_fox', 'critical_fox'  => 'child_fox',
-    'fox' => 'fox', //妖狐系
+    'fox' => 'fox', 'depraver' => 'depraver', //妖狐陣営
     'wolf' => 'wolf', 'mad' => 'mad', //人狼陣営
     'necromancer' => 'necromancer', //霊能者系
     'medium'      => 'medium', //巫女系
@@ -941,7 +976,8 @@ class RoleData {
   //サブ役職のグループリスト (CSS のクラス名 => 所属役職)
   //このリストの表示順に PlayerList の役職が表示される
   static public $sub_role_group_list = array(
-    'lovers'       => array('lovers', 'challenge_lovers', 'possessed_exchange'),
+    'lovers'       => array('lovers', 'challenge_lovers', 'vega_lovers', 'fake_lovers',
+			    'possessed_exchange'),
     'duelist'      => array('joker', 'rival', 'enemy', 'supported'),
     'mind'         => array('mind_read', 'mind_open', 'mind_receiver', 'mind_friend',
 			    'mind_sympathy', 'mind_evoke', 'mind_presage', 'mind_lonely',
@@ -968,7 +1004,7 @@ class RoleData {
 			    'sheep_wisp'),
     'assassin'     => array('death_note', 'death_selected'),
     'chiroptera'   => array('bad_status', 'sweet_status'),
-    'guard'        => array('protected'),
+    'guard'        => array('protected', 'penetration'),
     'poison'       => array('aspirator'),
     'human'        => array('lost_ability', 'muster_ability'),
     'wolf'         => array('possessed_target', 'possessed', 'changed_disguise', 'changed_therian'),
@@ -994,6 +1030,7 @@ class RoleData {
 
     case 'fox':
     case 'child_fox':
+    case 'depraver':
       return 'fox';
 
     case 'cupid':
@@ -1054,7 +1091,9 @@ class RoleData {
   }
 
   //役職省略名取得
-  static function GetShortName($role) { return @self::$short_role_list[$role]; }
+  static function GetShortName($role) {
+    return @self::$short_role_list[$role];
+  }
 
   //役職のコード名リスト取得
   static function GetList($sub_role = false) {
@@ -1093,16 +1132,24 @@ class RoleData {
   }
 
   //メイン役職判定
-  static function IsMain($role) { return array_key_exists($role, self::$main_role_list); }
+  static function IsMain($role) {
+    return array_key_exists($role, self::$main_role_list);
+  }
 
   //サブ役職判定
-  static function IsSub($role) { return array_key_exists($role, self::$sub_role_list); }
+  static function IsSub($role) {
+    return array_key_exists($role, self::$sub_role_list);
+  }
 
   //役職グループ判定
-  static function IsGroup($role, $group) { return self::GetGroup($role) == $group; }
+  static function IsGroup($role, $group) {
+    return self::GetGroup($role) == $group;
+  }
 
   //役職名のソート
-  static function Sort(array $list) { return array_intersect(self::GetList(), $list); }
+  static function Sort(array $list) {
+    return array_intersect(self::GetList(), $list);
+  }
 }
 
 //-- 天候データベース --//
@@ -1289,23 +1336,48 @@ class WeatherData {
     59 => array('name'    => '桜吹雪',
 		'event'   => 'lady',
 		'caption' => '全員 淑女'),
+    60 => array('name'    => '宵月',
+		'event'   => 'liar',
+		'caption' => '全員 狼少年'),
+    61 => array('name'    => '寒波',
+		'event'   => 'boost_reflect',
+		'caption' => '暗殺反射率上昇'),
+    62 => array('name'    => '野分',
+		'event'   => 'no_cute',
+		'caption' => '萌え封印'),
+    63 => array('name'    => '時化',
+		'event'   => 'strong_voice',
+		'caption' => '全員 大声'),
+    64 => array('name'    => '細雪',
+		'event'   => 'weak_voice',
+		'caption' => '全員 小声'),
   );
 
   /* 関数 */
   //天候データ取得
-  static function Get($id = null) { return self::$list[$id]; }
+  static function Get($id = null) {
+    return self::$list[$id];
+  }
 
   //イベント取得
-  static function GetEvent($id) { return self::$list[$id]['event']; }
+  static function GetEvent($id) {
+    return self::$list[$id]['event'];
+  }
 
   //存在判定
-  static function Exists($id) { return isset(self::$list[$id]); }
+  static function Exists($id) {
+    return isset(self::$list[$id]);
+  }
 
   //天候名出力
-  static function OutputName($id) { echo self::$list[$id]['name']; }
+  static function OutputName($id) {
+    echo self::$list[$id]['name'];
+  }
 
   //説明出力
-  static function OutputCaption($id) { echo self::$list[$id]['caption']; }
+  static function OutputCaption($id) {
+    echo self::$list[$id]['caption'];
+  }
 }
 
 //-- HTML 生成クラス (RoleData 拡張) --//

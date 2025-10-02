@@ -6,7 +6,9 @@
 */
 RoleManager::LoadFile('necromancer');
 class Role_emissary_necromancer extends Role_necromancer {
-  function Necromancer(User $user, $flag){
+  public $result = 'EMISSARY_NECROMANCER_RESULT';
+
+  public function Necromancer(User $user, $flag){
     $count = 0;
     $camp  = $user->GetCamp(true);
     foreach ($this->GetVotedUname($user->uname) as $uname) {

@@ -1,12 +1,9 @@
 <?php
-//error_reporting(E_ALL);
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('test_class', 'chaos_config', 'cast_class', 'room_option_class');
-
-//-- 仮想村データをセット --//
 Loader::LoadRequest('RequestBaseGame', true);
 
+//-- 仮想村データをセット --//
 DevRoom::Initialize(array('name' => '配役テスト村'));
 #RQ::AddTestRoom('game_option', 'quiz');
 #RQ::AddTestRoom('game_option', 'chaosfull');

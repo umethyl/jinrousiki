@@ -1,7 +1,6 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
-Loader::LoadFile('message', 'info_functions');
+require_once('init.php');
+Loader::LoadFile('dead_message', 'info_functions');
 InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 ?>
 <p>
@@ -123,49 +122,60 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 </p>
 
 <h3 id="dead_common">共通</h3>
-<h4>～<?php echo Message::$sudden_death; ?> [Ver. 1.4.0 β13～]</h4>
+<h4>～<?php echo DeadMessage::$novoted; ?> [Ver. 1.4.0 β13～]</h4>
 <ul>
 <li>未投票突然死</li>
 </ul>
 
-<h4>～<?php echo Message::$lovers_followed; ?> [Ver. 1.2.0～]</h4>
+<h4>～<?php echo DeadMessage::$lovers_followed; ?> [Ver. 1.2.0～]</h4>
 <ul>
 <li><a href="new_role/sub_role.php#lovers">恋人</a>後追い</li>
 </ul>
 
-<h4>～<?php echo Message::$joker_moved; ?> [Ver. 1.4.0 β21～]</h4>
+<h4>～<?php echo DeadMessage::$fox_followed; ?> [Ver. 2.3.0 α4～]</h4>
+<ul>
+<li><a href="new_role/fox.php#depraver_group">背徳者系</a>後追い</li>
+</ul>
+
+<h4>～<?php echo DeadMessage::$joker_moved; ?> [Ver. 1.4.0 β21～]</h4>
 <ul>
 <li><a href="new_role/sub_role.php#joker">ジョーカー</a>の移動 (配役公開状態限定)</li>
 </ul>
 
 
 <h3 id="dead_day">昼</h3>
-<h4>～<?php echo Message::$vote_killed; ?></h4>
+<h4>～<?php echo DeadMessage::$vote_killed; ?></h4>
 <ul>
 <li>処刑</li>
 </ul>
 
-<h4>～<?php echo Message::$deadman; ?></h4>
+<h4>～<?php echo DeadMessage::$vote_cancelled; ?> [Ver. 2.3.0 α6～]</h4>
+<ul>
+<li><a href="new_role/human.php#prince">ろくろ首</a>の能力発動</li>
+</ul>
+
+<h4><?php echo DeadMessage::$blind_vote; ?> [Ver. 1.4.0 β21～]</h4>
+<ul>
+<li><a href="new_role/wolf.php#amaze_mad">傘化け</a>の能力発動</li>
+</ul>
+
+<h4>～<?php echo DeadMessage::$deadman; ?></h4>
 <ul>
 <li>毒 (<a href="new_role/ability.php#poison">毒能力者</a>・<a href="new_role/human.php#centaurus_pharmacist">人馬</a>)</li>
 <li>罠 (<a href="new_role/human.php#trap_common">策士</a>)</li>
 </ul>
 
-<h4>～<?php echo Message::$vote_sudden_death; ?> [Ver. 1.4.0 α3-7～]</h4>
+<h4>～<?php echo DeadMessage::$sudden_death; ?> [Ver. 1.4.0 α3-7～]</h4>
 <ul>
 <li>ショック死 (<a href="new_role/ability.php#sudden_death">ショック死発動能力者</a>・<a href="weather.php#weather_thunderbolt">天候：青天の霹靂</a>)</li>
 </ul>
 
-<h4><?php echo Message::$blind_vote; ?> [Ver. 1.4.0 β21～]</h4>
-<ul>
-<li><a href="new_role/wolf.php#amaze_mad">傘化け</a>の能力発動</li>
-</ul>
-
 <h3 id="dead_night">夜</h3>
-<h4>～<?php echo Message::$deadman; ?></h4>
+<h4>～<?php echo DeadMessage::$deadman; ?></h4>
 <ul>
 <li>人狼襲撃 (<a href="new_role/wolf.php#wolf_group">人狼系</a>)</li>
 <li>餓狼襲撃 (<a href="new_role/wolf.php#hungry_wolf">餓狼</a>)</li>
+<li>自決 (<a href="new_role/wolf.php#honey_wolf">蜜狼</a>)</li>
 <li>身代わり (<a href="new_role/ability.php#sacrifice">身代わり能力者</a>・<a href="new_role/human.php#sacrifice_cat">猫神</a>)</li>
 <li>毒 (<a href="new_role/ability.php#poison">毒能力者</a>・<a href="new_role/human.php#soul_assassin">辻斬り</a>)</li>
 <li>罠 (<a href="new_role/ability.php#trap_night">罠能力者/夜投票型</a>)</li>
@@ -182,28 +192,28 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 <li>人外尾行 (<a href="new_role/human.php#reporter">ブン屋</a>)</li>
 <li>帰還 (<a href="new_role/human.php#revive_priest">天人</a>・<a href="new_role/sub_role.php#death_selected">オシラ遊び</a>)</li>
 </ul>
-<h4>～<?php echo Message::$revive_success; ?> [Ver. 1.4.0 α18～]</h4>
+<h4>～<?php echo DeadMessage::$revive_success; ?> [Ver. 1.4.0 α18～]</h4>
 <ul>
 <li>蘇生 (<a href="new_role/ability.php#revive">蘇生能力者</a>)</li>
 <li>憑依・憑依解放 (<a href="new_role/ability.php#possessed_direct">憑依能力者/直接型</a>)</li>
 </ul>
 
-<h4>～<?php echo Message::$revive_failed; ?> [Ver. 1.4.0 α18～]</h4>
+<h4>～<?php echo DeadMessage::$revive_failed; ?> [Ver. 1.4.0 α18～]</h4>
 <ul>
 <li>蘇生失敗 (霊界限定) (<a href="new_role/ability.php#revive_other">他者蘇生能力者</a>)</li>
 </ul>
 
-<h4>～<?php echo Message::$flowered_a; ?> (一例) [Ver. 1.4.0 β12～]</h4>
+<h4>～<?php echo DeadMessage::$flowered_a; ?> (一例) [Ver. 1.4.0 β12～]</h4>
 <ul>
 <li>悪戯 (<a href="new_role/chiroptera.php#flower_fairy">花妖精</a>)</li>
 </ul>
 
-<h4>～<?php echo Message::$constellation_a; ?> (一例) [Ver. 1.4.0 β13～]</h4>
+<h4>～<?php echo DeadMessage::$constellation_a; ?> (一例) [Ver. 1.4.0 β13～]</h4>
 <ul>
 <li>悪戯 (<a href="new_role/chiroptera.php#star_fairy">星妖精</a>)</li>
 </ul>
 
-<h4>～<?php echo Message::$pierrot_a; ?> (一例) [Ver. 1.5.0 α8～]</h4>
+<h4>～<?php echo DeadMessage::$pierrot_a; ?> (一例) [Ver. 1.5.0 α8～]</h4>
 <ul>
 <li>魔法 (<a href="new_role/human.php#pierrot_wizard">道化師</a>)</li>
 </ul>
@@ -227,9 +237,9 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
   - 投票集計 → 処刑者決定 → 処刑者カウンター → 役職判定
 
 + 処刑者決定法則
-  - 単独トップ ＞ <a href="new_role/sub_role.php#decide">決定者</a> ＞ <a href="new_role/sub_role.php#bad_luck">不運</a> ＞ <a href="new_role/sub_role.php#counter_decide">燕返し</a> ＞ <a href="new_role/sub_role.php#dropout">脱落者</a> ＞ <a href="new_role/sub_role.php#impatience">短気</a> ＞ <a href="new_role/sub_role.php#good_luck">幸運</a>が逃れる ＞
-    <a href="new_role/sub_role.php#plague">疫病神</a>の投票先が逃れる ＞ <a href="new_role/quiz.php#quiz">出題者</a> ＞ <a href="new_role/human.php#executor">執行者</a> ＞ <a href="new_role/human.php#saint">聖女</a> ＞ <a href="new_role/wolf.php#agitate_mad">扇動者</a> (+ ショック死) ＞
-    <a href="game_option.php#settle">決着村</a>判定
+  - 単独トップ ＞ <a href="new_role/sub_role.php#decide">決定者</a> ＞ <a href="new_role/sub_role.php#bad_luck">不運</a> ＞ <a href="new_role/sub_role.php#counter_decide">燕返し</a> ＞ <a href="new_role/sub_role.php#dropout">脱落者</a> ＞ <a href="new_role/sub_role.php#impatience">短気</a> ＞ <a href="new_role/sub_role.php#vega_lovers">織姫</a> ＞
+    <a href="new_role/sub_role.php#good_luck">幸運</a>が逃れる ＞ <a href="new_role/sub_role.php#plague">疫病神</a>の投票先が逃れる ＞ <a href="new_role/quiz.php#quiz">出題者</a> ＞ <a href="new_role/human.php#executor">執行者</a> ＞ <a href="new_role/human.php#saint">聖女</a> ＞
+    <a href="new_role/wolf.php#agitate_mad">扇動者</a> (+ ショック死) ＞ <a href="game_option.php#settle">決着村</a>判定
 
 + 処刑者カウンター
   - <a href="new_role/human.php#pharmacist_group">薬師系</a> ＞ 抗毒判定 ＞ 毒発動判定 → <a href="new_role/human.php#brownie">座敷童子</a>・<a href="new_role/human.php#doom_doll">蓬莱人形</a>・<a href="new_role/fox.php#miasma_fox">蟲狐</a>
@@ -237,13 +247,13 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 + 役職判定
   - <a href="new_role/human.php#seal_medium">封印師</a> → <a href="new_role/human.php#bacchus_medium">神主</a> → <a href="new_role/duelist.php#cowboy_duelist">無鉄砲者</a> → <a href="new_role/duelist.php#sea_duelist">海御前</a> → <a href="new_role/human.php#centaurus_pharmacist">人馬</a> → <a href="new_role/ability.php#vote_action">処刑投票能力者</a> → <a href="new_role/human.php#trap_common">策士</a> → <a href="new_role/human.php#jealousy">橋姫</a> →
     <a href="new_role/ability.php#anti_sudden_death">ショック死抑制能力者</a> ＞ <a href="new_role/sub_role.php#challenge_lovers">難題</a> ＞ <a href="new_role/sub_role.php#chicken_group">小心者系</a> ＞ <a href="new_role/human.php#eclipse_medium">蝕巫女</a>・<a href="new_role/lovers.php#cursed_angel">堕天使</a> →
-    <a href="new_role/wolf.php#follow_mad">舟幽霊</a> → <a href="new_role/sub_role.php#lovers">恋人</a>後追い → <a href="new_role/ability.php#vote_reaction">処刑得票能力者</a> → <a href="weather.php">天候</a>・<a href="new_role/sub_role.php#joker">ジョーカー</a>
+    <a href="new_role/wolf.php#follow_mad">舟幽霊</a> → <a href="new_role/sub_role.php#lovers">恋人</a>後追い → <a href="new_role/ability.php#vote_reaction">処刑得票能力者</a> → <a href="weather.php">天候</a> → <a href="new_role/human.php#prince">ろくろ首</a> → <a href="new_role/sub_role.php#joker">ジョーカー</a>
 </pre>
 
 <h3 id="vote_night">夜</h3>
 <pre>
 + 処理順序
-  - 恋人 → 足音 → 接触 → 夢 → 占い → 透視 → コピー → 帰還 → 反魂 →
+  - 恋人 → 足音 → 接触 → 夢 → 占い → 尾行 → 透視 → コピー → 帰還 → 反魂 →
     蘇生 → 憑依 → 覚醒コピー → 後追い → 蟲姫 → 司祭
 
 + 恋人 (<a href="new_role/lovers.php">恋人陣営</a>)
@@ -254,9 +264,9 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 
 + 接触 (罠・逃亡・護衛・身代わり・人狼襲撃・狩り・吸血・暗殺・人攫い)
   - 罠 ＞ 逃亡失敗 →
-    罠 ＞ 狩人護衛 ＞ <a href="new_role/sub_role.php#challenge_lovers">難題</a> ＞ <a href="new_role/sub_role.php#protected">庇護者</a> ＞ 襲撃耐性 ＞ 身代わり ＞ 人狼襲撃 →
+    罠 ＞ 狩人護衛 ＞ <a href="new_role/sub_role.php#challenge_lovers">難題</a> ＞ <a href="new_role/sub_role.php#vega_lovers">織姫</a> ＞ <a href="new_role/sub_role.php#protected">庇護者</a> ＞ 襲撃耐性 ＞ 身代わり ＞ 人狼襲撃 →
     <a href="new_role/sub_role.php#death_note">デスノート</a> → 狩り → 罠能力者の罠死 → 罠 ＞ 狩人護衛 ＞ 吸血 →
-    罠 ＞ 無効判定 ＞ 反射判定 ＞ 暗殺 →
+    罠 ＞ 無効判定 ＞ 反射判定 ＞ 失敗判定 ＞ 暗殺 →
     罠 ＞ 無効判定 ＞ 反射判定 ＞ 失敗判定 ＞ 人攫い → <a href="new_role/sub_role.php#death_selected">オシラ遊び</a> → 凍傷判定
 
   - <a href="new_role/ability.php#trap">罠能力者</a>
@@ -283,7 +293,9 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 
 + 帰還 (<a href="new_role/human.php#revive_priest">天人</a> / 1日目限定)
 
-+ 尾行 (<a href="new_role/human.php#reporter">ブン屋</a>・<a href="new_role/human.php#clairvoyance_scanner">猩々</a>)
++ 尾行 (<a href="new_role/human.php#reporter">ブン屋</a>・<a href="new_role/human.php#step_scanner">雷神</a>・<a href="new_role/human.php#clairvoyance_scanner">猩々</a>)
+
++ 後追い (<a href="new_role/sub_role.php#lovers">恋人</a>・<a href="new_role/fox.php#depraver_group">背徳者系</a>)
 </pre>
 
 <h2 id="revive_refuse">蘇生辞退システム [Ver. 1.4.0 β7～]</h2>

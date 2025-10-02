@@ -7,13 +7,20 @@
 class Role_eccentricer extends Role {
   public $ability = 'ability_eccentricer';
 
-  function OutputResult() {
-    if ($this->IsLost()) RoleHTML::OutputAbilityResult($this->ability, null);
+  protected function IgnoreResult() {
+    return $this->IsActive();
   }
 
-  function FilterVoteDo(&$count) {
-    if (! $this->IsLost()) $count++;
+  protected function OutputAddResult() {
+    RoleHTML::OutputAbilityResult($this->ability, null);
   }
 
-  private function IsLost() { return DB::$ROOM->date > 4; }
+  public function FilterVoteDo(&$count) {
+    if ($this->IsActive()) $count++;
+  }
+
+  //能力発動判定
+  private function IsActive() {
+    return DB::$ROOM->date < 5;
+  }
 }

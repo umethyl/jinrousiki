@@ -6,5 +6,7 @@
 */
 RoleManager::LoadFile('strong_voice');
 class Role_downer_voice extends Role_strong_voice {
-  function FilterVoice(&$voice, &$str) { $this->ShiftVoice($voice, $str, false); }
+  public function FilterVoice(&$voice, &$str) {
+    $this->ShiftVoice($voice, $str, false);
+  }
 }

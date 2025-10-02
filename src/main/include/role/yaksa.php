@@ -10,7 +10,7 @@ class Role_yaksa extends Role_ogre {
   public $resist_rate  = 20;
   public $reflect_rate = 20;
 
-  function Win($winner) {
+  public function Win($winner) {
     if ($this->IsDead() || $this->IgnoreWin($winner)) return false;
     foreach (DB::$USER->rows as $user) {
       if ($user->IsLive() && ! $this->IgnoreAssassin($user)) return false;
@@ -19,7 +19,11 @@ class Role_yaksa extends Role_ogre {
   }
 
   //勝利無効判定
-  protected function IgnoreWin($winner) { return $winner == 'wolf'; }
+  protected function IgnoreWin($winner) {
+    return $winner == 'wolf';
+  }
 
-  protected function IgnoreAssassin(User $user) { return ! $user->IsWolf(); }
+  protected function IgnoreAssassin(User $user) {
+    return ! $user->IsWolf();
+  }
 }

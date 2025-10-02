@@ -16,7 +16,7 @@ class Role_pierrot_wizard extends Role_wizard {
   public $result_list = array('MAGE_RESULT');
   public $result_type = 'PIERROT';
 
-  function SetAssassin(User $user) {
+  public function SetAssassin(User $user) {
     $actor = $this->GetActor();
     foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
       if ($filter->TrapStack($actor, $user->id)) return;
@@ -25,6 +25,7 @@ class Role_pierrot_wizard extends Role_wizard {
       if ($filter->GuardAssassin($user->id)) return;
     }
     if ($user->IsMainGroup('escaper')) return; //逃亡者は無効
+
     if ($user->IsReflectAssassin()) { //反射判定
       $this->AddSuccess($actor->id, 'assassin');
       return;
@@ -32,11 +33,11 @@ class Role_pierrot_wizard extends Role_wizard {
     $this->Assassin($user);
   }
 
-  function Assassin(User $user) {
+  public function Assassin(User $user) {
     if ($user->IsLive(true)) $user->AddDoom(Lottery::GetRange(2, 10), 'death_warrant');
   }
 
-  function Mage(User $user) {
+  public function Mage(User $user) {
     if ($this->IsJammer($user) || $this->IsCursed($user)) return false;
     DB::$ROOM->ResultDead($user->GetName(), $this->result_type, Lottery::GetRange('A', 'Z'));
   }

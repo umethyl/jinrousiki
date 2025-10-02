@@ -5,9 +5,18 @@
   ・発言変換：完全置換 (人狼遠吠え or サーバ設定)
 */
 class Role_cute_camouflage extends Role {
-  function ConvertSay() {
-    if (! DB::$ROOM->IsDay() || ! Lottery::Percent(10)) return false; //スキップ判定
-    $this->SetStack(Message::$cute_wolf != '' ? Message::$cute_wolf : Message::$wolf_howl, 'say');
+  public function ConvertSay() {
+    //スキップ判定
+    if (! DB::$ROOM->IsDay() || DB::$ROOM->IsEvent('no_cute') || ! Lottery::Percent(10)) {
+      return false;
+    }
+
+    if (RoleTalkMessage::CUTE_WOLF != '') {
+      $str = RoleTalkMessage::CUTE_WOLF;
+    } else {
+      $str = RoleTalkMessage::WOLF_HOWL;
+    }
+    $this->SetStack($str, 'say');
     return true;
   }
 }

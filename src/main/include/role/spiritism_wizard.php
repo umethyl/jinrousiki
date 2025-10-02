@@ -13,5 +13,7 @@ class Role_spiritism_wizard extends Role_wizard {
     'sex_necromancer');
   public $result_list = array('SPIRITISM_WIZARD_RESULT');
 
-  function Necromancer(User $user, $flag) { return $flag ? 'stolen' : 'sex_' . $user->sex; }
+  public function Necromancer(User $user, $flag) {
+    return $flag ? 'stolen' : 'sex_' . $user->sex;
+  }
 }

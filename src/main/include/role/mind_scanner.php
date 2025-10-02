@@ -20,23 +20,29 @@ class Role_mind_scanner extends Role {
     RoleHTML::OutputPartner($stack, 'mind_scanner_target');
   }
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('mind-scanner-do', 'mind_scanner_do', $this->action);
   }
 
-  function IsVote() { return parent::IsVote() && DB::$ROOM->IsDate(1); }
+  public function IsVote() {
+    return parent::IsVote() && DB::$ROOM->IsDate(1);
+  }
 
-  function GetIgnoreMessage() { return '初日以外は投票できません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
+  }
 
-  function IsVoteCheckbox(User $user, $live) {
+  public function IsVoteCheckbox(User $user, $live) {
     return parent::IsVoteCheckbox($user, $live) && ! $user->IsDummyBoy();
   }
 
-  function IgnoreVoteNight(User $user, $live) {
+  public function IgnoreVoteNight(User $user, $live) {
     if (! is_null($str = parent::IgnoreVoteNight($user, $live))) return $str;
-    return $user->IsDummyBoy() ? '身代わり君には投票できません' : null;
+    return $user->IsDummyBoy() ? VoteRoleMessage::TARGET_DUMMY_BOY : null;
   }
 
   //透視
-  function MindScan(User $user) { $user->AddRole($this->GetActor()->GetID($this->mind_role)); }
+  public function MindScan(User $user) {
+    $user->AddRole($this->GetActor()->GetID($this->mind_role));
+  }
 }

@@ -6,11 +6,11 @@
 */
 RoleManager::LoadFile('valkyrja_duelist');
 class Role_sea_duelist extends Role_valkyrja_duelist {
-  public $mix_in = 'critical_mad';
   public $self_shoot = true;
-  public $sudden_death = 'DUEL';
+  public $vote_day_type = 'init';
+  public $sudden_death  = 'DUEL';
 
-  function VoteAction() {
+  public function VoteAction() {
     $stack = array(); //ショック死対象者リスト
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname) || $this->IsVoted($target_uname)) continue;

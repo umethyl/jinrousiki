@@ -32,6 +32,7 @@ class Role_dummy_mania extends Role_soul_mania {
     'mad'		=> 'immolate_mad',
     'fox'		=> 'immolate_fox',
     'child_fox'		=> 'critical_fox',
+    'depraver'		=> 'silver_depraver',
     'cupid'		=> 'snow_cupid',
     'angel'		=> 'cursed_angel',
     'quiz'		=> 'quiz',

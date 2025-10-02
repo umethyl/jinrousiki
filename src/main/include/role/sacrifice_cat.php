@@ -10,5 +10,7 @@ class Role_sacrifice_cat extends Role_poison_cat {
   public $revive_rate   = 100;
   public $missfire_rate =   0;
 
-  function ReviveAction() { DB::$USER->Kill($this->GetID(), 'SACRIFICE'); }
+  public function ReviveAction() {
+    DB::$USER->Kill($this->GetID(), 'SACRIFICE');
+  }
 }

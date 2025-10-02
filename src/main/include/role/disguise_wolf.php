@@ -6,9 +6,9 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_disguise_wolf extends Role_wolf {
-  public $mix_in = 'critical_mad';
+  public $vote_day_type = 'init';
 
-  function VoteAction() {
+  public function VoteAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
       $target = DB::$USER->ByRealUname($target_uname);

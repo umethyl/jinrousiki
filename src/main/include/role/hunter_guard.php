@@ -7,11 +7,13 @@
 */
 RoleManager::LoadFile('guard');
 class Role_hunter_guard extends Role_guard {
-  function GuardAction() {
+  public function GuardAction() {
     if ($this->GetVoter()->IsSame($this->GetWolfVoter())) {
       DB::$USER->Kill($this->GetID(), 'WOLF_KILLED');
     }
   }
 
-  protected function IsHunt(User $user) { return parent::IsHunt($user) || $user->IsFox(); }
+  protected function IsAddHunt(User $user) {
+    return $user->IsFox();
+  }
 }

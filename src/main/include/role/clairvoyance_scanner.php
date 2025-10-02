@@ -11,19 +11,23 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
   public $mind_role = null;
   public $result = 'CLAIRVOYANCE_RESULT';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 2) $this->OutputAbilityResult($this->result);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 3;
   }
 
-  function IsVote() { return DB::$ROOM->date > 1; }
+  public function IsVote() {
+    return DB::$ROOM->date > 1;
+  }
 
-  function GetIgnoreMessage() { return '初日は透視できません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+  }
 
   /*
     複数の投票イベントを持つタイプが出現した場合は複数のメッセージを発行する必要がある
     対象が NULL でも有効になるタイプ (キャンセル投票はスキップ) は想定していない
   */
-  function Report(User $user) {
+  public function Report(User $user) {
     foreach ($this->GetStack('vote_data') as $action => $vote_stack) {
       if (strpos($action, '_NOT_DO') !== false || ! array_key_exists($user->id, $vote_stack)) {
 	continue;
@@ -44,7 +48,7 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
 	}
       }
       //審神者・山立・響狼・文武王
-      elseif ($user->IsRole('step_mage', 'step_guard', 'step_wolf', 'step_vampire')) {
+      elseif ($user->IsRole('step_mage', 'step_guard', 'step_wolf'. 'step_vampire')) {
 	$id_stack = explode(' ', $target_stack);
 	$target   = DB::$USER->ByVirtual(array_pop($id_stack)); //最終到達点は憑依を追跡する
 	$result_stack = array($target->id => $target->handle_name);
@@ -56,7 +60,8 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
 	  DB::$ROOM->ResultAbility($this->result, $result, $target_name, $actor_id);
 	}
       }
-      elseif ($user->IsRole('step_mad', 'step_fox')) { //家鳴・響狐
+      //家鳴・響狐
+      elseif ($user->IsRole('step_assassin', 'step_scanner', 'step_mad', 'step_fox')) {
 	$result_stack = array();
 	foreach (explode(' ', $target_stack) as $id) { //憑依を追跡しない
 	  $result_stack[$id] = DB::$USER->ByID($id)->handle_name;

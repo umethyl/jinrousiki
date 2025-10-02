@@ -11,7 +11,7 @@ class Role_dowser_yaksa extends Role_yaksa {
   public $reduce_rate  =  2;
   public $reflect_rate = 40;
 
-  function Win($winner) {
+  public function Win($winner) {
     if ($this->IsDead()) return false;
     $count = count($this->GetActor()->role_list);
     foreach (DB::$USER->rows as $user) {
@@ -20,5 +20,7 @@ class Role_dowser_yaksa extends Role_yaksa {
     return true;
   }
 
-  protected function IgnoreAssassin(User $user) { return count($user->role_list) == 1; }
+  protected function IgnoreAssassin(User $user) {
+    return count($user->role_list) == 1;
+  }
 }

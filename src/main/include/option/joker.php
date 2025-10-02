@@ -7,9 +7,15 @@
 class Option_joker extends CheckRoomOptionItem {
   public $group = RoomOption::GAME_OPTION;
 
-  function GetCaption() { return 'ババ抜き村'; }
+  public function GetCaption() {
+    return 'ババ抜き村';
+  }
 
-  function GetExplain() { return '誰か一人に「ジョーカー」がつきます'; }
+  public function GetExplain() {
+    return '誰か一人に「ジョーカー」がつきます';
+  }
 
-  function Cast(array &$list, &$rand) { $this->CastOnce($list, $rand, '[2]'); }
+  public function Cast(array &$list, &$rand) {
+    $this->CastOnce($list, $rand, '[2]');
+  }
 }

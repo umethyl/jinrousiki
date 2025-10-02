@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('jealousy');
 class Role_critical_jealousy extends Role_jealousy {
-  function VoteAction() {
+  public function VoteAction() {
     $role = 'critical_luck';
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;

@@ -8,8 +8,7 @@ RoleManager::LoadFile('chicken');
 class Role_nervy extends Role_chicken {
   public $sudden_death = 'NERVY';
 
-  function IsSuddenDeath() {
-    return ! $this->IgnoreSuddenDeath() &&
-      $this->GetActor()->GetCamp(true) == $this->GetVoteUser()->GetCamp(true);
+  public function IsSuddenDeath() {
+    return $this->GetActor()->GetCamp(true) == $this->GetVoteUser()->GetCamp(true);
   }
 }

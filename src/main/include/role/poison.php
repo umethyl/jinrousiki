@@ -5,8 +5,11 @@
   ・毒：常時 / 制限なし
 */
 class Role_poison extends Role {
+  //毒発動判定
+  public function IsPoison() { return true; }
+
   //毒対象者選出 (処刑)
-  function GetPoisonVoteTarget(array $list) {
+  final public function GetPoisonVoteTarget(array $list) {
     $stack     = array();
     $aspirator = array();
     $class = $this->GetClass($method = 'IsPoisonTarget');
@@ -23,9 +26,6 @@ class Role_poison extends Role {
     return count($aspirator) > 0 ? $aspirator : $stack;
   }
 
-  //毒発動判定
-  function IsPoison() { return true; }
-
   //毒対象者判定
-  function IsPoisonTarget(User $user) { return true; }
+  public function IsPoisonTarget(User $user) { return true; }
 }

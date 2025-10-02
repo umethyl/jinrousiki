@@ -9,20 +9,25 @@ RoleManager::LoadFile('priest');
 class Role_widow_priest extends Role_priest {
   public $display_role = 'human';
 
-  protected function GetOutputRole() { return null; }
+  protected function IgnoreResult() {
+    return true;
+  }
 
-  protected function SetPriest() {
-    if (DB::$ROOM->IsDate(1) && DB::$ROOM->IsDummyBoy()) parent::SetPriest();
+  protected function IgnoreSetPriest() {
+    return ! DB::$ROOM->IsDate(1) || ! DB::$ROOM->IsDummyBoy();
+  }
+
+  public function IsAggregatePriest() {
     return false;
   }
 
-  function Priest(StdClass $role_flag) {
-    $dummy_boy = DB::$USER->ByID(1);
+  public function Priest() {
+    $dummy_boy = DB::$USER->ByID(DB::$USER->GetDummyBoyID());
     $result    = $dummy_boy->main_role;
     $target    = $dummy_boy->handle_name;
-    foreach ($role_flag->{$this->role} as $id) {
-      $user = DB::$USER->ByID($id);
-      if ($user->IsDummyBoy()) continue;
+
+    foreach (DB::$USER->GetRoleUser($this->role) as $user) {
+      if ($user->IsDummyBoy() || $user->IsDead(true)) continue;
       $user->AddRole('mind_sympathy');
       DB::$ROOM->ResultAbility('SYMPATHY_RESULT', $result, $target, $user->id);
     }

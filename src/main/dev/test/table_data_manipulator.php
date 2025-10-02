@@ -6,13 +6,10 @@
 
   開発者のテスト用コードそのままなので要注意！
 */
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 
-$DISABLE_TABLE_DATA_MANIPULATOR = true; //false にすると使用可能になる
-if ($DISABLE_TABLE_DATA_MANIPULATOR) {
-  HTML::OutputResult('認証エラー', 'このスクリプトは使用できない設定になっています。');
-}
+$disable = true; //false にすると使用可能になる
+if ($disable) HTML::OutputUnusableError();
 
 DB::Connect();
 HTML::OutputHeader('Test Tools', null, true);
@@ -72,7 +69,7 @@ function UpdateIconInfo($type, $value, $from, $to = null) {
 
 //ファイルの IO テスト
 function OpenFile($file) {
-  Text::p(file_get_contents(JINRO_ROOT . '/' . $file));
+  Text::p(file_get_contents(JINROU_ROOT . '/' . $file));
 }
 
 //使用されているアイコンを削除する (from: 対象番号 / to: 代替番号)
@@ -88,7 +85,7 @@ function DeleteUsedIcon($from, $to) {
   }
   if (DB::Execute("UPDATE user_entry SET icon_no = {$to} WHERE icon_no = {$from}")) {
     $file = DB::FetchResult("SELECT icon_filename FROM user_icon WHERE icon_no = {$from}");
-    unlink(JINRO_ROOT . '/user_icon/' . $file); //ファイルの存在をチェックしていないので要注意
+    unlink(JINROU_ROOT . '/user_icon/' . $file); //ファイルの存在をチェックしていないので要注意
     DB::Execute("DELETE FROM user_icon WHERE icon_no = {$from}");
     Text::p($to, "Icon Change From {$from}");
     UnlockTable();
@@ -100,7 +97,7 @@ function SqueezeIcon() {
   $query = 'SELECT icon_no, icon_filename FROM user_icon WHERE icon_no > 0 ORDER BY icon_no';
   $icon_list = DB::FetchArray($query);
 
-  $path = JINRO_ROOT . '/user_icon/';
+  $path = JINROU_ROOT . '/user_icon/';
   $query_icon = 'UPDATE user_icon SET icon_filename = ';
   $query_user = 'UPDATE user_entry SET icon_no = ';
   $icon_count = count($icon_list);

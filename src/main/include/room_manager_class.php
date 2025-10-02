@@ -1,6 +1,30 @@
 <?php
 //-- 村作成コントローラー --//
 class RoomManager {
+  //実行処理
+  static function Execute() {
+    if (RQ::Get()->create_room) {
+      Loader::LoadFile('user_class', 'user_icon_class', 'cache_class', 'twitter_class');
+      RoomManager::Create();
+    }
+    elseif (RQ::Get()->change_room) {
+      Loader::LoadFile('session_class', 'user_class', 'cache_class');
+      RoomManager::Create();
+    }
+    elseif (RQ::Get()->describe_room) {
+      Loader::LoadFile('game_message', 'chaos_config');
+      RoomManager::OutputDescribe();
+    }
+    elseif (RQ::Get()->room_no > 0) {
+      Loader::LoadFile('session_class', 'user_class', 'option_form_class');
+      RoomManager::OutputCreate();
+    }
+    else {
+      Loader::LoadFile('game_message', 'chaos_config');
+      RoomManager::OutputList();
+    }
+  }
+
   //メンテナンス処理
   static function Maintenance() {
     if (ServerConfig::DISABLE_MAINTENANCE) return; //スキップ判定
@@ -13,93 +37,42 @@ class RoomManager {
 
   //村 (room) の作成
   static function Create() {
-    if (ServerConfig::DISABLE_ESTABLISH || DatabaseConfig::DISABLE) {
-      HTML::OutputResult('村作成 [制限事項]', '村作成はできません');
-    }
-    if (Security::CheckReferer('', array('127.0.0.1', '192.168.'))) { //リファラチェック
-      HTML::OutputResult('村作成 [入力エラー]', '無効なアクセスです。');
-    }
+    self::CheckCreate();
 
     //-- 入力データのエラーチェック --//
-    foreach (array('room_name', 'room_comment') as $type) { //村の名前・説明のデータチェック
-      RoomOption::LoadPost($type);
-      if (RQ::Get()->$type == '') { //未入力チェック
-	RoomManagerHTML::OutputResult('empty', OptionManager::GenerateCaption($type));
-      }
-
-      if (strlen(RQ::Get()->$type) > RoomConfig::$$type ||
-	  preg_match(RoomConfig::NG_WORD, RQ::Get()->$type)) { //文字列チェック
-	RoomManagerHTML::OutputResult('comment', OptionManager::GenerateCaption($type));
-      }
-    }
-
-    RoomOption::LoadPost('max_user'); //最大人数チェック
-    if (! in_array(RQ::Get()->max_user, RoomConfig::$max_user_list)) {
-      HTML::OutputResult('村作成 [入力エラー]', '無効な最大人数です。');
-    }
-
+    self::CheckCreateInput();
     if (! DB::Lock('room')) RoomManagerHTML::OutputResult('busy'); //トランザクション開始
 
     if (RQ::Get()->change_room) {
       OptionManager::$change = true;
       Session::Certify();
-      $title = 'オプション変更';
+      DB::SetRoom(RoomManagerDB::Load(true));
 
-      DB::$ROOM = RoomManagerDB::Load(true); //村情報をロード
+      $title  = RoomManagerMessage::TITLE_CHANGE . ' ' . Message::ERROR_TITLE;
+      $header = DB::$ROOM->id . GameMessage::ROOM_NUMBER_FOOTER;
       if (DB::$ROOM->IsFinished()) {
-	$body = sprintf('%d番地はすでに終了しています', DB::$ROOM->id);
-	HTML::OutputResult($title . ' [エラー]', $body);
+	HTML::OutputResult($title, $header . RoomManagerMessage::ERROR_FINISHED);
       }
       if (! DB::$ROOM->IsBeforegame()) {
-	$body = sprintf('%d番地はプレイ中です', DB::$ROOM->id);
-	HTML::OutputResult($title . ' [エラー]', $body);
+	HTML::OutputResult($title, $header . RoomManagerMessage::ERROR_CHANGE_PLAYING);
       }
 
-      DB::$USER = new UserData(RQ::Get()); //ユーザ情報をロード
+      DB::LoadUser();
       if (RQ::Get()->max_user < DB::$USER->GetUserCount()) {
-	HTML::OutputResult($title . ' [入力エラー]', '現在の参加人数より少なくできません。');
+	$title = sprintf('%s [%s]', RoomManagerMessage::TITLE_CHANGE,
+			 RoomManagerMessage::ERROR_INPUT);
+	HTML::OutputResult($title, RoomManagerMessage::ERROR_CHANGE_MAX_USER);
       }
 
-      DB::$SELF = DB::$USER->BySession(); //自分の情報をロード
+      DB::LoadSelf();
       if (! DB::$SELF->IsDummyBoy()) {
-	HTML::OutputResult($title . ' [エラー]', '身代わり君・GM 以外は変更できません');
+	$body = sprintf(RoomManagerMessage::ERROR_CHANGE_NOT_GM, Message::DUMMY_BOY, Message::GM);
+	HTML::OutputResult($title, $body);
       }
       DB::$ROOM->ParseOption(true);
     }
-    elseif (! ServerConfig::DEBUG_MODE) { //デバッグモード時は村作成制限をスキップ
-      //ブラックリストチェック
-      if (Security::IsEstablishBlackList()) {
-	HTML::OutputResult('村作成 [制限事項]', '村立て制限ホストです。');
-      }
-
-      $room_password = ServerConfig::ROOM_PASSWORD;
-      if (isset($room_password)) { //パスワードチェック
-	$str = 'room_password';
-	RQ::Get()->ParsePostStr($str);
-	if (RQ::Get()->$str != $room_password) {
-	  HTML::OutputResult('村作成 [制限事項]', '村作成パスワードが正しくありません。');
-	}
-      }
-
-      if (RoomManagerDB::GetActiveCount() >= RoomConfig::MAX_ACTIVE_ROOM) { //最大稼働数チェック
-	$str = "現在プレイ中の村の数がこのサーバで設定されている最大値を超えています。<br>\n" .
-	  'どこかの村で決着がつくのを待ってから再度登録してください。';
-	HTML::OutputResult('村作成 [制限事項]', $str);
-      }
-
-      if (RoomManagerDB::GetEstablishCount() > 0) { //同一ユーザの連続作成チェック
-	$str = "あなたが立てた村が現在稼働中です。<br>\n" .
-	  '立てた村の決着がつくのを待ってから再度登録してください。';
-	HTML::OutputResult('村作成 [制限事項]', $str);
-      }
-
-      $time = RoomManagerDB::GetLastEstablish(); //連続作成制限チェック
-      if (isset($time) &&
-	  Time::Get() - Time::ConvertTimeStamp($time, false) <= RoomConfig::ESTABLISH_WAIT) {
-	$str = "サーバで設定されている村立て許可時間間隔を経過していません。<br>\n" .
-	  'しばらく時間を開けてから再度登録してください。';
-	HTML::OutputResult('村作成 [制限事項]', $str);
-      }
+    else {
+      self::CheckEstablishLimit();
     }
 
     //-- ゲームオプションをセット --//
@@ -107,7 +80,7 @@ class RoomManager {
     if (RQ::Get()->real_time) { //制限時間チェック
       $day   = RQ::Get()->real_time_day;
       $night = RQ::Get()->real_time_night;
-      if ($day < 1 || 99 < $day || $night < 1 || 99 < $night) {
+      if ($day < 1 || 100 < $day || $night < 1 || 100 < $night) {
 	RoomManagerHTML::OutputResult('time');
       }
       RoomOption::Set(RoomOption::GAME_OPTION, sprintf('real_time:%d:%d', $day, $night));
@@ -131,7 +104,7 @@ class RoomManager {
       if (! RQ::Get()->change_room) {
 	RQ::Get()->ParsePostStr('gm_password'); //GM ログインパスワードをチェック
 	if (RQ::Get()->gm_password == '') RoomManagerHTML::OutputResult('no_password');
-	$dummy_boy_handle_name = 'GM';
+	$dummy_boy_handle_name = Message::GM;
 	$dummy_boy_password    = RQ::Get()->gm_password;
       }
       RoomOption::Set(RoomOption::GAME_OPTION, 'dummy_boy');
@@ -141,7 +114,7 @@ class RoomManager {
       //身代わり君関連のチェック
       if (RQ::Get()->dummy_boy) {
 	if (! RQ::Get()->change_room) {
-	  $dummy_boy_handle_name = '身代わり君';
+	  $dummy_boy_handle_name = Message::DUMMY_BOY;
 	  $dummy_boy_password    = ServerConfig::PASSWORD;
 	}
 	RoomOption::LoadPost('gerd');
@@ -150,7 +123,7 @@ class RoomManager {
 	if (! RQ::Get()->change_room) {
 	  RQ::Get()->ParsePostStr('gm_password'); //GM ログインパスワードをチェック
 	  if (RQ::Get()->gm_password == '') RoomManagerHTML::OutputResult('no_password');
-	  $dummy_boy_handle_name = 'GM';
+	  $dummy_boy_handle_name = Message::GM;
 	  $dummy_boy_password    = RQ::Get()->gm_password;
 	}
 	RoomOption::Set(RoomOption::GAME_OPTION, 'dummy_boy');
@@ -165,8 +138,8 @@ class RoomManager {
       }
       elseif (! RQ::Get()->duel && ! RQ::Get()->gray_random && ! RQ::Get()->step) { //通常村
 	RoomOption::LoadPost(
-          'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf', 'possessed_wolf',
-	  'sirius_wolf', 'fox', 'child_fox', 'medium');
+	  'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf', 'possessed_wolf',
+	  'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'medium');
 	if (! RQ::Get()->full_cupid)   RoomOption::LoadPost('cupid');
 	if (! RQ::Get()->full_mania)   RoomOption::LoadPost('mania');
 	if (! RQ::Get()->perverseness) RoomOption::LoadPost('decide', 'authority');
@@ -174,18 +147,15 @@ class RoomManager {
 
       if (! RQ::Get()->perverseness) RoomOption::LoadPost('sudden_death');
       RoomOption::LoadPost(
-        'liar', 'gentleman', 'passion', 'deep_sleep', 'mind_open', 'blinder', 'critical', 'joker',
-	'death_note', 'detective', 'weather', 'festival', 'change_common_selector',
+	'joker', 'death_note', 'detective', 'weather', 'festival', 'change_common_selector',
 	'change_mad_selector', 'change_cupid_selector');
     }
+    RoomOption::LoadPost('liar', 'gentleman', 'passion', 'deep_sleep', 'mind_open',
+			 'blinder', 'critical');
 
     $game_option = RoomOption::Get(RoomOption::GAME_OPTION);
     $option_role = RoomOption::Get(RoomOption::ROLE_OPTION);
-    //Text::p($_POST, 'Post');
-    //Text::p(RQ::Get(), 'RQ');
-    //Text::p($game_option, 'GameOption');
-    //Text::p($option_role, 'OptionRole');
-    //HTML::OutputFooter(true); //テスト用
+    //self::p(); //テスト用
 
     if (RQ::Get()->change_room) { //オプション変更
       $list = array(
@@ -198,20 +168,14 @@ class RoomManager {
       if (! RoomDB::Update($list)) RoomManagerHTML::OutputResult('busy');
 
       //システムメッセージ
-      $str = 'システム：村のオプションを変更しました。';
+      $str = Message::SYSTEM . Message::COLON . RoomManagerMessage::CHANGE;
       DB::$ROOM->TalkBeforeGame($str, DB::$SELF->uname, DB::$SELF->handle_name, DB::$SELF->color);
 
       RoomDB::UpdateVoteCount(); //投票リセット処理
       DB::Commit();
 
-      $str = <<<EOF
-村のオプションを変更しました。<br>
-<form method="post" action="#">
-<input type="button" value="ウィンドウを閉じる" onClick="window.close()">
-</form>
-
-EOF;
-      HTML::OutputResult('村オプション変更', $str);
+      $str = HTML::GenerateCloseWindow(RoomManagerMessage::CHANGE);
+      HTML::OutputResult(RoomManagerMessage::TITLE_CHANGE, $str);
     }
 
     //登録処理
@@ -220,13 +184,21 @@ EOF;
       if (! RoomManagerDB::Insert($room_no, $game_option, $option_role)) { //村作成
 	RoomManagerHTML::OutputResult('busy');
       }
-	
+
       //身代わり君を入村させる
       if (RQ::Get()->dummy_boy && RoomManagerDB::GetUserCount($room_no) == 0) {
-	if (! DB::InsertUser($room_no, 'dummy_boy', $dummy_boy_handle_name, $dummy_boy_password,
-			     1, RQ::Get()->gerd ? UserIconConfig::GERD : 0)) {
-	  RoomManagerHTML::OutputResult('busy');
-	}
+	$list = array(
+	  'room_no'     => $room_no,
+	  'user_no'     => 1,
+	  'uname'       => 'dummy_boy',
+	  'handle_name' => $dummy_boy_handle_name,
+	  'password'    => $dummy_boy_password,
+	  'sex'         => 'male',
+	  'icon_no'     => RQ::Get()->gerd ? UserIconConfig::GERD : 0,
+	  'profile'     => Message::DUMMY_BOY_PROFILE,
+	  'last_words'  => Message::DUMMY_BOY_LAST_WORDS
+	);
+	if (! UserDB::Insert($list)) RoomManagerHTML::OutputResult('busy');
       }
     }
 
@@ -239,10 +211,9 @@ EOF;
       DB::Commit();
     }
 
-    $format = '%s 村を作成しました。トップページに飛びます。' .
-      '切り替わらないなら <a href="%s">ここ</a> 。';
-    $str = sprintf($format, RQ::Get()->room_name, ServerConfig::SITE_ROOT);
-    HTML::OutputResult('村作成', $str, ServerConfig::SITE_ROOT);
+    $str  = sprintf(RoomManagerMessage::ENTRY, RQ::Get()->room_name);
+    $jump = sprintf(Message::JUMP, ServerConfig::SITE_ROOT);
+    HTML::OutputResult(RoomManagerMessage::TITLE, $str . Text::BR . $jump, ServerConfig::SITE_ROOT);
   }
 
   //稼働中の村のリストを出力する
@@ -256,59 +227,158 @@ EOF;
   //部屋作成画面を出力
   static function OutputCreate() {
     if (ServerConfig::DISABLE_ESTABLISH || DatabaseConfig::DISABLE) {
-      Text::Output('村作成はできません');
+      Text::Output(RoomManagerMessage::NOT_ESTABLISH);
       return;
     }
 
     OptionManager::$change = RQ::Get()->room_no > 0;
     if (OptionManager::$change) {
       Session::Certify();
-      $title = 'オプション変更';
+      DB::SetRoom(RoomManagerDB::Load());
 
-      DB::$ROOM = RoomManagerDB::Load(); //村情報をロード
+      $title  = RoomManagerMessage::TITLE_CHANGE . ' ' . Message::ERROR_TITLE;
+      $header = DB::$ROOM->id . GameMessage::ROOM_NUMBER_FOOTER;
       if (DB::$ROOM->IsFinished()) {
-	$body = sprintf('%d番地はすでに終了しています', DB::$ROOM->id);
-	HTML::OutputResult($title . ' [エラー]', $body);
+	HTML::OutputResult($title, $header . RoomManagerMessage::ERROR_FINISHED);
       }
       if (! DB::$ROOM->IsBeforegame()) {
-	$body = sprintf('%d番地はプレイ中です', DB::$ROOM->id);
-	HTML::OutputResult($title . ' [エラー]', $body);
+	HTML::OutputResult($title, $header . RoomManagerMessage::ERROR_CHANGE_PLAYING);
       }
 
-      DB::$USER = new UserData(RQ::Get()); //ユーザ情報をロード
-      DB::$SELF = DB::$USER->BySession(); //自分の情報をロード
+      DB::LoadUser();
+      DB::LoadSelf();
       if (! DB::$SELF->IsDummyBoy()) {
-	HTML::OutputResult($title . ' [エラー]', '身代わり君・GM 以外は変更できません');
+	$body = sprintf(RoomManagerMessage::ERROR_CHANGE_NOT_GM, Message::DUMMY_BOY, Message::GM);
+	HTML::OutputResult($title, $body);
       }
       DB::$ROOM->ParseOption(true);
 
-      HTML::OutputHeader($title, 'room_manager');
-      Text::Output(sprintf('<h1>%s</h1>', $title));
+      HTML::OutputHeader(RoomManagerMessage::TITLE_CHANGE, 'room_manager');
+      Text::Output(sprintf('<h1>%s</h1>', RoomManagerMessage::TITLE_CHANGE));
     }
     RoomManagerHTML::OutputCreate();
   }
 
   //部屋説明を出力
   static function OutputDescribe() {
-    $title = '村情報表示[エラー]';
-    if (RQ::Get()->room_no < 1)  HTML::OutputResult($title, '無効な村番地です');
-    DB::$ROOM = RoomManagerDB::Load();
-    if (DB::$ROOM->id < 1)       HTML::OutputResult($title, '無効な村番地です');
-    if (DB::$ROOM->IsFinished()) HTML::OutputResult($title, 'すでにゲーム終了しています');
+    //エラーチェック
+    $title = RoomManagerMessage::TITLE_DESCRIBE . ' ' . Message::ERROR_TITLE;
+    if (RQ::Get()->room_no < 1) HTML::OutputResult($title, Message::INVALID_ROOM);
 
-    HTML::OutputHeader('村情報表示', 'info/info', true);
+    DB::SetRoom(RoomManagerDB::Load());
+    if (DB::$ROOM->id < 1) HTML::OutputResult($title, Message::INVALID_ROOM);
+    if (DB::$ROOM->IsFinished()) {
+      $body = DB::$ROOM->id . GameMessage::ROOM_NUMBER_FOOTER . RoomManagerMessage::ERROR_FINISHED;
+      HTML::OutputResult($title, $body);
+    }
+
+    //表示情報セット
     $format = <<<EOF
-[%d番地]%s村<br>
-<div>～%s～ %s</div>
-
+[%s] %s%s
+<div>%s %s</div>
 EOF;
     $stack = array('game_option' => DB::$ROOM->game_option,
 		   'option_role' => DB::$ROOM->option_role,
 		   'max_user'    => DB::$ROOM->max_user);
     RoomOption::Load($stack);
-    printf($format, DB::$ROOM->id, DB::$ROOM->name, DB::$ROOM->comment, RoomOption::Generate());
+
+    //出力
+    HTML::OutputHeader(RoomManagerMessage::TITLE_DESCRIBE, 'info/info', true);
+    printf($format . Text::LF,
+	   DB::$ROOM->GenerateNumber(), DB::$ROOM->GenerateName(), Text::BR,
+	   DB::$ROOM->GenerateComment(), RoomOption::Generate());
     RoomOption::OutputCaption();
     HTML::OutputFooter();
+  }
+
+  //村作成呼び出しチェック
+  private static function CheckCreate() {
+    if (ServerConfig::DISABLE_ESTABLISH || DatabaseConfig::DISABLE) { //無効設定
+      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
+      HTML::OutputResult($title, RoomManagerMessage::NOT_ESTABLISH);
+    }
+
+    if (Security::CheckReferer('', array('127.0.0.1', '192.168.'))) { //リファラチェック
+      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
+      HTML::OutputResult($title, RoomManagerMessage::ERROR_LIMIT_ACCESS);
+    }
+  }
+
+  //村作成入力値チェック
+  private static function CheckCreateInput() {
+    foreach (array('room_name', 'room_comment') as $type) { //村の名前・説明のデータチェック
+      RoomOption::LoadPost($type);
+      if (RQ::Get()->$type == '') { //未入力チェック
+	RoomManagerHTML::OutputResult('empty', OptionManager::GenerateCaption($type));
+      }
+
+      if (strlen(RQ::Get()->$type) > RoomConfig::$$type ||
+	  preg_match(RoomConfig::NG_WORD, RQ::Get()->$type)) { //文字列チェック
+	RoomManagerHTML::OutputResult('comment', OptionManager::GenerateCaption($type));
+      }
+    }
+
+    RoomOption::LoadPost('max_user'); //最大人数チェック
+    if (! in_array(RQ::Get()->max_user, RoomConfig::$max_user_list)) {
+      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_INPUT);
+      HTML::OutputResult($title, RoomManagerMessage::ERROR_INPUT_MAX_USER);
+    }
+  }
+
+  //村作成制限チェック
+  private static function CheckEstablishLimit() {
+    if (ServerConfig::DEBUG_MODE) return; //スキップ判定
+
+    //ブラックリストチェック
+    if (Security::IsEstablishBlackList()) {
+      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
+      HTML::OutputResult($title, RoomManagerMessage::ERROR_LIMIT_BLACK_LIST);
+    }
+
+    $room_password = ServerConfig::ROOM_PASSWORD;
+    if (isset($room_password)) { //パスワードチェック
+      $str = 'room_password';
+      RQ::Get()->ParsePostStr($str);
+      if (RQ::Get()->$str != $room_password) {
+	$title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
+	HTML::OutputResult($title, RoomManagerMessage::ERROR_LIMIT_PASSWORD);
+      }
+    }
+
+    if (RoomManagerDB::GetActiveCount() >= RoomConfig::MAX_ACTIVE_ROOM) { //最大稼働数チェック
+      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
+      $str   = RoomManagerMessage::ERROR_LIMIT_MAX_ROOM . Text::BRLF .
+	RoomManagerMessage::ERROR_WAIT_FINISH;
+      HTML::OutputResult($title, $str);
+    }
+
+    if (RoomManagerDB::GetEstablishCount() > 0) { //同一ユーザの連続作成チェック
+      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
+      $str   = RoomManagerMessage::ERROR_LIMIT_ESTABLISH . Text::BRLF .
+	RoomManagerMessage::ERROR_WAIT_FINISH;
+      HTML::OutputResult($title, $str);
+    }
+
+    $time = RoomManagerDB::GetLastEstablish(); //連続作成制限チェック
+    if (isset($time) &&
+	Time::Get() - Time::ConvertTimeStamp($time, false) <= RoomConfig::ESTABLISH_WAIT) {
+      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
+      $str   = RoomManagerMessage::ERROR_LIMIT_ESTABLISH_WAIT . Text::BRLF .
+	RoomManagerMessage::ERROR_WAIT_TIME;
+      HTML::OutputResult($title, $str);
+    }
+  }
+
+  //テスト用結果表示
+  private static function p() {
+    if (! ServerConfig::DEBUG_MODE) return; //スキップ判定
+
+    HTML::OutputHeader(RoomManagerMessage::TITLE);
+    Text::p($_POST, '◆Post');
+    Text::p(RoomOption::Get(RoomOption::GAME_OPTION), '◆GameOption');
+    Text::p(RoomOption::Get(RoomOption::ROLE_OPTION), '◆OptionRole');
+    RQ::p();
+    HTML::OutputFooter(true);
   }
 }
 
@@ -322,7 +392,7 @@ class RoomManagerDB {
   //稼働中の村取得
   static function GetList() {
     $query = <<<EOF
-SELECT room_no, name, comment, game_option, option_role, max_user, status
+SELECT room_no AS id, name, comment, game_option, option_role, max_user, status
 FROM room WHERE status IN (?, ?) ORDER BY room_no DESC
 EOF;
     DB::Prepare($query, self::$status);
@@ -418,27 +488,33 @@ EOF;
 
 //-- HTML 生成クラス (RoomManager 拡張) --//
 class RoomManagerHTML {
-  const DELETE = "<a href=\"admin/room_delete.php?room_no=%d\">[削除 (緊急用)]</a>\n";
-  const PASSWORD = '<label for="room_password">村作成パスワード</label>：<input type="password" id="room_password" name="room_password" size="20">　';
-  const ERROR = "エラーが発生しました。<br>\n以下の項目を再度ご確認ください。<br>\n";
-
-  private static $status = array('waiting' => '募集中', 'playing' => 'プレイ中');
-
   //村表示
   static function OutputRoom(array $stack) {
     $format = <<<EOF
 %s<a href="login.php?room_no=%d">
-%s<span>[%d番地]</span>%s村<br>
-<div>～%s～ %s</div>
+%s<span>[%s]</span>%s%s
+<div>%s %s</div>
 </a><br>
-
 EOF;
+
+    $ROOM = new Room();
+    $ROOM->LoadData($stack);
     RoomOption::Load($stack);
-    extract($stack);
-    printf($format,
-	   ServerConfig::DEBUG_MODE ? sprintf(self::DELETE, $room_no) : '', $room_no,
-	   Image::Room()->Generate($status, self::$status[$status]), $room_no, $name,
-	   $comment, RoomOption::Generate());
+    if (ServerConfig::DEBUG_MODE) {
+      $delete_format = '<a href="admin/room_delete.php?room_no=%d">[%s]</a>';
+      $delete = sprintf($delete_format . Text::LF, $ROOM->id, RoomManagerMessage::DELETE);
+    }
+    else {
+      $delete = '';
+    }
+    $status_list = array('waiting' => RoomManagerMessage::WAITING,
+			 'playing' => RoomManagerMessage::PLAYING);
+
+    printf($format . Text::LF,
+	   $delete, $ROOM->id,
+	   Image::Room()->Generate($ROOM->status, $status_list[$ROOM->status]),
+	   $ROOM->GenerateNumber(), $ROOM->GenerateName(), Text::BR,
+	   $ROOM->GenerateComment(), RoomOption::Generate());
   }
 
   //村作成画面表示
@@ -448,68 +524,90 @@ EOF;
 <form method="post" action="room_manager.php%s">
 <input type="hidden" name="%s" value="on">
 <table>
-
 EOF;
+
     $footer = <<<EOF
 <tr><td id="make" colspan="2">%s<input type="submit" value=" %s "></td></tr>
 </table>
 </form>
-
 EOF;
 
     //パラメータセット
     if (OptionManager::$change) {
       $url     = sprintf('?room_no=%d', RQ::Get()->room_no);
       $command = 'change_room';
-      $submit  = '変更';
+      $submit  = RoomManagerMessage::SUBMIT_CHANGE;
     } else {
       $url     = '';
       $command = 'create_room';
-      $submit  = '作成';
+      $submit  = RoomManagerMessage::SUBMIT_CREATE;
+    }
+
+    //村作成パスワード
+    if (is_null(ServerConfig::ROOM_PASSWORD)) {
+      $password = '';
+    }
+    else {
+      $password_format = <<<EOF
+<label for="%s">%s</label>%s<input type="password" id="%s" name="%s" size="20">%s
+EOF;
+      $label = 'room_password';
+      $password = sprintf($password_format, $label,
+			  RoomManagerMessage::ROOM_PASSWORD, Message::COLON,
+			  $label, $label, Message::SPACER);
     }
 
     //出力
-    printf($header, $url, $command);
+    printf($header . Text::LF, $url, $command);
     OptionForm::Output();
-    printf($footer, is_null(ServerConfig::ROOM_PASSWORD) ? '' : self::PASSWORD, $submit);
+    printf($footer . Text::LF, $password, $submit);
     if (OptionManager::$change) HTML::OutputFooter();
   }
 
   //結果出力
   static function OutputResult($type, $str = '') {
+    $title  = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_INPUT);
+    $header = RoomManagerMessage::ERROR_HEADER . Text::BRLF .
+      RoomManagerMessage::ERROR_CHECK_LIST . Text::BRLF;
+
     switch ($type) {
     case 'empty':
-      $format = "%s<ul>\n<li>%sが記入されていない。</li>\n</ul>\n";
-      HTML::OutputResult('村作成 [入力エラー]', sprintf($format, self::ERROR, $str));
+      $stack = array($str . RoomManagerMessage::ERROR_INPUT_EMPTY);
+      HTML::OutputResult($title, $header . self::GenerateErrorList($stack));
       break;
 
     case 'comment':
-      $format = "%s<ul>\n<li>%sの文字数が長すぎる。</li>\n" .
-	"<li>%sに入力禁止文字列が含まれている。</li>\n</ul>\n";
-      HTML::OutputResult('村作成 [入力エラー]', sprintf($format, self::ERROR, $str, $str));
+      $stack = array($str . RoomManagerMessage::ERROR_INPUT_LIMIT,
+		     $str . RoomManagerMessage::ERROR_INPUT_NG_WORD);
+      HTML::OutputResult($title, $header . self::GenerateErrorList($stack));
       break;
 
     case 'no_password':
-      $error = '有効な GM ログインパスワードが設定されていません。';
-      HTML::OutputResult('村作成 [入力エラー]', $error);
+      HTML::OutputResult($title, RoomManagerMessage::ERROR_INPUT_PASSWORD);
       break;
 
     case 'time':
-      $error = <<<EOF
-<ul>
-<li>リアルタイム制の昼・夜の時間を記入していない。</li>
-<li>リアルタイム制の昼・夜の時間が 0 以下、または 99 以上である。</li>
-<li>リアルタイム制の昼・夜の時間を全角で入力している。</li>
-<li>リアルタイム制の昼・夜の時間が数字ではない。</li>
-</ul>
-EOF;
-      HTML::OutputResult('村作成 [入力エラー]', self::ERROR . $error);
+      $error_header = RoomManagerMessage::ERROR_INPUT_REAL_TIME_HEADER;
+      $stack = array($error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_EMPTY,
+		     $error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_OVER,
+		     $error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_EM,
+		     $error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_NUMBER);
+      HTML::OutputResult($title, $header . self::GenerateErrorList($stack));
       break;
 
     case 'busy':
-      $error = "データベースサーバが混雑しています。<br>\n時間を置いて再度登録してください。";
-      HTML::OutputResult('村作成 [データベースエラー]', $error);
+      $title = sprintf(RoomManagerMessage::ERROR, Message::DB_ERROR);
+      HTML::OutputResult($title, Message::DB_ERROR_LOAD);
       break;
     }
+  }
+
+  //エラーの説明リストを生成
+  private static function GenerateErrorList(array $list) {
+    $result = '<ul>' . Text::LF;
+    foreach ($list as $str) {
+      $result .= sprintf('<li>%s</li>' . Text::LF, $str);
+    }
+    return $result . '</ul>' . Text::LF;
   }
 }

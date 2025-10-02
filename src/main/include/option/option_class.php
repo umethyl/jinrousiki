@@ -10,7 +10,8 @@ class OptionManager {
   //特殊普通村編成リスト
   private static $role_list = array(
     'detective', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf',
-    'possessed_wolf', 'sirius_wolf', 'fox', 'child_fox', 'cupid', 'medium', 'mania');
+    'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'cupid',
+    'medium', 'mania');
 
   //特殊サブ配役リスト
   private static $cast_list = array(
@@ -66,7 +67,9 @@ class OptionManager {
   }
 
   //オプション名出力
-  static function OutputCaption($name) { echo self::GenerateCaption($name); }
+  static function OutputCaption($name) {
+    echo self::GenerateCaption($name);
+  }
 
   //オプション説明出力
   static function OutputExplain($name) {
@@ -83,7 +86,9 @@ class OptionManager {
   }
 
   //ファイルパス取得
-  private static function GetPath($name) { return sprintf(self::PATH, JINRO_INC, $name); }
+  private static function GetPath($name) {
+    return sprintf(self::PATH, JINROU_INC, $name);
+  }
 }
 
 //-- オプションパーサ --//
@@ -91,7 +96,7 @@ class OptionParser {
   public $row;
   public $list = array();
 
-  function __construct($data) {
+  public function __construct($data) {
     $this->row  = $data;
     $this->list = self::Parse($this->row);
   }
@@ -110,5 +115,20 @@ class OptionParser {
       $list[$stack[0]] = count($stack) > 1 ? array_slice($stack, 1) : true;
     }
     return $list;
+  }
+}
+
+//-- HTML 生成クラス (Option 拡張) --//
+class OptionHTML {
+  //ゲームオプション画像出力
+  static function OutputImage($str) {
+    $format = '<div class="game-option">%s%s%s</div>' . Text::LF;
+    printf($format, OptionMessage::GAME_OPTION, Message::COLON, $str);
+  }
+
+  //村用オプション説明メッセージ生成
+  static function GenerateRoomCaption($image, $url, $caption, $explain) {
+    $format  = '<div>%s%s<a href="info/%s">%s</a>%s%s</div>' . Text::LF;
+    return sprintf($format, $image, Message::COLON, $url, $caption, Message::COLON, $explain);
   }
 }

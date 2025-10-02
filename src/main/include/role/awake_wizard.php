@@ -14,17 +14,19 @@ class Role_awake_wizard extends Role_wizard {
   public $result_list = array('MAGE_RESULT');
 
   protected function GetWizard() {
-    return $this->GetActor()->IsActive() ?
-      (Lottery::Percent(30) ? $this->wizard_list : array(1 => 'MAGE_DO')) :
-      array('soul_mage' => 'MAGE_DO');
+    if ($this->GetActor()->IsActive()) {
+      return Lottery::Percent(30) ? $this->wizard_list : array(1 => 'MAGE_DO');
+    } else {
+      return array('soul_mage' => 'MAGE_DO');
+    }
   }
 
-  function Mage(User $user) {
+  public function Mage(User $user) {
     $this->IsJammer($user);
     $this->SaveMageResult($user, 'failed', 'MAGE_RESULT');
   }
 
-  function WolfEatResist() {
+  public function WolfEatResist() {
     if (! $this->GetActor()->IsActive()) return false;
     $this->GetActor()->LostAbility();
     return true;

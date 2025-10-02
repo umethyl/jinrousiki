@@ -2,7 +2,9 @@
 //-- テキスト処理クラス --//
 class Text {
   const BR   = '<br>';
+  const CR   = "\r";
   const LF   = "\n";
+  const CRLF = "\r\n";
   const BRLF = "<br>\n";
   const TR   = "</tr>\n<tr>";
 
@@ -24,12 +26,14 @@ class Text {
   }
 
   //暗号化
-  static function Crypt($str) { return sha1(ServerConfig::SALT . $str); }
+  static function Crypt($str) {
+    return sha1(ServerConfig::SALT . $str);
+  }
 
   //トリップ変換
   /*
     変換テスト結果＠2ch (2009/07/26)
-    [入力文字列] => [変換結果] (ConvetTrip()の結果)
+    [入力文字列] => [変換結果] (Text::Trip() の結果)
     test#test                     => test ◆.CzKQna1OU (test◆.CzKQna1OU)
     テスト#テスト                 => テスト ◆SQ2Wyjdi7M (テスト◆SQ2Wyjdi7M)
     てすと＃てすと                => てすと ◆ZUNa78GuQc (てすと◆ZUNa78GuQc)
@@ -42,7 +46,8 @@ class Text {
     if (GameConfig::TRIP) {
       if (get_magic_quotes_gpc()) $str = stripslashes($str); // \ を自動でつける処理系対策
       //トリップ関連のキーワードを置換
-      $str = str_replace(array('◆', '＃'), array('◇', '#'), $str);
+      $trip_list = array(Message::TRIP, Message::TRIP_KEY);
+      $str = str_replace($trip_list, array(Message::TRIP_CONVERT, '#'), $str);
       if (($trip_start = mb_strpos($str, '#')) !== false) { //トリップキーの位置を検索
 	$name = mb_substr($str, 0, $trip_start);
 	$key  = mb_substr($str, $trip_start + 1);
@@ -76,13 +81,13 @@ class Text {
 
 	  $trip = substr(crypt($key, $salt), -10);
 	}
-	$str = $name . '◆' . $trip;
+	$str = $name . Message::TRIP . $trip;
       }
       //self::p($str, 'Result');
     }
-    elseif (strpos($str, '#') !== false || strpos($str, '＃') !== false) {
-      $sentence = "トリップは使用不可です。<br>\n" . '"#" 又は "＃" の文字も使用不可です。';
-      HTML::OutputResult('村人登録 [入力エラー]', $sentence);
+    elseif (strpos($str, '#') !== false || strpos($str, Message::TRIP_KEY) !== false) {
+      $sentence = sprintf(Message::TRIP_FORMAT, '#', Message::TRIP_KEY);
+      HTML::OutputResult(Message::TRIP_ERROR, Message::DISABLE_TRIP . self::BRLF . $sentence);
     }
 
     return self::Escape($str); //特殊文字のエスケープ
@@ -109,10 +114,19 @@ class Text {
     }
     if (get_magic_quotes_gpc()) $str = stripslashes($str); //'\' を自動でつける処理系対策
     //$str = htmlentities($str, ENT_QUOTES); //UTF に移行したら機能する？
-    $replace_list = array('&' => '&amp;', '<' => '&lt;', '>' => '&gt;',
-			  '\\' => '&yen;', '"' => '&quot;', "'" => '&#039;');
+    $replace_list = array(
+      '&'  => '&amp;',
+      '<'  => '&lt;',
+      '>'  => '&gt;',
+      '\\' => '&yen;',
+      '"'  => '&quot;',
+      "'"  => '&#039;');
     $str = strtr($str, $replace_list);
-    $str = $trim ? trim($str) : str_replace(array("\r\n", "\r", "\n"), "\n", $str);
+    if ($trim) {
+      $str = trim($str);
+    } else {
+      $str = str_replace(array(self::CRLF, self::CR, self::LF), self::LF, $str);
+    }
     return $str;
   }
 
@@ -123,7 +137,9 @@ class Text {
 
   /* デバッグ用 */
   //改行タグ付きテキスト出力
-  static function d($str = '') { self::Output($str, true); }
+  static function d($str = '') {
+    self::Output($str, true);
+  }
 
   //データ表示
   static function p($data, $name = null) {
@@ -143,7 +159,9 @@ class Text {
 //-- セキュリティ関連クラス --//
 class Security {
   //IPアドレス取得
-  static function GetIP() { return @$_SERVER['REMOTE_ADDR']; }
+  static function GetIP() {
+    return @$_SERVER['REMOTE_ADDR'];
+  }
 
   //リファラチェック
   static function CheckReferer($page, $white_list = null) {
@@ -247,9 +265,9 @@ class Time {
     }
 
     $str = '';
-    if ($hours   > 0) $str .= $hours   . '時間';
-    if ($minutes > 0) $str .= $minutes . '分';
-    if ($seconds > 0) $str .= $seconds . '秒';
+    if ($hours   > 0) $str .= $hours   . Message::HOUR;
+    if ($minutes > 0) $str .= $minutes . Message::MINUTE;
+    if ($seconds > 0) $str .= $seconds . Message::SECOND;
     return $str;
   }
 
@@ -263,12 +281,6 @@ class Time {
 
 //-- HTML 生成クラス --//
 class HTML {
-  const HEADER = "</head>\n<body>\n";
-  const FOOTER = "</body>\n</html>";
-  const JUMP   = "<meta http-equiv=\"Refresh\" content=\"1;URL=%s\">\n";
-  const CSS    = "<link rel=\"stylesheet\" href=\"%s.css\">\n";
-  const JS     = "<script type=\"text/javascript\" src=\"%s/%s.js\"></script>\n";
-
   //共通 HTML ヘッダ生成
   static function GenerateHeader($title, $css = null, $close = false) {
     $format = <<<EOF
@@ -279,70 +291,108 @@ class HTML {
 <meta http-equiv="Content-Style-Type" content="text/css">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <title>%s</title>
-
 EOF;
-    $str = sprintf($format, ServerConfig::ENCODE, $title);
+    $str = sprintf($format . Text::LF, ServerConfig::ENCODE, $title);
     if (is_null($css)) $css = 'action';
-    $str .= self::LoadCSS(sprintf('%s/%s', JINRO_CSS, $css));
+    $str .= self::LoadCSS(sprintf('%s/%s', JINROU_CSS, $css));
     if ($close) $str .= self::GenerateBodyHeader();
     return $str;
   }
 
-  //ページジャンプ用 JavaScript 生成
-  static function GenerateSetLocation() {
-    $str = <<<EOF
-<script type="text/javascript"><!--
-if (top != self) { top.location.href = self.location.href; }
-%s
-EOF;
-    return sprintf($str, "//--></script>\n");
+  //JavaScript ヘッダ生成
+  static function GenerateJavaScriptHeader() {
+    return '<script type="text/javascript"><!--' . Text::LF;
   }
 
-  //HTML ヘッダクローズ
-  static function GenerateBodyHeader($css = null) {
-    $str = isset($css) ? self::LoadCSS($css) : '';
-    return $str . self::HEADER;
+  //JavaScript フッタ生成
+  static function GenerateJavaScriptFooter() {
+    return '//--></script>' . Text::LF;
+  }
+
+  //ページジャンプ用 JavaScript 生成
+  static function GenerateSetLocation() {
+    $str = 'if (top != self) { top.location.href = self.location.href; }' . Text::LF;
+    return self::GenerateJavaScriptHeader() . $str . self::GenerateJavaScriptFooter();
+  }
+
+  //HTML BODY ヘッダ生成
+  static function GenerateBodyHeader($css = null, $on_load = null) {
+    $str  = isset($css) ? self::LoadCSS($css) : '';
+    $body = isset($on_load) ? sprintf('<body onLoad="%s">', $on_load) : '<body>';
+    return $str . '</head>' . Text::LF . $body . Text::LF;
+  }
+
+  //リンク生成
+  static function GenerateLink($url, $str) {
+    return sprintf('<a href="%s">%s</a>', $url, $str);
   }
 
   //ログへのリンク生成
   static function GenerateLogLink($url, $watch = false, $header = '', $css = '', $footer = '') {
-    $str = <<<EOF
-{$header} <a target="_top" href="{$url}"{$css}>正</a>
-<a target="_top" href="{$url}&reverse_log=on"{$css}>逆</a>
-<a target="_top" href="{$url}&heaven_talk=on"{$css}>霊</a>
-<a target="_top" href="{$url}&reverse_log=on&heaven_talk=on"{$css}>逆&amp;霊</a>
-<a target="_top" href="{$url}&heaven_only=on"{$css} >逝</a>
-<a target="_top" href="{$url}&reverse_log=on&heaven_only=on"{$css}>逆&amp;逝</a>
+    $format = <<<EOF
+%s <a target="_top" href="%s"%s>%s</a>
+<a target="_top" href="%s&reverse_log=on"%s>%s</a>
+<a target="_top" href="%s&heaven_talk=on"%s>%s</a>
+<a target="_top" href="%s&heaven_talk=on&reverse_log=on"%s>%s</a>
+<a target="_top" href="%s&heaven_only=on"%s >%s</a>
+<a target="_top" href="%s&heaven_only=on&reverse_log=on"%s>%s</a>
 EOF;
-
+    $str = sprintf($format, $header,
+		   $url, $css, Message::LOG_NORMAL,
+		   $url, $css, Message::LOG_REVERSE,
+		   $url, $css, Message::LOG_DEAD,
+		   $url, $css, Message::LOG_DEAD_REVERSE,
+		   $url, $css, Message::LOG_HEAVEN,
+		   $url, $css, Message::LOG_HEAVEN_REVERSE);
     if ($watch) {
-      $str .= <<<EOF
-
-<a target="_top" href="{$url}&watch=on"{$css}>観</a>
-<a target="_top" href="{$url}&watch=on&reverse_log=on"{$css}>逆&amp;観</a>
+      $format = <<<EOF
+<a target="_top" href="%s&watch=on"%s>%s</a>
+<a target="_top" href="%s&watch=on&reverse_log=on"%s>%s</a>
 EOF;
+      $str .= sprintf(Text::LF . $format,
+		      $url, $css, Message::LOG_WATCH,
+		      $url, $css, Message::LOG_WATCH_REVERSE);
     }
     return $str . $footer;
   }
 
   //ログへのリンク生成 (観戦モード用)
   static function GenerateWatchLogLink($url, $header = '', $css = '', $footer = '') {
-    $str = <<<EOF
-{$header} <a target="_top" href="{$url}"{$css}>正</a>
-<a target="_top" href="{$url}&reverse_log=on"{$css}>逆</a>
-<a target="_top" href="{$url}&wolf_sight=on"{$css}>正&amp;狼</a>
-<a target="_top" href="{$url}&wolf_sight=on&reverse_log=on"{$css}>逆&amp;狼</a>{$footer}
+    $format = <<<EOF
+%s <a target="_top" href="%s"%s>%s</a>
+<a target="_top" href="%s&reverse_log=on"%s>%s</a>
+<a target="_top" href="%s&wolf_sight=on"%s >%s</a>
+<a target="_top" href="%s&wolf_sight=on&reverse_log=on"%s>%s</a>
 EOF;
-    return $str;
+    $str = sprintf($format, $header,
+		   $url, $css, Message::LOG_NORMAL,
+		   $url, $css, Message::LOG_REVERSE,
+		   $url, $css, Message::LOG_WOLF,
+		   $url, $css, Message::LOG_WOLF_REVERSE);
+    return $str . $footer;
+  }
+
+  //窓を閉じるボタン生成
+  static function GenerateCloseWindow($str) {
+    $format = <<<EOF
+%s%s
+<form method="post" action="#">
+<input type="button" value="%s" onClick="window.close()">
+</form>
+EOF;
+    return sprintf($format . Text::LF, $str, Text::BR, Message::CLOSE_WINDOW);
   }
 
   //CSS 読み込み
-  static function LoadCSS($path) { return sprintf(self::CSS, $path); }
+  static function LoadCSS($path) {
+    return sprintf('<link rel="stylesheet" href="%s.css">' . Text::LF, $path);
+  }
 
   //JavaScript 読み込み
   static function LoadJavaScript($file, $path = null) {
-    if (is_null($path)) $path = JINRO_ROOT . '/javascript';
-    return sprintf(self::JS, $path, $file);
+    if (is_null($path)) $path = JINROU_ROOT . '/javascript';
+    $format = '<script type="text/javascript" src="%s/%s.js"></script>';
+    return sprintf($format . Text::LF, $path, $file);
   }
 
   //共通 HTML ヘッダ出力
@@ -351,20 +401,26 @@ EOF;
   }
 
   //CSS 出力
-  static function OutputCSS($path) { echo self::LoadCSS($path); }
+  static function OutputCSS($path) {
+    echo self::LoadCSS($path);
+  }
 
   //JavaScript 出力
   static function OutputJavaScript($file, $path = null) {
     echo self::LoadJavaScript($file, $path);
   }
 
-  //HTML ヘッダクローズ出力
-  static function OutputBodyHeader($css = null) { echo self::GenerateBodyHeader($css); }
+  //HTML BODY ヘッダ出力
+  static function OutputBodyHeader($css = null, $on_load = null) {
+    echo self::GenerateBodyHeader($css, $on_load);
+  }
 
   //結果ページ HTML ヘッダ出力
   static function OutputResultHeader($title, $url = '') {
     self::OutputHeader($title);
-    if ($url != '') printf(self::JUMP, $url);
+    if ($url != '') {
+      printf('<meta http-equiv="Refresh" content="1;URL=%s">' . Text::LF, $url);
+    }
     if (is_object(DB::$ROOM)) echo DB::$ROOM->GenerateCSS();
     self::OutputBodyHeader();
   }
@@ -377,37 +433,42 @@ EOF;
     self::OutputFooter(true);
   }
 
+  //使用不可エラー出力
+  static function OutputUnusableError() {
+    self::OutputResult(Message::DISABLE_ERROR, Message::UNUSABLE_ERROR);
+  }
+
   //HTML フッタ出力
   static function OutputFooter($exit = false) {
     DB::Disconnect();
-    echo self::FOOTER;
+    echo '</body>' . Text::LF . '</html>';
     if ($exit) exit;
   }
 
   //共有フレーム HTML ヘッダ出力
   static function OutputFrameHeader($title) {
-    $str = <<<EOF
+    $format = <<<EOF
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html lang="ja">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=%s">
 <title>%s</title>
 </head>
-
 EOF;
-    printf($str, ServerConfig::ENCODE, $title);
+    printf($format . Text::LF, ServerConfig::ENCODE, $title);
   }
 
   //フレーム HTML フッタ出力
   static function OutputFrameFooter() {
-    echo <<<EOF
+    $format = <<<EOF
 <noframes>
 <body>
-フレーム非対応のブラウザの方は利用できません。
+%s
 </body>
 </noframes>
 </frameset>
 </html>
 EOF;
+    printf($format, Message::NO_FRAME);
   }
 }

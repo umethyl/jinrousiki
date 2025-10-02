@@ -6,5 +6,7 @@
 */
 OptionManager::Load('change_mad');
 class Option_change_whisper_mad extends Option_change_mad {
-  function GetCaption() { return '囁き狂人村'; }
+  public function GetCaption() {
+    return '囁き狂人村';
+  }
 }

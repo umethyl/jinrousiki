@@ -6,9 +6,9 @@
 */
 RoleManager::LoadFile('fox');
 class Role_purple_fox extends Role_fox {
-  public $mix_in = 'critical_mad';
+  public $vote_day_type = 'init';
 
-  function VoteAction() {
+  public function VoteAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
       $target = DB::$USER->ByRealUname($target_uname);

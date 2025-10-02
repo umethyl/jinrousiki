@@ -1,13 +1,11 @@
 <?php
-define('JINRO_ROOT', '..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
+Loader::LoadFile('admin_class');
 
 $disable = true; //使用時には false に変更する
-if ($disable) {
-  HTML::OutputResult('認証エラー', 'このスクリプトは使用できない設定になっています。');
-}
+if ($disable) HTML::OutputUnusableError();
 
-Loader::LoadFile('room_config', 'admin_class', 'old_log_functions');
+Loader::LoadFile('room_config', 'old_log_functions');
 Loader::LoadRequest('RequestOldLog'); //引数を取得
 
 RQ::Set('prefix', ''); //各ページの先頭につける文字列 (テスト / 上書き回避用)

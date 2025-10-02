@@ -4,9 +4,11 @@
   ○仕様
 */
 class Role_possessed_exchange extends Role {
-  protected function OutputImage() { return; }
+  protected function IgnoreImage() {
+    return true;
+  }
 
-  protected function OutputResult() {
+  protected function OutputAddResult() {
     if (! is_array($stack = $this->GetActor()->GetPartner($this->role))) return;
     if (is_null($target = DB::$USER->ByID(array_shift($stack))->handle_name)) return;
 

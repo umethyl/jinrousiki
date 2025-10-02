@@ -10,7 +10,8 @@ class ExternalLinkBuilder {
     if (! ($io = @fsockopen($host, 80, $status, $str, self::TIME))) return false;
 
     stream_set_timeout($io, self::TIME);
-    fwrite($io, sprintf("GET / HTTP/1.1\r\nHost: %s\r\nConnection: Close\r\n\r\n", $host));
+    $format = 'GET / HTTP/1.1%sHost: %s%sConnection: Close' . Text::CRLF . Text::CRLF;
+    fwrite($io, sprintf($format, Text::CRLF, $host, Text::CRLF));
     $data = fgets($io, 128);
     $stream_stack = stream_get_meta_data($io);
     fclose($io);
@@ -53,10 +54,14 @@ class Lottery {
   }
 
   //bool 判定
-  static function Bool() { return self::Percent(50); }
+  static function Bool() {
+    return self::Percent(50);
+  }
 
   //パーセント判定
-  static function Percent($rate) { return self::Rate(100, $rate); }
+  static function Percent($rate) {
+    return self::Rate(100, $rate);
+  }
 
   //配列からランダムに一つ取り出す
   static function Get(array $list) {
@@ -64,7 +69,15 @@ class Lottery {
   }
 
   //一定範囲からランダムに取り出す
-  static function GetRange($from, $to) { return self::Get(range($from, $to)); }
+  static function GetRange($from, $to) {
+    return self::Get(range($from, $to));
+  }
+
+  //シャッフルした配列を返す
+  static function GetList(array $list) {
+    shuffle($list);
+    return $list;
+  }
 
   //闇鍋モードの配役リスト取得
   static function GetChaos(array $list, array $filter) {
@@ -75,7 +88,9 @@ class Lottery {
   }
 
   //「比」の配列から一つ引く
-  static function Draw(array $list) { return self::Get(self::Generate($list)); }
+  static function Draw(array $list) {
+    return self::Get(self::Generate($list));
+  }
 
   //「比」の配列から「福引き」を作成する
   static function Generate(array $list) {

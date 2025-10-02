@@ -4,20 +4,19 @@
   ○仕様
 */
 class Role_thunder_brownie extends Role {
-  function SetVoteDay($uname) {
-    if ($this->IsRealActor()) $this->AddStackName($uname);
-  }
+  public $vote_day_type = 'real';
 
   //落雷判定
-  function SetThunderbolt(array $list) {
+  public function SetThunderbolt(array $list) {
     if (! is_array($stack = $this->GetStack()) || $this->IsVoteKill()) return;
+
     if (count(array_intersect($this->GetStack('vote_possible'), array_keys($stack))) > 0) {
       $this->SetThunderboltTarget($list);
     }
   }
 
   //落雷対象者選出
-  function SetThunderboltTarget(array $list) {
+  public function SetThunderboltTarget(array $list) {
     $stack = array();
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);

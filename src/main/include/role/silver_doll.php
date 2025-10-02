@@ -6,5 +6,7 @@
 */
 RoleManager::LoadFile('doll');
 class Role_silver_doll extends Role_doll {
-  protected function OutputPartner() { return; }
+  protected function OutputPartner() {
+    return;
+  }
 }

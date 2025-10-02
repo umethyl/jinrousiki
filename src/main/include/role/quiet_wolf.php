@@ -6,5 +6,7 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_quiet_wolf extends Role_wolf {
-  function Howl(TalkBuilder $builder, $voice) { return false; }
+  public function Howl(TalkBuilder $builder, $voice) {
+    return false;
+  }
 }

@@ -2,8 +2,7 @@
 //-- サーバ設定 --//
 class ServerConfig {
   /* サイト設定 */
-  #const SITE_ROOT = 'http://localhost/jinrou/';		//サーバのurl
-  const SITE_ROOT = 'http://localhost/jinrousiki/2.2/';
+  const SITE_ROOT = 'http://localhost/jinrou/';		//サーバのurl
   const TITLE     = '汝は人狼なりや？';		//タイトル
   const COMMENT   = '';		//サーバのコメント
   const BACK_PAGE = '';		//戻り先のページ
@@ -25,8 +24,7 @@ class ServerConfig {
   const ROOM_PASSWORD = null;
 
   /* モード設定 */
-  #const DEBUG_MODE    = false;	//デバッグモード (開発テスト用)
-  const DEBUG_MODE    = true;
+  const DEBUG_MODE    = false;	//デバッグモード (開発テスト用)
   const DRY_RUN       = false;	//村作成スキップ (開発テスト用)
   const SECRET_ROOM   = false;	//村情報非表示モード (開発テスト用)
   const DISPLAY_ERROR = false;	//エラー強制表示設定 (開発テスト用)
@@ -58,5 +56,5 @@ class ServerConfig {
     更新後のリビジョン番号と同じか、それより大きな値を設定すると
     admin/setup.php の処理は常時スキップされます。
   */
-  const REVISION = 0;
+  const REVISION = 1;
 }

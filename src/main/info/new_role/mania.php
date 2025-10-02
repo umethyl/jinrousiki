@@ -1,6 +1,5 @@
 <?php
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
+require_once('init.php');
 Loader::LoadFile('info_functions');
 InfoHTML::OutputRoleHeader('神話マニア陣営');
 ?>
@@ -14,6 +13,12 @@ InfoHTML::OutputRoleHeader('神話マニア陣営');
 </p>
 
 <h2 id="rule">基本ルール</h2>
+<p>
+<a href="#rule_summary">概要</a>
+<a href="#rule_distinguish">判定</a>
+</p>
+
+<h3 id="rule_summary">概要</h3>
 <ol>
 <li>初日の夜に誰か一人を選んでその人と同じ陣営に変化 (コピー) する特殊陣営です。</li>
 <li>勝利条件はコピー先の陣営になります。</li>
@@ -22,6 +27,25 @@ InfoHTML::OutputRoleHeader('神話マニア陣営');
 <li>なんらかの理由でコピーが成立しなかった場合は村人陣営と扱われます。</li>
 <li>コピーが成立する前に突然死した場合の<a href="human.php#medium_group">巫女系</a>の陣営判定は「村人」です。</li>
 </ol>
+
+<h3 id="rule_distinguish">判定</h3>
+<table>
+<tr>
+  <th>生存カウント</th>
+  <th>占い</th>
+  <th>霊能</th>
+  <th>精神鑑定</th>
+  <th>性別鑑定</th>
+</tr>
+<tr>
+  <td>村人</td>
+  <td>村人</td>
+  <td>村人</td>
+  <td>正常</td>
+  <td>性別</td>
+</tr>
+</table>
+
 
 <h2 id="change_group">所属変更</h2>
 <h3>Ver. 1.4.0 β18～</h3>
@@ -143,10 +167,13 @@ CO するべきかどうかは、コピーした役職次第です。
 </pre>
 
 <h3 id="soul_mania">覚醒者 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β11～]</h3>
+<h4>[耐性] 蘇生：不可 / 反魂：無効</h4>
 <pre>
 コピー先の上位種に変化する特殊な神話マニア。
 役職が変化すると<a href="sub_role.php#copied_soul">元覚醒者</a>がつく。
+耐性は全て変化前の状態のみに適用される。
 </pre>
+<h4>コピーの仕様</h4>
 <ol>
   <li>入れ替わるのは 4 日目の朝で、それまでは覚醒者のまま。</li>
   <li>2 日目の朝にどの役職系になるのか (コピー先の役職の系統) 分かる。<br>
@@ -266,6 +293,11 @@ CO するべきかどうかは、コピーした役職次第です。
   <td>Ver. 1.4.0 β14～</td>
 </tr>
 <tr>
+  <td><a href="fox.php#depraver_group">背徳者系</a></td>
+  <td><a href="fox.php#sacrifice_depraver">伊呂具秦公</a></td>
+  <td>Ver. 2.3.0 α4～</td>
+</tr>
+<tr>
   <td><a href="lovers.php#cupid_group">キューピッド系</a></td>
   <td><a href="lovers.php#minstrel_cupid">吟遊詩人</a></td>
   <td>Ver. 1.5.0 β1～</td>
@@ -326,17 +358,25 @@ CO するべきかどうかは、コピーした役職次第です。
   <td></td>
 </tr>
 </table>
+<h5>Ver. 2.3.0 α5～</h5>
+<pre>
+反魂無効
+</pre>
+<h5>Ver. 2.3.0 α4～</h5>
+<pre>
+蘇生不可
+</pre>
+<h5>Ver. 1.4.0 β14～</h5>
+<pre>
+変化するまでは霊界は公開されない。
+</pre>
 <h4>同一表示役職</h4>
 <pre>
 <a href="#dummy_mania">夢語部</a>
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="fox.php#vindictive_fox">昼狐</a>
-</pre>
-<h5>Ver. 1.4.0 β14～</h5>
-<pre>
-変化するまでは霊界は公開されない。
+<a href="fox.php#vindictive_fox">昼狐</a>・<a href="ability.php#reverse_limit">反魂制限能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -346,12 +386,12 @@ CO するべきかどうかは、コピーした役職次第です。
 
 <h3 id="dummy_mania">夢語部 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β11～]</h3>
 <h4>[役職表示] <a href="#soul_mania">覚醒者</a></h4>
-<h4>[耐性] 獏襲撃：死亡 (変化前) / 精神鑑定：嘘つき (変化前)</h4>
+<h4>[耐性] 獏襲撃：死亡 / 精神鑑定：嘘つき / 蘇生：不可 / 反魂：無効</h4>
 <pre>
 コピー先の基本・劣化種に変化する特殊な神話マニア。
 本人の表記は「<a href="#soul_mania">覚醒者</a>」で、仕様も同じ。
 役職が変化すると<a href="sub_role.php#copied_teller">元夢語部</a>がつく。
-変化前に<a href="wolf.php#dream_eater_mad">獏</a>に襲撃されると死亡する。
+耐性は全て変化前の状態のみに適用される。
 </pre>
 <h4>コピー結果一覧</h4>
 <table>
@@ -462,6 +502,11 @@ CO するべきかどうかは、コピーした役職次第です。
   <td>Ver. 1.5.0 β16～</td>
 </tr>
 <tr>
+  <td><a href="fox.php#depraver_group">背徳者系</a></td>
+  <td><a href="fox.php#silver_depraver">頭人</a></td>
+  <td>Ver. 2.3.0 α4～</td>
+</tr>
+<tr>
   <td><a href="lovers.php#cupid_group">キューピッド系</a></td>
   <td><a href="lovers.php#snow_cupid">寒戸婆</a></td>
   <td>Ver. 1.5.0 β8～</td>
@@ -522,13 +567,21 @@ CO するべきかどうかは、コピーした役職次第です。
   <td></td>
 </tr>
 </table>
-<h4>関連役職</h4>
+<h5>Ver. 2.3.0 α5～</h5>
 <pre>
-<a href="fox.php#vindictive_fox">昼狐</a>・<a href="ability.php#dummy">夢能力者</a>
+反魂無効
+</pre>
+<h5>Ver. 2.3.0 α4～</h5>
+<pre>
+蘇生不可
 </pre>
 <h5>Ver. 1.4.0 β14～</h5>
 <pre>
 変化するまでは霊界は公開されない。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="fox.php#vindictive_fox">昼狐</a>・<a href="ability.php#reverse_limit">反魂制限能力者</a>・<a href="ability.php#dummy">夢能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -548,6 +601,8 @@ CO するべきかどうかは、コピーした役職次第です。
 <a href="#sacrifice_mania">影武者</a>
 <a href="#resurrect_mania">僵尸</a>
 <a href="#revive_mania">五徳猫</a>
+<a href="#lute_mania">琵琶牧々</a>
+<a href="#harp_mania">琴古主</a>
 </p>
 
 <h3 id="unknown_mania_rule">基本ルール [鵺系]</h3>
@@ -723,6 +778,63 @@ CO するべきかどうかは、コピーした役職次第です。
 <pre>
 <a href="human.php#presage_scanner">件</a>と<a href="human.php#sacrifice_cat">猫神</a>を合わせたような能力で、<a href="http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1305122951/65" target="_top">新役職考案スレ2(65)</a> が原型です。
 条件次第で<a href="ability.php#possessed">憑依能力者</a>も騙ることができます。
+</pre>
+
+<h3 id="lute_mania">琵琶牧々 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α5～]</h3>
+<h4>[足音能力] タイプ：特殊 / キャンセル投票：無し</h4>
+<pre>
+コピー先の周辺縦軸で足音が鳴る特殊な鵺。
+</pre>
+<h4>足音の仕様</h4>
+<ol>
+<li>投票インターフェイスは通常の鵺と同じ。</li>
+<li><a href="human.php#step_mage">足音システム</a>の仕様が適用される。</li>
+<li>足音が鳴るのは投票したときだけ (実質初日のみ)。</li>
+<li>足音の鳴る範囲の長さはランダムだが、必ずコピー先が含まれる。</li>
+</ol>
+<h4>判定例</h4>
+<pre>
+ 1  2  3  4  5
+ 6  7  8  9 10
+11 12 13 14 15
+16 17
+
+例1) 8 をコピー
+→ 8, 3 + 8, 8 + 13, 3 + 8 + 13 のいずれかの組み合わせで足音が鳴る
+
+例2) 15 をコピー
+→ 15, 10 + 15, 5 + 10 + 15 のいずれかの組み合わせで足音が鳴る
+
+例3) 11 をコピー
+→ 11, 6 + 11, 11 + 16, 1 + 6 + 11, 6 + 11 + 16, 1 + 6 + 11 + 16
+   のいずれかの組み合わせで足音が鳴る
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#step">足音能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="human.php#step_mage">審神者</a>の鵺バージョンで、東方 Project の九十九 弁々がモチーフです。
+「びわぼくぼく」と読みます。
+存在を伏せにくくなるので人外コピー時の立ち回りが難しくなります。
+</pre>
+
+<h3 id="harp_mania">琴古主 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α5～]</h3>
+<h4>[足音能力] タイプ：特殊 / キャンセル投票：無し</h4>
+<pre>
+コピー先の周辺横軸で足音が鳴る特殊な鵺。
+仕様は<a href="#lute_mania">琵琶牧々</a>と同じ。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#step">足音能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#lute_mania">琵琶牧々</a>の横軸バージョンで、東方 Project の九十九 八橋がモチーフです。
+「ことふるぬし」と読みます。
+<a href="wolf.php#step_mad">家鳴</a>等が騙ることでコピー先をかく乱させる事が可能です。
 </pre>
 </body>
 </html>

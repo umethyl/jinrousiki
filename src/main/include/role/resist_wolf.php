@@ -7,9 +7,11 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_resist_wolf extends Role_wolf {
-  function GetPoisonEatTarget() { return $this->GetWolfVoter(); }
+  public function GetPoisonEatTarget() {
+    return $this->GetWolfVoter();
+  }
 
-  function PoisonDead() {
+  public function PoisonDead() {
     $actor = $this->GetActor();
     $actor->IsActive() ? $actor->LostAbility() : parent::PoisonDead();
   }

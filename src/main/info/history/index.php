@@ -1,8 +1,6 @@
 <?php
 //-- ◆ 文字化け抑制 --//
-define('JINRO_ROOT', '../..');
-require_once(JINRO_ROOT . '/include/init.php');
-Loader::LoadFile('info_functions');
+require_once('init.php');
 InfoHTML::OutputHeader('サーバ更新履歴', 1);
 ?>
 <!-- サーバの更新履歴を残したい場合はこのページを使用してください -->

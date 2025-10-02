@@ -8,5 +8,7 @@ RoleManager::LoadFile('doll');
 class Role_poison_doll extends Role_doll {
   public $mix_in = 'poison';
 
-  function IsPoisonTarget(User $user) { return ! Role_doll::IsDoll($user); }
+  public function IsPoisonTarget(User $user) {
+    return ! $this->IsDoll($user);
+  }
 }

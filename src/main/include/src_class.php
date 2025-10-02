@@ -6,7 +6,7 @@ class SrcHTML {
     $caption = self::GetCaption();
 
     HTML::OutputHeader('開発版ソースダウンロード', 'src', true);
-    Text::Output('<a href="../">←戻る</a>', true);
+    Text::Output(HTML::GenerateLink('../', Message::BACK), true);
     echo <<<EOF
 <p>
 ※「alpha」が付いているバージョンは、ほとんどテストを行っていません。取り扱い要注意。
@@ -249,7 +249,8 @@ EOF;
   //結果出力
   private static function OutputResult($body) {
     HTML::OutputHeader('ファイルアップロード処理', 'src', true);
-    echo $body . '<br><br>' . Text::LF . '<a href="./">←戻る</a>'.Text::LF;
+    Text::Output($body . Text::BR . Text::BRLF);
+    Text::Output(HTML::GenerateLink('./', Message::BACK), true);
     HTML::OutputFooter(true);
   }
 }

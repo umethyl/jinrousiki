@@ -8,9 +8,11 @@ class Role_copied extends Role {
   public $result = 'MANIA_RESULT';
   public $display_date = 2;
 
-  protected function OutputImage() { return; }
+  protected function IgnoreImage() {
+    return true;
+  }
 
-  protected function OutputResult() {
-    if (DB::$ROOM->IsDate($this->display_date)) $this->OutputAbilityResult($this->result);
+  protected function IgnoreResult() {
+    return ! DB::$ROOM->IsDate($this->display_date);
   }
 }

@@ -6,5 +6,5 @@
 */
 RoleManager::LoadFile('fox');
 class Role_elder_fox extends Role_fox {
-  function FilterVoteDo(&$count) { $count++; }
+  public function FilterVoteDo(&$count) { $count++; }
 }

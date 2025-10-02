@@ -4,5 +4,7 @@
 */
 OptionManager::Load('sub_role_limit_none');
 class Option_no_sub_role extends Option_sub_role_limit_none {
-  function GetCaption() { return 'サブ役職をつけない'; }
+  public function GetCaption() {
+    return 'サブ役職をつけない';
+  }
 }

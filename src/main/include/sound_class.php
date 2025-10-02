@@ -25,17 +25,17 @@ class Sound {
 <param name="movie" value="%s">
 <param name="quality" value="high">
 <embed src="%s" type="%s" quality="high" width="0" height="0" loop="false" pluginspage="%s%s">
-</object>%s
+</object>
 EOF;
-    echo self::Convert($format, $type);
+    Text::Output(self::Convert($format, $type));
   }
 
   //フォーマット変換
   private static function Convert($format, $type) {
-    $path = sprintf(self::PATH_FORMAT, JINRO_ROOT, SoundConfig::PATH, SoundConfig::$$type,
+    $path = sprintf(self::PATH_FORMAT, JINROU_ROOT, SoundConfig::PATH, SoundConfig::$$type,
 		    SoundConfig::EXTENSION);
 
     return sprintf($format, self::CLASS_ID, self::CODEBASE_URL, self::CODEBASE_FILE,
-		   $path, $path, self::TYPE, self::EMBED_URL, self::EMBED_FILE, "\n");
+		   $path, $path, self::TYPE, self::EMBED_URL, self::EMBED_FILE);
   }
 }

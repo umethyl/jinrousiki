@@ -9,21 +9,22 @@ class Role_emerald_fox extends Role_fox {
   public $mix_in = 'mage';
   public $action = 'MAGE_DO';
 
-  function OutputAction() {
+  public function OutputAction() {
     if ($this->GetActor()->IsActive()) RoleHTML::OutputVote('mage-do', 'mage_do', $this->action);
   }
 
-  function IgnoreFinishVote() { return ! $this->GetActor()->IsActive(); }
-
-  function IgnoreVoteFilter() {
-    return $this->GetActor()->IsActive() ? null : '能力喪失しています';
+  protected function IgnoreVoteFilter() {
+    return $this->GetActor()->IsActive() ? null : VoteRoleMessage::LOST_ABILITY;
   }
 
-  function Mage(User $user) {
-    if ($this->IsJammer($user) || $this->IsCursed($user) || ! $user->IsFox() ||
-	! ($user->IsChildFox() || $user->IsLonely())) {
-      return false;
-    }
+  protected function IgnoreFinishVote() {
+    return ! $this->GetActor()->IsActive();
+  }
+
+  public function Mage(User $user) {
+    if ($this->IsJammer($user) || $this->IsCursed($user)) return false;
+    if (! $user->IsFox() || ! ($user->IsChildFox() || $user->IsLonely())) return false;
+
     $role = $this->GetActor()->GetID('mind_friend');
     $this->GetActor()->LostAbility();
     $this->GetActor()->AddRole($role);

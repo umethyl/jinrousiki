@@ -9,7 +9,11 @@ RoleManager::LoadFile('child_fox');
 class Role_stargazer_fox extends Role_child_fox {
   public $mix_in = 'stargazer_mage';
 
-  function IsCursed(User $user) { return false; }
+  public function IgnoreCursed() {
+    return true;
+  }
 
-  protected function GetMageResult(User $user) { return $this->Stargazer($user); }
+  protected function GetMageResult(User $user) {
+    return $this->Stargazer($user);
+  }
 }

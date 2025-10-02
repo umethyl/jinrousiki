@@ -6,5 +6,7 @@
 */
 OptionManager::Load('change_mad');
 class Option_change_immolate_mad extends Option_change_mad {
-  function GetCaption() { return '殉教者村'; }
+  public function GetCaption() {
+    return '殉教者村';
+  }
 }

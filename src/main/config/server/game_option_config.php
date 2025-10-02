@@ -72,11 +72,20 @@ class GameOptionConfig {
   static $sirius_wolf_enable  = true; //天狼
   static $default_sirius_wolf = false;
 
+  static $mad_enable  = true; //狂人追加
+  static $default_mad = false;
+
   static $fox_enable  = true; //妖狐追加
   static $default_fox = false;
 
+  static $no_fox_enable  = true; //妖狐なし
+  static $default_no_fox = false;
+
   static $child_fox_enable  = true; //子狐
   static $default_child_fox = false;
+
+  static $depraver_enable  = true; //背徳者
+  static $default_depraver = false;
 
   static $cupid_enable  = true; //キューピッド
   static $default_cupid = false;
@@ -142,12 +151,13 @@ class GameOptionConfig {
   static $full_quiz_enable          = true; //出題者村
   static $full_vampire_enable       = true; //吸血鬼村
   static $full_chiroptera_enable    = true; //蝙蝠村
+  static $full_chiroptera_patron    = true; //後援者村
   static $full_mania_enable         = true; //神話マニア村
   static $full_unknown_mania_enable = true; //鵺村
   //村人置換モードの内訳
   static $replace_human_selector_list = array(
     '' => 'なし', 'replace_human', 'full_mad', 'full_cupid', 'full_quiz', 'full_vampire',
-    'full_chiroptera', 'full_mania', 'full_unknown_mania');
+    'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania');
 
   static $change_common_enable        = true; //共有者置換村 (管理人カスタムモード)
   static $change_hermit_common_enable = true; //隠者村
@@ -168,7 +178,7 @@ class GameOptionConfig {
   static $change_angel_enable          = true; //天使村
   //キューピッド置換モードの内訳
   static $change_cupid_selector_list = array('' => 'なし', 'change_cupid', 'change_mind_cupid',
-    'change_triangle_cupid', 'change_angel');
+    'change_triangle_cupid', 'change_angel', 'change_exchange_angel');
 
   //-- 特殊配役モード --//
   static $chaos_enable       = true; //闇鍋モード
@@ -204,7 +214,8 @@ class GameOptionConfig {
     'o' => 'O：陰陽村',
     'p' => 'P：音鳴村',
     'q' => 'Q：雛村',
-    'r' => 'R：妖精村');
+    'r' => 'R：妖精村',
+    's' => 'S：霊能村');
 
   static $boost_rate_enable = true; //出現率変動モード
   static $boost_rate_list = array(
@@ -216,7 +227,10 @@ class GameOptionConfig {
     'e' => 'E：封憑村',
     'f' => 'F：合戦村',
     'g' => 'G：独身村',
-    'h' => 'H：無毒村',);
+    'h' => 'H：無毒村',
+    'i' => 'I：強心村',
+    'j' => 'J：封呪村',
+    'k' => 'K：封夢村');
 
   //配役通知設定
   static $chaos_open_cast_enable      = true; //配役内訳を表示する

@@ -9,12 +9,12 @@ RoleManager::LoadFile('vampire');
 class Role_soul_vampire extends Role_vampire {
   public $result = 'VAMPIRE_RESULT';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 2) $this->OutputAbilityResult($this->result);
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 3;
   }
 
   protected function InfectVampire(User $user) {
-    $this->AddSuccess($user->id, 'vampire_kill');
+    if (! $user->IsAvoid()) $this->AddSuccess($user->id, 'vampire_kill');
   }
 
   protected function InfectAction(User $user) {

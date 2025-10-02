@@ -6,15 +6,18 @@
 */
 RoleManager::LoadFile('assassin');
 class Role_reverse_assassin extends Role_assassin {
-  function Assassin(User $user) { $this->AddStack($user->id); }
+  public function Assassin(User $user) {
+    $this->AddStack($user->id);
+  }
 
-  function AssassinKill() {
+  public function AssassinKill() {
     foreach ($this->GetStack() as $id => $target_id) {
       $target = DB::$USER->ByID($target_id);
       if ($target->IsLive(true)) {
 	DB::$USER->Kill($target->id, 'ASSASSIN_KILLED');
       }
-      elseif (! $target->IsLovers()) {
+      else {
+	if ($this->IgnoreResurrect($target)) continue; //反魂対象外判定
 	$stack = RoleManager::GetStack('reverse');
 	$stack[$target_id] = isset($stack[$target_id]) ? ! $stack[$target_id] : true;
 	RoleManager::SetStack('reverse', $stack);
@@ -22,8 +25,13 @@ class Role_reverse_assassin extends Role_assassin {
     }
   }
 
+  //反魂対象外判定
+  private function IgnoreResurrect(User $user) {
+    return $user->IsLovers() || $user->IsMainGroup('depraver') || $user->IsDelayMania();
+  }
+
   //反魂処理
-  function Resurrect() {
+  public function Resurrect() {
     $role = 'possessed';
     foreach ($this->GetStack('reverse') as $id => $flag) {
       if (! $flag) continue;

@@ -8,13 +8,11 @@ RoleManager::LoadFile('wolf');
 class Role_sharp_wolf extends Role_wolf {
   public $result = 'SHARP_WOLF_RESULT';
 
-  protected function OutputResult() {
-    if (DB::$ROOM->date > 1 && ! DB::$ROOM->IsOption('seal_message')) {
-      $this->OutputAbilityResult($this->result);
-    }
+  protected function IgnoreResult() {
+    return DB::$ROOM->date < 2 || DB::$ROOM->IsOption('seal_message');
   }
 
-  function WolfEatAction(User $user) {
+  public function WolfEatAction(User $user) {
     if (! $user->IsMainGroup('mad') && ! $user->IsPoison()) return false;
     if (DB::$ROOM->IsOption('seal_message')) return true;
     $id = $this->GetWolfVoter()->id;

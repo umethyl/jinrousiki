@@ -6,5 +6,9 @@
 */
 RoleManager::LoadFile('necromancer');
 class Role_soul_necromancer extends Role_necromancer {
-  function Necromancer(User $user, $flag) { return $flag ? 'stolen' : $user->main_role; }
+  public $result = 'SOUL_NECROMANCER_RESULT';
+
+  public function Necromancer(User $user, $flag) {
+    return $flag ? 'stolen' : $user->main_role;
+  }
 }

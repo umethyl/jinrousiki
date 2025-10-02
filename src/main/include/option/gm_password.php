@@ -5,7 +5,7 @@
 class Option_gm_password extends TextRoomOptionItem {
   public $type = 'password';
 
-  function __construct() {
+  public function __construct() {
     parent::__construct();
     if (OptionManager::$change) {
       $this->enable = false;
@@ -14,10 +14,12 @@ class Option_gm_password extends TextRoomOptionItem {
     }
   }
 
-  function GetCaption() { return 'GM ログインパスワード'; }
+  public function GetCaption() {
+    return 'GM ログインパスワード';
+  }
 
-  function GetExplain() {
-    return '(仮想 GM モード・クイズ村モード時の GM のパスワードです)<br>' .
+  public function GetExplain() {
+    return '(仮想 GM モード・クイズ村モード時の GM のパスワードです)' . Text::BR .
       '※ ログインユーザ名は「dummy_boy」です。GM は入村直後に必ず名乗ってください。';
   }
 }

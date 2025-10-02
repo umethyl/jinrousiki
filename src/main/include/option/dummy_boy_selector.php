@@ -7,13 +7,13 @@ class Option_dummy_boy_selector extends SelectorRoomOptionItem {
   public $type  = 'group';
   public $form_list = array('dummy_boy' => 'on', 'gm_login' => 'gm_login');
 
-  function __construct() {
+  public function __construct() {
     parent::__construct();
     $this->value = GameOptionConfig::$default_dummy_boy;
     if (OptionManager::$change) $this->enable = false;
   }
 
-  function LoadPost() {
+  public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
     if (is_null(RQ::Get()->{$this->name})) return false;
 
@@ -27,7 +27,7 @@ class Option_dummy_boy_selector extends SelectorRoomOptionItem {
     }
   }
 
-  function GetItem() {
+  public function GetItem() {
     $stack = array('' => new Option_no_dummy_boy());
     foreach ($this->form_list as $option => $form_value) {
       $item = OptionManager::GetClass($option);
@@ -48,9 +48,13 @@ class Option_dummy_boy_selector extends SelectorRoomOptionItem {
     return $stack;
   }
 
-  function GetCaption() { return '初日の夜は身代わり君'; }
+  public function GetCaption() {
+    return '初日の夜は身代わり君';
+  }
 
-  function GetExplain() { return '配役は<a href="info/rule.php">ルール</a>を確認して下さい'; }
+  public function GetExplain() {
+    return '配役は<a href="info/rule.php">ルール</a>を確認して下さい';
+  }
 }
 
 /*
@@ -60,5 +64,7 @@ class Option_no_dummy_boy extends CheckRoomOptionItem {
   public $group = RoomOption::GAME_OPTION;
   public $type  = 'radio';
 
-  function GetCaption() { return '身代わり君なし'; }
+  public function GetCaption() {
+    return '身代わり君なし';
+  }
 }

@@ -9,36 +9,45 @@ class Role_sweet_fairy extends Role_fairy {
   public $action = 'CUPID_DO';
   public $submit = 'fairy_do';
 
-  function IsVote() { return DB::$ROOM->IsDate(1); }
+  public function IsVote() {
+    return DB::$ROOM->IsDate(1);
+  }
 
-  function GetIgnoreMessage() { return '初日以外は投票できません'; }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
+  }
 
-  function IsVoteCheckbox(User $user, $live) { return $live && ! $user->IsDummyBoy(); }
+  public function IsVoteCheckbox(User $user, $live) {
+    return $live && ! $user->IsDummyBoy();
+  }
 
-  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
+  protected function GetVoteCheckboxHeader() {
+    return '<input type="checkbox" name="target_no[]"';
+  }
 
-  function VoteNight() {
-    $stack = $this->GetVoteNightTarget();
-    if (count($stack) != 2) return '指定人数は2人にしてください'; //人数チェック
-
-    $user_list = array();
-    sort($stack);
-    foreach ($stack as $id) {
-      $user = DB::$USER->ByID($id);
-      if (! $user->IsLive() || $user->IsDummyBoy()) { //例外判定
-	return '生存者以外と身代わり君には投票できません';
-      }
-      $user_list[$id] = $user;
-    }
-
+  public function SetVoteNightUserList(array $list) {
     $stack = array();
-    foreach ($user_list as $user) {
+    sort($list);
+    foreach ($list as $id) {
+      $user = DB::$USER->ByID($id);
+      //例外判定
+      if ($user->IsDead())     return VoteRoleMessage::TARGET_DEAD;
+      if ($user->IsDummyBoy()) return VoteRoleMessage::TARGET_DUMMY_BOY;
+      $stack[$id] = $user;
+    }
+    $this->SetStack($stack, 'target_list');
+    return null;
+  }
+
+  public function VoteNightAction() {
+    $list  = $this->GetStack('target_list');
+    $stack = array();
+    foreach ($list as $user) {
       $stack[] = $user->handle_name;
       $user->AddRole($this->GetActor()->GetID('sweet_status'));
     }
-    $this->SetStack(implode(' ', array_keys($user_list)), 'target_no');
+    $this->SetStack(implode(' ', array_keys($list)), 'target_no');
     $this->SetStack(implode(' ', $stack), 'target_handle');
     $this->SetStack('FAIRY_DO', 'message'); //Talk の action は FAIRY_DO
-    return null;
   }
 }

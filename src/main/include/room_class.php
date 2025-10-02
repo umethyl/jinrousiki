@@ -21,37 +21,45 @@ class Room {
   public $personal_mode    = false;
   public $test_mode        = false;
 
-  function __construct($request = null, $lock = false) {
+  public function __construct($request = null, $lock = false) {
     if (is_null($request)) return;
-    $stack = $request->IsVirtualRoom() ? $request->GetTestRoom() :
-      $this->LoadRoom($request->room_no, $lock);
-    foreach ($stack as $name => $value) $this->$name = $value;
+
+    if ($request->IsVirtualRoom()) {
+      $stack = $request->GetTestRoom();
+    } else {
+      $stack = $this->LoadRoom($request->room_no, $lock);
+    }
+    $this->LoadData($stack);
+  }
+
+  //基本情報セット
+  public function LoadData(array $stack) {
+    foreach ($stack as $name => $value) {
+      $this->$name = $value;
+    }
     $this->ParseOption();
   }
 
-  //指定番地情報を DB から取得
-  function LoadRoom($room_no, $lock = false) {
-    $stack = RoomDataDB::Get($room_no, $lock);
-    if (count($stack) < 1) HTML::OutputResult('村番号エラー', '無効な村番号です: ' . $room_no);
-    return $stack;
-  }
-
   //option_role を DB から追加取得
-  function LoadOption() {
-    $option_role = RQ::Get()->IsVirtualRoom() ? RQ::GetTest()->test_room['option_role'] :
-      RoomDB::Fetch('option_role');
+  public function LoadOption() {
+    if (RQ::Get()->IsVirtualRoom()) {
+      $option_role = RQ::GetTest()->test_room['option_role'];
+    } else {
+      $option_role = RoomDB::Fetch('option_role');
+    }
     $this->option_role = new OptionParser($option_role);
     $this->option_list = array_merge($this->option_list, array_keys($this->option_role->list));
   }
 
   //シーンに合わせた投票情報を DB から取得
-  function LoadVote($kick = false) {
+  public function LoadVote($kick = false) {
     if (RQ::Get()->IsVirtualRoom()) {
-      if (is_null($vote_list = RQ::GetTest()->vote->{$this->scene})) return null;
+      $vote_list = RQ::GetTest()->vote->{$this->scene};
+      if (is_null($vote_list)) return null;
     } else {
       $vote_list = RoomDB::GetVote();
     }
-    //Text::p($vote_list);
+    //Text::p($vote_list, '◆vote_list');
 
     $stack = array();
     switch ($this->scene) {
@@ -89,23 +97,14 @@ class Room {
   }
 
   //特殊イベント判定用の情報を DB から取得
-  function LoadEvent() {
+  public function LoadEvent() {
     if (! $this->IsPlaying()) return null;
     $this->event = new StdClass();
     $this->event->rows = SystemMessageDB::GetEvent();
   }
 
-  //天候判定用の情報を DB から取得
-  function LoadWeather($shift = false) {
-    if (! $this->IsPlaying()) return null;
-    $date = $this->date;
-    if (($shift && RQ::Get()->reverse_log) || $this->IsAfterGame()) $date++;
-    $result = SystemMessageDB::GetWeather($date);
-    $this->event->weather = $result === false ? null : $result; //天候を格納
-  }
-
   //勝敗情報を DB から取得
-  function LoadWinner() {
+  public function LoadWinner() {
     if (! isset($this->winner)) { //未設定ならキャッシュする
       $this->winner = $this->test_mode ? RQ::GetTest()->winner : RoomDB::Fetch('winner');
     }
@@ -113,7 +112,7 @@ class Room {
   }
 
   //投票情報をコマンド毎に分割する
-  function ParseVote() {
+  public function ParseVote() {
     $stack = array();
     foreach ($this->vote as $id => $vote_stack) {
       if ($this->IsDay()) {
@@ -128,7 +127,7 @@ class Room {
   }
 
   //ゲームオプションの展開処理
-  function ParseOption($join = false) {
+  public function ParseOption($join = false) {
     $this->game_option = new OptionParser($this->game_option);
     $this->option_role = new OptionParser($this->option_role);
     $this->option_list = $join ?
@@ -143,23 +142,38 @@ class Room {
   }
 
   //特殊イベント判定用の情報を取得する
-  function GetEvent($force = false) {
+  public function GetEvent($force = false) {
     if (! $this->IsPlaying()) return array();
     if ($force || ! isset($this->event)) $this->LoadEvent();
     return $this->event->rows;
   }
 
   //特殊オプションの配役データ取得
-  function GetOptionList($option) {
+  public function GetOptionList($option) {
     return $this->IsOption($option) ?
       ChaosConfig::${$option . '_list'}[$this->option_role->list[$option][0]] : array();
   }
 
+  //フラグをセット
+  public function SetFlag() {
+    $stack  = func_get_args();
+    foreach ($stack as $flag) {
+      $this->$flag = true;
+    }
+  }
+
+  //シーンをセット
+  public function SetScene($scene) {
+    $this->scene = $scene;
+  }
+
   //オプション判定
-  function IsOption($option) { return in_array($option, $this->option_list); }
+  public function IsOption($option) {
+    return in_array($option, $this->option_list);
+  }
 
   //オプショングループ判定
-  function IsOptionGroup($option) {
+  public function IsOptionGroup($option) {
     foreach ($this->option_list as $this_option) {
       if (strpos($this_option, $option) !== false) return true;
     }
@@ -167,28 +181,34 @@ class Room {
   }
 
   //リアルタイム制判定
-  function IsRealTime() { return $this->IsOption('real_time'); }
+  public function IsRealTime() {
+    return $this->IsOption('real_time');
+  }
 
   //身代わり君使用判定
-  function IsDummyBoy() { return $this->IsOption('dummy_boy'); }
+  public function IsDummyBoy() {
+    return $this->IsOption('dummy_boy');
+  }
 
   //クイズ村判定
-  function IsQuiz() { return $this->IsOption('quiz'); }
+  public function IsQuiz() {
+    return $this->IsOption('quiz');
+  }
 
   //村人置換村グループオプション判定
-  function IsReplaceHumanGroup() {
+  public function IsReplaceHumanGroup() {
     return $this->IsOption('replace_human') || $this->IsOptionGroup('full_');
   }
 
   //闇鍋式希望制オプション判定
-  function IsChaosWish() {
+  public function IsChaosWish() {
     return $this->IsOptionGroup('chaos') || $this->IsOption('duel') ||
       $this->IsOption('festival') || $this->IsReplaceHumanGroup() ||
       $this->IsOptionGroup('change_');
   }
 
   //霊界公開判定
-  function IsOpenCast() {
+  public function IsOpenCast() {
     if (! isset($this->open_cast)) { //未設定ならキャッシュする
       if ($this->IsOption('not_open_cast')) { //常時非公開
 	$user = DB::$USER->ByID(1); //身代わり君の蘇生辞退判定
@@ -205,44 +225,65 @@ class Room {
   }
 
   //情報公開判定
-  function IsOpenData($virtual = false) {
+  /*
+    + ゲーム終了後は全て表示
+    + 霊界表示オン状態の死者には全て表示
+    + 霊界表示オフ状態は観戦者と同じ (投票情報は表示しない)
+  */
+  public function IsOpenData($virtual = false) {
     return DB::$SELF->IsDummyBoy() ||
       (DB::$SELF->IsDead() && ! $this->single_view_mode && $this->IsOpenCast()) ||
       ($virtual ? $this->IsAfterGame() : ($this->IsFinished() && ! $this->single_view_mode));
   }
 
   //ゲーム開始前シーン判定
-  function IsBeforeGame() { return $this->scene == 'beforegame'; }
+  public function IsBeforeGame() {
+    return $this->scene == 'beforegame';
+  }
 
   //ゲーム中 (昼) シーン判定
-  function IsDay() { return $this->scene == 'day'; }
+  public function IsDay() {
+    return $this->scene == 'day';
+  }
 
   //ゲーム中 (夜) シーン判定
-  function IsNight() { return $this->scene == 'night'; }
+  public function IsNight() {
+    return $this->scene == 'night';
+  }
 
   //ゲーム終了後シーン判定
-  function IsAfterGame() { return $this->scene == 'aftergame'; }
+  public function IsAfterGame() {
+    return $this->scene == 'aftergame';
+  }
 
   //ゲーム開始前判定
-  function IsWaiting() { return $this->status == 'waiting'; }
+  public function IsWaiting() {
+    return $this->status == 'waiting';
+  }
 
   //ゲーム中判定 (仮想処理をする為、status では判定しない)
-  function IsPlaying() { return $this->IsDay() || $this->IsNight(); }
+  public function IsPlaying() {
+    return $this->IsDay() || $this->IsNight();
+  }
 
   //ゲーム終了判定
-  function IsFinished() { return $this->status == 'finished'; }
+  public function IsFinished() {
+    return $this->status == 'finished';
+  }
 
   //当日判定
-  function IsDate($date) { return $this->date == $date; }
+  public function IsDate($date) {
+    return $this->date == $date;
+  }
 
   //特殊イベント判定
-  function IsEvent($type) {
+  public function IsEvent($type) {
     if (! isset($this->event)) $this->event = new StdClass();
     return isset($this->event->$type) ? $this->event->$type : null;
   }
 
   //天候セット
-  function SetWeather() {
+  public function SetWeather() {
     if ($this->watch_mode || $this->single_view_mode) {
       $this->LoadWeather();
       if (isset($this->event) && WeatherData::Exists($this->event->weather)) {
@@ -253,13 +294,13 @@ class Room {
   }
 
   //突然死タイマーセット
-  function SetSuddenDeath() {
+  public function SetSuddenDeath() {
     $this->sudden_death = TimeConfig::SUDDEN_DEATH - RoomDB::GetTime();
   }
 
   //発言登録
-  function Talk($sentence, $action = null, $uname = '', $scene = '', $location = null,
-		$font_type = null, $role_id = null, $spend_time = 0) {
+  public function Talk($sentence, $action = null, $uname = '', $scene = '', $location = null,
+		       $font_type = null, $role_id = null, $spend_time = 0) {
     if ($uname == '') $uname = 'system';
     if ($scene == '') {
       $scene = $this->scene;
@@ -305,7 +346,7 @@ class Room {
   }
 
   //発言登録 (ゲーム開始前専用)
-  function TalkBeforeGame($sentence, $uname, $handle_name, $color, $font_type = null) {
+  public function TalkBeforeGame($sentence, $uname, $handle_name, $color, $font_type = null) {
     if ($this->test_mode) {
       $str = sprintf('Talk: %s: %s: %s: %s', $uname, $handle_name, $color, $font_type);
       Text::p(Text::Line($sentence), $str);
@@ -323,14 +364,14 @@ class Room {
   }
 
   //超過警告メッセージ登録
-  function OvertimeAlert($str) {
+  public function OvertimeAlert($str) {
     if (RoomDB::IsOvertimeAlert()) return true;
     $this->Talk($str);
     return RoomDB::UpdateOvertimeAlert(true);
   }
 
   //システムメッセージ登録
-  function SystemMessage($str, $type, $add_date = 0) {
+  public function SystemMessage($str, $type, $add_date = 0) {
     $date = $this->date + $add_date;
     if ($this->test_mode) {
       Text::p("{$type} ({$date}): {$str}", 'SystemMessage');
@@ -339,13 +380,14 @@ class Room {
       }
       return true;
     }
-    $items = 'room_no, date, type, message';
+
+    $items  = 'room_no, date, type, message';
     $values = "{$this->id}, {$date}, '{$type}', '{$str}'";
     return DB::Insert('system_message', $items, $values);
   }
 
   //能力発動結果登録
-  function ResultAbility($type, $result, $target = null, $user_no = null) {
+  public function ResultAbility($type, $result, $target = null, $user_no = null) {
     $date = $this->date;
     if ($this->test_mode) {
       Text::p("{$type}: {$result}: {$target}: {$user_no}", 'ResultAbility');
@@ -355,6 +397,7 @@ class Room {
       }
       return true;
     }
+
     $items  = 'room_no, date, type';
     $values = "{$this->id}, {$date}, '{$type}'";
     foreach (array('result', 'target', 'user_no') as $data) {
@@ -367,7 +410,7 @@ class Room {
   }
 
   //システムメッセージ登録
-  function ResultDead($name, $type, $result = null) {
+  public function ResultDead($name, $type, $result = null) {
     $date = $this->date;
     if ($this->test_mode) {
       Text::p("{$name}: {$type} ({$date}): {$result}", 'ResultDead');
@@ -377,7 +420,8 @@ class Room {
       }
       return true;
     }
-    $items = 'room_no, date, scene, type';
+
+    $items  = 'room_no, date, scene, type';
     $values = "{$this->id}, {$date}, '{$this->scene}', '{$type}'";
     if (isset($name)) {
       $items  .= ', handle_name';
@@ -391,7 +435,7 @@ class Room {
   }
 
   //天候登録
-  function EntryWeather($id, $date, $priest = false) {
+  public function EntryWeather($id, $date, $priest = false) {
     $this->SystemMessage($id, 'WEATHER', $date);
     if ($priest) { //祈祷師の処理
       $result = 'prediction_weather_' . WeatherData::GetEvent($id);
@@ -400,8 +444,8 @@ class Room {
   }
 
   //夜にする
-  function ChangeNight() {
-    $this->scene = 'night';
+  public function ChangeNight() {
+    $this->SetScene('night');
     if ($this->test_mode) return true;
 
     RoomDB::UpdateScene();
@@ -409,7 +453,7 @@ class Room {
   }
 
   //次の日にする
-  function ChangeDate() {
+  public function ChangeDate() {
     $this->ShiftScene();
     if ($this->test_mode) return true;
 
@@ -420,36 +464,70 @@ class Room {
   }
 
   //夜を飛ばす
-  function SkipNight() {
+  public function SkipNight() {
     if ($this->IsEvent('skip_night')) {
-      Vote::AggregateNight(true);
-      $this->talk(Message::$skip_night);
+      VoteNight::Aggregate(true);
+      $this->talk(TalkMessage::SKIP_NIGHT);
     }
   }
 
   //シーンをずらす (主に仮想処理用)
-  function ShiftScene($unshift = false) {
+  public function ShiftScene($unshift = false) {
     if ($unshift) {
       $this->date--;
-      $this->scene = 'night';
+      $this->SetScene('night');
     } else {
       $this->date++;
-      $this->scene = 'day';
+      $this->SetScene('day');
     }
   }
 
   //背景設定 CSS タグを生成
-  function GenerateCSS() {
-    if (isset($this->scene)) return HTML::LoadCSS(sprintf('%s/game_%s', JINRO_CSS, $this->scene));
+  public function GenerateCSS() {
+    if (isset($this->scene)) return HTML::LoadCSS(sprintf('%s/game_%s', JINROU_CSS, $this->scene));
   }
 
   //村のタイトルタグを生成
-  function GenerateTitleTag($log = false) {
-    $format = '<%s class="room"><span class="room-name">%s村</span>　[%d番地]' . Text::BR .
-      '<span class="room-comment">～%s～</span></%s>' . Text::LF;
+  public function GenerateTitleTag($log = false) {
+    $format = '<%s class="room"><span class="room-name">%s</span> [%s]' . Text::BR .
+      '<span class="room-comment">%s</span></%s>' . Text::LF;
     $tag = $log ? 'span' : 'td';
 
-    return sprintf($format, $tag, $this->name, $this->id, $this->comment, $tag);
+    return sprintf($format, $tag, $this->GenerateName(), $this->GenerateNumber(),
+		   $this->GenerateComment(), $tag);
+  }
+
+  //村名を生成
+  public function GenerateName() {
+    return $this->name . GameMessage::ROOM_TITLE_FOOTER;
+  }
+
+  //番地を生成
+  public function GenerateNumber() {
+    return $this->id . GameMessage::ROOM_NUMBER_FOOTER;
+  }
+
+  //村のコメントを生成
+  public function GenerateComment() {
+    return GameMessage::ROOM_COMMENT_HEADER . $this->comment . GameMessage::ROOM_COMMENT_FOOTER;
+  }
+
+  //指定番地情報を DB から取得
+  private function LoadRoom($room_no, $lock = false) {
+    $stack = RoomDataDB::Get($room_no, $lock);
+    if (count($stack) < 1) {
+      HTML::OutputResult(Message::REQUEST_ERROR, Message::INVALID_ROOM . Message::COLON . $room_no);
+    }
+    return $stack;
+  }
+
+  //天候判定用の情報を DB から取得
+  private function LoadWeather($shift = false) {
+    if (! $this->IsPlaying()) return null;
+    $date = $this->date;
+    if (($shift && RQ::Get()->reverse_log) || $this->IsAfterGame()) $date++;
+    $result = SystemMessageDB::GetWeather($date);
+    $this->event->weather = $result === false ? null : $result; //天候を格納
   }
 }
 
@@ -472,7 +550,9 @@ class RoomDB {
   }
 
   //日付入り条件取得
-  static function GetDate() { return self::SELECT . self::Date; }
+  static function GetDate() {
+    return self::SELECT . self::Date;
+  }
 
   //基礎 SQL セット
   static function SetID($data, $lock = false) {
@@ -480,13 +560,19 @@ class RoomDB {
   }
 
   //日付入り SQL セット
-  static function SetDate() { return sprintf(self::DATE, DB::$ROOM->id, DB::$ROOM->date); }
+  static function SetDate() {
+    return sprintf(self::DATE, DB::$ROOM->id, DB::$ROOM->date);
+  }
 
   //シーン取得
-  static function GetScene() { return self::Fetch('scene', true); }
+  static function GetScene() {
+    return self::Fetch('scene', true);
+  }
 
   //経過時間取得
-  static function GetTime() { return self::Fetch('UNIX_TIMESTAMP() - last_update_time'); }
+  static function GetTime() {
+    return self::Fetch('UNIX_TIMESTAMP() - last_update_time');
+  }
 
   //ゲームオプション取得
   static function GetOption() {

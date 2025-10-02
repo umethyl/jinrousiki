@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('doll');
 class Role_doom_doll extends Role_doll {
-  function VoteKillCounter(array $list) {
+  public function VoteKillCounter(array $list) {
     $stack = array();
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);

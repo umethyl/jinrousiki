@@ -11,81 +11,109 @@ class Role_cupid extends Role {
   public $shoot_count = 2;
 
   protected function OutputPartner() {
-    $id = $this->GetID();
+    $id    = $this->GetID();
     $stack = array();
     foreach (DB::$USER->rows as $user) {
-      if ($user->IsPartner('lovers', $id)) $stack[] = $user->handle_name;
+      if ($user->IsPartner('lovers', $id) || $this->IsCupidTarget($user, $id)) {
+	$stack[] = $user->handle_name;
+      }
     }
     RoleHTML::OutputPartner($stack, 'cupid_pair');
   }
 
-  function OutputAction() {
+  //自分の恋人判定
+  protected function IsCupidTarget(User $user, $id) {
+    return false;
+  }
+
+  public function OutputAction() {
     RoleHTML::OutputVote('cupid-do', 'cupid_do', $this->action);
   }
 
-  function IsVote() { return DB::$ROOM->IsDate(1); }
-
-  function GetIgnoreMessage() { return '初日以外は投票できません'; }
-
-  function SetVoteNightFilter() {
-    $this->SetStack(DB::$USER->GetUserCount() < GameConfig::CUPID_SELF_SHOOT, 'self_shoot');
+  public function IsVote() {
+    return DB::$ROOM->IsDate(1);
   }
 
-  function IsVoteCheckbox(User $user, $live) { return $live && ! $user->IsDummyBoy(); }
+  protected function GetIgnoreMessage() {
+    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
+  }
 
-  function IsVoteCheckboxChecked(User $user) {
+  protected function SetVoteNightFilter() {
+    $flag = DB::$USER->GetUserCount() < GameConfig::CUPID_SELF_SHOOT;
+    $this->SetStack($flag, 'self_shoot');
+  }
+
+  public function IsVoteCheckbox(User $user, $live) {
+    return $live && ! $user->IsDummyBoy();
+  }
+
+  protected function IsVoteCheckboxChecked(User $user) {
     return $this->IsSelfShoot() && $this->IsActor($user);
   }
 
-  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
-
   //自分撃ち判定
-  function IsSelfShoot() { return $this->GetStack('self_shoot') || $this->self_shoot; }
+  final protected function IsSelfShoot() {
+    return $this->GetStack('self_shoot') || $this->self_shoot;
+  }
 
-  function VoteNight() {
-    $stack = $this->GetVoteNightTarget();
-    //人数チェック
-    $count = $this->GetVoteNightTargetCount();
-    if (count($stack) != $count) return sprintf('指定人数は %d 人にしてください', $count);
+  protected function GetVoteCheckboxHeader() {
+    return '<input type="checkbox" name="target_no[]"';
+  }
 
-    $self_shoot = false; //自分撃ちフラグ
+  protected function GetVoteNightNeedCount() {
+    return $this->shoot_count;
+  }
+
+  public function SetVoteNightUserList(array $list) {
+    $self_shoot = false; //自分撃ち実行フラグ
     $user_list  = array();
-    sort($stack);
-    foreach ($stack as $id) {
+    sort($list);
+    foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
       //例外判定
-      if ($user->IsDead() || $user->IsDummyBoy()) return '死者と身代わり君には投票できません';
+      if ($user->IsDead())     return VoteRoleMessage::TARGET_DEAD;
+      if ($user->IsDummyBoy()) return VoteRoleMessage::TARGET_DUMMY_BOY;
       $user_list[$id] = $user;
       $self_shoot |= $this->IsActor($user); //自分撃ち判定
     }
 
     if (! $self_shoot) { //自分撃ちエラー判定
-      $str = '必ず自分を対象に含めてください';
-      if ($this->self_shoot)    return $str; //自分撃ち固定役職
-      if ($this->IsSelfShoot()) return '少人数村の場合は、' . $str; //参加人数
+      if ($this->self_shoot)    return VoteRoleMessage::TARGET_INCLUDE_MYSELF; //自分撃ち固定
+      if ($this->IsSelfShoot()) return VoteRoleMessage::TARGET_MYSELF_COUNT;   //参加人数
     }
-    $class = $this->GetClass($method = 'VoteNightAction');
-    $class->$method($user_list, $self_shoot);
+    $this->SetStack($user_list, 'target_list');
+    $this->SetStack($self_shoot, 'is_self_shoot');
     return null;
   }
 
-  //投票人数取得
-  function GetVoteNightTargetCount() { return $this->shoot_count; }
-
-  //キューピッドの投票処理
-  function VoteNightAction(array $list, $flag) {
+  public function VoteNightAction() {
     $role  = $this->GetActor()->GetID('lovers');
+    $list  = $this->GetStack('target_list');
     $stack = array();
     foreach ($list as $user) {
       $stack[] = $user->handle_name;
-      $user->AddRole($role); //恋人セット
-      $this->AddCupidRole($user, $flag); //役職追加
+      if ($this->IsLoversTarget($user)) $user->AddRole($role); //恋人セット
+      $this->AddCupidRole($user); //役職追加
       $user->Reparse(); //再パース (魂移使判定用：反映が保障されているのは恋人のみ)
     }
     $this->SetStack(implode(' ', array_keys($list)), 'target_no');
     $this->SetStack(implode(' ', $stack), 'target_handle');
   }
 
+  //恋人対象判定
+  protected function IsLoversTarget(User $user) {
+    return true;
+  }
+
   //役職追加処理
-  protected function AddCupidRole(User $user, $flag) {}
+  protected function AddCupidRole(User $user) {}
+
+  //全恋人ID取得
+  protected function GetLoversList() {
+    $stack = array();
+    foreach (DB::$USER->rows as $user) {
+      if ($user->IsLovers()) $stack[] = $user->id;
+    }
+    return $stack;
+  }
 }

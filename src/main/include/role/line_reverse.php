@@ -8,7 +8,7 @@
   ・最後が改行だった場合はカットされる (explode + implode の仕様)
 */
 class Role_line_reverse extends Role {
-  function ConvertSay() {
+  public function ConvertSay() {
     $str = implode(Text::LF, array_reverse(explode(Text::LF, $this->GetStack('say'))));
     $this->SetStack($str, 'say');
   }

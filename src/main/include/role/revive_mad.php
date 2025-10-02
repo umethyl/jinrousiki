@@ -7,7 +7,7 @@
 class Role_revive_mad extends Role {
   public $mix_in = 'revive_pharmacist';
 
-  function Resurrect() {
+  public function Resurrect() {
     if (! $this->filter->Resurrect()) return false;
 
     //共鳴処理

@@ -9,5 +9,7 @@ RoleManager::LoadFile('common');
 class Role_dummy_common extends Role_common {
   public $display_role = 'common';
 
-  protected function IsCommonPartner(User $user) { return $user->IsDummyBoy(); }
+  protected function IsCommonPartner(User $user) {
+    return $user->IsDummyBoy();
+  }
 }

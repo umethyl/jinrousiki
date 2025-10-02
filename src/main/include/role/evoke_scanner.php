@@ -8,10 +8,11 @@ RoleManager::LoadFile('mind_scanner');
 class Role_evoke_scanner extends Role_mind_scanner {
   public $mind_role = 'mind_evoke';
 
-  function IsVote() { return parent::IsVote() && ! DB::$ROOM->IsOpenCast(); }
+  public function IsVote() {
+    return parent::IsVote() && ! DB::$ROOM->IsOpenCast();
+  }
 
-  function IgnoreVoteFilter() {
-    return DB::$ROOM->IsOpenCast() ?
-      '「霊界で配役を公開しない」オプションがオフの時は投票できません' : null;
+  protected function IgnoreVoteFilter() {
+    return DB::$ROOM->IsOpenCast() ? VoteRoleMessage::OPEN_CAST : null;
   }
 }

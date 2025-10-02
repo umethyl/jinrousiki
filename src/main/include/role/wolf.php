@@ -8,9 +8,9 @@ class Role_wolf extends Role {
   public $wolf_action_list = array('WOLF_EAT', 'STEP_WOLF_EAT', 'SILENT_WOLF_EAT');
 
   protected function OutputPartner() {
-    $wolf_list        = array();
-    $mad_list         = array();
-    $unconscious_list = array();
+    $wolf_list        = array(); //人狼
+    $mad_list         = array(); //囁き狂人
+    $unconscious_list = array(); //無意識
     foreach (DB::$USER->rows as $user) {
       if ($this->IsActor($user)) continue;
       if ($user->IsRole('possessed_wolf')) {
@@ -26,81 +26,104 @@ class Role_wolf extends Role {
 	$unconscious_list[] = $user->handle_name;
       }
     }
+
     if ($this->GetActor()->IsWolf(true)) {
-      RoleHTML::OutputPartner($wolf_list, 'wolf_partner'); //人狼
-      RoleHTML::OutputPartner($mad_list, 'mad_partner'); //囁き狂人
+      RoleHTML::OutputPartner($wolf_list, 'wolf_partner');
+      RoleHTML::OutputPartner($mad_list, 'mad_partner');
     }
     if (DB::$ROOM->IsNight()) {
-      RoleHTML::OutputPartner($unconscious_list, 'unconscious_list'); //無意識
+      RoleHTML::OutputPartner($unconscious_list, 'unconscious_list');
     }
   }
 
-  function OutputAction() {
+  public function OutputAction() {
     RoleHTML::OutputVote('wolf-eat', 'wolf_eat', $this->action);
   }
 
-  //身代わり君襲撃固定判定
-  final function IsDummyBoy() {
-    return DB::$ROOM->IsQuiz() || (DB::$ROOM->IsDummyBoy() && DB::$ROOM->IsDate(1));
-  }
-
-  function IsVoteCheckboxChecked(User $user) { return $this->IsDummyBoy() && $user->IsDummyBoy(); }
-
-  function ExistsAction(array $list) {
-    if (DB::$ROOM->IsEvent('no_step')) unset($list['SILENT_WOLF_EAT']);
-    return count(array_intersect($this->wolf_action_list, array_keys($list))) > 0;
-  }
-
   //遠吠え
-  function Howl(TalkBuilder $builder, $voice) {
+  public function Howl(TalkBuilder $builder, $voice) {
     if (! $builder->flag->wolf_howl) return false; //スキップ判定
 
-    $str = Message::$wolf_howl;
-    foreach ($builder->filter as $filter) $filter->FilterWhisper($voice, $str); //フィルタリング処理
-    $builder->AddRaw('', '狼の遠吠え', $str, $voice);
-    return true;
+    $str = RoleTalkMessage::WOLF_HOWL;
+    foreach ($builder->filter as $filter) {
+      $filter->FilterWhisper($voice, $str); //フィルタリング処理
+    }
+
+    $stack = array(
+      'str'       => $str,
+      'symbol'    => '',
+      'user_info' => RoleTalkMessage::WOLF,
+      'voice'     => $voice
+    );
+    return $builder->AddRaw($stack);
   }
 
-  function GetVoteTargetUser() {
+  public function GetVoteTargetUser() {
     $stack = parent::GetVoteTargetUser();
-    //身代わり君適用判定
-    if ($this->IsDummyBoy()) $stack = array(1 => $stack[1]); //dummy_boy = 1番は保証されている？
+    if ($this->IsDummyBoy()) { //身代わり君適用判定
+      $stack = array(1 => $stack[DB::$USER->GetDummyBoyID()]);
+    }
     return $stack;
   }
 
-  function GetVoteIconPath(User $user, $live) {
-    return ! $live ? Icon::GetDead() :
-      ($this->IsWolfPartner($user->id) ? Icon::GetWolf() : Icon::GetFile($user->icon_filename));
+  //身代わり君襲撃固定判定
+  final protected function IsDummyBoy() {
+    return DB::$ROOM->IsQuiz() || (DB::$ROOM->IsDummyBoy() && DB::$ROOM->IsDate(1));
+  }
+
+  public function GetVoteIconPath(User $user, $live) {
+    if ($live) {
+      if ($this->IsWolfPartner($user->id)) { //仲間は狼アイコン表示
+	return Icon::GetWolf();
+      } else {
+	return Icon::GetFile($user->icon_filename);
+      }
+    } else {
+      return Icon::GetDead();
+    }
   }
 
   //仲間狼判定
-  protected function IsWolfPartner($id) { return DB::$USER->ByReal($id)->IsWolf(true); }
+  protected function IsWolfPartner($id) {
+    return DB::$USER->ByReal($id)->IsWolf(true);
+  }
 
-  function IsVoteCheckbox(User $user, $live) {
+  public function IsVoteCheckbox(User $user, $live) {
     return parent::IsVoteCheckbox($user, $live) && $this->IsWolfEatTarget($user->id);
   }
 
   //仲間狼襲撃可能判定
-  protected function IsWolfEatTarget($id) { return ! $this->IsWolfPartner($id); }
+  protected function IsWolfEatTarget($id) {
+    return ! $this->IsWolfPartner($id);
+  }
 
-  function IgnoreVoteNight(User $user, $live) {
+  protected function IsVoteCheckboxChecked(User $user) {
+    return $this->IsDummyBoy() && $user->IsDummyBoy();
+  }
+
+  protected function ExistsAction(array $list) {
+    if (DB::$ROOM->IsEvent('no_step')) unset($list['SILENT_WOLF_EAT']);
+    return count(array_intersect($this->wolf_action_list, array_keys($list))) > 0;
+  }
+
+  public function IgnoreVoteNight(User $user, $live) {
     if (! is_null($str = parent::IgnoreVoteNight($user, $live))) return $str;
     if (! $user->IsDummyBoy()) { //身代わり君判定
-      if (DB::$ROOM->IsQuiz()) return 'クイズ村では GM 以外に投票できません'; //クイズ村
+      if (DB::$ROOM->IsQuiz()) return VoteRoleMessage::TARGET_QUIZ; //クイズ村
       if (DB::$ROOM->IsDummyBoy() && DB::$ROOM->IsDate(1)) { //身代わり君
-	return '身代わり君使用の場合は、身代わり君以外に投票できません';
+	return VoteRoleMessage::TARGET_ONLY_DUMMY_BOY;
       }
     }
-    if (! $this->IsWolfEatTarget($user->id)) return '狼同士には投票できません'; //仲間狼判定
+    if (! $this->IsWolfEatTarget($user->id)) return VoteRoleMessage::TARGET_WOLF; //仲間狼判定
     return null;
   }
 
   //人狼襲撃処理
-  final function WolfEat($skip) {
+  final public function WolfEat() {
     $target = $this->GetWolfTarget();
     $target->wolf_eat    = false;
     $target->wolf_killed = false;
-    if ($skip || DB::$ROOM->IsQuiz()) return; //スキップモード・クイズ村仕様
+    if (RoleManager::GetStack('skip') || DB::$ROOM->IsQuiz()) return; //スキップ判定
 
     $actor = $this->GetWolfVoter();
     if (! $actor->IsSiriusWolf(false)) { //罠判定 (覚醒天狼は無効)
@@ -115,10 +138,10 @@ class Role_wolf extends Role {
       DB::$USER->Kill($id, 'WOLF_KILLED'); //死亡処理
     }
 
-    //護衛判定 (護衛能力判定を天狼判定の前に行うこと)
-    if (DB::$ROOM->date > 1 && RoleManager::GetClass('guard')->Guard($target) &&
-	! $actor->IsSiriusWolf()) {
-      //RoleManager::p('guard_success', 'GuardSuccess');
+    //護衛判定
+    if (DB::$ROOM->date > 1 && ! $actor->IsSiriusWolf() &&
+	RoleManager::GetClass('guard')->Guard($target)) {
+      //RoleManager::p('guard_success', '◆GuardSuccess');
       RoleManager::LoadMain($actor)->GuardCounter();
       return;
     }
@@ -132,20 +155,20 @@ class Role_wolf extends Role {
     if (! $target->IsPoison() || $actor->IsSiriusWolf()) return; //毒死判定
 
     $poison_target = $wolf_filter->GetPoisonEatTarget(); //対象選出
-    if ($poison_target->IsChallengeLovers()) return; //難題なら無効
+    if ($poison_target->IsAvoidLovers()) return; //特殊耐性恋人なら無効
 
     RoleManager::SetActor($target); //襲撃毒死回避判定
     foreach (RoleManager::Load('avoid_poison_eat') as $filter) {
-      if ($filter->AvoidPoisonEat($poison_target)) return;
+      if (! $filter->IsPoisonTarget($poison_target)) return;
     }
     RoleManager::LoadMain($poison_target)->PoisonDead(); //毒死処理
   }
 
   //護衛カウンター
-  function GuardCounter() {}
+  public function GuardCounter() {}
 
   //人狼襲撃耐性判定
-  final function IgnoreWolfEat() {
+  final protected function IgnoreWolfEat() {
     $target = $this->GetWolfTarget();
     if ($target->IsDummyBoy()) return false; //身代わり君は対象外
 
@@ -178,7 +201,7 @@ class Role_wolf extends Role {
   }
 
   //人狼襲撃失敗判定
-  function WolfEatSkip(User $user) {
+  public function WolfEatSkip(User $user) {
     if ($user->IsWolf()) { //人狼系判定 (例：銀狼出現)
       $this->WolfEatSkipAction($user);
       $user->wolf_eat = true; //襲撃は成功扱い
@@ -207,10 +230,10 @@ class Role_wolf extends Role {
   protected function FoxEatAction(User $user) {}
 
   //人狼襲撃処理
-  function WolfEatAction(User $user) {}
+  public function WolfEatAction(User $user) {}
 
   //人狼襲撃死亡処理
-  function WolfKill(User $user) {
+  public function WolfKill(User $user) {
     DB::$USER->Kill($user->id, 'WOLF_KILLED');
     $this->WolfKillAction($user);
   }
@@ -219,11 +242,16 @@ class Role_wolf extends Role {
   protected function WolfKillAction(User $user) {}
 
   //毒対象者選出 (襲撃)
-  function GetPoisonEatTarget() {
-    return GameConfig::POISON_ONLY_EATER ? $this->GetWolfVoter() :
-      DB::$USER->ByID(Lottery::Get(DB::$USER->GetLivingWolves()));
+  public function GetPoisonEatTarget() {
+    if (GameConfig::POISON_ONLY_EATER) {
+      return $this->GetWolfVoter();
+    } else {
+      return DB::$USER->ByID(Lottery::Get(DB::$USER->GetLivingWolves()));
+    }
   }
 
   //毒死処理
-  function PoisonDead() { DB::$USER->Kill($this->GetID(), 'POISON_DEAD'); }
+  public function PoisonDead() {
+    DB::$USER->Kill($this->GetID(), 'POISON_DEAD');
+  }
 }

@@ -2,22 +2,27 @@
 /*
   ◆宿敵 (rival)
   ○仕様
+  ・仲間表示：憑依追跡なし
   ・勝利判定：生存 + 自分以外の宿敵生存者全滅 (恋人は判定対象外)
 */
 class Role_rival extends Role {
-  protected function OutputImage() { return; }
+  protected function IgnoreImage() {
+    return true;
+  }
 
   protected function OutputPartner() {
     $target = $this->GetActor()->partner_list;
     $stack  = array();
     foreach (DB::$USER->rows as $user) {
       if ($this->IsActor($user)) continue;
-      if ($user->IsPartner($this->role, $target)) $stack[] = $user->handle_name; //憑依は追跡しない
+      if ($user->IsPartner($this->role, $target)) {
+	$stack[] = $user->handle_name; //憑依追跡なし
+      }
     }
     RoleHTML::OutputPartner($stack, 'partner_header', 'rival_footer');
   }
 
-  function FilterWin(&$flag) {
+  public function FilterWin(&$flag) {
     if (! $flag || $this->GetActor()->IsLovers()) return;
     if ($this->IsDead()) {
       $flag = false;

@@ -16,13 +16,15 @@ class Role_doll extends Role {
       if ($user->IsRole('doll_master', 'puppet_mage') || $user->IsRoleGroup('scarlet')) {
 	$stack[] = $user->handle_name;
       }
-      if ($this->display_doll && $this->IsDoll($user)) $doll_stack[] = $user->handle_name;
+      if ($this->display_doll && $this->IsDoll($user)) {
+	$doll_stack[] = $user->handle_name;
+      }
     }
     RoleHTML::OutputPartner($stack, 'doll_master_list'); //人形遣い枠
     if ($this->display_doll) RoleHTML::OutputPartner($doll_stack, 'doll_partner'); //人形
   }
 
-  function Win($winner) {
+  public function Win($winner) {
     $this->SetStack('doll', 'class');
     foreach (DB::$USER->rows as $user) {
       if ($user->IsLiveRole('doll_master')) return false;
@@ -31,7 +33,7 @@ class Role_doll extends Role {
   }
 
   //人形判定
-  function IsDoll(User $user) {
+  final protected function IsDoll(User $user) {
     return $user->IsMainGroup('doll') && ! $user->IsRole('doll_master');
   }
 }
