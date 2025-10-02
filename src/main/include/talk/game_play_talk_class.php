@@ -48,7 +48,9 @@ final class GamePlayTalk {
 
     //-- シーン別処理 --//
     if (DB::$ROOM->IsDay()) { //昼はそのまま発言
-      if (DB::$ROOM->IsEvent('wait_morning')) return false; //待機時間判定
+      if (DB::$ROOM->IsEvent('wait_morning')) { //待機時間判定
+	return false;
+      }
 
       if (RQ::Get()->secret_talk) {
 	$talk->Set(TalkStruct::LOCATION, TalkLocation::SECRET);
@@ -137,7 +139,9 @@ final class GamePlayTalk {
 
   //発言数更新 (沈黙禁止用)
   private static function UpdateNoSilenceTalkCount() {
-    if (DB::$SELF->GetTalkCount() > 0) return true; //発言済みならスキップ
+    if (DB::$SELF->GetTalkCount() > 0) { //発言済みならスキップ
+      return true;
+    }
     return TalkDB::UpdateUserTalkCount(); //1 以上であればいいのでロックしない
   }
 }

@@ -67,7 +67,7 @@ class Role_ogre extends Role {
     } elseif (RoleUser::IsReflectAssassin($user)) {
       $this->AddSuccess($this->GetID(), RoleVoteSuccess::OGRE);
       return false;
-    } elseif ($this->IgnoreOgreAssassin($user)) {
+    } elseif ($this->IgnoreSetOgreAssassin($user)) {
       return false;
     } else {
       $count = (int)$this->GetActor()->GetMainRoleTarget();
@@ -79,11 +79,14 @@ class Role_ogre extends Role {
 	$rate = $event;
       }
       //Text::p($rate, '◆AssassinRate [ogre]');
-      if (! Lottery::Percent($rate)) return false; //成功判定
+
+      if (false === Lottery::Percent($rate)) { //成功判定
+	return false;
+      }
     }
 
     $this->OgreAssassin($user);
-    if (! DB::$ROOM->IsEvent('full_ogre')) { //成功回数更新処理 (朧月ならスキップ)
+    if (false === DB::$ROOM->IsEvent('full_ogre')) { //成功回数更新処理 (朧月ならスキップ)
       $role = $this->role;
       if ($count > 0) {
 	$role .= sprintf('[%d]', $count);
@@ -93,8 +96,8 @@ class Role_ogre extends Role {
     return true;
   }
 
-  //人攫い失敗判定
-  protected function IgnoreOgreAssassin(User $user) {
+  //人攫い情報セット失敗判定
+  protected function IgnoreSetOgreAssassin(User $user) {
     return false;
   }
 

@@ -12,9 +12,6 @@ final class MenuConfig {
     '式神研系' => [
       '真・チルノ鯖'		=> 'https://jinrousiki.osdn.jp/cirno/',
       'ミスティア鯖'		=> 'http://www.kuroienogu.net/mystia/',
-      //'小町鯖'			=> 'http://www48.atpages.jp/onodukakomachi/',
-      //'輝夜鯖'			=> 'http://www42.atpages.jp/houraisankaguya/',
-      //'人狼式縁起鯖'		=> 'http://www36.atpages.jp/jinrousikiengi/',
       'OSDN/SourceForge'	=> 'https://osdn.jp/projects/jinrousiki/',
       '開発・バグ報告スレ'	=> 'http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1240771280/l50',
       '新役職提案スレ'		=> 'http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1305122951/l50'
@@ -26,8 +23,6 @@ final class MenuConfig {
       '掲示板'		=> 'http://jbbs.livedoor.jp/netgame/2829/',
       'チャットルーム'	=> 'http://umigamejinrou.chatx2.whocares.jp/'
     ],
-
-    '東方ウミガメ系予備' => ['咲夜鯖' => 'http://www7.atpages.jp/izayoi398/'],
 
     'やる夫系' => [
       '真紅鯖'			=> 'http://alicegame.xsrv.jp/shinku/',
@@ -41,15 +36,8 @@ final class MenuConfig {
     ],
 
     'やる夫系予備' => [
-      //'流石兄弟鯖'	=> 'http://www12.atpages.jp/yaruo/jinro/',
-      //'流石弟者鯖'	=> 'http://www16.atpages.jp/sasugabros/',
-      //'流石妹者鯖'	=> 'http://www21.atpages.jp/sasugasister/',
-      //'薔薇姉妹鯖'	=> 'http://www13.atpages.jp/yaranai/',
-      //'水銀鯖'		=> 'http://www13.atpages.jp/suigintou/',
-      //'金糸雀保管庫'	=> 'http://www15.atpages.jp/kanaria/',
       '翠星石鯖'	=> 'http://alicegame.xsrv.jp/suisei/',
       '蒼星石テスト鯖'	=> 'http://alicegame.xsrv.jp/sousei/',
-      //'世紀末鯖'	=> 'http://www14.atpages.jp/mmr1/'
     ],
 
     '鉄村人狼系' => [
@@ -57,8 +45,6 @@ final class MenuConfig {
       'ミストさんテスト鯖'	=> 'http://bourbonhouse.xsrv.jp/test/',
       'Wiki'			=> 'http://www29.atwiki.jp/onmyoutetu-jinro/'
     ],
-
-    '鉄村人狼系予備' => ['裏世界鯖' => 'http://dynamis.xsrv.jp/jinro/'],
 
     'iM@S系' => [
       '四条劇場仮設テント'	=> 'http://alicegame.xsrv.jp/takane/',

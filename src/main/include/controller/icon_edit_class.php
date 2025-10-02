@@ -63,8 +63,16 @@ final class IconEditController extends JinrouController {
       self::OutputError(IconEditMessage::USING, $url);
     }
 
-    if (IconDB::Disable($icon_no) !== $disable) { //非表示フラグチェック
-      $query->SetData('disable', $disable ? Query::ENABLE : Query::DISABLE);
+    //非表示フラグチェック
+    //論理フラグとDBの組み合わせをチェックして変更がある時だけセットする
+    if (true === $disable) { //無効 -> 有効
+      if (false === IconDB::Enable($icon_no)) {
+	$query->SetData('disable', Query::ENABLE);
+      }
+    } elseif (false === $disable) { //有効 -> 無効
+      if (false === IconDB::Disable($icon_no)) {
+	$query->SetData('disable', Query::DISABLE);
+      }
     }
     $query->Set(array_keys($stack));
 

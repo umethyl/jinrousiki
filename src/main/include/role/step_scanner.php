@@ -40,10 +40,22 @@ class Role_step_scanner extends Role_mind_scanner {
   }
 
   //範囲透視
-  public function StepScan(array $list) {
-    if ($this->IgnoreStep()) return false;
+  public function StepMindScan(array $list) {
+    //-- 罠判定 --//
+    foreach (RoleLoader::LoadFilter('trap') as $filter) {
+      foreach ($list as $id) {
+	if ($filter->DelayTrap($this->GetActor(), $id)) {
+	  return false;
+	}
+      }
+    }
 
-    //周辺ID取得
+    //-- 足音無効判定 --//
+    if ($this->IgnoreStep()) {
+      return false;
+    }
+
+    //-- 周辺ID取得 --//
     //Text::p($list, '◆Target [Vote]');
     $max   = DB::$USER->Count();
     $stack = [];
@@ -53,31 +65,28 @@ class Role_step_scanner extends Role_mind_scanner {
 
     $around_list = [];
     foreach ($stack as $id) {
-      if (in_array($id, $list) || DB::$USER->ByID($id)->IsDead(true)) continue;
+      if (in_array($id, $list) || DB::$USER->ByID($id)->IsDead(true)) {
+	continue;
+      }
       $around_list[] = $id;
     }
     //Text::p($around_list, '◆Target [Around]');
 
-    //確率判定
+    //-- 確率判定 --//
     $rate = min(80, count($around_list) * 10);
     //Text::p($rate, '◆Rate');
     if (Lottery::Percent(100 - $rate)) {
       return false;
     }
 
-    //会話能力者判定
-    $step_flag = false;
+    //-- 会話能力者判定 --//
     foreach ($around_list as $id) {
       $user = DB::$USER->ByID($id);
-      if ($user->IsDead(true)) continue;
       if (RoleUser::IsCommon($user) || RoleUser::IsWolf($user) || RoleUser::IsFox($user) ||
 	  $user->IsRole('mind_friend')) {
-	$step_flag = true;
-	break;
+	$this->Step($list); //足音処理
+	return true;
       }
-    }
-    if (true === $step_flag) {
-      $this->Step($list);
     }
   }
 }

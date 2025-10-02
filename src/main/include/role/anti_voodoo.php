@@ -21,7 +21,7 @@ class Role_anti_voodoo extends Role {
   }
 
   //厄払い先セット (憑依妨害 > 憑依者(強制送還) > 襲撃憑狼(襲撃キャンセル))
-  public function SetGuard(User $user) {
+  final public function SetVoodooGuard(User $user) {
     $this->AddStack($user->id);
     $stack = $this->GetStackKey(RoleVoteSuccess::POSSESSED, $user->id);
     $wolf  = $this->GetWolfVoter();
@@ -29,8 +29,8 @@ class Role_anti_voodoo extends Role {
       foreach ($stack as $id) {
 	DB::$USER->ByID($id)->Flag()->On(UserMode::POSSESSED_CANCEL);
       }
-    } elseif (RoleUser::IsPossessed($user) && ! $user->IsSame($user->GetVirtual())) {
-      if (! RoleUser::IsPossessedTarget($user)) {
+    } elseif (RoleUser::IsPossessed($user) && false === $user->IsSame($user->GetVirtual())) {
+      if (false === RoleUser::IsPossessedTarget($user)) {
 	$this->AddSuccess($user->id, RoleVoteSuccess::POSSESSED, true); //憑依リストに追加
       }
       $user->Flag()->On(UserMode::POSSESSED_RESET);
@@ -44,7 +44,10 @@ class Role_anti_voodoo extends Role {
 
   //厄払い成立判定
   public function IsGuard($id) {
-    if (! $this->InStack($id)) return false;
+    if (! $this->InStack($id)) {
+      return false;
+    }
+
     $this->AddSuccess($id, RoleVoteSuccess::ANTI_VOODOO);
     return true;
   }

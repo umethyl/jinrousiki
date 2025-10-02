@@ -11,17 +11,17 @@ class Paparazzi {
     $this->date    = Time::GetDateTime(Time::Get());
     $this->time    = microtime();
     $this->memory  = memory_get_usage();
-    $this->log     = array();
+    $this->log     = [];
     $this->written = false;
   }
 
   public function shot($comment, $category = 'general') {
-    $this->log[] = array(
+    $this->log[] = [
 	'time'     => $this->GetTime(),
 	'memory'   => memory_get_usage() - $this->memory,
 	'category' => $category,
 	'comment'  => $comment
-    );
+    ];
     return $comment;
   }
 
@@ -38,7 +38,9 @@ class Paparazzi {
   }
 
   public function Collect($force = false) {
-    if (! $force && $this->written) return;
+    if (! $force && $this->written) {
+      return;
+    }
     $this->written |= ! $force;
 
     $output = '<dl>' . '<dt>' .  $this->date . '</dt>';

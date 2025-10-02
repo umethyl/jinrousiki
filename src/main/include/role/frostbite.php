@@ -21,4 +21,14 @@ class Role_frostbite extends Role_febris {
   protected function GetSuddenDeathType() {
     return 'FROSTBITE';
   }
+
+  //凍傷実行処理
+  final public function SetFrostbite() {
+    foreach ($this->GetStackKey() as $id) {
+      $user = DB::$USER->ByID($id);
+      if ($user->IsLive(true)) {
+	$user->AddDoom(1, $this->role);
+      }
+    }
+  }
 }

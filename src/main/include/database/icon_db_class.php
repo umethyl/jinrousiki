@@ -220,11 +220,12 @@ final class IconDB {
 
   //Prepare 処理 (Bool 用)
   private static function PrepareBool($icon_no, $bool) {
-    $query = self::GetQueryIconNo();
+    $column = 'disable';
+    $query  = self::GetQueryIconNo()->Where(['icon_no']);
     if (true === $bool) {
-      $query->WhereBool('disable', $bool);
+      $query->WhereNull($column)->WhereBool($column, $bool)->WhereOr([$column, $column]);
     } else {
-      $query->WhereNotTrue('disable');
+      $query->WhereBool($column, $bool);
     }
     DB::Prepare($query->Build(), [$icon_no]);
   }

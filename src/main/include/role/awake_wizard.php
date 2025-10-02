@@ -40,7 +40,7 @@ class Role_awake_wizard extends Role_wizard {
     return true;
   }
 
-  public function IsMageFailed() {
+  public function FixMageFailed() {
     return true;
   }
 }

@@ -21,7 +21,7 @@ class Role_mage extends Role {
   public function Mage(User $user) {
     if ($this->IgnoreMage()) {
       return false;
-    } elseif ($this->IsJammer($user) || $this->CallParent('IsMageFailed')) {
+    } elseif ($this->IsJammer($user) || $this->CallParent('FixMageFailed')) {
       return $this->CallParent('MageFailed', $user);
     } elseif ($this->IsCursed($user)) {
       return false;
@@ -68,7 +68,7 @@ class Role_mage extends Role {
   }
 
   //占い失敗固定判定
-  public function IsMageFailed() {
+  public function FixMageFailed() {
     return false;
   }
 

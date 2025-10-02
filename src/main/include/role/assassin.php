@@ -23,7 +23,7 @@ class Role_assassin extends Role {
   }
 
   //暗殺先セット (罠 > 対暗殺護衛 > 逃亡 > 反射 > 通常)
-  public function SetAssassin(User $user) {
+  final public function SetAssassin(User $user) {
     if (RoleUser::DelayTrap($this->GetActor(), $user->id)) {
       return false;
     } elseif (RoleUser::GuardAssassin($user)) {
@@ -45,7 +45,9 @@ class Role_assassin extends Role {
 
   //暗殺処理
   protected function Assassin(User $user) {
-    if ($user->IsDead(true) || $this->IgnoreAssassin($user)) return false;
+    if ($user->IsDead(true) || $this->IgnoreAssassin($user)) {
+      return false;
+    }
 
     if ($this->IsAssassinKill()) {
       $this->AddSuccess($user->id, RoleVoteSuccess::ASSASSIN);

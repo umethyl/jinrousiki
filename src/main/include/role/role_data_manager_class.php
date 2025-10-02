@@ -9,7 +9,9 @@ class RoleDataManager {
   //役職グループ取得
   public static function GetGroup($role) {
     foreach (RoleGroupData::$list as $main_role => $group) {
-      if (Text::Search($role, $main_role)) return $group;
+      if (Text::Search($role, $main_role)) {
+	return $group;
+      }
     }
     return CampGroup::HUMAN;
   }

@@ -40,7 +40,7 @@ class Role_sacrifice_ogre extends Role_ogre {
     return 50;
   }
 
-  protected function IgnoreOgreAssassin(User $user) {
+  protected function IgnoreSetOgreAssassin(User $user) {
     return $user->IsCamp(Camp::VAMPIRE);
   }
 

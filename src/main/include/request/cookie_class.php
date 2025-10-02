@@ -38,7 +38,9 @@ class JinrouCookie {
       setcookie('user_count', DB::$USER->Count(), $time);
     }
 
-    if (DB::$ROOM->IsAfterGame()) return; //ゲーム終了ならスキップ
+    if (DB::$ROOM->IsAfterGame()) { //ゲーム終了ならスキップ
+      return;
+    }
 
     /* 投票済み */
     if (self::$vote_result != '') setcookie('vote_result', '', $time);

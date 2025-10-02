@@ -5,7 +5,9 @@
 class Role_echo_brownie extends Role {
   //反響
   public function EchoSay() {
-    if (! Lottery::Percent(30)) return; //確率判定
+    if (! Lottery::Percent(30)) { //確率判定
+      return;
+    }
 
     $stack = TalkDB::GetRecent();
     //連続発言検出

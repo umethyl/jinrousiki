@@ -22,9 +22,15 @@ class Role_reporter extends Role {
 
   //尾行
   public function Report(User $user) {
+    foreach (RoleLoader::LoadFilter('trap') as $filter) { //罠判定
+      if ($filter->TrapKill($this->GetActor(), $user->id)) {
+	return false;
+      }
+    }
+
     $target = $this->GetWolfTarget();
     if ($user->IsSame($target)) { //尾行成功
-      if (! $user->wolf_eat) { //人狼襲撃が失敗していたらスキップ
+      if (false === $user->wolf_eat) { //人狼襲撃が失敗していたらスキップ
 	return;
       }
       $result = $this->GetWolfVoter()->GetName();

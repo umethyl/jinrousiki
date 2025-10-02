@@ -789,10 +789,10 @@ final class VoteNight extends VoteBase {
     self::FilterMage();
     self::FilterMageKill();
 
-    if (DB::$ROOM->IsDate(1)) {
-      //-- 透視レイヤー --//
-      self::FilterMindScan();
+    //-- 透視レイヤー --//
+    self::FilterMindScan();
 
+    if (DB::$ROOM->IsDate(1)) {
       //-- コピーレイヤー --//
       self::FilterCopy();
 
@@ -1108,7 +1108,7 @@ final class VoteNight extends VoteBase {
     //RoleManager::Stack()->p(RoleVoteSuccess::POSSESSED, '◆Possessed [wolf]');
   }
 
-  //デスノートの処理
+  //デスノートの死亡処理
   private static function FilterDeathNote() {
     $vote_data = RoleManager::GetVoteData();
     $list      = $vote_data[VoteAction::DEATH_NOTE];
@@ -1194,18 +1194,9 @@ final class VoteNight extends VoteBase {
     RoleManager::Stack()->Clear($role);
   }
 
-  //オシラ遊びの処理
+  //オシラ遊びの死亡処理
   private static function FilterDeathSelected() {
-    $role = 'death_selected';
-    foreach (DB::$USER->Get() as $user) {
-      if ($user->IsDead(true)) {
-	continue;
-      }
-
-      if ($user->GetVirtual()->IsDoomRole($role)) {
-	DB::$USER->Kill($user->id, DeadReason::PRIEST_RETURNED);
-      }
-    }
+    RoleLoader::Load('death_selected')->DeathSelectedKill();
   }
 
   //反魂師の暗殺処理
@@ -1224,12 +1215,7 @@ final class VoteNight extends VoteBase {
   private static function FilterFrostbite() {
     $role = 'frostbite';
     //RoleManager::Stack()->p($role, "◆Target [{$role}]");
-    foreach (RoleManager::Stack()->Get($role) as $id => $flag) {
-      $target = DB::$USER->ByID($id);
-      if ($target->IsLive(true)) {
-	$target->AddDoom(1, $role);
-      }
-    }
+    RoleLoader::Load($role)->SetFrostbite();
     RoleManager::Stack()->Clear($role);
   }
 
@@ -1254,7 +1240,7 @@ final class VoteNight extends VoteBase {
   //厄神の情報収集
   private static function LoadAntiVoodoo() {
     $vote_data = RoleManager::GetVoteData();
-    RoleVote::FilterNight($vote_data[VoteAction::ANTI_VOODOO], 'SetGuard');
+    RoleVote::FilterNight($vote_data[VoteAction::ANTI_VOODOO], 'SetVoodooGuard');
     //RoleManager::Stack()->p(RoleVoteTarget::ANTI_VOODOO, '◆Target [anti_voodoo]');
   }
 
@@ -1340,6 +1326,10 @@ final class VoteNight extends VoteBase {
   private static function FilterMindScan() {
     $vote_data = RoleManager::GetVoteData();
     RoleVote::FilterNight($vote_data[VoteAction::SCAN], 'MindScan');
+    if (DB::$ROOM->date > 1) { //雷神は二日目以降
+      RoleVote::FilterNight($vote_data[VoteAction::STEP_SCAN], 'StepMindScan', null, 'multi');
+      self::FilterDelayTrapKill(); //遅行罠死処理 (凍傷型は無効)
+    }
   }
 
   //神話マニアの処理
@@ -1381,45 +1371,17 @@ final class VoteNight extends VoteBase {
     RoleLoader::Load('tengu')->SetWinCamp();
   }
 
-  //ブン屋・猩々・雷神
+  //尾行処理
   private static function FilterReport() {
     $vote_data = RoleManager::GetVoteData();
-    foreach (VoteActionGroup::$report as $action) {
-      foreach ($vote_data[$action] as $id => $target_id) {
-	$user = DB::$USER->ByID($id);
-	if ($user->IsDead(true)) { //直前に死んでいたら無効
-	  continue;
-	}
-
-	switch ($action) {
-	case VoteAction::STEP_SCAN: //雷神
-	  $target_list = Text::Parse($target_id);
-	  foreach (RoleLoader::LoadFilter('trap') as $filter) { //罠判定
-	    foreach ($target_list as $target_id) {
-	      if ($filter->DelayTrap($user, $target_id)) continue 4;
-	    }
-	  }
-	  RoleLoader::LoadMain($user)->StepScan($target_list);
-	  break;
-
-	default:
-	  foreach (RoleLoader::LoadFilter('trap') as $filter) { //罠判定
-	    if ($filter->TrapKill($user, $target_id)) continue 3;
-	  }
-	  RoleLoader::LoadMain($user)->Report(DB::$USER->ByID($target_id));
-	  break;
-	}
-      }
-
-      if ($action == VoteAction::STEP_SCAN) { //遅行罠死処理 (凍傷型は無効)
-	self::FilterDelayTrapKill();
-      }
-    }
+    RoleVote::FilterNight($vote_data[VoteAction::REPORTER], 'Report');
   }
 
   //反魂処理
   private static function FilterResurrect() {
-    if (DB::$ROOM->IsEvent('no_revive')) return; //快晴なら無効
+    if (DB::$ROOM->IsEvent('no_revive')) { //快晴なら無効
+      return;
+    }
 
     $actor = RoleManager::Stack()->Get('wolf_target');
     foreach (RoleLoader::LoadUser($actor, 'resurrect') as $filter) {

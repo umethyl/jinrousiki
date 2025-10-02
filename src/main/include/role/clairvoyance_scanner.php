@@ -22,11 +22,17 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
     return null;
   }
 
-  /*
-    複数の投票イベントを持つタイプが出現した場合は複数のメッセージを発行する必要がある
-    対象が NULL でも有効になるタイプ (キャンセル投票はスキップ) は想定していない
-  */
-  public function Report(User $user) {
+  public function MindScan(User $user) {
+    foreach (RoleLoader::LoadFilter('trap') as $filter) { //罠判定
+      if ($filter->TrapKill($this->GetActor(), $user->id)) {
+	return false;
+      }
+    }
+
+    /*
+      複数の投票イベントを持つタイプが出現した場合は複数のメッセージを発行する必要がある
+      対象が NULL でも有効になるタイプ (キャンセル投票はスキップ) は想定していない
+    */
     foreach (RoleManager::GetVoteData() as $action => $vote_stack) {
       if (Text::Search($action, '_NOT_DO') || false === isset($vote_stack[$user->id])) {
 	continue;

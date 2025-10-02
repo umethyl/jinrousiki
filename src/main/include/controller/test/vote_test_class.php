@@ -201,7 +201,10 @@ final class VoteTestController extends JinrouController {
 
   //発言変換テスト
   private static function ConvertTalk() {
-    if (RQ::Get()->say == '') return;
+    if (RQ::Get()->say == '') {
+      return;
+    }
+
     RoleTalk::Convert(RQ::Get()->say);
     Text::Escape(RQ::Get()->say, false);
     $talk = new RoleTalkStruct(RQ::Get()->say);

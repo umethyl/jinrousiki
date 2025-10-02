@@ -2,7 +2,7 @@
 /*
   ◆夢馬 (homogeneous_vampire)
   ○仕様
-  ・吸血：異性以外なら性転換 + 性別鑑定
+  ・吸血：同性以外なら性転換 + 性別鑑定
 */
 RoleLoader::LoadFile('vampire');
 class Role_homogeneous_vampire extends Role_vampire {

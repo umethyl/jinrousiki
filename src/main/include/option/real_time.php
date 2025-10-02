@@ -8,7 +8,9 @@ class Option_real_time extends OptionCheckbox {
 
   public function LoadPost() {
     RQ::Get()->ParsePostOn($this->name);
-    if (! RQ::Get()->{$this->name}) return false;
+    if (! RQ::Get()->{$this->name}) {
+      return false;
+    }
 
     $post_day   = sprintf('%s_day',   $this->name);
     $post_night = sprintf('%s_night', $this->name);

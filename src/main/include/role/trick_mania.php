@@ -16,13 +16,15 @@ class Role_trick_mania extends Role_mania {
 
   //奇術処理
   final protected function TrickCopy(User $user, $role) {
-    //スキップ判定 (コピー結果村人, 身代わり君, 特定役職, 投票実施者)
+    //スキップ判定 (コピー結果村人/身代わり君/特定役職/投票実施者)
     if ($role == 'human' || $user->IsDummyBoy() || $user->IsRole('widow_priest', 'revive_priest')) {
       return;
     }
 
     foreach (RoleManager::GetVoteData() as $stack) { //投票実施者判定
-      if (isset($stack[$user->id])) return;
+      if (isset($stack[$user->id])) {
+	return;
+      }
     }
 
     $user->ReplaceRole($role, $user->DistinguishRoleGroup());

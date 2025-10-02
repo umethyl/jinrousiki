@@ -85,7 +85,7 @@ final class UserManagerController extends JinrouController {
     if (! Sex::Exists($sex)) {
       self::OutputError($title, UserManagerMessage::CHECK_SEX . $back_url);
     }
-    if ($icon_no < ($user_no > 0 ? 0 : 1) || ! IconDB::Enable($icon_no)) {
+    if ($icon_no < ($user_no > 0 ? 0 : 1) || IconDB::Disable($icon_no)) {
       /* ロック前なのでスキマが存在するが、実用性を考慮してここで判定する */
       self::OutputError($title, UserManagerMessage::CHECK_ICON . $back_url);
     }

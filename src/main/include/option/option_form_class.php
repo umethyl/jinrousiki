@@ -39,13 +39,17 @@ class OptionForm {
       is_null($name) ? self::OutputSeparator($group) : self::OutputForm($name, $class);
     }
 
-    if (count(self::$javascript) > 0) OptionFormHTML::OutputJavaScript(self::$javascript);
+    if (count(self::$javascript) > 0) {
+      OptionFormHTML::OutputJavaScript(self::$javascript);
+    }
   }
 
   //フォーム出力 (振り分け処理用)
   private static function OutputForm($name, $class) {
     $filter = OptionLoader::Load($name);
-    if (! $filter->enable || false === isset($filter->type)) return;
+    if (! $filter->enable || false === isset($filter->type)) {
+      return;
+    }
 
     switch ($filter->type) {
     case OptionFormType::TEXT:
@@ -80,7 +84,9 @@ class OptionForm {
   //境界線出力
   private static function OutputSeparator($group) {
     OptionFormHTML::OutputSeparator();
-    if (OptionManager::IsChange()) return;
+    if (OptionManager::IsChange()) {
+      return;
+    }
 
     switch ($group) {
     case 'base':
@@ -162,7 +168,10 @@ class OptionForm {
   private static function GenerateGroup(Option $filter) {
     $str = '';
     foreach ($filter->GetItem() as $child) {
-      if (empty($child->type)) continue;
+      if (empty($child->type)) {
+	continue;
+      }
+
       switch ($child->type) {
       case OptionFormType::RADIO:
 	$str .= self::GenerateCheckbox($child);

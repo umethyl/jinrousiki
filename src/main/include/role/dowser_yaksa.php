@@ -18,7 +18,7 @@ class Role_dowser_yaksa extends Role_yaksa {
     return 40;
   }
 
-  protected function IgnoreOgreAssassin(User $user) {
+  protected function IgnoreSetOgreAssassin(User $user) {
     return $user->GetRoleCount() == 1;
   }
 

@@ -7,7 +7,9 @@
 RoleLoader::LoadFile('unknown_mania');
 class Role_mask_mania extends Role_unknown_mania {
   protected function CopySelfAction(User $user) {
-    if ($user->IsRoleGroup('mania')) return;
+    if ($user->IsRoleGroup('mania')) {
+      return;
+    }
 
     $stack = $this->GetCopySelfActionRoleList();
     $this->GetActor()->AddRole($stack[$user->DistinguishCamp()]);

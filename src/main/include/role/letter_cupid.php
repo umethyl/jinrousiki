@@ -13,7 +13,9 @@ class Role_letter_cupid extends Role_cupid {
     $stack = [];
     foreach ($this->GetLoversList() as $id) { //恋人一覧から検索
       $cupid_stack = DB::$USER->ByID($id)->GetPartner('lovers');
-      if (count($cupid_stack) > 1) continue; //単独カップルのみ
+      if (count($cupid_stack) > 1) { //単独カップルのみ
+	continue;
+      }
 
       $cupid_id = array_shift($cupid_stack);
       if (in_array($cupid_id, $cupid_list)) {
@@ -23,7 +25,9 @@ class Role_letter_cupid extends Role_cupid {
     //Text::p($stack, "◆{$this->role} / Lovers");
 
     foreach ($stack as $list) {
-      if (count($list) != $this->GetVoteNightNeedCount()) continue; //完全単独カップルのみ
+      if (count($list) != $this->GetVoteNightNeedCount()) { //完全単独カップルのみ
+	continue;
+      }
 
       foreach (Lottery::GetList($list) as $key => $id) {
 	$user = DB::$USER->ByID($id);

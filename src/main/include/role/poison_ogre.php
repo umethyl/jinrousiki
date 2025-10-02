@@ -16,7 +16,7 @@ class Role_poison_ogre extends Role_ogre {
     return RoleUser::IsInhuman($user) || $user->IsMainCamp(Camp::OGRE);
   }
 
-  protected function IgnoreOgreAssassin(User $user) {
+  protected function IgnoreSetOgreAssassin(User $user) {
     return $user->IsRole('quiz');
   }
 

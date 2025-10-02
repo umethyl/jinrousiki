@@ -19,12 +19,16 @@ class Option_sub_role_limit extends OptionSelector {
   }
 
   protected function LoadValue() {
-    if (OptionManager::IsChange()) $this->SetFormValue('key');
+    if (OptionManager::IsChange()) {
+      $this->SetFormValue('key');
+    }
   }
 
   public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
-    if (is_null(RQ::Get()->{$this->name})) return false;
+    if (is_null(RQ::Get()->{$this->name})) {
+      return false;
+    }
 
     $post = RQ::Get()->{$this->name};
     foreach ($this->form_list as $option => $value) {

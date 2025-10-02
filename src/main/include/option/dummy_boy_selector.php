@@ -13,7 +13,9 @@ class Option_dummy_boy_selector extends OptionSelector {
 
   public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
-    if (is_null(RQ::Get()->{$this->name})) return false;
+    if (is_null(RQ::Get()->{$this->name})) {
+      return false;
+    }
 
     $post = RQ::Get()->{$this->name};
     foreach ($this->form_list as $option => $form_value) {

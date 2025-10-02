@@ -188,7 +188,7 @@ final class Room extends StackManager {
   //イベント判定
   public function IsEvent($type) {
     $this->InitEvent();
-    return $this->Stack()->Get('event')->Get($type);
+    return $this->Stack()->Get('event')->Exists($type);
   }
 
   //天候セット (ログ用)

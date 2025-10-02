@@ -20,7 +20,10 @@ class Role_exchange_angel extends Role_angel {
 
     //魂移使が打った恋人の情報を収集 (Reparse() 対策で GetRoleUser() は使わない)
     foreach (DB::$USER->Get() as $user) {
-      if ($user->IsDummyBoy() || ! $user->IsRole('lovers')) continue;
+      if ($user->IsDummyBoy() || false === $user->IsRole('lovers')) {
+	continue;
+      }
+
       foreach ($user->GetPartner('lovers') as $cupid_id) {
 	if (DB::$USER->ByID($cupid_id)->IsRole($this->role)) {
 	  $angel_list[$cupid_id][]  = $user->id;
@@ -35,7 +38,10 @@ class Role_exchange_angel extends Role_angel {
     //Text::p($lovers_list, '◆lovers: 1st');
 
     foreach ($angel_list as $id => $lovers_stack) { //抽選処理
-      if (isset($fix_list[$id])) continue;
+      if (isset($fix_list[$id])) {
+	continue;
+      }
+
       $duplicate_stack = [];
       //Text::p($fix_list, '◆fix_angel:'. $id);
       foreach ($lovers_stack as $lovers_id) {
@@ -46,6 +52,7 @@ class Role_exchange_angel extends Role_angel {
 	}
       }
       //Text::p($duplicate_stack, '◆duplicate:' . $id);
+
       $duplicate_list = array_keys($duplicate_stack);
       if (count($duplicate_list) > 1) {
 	$exchange_list[] = Lottery::Get($duplicate_list);

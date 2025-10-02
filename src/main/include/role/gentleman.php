@@ -6,7 +6,9 @@
 */
 class Role_gentleman extends Role {
   public function ConvertSay() {
-    if (! Lottery::Percent(GameConfig::GENTLEMAN_RATE)) return false; //スキップ判定
+    if (! Lottery::Percent(GameConfig::GENTLEMAN_RATE)) { //スキップ判定
+      return false;
+    }
 
     $stack = DB::$USER->SearchLive(); //生存者のユーザ ID を取得
     unset($stack[$this->GetID()]); //自分を削除

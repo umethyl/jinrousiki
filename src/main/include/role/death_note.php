@@ -35,7 +35,7 @@ class Role_death_note extends Role {
     return $this->IsVote();
   }
 
-  //デスノート処理
+  //デスノート死亡処理
   public function DeathNoteKill(array $list) {
     foreach ($list as $id => $target_id) {
       if (DB::$USER->ByID($id)->IsDead(true)) { //直前に死んでいたら無効

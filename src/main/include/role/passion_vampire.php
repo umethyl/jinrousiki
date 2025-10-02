@@ -7,6 +7,8 @@
 RoleLoader::LoadFile('vampire');
 class Role_passion_vampire extends Role_vampire {
   protected function InfectAction(User $user) {
-    if (Lottery::Bool()) $user->AddRole('passion');
+    if (Lottery::Bool()) {
+      $user->AddRole('passion');
+    }
   }
 }

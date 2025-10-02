@@ -19,7 +19,9 @@ class Role_doom_cat extends Role_poison_cat {
   protected function ReviveAction() {
     $actor = $this->GetActor();
     $role  = 'death_warrant';
-    if (! $actor->IsRole($role)) return;
+    if (! $actor->IsRole($role)) {
+      return;
+    }
 
     $date = $actor->GetDoomDate($role); //未達の宣告があれば延長する
     if (DB::$ROOM->date < $date) {

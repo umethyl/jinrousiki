@@ -426,7 +426,9 @@ abstract class GamePlayView {
 
   //異議ありボタン表示
   final protected function OutputObjection($left_time) {
-    if ($this->IgnoreObjection($left_time)) return; //スキップ判定
+    if ($this->IgnoreObjection($left_time)) { //スキップ判定
+      return;
+    }
 
     $stack = [
       RequestDataGame::RELOAD, RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::DOWN
@@ -445,7 +447,9 @@ abstract class GamePlayView {
 
   //時間制限通知出力
   final protected function OutputTimelimit($left_time) {
-    if ($this->IgnoreTimelimit()) return; //スキップ判定
+    if ($this->IgnoreTimelimit()) { //スキップ判定
+      return;
+    }
 
     HTML::OutputDivHeader('timelimit');
     if (DB::$ROOM->IsEvent('wait_morning')) {

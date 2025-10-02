@@ -18,7 +18,7 @@ class Role_power_yaksa extends Role_yaksa {
     return 30;
   }
 
-  protected function IgnoreOgreAssassin(User $user) {
+  protected function IgnoreSetOgreAssassin(User $user) {
     return $user->IsWinCamp(Camp::HUMAN);
   }
 

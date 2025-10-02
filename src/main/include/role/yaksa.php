@@ -17,7 +17,7 @@ class Role_yaksa extends Role_ogre {
     return 20;
   }
 
-  protected function IgnoreOgreAssassin(User $user) {
+  protected function IgnoreSetOgreAssassin(User $user) {
     return false === $this->RequireOgreWinDead($user);
   }
 

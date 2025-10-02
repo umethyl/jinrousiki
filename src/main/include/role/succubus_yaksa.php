@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('yaksa');
 class Role_succubus_yaksa extends Role_yaksa {
-  protected function IgnoreOgreAssassin(User $user) {
+  protected function IgnoreSetOgreAssassin(User $user) {
     return false === Sex::IsMale($user);
   }
 

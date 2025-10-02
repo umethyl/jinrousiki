@@ -8,7 +8,9 @@ class Option_limit_talk extends OptionCheckbox {
 
   public function LoadPost() {
     RQ::Get()->ParsePostOn($this->name);
-    if (! RQ::Get()->{$this->name}) return false;
+    if (! RQ::Get()->{$this->name}) {
+      return false;
+    }
 
     $post = sprintf('%s_count', $this->name);
     RQ::Get()->ParsePostInt($post);

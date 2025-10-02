@@ -19,13 +19,6 @@ class SharedServerConfig {
 		 'footer' => '',
 		 'disable' => false],
 
-    'kaguya' => ['name' => '輝夜鯖',
-		 'url' => 'http://www42.atpages.jp/houraisankaguya/',
-		 'encode' => 'UTF-8',
-		 'separator' => '<!-- atpages banner tag -->',
-		 'footer' => '</a><br>',
-		 'disable' => false],
-
     'sanae' => ['name' => '早苗鯖',
 		'url' => 'http://alicegame.xsrv.jp/sanae/',
 		'encode' => 'UTF-8',
@@ -63,30 +56,9 @@ class SharedServerConfig {
 
     'bourbonhouse' => ['name' => 'バーボンハウス鯖',
 		       'url' => 'http://bourbonhouse.xsrv.jp/jinro/',
-		       'encode' => 'EUC-JP',
+		       'encode' => 'UTF-8',
 		       'separator' => '',
 		       'footer' => '',
-		       'disable' => false],
-
-    'bourbon_chaos' => ['name' => '裏世界鯖',
-			'url' => 'http://dynamis.xsrv.jp/jinro/',
-			'encode' => 'UTF-8',
-			'separator' => '',
-			'footer' => '',
-			'disable' => false],
-
-    'takane' => ['name' => '四条劇場',
-		 'url' => 'http://takanegm.com/',
-		 'encode' => 'UTF-8',
-		 'separator' => '',
-		 'footer' => '',
-		 'disable' => false],
-
-    'prg_i' => ['name' => 'Twitter鯖',
-		'url' => 'http://www28.atpages.jp/pururiru/jinrou/',
-		'encode' => 'UTF-8',
-		'separator' => '<!-- atpages banner tag -->',
-		'footer' => '</a><br>',
-		'disable' => false]
+		       'disable' => false]
   ];
 }

@@ -19,7 +19,10 @@ class Role_altair_cupid extends Role_cupid {
   public function LotteryLovers() {
     $target_id = Lottery::Get(DB::$USER->GetRoleID($this->role)); //対象彦星を抽選
     foreach ($this->GetLoversList() as $id) { //恋人一覧から検索
-      if ($id == $target_id) continue;
+      if ($id == $target_id) {
+	continue;
+      }
+
       $user = DB::$USER->ByID($id);
       foreach ($user->GetPartner('lovers') as $cupid_id) {
 	if ($cupid_id == $target_id) {

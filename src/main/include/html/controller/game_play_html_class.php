@@ -88,7 +88,9 @@ class GamePlayHTML {
 
   //役職能力出力
   public static function OutputAbility() {
-    if (false === DB::$ROOM->IsPlaying()) return; //スキップ判定
+    if (false === DB::$ROOM->IsPlaying()) { //スキップ判定
+      return;
+    }
 
     HTML::OutputDivHeader('ability-elements');
     RoleHTML::OutputAbility();
@@ -97,7 +99,9 @@ class GamePlayHTML {
 
   //投票情報出力
   public static function OutputVote() {
-    if (false === DB::$ROOM->IsPlaying()) return; //スキップ判定
+    if (false === DB::$ROOM->IsPlaying()) { //スキップ判定
+      return;
+    }
 
     HTML::OutputDivHeader('vote-elements');
     RoleHTML::OutputVoteKill();

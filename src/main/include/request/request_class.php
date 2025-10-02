@@ -201,7 +201,10 @@ class Request {
 
   //ページセット
   protected function SetPage($arg) {
-    if ($arg == 'all') return $arg;
+    if ($arg == 'all') {
+      return $arg;
+    }
+
     $int = intval($arg);
     return $int > 0 ? $int : 1;
   }

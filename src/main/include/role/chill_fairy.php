@@ -7,7 +7,8 @@
 RoleLoader::LoadFile('fairy');
 class Role_chill_fairy extends Role_fairy {
   protected function FairyAction(User $user) {
-    if (RoleUser::IsAvoid($user)) return;
-    $user->AddDoom(1, 'chill_febris');
+    if (false === RoleUser::IsAvoid($user)) {
+      $user->AddDoom(1, 'chill_febris');
+    }
   }
 }

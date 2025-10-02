@@ -18,7 +18,9 @@ class Option_detective extends OptionCheckbox {
   public function SetRole(array &$list, $count) {
     $target_role = $this->GetTargetRole();
     foreach (['mania', 'common', 'human'] as $role) {
-      if (OptionManager::Replace($list, $role, $target_role)) break;
+      if (OptionManager::Replace($list, $role, $target_role)) {
+	break;
+      }
     }
   }
 
@@ -32,7 +34,9 @@ class Option_detective extends OptionCheckbox {
     //Cast::Stack()->p(Cast::DETECTIVE, '◆detective');
     $stack = Cast::Stack()->Get(Cast::DETECTIVE);
     Cast::Stack()->Clear(Cast::DETECTIVE);
-    if (1 > count($stack)) return;
+    if (1 > count($stack)) {
+      return;
+    }
 
     $user = Lottery::Get($stack);
     RoomTalk::StoreSystem(sprintf(TalkMessage::DETECTIVE, $user->handle_name));

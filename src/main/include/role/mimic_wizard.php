@@ -19,7 +19,7 @@ class Role_mimic_wizard extends Role_wizard {
     return ['mage' => VoteAction::MAGE, 1 => VoteAction::MAGE];
   }
 
-  public function IsMageFailed() {
+  public function FixMageFailed() {
     return true;
   }
 

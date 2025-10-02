@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('incubus_vampire');
 class Role_succubus_vampire extends Role_incubus_vampire {
-  protected function IsInfect(User $user) {
-    return Sex::IsMale($user);
+  protected function InfectFailed(User $user) {
+    return false === Sex::IsMale($user);
   }
 }

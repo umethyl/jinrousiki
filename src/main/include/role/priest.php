@@ -62,7 +62,9 @@ class Role_priest extends Role {
     }
 
     //-- 司祭陣営情報収集判定 --//
-    if (! $flag) return;
+    if (! $flag) {
+      return;
+    }
 
     //陣営情報収集リスト初期化
     foreach (['human_side', 'dead', 'sub_role', 'dream', 'tengu'] as $type) {
@@ -165,7 +167,9 @@ class Role_priest extends Role {
 
   //司祭能力
   final public function Priest() {
-    if ($this->IgnorePriest()) return;
+    if ($this->IgnorePriest()) {
+      return;
+    }
     $this->PriestAction();
   }
 

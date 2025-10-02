@@ -795,7 +795,9 @@ final class TalkBuilder {
 
   //発言 (霊界)
   private function TalkHeaven(TalkParser $talk, $symbol, $name) {
-    if (! $this->flag->open_talk) return false;
+    if (! $this->flag->open_talk) {
+      return false;
+    }
 
     $stack = [
       TalkElement::SYMBOL   => $symbol,

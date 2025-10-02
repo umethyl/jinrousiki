@@ -76,14 +76,17 @@ class Role_poison_cat extends Role {
     $target = $this->GetReviveTarget($user);
     $result = (is_null($target) || ! $this->ReviveUser($target)) ? 'failed' : 'success';
     if ($result == 'success') {
-      if (! DB::$ROOM->IsEvent('full_revive')) { //雷雨ならスキップ
+      if (false === DB::$ROOM->IsEvent('full_revive')) { //雷雨ならスキップ
 	$this->CallParent('ReviveAction');
       }
     } else {
       $target = $user;
       DB::$ROOM->StoreDead(DB::$USER->GetHandleName($target->uname), DeadReason::REVIVE_FAILED);
     }
-    if (DB::$ROOM->IsOption('seal_message')) return; //蘇生結果を登録 (天啓封印ならスキップ)
+
+    if (DB::$ROOM->IsOption('seal_message')) { //蘇生結果を登録 (天啓封印ならスキップ)
+      return;
+    }
 
     //蘇生結果は憑依を追跡しない
     DB::$ROOM->StoreAbility(RoleAbility::REVIVE, $result, $target->handle_name, $this->GetID());
@@ -112,8 +115,10 @@ class Role_poison_cat extends Role {
     //$rand = 5; Lottery::Rand(10); //テスト用
     //Text::p("{$revive} ({$missfire})", "◆Info: {$this->GetUname()} => {$user->uname}");
     //Text::p($rand, sprintf('◆Rate: %s', $this->GetUname()));
+    if ($rand > $revive) { //蘇生失敗
+      return null;
+    }
 
-    if ($rand > $revive) return null; //蘇生失敗
     if ($rand <= $missfire) { //誤爆蘇生
       $stack = [];
       //現時点の身代わり君と蘇生能力者が選んだ人以外の死者と憑依者を検出
@@ -172,7 +177,9 @@ class Role_poison_cat extends Role {
   //蘇生実行
   final protected function ReviveUser(User $user) {
     if (RoleUser::IsPossessed($user)) { //憑依能力者対応
-      if ($user->IsOn(UserMode::REVIVE)) return true; //蘇生済みならスキップ
+      if ($user->IsOn(UserMode::REVIVE)) { //蘇生済みならスキップ
+	return true;
+      }
 
       $virtual = $user->GetVirtual();
       if ($user->IsDead()) { //確定死者
@@ -186,7 +193,9 @@ class Role_poison_cat extends Role {
 	  }
 	}
       } elseif ($user->IsLive(true)) { //生存者 (憑依状態確定)
-	if (RoleUser::LimitedRevive($virtual)) return false; //蘇生制限判定
+	if (RoleUser::LimitedRevive($virtual)) { //蘇生制限判定
+	  return false;
+	}
 
 	//見かけ上の蘇生処理
 	$user->ReturnPossessed('possessed_target');
@@ -214,7 +223,10 @@ class Role_poison_cat extends Role {
 	}
       }
 
-      if ($user->IsOn(UserMode::REVIVE)) return true; //蘇生済みならスキップ
+      if ($user->IsOn(UserMode::REVIVE)) { //蘇生済みならスキップ
+	return true;
+      }
+
       if (! $user->IsSame(DB::$USER->ByReal($user->id))) { //憑依されていたらリセット
 	$user->ReturnPossessed('possessed');
       }

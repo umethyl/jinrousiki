@@ -15,7 +15,9 @@ class Option_topping extends OptionSelector {
 
   public function LoadPost() {
     RQ::Get()->ParsePostData($this->name);
-    if (is_null(RQ::Get()->{$this->name})) return false;
+    if (is_null(RQ::Get()->{$this->name})) {
+      return false;
+    }
 
     $post = RQ::Get()->{$this->name};
     $flag = (false === empty($post)) && isset($this->form_list[$post]);
@@ -73,9 +75,11 @@ class Option_topping extends OptionSelector {
   //闇鍋固定枠追加
   public function FilterChaosFixRole(array &$list) {
     $stack = DB::$ROOM->GetOptionList($this->name);
-    if (count($stack) < 1) return;
-
+    if (count($stack) < 1) {
+      return;
+    }
     //Text::p($stack, '◆topping');
+
     if (ArrayFilter::IsAssoc($stack, 'fix')) { //固定枠
       foreach ($stack['fix'] as $role => $count) {
 	ArrayFilter::Add($list, $role, $count);

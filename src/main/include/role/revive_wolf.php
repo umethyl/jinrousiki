@@ -8,7 +8,9 @@ RoleLoader::LoadFile('wolf');
 class Role_revive_wolf extends Role_wolf {
   public function Resurrect() {
     $user = $this->GetActor();
-    if ($user->IsRole('lovers')) return; //無効判定 (恋人)
+    if ($user->IsRole('lovers')) { //無効判定 (恋人)
+      return;
+    }
 
     if ($user->IsActive() && $user->IsLive() && $user->IsDead(true)) {
       $user->Revive();

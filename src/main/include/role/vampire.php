@@ -104,16 +104,16 @@ class Role_vampire extends Role {
 
   //吸血処理
   final protected function Infect(User $user) {
-    if ($this->IsInfect($user)) {
-      $user->AddRole($this->GetActor()->GetID('infected'));
-    } else {
+    if ($this->InfectFailed($user)) {
       $this->InfectFailedAction($user);
+    } else {
+      $user->AddRole($this->GetActor()->GetID('infected'));
     }
     $this->InfectAction($user);
   }
 
-  //吸血実行判定
-  protected function IsInfect(User $user) {
+  //吸血失敗判定
+  protected function InfectFailed(User $user) {
     return true;
   }
 

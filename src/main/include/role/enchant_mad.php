@@ -13,7 +13,9 @@ class Role_enchant_mad extends Role {
 
   public function BadStatus() {
     $event = $this->GetBadStatus();
-    if (! DB::$ROOM->IsEvent($event)) return;
+    if (false === DB::$ROOM->IsEvent($event)) {
+      return;
+    }
 
     $target = DB::$USER->ByID(DB::$ROOM->Stack()->Get($event));
     if (false === isset($target->icon_filename)) {

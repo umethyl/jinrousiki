@@ -9,7 +9,7 @@ RQ::GetTest()->test_users[2]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[3]->role = 'possessed_wolf possessed_target[3-17]';
 RQ::GetTest()->test_users[3]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[4]->role = 'soul_mage lovers[16] challenge_lovers rebel';
+RQ::GetTest()->test_users[4]->role = 'soul_mage lovers[16] challenge_lovers rebel critical_luck';
 RQ::GetTest()->test_users[4]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[5]->role = 'mage febris[6]';

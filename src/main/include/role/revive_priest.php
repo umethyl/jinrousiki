@@ -52,10 +52,11 @@ class Role_revive_priest extends Role_priest {
 
   //帰還
   public function PriestReturn() {
+    //身代わり君 (無効) > 恋人 (能力喪失) > 生存 (帰還)
     $user = $this->GetActor();
-    if ($user->IsDummyBoy()) return;
-
-    if (RoleUser::IsContainLovers($user)) {
+    if ($user->IsDummyBoy()) {
+      return;
+    } elseif (RoleUser::IsContainLovers($user)) {
       $user->LostAbility();
     } elseif ($user->IsLive(true)) {
       DB::$USER->Kill($user->id, DeadReason::PRIEST_RETURNED);
