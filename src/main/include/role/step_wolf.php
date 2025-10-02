@@ -11,33 +11,38 @@ class Role_step_wolf extends Role_wolf {
   public $submit     = VoteAction::WOLF;
 
   protected function DisableAddAction() {
-    return DB::$ROOM->IsEvent('no_step') || $this->IsFixDummyBoy() || ! $this->IsActorActive();
+    return DB::$ROOM->IsEvent('no_step') || $this->FixDummyBoy() ||
+      false === $this->IsActorActive();
   }
 
-  protected function IsVoteCheckboxLive($live) {
+  protected function IsVoteNightCheckboxLive($live) {
     return true;
   }
 
-  protected function IsVoteCheckboxFilter(User $user) {
+  protected function IsVoteNightCheckboxFilter(User $user) {
     return true;
   }
 
-  protected function GetVoteCheckboxType() {
+  protected function GetVoteNightCheckboxType() {
     return OptionFormType::CHECKBOX;
   }
 
-  public function ValidateVoteNightTargetList(array $list) {
+  protected function ValidateVoteNightTargetList(array $list) {
+    //-- 経路判定 --//
     $root_list = [];
-    if ($this->IsFixDummyBoy()) { //身代わり君襲撃固定モード
+    if ($this->FixDummyBoy()) { //身代わり君襲撃固定モード
       $id = array_shift($list);
-      if (! DB::$USER->ByID($id)->IsDummyBoy()) { //身代わり君判定
+      if (false === DB::$USER->ByID($id)->IsDummyBoy()) { //身代わり君判定
 	if (DB::$ROOM->IsQuiz()) {
-	  return VoteRoleMessage::TARGET_QUIZ;
+	  throw new UnexpectedValueException(VoteRoleMessage::TARGET_QUIZ);
 	} else {
-	  return VoteRoleMessage::TARGET_ONLY_DUMMY_BOY;
+	  throw new UnexpectedValueException(VoteRoleMessage::TARGET_ONLY_DUMMY_BOY);
 	}
       }
-      if (count($list) > 0) return VoteRoleMessage::UNCHAINED_ROUTE;
+
+      if (count($list) > 0) {
+	throw new UnexpectedValueException(VoteRoleMessage::UNCHAINED_ROUTE);
+      }
       $root_list[] = $id;
     } else {
       $id     = $this->GetID();
@@ -47,11 +52,15 @@ class Role_step_wolf extends Role_wolf {
       do {
 	$chain = Position::GetChain($id, $max);
 	$point = array_intersect($chain, $list);
-	if (count($point) != 1) return VoteRoleMessage::UNCHAINED_ROUTE;
+	if (count($point) != 1) {
+	  throw new UnexpectedValueException(VoteRoleMessage::UNCHAINED_ROUTE);
+	}
 
 	$new_vector = ArrayFilter::PickKey($point);
 	if ($new_vector != $vector) {
-	  if ($count++ > 1) return VoteRoleMessage::INVALID_VECTOR;
+	  if ($count++ > 1) {
+	    throw new UnexpectedValueException(VoteRoleMessage::INVALID_VECTOR);
+	  }
 	  $vector = $new_vector;
 	}
 
@@ -60,27 +69,34 @@ class Role_step_wolf extends Role_wolf {
 	ArrayFilter::Delete($list, $id);
       } while (count($list) > 0);
     }
-    if (count($root_list) < 1) return VoteRoleMessage::UNCHAINED_SELF;
 
+    if (count($root_list) < 1) {
+      throw new UnexpectedValueException(VoteRoleMessage::UNCHAINED_SELF);
+    }
+
+    //-- 対象者判定 --//
     $target = DB::$USER->ByID($id);
     $live   = DB::$USER->IsVirtualLive($target->id); //生死判定は仮想を使う
-    $str    = $this->ValidateVoteNightTarget($target, $live);
-    if (! is_null($str)) return $str;
+    $this->ValidateVoteNightTarget($target, $live);
 
+    //-- 投票情報登録 --//
     $target_stack = [];
     $handle_stack = [];
     foreach ($root_list as $id) { //投票順に意味があるので sort しない
       //対象者のみ憑依追跡する
-      $target_stack[] = $id == $target->id ? DB::$USER->ByReal($id)->id : $id;
+      $target_stack[] = ($id == $target->id) ? DB::$USER->ByReal($id)->id : $id;
       $handle_stack[] = DB::$USER->ByID($id)->handle_name;
     }
 
     $this->SetStack(ArrayFilter::Concat($target_stack), RequestDataVote::TARGET);
     $this->SetStack(ArrayFilter::Concat($handle_stack), 'target_handle');
-    return null;
   }
 
   protected function IsInvalidVoteNightTargetLive($live) {
-    return ! $live;
+    return false === $live;
+  }
+
+  protected function GetWolfTargetID($id) {
+    return Text::CutPop($id, ' '); //響狼は最終投票者
   }
 }

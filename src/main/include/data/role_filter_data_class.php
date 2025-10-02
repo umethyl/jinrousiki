@@ -14,7 +14,7 @@ final class RoleFilterData {
     'infatuated', 'day_voter', 'wirepuller_luck', 'occupied_luck', 'tengu_voice', 'mind_open',
     'mind_read', 'mind_evoke', 'mind_lonely', 'mind_receiver', 'mind_friend', 'mind_sympathy',
     'mind_sheep', 'mind_presage', 'wisp', 'black_wisp', 'spell_wisp', 'foughten_wisp', 'gold_wisp',
-    'tengu_spell_wisp', 'sheep_wisp', 'aspirator'
+    'tengu_spell_wisp', 'sheep_wisp', 'male_status', 'female_status', 'gender_status', 'aspirator'
   ];
 
   //初期配役抑制役職
@@ -25,9 +25,10 @@ final class RoleFilterData {
     'mind_lonely', 'mind_sheep', 'sheep_wisp', 'lovers', 'challenge_lovers', 'vega_lovers',
     'fake_lovers', 'possessed_exchange', 'letter_exchange', 'joker', 'rival', 'enemy', 'supported',
     'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
-    'bad_status', 'sweet_status', 'protected', 'penetration', 'aspirator', 'levitation',
-    'lost_ability', 'muster_ability', 'changed_disguise', 'changed_therian', 'changed_vindictive',
-    'copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
+    'bad_status', 'sweet_status', 'male_status', 'female_status', 'gender_status', 'protected',
+    'penetration', 'aspirator', 'levitation', 'lost_ability', 'muster_ability', 'changed_disguise',
+    'changed_therian', 'changed_vindictive', 'copied', 'copied_trick', 'copied_basic',
+    'copied_nymph', 'copied_soul', 'copied_teller'
   ];
 
   //発言表示
@@ -331,4 +332,7 @@ final class RoleFilterData {
 
   //特殊暗殺 (デスノート系)
   public static $death_note = ['death_note'];
+
+  //性別判定 (順番依存あり)
+  public static $gender_status = ['male_status', 'female_status', 'gender_status'];
 }

@@ -10,7 +10,7 @@ class Role_snow_trap_mad extends Role_trap_mad {
     return false;
   }
 
-  protected function GetSetTrapType() {
+  protected function GetTrapType() {
     return RoleVoteTarget::SNOW_TRAP;
   }
 
@@ -18,16 +18,16 @@ class Role_snow_trap_mad extends Role_trap_mad {
     return;
   }
 
-  protected function GetOtherSetTrapType() {
+  protected function GetOtherTrapType() {
     return RoleVoteTarget::TRAP;
   }
 
-  protected function GetTrapType() {
+  protected function GetTrapActionType() {
     return RoleVoteSuccess::FROSTBITE;
   }
 
   protected function TrapKillAction(User $user) {
-    $user->AddDoom(1, $this->GetTrapType());
+    $user->AddDoom(1, $this->GetTrapActionType());
   }
 
   protected function GetTrapKillResult($flag) {

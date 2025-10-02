@@ -30,7 +30,10 @@ final class SearchRoleInfoController extends JinrouController {
       switch ($category) {
       case 'fix':
 	foreach ($list as $type => $role) {
-	  if (empty($role) || in_array($role, $stack)) continue;
+	  if (empty($role) || in_array($role, $stack)) {
+	    continue;
+	  }
+
 	  if ($type == 'main') {
 	    $page = RoleDataManager::GetManualPage($role);
 	    $name = RoleDataManager::GetName($role);
@@ -45,9 +48,15 @@ final class SearchRoleInfoController extends JinrouController {
 
       case 'match':
 	foreach ($list as $type => $role_list) {
-	  if (empty($role_list)) continue;
+	  if (empty($role_list)) {
+	    continue;
+	  }
+
 	  foreach ($role_list as $role => $name) {
-	    if (in_array($role, $stack)) continue;
+	    if (in_array($role, $stack)) {
+	      continue;
+	    }
+
 	    if ($type == 'main') {
 	      $page = RoleDataManager::GetManualPage($role);
 	    } else {

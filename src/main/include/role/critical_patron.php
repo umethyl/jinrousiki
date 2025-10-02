@@ -10,7 +10,7 @@ class Role_critical_patron extends Role_patron {
   public $mix_in = ['critical_luck'];
 
   protected function IgnoreFilterVotePoll() {
-    return ! Lottery::Percent(5);
+    return false === Lottery::Percent(5);
   }
 
   protected function AddDuelistRole(User $user) {

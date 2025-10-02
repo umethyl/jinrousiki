@@ -8,9 +8,12 @@
 */
 class Role_possessed_mad extends Role {
   public $mix_in = ['authority'];
-  public $action      = VoteAction::POSSESSED;
-  public $not_action  = VoteAction::NOT_POSSESSED;
-  public $action_date = RoleActionDate::AFTER;
+  public $action     = VoteAction::POSSESSED;
+  public $not_action = VoteAction::NOT_POSSESSED;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   protected function IsAddVote() {
     return $this->IsActorActive();
@@ -29,14 +32,16 @@ class Role_possessed_mad extends Role {
 
   //現在の憑依先 (Mixin 用)
   final protected function OutputPossessed() {
-    if ($this->IgnoreResult()) return;
+    if ($this->IgnoreResult()) {
+      return;
+    }
     RoleHTML::OutputPossessed();
   }
 
   public function OutputAction() {
     if ($this->IsAddVote()) {
       $str = RoleAbilityMessage::POSSESSED;
-      RoleHTML::OutputVote(VoteCSS::WOLF, $str, $this->action, $this->not_action);
+      RoleHTML::OutputVoteNight(VoteCSS::WOLF, $str, $this->action, $this->not_action);
     }
   }
 
@@ -49,23 +54,23 @@ class Role_possessed_mad extends Role {
     return count($list) < 1 || DB::$ROOM->date < ArrayFilter::GetMin($list) + 2;
   }
 
-  protected function GetDisabledAddVoteMessage() {
+  protected function GetDisabledAddVoteNightMessage() {
     return VoteRoleMessage::LOST_ABILITY;
   }
 
-  protected function IgnoreDeadVoteIconPath() {
+  protected function FixLiveVoteNightIconPath() {
     return true;
   }
 
-  protected function IsVoteCheckboxLive($live) {
+  protected function IsVoteNightCheckboxLive($live) {
     return false === $live;
   }
 
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return true;
   }
 
-  protected function IgnoreFinishVote() {
+  protected function IgnoreCompletedVoteNight() {
     return false === $this->IsAddVote();
   }
 

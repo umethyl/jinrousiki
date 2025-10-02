@@ -16,6 +16,7 @@
 <a href="#joker_group">ジョーカー系</a>
 <a href="#death_note_group">デスノート系</a>
 <a href="#bad_status_group">悪戯系</a>
+<a href="#gender_status_group">性転換系</a>
 <a href="#copied_group">元神話マニア系</a>
 <a href="#other_group">その他</a>
 </p>
@@ -1957,6 +1958,80 @@ B：「恋人陣営の勝利」
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="chiroptera.php#sweet_fairy">恋妖精</a>用に実装されたサブ役職です。
+</pre>
+
+
+<h2 id="gender_status_group">性転換系 (性別変化)</h2>
+<p>
+<a href="#gender_status_rule">基本ルール</a>
+</p>
+<p>
+<a href="#gender_status">性転換</a>
+<a href="#male_status">男性転換</a>
+<a href="#female_status">女性転換</a>
+</p>
+
+<h3 id="gender_status_rule">基本ルール [性別]</h3>
+<ol>
+  <li><a href="ability.php#sex_mage">性別鑑定能力</a>は性転換系の影響を受ける</li>
+  <li>性転換系には全て発動日が設定されている。</li>
+  <li><a href="#male_status">男性転換</a>・<a href="#female_status">女性転換</a>は発動日以降、その性別に変化する。</li>
+  <li><a href="#male_status">男性転換</a>・<a href="#female_status">女性転換</a>の発動判定は元の性別の影響を受けない。<br>
+例) 男性に<a href="#male_status">男性転換</a>が付与されても男性となる。
+</li>
+  <li><a href="#male_status">男性転換</a>・<a href="#female_status">女性転換</a>は後発の付与で上書きされる。<br>
+例) <a href="#male_status">男性転換</a>状態の後に<a href="#female_status">女性転換</a>が付与された場合は上書きされて、女性になる。</li>
+  <li><a href="#male_status">男性転換</a>・<a href="#female_status">女性転換</a>は同日に付与されない。</li>
+  <li><a href="#gender_status">性転換</a>は発動日限定で有効となり、性別が男女反転する。</li>
+  <li><a href="#male_status">男性転換</a>・<a href="#female_status">女性転換</a>が発動中に<a href="#gender_status">性転換</a>が発動した場合はその状態からさらに反転する。</li>
+</ol>
+
+<h3 id="gender_status">性転換 [Ver. 4.1.0 α1～]</h3>
+<h4>[役職表示] 発動日限定</h4>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+表示された日の性別が男女反転する。
+<a href="#male_status">男性転換</a>・<a href="#female_status">女性転換</a>が発動中の場合はその状態からさらに反転する。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="chiroptera.php#gender_fairy">転妖精</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+性転換の天候を実装しようと思いついてベースとなる妖精用に実装しました。
+</pre>
+
+<h3 id="male_status">男性転換 [Ver. 4.1.0 α1～]</h3>
+<h4>[役職表示] 発動状態限定</h4>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+性別が男性に変化する。
+<a href="#female_status">女性転換</a>で上書きされた場合は無効化される。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#sex_exchange">性別能力者 (転換能力者)</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+性転換のシステム用に実装されたサブ役職です。
+</pre>
+
+<h3 id="female_status">女性転換 [Ver. 4.1.0 α1～]</h3>
+<h4>[役職表示] 発動状態限定</h4>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+性別が女性に変化する。
+<a href="#male_status">男性転換</a>で上書きされた場合は無効化される。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#sex_exchange">性別能力者 (転換能力者)</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#male_status">男性転換</a>の女性バージョンです。
 </pre>
 
 

@@ -6,7 +6,9 @@ final class GameVoteController extends JinrouController {
     Loader::LoadRequest('game_vote', true);
     DB::Connect();
     Session::Login();
-    if (! DB::Transaction()) VoteHTML::OutputResult(VoteMessage::DB_ERROR); //トランザクション開始
+    if (false === DB::Transaction()) { //トランザクション開始
+      VoteHTML::OutputResult(VoteMessage::DB_ERROR);
+    }
 
     DB::LoadRoom(true); //村情報 (ロック付き)
     if (DB::$ROOM->IsFinished()) {

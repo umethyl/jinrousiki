@@ -7,6 +7,10 @@
 RoleLoader::LoadFile('strong_voice');
 class Role_outside_voice extends Role_strong_voice {
   public function FilterVoice(&$voice, &$str) {
-    $voice = ArrayFilter::Pick($this->voice_list, DB::$ROOM->IsDay());
+    if (DB::$ROOM->IsDay()) {
+      $voice = ArrayFilter::Pop($this->voice_list);
+    } else {
+      $voice = ArrayFilter::Pick($this->voice_list);
+    }
   }
 }

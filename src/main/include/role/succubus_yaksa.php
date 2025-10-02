@@ -9,7 +9,7 @@
 RoleLoader::LoadFile('yaksa');
 class Role_succubus_yaksa extends Role_yaksa {
   protected function IgnoreOgreAssassin(User $user) {
-    return ! Sex::IsMale($user);
+    return false === Sex::IsMale($user);
   }
 
   protected function GetOgreReduceDenominator() {
@@ -21,6 +21,6 @@ class Role_succubus_yaksa extends Role_yaksa {
   }
 
   protected function RequireOgreWinDead(User $user) {
-    return ! $this->IsActor($user) && Sex::IsMale($user);
+    return false === $this->IsActor($user) && Sex::IsMale($user);
   }
 }

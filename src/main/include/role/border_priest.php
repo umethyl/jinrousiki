@@ -22,7 +22,9 @@ class Role_border_priest extends Role_priest {
     $result = $this->GetPriestResultType();
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
       //スキップ判定 (司祭能力発動は蘇生判定の後)
-      if ($user->IsDead(true) || $user->IsOn(UserMode::REVIVE)) continue;
+      if ($user->IsDead(true) || $user->IsOn(UserMode::REVIVE)) {
+	continue;
+      }
 
       $count = 0;
       foreach (DB::$ROOM->Stack()->Get('vote') as $vote_stack) {
@@ -35,7 +37,7 @@ class Role_border_priest extends Role_priest {
 	  }
 	}
       }
-      DB::$ROOM->ResultAbility($result, $count, null, $user->id);
+      DB::$ROOM->StoreAbility($result, $count, null, $user->id);
     }
   }
 }

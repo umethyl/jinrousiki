@@ -35,7 +35,9 @@ class IndexHTML {
 
   //メニュー交流リンク出力
   private static function OutputMenuLink() {
-    if (count(MenuConfig::$list) < 1) return;
+    if (count(MenuConfig::$list) < 1) {
+      return;
+    }
 
     Text::Printf(self::GetMenu(),
       TopPageMessage::MENU_COMMUNICATION, self::GenerateMenuLink(MenuConfig::$list)
@@ -44,7 +46,9 @@ class IndexHTML {
 
   //メニュー外部リンク出力
   private static function OutputMenuAddLink() {
-    if (count(MenuConfig::$add_list) < 1) return;
+    if (count(MenuConfig::$add_list) < 1) {
+      return;
+    }
 
     $tag = self::GetSubMenu();
     $str = '';
@@ -79,7 +83,9 @@ class IndexHTML {
 
   //掲示板情報出力
   private static function OutputBBS() {
-    if (BBSConfig::DISABLE) return;
+    if (BBSConfig::DISABLE) {
+      return;
+    }
     if (! ExternalLinkBuilder::IsConnect(BBSConfig::RAW_URL)) {
       $title = sprintf(TopPageMessage::BBS_TITLE, BBSConfig::VIEW_URL, BBSConfig::THREAD);
       ExternalLinkBuilder::OutputTimeOut($title, BBSConfig::RAW_URL);
@@ -87,8 +93,11 @@ class IndexHTML {
     }
 
     //スレッド情報を取得
-    $url = sprintf('%s%sl%dn', BBSConfig::RAW_URL, BBSConfig::THREAD, BBSConfig::SIZE);
-    if (($data = @file_get_contents($url)) == '') return;
+    $url  = sprintf('%s%sl%dn', BBSConfig::RAW_URL, BBSConfig::THREAD, BBSConfig::SIZE);
+    $data = @file_get_contents($url);
+    if ($data == '') {
+      return;
+    }
 
     $format = self::GetBBS();
     $str = '';

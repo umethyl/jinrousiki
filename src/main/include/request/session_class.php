@@ -12,7 +12,9 @@ class Session {
 
   //セッション開始
   public static function Start() {
-    if (is_null(self::$id)) new self();
+    if (is_null(self::$id)) {
+      new self();
+    }
   }
 
   //データ取得
@@ -42,14 +44,14 @@ class Session {
 
   //データ初期化
   public static function Init($type, $key, $value = []) {
-    if (! self::Exists($type, $key)) {
+    if (false === self::Exists($type, $key)) {
       $_SESSION[$type][$key] = $value;
     }
   }
 
   //データ存在確認
   public static function Exists($type, $key) {
-    return isset($_SESSION[$type][$key]);
+    return ArrayFilter::IsAssocKey($_SESSION, $type, $key);
   }
 
   //データセット
@@ -86,7 +88,9 @@ class Session {
 
   //ログイン (game_play 専用)
   public static function LoginGamePlay() {
-    if (self::Certify()) return true;
+    if (self::Certify()) {
+      return true;
+    }
 
     //村が存在するなら観戦ページにジャンプする
     RoomLoaderDB::Exists() ? self::OutputJump() : self::Output();

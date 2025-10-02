@@ -15,10 +15,23 @@ class UserManagerHTML {
     HTML::OutputFooter();
   }
 
+  //エラーバックリンク
+  public static function GenerateError($url) {
+    $stack = RQ::Get()->GetIgnoreError();
+    $str   = HTML::GenerateFormHeader($url, Message::BACK);
+    foreach (RQ::Get() as $key => $value) {
+      if (in_array($key, $stack)) {
+        continue;
+      }
+      $str .= self::GenerateHidden($key, $value);
+    }
+    return $str . HTML::GenerateFormFooter();
+  }
+
   //ヘッダ出力
   private static function OutputHeader() {
     $url = URL::GetRoom('user_manager');
-    if (RQ::Get()->user_no > 0) {
+    if (self::IsEditMode()) {
       $url .= RQ::Get()->ToURL(RequestDataUser::ID, true);
     }
 
@@ -32,27 +45,31 @@ class UserManagerHTML {
 
   //フォーム出力
   private static function OutputForm() {
-    echo TableHTML::GenerateTrHeader() . TableHTML::GenerateTdHeader();
+    TableHTML::OutputTrHeader();
+    TableHTML::OutputTdHeader();
     TableHTML::OutputHeader('input', false);
-    self::OutputUname();
-    self::OutputHandleName();
-    self::OutputPassword();
-    self::OutputSex();
-    self::OutputProfile();
-    self::OutputWishRole();
-    self::OutputSubmit();
-    echo TableHTML::GenerateFooter() . TableHTML::GenerateTdFooter();
+    self::OutputFormUname();
+    self::OutputFormHandleName();
+    self::OutputFormPassword();
+    self::OutputFormSex();
+    self::OutputFormProfile();
+    self::OutputFormWishRole();
+    self::OutputFormSubmit();
+    TableHTML::OutputFooter(false);
+    TableHTML::OutputTdFooter();
     TableHTML::OutputTrFooter();
   }
 
   //ユーザ名フォーム出力
-  private static function OutputUname() {
-    if (RQ::Get()->user_no > 0) { //登録情報変更モード時はユーザ名は変更不可
-      $str = Text::Format(self::GetUnameEdit(),
-	RQ::Get()->uname,
-	UserManagerMessage::UNAME_EXPLAIN_HEADER, Text::BR,
-	UserManagerMessage::UNAME_EXPLAIN_FOOTER
-      );
+  private static function OutputFormUname() {
+    TableHTML::OutputTrHeader();
+    Text::Printf(self::GetFormUnameHeader(), self::PATH, UserManagerMessage::UNAME);
+    if (self::IsEditMode()) { //登録情報変更モード時はユーザ名は変更不可
+      $str  = UserManagerMessage::UNAME_EXPLAIN_HEADER . Text::BR;
+      $str .= UserManagerMessage::UNAME_EXPLAIN_FOOTER;
+
+      TableHTML::OutputTd(RQ::Get()->uname);
+      TableHTML::OutputTd($str, 'explain');
     } elseif (GameConfig::TRIP) { //トリップ対応
       if (DB::$ROOM->IsOption('necessary_name') && DB::$ROOM->IsOption('necessary_trip')) {
 	$warning = Text::BR . HTML::GenerateSpan(UserManagerMessage::NECESSARY_NAME_TRIP);
@@ -63,44 +80,46 @@ class UserManagerHTML {
       } else {
 	$warning = '';
       }
-      $str = Text::Format(self::GetUnameTrip(),
+
+      Text::Printf(self::GetFormUnameWithTrip(),
 	RQ::Get()->uname, Message::TRIP_KEY, RQ::Get()->trip,
 	UserManagerMessage::UNAME_EXPLAIN_HEADER,
 	UserManagerMessage::UNAME_EXPLAIN_FOOTER, Text::BR,
 	Message::TRIP_KEY, UserManagerMessage::TRIP, $warning
       );
     } else {
-      $str = Text::Format(self::GetUnameNoTrip(),
+      Text::Printf(self::GetFormUnameWithoutTrip(),
 	RQ::Get()->uname,
 	UserManagerMessage::UNAME_EXPLAIN_HEADER, Text::BR,
 	UserManagerMessage::UNAME_EXPLAIN_FOOTER,
 	UserManagerMessage::DISABLE_TRIP
       );
     }
-
-    Text::Printf(self::GetUname(), self::PATH, UserManagerMessage::UNAME, $str);
+    TableHTML::OutputTrFooter();
   }
 
   //HN フォーム出力
-  private static function OutputHandleName() {
-    Text::Printf(self::GetHandleName(),
+  private static function OutputFormHandleName() {
+    Text::Printf(self::GetFormHandleName(),
       self::PATH, UserManagerMessage::HANDLE_NAME,
       RQ::Get()->handle_name, UserManagerMessage::HANDLE_NAME_EXPLAIN
     );
   }
 
   //パスワードフォーム出力
-  private static function OutputPassword() {
-    if (RQ::Get()->user_no > 0) return;
-    Text::Printf(
-      self::GetPassword(),
+  private static function OutputFormPassword() {
+    if (self::IsEditMode()) {
+      return;
+    }
+
+    Text::Printf(self::GetFormPassword(),
       self::PATH, UserManagerMessage::PASSWORD,
       UserManagerMessage::PASSWORD_EXPLAIN, UserManagerMessage::PASSWORD_CAUTION
     );
   }
 
   //性別フォーム出力
-  private static function OutputSex() {
+  private static function OutputFormSex() {
     $male   = '';
     $female = '';
     switch (RQ::Get()->sex) {
@@ -113,7 +132,7 @@ class UserManagerHTML {
       break;
     }
 
-    Text::Printf(self::GetSex(),
+    Text::Printf(self::GetFormSex(),
       self::PATH, UserManagerMessage::SEX,
       self::PATH, Message::MALE,   $male,
       self::PATH, Message::FEMALE, $female,
@@ -122,20 +141,20 @@ class UserManagerHTML {
   }
 
   //プロフィールフォーム出力
-  private static function OutputProfile() {
-    Text::Printf(self::GetProfile(),
+  private static function OutputFormProfile() {
+    Text::Printf(self::GetFormProfile(),
       self::PATH, UserManagerMessage::PROFILE, RQ::Get()->profile,
       UserManagerMessage::PROFILE_EXPLAIN
     );
   }
 
   //希望役職選択フォーム出力
-  private static function OutputWishRole() {
-    if (! DB::$ROOM->IsOption('wish_role')) {
-      Text::Output(self::GetWishRoleNone());
+  private static function OutputFormWishRole() {
+    if (false === DB::$ROOM->IsOption('wish_role')) {
+      Text::Output(self::GetFormWishRoleNone());
       return;
     }
-    Text::Printf(self::GetWishRoleHeader(), self::PATH, UserManagerMessage::WISH_ROLE);
+    Text::Printf(self::GetFormWishRoleHeader(), self::PATH, UserManagerMessage::WISH_ROLE);
 
     $stack = OptionLoader::Load('wish_role')->GetWishRole();
     $count = 0;
@@ -148,16 +167,16 @@ class UserManagerHTML {
 	$alt = UserManagerMessage::WISH_ROLE_ALT . RoleDataManager::GetName($role);
       }
       $checked = HTML::GenerateChecked($check_role == $role);
-      Text::Printf(self::GetWishRoleButton(),
+      Text::Printf(self::GetFormWishRoleButton(),
 	$role, $role, $role, $checked, self::PATH, $role, $alt
       );
     }
-    Text::Output(self::GetWishRoleFooter());
+    Text::Output(self::GetFormWishRoleFooter());
   }
 
   //登録ボタン出力
-  private static function OutputSubmit() {
-    Text::Printf(self::GetSubmit(),
+  private static function OutputFormSubmit() {
+    Text::Printf(self::GetFormSubmit(),
       UserManagerMessage::SUBMIT_EXPLAIN, UserManagerMessage::SUBMIT,
       DB::$ROOM->IsClosing() ? GameMessage::CLOSING : ''
     );
@@ -186,17 +205,6 @@ class UserManagerHTML {
     Text::Output(self::GetFooter());
   }
 
-  //エラーバックリンク
-  public static function GenerateError($url) {
-    $stack = RQ::Get()->GetIgnoreError();
-    $str   = HTML::GenerateFormHeader($url, Message::BACK);
-    foreach (RQ::Get() as $key => $value) {
-      if (in_array($key, $stack)) continue;
-      $str .= self::GenerateHidden($key, $value);
-    }
-    return $str . HTML::GenerateFormFooter();
-  }
-
   //hidden タグ生成
   private static function GenerateHidden($name, $value) {
     return Text::Format('<input type="hidden" name="%s" value="%s">', $name, $value);
@@ -215,25 +223,15 @@ class UserManagerHTML {
 EOF;
   }
 
-  //ユーザ名フォームタグ
-  private static function GetUname() {
+  //ユーザ名フォームタグヘッダ
+  private static function GetFormUnameHeader() {
     return <<<EOF
-<tr>
 <td class="img"><label for="uname"><img src="%s/uname.gif" alt="%s"></label></td>
-%s</tr>
-EOF;
-  }
-
-  //ユーザ名フォームタグ (登録情報変更)
-  private static function GetUnameEdit() {
-    return <<<EOF
-<td>%s</td>
-<td class="explain">%s%s%s</td>
 EOF;
   }
 
   //ユーザ名フォームタグ (トリップあり)
-  private static function GetUnameTrip() {
+  private static function GetFormUnameWithTrip() {
     return <<<EOF
 <td><input type="text" id="uname" name="uname" size="30" maxlength="30" value="%s"></td>
 <td><label for="trip">%s</label> <input type="text" id="trip" name="trip" size="15" maxlength="15" value="%s"></td>
@@ -245,7 +243,7 @@ EOF;
   }
 
   //ユーザ名フォームタグ (トリップなし)
-  private static function GetUnameNoTrip() {
+  private static function GetFormUnameWithoutTrip() {
     return <<<EOF
 <td><input type="text" id="uname" name="uname" size="30" maxlength="30" value="%s"></td>
 <td class="explain">%s%s%s(<span>%s</span>)</td>
@@ -253,7 +251,7 @@ EOF;
   }
 
   //HN フォームタグ
-  private static function GetHandleName() {
+  private static function GetFormHandleName() {
     return <<<EOF
 <tr>
 <td class="img"><label for="handle_name"><img src="%s/handle_name.gif" alt="%s"></label></td>
@@ -264,7 +262,7 @@ EOF;
   }
 
   //パスワードフォームタグ
-  private static function GetPassword() {
+  private static function GetFormPassword() {
     return <<<EOF
 <tr>
 <td class="img"><label for="password"><img src="%s/password.gif" alt="%s"></label></td>
@@ -275,7 +273,7 @@ EOF;
   }
 
   //性別フォームタグ
-  private static function GetSex() {
+  private static function GetFormSex() {
     return <<<EOF
 <tr>
 <td class="img"><img src="%s/sex.gif" alt="%s"></td>
@@ -289,7 +287,7 @@ EOF;
   }
 
   //プロフィールフォームタグ
-  private static function GetProfile() {
+  private static function GetFormProfile() {
     return <<<EOF
 <tr>
 <td class="img"><label for="profile"><img src="%s/profile.gif" alt="%s"></label></td>
@@ -300,7 +298,7 @@ EOF;
   }
 
   //希望役職選択フォームタグ (ヘッダ)
-  private static function GetWishRoleHeader() {
+  private static function GetFormWishRoleHeader() {
     return <<<EOF
 <tr>
 <td class="role"><img src="%s/role.gif" alt="%s"></td>
@@ -310,14 +308,14 @@ EOF;
   }
 
   //希望役職選択フォームタグ (ボタン)
-  private static function GetWishRoleButton() {
+  private static function GetFormWishRoleButton() {
     return <<<EOF
 <td><label for="%s"><input type="radio" id="%s" name="role" value="%s"%s><img src="%s/role_%s.gif" alt="%s"></label></td>
 EOF;
   }
 
   //希望役職選択フォームタグ (フッタ)
-  private static function GetWishRoleFooter() {
+  private static function GetFormWishRoleFooter() {
     return <<<EOF
 </tr>
 </table></td>
@@ -326,12 +324,12 @@ EOF;
   }
 
   //希望役職選択フォームタグ (なし)
-  private static function GetWishRoleNone() {
+  private static function GetFormWishRoleNone() {
     return '<tr><td><input type="hidden" name="role" value="none"></td></tr>';
   }
 
   //登録ボタンタグ
-  private static function GetSubmit() {
+  private static function GetFormSubmit() {
     return <<<EOF
 <tr>
 <td class="submit" colspan="3">
@@ -370,5 +368,10 @@ EOF;
   //フッタタグ
   private static function GetFooter() {
     return '</table></div></form>';
+  }
+
+  //登録情報変更モード判定
+  private static function IsEditMode() {
+    return RQ::Get()->user_no > 0;
   }
 }

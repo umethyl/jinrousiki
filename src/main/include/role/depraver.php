@@ -13,7 +13,7 @@ class Role_depraver extends Role {
       if ($user->IsRole('possessed_fox')) {
 	$stack[] = $user->GetName(); //憑依追跡
       } elseif (RoleUser::IsFoxCount($user)) {
-	if (! RoleUser::IsLonely($user)) {
+	if (false === RoleUser::IsLonely($user)) {
 	  $stack[] = $user->handle_name;
 	}
       } elseif ($user->IsRoleGroup('scarlet')) {

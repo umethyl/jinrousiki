@@ -6,8 +6,11 @@
   ・追加役職：なし
 */
 class Role_cupid extends Role {
-  public $action      = VoteAction::CUPID;
-  public $action_date = RoleActionDate::FIRST;
+  public $action = VoteAction::CUPID;
+
+  protected function GetActionDate() {
+    return RoleActionDate::FIRST;
+  }
 
   protected function GetPartner() {
     $id    = $this->GetID();
@@ -26,22 +29,26 @@ class Role_cupid extends Role {
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::CUPID, RoleAbilityMessage::CUPID, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::CUPID, RoleAbilityMessage::CUPID, $this->action);
   }
 
   protected function SetVoteNightFilter() {
     $this->SetStack(DB::$USER->Count() < GameConfig::CUPID_SELF_SHOOT, 'self_shoot');
   }
 
-  protected function IgnoreVoteCheckboxSelf() {
+  protected function DisableVoteNightCheckboxSelf() {
     return false;
   }
 
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return true;
   }
 
-  protected function IsVoteCheckboxChecked(User $user) {
+  protected function GetVoteNightCheckboxType() {
+    return OptionFormType::CHECKBOX;
+  }
+
+  protected function CheckedVoteNightCheckbox(User $user) {
     return $this->IsSelfShoot() && $this->IsActor($user);
   }
 
@@ -55,10 +62,6 @@ class Role_cupid extends Role {
     return false;
   }
 
-  protected function GetVoteCheckboxType() {
-    return OptionFormType::CHECKBOX;
-  }
-
   protected function GetVoteNightNeedCount() {
     return 2;
   }
@@ -69,25 +72,26 @@ class Role_cupid extends Role {
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
-      if (! is_null($str)) return $str;
+      $this->ValidateVoteNightTarget($user, $user->IsLive());
       $user_list[$id] = $user;
-      $self_shoot |= $this->IsActor($user); //自分撃ち判定
+      if ($this->IsActor($user)) { //自分撃ち判定
+	$self_shoot = true;
+      }
     }
 
-    if (! $self_shoot) { //自分撃ちエラー判定
-      if ($this->FixSelfShoot()) { //自分撃ち固定
-	return VoteRoleMessage::TARGET_INCLUDE_MYSELF;
-      } elseif ($this->IsSelfShoot()) { //参加人数制限
-	return VoteRoleMessage::TARGET_MYSELF_COUNT;
+    //自分撃ちエラー判定 (自分撃ち固定 > 参加人数制限)
+    if (false === $self_shoot) {
+      if ($this->FixSelfShoot()) {
+	throw new UnexpectedValueException(VoteRoleMessage::TARGET_INCLUDE_MYSELF);
+      } elseif ($this->IsSelfShoot()) {
+	throw new UnexpectedValueException(VoteRoleMessage::TARGET_MYSELF_COUNT);
       }
     }
     $this->SetStack($user_list, 'target_list');
     $this->SetStack($self_shoot, 'is_self_shoot');
-    return null;
   }
 
-  public function VoteNightAction() {
+  public function SetVoteNightTargetListAction() {
     $role  = $this->GetActor()->GetID('lovers');
     $list  = $this->GetStack('target_list');
     $stack = [];

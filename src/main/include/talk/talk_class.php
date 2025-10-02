@@ -22,7 +22,9 @@ final class Talk {
   //会話取得
   public static function Fetch() {
     $builder = new TalkBuilder('talk');
-    foreach (TalkDB::Get() as $talk) $builder->Generate($talk);
+    foreach (TalkDB::Get() as $talk) {
+      $builder->Generate($talk);
+    }
     $builder->GenerateTimeStamp();
     return $builder;
   }
@@ -34,7 +36,9 @@ final class Talk {
 
     $builder = new TalkBuilder('talk');
     $builder->flag->open_cast = DB::$ROOM->IsOpenCast(); //霊界公開判定
-    foreach (TalkDB::Get(true) as $talk) $builder->GenerateHeaven($talk);
+    foreach (TalkDB::Get(true) as $talk) {
+      $builder->GenerateHeaven($talk);
+    }
     return $builder;
   }
 
@@ -208,7 +212,7 @@ final class TalkParser {
     case VoteAction::VOODOO_MAD:
     case VoteAction::VOODOO_FOX:
     case VoteAction::TRAP:
-      $action      = Text::Cut($action, '_', null, false) . '_DO';
+      $action      = Text::CutPick($action) . '_DO';
       $this->class = VoteCSS::WOLF;
       break;
 
@@ -282,7 +286,7 @@ final class TalkBuilder {
     case RoomScene::DAY:
     case RoomScene::NIGHT:
       $virtual = DB::$USER->ByVirtual($actor->id);
-      if (! $actor->IsSame($virtual)) {
+      if (false === $actor->IsSame($virtual)) {
 	$actor = $virtual;
       }
       break;
@@ -360,13 +364,17 @@ final class TalkBuilder {
       break;
 
     case RoomScene::DAY: //OP の昼限定
-      if (! DB::$ROOM->IsDate(1)) return false;
+      if (false === DB::$ROOM->IsDate(1)) {
+	return false;
+      }
       $type     = 'start_datetime'; //ゲーム開始時刻
       $sentence = TalkMessage::GAME_START;
       break;
 
     case RoomScene::NIGHT:
-      if (! DB::$ROOM->IsDate(1)) return false;
+      if (false === DB::$ROOM->IsDate(1)) {
+	return false;
+      }
       $type     = 'start_datetime'; //ゲーム開始時刻
       $sentence = TalkMessage::GAME_START;
       break;
@@ -381,7 +389,9 @@ final class TalkBuilder {
     }
 
     $time = RoomDB::Get($type);
-    if (is_null($time)) return false;
+    if (is_null($time)) {
+      return false;
+    }
 
     $talk = new TalkParser();
     $talk->sentence   = $sentence . Time::ConvertTimeStamp($time);
@@ -451,7 +461,7 @@ final class TalkBuilder {
     $is_day = DB::$ROOM->IsDay();
     $stack  = ['blinder' => $is_day, 'earplug' => $is_day, 'deep_sleep' => true];
     foreach ($stack as $role => $flag) {
-      if (($flag && DB::$ROOM->IsEvent($role)) || DB::$ROOM->IsOption($role)) {
+      if ((true === $flag && DB::$ROOM->IsEvent($role)) || DB::$ROOM->IsOption($role)) {
 	$this->actor->virtual_live = true;
 	$this->actor->AddVirtualRole($role);
       }
@@ -460,7 +470,7 @@ final class TalkBuilder {
 
   //役職情報ロード
   private function LoadFilter() {
-    if (! isset($this->actor->virtual_live)) {
+    if (false === isset($this->actor->virtual_live)) {
       $this->actor->virtual_live = false;
     }
     RoleManager::Stack()->Set('viewer', $this->actor);
@@ -544,15 +554,21 @@ final class TalkBuilder {
   //発言透過役職判定
   private function IsMindReadRole(User $user, User $real) {
     foreach (RoleLoader::LoadUser($user, 'mind_read') as $filter) {
-      if ($filter->IsMindRead()) return true;
+      if ($filter->IsMindRead()) {
+	return true;
+      }
     }
 
     foreach (RoleLoader::LoadUser($this->actor, 'mind_read_active') as $filter) {
-      if ($filter->IsMindReadActive($user)) return true;
+      if ($filter->IsMindReadActive($user)) {
+	return true;
+      }
     }
 
     foreach (RoleLoader::LoadUser($real, 'mind_read_possessed') as $filter) {
-      if ($filter->IsMindReadPossessed($user)) return true;
+      if ($filter->IsMindReadPossessed($user)) {
+	return true;
+      }
     }
 
     return false;
@@ -603,13 +619,13 @@ final class TalkBuilder {
   //発言 (システムメッセージ)
   private function TalkSystem(TalkParser $talk, User $user, $name) {
     $str = $talk->sentence . $this->AddTime($talk);
-    if (! isset($talk->action)) { //標準処理
+    if (false === isset($talk->action)) { //標準処理
       return $this->RegisterSystem($str, $this->GetTalkID($talk));
     }
 
     switch ($talk->action) { //投票情報
     case TalkAction::OBJECTION: //「異議」ありは常時表示
-      $sex = empty($talk->sex) ? $user->sex : $talk->sex;
+      $sex = empty($talk->sex) ? Sex::Get($user) : $talk->sex;
       $css = 'objection-' . $sex;
       return $this->RegisterSystemMessage($name . $str, $this->GetTalkID($talk), $css);
 
@@ -672,7 +688,9 @@ final class TalkBuilder {
       }
 
       foreach (RoleLoader::LoadType('talk_whisper') as $filter) {
-	if ($filter->Whisper($this, $talk)) return true;
+	if ($filter->Whisper($this, $talk)) {
+	  return true;
+	}
       }
       return false;
 
@@ -685,33 +703,45 @@ final class TalkBuilder {
       }
 
       foreach (RoleLoader::LoadType('talk_whisper') as $filter) {
-	if ($filter->Whisper($this, $talk)) return true;
+	if ($filter->Whisper($this, $talk)) {
+	  return true;
+	}
       }
       return false;
 
     case TalkLocation::MAD: //囁き狂人
       foreach (RoleLoader::LoadUser($actor, 'talk_whisper') as $filter) {
-	if ($filter->Whisper($this, $talk)) return true;
+	if ($filter->Whisper($this, $talk)) {
+	  return true;
+	}
       }
       return false;
 
     case TalkLocation::FOX: //妖狐
       foreach (RoleLoader::LoadUser(DB::$SELF, 'talk_fox') as $filter) {
-	if ($filter->Whisper($this, $talk)) return true;
+	if ($filter->Whisper($this, $talk)) {
+	  return true;
+	}
       }
 
       foreach (RoleLoader::LoadUser($actor, 'talk_whisper') as $filter) {
-	if ($filter->Whisper($this, $talk)) return true;
+	if ($filter->Whisper($this, $talk)) {
+	  return true;
+	}
       }
       return false;
 
     case TalkLocation::MONOLOGUE: //独り言
       foreach (RoleLoader::LoadUser($actor, 'talk_self') as $filter) {
-	if ($filter->Whisper($this, $talk)) return true;
+	if ($filter->Whisper($this, $talk)) {
+	  return true;
+	}
       }
 
       foreach (RoleLoader::LoadUser($this->actor, 'talk_ringing') as $filter) {
-	if ($filter->Whisper($this, $talk)) return true;
+	if ($filter->Whisper($this, $talk)) {
+	  return true;
+	}
       }
       return false;
     }

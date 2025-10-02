@@ -27,16 +27,18 @@ final class IconDB {
 
   //次のアイコン番号取得
   public static function GetNext() {
-    DB::Prepare(self::GetQuerySelect(['MAX(icon_no)'])->Build());
+    $query = self::GetQuerySelect(['MAX(icon_no)']);
+
+    DB::Prepare($query->Build());
     return (int)DB::FetchResult() + 1;
   }
 
   //リスト取得
   public static function GetList(Query $query, array $list) {
     if (RQ::Get()->sort_by_name) {
-      $query->Order(['icon_name' => true, 'icon_no' => true]);
+      $query->Order(['icon_name' => true, 'icon_no'   => true]);
     } else {
-      $query->Order(['icon_no' => true, 'icon_name' => true]);
+      $query->Order(['icon_no'   => true, 'icon_name' => true]);
     }
 
     if (RQ::Get()->page != 'all') {
@@ -59,6 +61,7 @@ final class IconDB {
     }
 
     $query = self::GetQuerySelect([$type])->Distinct()->WhereNotNull($type);
+
     DB::Prepare($query->Build());
     return DB::FetchColumn();
   }
@@ -89,6 +92,15 @@ final class IconDB {
 
     DB::Prepare($query->Build(), [$icon_no, $icon_name]);
     return DB::Exists();
+  }
+
+  //新規登録
+  public static function Insert(array $list) {
+    $query = self::GetQueryBase()->Insert()->Into(array_keys($list))
+      ->IntoData('regist_date', Query::NOW);
+
+    DB::Prepare($query->Build(), array_values($list));
+    return DB::Execute();
   }
 
   //有効判定

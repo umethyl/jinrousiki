@@ -33,7 +33,7 @@ class OptionForm {
   public static function Output() {
     $class = '';
     foreach (self::$order as $group => $name) {
-      if (! is_int($group)) {
+      if (false === is_int($group)) {
 	$class = sprintf(' class="%s"', $group); //class 切り替え
       }
       is_null($name) ? self::OutputSeparator($group) : self::OutputForm($name, $class);
@@ -45,7 +45,7 @@ class OptionForm {
   //フォーム出力 (振り分け処理用)
   private static function OutputForm($name, $class) {
     $filter = OptionLoader::Load($name);
-    if (! $filter->enable || ! isset($filter->type)) return;
+    if (! $filter->enable || false === isset($filter->type)) return;
 
     switch ($filter->type) {
     case OptionFormType::TEXT:

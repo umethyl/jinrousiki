@@ -93,9 +93,9 @@ class OldLogHTML {
       HTML::OutputResult($title, Text::Join(OldLogMessage::NO_LOG, $back));
     }
 
-    $cache_flag = false; //キャッシュ取得判定
+    $cache_flag = false; //キャッシュ有効判定
     if (JinrouCacheManager::Enable(JinrouCacheManager::LOG_LIST)) {
-      $cache_flag = self::IsCache();
+      $cache_flag = self::EnableCache();
       if (true === $cache_flag) {
 	$str = JinrouCacheManager::Get(JinrouCacheManager::LOG_LIST);
 	if (true === isset($str)) {
@@ -212,7 +212,9 @@ class OldLogHTML {
   //過去ログ一覧のHTML化処理
   public static function GenerateIndex() {
     RQ::Set('reverse', Switcher::OFF);
-    if (RQ::Get()->max_room_no < 1) return false;
+    if (RQ::Get()->max_room_no < 1) {
+      return false;
+    }
 
     $header = sprintf('../log/%sindex', RQ::Get()->prefix);
     $footer = Text::LineFeed('</body></html>');
@@ -473,7 +475,7 @@ EOF;
   }
 
   //キャッシュ有効判定
-  private static function IsCache() {
+  private static function EnableCache() {
     foreach (RQ::Get() as $key => $value) { //何か値がセットされていたら無効
       switch ($key) {
       case 'page':

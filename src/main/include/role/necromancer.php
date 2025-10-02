@@ -14,34 +14,43 @@ class Role_necromancer extends Role {
 
   //霊能
   public function Necromancer(User $user, $flag) {
-    return $flag ? 'stolen' : $this->DistinguishNecromancer($user);
+    return (true === $flag) ? 'stolen' : $this->DistinguishNecromancer($user);
   }
 
   //霊能判定
   final protected function DistinguishNecromancer(User $user, $reverse = false) {
-    switch ($camp = $user->DistinguishCamp()) {
+    $camp = $user->DistinguishCamp();
+    switch ($camp) {
     case Camp::WOLF:
       $stack = [
         'boss_wolf', 'mist_wolf', 'tiger_wolf', 'phantom_wolf', 'cursed_wolf', 'possessed_wolf'
       ];
-      if ($user->IsRole($stack)) return $user->main_role;
+      if ($user->IsRole($stack)) {
+	return $user->main_role;
+      }
       break;
 
     case Camp::FOX:
-      if ($user->IsMainGroup(CampGroup::CHILD_FOX)) return 'child_fox';
+      if ($user->IsMainGroup(CampGroup::CHILD_FOX)) {
+	return 'child_fox';
+      }
 
       $stack = [
         'white_fox', 'black_fox', 'mist_fox', 'tiger_fox', 'phantom_fox', 'sacrifice_fox',
 	'possessed_fox', 'cursed_fox'
       ];
-      if ($user->IsRole($stack)) return $camp;
+      if ($user->IsRole($stack)) {
+	return $camp;
+      }
       break;
 
     case Camp::VAMPIRE:
       return 'chiroptera';
 
     case Camp::CHIROPTERA:
-      if ($user->IsRole('cute_chiroptera')) return $camp;
+      if ($user->IsRole('cute_chiroptera')) {
+	return $camp;
+      }
       break;
 
     case Camp::OGRE:
@@ -49,6 +58,6 @@ class Role_necromancer extends Role {
       return $camp;
     }
 
-    return ($user->IsMainGroup(CampGroup::WOLF) xor $reverse) ? 'wolf' : 'human';
+    return ($user->IsMainGroup(CampGroup::WOLF) xor (true === $reverse)) ? 'wolf' : 'human';
   }
 }

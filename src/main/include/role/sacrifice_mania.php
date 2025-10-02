@@ -11,7 +11,7 @@ class Role_sacrifice_mania extends Role_unknown_mania {
     return $user->GetID('protected');
   }
 
-  public function WolfEatResist() {
+  public function ResistWolfEat() {
     return true;
   }
 }

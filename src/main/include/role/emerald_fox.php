@@ -2,7 +2,7 @@
 /*
   ◆翠狐 (emerald_fox)
   ○仕様
-  ・占い：共鳴者付加
+  ・占い：共鳴者付加 (念話できない妖狐カウント)
 */
 RoleLoader::LoadFile('fox');
 class Role_emerald_fox extends Role_fox {
@@ -14,15 +14,15 @@ class Role_emerald_fox extends Role_fox {
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
   }
 
-  protected function GetDisabledAddVoteMessage() {
+  protected function GetDisabledAddVoteNightMessage() {
     return VoteRoleMessage::LOST_ABILITY;
   }
 
-  protected function IgnoreFinishVote() {
-    return ! $this->IsAddVote();
+  protected function IgnoreCompletedVoteNight() {
+    return false === $this->IsAddVote();
   }
 
   public function MageFailed(User $user) {
@@ -30,8 +30,8 @@ class Role_emerald_fox extends Role_fox {
   }
 
   public function MageSuccess(User $user) {
-    if (! RoleUser::IsFoxCount($user) ||
-	! ($user->IsMainGroup(CampGroup::CHILD_FOX) || RoleUser::IsLonely($user))) {
+    if (false === RoleUser::IsFoxCount($user) ||
+	false === ($user->IsMainGroup(CampGroup::CHILD_FOX) || RoleUser::IsLonely($user))) {
       return false;
     }
 

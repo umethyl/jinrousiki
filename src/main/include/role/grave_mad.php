@@ -5,46 +5,53 @@
   ・死者妨害：憑依能力者以外
 */
 class Role_grave_mad extends Role {
-  public $action      = VoteAction::GRAVE;
-  public $not_action  = VoteAction::NOT_GRAVE;
-  public $action_date = RoleActionDate::AFTER;
+  public $action     = VoteAction::GRAVE;
+  public $not_action = VoteAction::NOT_GRAVE;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   protected function IsAddVote() {
     return DB::$ROOM->IsOption('not_open_cast') || DB::$ROOM->IsOption('auto_open_cast');
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3 || ! $this->IsAddVote();
+    return DB::$ROOM->date < 3 || false === $this->IsAddVote();
   }
 
   public function OutputAction() {
     $str = RoleAbilityMessage::GRAVE;
-    RoleHTML::OutputVote(VoteCSS::WOLF, $str, $this->action, $this->not_action);
+    RoleHTML::OutputVoteNight(VoteCSS::WOLF, $str, $this->action, $this->not_action);
   }
 
-  protected function GetDisabledAddVoteMessage() {
+  protected function GetDisabledAddVoteNightMessage() {
     return VoteRoleMessage::OPEN_CAST;
   }
 
-  protected function IgnoreDeadVoteIconPath() {
+  protected function FixLiveVoteNightIconPath() {
     return true;
   }
 
-  protected function IsVoteCheckboxLive($live) {
-    return ! $live;
+  protected function IsVoteNightCheckboxLive($live) {
+    return false === $live;
   }
 
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return true;
   }
 
   //死者妨害対象者セット
   public function SetGrave(User $user) {
-    if (! RoleUser::IsPossessed($user)) $this->AddStack($user->id, 'grave');
+    if (false === RoleUser::IsPossessed($user)) {
+      $this->AddStack($user->id, 'grave');
+    }
   }
 
   //死者妨害
   public function Grave(User $user) {
-    if (! RoleUser::IsAvoid($user) && Lottery::Percent(70)) $user->AddDoom(2);
+    if (false === RoleUser::IsAvoid($user) && Lottery::Percent(70)) {
+      $user->AddDoom(2);
+    }
   }
 }

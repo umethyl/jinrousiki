@@ -17,7 +17,7 @@ class Role_soul_assassin extends Role_assassin {
     if (RoleUser::IsPoison($user)) {
       DB::$USER->Kill($this->GetID(), DeadReason::POISON_DEAD);
     } else {
-      DB::$ROOM->ResultAbility($this->result, $user->main_role, $user->GetName(), $this->GetID());
+      DB::$ROOM->StoreAbility($this->result, $user->main_role, $user->GetName(), $this->GetID());
     }
   }
 }

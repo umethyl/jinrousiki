@@ -33,7 +33,7 @@ class Role_holy_priest extends Role_priest {
       }
       //Text::p($stack, "◆Camp [{$this->role}]");
 
-      DB::$ROOM->ResultAbility($result, ArrayFilter::CountKey($stack), null, $user->id);
+      DB::$ROOM->StoreAbility($result, ArrayFilter::CountKey($stack), null, $user->id);
     }
   }
 }

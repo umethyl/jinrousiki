@@ -71,12 +71,12 @@ class Role_possessed_wolf extends Role_wolf {
 	  //憑依先のリセット処理
 	  $virtual->ReturnPossessed('possessed');
 	  $virtual->StoreLastWords();
-	  DB::$ROOM->ResultDead($virtual->handle_name, DeadReason::POSSESSED_RESET);
+	  DB::$ROOM->StoreDead($virtual->handle_name, DeadReason::POSSESSED_RESET);
 
 	  //見かけ上の蘇生処理
 	  $user->ReturnPossessed('possessed_target');
 	  $user->StoreLastWords($virtual->handle_name);
-	  DB::$ROOM->ResultDead($user->handle_name, DeadReason::REVIVE_SUCCESS);
+	  DB::$ROOM->StoreDead($user->handle_name, DeadReason::REVIVE_SUCCESS);
 	}
 	continue;
       } elseif ($user->IsOn(UserMode::POSSESSED_CANCEL) || $target->IsOn(UserMode::REVIVE)) {
@@ -90,14 +90,14 @@ class Role_possessed_wolf extends Role_wolf {
 	  //Ver. 1.5.0 β13 の仕様変更でこのケースはなくなったはず
 	  $target = $target->GetVirtual();
 	} else {
-	  DB::$ROOM->ResultDead($target->handle_name, DeadReason::REVIVE_SUCCESS);
+	  DB::$ROOM->StoreDead($target->handle_name, DeadReason::REVIVE_SUCCESS);
 	  $user->LostAbility();
 	}
 	$target->AddRole(sprintf('possessed[%d-%d]', $possessed_date, $user->id));
 
 	//憑依処理
 	$user->AddRole(sprintf('possessed_target[%d-%d]', $possessed_date, $target->id));
-	DB::$ROOM->ResultDead($virtual->handle_name, DeadReason::POSSESSED);
+	DB::$ROOM->StoreDead($virtual->handle_name, DeadReason::POSSESSED);
 	$user->StoreLastWords($virtual->handle_name);
 	$user->Update('last_words', null);
       }

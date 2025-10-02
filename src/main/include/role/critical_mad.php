@@ -11,9 +11,14 @@ class Role_critical_mad extends Role {
 
   public function VoteKillAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($uname)) continue;
+      if ($this->IsVoteKill($uname)) {
+	continue;
+      }
+
       $user = DB::$USER->ByRealUname($target_uname);
-      if ($user->IsDead(true) || $this->CallParent('IgnoreVoteKillAction', $user)) continue;
+      if ($user->IsDead(true) || $this->CallParent('IgnoreVoteKillAction', $user)) {
+	continue;
+      }
 
       if ($this->CallParent('IsVoteKillActionTarget', $user)) {
 	$this->CallParent('SetVoteKillAction', $user);

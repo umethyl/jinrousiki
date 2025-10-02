@@ -78,7 +78,9 @@ class Stack {
   public function Add($name, $data) {
     //Text::p($data, "◆Stack/Add[{$name}]");
     $stack = $this->GetArray($name);
-    if (is_null($stack)) return;
+    if (is_null($stack)) {
+      return;
+    }
 
     $stack[] = $data;
     $this->Set($name, $stack);
@@ -115,7 +117,9 @@ class Stack {
   //シャッフル
   public function Shuffle($name) {
     $stack = $this->GetArray($name);
-    if (is_null($stack)) return;
+    if (is_null($stack)) {
+      return;
+    }
 
     shuffle($stack);
     $this->Set($name, $stack);
@@ -125,16 +129,22 @@ class Stack {
   public function Delete($name, $data) {
     //Text::p($data, "◆Stack/Delete[{$name}]");
     $stack = $this->GetArray($name);
-    if (is_null($stack)) return;
+    if (is_null($stack)) {
+      return;
+    }
 
     $key = array_search($data, $stack);
-    if ($key !== false) $this->DeleteKey($name, $key);
+    if (false !== $key) {
+      $this->DeleteKey($name, $key);
+    }
   }
 
   //削除 (キー指定)
   public function DeleteKey($name, $key) {
     $stack = $this->GetArray($name);
-    if (is_null($stack)) return;
+    if (is_null($stack)) {
+      return;
+    }
 
     unset($stack[$key]);
     $this->Set($name, $stack);
@@ -143,7 +153,9 @@ class Stack {
   //削除 (差分指定)
   public function DeleteDiff($name, array $list) {
     $stack = $this->GetArray($name);
-    if (is_null($stack)) return;
+    if (is_null($stack)) {
+      return;
+    }
 
     $this->Set($name, array_values(array_diff($stack, $list)));
   }
@@ -222,11 +234,40 @@ abstract class StackManager {
   //ON 判定
   final public function IsOn($mode) {
     //if (get_class($this) == 'User') Text::p($this->Flag());
-    return $this->Flag()->Get($mode);
+    return true === $this->Flag()->Get($mode);
   }
 
   //OFF 判定
   final public function IsOff($mode) {
     return true !== $this->IsOn($mode);
+  }
+}
+
+//-- 構造体基底クラス --//
+abstract class StructBase {
+  protected $struct = [];
+
+  //セット
+  final public function Set($name, $data) {
+    //Text::p($data, sprintf("◆%s/Set[%s]", get_class($this), $name));
+    if (array_key_exists($name, $this->struct)) {
+      $this->struct[$name] = $data;
+    } else {
+      throw new Exception("Invalid Key: {$name}: {$data}");
+    }
+  }
+
+  //取得
+  final public function Get($name) {
+    if (array_key_exists($name, $this->struct)) {
+      return $this->struct[$name];
+    } else {
+      throw new Exception("Invalid Key: {$name}");
+    }
+  }
+
+  //全データ取得
+  final public function GetStruct() {
+    return $this->struct;
   }
 }

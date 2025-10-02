@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('tengu');
 class Role_meteor_tengu extends Role_tengu {
   protected function TenguKill(User $user) {
-    if (! RoleUser::IsAvoid($user)) {
+    if (false === RoleUser::IsAvoid($user)) {
       DB::$USER->Kill($user->id, DeadReason::TENGU_KILLED);
     }
   }

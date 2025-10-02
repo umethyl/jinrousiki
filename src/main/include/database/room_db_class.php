@@ -28,7 +28,9 @@ final class RoomDB {
 
   //最終更新時刻更新
   public static function UpdateTime() {
-    if (DB::$ROOM->IsTest()) return true;
+    if (DB::$ROOM->IsTest()) {
+      return true;
+    }
 
     $query = self::GetQueryUpdate()->SetData('last_update_time', Query::TIME);
     self::Prepare($query);
@@ -37,7 +39,9 @@ final class RoomDB {
 
   //投票回数更新
   public static function UpdateVoteCount($revote = false) {
-    if (DB::$ROOM->IsTest()) return true;
+    if (DB::$ROOM->IsTest()) {
+      return true;
+    }
 
     $query = self::GetQueryUpdate()
       ->SetIncrement('vote_count')->SetData('overtime_alert', Query::DISABLE);
@@ -53,10 +57,12 @@ final class RoomDB {
 
   //超過警告メッセージ判定フラグ変更
   public static function UpdateOvertimeAlert($bool = false) {
-    if (DB::$ROOM->IsTest()) return true;
+    if (DB::$ROOM->IsTest()) {
+      return true;
+    }
 
     $query = self::GetQueryUpdate()
-      ->SetData('overtime_alert', $bool ? Query::ENABLE : Query::DISABLE)
+      ->SetData('overtime_alert', (true === $bool) ? Query::ENABLE : Query::DISABLE)
       ->SetData('last_update_time', Query::TIME);
 
     self::Prepare($query);
@@ -147,7 +153,11 @@ final class RoomDB {
 
   //投票リセット
   public static function ResetVote() {
-    if (DB::$ROOM->IsTest()) return true;
+    if (DB::$ROOM->IsTest()) {
+      return true;
+    }
+
+    //投票回数を更新して現行投票を無効扱いとする
     if (false === self::UpdateVoteCount()) {
       return false;
     }
@@ -156,6 +166,7 @@ final class RoomDB {
     if (false === DB::$ROOM->IsDate(1)) { //即処理型は1日目のみ
       return true;
     }
+
     $query = Query::Init()->Table('vote')->Update()->SetIncrement('vote_count')
       ->Where(['room_no', 'date'])->WhereIn('type', 2);
     $list = [DB::$ROOM->id, DB::$ROOM->date, VoteAction::CUPID, VoteAction::DUELIST];
@@ -166,7 +177,9 @@ final class RoomDB {
 
   //投票データ削除
   public static function DeleteVote() {
-    if (is_null(DB::$ROOM->id)) return true;
+    if (is_null(DB::$ROOM->id)) {
+      return true;
+    }
 
     $query = Query::Init()->Table('vote')->Delete()->Where(['room_no', 'date']);
     $list  = [DB::$ROOM->id, DB::$ROOM->date];
@@ -301,7 +314,7 @@ final class SystemMessageDB {
   //遺言取得
   public static function GetLastWords($shift = false) {
     $query = self::GetQuery()->Table('result_lastwords')->Select(['handle_name', 'message']);
-    $list  = [DB::$ROOM->id, DB::$ROOM->date - ($shift ? 0 : 1)];
+    $list  = [DB::$ROOM->id, DB::$ROOM->date - (true === $shift ? 0 : 1)];
 
     DB::Prepare($query->Build(), $list);
     return DB::FetchAssoc();
@@ -425,5 +438,80 @@ final class RoomLoaderDB {
   private static function LoadRoom(Query $query, array $list) {
     DB::Prepare($query->Build(), $list);
     return DB::FetchClass('Room', true);
+  }
+}
+
+//-- DB アクセス (RoomTalk 拡張) --//
+final class RoomTalkDB {
+  //発言登録
+  public static function Insert(TalkStruct $talk) {
+    $stack = $talk->GetStruct();
+    $query = Query::Init()->Insert()->IntoData('time', Query::TIME);
+    $list  = ['room_no' => DB::$ROOM->id, 'date' => DB::$ROOM->date];
+    switch ($stack[TalkStruct::SCENE]) {
+    case RoomScene::BEFORE:
+    case RoomScene::AFTER:
+      $query->Table('talk_' . $stack[TalkStruct::SCENE]);
+      break;
+
+    default:
+      $query->Table('talk');
+      break;
+    }
+
+    $struct_list = [
+      TalkStruct::SCENE,
+      TalkStruct::UNAME,
+      TalkStruct::SENTENCE,
+      TalkStruct::SPEND_TIME
+    ];
+    foreach ($struct_list as $struct) {
+      $list[$struct] = $stack[$struct];
+    }
+
+    $add_struct_list = [
+      TalkStruct::ACTION,
+      TalkStruct::LOCATION,
+      TalkStruct::FONT_TYPE,
+      TalkStruct::ROLE_ID
+    ];
+    foreach ($add_struct_list as $struct) {
+      if (isset($stack[$struct])) {
+	$list[$struct] = $stack[$struct];
+      }
+    }
+    $query->Into(array_keys($list));
+
+    DB::Prepare($query->Build(), array_values($list));
+    return DB::FetchBool();
+  }
+
+  //発言登録 (ゲーム開始前専用)
+  public static function InsertBeforeGame(RoomTalkBeforeGameStruct $talk) {
+    $stack = $talk->GetStruct();
+    $query = Query::Init()->Table('talk_' . DB::$ROOM->scene)
+      ->Insert()->IntoData('time', Query::TIME);
+    $list  = ['room_no' => DB::$ROOM->id, 'date' => 0, 'scene' => DB::$ROOM->scene];
+
+    $struct_list = [
+      RoomTalkBeforeGameStruct::UNAME,
+      RoomTalkBeforeGameStruct::HANDLE_NAME,
+      RoomTalkBeforeGameStruct::COLOR,
+      RoomTalkBeforeGameStruct::SENTENCE
+    ];
+    foreach ($struct_list as $struct) {
+      $list[$struct] = $stack[$struct];
+    }
+
+    $add_struct_list = [RoomTalkBeforeGameStruct::FONT_TYPE];
+    foreach ($add_struct_list as $struct) {
+      if (isset($stack[$struct])) {
+	$list[$struct] = $stack[$struct];
+      }
+    }
+    $query->Into(array_keys($list));
+
+    DB::Prepare($query->Build(), array_values($list));
+    return DB::FetchBool();
   }
 }

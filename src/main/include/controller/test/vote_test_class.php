@@ -45,7 +45,7 @@ final class VoteTestController extends JinrouController {
     DB::$USER->SetEvent(); //天候テスト用
     include('data/vote_self.php');
     foreach (DB::$USER->Get() as $user) {
-      if (! isset($user->target_no)) {
+      if (false === isset($user->target_no)) {
 	$user->target_no = 0;
       }
 

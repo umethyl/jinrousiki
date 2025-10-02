@@ -9,13 +9,16 @@
 */
 class Role_poison_cat extends Role {
   public $mix_in = ['poison'];
-  public $action      = VoteAction::REVIVE;
-  public $not_action  = VoteAction::NOT_REVIVE;
-  public $result      = RoleAbility::REVIVE;
-  public $action_date = RoleActionDate::AFTER;
+  public $action     = VoteAction::REVIVE;
+  public $not_action = VoteAction::NOT_REVIVE;
+  public $result     = RoleAbility::REVIVE;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   protected function IsAddVote() {
-    return $this->CallParent('IsReviveVote') && ! DB::$ROOM->IsOpenCast();
+    return $this->CallParent('IsReviveVote') && false === DB::$ROOM->IsOpenCast();
   }
 
   //投票能力判定 (蘇生能力者専用)
@@ -29,19 +32,21 @@ class Role_poison_cat extends Role {
 
   //蘇生結果表示 (Mixin 用)
   final protected function OutputReviveResult() {
-    if ($this->IgnoreResult()) return;
+    if ($this->IgnoreResult()) {
+      return;
+    }
     RoleHTML::OutputResult($this->result);
   }
 
   public function OutputAction() {
     $str = RoleAbilityMessage::REVIVE;
-    RoleHTML::OutputVote(VoteCSS::REVIVE, $str, $this->action, $this->not_action);
+    RoleHTML::OutputVoteNight(VoteCSS::REVIVE, $str, $this->action, $this->not_action);
   }
 
-  protected function GetDisabledAddVoteMessage() {
+  protected function GetDisabledAddVoteNightMessage() {
     //生存者に自動公開判定の結果を見せないために先に個別能力判定を行う
-    if (! $this->CallParent('IsReviveVote')) {
-      return $this->CallParent('GetDisabledReviveVoteMessage');
+    if (false === $this->CallParent('IsReviveVote')) {
+      return $this->CallParent('GetDisabledReviveVoteNightMessage');
     } elseif (DB::$ROOM->IsOpenCast()) {
       return VoteRoleMessage::OPEN_CAST;
     } else {
@@ -49,20 +54,20 @@ class Role_poison_cat extends Role {
     }
   }
 
-  //投票無効メッセージ取得 (蘇生能力者専用)
-  protected function GetDisabledReviveVoteMessage() {
+  //夜投票無効メッセージ取得 (蘇生能力者専用)
+  protected function GetDisabledReviveVoteNightMessage() {
     return null;
   }
 
-  protected function IgnoreDeadVoteIconPath() {
+  protected function FixLiveVoteNightIconPath() {
     return true;
   }
 
-  protected function IsVoteCheckboxLive($live) {
-    return ! $live;
+  protected function IsVoteNightCheckboxLive($live) {
+    return false === $live;
   }
 
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return true;
   }
 
@@ -76,12 +81,12 @@ class Role_poison_cat extends Role {
       }
     } else {
       $target = $user;
-      DB::$ROOM->ResultDead(DB::$USER->GetHandleName($target->uname), DeadReason::REVIVE_FAILED);
+      DB::$ROOM->StoreDead(DB::$USER->GetHandleName($target->uname), DeadReason::REVIVE_FAILED);
     }
     if (DB::$ROOM->IsOption('seal_message')) return; //蘇生結果を登録 (天啓封印ならスキップ)
 
     //蘇生結果は憑依を追跡しない
-    DB::$ROOM->ResultAbility(RoleAbility::REVIVE, $result, $target->handle_name, $this->GetID());
+    DB::$ROOM->StoreAbility(RoleAbility::REVIVE, $result, $target->handle_name, $this->GetID());
   }
 
   //蘇生対象者取得
@@ -185,7 +190,7 @@ class Role_poison_cat extends Role {
 
 	//見かけ上の蘇生処理
 	$user->ReturnPossessed('possessed_target');
-	DB::$ROOM->ResultDead($user->handle_name, DeadReason::REVIVE_SUCCESS);
+	DB::$ROOM->StoreDead($user->handle_name, DeadReason::REVIVE_SUCCESS);
 
 	//本当の死者の蘇生処理
 	$virtual->Revive(true);

@@ -16,9 +16,14 @@ class Event_random_step extends Event {
 
     $count = 0;
     foreach (Lottery::GetList($stack) as $id) {
-      if (! Lottery::Percent(20)) continue;
-      DB::$ROOM->ResultDead($id, DeadReason::STEP);
-      if (++$count > 2) break;
+      if (false === Lottery::Percent(20)) {
+	continue;
+      }
+
+      DB::$ROOM->StoreDead($id, DeadReason::STEP);
+      if (++$count > 2) {
+	break;
+      }
     }
   }
 }

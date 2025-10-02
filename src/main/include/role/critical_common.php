@@ -10,6 +10,6 @@ class Role_critical_common extends Role_common {
   public $mix_in = ['authority', 'critical_luck'];
 
   protected function IgnoreFilterVotePoll() {
-    return ! Lottery::Percent(5);
+    return false === Lottery::Percent(5);
   }
 }

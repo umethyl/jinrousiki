@@ -8,8 +8,11 @@
   ・投票：1 日目のみ
 */
 class Role_mind_scanner extends Role {
-  public $action      = VoteAction::SCAN;
-  public $action_date = RoleActionDate::FIRST;
+  public $action = VoteAction::SCAN;
+
+  protected function GetActionDate() {
+    return RoleActionDate::FIRST;
+  }
 
   protected function IgnorePartner() {
     return DB::$ROOM->date < 2 || is_null($this->GetMindRole());
@@ -33,10 +36,10 @@ class Role_mind_scanner extends Role {
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::SCAN, RoleAbilityMessage::SCAN, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::SCAN, RoleAbilityMessage::SCAN, $this->action);
   }
 
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return true;
   }
 

@@ -2,7 +2,7 @@
 /*
   ◆傍観者 (watcher)
   ○仕様
-  ・投票数：0
+  ・投票数：0 固定
 */
 RoleLoader::LoadFile('authority');
 class Role_watcher extends Role_authority {
@@ -10,7 +10,7 @@ class Role_watcher extends Role_authority {
     return 0;
   }
 
-  protected function IsUpdateFilterVoteDo() {
-    return true;
+  protected function EnableAddVoteDoCount() {
+    return false;
   }
 }

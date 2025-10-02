@@ -37,7 +37,9 @@ class IconHTML {
   //アイコン編集フォーム出力
   private static function OutputEdit($icon_no) {
     $stack = IconDB::Get($icon_no);
-    if (count($stack) < 1) return;
+    if (count($stack) < 1) {
+      return;
+    }
 
     extract($stack);
     $size = UserIcon::GetMaxLength();
@@ -170,17 +172,17 @@ class IconHTML {
     extract($icon_list);
     $edit_url = URL::GetHeaderLink('icon_view', RequestDataIcon::ID, $icon_no);
     if ($disable > 0) {
-      $icon_name = sprintf('<s>%s</s>', $icon_name);
+      $icon_name = HTML::GenerateTag('s', $icon_name);
     }
     $data = '';
     if (false === empty($appearance)) {
-      $data .= Text::Format('<li>[S]%s</li>', $appearance);
+      $data .= HTML::GenerateTag('li', Text::QuoteBracket('S') . ' ' . $appearance);
     }
     if (false === empty($category)) {
-      $data .= Text::Format('<li>[C]%s</li>', $category);
+      $data .= HTML::GenerateTag('li', Text::QuoteBracket('C') . ' ' . $category);
     }
     if (false === empty($author)) {
-      $data .= Text::Format('<li>[A]%s</li>', $author);
+      $data .= HTML::GenerateTag('li', Text::QuoteBracket('A') . ' ' . $author);
     }
 
     Text::Printf(self::GetDetailForIconView(),

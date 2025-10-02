@@ -38,7 +38,10 @@ class InfoHTML {
   //新役職情報ヘッダ出力
   public static function OutputRoleHeader($title) {
     HTML::OutputHeader(self::GenerateTitle(InfoMessage::TITLE_ROLE, $title), 'new_role', true);
-    if ($title == InfoMessage::TITLE_ROLE_SUMMARY) return;
+    if ($title == InfoMessage::TITLE_ROLE_SUMMARY) {
+      return;
+    }
+
     Text::Printf(self::GetRoleHeader(),
       $title, InfoMessage::TITLE_TOP, InfoMessage::TITLE_MENU, InfoMessage::TITLE_ROLE_SUMMARY
     );
@@ -54,7 +57,9 @@ class InfoHTML {
   //開発ページ出力
   public static function OutputDevelop($title, $css, $name, $version = null, $url = null) {
     self::OutputHeader($title, 1, $css);
-    if (isset($version)) self::OutputLatestLink($url);
+    if (isset($version)) {
+      HTML::OutputP(HTML::GenerateLink($url, InfoMessage::TITLE_LATEST));
+    }
     self::Load(Text::AddFooter($name, $version), 'develop/');
     HTML::OutputFooter();
   }
@@ -84,9 +89,14 @@ class InfoHTML {
     //設定されている役職名を取得
     $stack = [];
     foreach (CastConfig::$role_list as $key => $value) {
-      if ($key < $min) continue;
+      if ($key < $min) {
+	continue;
+      }
+
       ArrayFilter::AddMerge($stack, array_keys($value));
-      if ($key == $max) break;
+      if ($key == $max) {
+	break;
+      }
     }
     $role_list = RoleDataManager::Sort(array_unique($stack)); //表示順を決定
 
@@ -99,13 +109,19 @@ class InfoHTML {
 
     //人数毎の配役を表示
     foreach (CastConfig::$role_list as $key => $value) {
-      if ($key < $min) continue;
-      $str = TableHTML::GenerateTd(sprintf('<strong>%s</strong>', $key));
+      if ($key < $min) {
+	continue;
+      }
+
+      $str = TableHTML::GenerateTd(HTML::GenerateTag('b', $key));
       foreach ($role_list as $role) {
 	$str .= TableHTML::GenerateTd(ArrayFilter::GetInt($value, $role));
       }
       TableHTML::OutputTr($str);
-      if ($key == $max) break;
+      if ($key == $max) {
+	break;
+      }
+
       if ($key % 20 == 0) {
 	Text::Output($header);
       }
@@ -115,12 +131,18 @@ class InfoHTML {
 
   //他のサーバの部屋画面ロード用データを出力
   public static function OutputSharedRoomList($top = false) {
-    if ($top) {
-      if (TopPageConfig::DISABLE_SHARED_SERVER) return false;
+    if (true === $top) {
+      if (TopPageConfig::DISABLE_SHARED_SERVER) {
+	return false;
+      }
+
       $stack   = TopPageConfig::$server_list;
       $arg_url = 'index';
     } else {
-      if (SharedServerConfig::DISABLE) return false;
+      if (SharedServerConfig::DISABLE) {
+	return false;
+      }
+
       $stack   = SharedServerConfig::$server_list;
       $arg_url = 'shared_room';
     }
@@ -130,7 +152,10 @@ class InfoHTML {
     foreach ($stack as $server => $array) {
       $count++;
       extract($array);
-      if ($disable) continue;
+      if (true === $disable) {
+	continue;
+      }
+
       $str .= Text::Format(self::GetSharedRoom(),
 	$count, HTML::GenerateJavaScriptHeader(), $count, $count, $arg_url,
 	HTML::GenerateJavaScriptFooter()
@@ -141,20 +166,31 @@ class InfoHTML {
 
   //他のサーバの部屋画面を出力
   public static function OutputSharedRoom($id, $top = false) {
-    if ($top) {
-      if (TopPageConfig::DISABLE_SHARED_SERVER) return false;
+    if (true === $top) {
+      if (TopPageConfig::DISABLE_SHARED_SERVER) {
+	return false;
+      }
+
       $stack = TopPageConfig::$server_list;
     } else {
-      if (SharedServerConfig::DISABLE) return false;
+      if (SharedServerConfig::DISABLE) {
+	return false;
+      }
+
       $stack = SharedServerConfig::$server_list;
     }
 
     $count = 0;
     foreach ($stack as $server => $array) {
-      if (++$count == $id) break;
+      if (++$count == $id) {
+	break;
+      }
     }
     extract($array);
-    if ($disable) return false;
+    if (true === $disable) {
+      return false;
+    }
+
     $title = sprintf('%s (<a href="%s">%s</a>)', InfoMessage::GAME_LIST, $url, $name);
 
     if (! ExternalLinkBuilder::IsConnect($url)) { //サーバ通信状態チェック
@@ -163,26 +199,30 @@ class InfoHTML {
     }
 
     //部屋情報を取得
-    if (($data = @file_get_contents($url.'room_manager.php')) == '') return false;
+    $data = @file_get_contents($url.'room_manager.php');
+    if ($data == '') {
+      return false;
+    }
+
     $data = Text::RemoveBOM(Text::Encode($data, $encode));
     if ($separator != '') {
       $split_list = mb_split($separator, $data);
       $data = array_pop($split_list);
     }
     if ($footer != '') {
-      if (($position = mb_strrpos($data, $footer)) === false) return false;
+      $position = mb_strrpos($data, $footer);
+      if (false === $position) {
+	return false;
+      }
       $data = Text::Shrink($data, $position + Text::Count($footer));
     }
-    if ($data == '') return false;
+    if ($data == '') {
+      return false;
+    }
 
     $replace_list = ['href="' => 'href="' . $url, 'src="'  => 'src="' . $url];
     $data = strtr($data, $replace_list);
     ExternalLinkBuilder::Output($title, $data);
-  }
-
-  //最新情報へのリンク出力
-  private static function OutputLatestLink($url) {
-    Text::Printf(HTML::GetP(), HTML::GenerateLink($url, InfoMessage::TITLE_LATEST));
   }
 
   //サブタイトル付タイトル生成

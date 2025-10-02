@@ -27,7 +27,10 @@ class Role_rival extends Role {
   }
 
   public function FilterWin(&$flag) {
-    if (! $flag || $this->GetActor()->IsRole('lovers')) return;
+    if (! $flag || $this->GetActor()->IsRole('lovers')) {
+      return;
+    }
+
     if ($this->IsActorDead()) {
       $flag = false;
       return;
@@ -44,6 +47,6 @@ class Role_rival extends Role {
 
   //宿敵判定
   private function IsRival(User $user, array $target) {
-    return ! $this->IsActor($user) && $user->IsPartner($this->role, $target);
+    return false === $this->IsActor($user) && $user->IsPartner($this->role, $target);
   }
 }

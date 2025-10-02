@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('vampire');
 class Role_doom_vampire extends Role_vampire {
-  public function WolfEatResist() {
+  public function ResistWolfEat() {
     return true;
   }
 

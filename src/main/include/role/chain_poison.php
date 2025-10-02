@@ -14,16 +14,23 @@ class Role_chain_poison extends Role_poison {
   }
 
   //連毒処理
-  public function ChainPoison() {
-    if ($this->IsDetox($this->GetActor()->GetVirtual())) return; //解毒判定
+  final public function ChainPoison() {
+    if ($this->IsDetox($this->GetActor()->GetVirtual())) { //解毒判定
+      return;
+    }
 
     $stack     = [];
     $aspirator = [];
     foreach (DB::$USER->SearchLive(true) as $id => $uname) { //生存者から常時対象外の役職を除く
       $target = DB::$USER->ByReal($id);
-      if (RoleUser::IsAvoid($target, true)) continue;
+      if (RoleUser::IsAvoid($target, true)) {
+	continue;
+      }
+
       $stack[] = $target->id;
-      if ($target->IsRole('aspirator')) $aspirator[] = $target->id;
+      if ($target->IsRole('aspirator')) {
+	$aspirator[] = $target->id;
+      }
     }
     //Text::p($stack, "◆Target/Base [{$this->role}]");
     //Text::p($aspirator, "◆Target/aspirator [{$this->role}]");
@@ -36,11 +43,16 @@ class Role_chain_poison extends Role_poison {
       //-- 対象者選出 --//
       $target_stack = [];
       for ($i = 0; $i < 2; $i++) {
-	if (count($stack) < 1) break;
+	if (count($stack) < 1) {
+	  break;
+	}
+
 	$id = Lottery::Get(count($aspirator) > 0 ? $aspirator : $stack);
 	$target_stack[] = $id;
 	ArrayFilter::Shrink($stack, $id);
-	if (count($aspirator) > 0) ArrayFilter::Shrink($aspirator, $id);
+	if (count($aspirator) > 0) {
+	  ArrayFilter::Shrink($aspirator, $id);
+	}
       }
       //Text::p($target_stack, "◆Target [{$this->role}]");
 
@@ -57,8 +69,11 @@ class Role_chain_poison extends Role_poison {
 	}
 	DB::$USER->Kill($id, DeadReason::POISON_DEAD); //死亡処理
 
-	if (! $target->IsRole($this->role)) continue; //連鎖判定
-	if (! $this->IsDetox($target->GetVirtual())) $count++; //解毒判定
+	if ($target->IsRole($this->role)) { //連鎖判定
+	  if (false === $this->IsDetox($target->GetVirtual())) { //解毒判定
+	    $count++;
+	  }
+	}
       }
     }
   }

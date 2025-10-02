@@ -25,7 +25,9 @@ class Role_involve_tengu extends Role_meteor_tengu {
     //陣営情報収集
     $camp_list = [];
     foreach (DB::$USER->Get() as $user) {
-      if ($user->IsDead()) continue;
+      if ($user->IsDead()) {
+	continue;
+      }
       $camp_list[$user->GetMainCamp($start)][] = $user->id; //キャッシュを参照しない
     }
     //Text::p($camp_list, "◆Camp/Base [{$this->role}]");
@@ -52,7 +54,9 @@ class Role_involve_tengu extends Role_meteor_tengu {
     $stack = [];
     foreach ($camp_list[$camp] as $id) {
       $user = DB::$USER->ByID($id);
-      if ($user->IsRole('lovers') || RoleUser::IsAvoid($user)) continue; //対象外判定
+      if ($user->IsRole('lovers') || RoleUser::IsAvoid($user)) { //対象外判定
+	continue;
+      }
       $stack[] = $id;
     }
     //Text::p($stack, "◆Target [{$this->role}]");

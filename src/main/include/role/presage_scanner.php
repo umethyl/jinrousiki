@@ -17,7 +17,7 @@ class Role_presage_scanner extends Role_mind_scanner {
     foreach (DB::$USER->GetRoleUser($role) as $user) {
       if ($user->IsPartner($role, $actor->id)) {
 	$result = RoleAbility::PRESAGE;
-	DB::$ROOM->ResultAbility($result, $voter->GetName(), $actor->GetName(), $user->id);
+	DB::$ROOM->StoreAbility($result, $voter->GetName(), $actor->GetName(), $user->id);
 	break;
       }
     }

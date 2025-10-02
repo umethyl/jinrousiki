@@ -59,7 +59,9 @@ class OptionManager {
 
   //役職置換処理
   public static function Replace(array &$list, $base, $target) {
-    if (ArrayFilter::GetInt($list, $base) < 1) return false;
+    if (ArrayFilter::GetInt($list, $base) < 1) {
+      return false;
+    }
     ArrayFilter::Replace($list, $base, $target);
     return true;
   }
@@ -108,7 +110,10 @@ class OptionParser {
   private static function Parse($data) {
     $list = [];
     foreach (Text::Parse($data) as $option) {
-      if (empty($option)) continue;
+      if (empty($option)) {
+	continue;
+      }
+
       $stack = Text::Parse($option, ':');
       $list[$stack[0]] = count($stack) > 1 ? array_slice($stack, 1) : true;
     }
@@ -127,16 +132,19 @@ abstract class Option {
   public $form_value;
 
   public function __construct() {
-    if ($this->Ignore()) return false;
-    $this->name = Text::Cut(get_class($this), OptionLoader::CLASS_PREFIX);
+    if ($this->Ignore()) {
+      return false;
+    }
+
+    $this->name = Text::CutPop(get_class($this), OptionLoader::CLASS_PREFIX);
 
     $enable  = sprintf('%s_enable',  $this->name);
     $default = sprintf('default_%s', $this->name);
     $this->enable = isset(GameOptionConfig::$$enable) ? GameOptionConfig::$$enable : true;
-    if (! isset($this->form_name)) {
+    if (false === isset($this->form_name)) {
       $this->form_name  = $this->name;
     }
-    if (! isset($this->form_value)) {
+    if (false === isset($this->form_value)) {
       $this->form_value = $this->value;
     }
 
@@ -254,7 +262,9 @@ abstract class Option {
   final protected function CastAll() {
     $list = Cast::Stack()->Get(Cast::CAST);
     foreach (array_keys($list) as $id) {
-      if ($this->IgnoreCastAll($id)) continue;
+      if ($this->IgnoreCastAll($id)) {
+	continue;
+      }
       $list[$id] .= ' ' . $this->GetCastAllRole($id);
     }
     Cast::Stack()->Set(Cast::CAST, $list);
@@ -284,9 +294,14 @@ abstract class OptionCheckbox extends Option {
   public $form_value = Switcher::ON;
 
   public function LoadPost() {
-    if ($this->IgnorePost()) return false;
+    if ($this->IgnorePost()) {
+      return false;
+    }
+
     RQ::Get()->ParsePostOn($this->name);
-    if (RQ::Get()->{$this->name}) $this->Set($this->name);
+    if (RQ::Get()->{$this->name}) {
+      $this->Set($this->name);
+    }
   }
 
   protected function GetRoomCaption() {
@@ -314,9 +329,14 @@ abstract class OptionSelector extends Option {
   }
 
   public function LoadPost() {
-    if ($this->IgnorePost()) return false;
+    if ($this->IgnorePost()) {
+      return false;
+    }
+
     RQ::Get()->ParsePostData($this->name);
-    if (is_null(RQ::Get()->{$this->name})) return false;
+    if (is_null(RQ::Get()->{$this->name})) {
+      return false;
+    }
 
     $post = RQ::Get()->{$this->name};
     $flag = in_array($post, $this->form_list);
@@ -329,7 +349,7 @@ abstract class OptionSelector extends Option {
 
   //個別データ取得
   public function GetItem() {
-    if (! isset($this->item_list)) {
+    if (false === isset($this->item_list)) {
       $this->item_list = [];
       $stack = is_array($this->conf_name) ? $this->conf_name : GameOptionConfig::${$this->source};
       if (isset($stack)) {
@@ -356,7 +376,9 @@ abstract class OptionSelector extends Option {
   //選択値セット
   protected function SetFormValue($type) {
     foreach ($this->form_list as $key => $value) {
-      if ($type == 'int' && ! is_int($key)) continue;
+      if ($type == 'int' && false === is_int($key)) {
+	continue;
+      }
 
       if (DB::$ROOM->IsOption($type == 'key' ? $key : $value)) {
 	$this->value = $value;
@@ -378,7 +400,10 @@ abstract class OptionText extends Option {
   public $type  = OptionFormType::TEXT;
 
   public function LoadPost() {
-    if ($this->IgnorePost()) return false;
+    if ($this->IgnorePost()) {
+      return false;
+    }
+
     RQ::Get()->ParsePost('Escape', $this->name);
   }
 }

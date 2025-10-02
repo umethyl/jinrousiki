@@ -105,7 +105,10 @@ final class RoleTestController extends JinrouController {
     //置換系
     foreach (['replace_human', 'change_common', 'change_mad', 'change_cupid'] as $option) {
       RQ::Get()->ParsePostData($option);
-      if (empty(RQ::Get()->$option)) continue;
+      if (empty(RQ::Get()->$option)) {
+	continue;
+      }
+
       $list = $option . '_selector_list';
       if (array_search(RQ::Get()->$option, GameOptionConfig::$$list) !== false) {
 	$stack->option_role[] = RQ::Get()->$option;
@@ -115,7 +118,10 @@ final class RoleTestController extends JinrouController {
     //闇鍋用オプション
     foreach (['topping', 'boost_rate'] as $option) {
       RQ::Get()->ParsePostData($option);
-      if (empty(RQ::Get()->$option)) continue;
+      if (empty(RQ::Get()->$option)) {
+	continue;
+      }
+
       if (array_key_exists(RQ::Get()->$option, GameOptionConfig::${$option.'_list'})) {
 	$stack->option_role[] = $option . ':' . RQ::Get()->$option;
       }

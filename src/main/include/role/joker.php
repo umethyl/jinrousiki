@@ -7,7 +7,7 @@
 */
 class Role_joker extends Role {
   protected function IgnoreAbility() {
-    return ! $this->IsJoker($this->GetActor());
+    return false === $this->IsJoker($this->GetActor());
   }
 
   public function FilterWin(&$flag) {
@@ -22,7 +22,7 @@ class Role_joker extends Role {
   //ジョーカー所持者判定
   public function IsJoker(User $user, $shift = false) {
     if (DB::$ROOM->IsFinished()) {
-      if (! isset($user->joker_flag)) {
+      if (false === isset($user->joker_flag)) {
 	$this->SetAllJoker();
       }
       return $user->joker_flag;
@@ -30,8 +30,10 @@ class Role_joker extends Role {
       return false;
     }
 
-    $date = DB::$ROOM->date - ($shift ? 1 : 0);
-    if ($date == 1 || DB::$ROOM->IsNight()) $date++;
+    $date = DB::$ROOM->date - ((true === $shift) ? 1 : 0);
+    if ($date == 1 || DB::$ROOM->IsNight()) {
+      $date++;
+    }
     return $user->GetDoomDate($this->role) == $date;
   }
 
@@ -39,7 +41,7 @@ class Role_joker extends Role {
   public function SetJoker() {
     $user    = $this->GetJoker(); //現在の所持者
     $virtual = $user->GetVirtual()->uname; //仮想ユーザ名
-    $uname   = $this->GetVoteTargetUname($virtual); //ジョーカーの投票先
+    $uname   = $this->GetVoteKillUname($virtual); //ジョーカーの投票先
 
     //Stack 格納
     $stack = $this->GetStack();
@@ -47,10 +49,10 @@ class Role_joker extends Role {
     //Text::p($uname, '◆Vote');
 
     $target_list = []; //移動可能者リスト
-    $voter_list  = $this->GetVotedUname($virtual); //ジョーカー投票者
+    $voter_list  = $this->GetVotePollList($virtual); //ジョーカー投票者
     foreach ($voter_list as $voter_uname) { //死者と前日所持者を除外
       $voter = DB::$USER->ByRealUname($voter_uname);
-      if ($voter->IsLive(true) && ! $this->IsKeepJoker($voter, true)) {
+      if ($voter->IsLive(true) && false === $this->IsKeepJoker($voter, true)) {
 	$target_list[] = $voter_uname;
       }
     }
@@ -60,7 +62,7 @@ class Role_joker extends Role {
     //Text::p($target_list, '◆Target [joker]');
 
     //対象者か現在のジョーカー所持者が処刑者なら無効
-    if ($this->IsVoted($uname) || $this->IsVoted($user->uname)) {
+    if ($this->IsVoteKill($uname) || $this->IsVoteKill($user->uname)) {
       return true;
     }
 
@@ -90,12 +92,16 @@ class Role_joker extends Role {
   public function ResetJoker($shift = false) {
     $stack = [];
     foreach (DB::$USER->Get() as $user) {
-      if ($user->IsDead(true)) continue;
+      if ($user->IsDead(true)) {
+	continue;
+      }
+
       if ($this->IsKeepJoker($user)) {
 	return;
       }
       $stack[] = $user;
     }
+
     if (count($stack) > 0) {
       $this->AddJoker(Lottery::Get($stack), $shift);
     }
@@ -111,7 +117,7 @@ class Role_joker extends Role {
     }
 
     $target_list = $this->GetStack()['target_list'];
-    if ($this->IsVoted($user->uname) && count($target_list) > 0) {
+    if (count($target_list) > 0 && $this->IsVoteKill($user->uname)) {
       $stack = $target_list;
     } else {
       $stack = DB::$USER->SearchLive(true);
@@ -124,7 +130,7 @@ class Role_joker extends Role {
   public function FinishJoker() {
     $uname = $this->GetStack()['uname'];
     $user  = $this->GetJoker();
-    if ($this->IsVoted($uname) && ! $this->IsVoted($user->uname)) {
+    if ($this->IsVoteKill($uname) && false === $this->IsVoteKill($user->uname)) {
       $this->AddJoker(DB::$USER->ByRealUname($uname));
     } else {
       $this->AddJoker($user);
@@ -142,7 +148,10 @@ class Role_joker extends Role {
     $max_date = 1;
     foreach (DB::$USER->Get() as $user) {
       $user->joker_flag = false;
-      if (! $user->IsRole($this->role)) continue;
+      if (false === $user->IsRole($this->role)) {
+	continue;
+      }
+
       $date = $user->GetDoomDate($this->role);
       if ($date > $max_date || ($date == $max_date && $user->IsLive())) {
 	$id = $user->id;
@@ -165,9 +174,13 @@ class Role_joker extends Role {
 
   //ジョーカーの移動処理
   private function AddJoker(User $user, $shift = false) {
-    if ($shift) DB::$ROOM->ShiftScene(true); //一時的に前日に巻戻す
+    if (true === $shift) {
+      DB::$ROOM->ShiftScene(true); //一時的に前日に巻戻す
+    }
     $user->AddDoom(1, 'joker');
-    DB::$ROOM->ResultDead($user->handle_name, DeadReason::JOKER_MOVED);
-    if ($shift) DB::$ROOM->ShiftScene();     //日時を元に戻す
+    DB::$ROOM->StoreDead($user->handle_name, DeadReason::JOKER_MOVED);
+    if (true === $shift) {
+      DB::$ROOM->ShiftScene(); //日時を元に戻す
+    }
   }
 }

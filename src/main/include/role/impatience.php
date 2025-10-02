@@ -14,7 +14,7 @@ class Role_impatience extends Role_chicken {
   }
 
   protected function IsSuddenDeath() {
-    return ! $this->IsVoteKill();
+    return false === $this->DetermineVoteKill();
   }
 
   protected function GetSuddenDeathType() {

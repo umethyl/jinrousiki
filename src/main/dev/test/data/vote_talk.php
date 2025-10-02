@@ -3,6 +3,8 @@ class VoteTestTalk {
   private static $day = [
     ['uname' => 'moon', 'font_type' => TalkVoice::NORMAL,
      'sentence' => '●かー'],
+    ['uname' => 'dark_gray',
+     'location' => TalkLocation::SYSTEM, 'action' => TalkAction::OBJECTION],
     ['uname' => 'frame', 'font_type' => TalkVoice::NORMAL,
      'location' => TalkVoice::SECRET,
      'sentence' => 'よしよし、気づかれてないな'],
@@ -74,7 +76,7 @@ class VoteTestTalk {
     case RoomScene::NIGHT:
       $stack = self::${DB::$ROOM->scene};
       foreach ($stack as &$list) {
-	if (! isset($list['location'])) {
+	if (false === isset($list['location'])) {
 	  if ($list['uname'] == GM::SYSTEM) {
 	    $list['location'] = TalkLocation::SYSTEM;
 	  } else {

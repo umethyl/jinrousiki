@@ -101,25 +101,34 @@ final class GamePlayController extends JinrouController {
 	DB::$SELF->Update('last_load_scene', DB::$ROOM->scene);
       }
     } elseif (DB::$ROOM->IsOn(RoomMode::DEAD) && DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
-      //超過なら突然死タイマーを見れるようにする
-      if (! GameTime::IsInTime()) DB::$ROOM->SetSuddenDeath();
+      if (false === GameTime::IsInTime()) { //超過なら突然死タイマーを見れるようにする
+	DB::$ROOM->SetSuddenDeath();
+      }
     }
   }
 
   //ゲーム停滞のチェック
   private static function FilterSilence() {
-    if (! DB::$ROOM->IsPlaying()) return true; //スキップ判定
+    if (false === DB::$ROOM->IsPlaying()) { //スキップ判定
+      return true;
+    }
 
     //経過時間を取得
     if (DB::$ROOM->IsRealTime()) { //リアルタイム制
       GameTime::GetRealPass($left_time);
-      if ($left_time > 0) return true; //制限時間超過判定
+      if ($left_time > 0) { //制限時間超過判定
+	return true;
+      }
     } else { //仮想時間制
-      if (! self::LockScene()) return false; //判定条件が全て DB なので即ロック
+      if (false === self::LockScene()) { //判定条件が全て DB なので即ロック
+	return false;
+      }
       $silence_pass_time = GameTime::GetTalkPass($left_time, true);
 
       if ($left_time > 0) { //制限時間超過判定
-	if (RoomDB::GetTime() <= TimeConfig::SILENCE) return DB::Rollback(); //沈黙判定
+	if (RoomDB::GetTime() <= TimeConfig::SILENCE) { //沈黙判定
+	  return DB::Rollback();
+	}
 
 	//沈黙メッセージを発行してリセット
 	$talk = new RoomTalkStruct(sprintf(GamePlayMessage::SILENCE, $silence_pass_time));
@@ -132,7 +141,9 @@ final class GamePlayController extends JinrouController {
     //オープニングなら即座に夜に移行する
     if (DB::$ROOM->IsDate(1) && DB::$ROOM->IsDay() && DB::$ROOM->IsOption('open_day')) {
       if (DB::$ROOM->IsRealTime()) { //リアルタイム制はここでロック開始
-	if (! self::LockScene()) return false; //シーン再判定
+	if (false === self::LockScene()) { //シーン再判定
+	  return false;
+	}
       }
       DB::$ROOM->ChangeNight(); //夜に切り替え
       return RoomDB::UpdateTime() ? DB::Commit() : DB::Rollback(); //最終書き込み時刻を更新
@@ -140,7 +151,9 @@ final class GamePlayController extends JinrouController {
 
     if (! RoomDB::IsOvertimeAlert()) { //警告メッセージ出力判定
       if (DB::$ROOM->IsRealTime()) { //リアルタイム制はここでロック開始
-	if (! self::LockScene()) return false; //シーン再判定
+	if (false === self::LockScene()) { //シーン再判定
+	  return false;
+	}
       }
 
       //警告メッセージを出力 (最終出力判定は呼び出し先で行う)
@@ -157,14 +170,20 @@ final class GamePlayController extends JinrouController {
     DB::$ROOM->SetSuddenDeath(); //最終発言時刻からの差分を取得
 
     //制限時間前ならスキップ (この段階でロックしているのは仮想時間制のみ)
-    if (DB::$ROOM->sudden_death > 0) return DB::$ROOM->IsRealTime() || DB::Rollback();
+    if (DB::$ROOM->sudden_death > 0) {
+      return DB::$ROOM->IsRealTime() || DB::Rollback();
+    }
 
     //制限時間を過ぎていたら未投票の人を突然死させる
     if (DB::$ROOM->IsRealTime()) { //リアルタイム制はここでロック開始
-      if (! self::LockScene()) return false; //シーン再判定
+      if (false === self::LockScene()) { //シーン再判定
+	return false;
+      }
 
       DB::$ROOM->SetSuddenDeath(); //制限時間を再計算
-      if (DB::$ROOM->sudden_death > 0) return DB::Rollback();
+      if (DB::$ROOM->sudden_death > 0) {
+	return DB::Rollback();
+      }
     }
 
     if (abs(DB::$ROOM->sudden_death) > TimeConfig::SERVER_DISCONNECT) { //サーバダウン検出
@@ -183,7 +202,7 @@ final class GamePlayController extends JinrouController {
     } elseif (DB::$ROOM->IsNight()) {
       $vote_data = DB::$ROOM->ParseVote(); //投票情報をパース
       foreach (DB::$USER->Get() as $user) { //未投票チェック
-	if (RoleUser::IsNoVote($user, $vote_data)) {
+	if (RoleUser::ImcompletedVoteNight($user, $vote_data)) {
 	  $novote_list[] = $user->id;
 	}
       }
@@ -194,7 +213,7 @@ final class GamePlayController extends JinrouController {
       DB::$USER->SuddenDeath($id, DeadReason::NOVOTED);
     }
     RoleLoader::Load('lovers')->Followed(true);
-    RoleLoader::Load('medium')->InsertResult();
+    RoleLoader::Load('medium')->InsertMediumResult();
 
     RoomTalk::StoreSystem(GameMessage::VOTE_RESET); //投票リセットメッセージ
     RoomDB::ResetVote(); //投票リセット
@@ -208,7 +227,9 @@ final class GamePlayController extends JinrouController {
 
   //シーン再判定付きロック処理
   private static function LockScene() {
-    if (! DB::Transaction()) return false;
+    if (false === DB::Transaction()) {
+      return false;
+    }
 
     if (RoomDB::Get('scene', true) != DB::$ROOM->scene) { //シーン再判定 (ロック付き)
       DB::Rollback();
@@ -220,8 +241,13 @@ final class GamePlayController extends JinrouController {
 
   //沈黙死 + 処刑投票処理
   private static function VoteNoSilence() {
-    if (RoomDB::Get('vote_count', true) != DB::$ROOM->vote_count) return; //投票回数判定
-    if (TalkDB::CountNoVoteTalker() > 0) return; //発言者の投票済み判定
+    if (RoomDB::Get('vote_count', true) != DB::$ROOM->vote_count) { //投票回数判定
+      return;
+    }
+
+    if (TalkDB::CountNoVoteTalker() > 0) { //発言者の投票済み判定
+      return;
+    }
 
     Loader::LoadFile('game_vote_functions');
     RQ::Set(RequestDataVote::SITUATION, VoteAction::VOTE_KILL); //仮想的に処刑投票コマンドをセット
@@ -463,7 +489,7 @@ abstract class GamePlayView {
       }
       $vote_data = DB::$ROOM->ParseVote(); //投票情報をパース
       foreach (DB::$USER->Get() as $user) { //未投票チェック
-	if (RoleUser::IsNoVote($user, $vote_data)) {
+	if (RoleUser::ImcompletedVoteNight($user, $vote_data)) {
 	  $count++;
 	}
       }
@@ -495,13 +521,19 @@ abstract class GamePlayView {
 
   //自分の遺言出力
   final protected function OutputSelfLastWords() {
-    if ($this->IgnoreSelfLastWords()) return; //スキップ判定
+    if ($this->IgnoreSelfLastWords()) { //スキップ判定
+      return;
+    }
 
     $str = UserDB::GetLastWords(DB::$SELF->id);
-    if ($str == '') return false;
+    if ($str == '') {
+      return false;
+    }
 
     $str = Text::ConvertLine($str);
-    if ($str == '') return false;
+    if ($str == '') {
+      return false;
+    }
     GamePlayHTML::OutputSelfLastWords($str);
   }
 
@@ -512,7 +544,10 @@ abstract class GamePlayView {
 
   //音声出力
   final protected function OutputSound() {
-    if ($this->IgnoreSound()) return;
+    if ($this->IgnoreSound()) {
+      return;
+    }
+
     $this->OutputSoundHeader();
     $this->OutputSoundScene();
     $this->OutputSoundObjection();
@@ -531,7 +566,10 @@ abstract class GamePlayView {
 
   //音声出力 (「異議」あり)
   final protected function OutputSoundObjection() {
-    if ($this->IgnoreSoundObjection()) return;
+    if ($this->IgnoreSoundObjection()) {
+      return;
+    }
+
     Objection::OutputSound();
   }
 
@@ -706,7 +744,9 @@ class GamePlayView_After extends GamePlayView {
 //-- GamePlay 出力クラス (霊界) --//
 class GamePlayView_Heaven extends GamePlayView {
   public function Output() {
-    if (false === DB::$SELF->IsDead()) return;
+    if (false === DB::$SELF->IsDead()) {
+      return;
+    }
 
     GameHTML::OutputHeader('game_play');
     $this->OutputHeader();
@@ -755,7 +795,9 @@ class GamePlayView_Heaven extends GamePlayView {
   }
 
   public function OutputAsync() {
-    if (false === DB::$SELF->IsDead()) return;
+    if (false === DB::$SELF->IsDead()) {
+      return;
+    }
 
     GamePlayHTML::OutputSceneAsync();
     $this->OutputTalk();

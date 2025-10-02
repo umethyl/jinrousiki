@@ -9,7 +9,7 @@
 */
 RoleLoader::LoadFile('ogre');
 class Role_power_ogre extends Role_ogre {
-  protected function GetOgreWolfEatResistRate() {
+  protected function GetOgreResistWolfEatRate() {
     return 40;
   }
 

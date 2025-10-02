@@ -6,7 +6,7 @@ class RoleVote {
   //後追い
   public static function Followed() {
     RoleLoader::Load('lovers')->Followed();
-    RoleLoader::Load('medium')->InsertResult();
+    RoleLoader::Load('medium')->InsertMediumResult();
   }
 
   //-- 処刑投票 --//
@@ -17,7 +17,9 @@ class RoleVote {
 
   //投票数補正 (サブ役職/仮想ユーザ))
   public static function VoteDoSub() {
-    if (DB::$ROOM->IsEvent('no_authority')) return; //蜃気楼ならスキップ
+    if (DB::$ROOM->IsEvent('no_authority')) { //蜃気楼ならスキップ
+      return;
+    }
     self::FilterUser(DB::$SELF->GetVirtual(), 'vote_do_sub', 'FilterVoteDo');
   }
 
@@ -28,7 +30,9 @@ class RoleVote {
 
   //得票数補正 (サブ役職/仮想ユーザ)
   public static function VotePollSub(User $user) {
-    if (DB::$ROOM->IsEvent('no_authority')) return; //蜃気楼ならスキップ
+    if (DB::$ROOM->IsEvent('no_authority')) { //蜃気楼ならスキップ
+      return;
+    }
     self::FilterUser($user, 'vote_poll_sub', 'FilterVotePoll');
   }
 
@@ -79,7 +83,9 @@ class RoleVote {
     $actor->$role = false;
     RoleLoader::SetActor($actor);
 
-    if ($user->IsRole('dummy_poison')) return false; //夢毒者は対象外
+    if ($user->IsRole('dummy_poison')) { //夢毒者は対象外
+      return false;
+    }
     self::Filter('detox', __FUNCTION__);
     return RoleLoader::GetActor()->detox;
   }
@@ -109,7 +115,9 @@ class RoleVote {
   public static function ResistVoteKillPoison(User $user) {
     $method = __FUNCTION__;
     foreach (RoleLoader::LoadUser($user, 'resist_vote_kill_poison') as $filter) {
-      if ($filter->$method()) return true;
+      if ($filter->$method()) {
+	return true;
+      }
     }
     return false;
   }
@@ -147,7 +155,9 @@ class RoleVote {
       $wizard_flag->$role = false;
     }
     foreach (DB::$USER->GetRole() as $role => $list) {
-      if (RoleDataManager::IsMain($role)) $role_flag->$role = true;
+      if (RoleDataManager::IsMain($role)) {
+	$role_flag->$role = true;
+      }
     }
     RoleManager::Stack()->Set('necromancer_wizard', $wizard_flag);
     //Text::p($role_flag, '◆ROLE_FLAG');
@@ -165,15 +175,17 @@ class RoleVote {
       if ($role_flag->$role || $wizard_flag->$role) {
 	$filter = RoleLoader::Load($role);
 	$result = $filter->Necromancer($user, $stolen_flag);
-	if (is_null($result)) continue;
+	if (is_null($result)) {
+	  continue;
+	}
 
 	if ($role_flag->$role) {
-	  DB::$ROOM->ResultAbility($filter->result, $result, $name);
+	  DB::$ROOM->StoreAbility($filter->result, $result, $name);
 	}
 
 	if ($wizard_flag->$role) {
 	  $wizard_result = RoleManager::Stack()->Get('necromancer_wizard_result');
-	  DB::$ROOM->ResultAbility($wizard_result, $result, $name);
+	  DB::$ROOM->StoreAbility($wizard_result, $result, $name);
 	}
       }
     }
@@ -198,9 +210,17 @@ class RoleVote {
     }
   }
 
+  //ショック死判定 (青天の霹靂)
+  public static function SuddenDeathThunderbolt() {
+    RoleLoader::Load('thunder_brownie')->SuddenDeath();
+  }
+
   //ショック死判定 (サブ役職)
   public static function SuddenDeathSub() {
-    if (DB::$ROOM->IsEvent('no_sudden_death')) return; //凪ならスキップ
+    if (DB::$ROOM->IsEvent('no_sudden_death')) { //凪ならスキップ
+      return;
+    }
+
     foreach (RoleLoader::LoadType('sudden_death_sub') as $filter) {
       $filter->SuddenDeath();
     }
@@ -215,7 +235,9 @@ class RoleVote {
 
   //ショック死判定 (天狗陣営)
   public static function SuddenDeathTengu(User $user) {
-    if ($user->IsMainCamp(Camp::TENGU)) RoleLoader::LoadMain($user)->SuddenDeath();
+    if ($user->IsMainCamp(Camp::TENGU)) {
+      RoleLoader::LoadMain($user)->SuddenDeath();
+    }
   }
 
   //治療判定
@@ -257,7 +279,9 @@ class RoleVote {
 	$skip = $user->IsDead(true); //直前に死んでいたら無効
 	break;
       }
-      if ($skip) continue;
+      if (true === $skip) {
+	continue;
+      }
 
       switch ($target_type) {
       case 'direct':
@@ -269,7 +293,7 @@ class RoleVote {
 	break;
 
       case 'step':
-	$target = DB::$USER->ByID(Text::Cut($target_id, ' '));
+	$target = DB::$USER->ByID(Text::CutPop($target_id, ' '));
 	break;
 
       default:

@@ -65,7 +65,7 @@ class DevRoom {
   public static function GetAbility($date, $action, $limit) {
     $stack = RQ::GetTest()->result_ability;
     $stack = ArrayFilter::GetList(ArrayFilter::GetList($stack, $date), $action);
-    if ($limit) {
+    if (true === $limit) {
       $limit_stack = [];
       foreach ($stack as $list) {
 	if ($list['user_no'] == DB::$SELF->id) {
@@ -193,13 +193,13 @@ class DevUser {
     foreach (RQ::GetTest()->test_users as $id => $user) {
       $user->room_no = RQ::Get()->room_no;
       $user->role_id = $id;
-      if (! isset($user->live)) {
+      if (false === isset($user->live)) {
 	$user->live = UserLive::LIVE;
       }
-      if (! isset($user->sex)) {
+      if (false === isset($user->sex)) {
 	$user->sex = ($id % 2 == 0 ? Sex::FEMALE : Sex::MALE);
       }
-      if (! isset($user->profile)) {
+      if (false === isset($user->profile)) {
 	$user->profile = $id;
       }
       $user->last_load_scene = $scene;
@@ -216,9 +216,12 @@ class DevUser {
     DB::LoadDummyBoy();
     if (DB::$ROOM->IsBeforeGame()) {
       foreach (DB::$USER->Get() as $user) {
-	if (! isset($user->vote_type)) $user->vote_type = 'GAME_START';
+	if (false === isset($user->vote_type)) {
+	  $user->vote_type = 'GAME_START';
+	}
       }
     }
+
     if (DB::$ROOM->IsDate(1)) { //初日は死亡者ゼロ
       foreach (DB::$USER->Get() as $user) {
 	if ($user->IsDead()) {

@@ -11,7 +11,7 @@ class Role_seiren_mad extends Role {
     return DB::$ROOM->date > 2 && DB::$ROOM->date % 3 == 0;
   }
 
-  protected function GetDisabledFairyVoteMessage() {
+  protected function GetDisabledFairyVoteNightMessage() {
     return VoteRoleMessage::IMPOSSIBLE_VOTE_DAY;
   }
 

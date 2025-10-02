@@ -8,10 +8,10 @@ RoleLoader::LoadFile('critical_mad');
 class Role_amaze_mad extends Role_critical_mad {
   public function VoteKillAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($target_uname)) {
-	DB::$ROOM->SystemMessage(DB::$ROOM->date, DeadReason::BLIND_VOTE);
-	DB::$ROOM->SystemMessage(DB::$ROOM->date, DeadReason::BLIND_VOTE, 1);
-	DB::$ROOM->ResultDead(null, DeadReason::BLIND_VOTE);
+      if ($this->IsVoteKill($target_uname)) {
+	DB::$ROOM->StoreEvent(DB::$ROOM->date, DeadReason::BLIND_VOTE);
+	DB::$ROOM->StoreEvent(DB::$ROOM->date, DeadReason::BLIND_VOTE, 1);
+	DB::$ROOM->StoreDead(null, DeadReason::BLIND_VOTE);
 	return;
       }
     }

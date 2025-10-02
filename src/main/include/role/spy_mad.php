@@ -7,39 +7,45 @@
 */
 RoleLoader::LoadFile('fanatic_mad');
 class Role_spy_mad extends Role_fanatic_mad {
-  public $action      = VoteAction::EXIT_DO;
-  public $not_action  = VoteAction::NOT_EXIT;
-  public $action_date = RoleActionDate::AFTER;
+  public $action     = VoteAction::EXIT_DO;
+  public $not_action = VoteAction::NOT_EXIT;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   protected function IsAddVote() {
     $user = $this->GetActor();
-    return ! RoleUser::IsContainLovers($user) && ! is_array($user->GetPartner($this->role));
+    return false === RoleUser::IsContainLovers($user) &&
+      false === is_array($user->GetPartner($this->role));
   }
 
   public function OutputAction() {
     $str = RoleAbilityMessage::SPY;
-    RoleHTML::OutputVote(VoteCSS::ESCAPE, $str, $this->action, $this->not_action);
+    RoleHTML::OutputVoteNight(VoteCSS::ESCAPE, $str, $this->action, $this->not_action);
   }
 
-  protected function GetDisabledAddVoteMessage() {
+  protected function GetDisabledAddVoteNightMessage() {
     return VoteRoleMessage::LOST_ABILITY;
   }
 
-  protected function GetVoteTargetUserFilter(array $list) {
+  protected function GetVoteNightTargetUserFilter(array $list) {
     $id = $this->GetID();
     return [$id => $list[$id]];
   }
 
-  protected function IgnoreVoteCheckboxSelf() {
+  protected function DisableVoteNightCheckboxSelf() {
     return false;
   }
 
-  protected function IsVoteCheckboxChecked(User $user) {
+  protected function CheckedVoteNightCheckbox(User $user) {
     return $this->IsActor($user);
   }
 
   public function ValidateVoteNightTargetFilter(User $user) {
-    return $this->IsActor($user) ? null : VoteRoleMessage::TARGET_INCLUDE_MYSELF;
+    if (false === $this->IsActor($user)) {
+      throw new UnexpectedValueException(VoteRoleMessage::TARGET_INCLUDE_MYSELF);
+    }
   }
 
   //離脱
@@ -52,7 +58,9 @@ class Role_spy_mad extends Role_fanatic_mad {
   public function Win($winner) {
     $this->SetStack('escaper', 'class');
     $stack = $this->GetActor()->GetPartner($this->role);
-    if (! is_array($stack)) return false;
+    if (false === is_array($stack)) {
+      return false;
+    }
 
     $date = array_shift($stack);
     return DB::$ROOM->date <= $date + max(2, ceil(DB::$USER->Count() / 8));

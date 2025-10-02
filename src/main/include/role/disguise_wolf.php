@@ -12,9 +12,14 @@ class Role_disguise_wolf extends Role_wolf {
 
   public function VoteKillAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($uname)) continue;
+      if ($this->IsVoteKill($uname)) {
+	continue;
+      }
+
       $target = DB::$USER->ByRealUname($target_uname);
-      if ($target->IsDead(true) || ! $target->IsMainGroup(CampGroup::WOLF)) continue;
+      if ($target->IsDead(true) || false === $target->IsMainGroup(CampGroup::WOLF)) {
+	continue;
+      }
 
       $user = DB::$USER->ByUname($uname);
       if ($user->IsLive(true)) {

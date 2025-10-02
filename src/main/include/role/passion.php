@@ -7,7 +7,11 @@
 */
 class Role_passion extends Role {
   public function ConvertSay() {
-    if (! is_array($stack = $this->GetConvertSayList())) return;
+    $stack = $this->GetConvertSayList();
+    if (false === is_array($stack)) {
+      return;
+    }
+
     $this->SetStack(strtr($this->GetStack('say'), $stack), 'say');
   }
 

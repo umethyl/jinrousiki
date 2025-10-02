@@ -9,7 +9,7 @@ class Role_sweet_status extends Role {
   public $mix_in = ['lovers'];
 
   protected function IgnoreImage() {
-    return ! DB::$ROOM->IsDate(2);
+    return false === DB::$ROOM->IsDate(2);
   }
 
   protected function GetPartner() {

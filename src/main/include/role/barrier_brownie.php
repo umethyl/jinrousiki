@@ -12,7 +12,9 @@ class Role_barrier_brownie extends Role {
     $result = [];
     //村人陣営限定 / 発動率判定 / 産土神は護衛不可
     $user = DB::$USER->ByID($id);
-    if ($user->IsRole($this->role) || ! $user->IsWinCamp(Camp::HUMAN) || ! Lottery::Percent(10)) {
+    if ($user->IsRole($this->role) ||
+	false === $user->IsWinCamp(Camp::HUMAN) ||
+	false === Lottery::Percent(10)) {
       return $result;
     }
 

@@ -4,13 +4,13 @@ class TableHTML {
   //ヘッダ生成
   public static function GenerateHeader($class = null, $tr = true, $id = null) {
     $str = HTML::GenerateTagHeader('table', $class, $id);
-    return $tr ? $str . self::GenerateTrHeader() : $str;
+    return (true === $tr) ? $str . self::GenerateTrHeader() : $str;
   }
 
   //フッタ生成
   public static function GenerateFooter($tr = true) {
     $str = HTML::GenerateTagFooter('table');
-    return $tr ? self::GenerateTrFooter() . $str : $str;
+    return (true === $tr) ? self::GenerateTrFooter() . $str : $str;
   }
 
   //tr 生成
@@ -30,11 +30,11 @@ class TableHTML {
 
   //th 生成
   public static function GenerateTh($str, $class = null) {
-    return HTML::GenerateTagHeader('th', $class) . $str . HTML::GenerateTagFooter('th');
+    return HTML::GenerateTag('th', $str, $class);
   }
 
   //tr 改行生成
-  public static function GenerateTrLine() {
+  public static function GenerateTrLineFeed() {
     return Text::LineFeed(self::GenerateTrFooter()) . self::GenerateTrHeader();
   }
 
@@ -100,6 +100,6 @@ class TableHTML {
 
   //出力 (折り返し)
   public static function OutputFold($count, $base = Position::BASE) {
-    Text::OutputFold($count, self::GenerateTrLine(), $base);
+    Text::OutputFold($count, self::GenerateTrLineFeed(), $base);
   }
 }

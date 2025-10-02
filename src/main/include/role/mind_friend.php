@@ -11,7 +11,10 @@ class Role_mind_friend extends Role_mind_read {
     $target = $this->GetActor()->GetPartnerList();
     $stack  = [];
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
-      if ($this->IsActor($user)) continue;
+      if ($this->IsActor($user)) {
+	continue;
+      }
+
       if ($user->IsPartner($this->role, $target)) {
 	$stack[$user->id] = $user->handle_name;
       }

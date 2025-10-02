@@ -15,11 +15,13 @@ class Role_revive_fox extends Role_fox {
   }
 
   protected function OutputAddResult() {
-    if (DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message')) return;
+    if (DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message')) {
+      return;
+    }
     RoleHTML::OutputResult(RoleAbility::REVIVE);
   }
 
-  protected function GetDisabledReviveVoteMessage() {
+  protected function GetDisabledReviveVoteNightMessage() {
     return VoteRoleMessage::LOST_ABILITY;
   }
 

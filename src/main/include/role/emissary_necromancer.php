@@ -11,7 +11,7 @@ class Role_emissary_necromancer extends Role_necromancer {
   public function Necromancer(User $user, $flag){
     $camp  = $user->GetWinCamp();
     $count = 0;
-    foreach ($this->GetVotedUname($user->uname) as $uname) {
+    foreach ($this->GetVotePollList($user->uname) as $uname) {
       if (DB::$USER->ByRealUname($uname)->IsWinCamp($camp)) {
 	$count++;
       }

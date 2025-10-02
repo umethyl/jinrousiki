@@ -3,21 +3,26 @@
   ◆狩人 (guard)
   ○仕様
   ・能力結果：護衛成功・狩り (天啓封印あり)
-  ・護衛失敗：通常
+  ・護衛失敗：なし
+  ・護衛制限：あり
   ・護衛処理：なし
+  ・護衛成功登録：あり
   ・狩り：通常
 */
 class Role_guard extends Role {
-  public $action      = VoteAction::GUARD;
-  public $result      = RoleAbility::GUARD;
-  public $action_date = RoleActionDate::AFTER;
+  public $action = VoteAction::GUARD;
+  public $result = RoleAbility::GUARD;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message');
   }
 
   protected function OutputAddResult() {
-    if (! $this->IgnoreHunt()) {
+    if (false === $this->IgnoreHunt()) {
       RoleHTML::OutputResult(RoleAbility::HUNTED);
     }
     $this->OutputGuardAddResult();
@@ -28,17 +33,21 @@ class Role_guard extends Role {
 
   //護衛結果表示 (Mixin 用)
   final protected function OutputGuardResult() {
-    if ($this->IgnoreResult()) return;
+    if ($this->IgnoreResult()) {
+      return;
+    }
     RoleHTML::OutputResult($this->result);
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::GUARD, RoleAbilityMessage::GUARD, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::GUARD, RoleAbilityMessage::GUARD, $this->action);
   }
 
   //護衛先セット
   final public function SetGuard(User $user) {
-    if ($this->IgnoreSetGuard()) return;
+    if ($this->IgnoreSetGuard()) {
+      return;
+    }
     $this->SetGuardStack($user);
     $this->SetGuardAction($user);
   }
@@ -67,29 +76,40 @@ class Role_guard extends Role {
 
     $result  = false;
     $half    = DB::$ROOM->IsEvent('half_guard'); //曇天
-    $limited = ! DB::$ROOM->IsEvent('full_guard') && $this->IsGuardLimited($user); //護衛制限判定
+    $limited = (false === DB::$ROOM->IsEvent('full_guard')) && $this->LimitedGuard($user);
     foreach ($stack as $id) {
       $actor = DB::$USER->ByID($id);
-      if ($actor->IsDead(true)) continue; //直前に死んでいたら無効
+      if ($actor->IsDead(true)) { //直前に死んでいたら無効
+	continue;
+      }
 
       //-- 護衛成功判定 --//
       $filter = RoleLoader::LoadMain($actor);
-      $ignore = $filter->IgnoreGuard($user); //個別護衛失敗判定
-      if ($ignore) continue;
+      if ($filter->GuardFailed($user)) { //個別護衛失敗判定
+	continue;
+      }
 
-      if (! $result) { //対象者護衛成功判定
-	$result |= ! ($half && Lottery::Bool()) && (! $limited || is_null($ignore));
+      //対象者護衛成功判定 (成功成立済み > 天候 > 護衛制限無効 > 護衛制限)
+      if (true === $result || (true === $half && Lottery::Bool())) {
+      } elseif (false === $limited || $filter->UnlimitedGuard()) {
+	$result = true;
       }
 
       //-- 護衛実行処理 --//
       $filter->GuardAction($user);
 
       //-- 護衛成功メッセージ登録 --//
-      if ($filter->IgnoreGuardSuccess()) continue;
+      if ($filter->IgnoreGuardSuccess()) {
+	continue;
+      }
 
       $this->AddSuccess($actor->id, RoleVoteSuccess::GUARD); //成功者を登録
-      if (! DB::$ROOM->IsOption('seal_message') && RoleUser::GuardSuccess($actor, $user->id)) {
-	DB::$ROOM->ResultAbility($this->result, 'success', $user->GetName(), $actor->id);
+      if (DB::$ROOM->IsOption('seal_message')) {
+	continue;
+      }
+
+      if (RoleUser::GuardSuccess($actor, $user->id)) {
+	DB::$ROOM->StoreAbility($this->result, 'success', $user->GetName(), $actor->id);
       }
     }
 
@@ -101,7 +121,7 @@ class Role_guard extends Role {
       }
     }
 
-    return $result && ! $user->IsRole('penetration');
+    return (true === $result) && (false === $user->IsRole('penetration'));
   }
 
   //護衛者検出
@@ -110,7 +130,12 @@ class Role_guard extends Role {
   }
 
   //護衛失敗判定
-  public function IgnoreGuard(User $user) {
+  public function GuardFailed(User $user) {
+    return false;
+  }
+
+  //護衛制限無効判定
+  public function UnlimitedGuard() {
     return false;
   }
 
@@ -124,7 +149,9 @@ class Role_guard extends Role {
 
   //狩り
   final public function Hunt(User $user) {
-    if ($this->CallParent('IgnoreHunt') || ! $this->IsHunt($user)) return;
+    if ($this->CallParent('IgnoreHunt') || false === $this->IsHunt($user)) {
+      return;
+    }
     $this->HuntKill($user);
   }
 
@@ -140,7 +167,7 @@ class Role_guard extends Role {
     } elseif ($this->IsAddHunt($user)) {
       return true;
     } elseif ($user->IsMainGroup(CampGroup::MAD)) {
-      return ! $user->IsRole(
+      return false === $user->IsRole(
 	'mad', 'fanatic_mad', 'whisper_mad', 'swindle_mad', 'step_mad', 'therian_mad',
 	'revive_mad', 'spy_mad', 'immolate_mad'
       );
@@ -164,15 +191,15 @@ class Role_guard extends Role {
   //狩り処理
   protected function HuntKill(User $user) {
     DB::$USER->Kill($user->id, DeadReason::HUNTED);
-    if (! DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
-      DB::$ROOM->ResultAbility(RoleAbility::HUNTED, 'hunted', $user->GetName(), $this->GetID());
+    if (false === DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
+      DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $user->GetName(), $this->GetID());
     }
   }
 
   //護衛制限判定 (司祭系 > 暗殺者系・人形遣い系 > 上位能力者・身代わり能力者)
-  private function IsGuardLimited(User $user) {
+  private function LimitedGuard(User $user) {
     if ($user->IsRoleGroup('priest')) {
-      return ! $user->IsRole('crisis_priest', 'widow_priest', 'revive_priest');
+      return false === $user->IsRole('crisis_priest', 'widow_priest', 'revive_priest');
     } elseif ($user->IsMainGroup(CampGroup::ASSASSIN) || $user->IsRoleGroup('doll_master')) {
       return true;
     } else {

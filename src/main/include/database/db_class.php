@@ -78,7 +78,10 @@ final class DB {
 
   //データベース切断
   public static function Disconnect() {
-    if (empty(self::$instance)) return;
+    if (empty(self::$instance)) {
+      return;
+    }
+
     if (self::$transaction) {
       self::Rollback();
     }
@@ -87,7 +90,10 @@ final class DB {
 
   //トランザクション開始
   public static function Transaction() {
-    if (self::$transaction) return true; //トランザクション中ならスキップ
+    if (self::$transaction) { //トランザクション中ならスキップ
+      return true;
+    }
+
     self::$transaction = self::$instance->beginTransaction();
     return self::$transaction;
   }
@@ -117,8 +123,11 @@ final class DB {
 
   //SQL 実行
   public static function Execute($quiet = false) {
+    if (is_null(self::$statement)) {
+      return false;
+    }
+
     try {
-      if (is_null(self::$statement)) return false;
       self::$statement->execute(self::$parameter);
       if (self::$display) { //statement 表示 (デバッグ用)
 	Text::p(self::$statement);
@@ -152,20 +161,21 @@ final class DB {
   //カウンタロック処理
   public static function Lock($type) {
     $query = Query::Init()->Table('count_limit')->Select(['count'])->Where(['type'])->Lock();
+
     self::Prepare($query->Build(), [$type]);
     return self::Transaction() && self::FetchBool();
   }
 
   //実行結果を bool で受け取る
   public static function FetchBool($quiet = false) {
-    return self::Execute($quiet) !== false;
+    return false !== self::Execute($quiet);
   }
 
   //単体の値を取得
   public static function FetchResult() {
     $stmt = self::Execute();
     self::Reset();
-    return $stmt instanceOf PDOStatement && $stmt->rowCount() > 0 ? $stmt->fetchColumn() : false;
+    return ($stmt instanceOf PDOStatement && $stmt->rowCount() > 0) ? $stmt->fetchColumn() : false;
   }
 
   //該当するデータの行数を取得
@@ -192,7 +202,7 @@ final class DB {
     $stmt = self::Execute();
     self::Reset();
     $stack = $stmt instanceOf PDOStatement ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
-    return $shift ? array_shift($stack) : $stack;
+    return (true === $shift) ? array_shift($stack) : $stack;
   }
 
   //オブジェクト形式の配列を取得
@@ -200,21 +210,25 @@ final class DB {
     $stmt = self::Execute();
     self::Reset();
     $stack = $stmt instanceOf PDOStatement ? $stmt->fetchAll(PDO::FETCH_CLASS, $class) : [];
-    return $shift ? array_shift($stack) : $stack;
+    return (true === $shift) ? array_shift($stack) : $stack;
   }
 
   //データベース登録
-  public static function Insert($table, $items, $values) {
-    self::Prepare("INSERT INTO {$table}({$items}) VALUES({$values})");
+  public static function Insert($table, array $list) {
+    $query = Query::Init()->Table($table)->Insert()->Into(array_keys($list));
+
+    self::Prepare($query->Build(), array_values($list));
     return self::FetchBool();
   }
 
   //村削除
   public static function DeleteRoom($room_no) {
     $query = Query::Init()->Delete()->Where(['room_no']);
+    $list  = [$room_no];
     foreach (self::GetTableList() as $table) {
       $query->Table($table);
-      self::Prepare($query->Build(), [$room_no]);
+
+      self::Prepare($query->Build(), $list);
       if (false === self::FetchBool()) {
 	return false;
       }
@@ -224,8 +238,10 @@ final class DB {
 
   //最適化
   public static function Optimize($name = null) {
-    $query = is_null($name) ? ArrayFilter::ToCSV(self::GetTableList()) : $name;
-    self::Prepare('OPTIMIZE TABLE ' . $query);
+    $table = is_null($name) ? ArrayFilter::ToCSV(self::GetTableList()) : $name;
+    $query = Query::Init()->Optimize()->Table($table);
+
+    self::Prepare($query->Build());
     return self::FetchBool() && self::Commit();
   }
 
@@ -408,6 +424,12 @@ final class Query {
     return $this;
   }
 
+  //OPTIMIZE 句登録
+  public function Optimize() {
+    $this->head = 'OPTIMIZE';
+    return $this;
+  }
+
   //SET 句登録
   public function Set(array $list) {
     return $this->Store('set', $list);
@@ -570,6 +592,9 @@ final class Query {
     case 'INSERT':
       return $this->head . ' INTO';
 
+    case 'OPTIMIZE':
+      return $this->head . ' TABLE';
+
     default:
       return $this->head;
     }
@@ -580,6 +605,7 @@ final class Query {
     switch ($this->head) {
     case 'INSERT':
     case 'UPDATE':
+    case 'OPTIMIZE':
       return $this->table;
 
     default:

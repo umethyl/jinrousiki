@@ -59,7 +59,7 @@ class Role_reverse_assassin extends Role_assassin {
 	//特殊ケースなのでベタに処理
 	$virtual->UpdateLive(UserLive::LIVE);
 	$virtual->Flag()->On(UserMode::REVIVE);
-	DB::$ROOM->ResultDead($virtual->handle_name, DeadReason::REVIVE_SUCCESS);
+	DB::$ROOM->StoreDead($virtual->handle_name, DeadReason::REVIVE_SUCCESS);
       } else {
 	if (! $user->IsSame(DB::$USER->ByReal($user->id))) { //憑依されていたらリセット
 	  $user->ReturnPossessed($role);

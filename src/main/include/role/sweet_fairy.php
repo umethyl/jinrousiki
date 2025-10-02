@@ -6,19 +6,22 @@
 */
 RoleLoader::LoadFile('fairy');
 class Role_sweet_fairy extends Role_fairy {
-  public $action      = VoteAction::CUPID;
-  public $action_date = RoleActionDate::FIRST;
-  public $submit      = VoteAction::FAIRY;
+  public $action = VoteAction::CUPID;
+  public $submit = VoteAction::FAIRY;
 
-  protected function IgnoreVoteCheckboxSelf() {
+  protected function GetActionDate() {
+    return RoleActionDate::FIRST;
+  }
+
+  protected function DisableVoteNightCheckboxSelf() {
     return false;
   }
 
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return true;
   }
 
-  protected function GetVoteCheckboxType() {
+  protected function GetVoteNightCheckboxType() {
     return OptionFormType::CHECKBOX;
   }
 
@@ -27,15 +30,13 @@ class Role_sweet_fairy extends Role_fairy {
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
-      if (! is_null($str)) return $str;
+      $this->ValidateVoteNightTarget($user, $user->IsLive());
       $stack[$id] = $user;
     }
     $this->SetStack($stack, 'target_list');
-    return null;
   }
 
-  public function VoteNightAction() {
+  public function SetVoteNightTargetListAction() {
     $list  = $this->GetStack('target_list');
     $stack = [];
     foreach ($list as $user) {

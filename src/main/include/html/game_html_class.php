@@ -3,7 +3,9 @@
 class GameHTML {
   //投票データを整形する
   public static function ParseVote(array $raw_list, $date) {
-    if (count($raw_list) < 1) return null; //投票総数
+    if (count($raw_list) < 1) { //投票総数
+      return null;
+    }
 
     $open_vote   = DB::$ROOM->IsOpenData() || DB::$ROOM->IsOption('open_vote'); //投票数開示判定
     $table_stack = [];
@@ -16,7 +18,9 @@ class GameHTML {
       );
       $table_stack[$count][] = $vote_base;
     }
-    if (! RQ::Get()->reverse_log) krsort($table_stack); //正順なら逆転させる
+    if (false === RQ::Get()->reverse_log) { //正順なら逆転させる
+      krsort($table_stack);
+    }
 
     $str = '';
     foreach ($table_stack as $count => $stack) {
@@ -75,7 +79,7 @@ class GameHTML {
     $count = 0; //改行カウントを初期化
     $str   = Text::LineFeed(self::GetPlayerHeader());
     foreach (DB::$USER->Get() as $id => $user) {
-      $str .= Text::Fold($count++, TableHTML::GenerateTrLine());
+      $str .= Text::Fold($count++, TableHTML::GenerateTrLineFeed());
 
       $td_header = self::GeneratePlayerVoteHeader($user, $stack); //投票済み判定
       $str .= $td_header;
@@ -118,7 +122,9 @@ class GameHTML {
 
   //死亡メッセージ生成
   public static function GenerateDead() {
-    if (! DB::$ROOM->IsPlaying()) return null; //スキップ判定
+    if (false === DB::$ROOM->IsPlaying()) { //スキップ判定
+      return null;
+    }
 
     $str = self::GenerateWeather() . self::LoadDead(); //天候メッセージも表示する
 
@@ -141,7 +147,9 @@ class GameHTML {
     }
 
     $stack_list = SystemMessageDB::GetLastWords($shift);
-    if (count($stack_list) < 1) return null;
+    if (count($stack_list) < 1) {
+      return null;
+    }
 
     $str = '';
     foreach (Lottery::GetList($stack_list) as $stack) { //表示順はランダム
@@ -156,8 +164,13 @@ class GameHTML {
 
   //投票結果生成
   public static function GenerateVote() {
-    if (! DB::$ROOM->IsPlaying()) return null; //ゲーム中以外は出力しない
-    if (DB::$ROOM->IsEvent('blind_vote') && ! DB::$ROOM->IsOpenData()) return null; //傘化け判定
+    if (false === DB::$ROOM->IsPlaying()) { //ゲーム中以外は出力しない
+      return null;
+    }
+
+    if (DB::$ROOM->IsEvent('blind_vote') && false === DB::$ROOM->IsOpenData()) { //傘化け判定
+      return null;
+    }
 
     //昼なら前日、夜なら今日の集計を表示
     if (DB::$ROOM->IsDay() && DB::$ROOM->IsOff(RoomMode::LOG)) {
@@ -248,7 +261,7 @@ class GameHTML {
 	if (DB::$ROOM->IsDay()) { //未投票判定
 	  $novote_flag = ! DB::$SELF->ExistsVote();
 	} elseif (DB::$ROOM->IsNight()) {
-	  $novote_flag = RoleUser::IsNoVote(DB::$SELF, DB::$ROOM->ParseVote());
+	  $novote_flag = RoleUser::ImcompletedVoteNight(DB::$SELF, DB::$ROOM->ParseVote());
 	}
 
 	if ($novote_flag) {
@@ -304,17 +317,17 @@ class GameHTML {
     $end_date = GameTime::ConvertJavaScriptDate($end_time);
 
     HTML::OutputJavaScript('output_realtime');
-    echo HTML::GenerateJavaScriptHeader();
+    HTML::OutputJavaScriptHeader();
     Text::Printf(self::GetTimer(),
       DB::$ROOM->IsDay() ? GameMessage::TIME_LIMIT_DAY : GameMessage::TIME_LIMIT_NIGHT,
       GameTime::ConvertJavaScriptDate(DB::$ROOM->system_time),
       $end_date,
       $end_date, GameTime::ConvertJavaScriptDate(DB::$ROOM->scene_start_time),
       Switcher::GetBool(isset($type)),
-      isset($type) && class_exists('Sound') ? SoundHTML::Generate($type) : '',
+      (isset($type) && class_exists('Sound')) ? SoundHTML::Generate($type) : '',
       Switcher::GetBool($flag), TimeConfig::ALERT_DISTANCE
     );
-    echo HTML::GenerateJavaScriptFooter();
+    HTML::OutputJavaScriptFooter();
   }
 
   //日付と生存者の人数を出力
@@ -381,9 +394,11 @@ class GameHTML {
     }
 
     //投票結果表示は再投票のみ
-    if (! DB::$ROOM->IsDay() || DB::$ROOM->revote_count < 1) return false;
+    if (false === DB::$ROOM->IsDay() || DB::$ROOM->revote_count < 1) {
+      return false;
+    }
 
-    if (! isset(DB::$SELF->target_no)) { //投票済みチェック
+    if (false === isset(DB::$SELF->target_no)) { //投票済みチェック
       $format = HTML::GenerateDiv(GameMessage::REVOTE, 'revote');
       printf($format . Text::BRLF, GameConfig::DRAW);
     }
@@ -407,7 +422,10 @@ class GameHTML {
 
   //指定した日付の投票結果をロードして ParseVote() に渡す
   private static function LoadVote($date) {
-    if (DB::$ROOM->IsOn(RoomMode::PERSONAL)) return null; //スキップ判定
+    if (DB::$ROOM->IsOn(RoomMode::PERSONAL)) { //スキップ判定
+      return null;
+    }
+
     return self::ParseVote(SystemMessageDB::GetVote($date), $date);
   }
 
@@ -419,10 +437,15 @@ class GameHTML {
   //移動先 URL 取得
   private static function GenerateJump() {
     $url = URL::GetRoom('game_frame');
-    if (RQ::Get()->auto_reload > 0) $url .= RQ::Get()->ToURL(RequestDataGame::RELOAD, true);
+    if (RQ::Get()->auto_reload > 0) {
+      $url .= RQ::Get()->ToURL(RequestDataGame::RELOAD, true);
+    }
 
     $stack = array(RequestDataGame::SOUND, RequestDataGame::DOWN);
-    if (GameConfig::ASYNC) $stack[] = RequestDataGame::ASYNC;
+    if (GameConfig::ASYNC) {
+      $stack[] = RequestDataGame::ASYNC;
+    }
+
     foreach ($stack as $key) {
       $url .= RQ::Get()->ToURL($key);
     }
@@ -442,11 +465,15 @@ class GameHTML {
       $stack->Set('trip_from', array(Message::TRIP, Message::TRIP_CONVERT));
       $stack->Set('trip_to',   array(Message::TRIP . Text::BR, Message::TRIP_CONVERT . Text::BR));
       $stack->Set('sex', DB::$ROOM->IsFinished() && RQ::Get()->sex);
-      if ($stack->sex) $stack->Set('sex_list', Sex::GetList());
+      if ($stack->sex) {
+	$stack->Set('sex_list', Sex::GetList());
+      }
     }
 
     if ($stack->admin && DB::$ROOM->IsNight()) {
-      if (DB::$ROOM->Stack()->IsEmpty('vote')) DB::$ROOM->LoadVote();
+      if (DB::$ROOM->Stack()->IsEmpty('vote')) {
+	DB::$ROOM->LoadVote();
+      }
       $stack->vote_data = DB::$ROOM->ParseVote(); //投票情報をパース
     }
 
@@ -457,7 +484,7 @@ class GameHTML {
   private static function GeneratePlayerVoteHeader(User $user, Stack $stack) {
     switch (DB::$ROOM->scene) {
     case RoomScene::BEFORE:
-      $voted = $user->vote_type == VoteAction::GAME_START || $user->IsDummyBoy(true);
+      $voted = ($user->vote_type == VoteAction::GAME_START) || $user->IsDummyBoy(true);
       break;
 
     case RoomScene::DAY:
@@ -465,7 +492,7 @@ class GameHTML {
       break;
 
     case RoomScene::NIGHT:
-      $voted = $stack->admin && RoleUser::IsVote($user, $stack->vote_data);
+      $voted = $stack->admin && RoleUser::CompletedVoteNight($user, $stack->vote_data);
       break;
 
     default:
@@ -490,7 +517,7 @@ class GameHTML {
 
     $str = $header . Text::Quote($uname) . Text::BR . $user->GenerateRoleName();
     if ($stack->sex) { //性別 (ゲーム終了後のみ)
-      $str .= Text::BR . Text::Quote($stack->sex_list[$user->sex]);
+      $str .= Text::BR . Text::Quote($stack->sex_list[Sex::Get($user)]);
     }
 
     return $str;
@@ -510,13 +537,15 @@ class GameHTML {
 
   //死亡メッセージ整形
   private static function ParseDead($name, $type, $result) {
-    if (isset($name)) $name .= ' ';
+    if (isset($name)) {
+      $name .= ' ';
+    }
     $base   = true;
     $class  = null;
     $reason = null;
     $action = strtolower($type);
     $open_reason = DB::$ROOM->IsOpenData();
-    $show_reason = $open_reason || self::FilterShowReason();
+    $show_reason = (true === $open_reason) || self::FilterShowReason();
 
     switch ($type) {
     case DeadReason::VOTE_KILLED:
@@ -542,14 +571,23 @@ class GameHTML {
       $class = 'revive';
       break;
 
+    case DeadReason::GENDER_STATUS:
+      $base  = false;
+      $class = 'fairy';
+      break;
+
     case DeadReason::REVIVE_FAILED:
-      if (! self::FilterShowReviveFailed()) return;
+      if (false === self::FilterShowReviveFailed()) {
+	return;
+      }
       $base  = false;
       $class = 'revive';
       break;
 
     case DeadReason::POSSESSED_TARGETED:
-      if (! $open_reason) return;
+      if (false === $open_reason) {
+	return;
+      }
       $base = false;
       break;
 
@@ -562,7 +600,9 @@ class GameHTML {
     case DeadReason::SUDDEN_DEATH:
       $base  = false;
       $class = 'sudden-death';
-      if ($show_reason) $reason = strtolower($result);
+      if (true === $show_reason) {
+	$reason = strtolower($result);
+      }
       break;
 
     case DeadReason::FLOWERED:
@@ -575,19 +615,28 @@ class GameHTML {
 
     case DeadReason::JOKER_MOVED:
     case DeadReason::DEATH_NOTE_MOVED:
-      if (! $open_reason) return;
+      if (false === $open_reason) {
+	return;
+      }
+
       $base  = false;
       $class = 'fairy';
       break;
 
     case DeadReason::LETTER_EXCHANGE_MOVED:
-      if (! $open_reason) return;
+      if (false === $open_reason) {
+	return;
+      }
+
       $base  = false;
       $class = 'lovers';
       break;
 
     case DeadReason::WOLF_FAILED:
-      if (! $open_reason && ! self::FilterShowWolfFailed()) return;
+      if (false === $open_reason && false === self::FilterShowWolfFailed()) {
+	return;
+      }
+
       $base   = false;
       $class  = 'wolf';
       $action = strtolower($type . '_' . $result);
@@ -614,22 +663,27 @@ class GameHTML {
       break;
 
     case DeadReason::COPIED_TRICK:
-      if (! $open_reason) return;
+      if (false === $open_reason) {
+	return;
+      }
+
       $base  = false;
       $class = 'mania';
       $name .= Text::Quote(RoleDataManager::GetName($result)) . ' ';
       break;
 
     default:
-      if ($show_reason) $reason = $action;
+      if (true === $show_reason) {
+	$reason = $action;
+      }
       break;
     }
 
     $str  = Text::LineFeed(TableHTML::GenerateHeader('dead-type', false));
     $str .= TableHTML::GenerateTrHeader(is_null($class) ? null : 'dead-type-' . $class);
-    $str .= TableHTML::GenerateTd($name . DeadMessage::${$base ? 'deadman' : $action});
+    $str .= TableHTML::GenerateTd($name . DeadMessage::${true === $base ? 'deadman' : $action});
     if (isset($reason)) {
-      $str .= TableHTML::GenerateTrLine();
+      $str .= TableHTML::GenerateTrLineFeed();
       $str .= TableHTML::GenerateTd(Text::Quote($name . DeadMessage::$$reason));
     }
     $str .= Text::LineFeed(TableHTML::GenerateTrFooter());

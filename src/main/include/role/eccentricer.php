@@ -9,7 +9,7 @@ class Role_eccentricer extends Role {
   public $mix_in = ['authority'];
 
   protected function IgnoreResult() {
-    return ! $this->IgnoreFilterVoteDo();
+    return false === $this->IgnoreFilterVoteDo();
   }
 
   protected function OutputAddResult() {

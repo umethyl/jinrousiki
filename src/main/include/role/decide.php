@@ -16,22 +16,24 @@ class Role_decide extends Role {
 
   //処刑者決定
   public function DecideVoteKill() {
-    if ($this->IsVoteKill()) return;
+    if ($this->DetermineVoteKill()) {
+      return;
+    }
 
     $target = $this->GetStack();
-    if (in_array($target, $this->GetVotePossible())) {
+    if (in_array($target, $this->GetVoteKillPossibleList())) {
       $this->SetVoteKill($target);
     }
   }
 
   //処刑者候補取得
-  final protected function GetVotePossible() {
+  final protected function GetVoteKillPossibleList() {
     return $this->GetStack(VoteDayElement::VOTE_POSSIBLE);
   }
 
-  //最大得票者投票者ユーザ名取得
-  final protected function GetMaxVotedUname() {
-    return array_intersect($this->GetVotePossible(), $this->GetStack());
+  //決定能力者の処刑者候補リスト取得
+  final protected function GetDecideVoteKillPossibleList() {
+    return array_intersect($this->GetVoteKillPossibleList(), $this->GetStack());
   }
 
   //処刑者ユーザ名登録
@@ -39,12 +41,16 @@ class Role_decide extends Role {
     return $this->SetStack($uname, VoteDayElement::VOTE_KILL);
   }
 
-  //単一処刑者候補判定
+  //処刑者決定 (単一処刑者候補投票判定)
   final protected function DecideVoteKillSame() {
-    if ($this->IsVoteKill() || ! is_array($this->GetStack())) return true;
+    if ($this->DetermineVoteKill() || false === is_array($this->GetStack())) {
+      return true;
+    }
 
-    $stack = $this->GetMaxVotedUname();
-    if (count($stack) != 1) return true;
+    $stack = $this->GetDecideVoteKillPossibleList();
+    if (count($stack) != 1) {
+      return true;
+    }
 
     $this->SetVoteKill(array_shift($stack));
     return false;

@@ -7,7 +7,9 @@
 RoleLoader::LoadFile('authority');
 class Role_rebel extends Role_authority {
   public function VoteKillCorrect() {
-    if (DB::$ROOM->IsEvent('no_authority')) return; //蜃気楼ならスキップ
+    if (DB::$ROOM->IsEvent('no_authority')) { //蜃気楼ならスキップ
+      return;
+    }
 
     //データ取得
     $count_list   = $this->GetStack(VoteDayElement::COUNT_LIST);

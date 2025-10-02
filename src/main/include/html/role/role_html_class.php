@@ -3,12 +3,18 @@
 class RoleHTML {
   //能力の種類とその説明を出力
   public static function OutputAbility() {
-    if (! DB::$ROOM->IsPlaying()) return false; //ゲーム中のみ表示する
+    if (false === DB::$ROOM->IsPlaying()) { //ゲーム中のみ表示する
+      return false;
+    }
 
     if (DB::$SELF->IsDead()) { //死亡したら口寄せ以外は表示しない
       echo HTML::GenerateSpan(RoleAbilityMessage::DEAD, 'ability ability-dead') . Text::BR;
-      if (DB::$SELF->IsRole('mind_evoke')) ImageManager::Role()->Output('mind_evoke');
-      if (DB::$SELF->IsDummyBoy() && ! DB::$ROOM->IsOpenCast()) { //身代わり君のみ隠蔽情報を表示
+      if (DB::$SELF->IsRole('mind_evoke')) {
+	ImageManager::Role()->Output('mind_evoke');
+      }
+
+      //身代わり君のみ隠蔽情報を表示
+      if (DB::$SELF->IsDummyBoy() && false === DB::$ROOM->IsOpenCast()) {
 	GameHTML::OutputVoteAnnounce(GameMessage::CLOSE_CAST);
       }
       return;
@@ -26,7 +32,9 @@ class RoleHTML {
     }
 
     //-- これ以降はサブ役職非公開オプションの影響を受ける --//
-    if (DB::$ROOM->IsOption('secret_sub_role')) return;
+    if (DB::$ROOM->IsOption('secret_sub_role')) {
+      return;
+    }
 
     foreach (RoleDataManager::GetDisplayList(RoleLoader::GetActor()->GetSubRoleList()) as $role) {
       RoleLoader::Load($role)->OutputAbility();
@@ -35,7 +43,9 @@ class RoleHTML {
 
   //仲間表示
   public static function OutputPartner(array $list, $header, $footer = null) {
-    if (count($list) < 1) return; //仲間がいなければ表示しない
+    if (count($list) < 1) { //仲間がいなければ表示しない
+      return;
+    }
 
     $list[] = TableHTML::GenerateTdFooter();
     $str    = ArrayFilter::Concat($list, RoleAbilityMessage::HONORIFIC . Message::SPACER);
@@ -44,23 +54,33 @@ class RoleHTML {
       ImageManager::Role()->Generate($header, null, true),
       TableHTML::GenerateTdHeader() . Message::SPACER . $str
     ];
-    if ($footer) $stack[] = ImageManager::Role()->Generate($footer, null, true);
+    if (isset($footer)) {
+      $stack[] = ImageManager::Role()->Generate($footer, null, true);
+    }
     $stack[] = TableHTML::GenerateFooter();
     Text::Output(ArrayFilter::Concat($stack, Text::LF));
   }
 
   //現在の憑依先表示
   public static function OutputPossessed() {
-    $type = 'possessed_target';
-    if (is_null($stack = DB::$SELF->GetPartner($type))) return;
+    $type  = 'possessed_target';
+    $stack = DB::$SELF->GetPartner($type);
+    if (is_null($stack)) {
+      return;
+    }
 
     $target = DB::$USER->ByID(ArrayFilter::GetMaxKey($stack))->handle_name;
-    if ($target != '') self::OutputAbilityResult('partner_header', $target, $type);
+    if ($target != '') {
+      self::OutputAbilityResult('partner_header', $target, $type);
+    }
   }
 
   //処刑投票メッセージ出力
   public static function OutputVoteKill() {
-    if (DB::$ROOM->date < 2 || ! DB::$ROOM->IsDay() || DB::$SELF->IsDead()) return; //スキップ判定
+    //スキップ判定 (2日目以降/昼/生存者)
+    if (DB::$ROOM->date < 2 || false === DB::$ROOM->IsDay() || DB::$SELF->IsDead()) {
+      return;
+    }
 
     $vote_count = sprintf(RoleAbilityMessage::VOTE_COUNT, DB::$ROOM->revote_count + 1);
     if (is_null(DB::$SELF->target_no)) {
@@ -74,11 +94,11 @@ class RoleHTML {
     }
   }
 
-  //夜の未投票メッセージ出力
-  public static function OutputVote($class, $str, $type, $not_type = '') {
+  //夜投票メッセージ出力
+  public static function OutputVoteNight($class, $str, $type, $not_type = '') {
     $stack = DB::$ROOM->IsTest() ? [] : DB::$SELF->LoadVote($type, $not_type);
     if (count($stack) > 0) {
-      $str = self::GetVoteMessage($stack, $type, $not_type);
+      $str = self::GetVoteNightVotedMessage($stack, $type, $not_type);
     }
     echo HTML::GenerateSpan($str, 'ability ' . $class) . Text::BRLF;
   }
@@ -276,7 +296,9 @@ class RoleHTML {
       break;
 
     default:
-      if (DB::$ROOM->IsTest()) Text::p($action, '★Invalid Action');
+      if (DB::$ROOM->IsTest()) {
+	Text::p($action, '★Invalid Action');
+      }
       return false;
     }
 
@@ -290,11 +312,17 @@ class RoleHTML {
 
     switch ($type) {
     case RoleAbility::MAGE:
-      if ($uniq) $stack = [];
+      if (true === $uniq) {
+	$stack = [];
+      }
       foreach ($result_list as $result) {
-	if ($uniq && in_array($result['target'], $stack)) continue;
+	if (true === $uniq && in_array($result['target'], $stack)) {
+	  continue;
+	}
 	self::OutputAbilityResult($header, $result['target'], $footer . $result['result']);
-	if ($uniq) $stack[] = $result['target'];
+	if (true === $uniq) {
+	  $stack[] = $result['target'];
+	}
       }
       break;
 
@@ -324,12 +352,18 @@ class RoleHTML {
       break;
 
     case RoleAbility::REPORTER:
-      if ($uniq) $stack = [];
+      if (true === $uniq) {
+	$stack = [];
+      }
       foreach ($result_list as $result) {
-	if ($uniq && in_array($result['result'], $stack)) continue;
+	if (true === $uniq && in_array($result['result'], $stack)) {
+	  continue;
+	}
 	$target = $result['target'] . ' さんは ' . $result['result'];
 	self::OutputAbilityResult($header, $target, $footer);
-	if ($uniq) $stack[] = $result['result'];
+	if (true === $uniq) {
+	  $stack[] = $result['result'];
+	}
       }
       break;
 
@@ -357,19 +391,22 @@ class RoleHTML {
     TableHTML::OutputFooter();
   }
 
-  //投票のチェックボックスヘッダ取得
-  public static function GetVoteCheckboxHeader($type) {
+  //夜投票チェックボックス生成
+  public static function GenerateVoteNightCheckbox($type, $id, $checked) {
     switch ($type) {
     case OptionFormType::RADIO:
-      return '<input type="radio" name="target_no"';
+      $format = '<input type="radio" name="target_no" id="%d" value="%d"%s>';
+      break;
 
     case OptionFormType::CHECKBOX:
-      return '<input type="checkbox" name="target_no[]"';
+      $format = '<input type="checkbox" name="target_no[]" id="%d" value="%d"%s>';
+      break;
     }
+    return Text::Format($format, $id, $id, HTML::GenerateChecked($checked));
   }
 
   //夜の投票済みメッセージを取得
-  private static function GetVoteMessage(array $stack, $type, $not_type = '') {
+  private static function GetVoteNightVotedMessage(array $stack, $type, $not_type = '') {
     switch ($type) {
     case VoteAction::WOLF:
     case VoteAction::STEP_WOLF:
@@ -384,13 +421,13 @@ class RoleHTML {
     case VoteAction::STEP_SCAN:
     case VoteAction::SPREAD_WIZARD:
     case VoteAction::STEP_VAMPIRE:
-      return self::GetMultiVoteMessage($stack);
+      return self::GetMultiVoteNightVotedMessage($stack);
 
     case VoteAction::STEP:
       if ($not_type != '' && $stack['type'] == $not_type) {
 	return RoleAbilityMessage::CANCEL_VOTED;
       }
-      return self::GetMultiVoteMessage($stack);
+      return self::GetMultiVoteNightVotedMessage($stack);
 
     case VoteAction::REVIVE:
     case VoteAction::POSSESSED:
@@ -411,7 +448,7 @@ class RoleHTML {
   }
 
   //夜の投票済みメッセージを取得 (複数投票型)
-  private static function GetMultiVoteMessage(array $stack) {
+  private static function GetMultiVoteNightVotedMessage(array $stack) {
     $str_stack = [];
     foreach (Text::Parse($stack['target_no']) as $id) {
       $user = DB::$USER->ByVirtual($id);

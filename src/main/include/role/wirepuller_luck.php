@@ -15,7 +15,7 @@ class Role_wirepuller_luck extends Role_authority {
   }
 
   protected function IgnoreFilterVoteDo() {
-    return ! $this->IsLivePartner();
+    return false === $this->IsLivePartner();
   }
 
   protected function IgnoreFilterVotePoll() {

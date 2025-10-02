@@ -3,7 +3,9 @@
 class VoteHTML {
   //結果出力
   public static function OutputResult($str, $reset = false) {
-    if ($reset) RoomDB::DeleteVote(); //今までの投票を全部削除
+    if (true === $reset) {
+      RoomDB::DeleteVote(); //今までの投票を全部削除
+    }
     HTML::OutputResult(ServerConfig::TITLE . VoteMessage::RESULT, self::GenerateResult($str));
   }
 
@@ -26,7 +28,7 @@ class VoteHTML {
     $path   = Icon::GetPath();
     foreach (DB::$USER->Get() as $id => $user) {
       TableHTML::OutputFold($count++);
-      if (! $user->IsDummyBoy() && (GameConfig::SELF_KICK || ! $user->IsSelf())) {
+      if (false === $user->IsDummyBoy() && (GameConfig::SELF_KICK || false === $user->IsSelf())) {
 	$checkbox = sprintf($format, $id, $id);
       } else {
 	$checkbox = '';
@@ -39,14 +41,18 @@ class VoteHTML {
       RQ::Get()->back_url, VoteMessage::KICK_DO, RQ::Get()->post_url,
       Security::GetToken(DB::$ROOM->id), VoteAction::GAME_START, VoteMessage::GAME_START
     );
-    if (! DB::$ROOM->IsTest()) HTML::OutputFooter(true);
+    if (false === DB::$ROOM->IsTest()) {
+      HTML::OutputFooter(true);
+    }
   }
 
   //昼の投票ページを出力する
   public static function OutputDay() {
     self::ValidateScene(); //投票シーンチェック
-    if (DB::$ROOM->IsDate(1)) self::OutputResult(VoteMessage::NEEDLESS_VOTE);
-    if (! DB::$ROOM->IsTest() && UserDB::IsVoteKill()) { //投票済みチェック
+    if (DB::$ROOM->IsDate(1)) {
+      self::OutputResult(VoteMessage::NEEDLESS_VOTE);
+    }
+    if (false === DB::$ROOM->IsTest() && UserDB::IsVoteKill()) { //投票済みチェック
       self::OutputResult(VoteMessage::ALREADY_VOTE);
     }
 
@@ -64,8 +70,8 @@ class VoteHTML {
     self::OutputHeader();
     Text::Printf(self::GetDayHeader(), VoteAction::VOTE_KILL, DB::$ROOM->revote_count);
 
-    $format = self::GetCheckbox();
-    $count  = 0;
+    $format    = self::GetCheckbox();
+    $count     = 0;
     $base_path = Icon::GetPath();
     $dead_icon = Icon::GetDead();
     foreach ($user_stack as $id => $user) {
@@ -73,8 +79,8 @@ class VoteHTML {
       $is_live = DB::$USER->IsVirtualLive($id);
 
       //生きていればユーザアイコン、死んでれば死亡アイコン
-      $path = $is_live ? $base_path . $user->icon_filename : $dead_icon;
-      if ($is_live && ! $user->IsSame($virtual_self)) {
+      $path = (true === $is_live) ? $base_path . $user->icon_filename : $dead_icon;
+      if (true === $is_live && false === $user->IsSame($virtual_self)) {
 	$checkbox = sprintf($format, $id, $id);
       } else {
 	$checkbox = '';
@@ -85,7 +91,9 @@ class VoteHTML {
     Text::Printf(self::GetDayFooter(),
       VoteMessage::CAUTION, RQ::Get()->back_url, VoteMessage::VOTE_DO
     );
-    if (! DB::$ROOM->IsTest()) HTML::OutputFooter(true);
+    if (false === DB::$ROOM->IsTest()) {
+      HTML::OutputFooter(true);
+    }
   }
 
   //夜の投票ページを出力する
@@ -93,7 +101,7 @@ class VoteHTML {
     self::ValidateScene(); //投票シーンチェック
     //-- 投票済みチェック --//
     $filter = VoteNight::GetFilter();
-    if (! DB::$ROOM->IsTest()) {
+    if (false === DB::$ROOM->IsTest()) {
       $action     = RoleManager::Stack()->Get('action');
       $not_action = RoleManager::Stack()->Get('not_action');
       VoteNight::ValidateVoted($action, $not_action);
@@ -104,15 +112,15 @@ class VoteHTML {
     //RoleManager::Stack()->p();
     TableHTML::OutputHeader('vote-page');
     $count = 0;
-    foreach ($filter->GetVoteTargetUser() as $id => $user) {
+    foreach ($filter->GetVoteNightTargetUser() as $id => $user) {
       TableHTML::OutputFold($count++);
       $live = DB::$USER->IsVirtualLive($id);
       /*
 	死者は死亡アイコン (蘇生能力者は死亡アイコンにしない)
 	生存者はユーザアイコン (狼仲間なら狼アイコン)
       */
-      $path     = $filter->GetVoteIconPath($user, $live);
-      $checkbox = $filter->GetVoteCheckbox($user, $id, $live);
+      $path     = $filter->GetVoteNightIconPath($user, $live);
+      $checkbox = $filter->GetVoteNightCheckbox($user, $id, $live);
       ImageHTML::OutputVoteIcon($user, $path, $checkbox);
     }
 
@@ -137,20 +145,28 @@ class VoteHTML {
 
     echo TableHTML::GenerateFooter();
     HTML::OutputDivFooter();
-    if (! DB::$ROOM->IsTest()) HTML::OutputFooter(true);
+    if (false === DB::$ROOM->IsTest()) {
+      HTML::OutputFooter(true);
+    }
   }
 
   //死者の投票ページ出力
   public static function OutputHeaven() {
     //投票済みチェック
-    if (DB::$SELF->IsDrop())     self::OutputResult(VoteMessage::ALREADY_DROP);
-    if (DB::$ROOM->IsOpenCast()) self::OutputResult(VoteMessage::ALREADY_OPEN);
+    if (DB::$SELF->IsDrop()) {
+      self::OutputResult(VoteMessage::ALREADY_DROP);
+    }
+    if (DB::$ROOM->IsOpenCast()) {
+      self::OutputResult(VoteMessage::ALREADY_OPEN);
+    }
 
     self::OutputHeader();
     Text::Printf(self::GetHeaven(),
       VoteAction::HEAVEN, VoteMessage::CAUTION, RQ::Get()->back_url, VoteMessage::REVIVE_REFUSE
     );
-    if (! DB::$ROOM->IsTest()) HTML::OutputFooter(true);
+    if (false === DB::$ROOM->IsTest()) {
+      HTML::OutputFooter(true);
+    }
   }
 
   //身代わり君 (霊界) の投票ページ出力
@@ -161,8 +177,8 @@ class VoteHTML {
     );
 
     //蘇生辞退ボタン表示判定
-    if (! DB::$SELF->IsDrop() && DB::$ROOM->IsOption('not_open_cast') &&
-	! DB::$ROOM->IsOpenCast()) {
+    if (false === DB::$SELF->IsDrop() && DB::$ROOM->IsOption('not_open_cast') &&
+	false === DB::$ROOM->IsOpenCast()) {
       Text::Printf(self::GetDummyBoyReviveRefuse(),
 	RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id),
 	VoteAction::HEAVEN, VoteMessage::REVIVE_REFUSE
@@ -171,7 +187,9 @@ class VoteHTML {
 
     echo TableHTML::GenerateFooter();
     HTML::OutputDivFooter();
-    if (! DB::$ROOM->IsTest()) HTML::OutputFooter(true);
+    if (false === DB::$ROOM->IsTest()) {
+      HTML::OutputFooter(true);
+    }
   }
 
   //シーンの一致チェック

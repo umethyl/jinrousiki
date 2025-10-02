@@ -117,13 +117,15 @@
 <a href="#follow_vampire">鮮血夫人</a>
 <a href="#incubus_vampire">青髭公</a>
 <a href="#succubus_vampire">飛縁魔</a>
+<a href="#homogeneous_vampire">夢馬</a>
+<a href="#heterologous_vampire">夜魔</a>
 <a href="#passion_vampire">牡丹灯籠</a>
 <a href="#step_vampire">文武王</a>
 <a href="#doom_vampire">冥血鬼</a>
-<a href="#sacrifice_vampire">吸血公</a>
-<a href="#soul_vampire">吸血姫</a>
 </p>
 <p>
+<a href="#sacrifice_vampire">吸血公</a>
+<a href="#soul_vampire">吸血姫</a>
 <a href="#scarlet_vampire">屍鬼</a>
 </p>
 
@@ -213,6 +215,54 @@
 <pre>
 <a href="#incubus_vampire">青髭公</a>の対女性バージョンです。「ひのえんま」と読みます。
 村の男女構成比次第で難易度が大きく変わることになります。
+</pre>
+
+<h3 id="homogeneous_vampire">夢馬 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 4.1.0 α1～]</h3>
+<pre>
+<a href="#vampire_do">感染</a>させる事に成功した人の性別を知ることができ、
+異性だった場合は性転換させてしまう特殊な吸血鬼。
+</pre>
+<h4>性別鑑定能力</h4>
+<ol>
+<li><a href="sub_role.php#gender_status_rule">基本ルール [性別]</a> の影響を受ける。</li>
+<li>対象者の役職には影響されない。</li>
+</ol>
+<h4>性転換能力</h4>
+<ol>
+<li>自身、対象ともに<a href="sub_role.php#gender_status_rule">基本ルール [性別]</a> の影響を受ける。</li>
+<li>対象を男性と判定した場合は<a href="sub_role.php#female_status">女性転換</a>、女性と判定した場合は<a href="sub_role.php#male_status">男性転換</a>を翌日発動で付与する。</li>
+<li>性転換が実際に付与されたかは自身には分からない。</li>
+<li>同じ夜に襲撃した他の吸血鬼の動向は判定に関与しない。<br>
+例) A[夢馬](男性) → B[村人](女性) ← C[夢馬](女性) <br>
+襲撃結果：B[村人][<a href="sub_role.php#male_status">男性転換</a>]
+</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="#heterologous_vampire">夜魔</a>・<a href="sub_role.php#gender_status">性転換系</a>・<a href="ability.php#sex">性別能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+性転換能力の実装方法を閃いて、「では、その能力が絵になる存在は何か？」
+と考察して吸血鬼の亜種として実装しました。
+ナイトメアがモチーフです。
+</pre>
+
+<h3 id="heterologous_vampire">夜魔 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 4.1.0 α1～]</h3>
+<pre>
+<a href="#vampire_do">感染</a>させる事に成功した人の性別を知ることができ、
+同性だった場合は性転換させてしまう特殊な吸血鬼。
+性別鑑定能力、性転換能力は<a href="#homogeneous_vampire">夢馬</a>と同じ。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="#homogeneous_vampire">夢馬</a>・<a href="sub_role.php#gender_status">性転換系</a>・<a href="ability.php#sex">性別能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#homogeneous_vampire">夢馬</a>の対同性バージョンで、リリスがモチーフです。
+ある程度<a href="human.php#sex_mage">ひよこ鑑定士</a>を騙ることはできますが、
+<a href="sub_role.php#infected">感染者</a>が自覚する可能性と合わせるとリスクの方が大きいと推定されます。
 </pre>
 
 <h3 id="passion_vampire">牡丹灯籠 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 2.1.0 α7～]</h3>

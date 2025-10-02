@@ -16,7 +16,10 @@ class Role_spiritism_wizard extends Role_wizard {
 
   protected function GetWizardList() {
     return [
-      'soul_necromancer', 'necromancer', 'psycho_necromancer', 'embalm_necromancer',
+      'soul_necromancer',
+      'necromancer',
+      'psycho_necromancer',
+      'embalm_necromancer',
       'sex_necromancer'
     ];
   }
@@ -24,8 +27,9 @@ class Role_spiritism_wizard extends Role_wizard {
   public function NecromancerWizard(User $user, $flag) {
     $role = $this->SetWizard();
     $type = RoleAbility::SPIRITISM_WIZARD;
-    if ($role == ArrayFilter::Pick($this->GetWizardList(), true)) {
-      DB::$ROOM->ResultAbility($type, $flag ? 'stolen' : Sex::Get($user), $user->GetName());
+    if ($role == ArrayFilter::Pop($this->GetWizardList())) {
+      $result = (true === $flag) ? 'stolen' : Sex::Distinguish($user);
+      DB::$ROOM->StoreAbility($type, $result, $user->GetName());
     } else {
       $stack = RoleManager::Stack();
       $stack->Get('necromancer_wizard')->$role = true;

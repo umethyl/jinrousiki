@@ -8,11 +8,13 @@ class Role_prince extends Role {
   //処刑キャンセル
   public function VoteKillCancel() {
     $user = $this->GetActor();
-    if (! $user->IsActive() || $user->IsWinCamp(Camp::LOVERS)) return;
+    if (false === $user->IsActive() || $user->IsWinCamp(Camp::LOVERS)) {
+      return;
+    }
 
     $user->UpdateLive(UserLive::LIVE);
     $user->Flag()->On(UserMode::REVIVE);
     $user->LostAbility();
-    DB::$ROOM->ResultDead($user->handle_name, DeadReason::VOTE_CANCELLED);
+    DB::$ROOM->StoreDead($user->handle_name, DeadReason::VOTE_CANCELLED);
   }
 }

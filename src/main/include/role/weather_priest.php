@@ -11,8 +11,10 @@ class Role_weather_priest extends Role_priest {
   }
 
   protected function IgnoreSetPriest() {
-    if (DB::$ROOM->date < 3 || DB::$ROOM->date % 3 != 0) return true;
-    return ! DB::$USER->IsLiveRole($this->role);
+    if (DB::$ROOM->date < 3 || DB::$ROOM->date % 3 != 0) {
+      return true;
+    }
+    return false === DB::$USER->IsLiveRole($this->role);
   }
 
   protected function IgnorePriest() {
@@ -34,13 +36,13 @@ class Role_weather_priest extends Role_priest {
     //ksort($stack); Text::p($stack, "◆{$this->role}");
 
     if (DB::$ROOM->IsOption('full_weather') && DB::$ROOM->IsDate(1)) { //天変地異対応
-      DB::$ROOM->EntryWeather(Lottery::Draw($list), 1);
+      DB::$ROOM->StoreWeather(Lottery::Draw($list), 1);
     }
 
     $weather = Lottery::Draw($list);
     //$weather = 44; //テスト用
     $date = 2;
-    DB::$ROOM->EntryWeather($weather, $date, DB::$USER->IsLiveRole($this->role));
+    DB::$ROOM->StoreWeather($weather, $date, DB::$USER->IsLiveRole($this->role));
   }
 
 

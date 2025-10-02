@@ -10,25 +10,28 @@
 */
 class Role_tengu extends Role {
   public $mix_in = ['mage', 'chicken'];
-  public $action       = VoteAction::TENGU;
-  public $result       = RoleAbility::TENGU_CAMP;
-  public $action_date  = RoleActionDate::AFTER;
+  public $action = VoteAction::TENGU;
+  public $result = RoleAbility::TENGU_CAMP;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   protected function IgnoreResult() {
-    return ! DB::$ROOM->IsDate(2);
+    return false === DB::$ROOM->IsDate(2);
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::TENGU, RoleAbilityMessage::TENGU, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::TENGU, RoleAbilityMessage::TENGU, $this->action);
   }
 
   protected function IgnoreSuddenDeath() {
-    return ! $this->IsRealActor() || RoleUser::IsAvoidLovers($this->GetActor(), true);
+    return $this->IgnoreSuddenDeathAvoid();
   }
 
   protected function IsSuddenDeath() {
     $flag = false;
-    foreach ($this->GetVotedUname() as $uname) {
+    foreach ($this->GetVotePollList() as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       //恋人は常時除く, 鬼は常時対象, 天狗同士は同陣営
       if ($user->IsWinCamp(Camp::OGRE) || $user->IsWinCamp(Camp::TENGU) ||
@@ -37,7 +40,7 @@ class Role_tengu extends Role {
 	break;
       }
     }
-    return $flag && Lottery::Percent($this->GetTenguSuddenDeathRate());
+    return (true === $flag) && Lottery::Percent($this->GetTenguSuddenDeathRate());
   }
 
   //勝利陣営判定
@@ -89,19 +92,25 @@ class Role_tengu extends Role {
   }
 
   public function Mage(User $user) {
-    if ($this->IsJammer($user) || $this->IsCursed($user)) return false;
+    if ($this->IsJammer($user) || $this->IsCursed($user)) {
+      return false;
+    }
     $this->GetMageResult($user);
   }
 
   protected function GetMageResult(User $user) {
-    if ($this->IgnoreTenguTarget($user)) return false;
-    if (! Lottery::Percent($this->GetTenguMageRate($user))) return false;
+    if ($this->IgnoreTenguTarget($user)) {
+      return false;
+    }
+    if (false === Lottery::Percent($this->GetTenguMageRate($user))) {
+      return false;
+    }
     $this->TenguKill($user);
   }
 
   //神通力発動対象外判定
   protected function IgnoreTenguTarget(User $user) {
-    return ! $user->IsMainGroup(
+    return false === $user->IsMainGroup(
       CampGroup::GUARD, CampGroup::ASSASSIN, CampGroup::WOLF, CampGroup::CHILD_FOX
     );
   }
@@ -131,7 +140,7 @@ class Role_tengu extends Role {
   //勝利陣営判定
   final public function SetWinCamp() {
     $camp = $this->GetWinCamp(true);
-    DB::$ROOM->ResultAbility($this->result, 'result_tengu_camp_' . $camp);
+    DB::$ROOM->StoreAbility($this->result, 'result_tengu_camp_' . $camp);
   }
 
   public function Win($winner) {

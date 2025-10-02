@@ -21,11 +21,14 @@ class Role_cowboy_duelist extends Role_valkyrja_duelist {
     $message_list = $this->GetStack(VoteDayElement::MESSAGE_LIST);
 
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($uname == $this->GetVoteTargetUname($target_uname)) continue; //相互投票判定
+      if ($uname == $this->GetVoteKillUname($target_uname)) { //相互投票判定
+	continue;
+      }
 
       $actor = DB::$USER->ByUname($uname);
-      if ($actor->IsRole('vega_lovers') && ! DB::$ROOM->IsEvent('no_authority')) {
-	continue; //織姫は補正をかけない
+      //織姫は補正をかけない
+      if ($actor->IsRole('vega_lovers') && false === DB::$ROOM->IsEvent('no_authority')) {
+	continue;
       }
 
       $target = DB::$USER->ByRealUname($target_uname);
@@ -42,22 +45,28 @@ class Role_cowboy_duelist extends Role_valkyrja_duelist {
 
   public function VoteKillAction() {
     $stack = []; //ショック死対象者リスト
-    foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($uname)) continue;
+    foreach ($this->GetStackKey() as $uname) {
+      if ($this->IsVoteKill($uname)) {
+	continue;
+      }
 
       $user = DB::$USER->ByUname($uname);
-      foreach ($this->GetVotedUname($uname) as $voted_uname) { //投票者取得
-	if ($this->IsVoted($voted_uname)) continue;
+      foreach ($this->GetVotePollList($uname) as $target_uname) { //投票者取得
+	if ($this->IsVoteKill($target_uname)) {
+	  continue;
+	}
 
-	$target = DB::$USER->ByRealUname($voted_uname);
+	$target = DB::$USER->ByRealUname($target_uname);
 	if ($target->IsPartner($this->GetPartnerRole(), $user->id)) {
-	  $id = $voted_uname == $this->GetVoteTargetUname($uname) ? $target->id : $user->id;
+	  $id = ($target_uname == $this->GetVoteKillUname($uname)) ? $target->id : $user->id;
 	  $stack[$id] = true;
 	}
       }
     }
 
-    foreach ($stack as $id => $flag) $this->SuddenDeathKill($id); //ショック死処理
+    foreach ($stack as $id => $flag) { //ショック死処理
+      $this->SuddenDeathKill($id);
+    }
   }
 
   protected function GetSuddenDeathType() {

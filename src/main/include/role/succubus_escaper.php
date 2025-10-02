@@ -7,6 +7,6 @@
 RoleLoader::LoadFile('escaper');
 class Role_succubus_escaper extends Role_escaper {
   protected function EscapeFailed(User $user) {
-    return ! Sex::IsMale($user);
+    return false === Sex::IsMale($user);
   }
 }

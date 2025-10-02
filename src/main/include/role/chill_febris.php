@@ -15,6 +15,6 @@ class Role_chill_febris extends Role_febris {
   }
 
   protected function IgnoreSuddenDeathFebris() {
-    return ! Lottery::Percent(15);
+    return false === Lottery::Percent(15);
   }
 }

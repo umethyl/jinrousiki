@@ -7,6 +7,6 @@
 RoleLoader::LoadFile('flower_fairy');
 class Role_star_fairy extends Role_flower_fairy {
   protected function GetFairyActionResult() {
-    return 'CONSTELLATION';
+    return DeadReason::CONSTELLATION;
   }
 }

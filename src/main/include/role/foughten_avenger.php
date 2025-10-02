@@ -8,7 +8,7 @@ RoleLoader::LoadFile('avenger');
 class Role_foughten_avenger extends Role_avenger {
   protected function AddDuelistRole(User $user) {
     $stack = $this->GetStack();
-    if (! is_array($stack)) { //抽選処理
+    if (false === is_array($stack)) { //抽選処理
       $list  = Lottery::GetList($this->GetStackKey('target_list'));
       $stack = array_slice($list, 0, floor(count($list) / 2));
       $this->SetStack($stack);

@@ -9,6 +9,6 @@ class Role_soul_necromancer extends Role_necromancer {
   public $result = RoleAbility::SOUL_NECROMANCER;
 
   public function Necromancer(User $user, $flag) {
-    return $flag ? 'stolen' : $user->main_role;
+    return (true === $flag) ? 'stolen' : $user->main_role;
   }
 }

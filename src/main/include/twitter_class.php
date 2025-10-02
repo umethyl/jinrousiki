@@ -8,7 +8,9 @@ class JinrouTwitter {
 
   //投稿処理
   public static function Send($id, $name, $comment) {
-    if (TwitterConfig::DISABLE || ServerConfig::SECRET_ROOM) return true;
+    if (TwitterConfig::DISABLE || ServerConfig::SECRET_ROOM) {
+      return true;
+    }
 
     $str = TwitterConfig::GenerateMessage($id, $name, $comment);
     $str = Text::Encode($str, self::ENCODE, ServerConfig::ENCODE);
@@ -27,12 +29,12 @@ class JinrouTwitter {
 	  $url = $short_url;
 	}
       }
-      if (! self::Over($str . $url, 1)) {
+      if (false === self::Over($str . $url, 1)) {
 	$str .= ' ' . $url;
       }
     }
 
-    if (Text::Exists(TwitterConfig::HASH) && ! self::Over($str . TwitterConfig::HASH, 2)) {
+    if (Text::Exists(TwitterConfig::HASH) && false === self::Over($str . TwitterConfig::HASH, 2)) {
       $str .= sprintf(' #%s', TwitterConfig::HASH);
     }
 
@@ -42,7 +44,9 @@ class JinrouTwitter {
     );
     $response = $filter->OAuthRequest(self::API, 'POST', ['status' => $str]);
 
-    if (! ($response === false || strrpos($response, 'error'))) return true;
+    if (! (false === $response || strrpos($response, 'error'))) {
+      return true;
+    }
 
     //エラー処理
     Text::Output(TwitterMessage::FAILED, true);

@@ -10,12 +10,14 @@ class Role_cursed_angel extends Role_angel {
   public $mix_in = ['chicken'];
 
   protected function IgnoreSuddenDeath() {
-    return ! $this->IsRealActor() || RoleUser::IsAvoidLovers($this->GetActor(), true);
+    return $this->IgnoreSuddenDeathAvoid();
   }
 
   protected function IsSuddenDeath() {
-    foreach ($this->GetVotedUname() as $uname) {
-      if (DB::$USER->ByRealUname($uname)->IsRole('lovers')) return true;
+    foreach ($this->GetVotePollList() as $uname) {
+      if (DB::$USER->ByRealUname($uname)->IsRole('lovers')) {
+	return true;
+      }
     }
     return false;
   }

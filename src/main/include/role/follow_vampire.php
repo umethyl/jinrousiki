@@ -20,7 +20,8 @@ class Role_follow_vampire extends Role_vampire {
     $id   = $this->GetID();
     $role = 'infected';
     foreach (DB::$USER->GetRoleUser($role) as $user) {
-      if ($user->IsPartner($role, $id) && $user->IsLive(true) && ! RoleUser::IsAvoid($user)) {
+      if ($user->IsPartner($role, $id) && $user->IsLive(true) &&
+	  false === RoleUser::IsAvoid($user)) {
 	DB::$USER->Kill($user->id, DeadReason::VAMPIRE_KILLED);
       }
     }

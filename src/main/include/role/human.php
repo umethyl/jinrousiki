@@ -14,6 +14,6 @@ class Role_human extends Role {
       $flag = DB::$ROOM->IsEvent($role) || DB::$USER->IsLiveRole($role);
       $this->SetStack($flag);
     }
-    return ! $flag;
+    return false === $flag;
   }
 }

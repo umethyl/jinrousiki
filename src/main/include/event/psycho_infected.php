@@ -9,8 +9,10 @@ class Event_psycho_infected extends Event {
     $stack = [];
     foreach (RoleManager::Stack()->Get(VoteDayElement::USER_LIST) as $id => $uname) {
       $user = DB::$USER->ByID($id);
-      if ($user->IsLive(true) && ! RoleUser::IsAvoid($user, true) &&
-	  ! $user->IsRole($this->name) && ! $user->IsCamp(Camp::VAMPIRE)) {
+      if ($user->IsLive(true) &&
+	  false === RoleUser::IsAvoid($user, true) &&
+	  false === $user->IsRole($this->name) &&
+	  false === $user->IsCamp(Camp::VAMPIRE)) {
 	$stack[] = $user->id;
       }
     }

@@ -5,7 +5,7 @@
   ・人狼襲撃耐性：無効 + 死の宣告
 */
 class Role_tough extends Role {
-  public function WolfEatResist() {
+  public function ResistWolfEat() {
     $this->GetActor()->AddDoom(1);
     return true;
   }

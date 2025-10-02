@@ -34,7 +34,7 @@ class Role_gatekeeper_guard extends Role_guard {
     $handle_name = DB::$USER->ByVirtual($id)->handle_name;
     foreach ($guard_stack as $user) {
       if (RoleUser::GuardSuccess($user, $id)) {
-	DB::$ROOM->ResultAbility($this->result, 'success', $handle_name, $user->id);
+	DB::$ROOM->StoreAbility($this->result, 'success', $handle_name, $user->id);
       }
     }
     return true;

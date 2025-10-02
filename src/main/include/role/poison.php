@@ -16,7 +16,9 @@ class Role_poison extends Role {
     $aspirator = [];
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if ($user->IsDead(true) || $this->IsAvoidPoison($user)) continue;
+      if ($user->IsDead(true) || $this->IsAvoidPoison($user)) {
+	continue;
+      }
 
       if ($this->CallParent('IsPoisonTarget', $user)) {
 	if ($user->IsRole('aspirator')) { //吸毒者判定
@@ -41,6 +43,6 @@ class Role_poison extends Role {
 
   //人狼襲撃毒死無効判定
   final public function IgnorePoisonEat(User $user) {
-    return ! $this->CallParent('IsPoisonTarget', $user);
+    return false === $this->CallParent('IsPoisonTarget', $user);
   }
 }

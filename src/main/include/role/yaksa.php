@@ -9,7 +9,7 @@
 */
 RoleLoader::LoadFile('ogre');
 class Role_yaksa extends Role_ogre {
-  protected function GetOgreWolfEatResistRate() {
+  protected function GetOgreResistWolfEatRate() {
     return 20;
   }
 
@@ -18,7 +18,7 @@ class Role_yaksa extends Role_ogre {
   }
 
   protected function IgnoreOgreAssassin(User $user) {
-    return ! $this->RequireOgreWinDead($user);
+    return false === $this->RequireOgreWinDead($user);
   }
 
   protected function IsOgreLoseCamp($winner) {

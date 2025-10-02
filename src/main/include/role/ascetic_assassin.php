@@ -11,7 +11,7 @@ class Role_ascetic_assassin extends Role_assassin {
     RoleHTML::OutputAbilityResult('ability_ascetic_' . $this->CountAscetic(), null);
   }
 
-  public function WolfEatResist() {
+  public function ResistWolfEat() {
     return Lottery::Percent(floor($this->CountAscetic() / 3) * 10);
   }
 
@@ -19,7 +19,9 @@ class Role_ascetic_assassin extends Role_assassin {
   private function CountAscetic() {
     $count = 1;
     foreach (Position::GetAround($this->GetActor()) as $id) {
-      if (! DB::$USER->IsVirtualLive($id)) $count++;
+      if (false === DB::$USER->IsVirtualLive($id)) {
+	$count++;
+      }
     }
     return $count;
   }

@@ -24,7 +24,9 @@ class Role_mimic_wizard extends Role_wizard {
   }
 
   public function NecromancerWizard(User $user, $flag) {
-    if (DB::$ROOM->date < 3) return;
+    if (DB::$ROOM->date < 3) {
+      return;
+    }
 
     if (DB::$ROOM->IsEvent('full_wizard')) {
       $failed = false;
@@ -34,7 +36,11 @@ class Role_mimic_wizard extends Role_wizard {
       $failed = Lottery::Bool();
     }
 
-    $result = ($flag || $failed) ? 'stolen' : $this->DistinguishNecromancer($user);
-    DB::$ROOM->ResultAbility(RoleAbility::MIMIC_WIZARD, $result, $user->GetName());
+    if (true === $flag || true === $failed) {
+      $result = 'stolen';
+    } else {
+      $result = $this->DistinguishNecromancer($user);
+    }
+    DB::$ROOM->StoreAbility(RoleAbility::MIMIC_WIZARD, $result, $user->GetName());
   }
 }

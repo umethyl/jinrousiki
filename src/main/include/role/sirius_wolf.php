@@ -9,7 +9,7 @@ class Role_sirius_wolf extends Role_wolf {
   protected function OutputAddResult() {
     $stack = $this->GetStack();
     //未定義なら取り直す (日数判定はログ対策)
-    if (is_null($stack) || ! DB::$ROOM->IsDate($stack['date'])) {
+    if (is_null($stack) || false === DB::$ROOM->IsDate($stack['date'])) {
       $stack = $this->GetAbilitySiriusWolf();
     }
 

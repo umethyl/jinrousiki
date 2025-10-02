@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('mage');
 class Role_critical_mage extends Role_mage {
   protected function MageAction(User $user) {
-    if ($user->IsLive(true) && ! RoleUser::IsAvoid($user)) {
+    if ($user->IsLive(true) && false === RoleUser::IsAvoid($user)) {
       $user->AddRole('critical_luck');
     }
   }

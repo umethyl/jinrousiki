@@ -7,8 +7,11 @@
   ・天候：霧雨(占い師), 木枯らし(ひよこ鑑定士)
 */
 class Role_wizard extends Role {
-  public $action      = VoteAction::WIZARD;
-  public $action_date = RoleActionDate::AFTER;
+  public $action = VoteAction::WIZARD;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3;
@@ -26,7 +29,7 @@ class Role_wizard extends Role {
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::WIZARD, RoleAbilityMessage::WIZARD, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::WIZARD, RoleAbilityMessage::WIZARD, $this->action);
   }
 
   //魔法セット (返り値：昼：魔法 / 夜：投票タイプ)

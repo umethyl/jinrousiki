@@ -114,9 +114,13 @@ final class Loader extends LoadManager {
     }
 
     //mbstring 非対応の場合、エミュレータを使用する
-    if (! extension_loaded('mbstring')) self::LoadFile('mb-emulator');
+    if (! extension_loaded('mbstring')) {
+      self::LoadFile('mb-emulator');
+    }
 
-    if (Security::IsInvalidValue($_REQUEST) || Security::IsInvalidValue($_SERVER)) die();
+    if (Security::IsInvalidValue($_REQUEST) || Security::IsInvalidValue($_SERVER)) {
+      die();
+    }
 
     //デバッグ用ツールをロード
     if (ServerConfig::DEBUG_MODE) {
@@ -155,7 +159,9 @@ final class Loader extends LoadManager {
 
   //リクエストクラスロード
   public static function LoadRequest($class = 'Request', $game = false) {
-    if ($game) self::LoadFile('game_config');
+    if (true === $game) {
+      self::LoadFile('game_config');
+    }
     self::LoadFile('request_class');
     return RQ::LoadRequest($class);
   }

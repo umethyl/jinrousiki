@@ -10,7 +10,7 @@ class Role_ark_angel extends Role_angel {
   public $result = RoleAbility::SYMPATHY;
 
   protected function IgnoreResult() {
-    return ! DB::$ROOM->IsDate(2);
+    return false === DB::$ROOM->IsDate(2);
   }
 
   protected function IsSympathy(User $a, User $b) {

@@ -71,8 +71,8 @@ final class Text {
   }
 
   //カッコで括る
-  public static function Quote($str, $before = '(', $after = ')') {
-    return $before . $str . $after;
+  public static function Quote($str, $header = '(', $footer = ')') {
+    return $header . $str . $footer;
   }
 
   //カッコで括る (ブラケット版)
@@ -95,9 +95,14 @@ final class Text {
     return $stack;
   }
 
+  //キーワードで分離して先頭を取り出す
+  public static function CutPick($str, $delimiter = '_', $limit = null) {
+    return ArrayFilter::Pick(self::Parse($str, $delimiter, $limit));
+  }
+
   //キーワードで分離して末尾を取り出す
-  public static function Cut($str, $delimiter = '_', $limit = null, $pop = true) {
-    return ArrayFilter::Pick(self::Parse($str, $delimiter, $limit), $pop);
+  public static function CutPop($str, $delimiter = '_', $limit = null) {
+    return ArrayFilter::Pop(self::Parse($str, $delimiter, $limit));
   }
 
   //切り詰め
@@ -145,7 +150,8 @@ final class Text {
       $trip_list = [Message::TRIP, Message::TRIP_KEY];
       $str = str_replace($trip_list, [Message::TRIP_CONVERT, '#'], $str);
 
-      if (($trip_start = mb_strpos($str, '#')) !== false) { //トリップキーの位置を検索
+      $trip_start = mb_strpos($str, '#');
+      if (false !== $trip_start) { //トリップキーの位置を検索
 	$name = self::Shrink($str, $trip_start);
 	$key  = mb_substr($str, $trip_start + 1);
 	//self::p(sprintf('%s, name: %s, key: %s', $trip_start, $name, $key), '◆Trip Start');
@@ -211,7 +217,9 @@ final class Text {
 
   //出力 (NULL 対応版)
   public static function OutputExists($str) {
-    if (is_null($str)) return null;
+    if (is_null($str)) {
+      return null;
+    }
     echo $str;
   }
 
@@ -256,7 +264,7 @@ final class Text {
       "'"  => '&#039;'
     ];
     $str = strtr($str, $replace_list);
-    if ($trim) {
+    if (true === $trim) {
       $str = trim($str);
     } else {
       $str = str_replace([self::CRLF, self::CR, self::LF], self::LF, $str);
@@ -306,12 +314,12 @@ final class Switcher {
   /* 変換 */
   //ON・OFF 変換
   public static function Get($flag) {
-    return $flag ? self::ON : self::OFF;
+    return (true === $flag) ? self::ON : self::OFF;
   }
 
   //OK・NG 変換
   public static function GetBool($flag) {
-    return $flag ? self::OK : self::NG;
+    return (true === $flag) ? self::OK : self::NG;
   }
 }
 
@@ -440,14 +448,24 @@ final class ArrayFilter {
     return is_array($list[0]) ? $list[0] : $list;
   }
 
-  //先頭/末尾取得
-  public static function Pick(array $list, $pop = false) {
-    return $pop ? array_pop($list) : array_shift($list);
+  //先頭取得
+  public static function Pick(array $list) {
+    return array_shift($list);
   }
 
-  //先頭/末尾取得 (key ベース)
-  public static function PickKey(array $list, $pop = false) {
-    return self::Pick(array_keys($list), $pop);
+  //末尾取得
+  public static function Pop(array $list) {
+    return array_pop($list);
+  }
+
+  //先頭取得 (key ベース)
+  public static function PickKey(array $list) {
+    return self::Pick(array_keys($list));
+  }
+
+  //末尾取得 (key ベース)
+  public static function PopKey(array $list) {
+    return self::Pop(array_keys($list));
   }
 
   //最大値取得 (key ベース)
@@ -474,6 +492,17 @@ final class ArrayFilter {
   //連想配列
   public static function IsAssoc(array $list, $key) {
     return self::IsKey($list, $key) && is_array($list[$key]);
+  }
+
+  //配列添字 (連想配列)
+  /*
+    連想配列の中身の評価の有無が異なる。
+    $list = ['a' => ['b' => null]];
+    self::IsAssocKey(  $list, 'a', 'b') => false
+    self::IsIncludeKey($list, 'a', 'b') => true
+  */
+  public static function IsAssocKey(array $list, $assoc_key, $key) {
+    return isset($list[$assoc_key][$key]);
   }
 
   //存在 (key ベース)
@@ -504,7 +533,7 @@ final class ArrayFilter {
 
   //空データ
   public static function Fill($flag) {
-    return $flag ? [] : null;
+    return (true === $flag) ? [] : null;
   }
 
   //結合 (implode() ラッパー)
@@ -679,9 +708,15 @@ final class Time {
     }
 
     $str = '';
-    if ($hour   > 0) $str .= $hour   . Message::HOUR;
-    if ($minute > 0) $str .= $minute . Message::MINUTE;
-    if ($second > 0) $str .= $second . Message::SECOND;
+    if ($hour > 0) {
+      $str .= $hour . Message::HOUR;
+    }
+    if ($minute > 0) {
+      $str .= $minute . Message::MINUTE;
+    }
+    if ($second > 0) {
+      $str .= $second . Message::SECOND;
+    }
     return $str;
   }
 
@@ -710,24 +745,40 @@ final class Sex {
     return array_key_exists($sex, self::GetList());
   }
 
-  //性別取得
+  //取得
   public static function Get(User $user) {
-    return 'sex_' . $user->sex;
+    return RoleUser::GetSex($user);
+  }
+
+  //反転取得
+  public static function GetInversion($sex) {
+    return ($sex === self::MALE) ? self::FEMALE : self::MALE;
+  }
+
+  //鑑定
+  public static function Distinguish(User $user) {
+    return 'sex_' . self::Get($user);
   }
 
   //男性判定
   public static function IsMale(User $user) {
-    return $user->sex == self::MALE;
+    return self::Get($user) === self::MALE;
   }
 
   //女性判定
   public static function IsFemale(User $user) {
-    return $user->sex == self::FEMALE;
+    return self::Get($user) === self::FEMALE;
   }
 
   //同姓判定
   public static function IsSame(User $a, User $b) {
-    return $a->sex == $b->sex;
+    return self::Get($a) === self::Get($b);
+  }
+
+  //性転換
+  public static function Exchange(User $user) {
+    $role = self::GetInversion(self::Get($user)) . '_status';
+    $user->AddDoom(1, $role);
   }
 }
 
@@ -858,7 +909,7 @@ final class Security {
    */
   public static function IsInvalidValue($data, $found = false) {
     $num = '22250738585072011';
-    if ($found || Text::Search(str_replace('.', '', serialize($data)), $num)) {
+    if (true === $found || Text::Search(str_replace('.', '', serialize($data)), $num)) {
       //文字列の中に問題の数字が埋め込まれているケースを排除する
       if (is_array($data)) {
 	foreach ($data as $item) {
@@ -957,9 +1008,8 @@ class ExternalLinkBuilder {
 
   //出力
   public static function Output($title, $data) {
-    $str = HTML::GenerateTagHeader('dl') . $data . HTML::GenerateTagFooter('dl');
     HTML::OutputFieldsetHeader($title);
-    HTML::OutputDiv($str, 'game-list');
+    HTML::OutputDiv(HTML::GenerateTag('dl', $data), 'game-list');
     HTML::OutputFieldsetFooter();
   }
 

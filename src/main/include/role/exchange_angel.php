@@ -40,7 +40,9 @@ class Role_exchange_angel extends Role_angel {
       //Text::p($fix_list, '◆fix_angel:'. $id);
       foreach ($lovers_stack as $lovers_id) {
 	foreach ($lovers_list[$lovers_id] as $cupid_id) {
-	  if (! isset($fix_list[$cupid_id])) $duplicate_stack[$cupid_id] = true;
+	  if (false === isset($fix_list[$cupid_id])) {
+	    $duplicate_stack[$cupid_id] = true;
+	  }
 	}
       }
       //Text::p($duplicate_stack, '◆duplicate:' . $id);

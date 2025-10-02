@@ -41,7 +41,9 @@ final class GameLogController extends JinrouController {
 
   //認証 (死者 or ゲーム終了後のみ)
   private static function Certify() {
-    if (DB::$SELF->IsDead() || DB::$ROOM->IsFinished()) return;
+    if (DB::$SELF->IsDead() || DB::$ROOM->IsFinished()) {
+      return;
+    }
     HTML::OutputResult(GameLogMessage::CERTIFY, GameLogMessage::CERTIFY . Message::TOP);
   }
 

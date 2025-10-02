@@ -11,7 +11,10 @@ class User extends StackManager {
   protected $updated   = [];
 
   public function __construct($role = null) {
-    if (is_null($role)) return;
+    if (is_null($role)) {
+      return;
+    }
+
     $this->role = $role;
     $this->Parse();
   }
@@ -56,16 +59,22 @@ class User extends StackManager {
   //役職再パース + Stack 処理
   public function StackReparse() {
     $role = $this->GetRole();
-    if ($this->role == $role) return;
+    if ($this->role == $role) {
+      return;
+    }
+
     //Text::p($role, "◆StackReparse [{$this->uname}]");
     $this->reparse = new self($role);
   }
 
   //player 入れ替え処理
   public function ChangePlayer($id) {
-    if (! isset(DB::$USER->player) || ! isset($this->role_id) || $this->role_id == $id) {
+    //未定義、または変更なしならスキップ
+    if (false === isset(DB::$USER->player) || false === isset($this->role_id) ||
+	$this->role_id == $id) {
       return false;
     }
+
     $this->role_id = $id;
     $this->Parse(DB::$USER->player->role_list[$id]);
     return true;
@@ -108,7 +117,11 @@ class User extends StackManager {
 
   //メイン役職取得
   public function GetMainRole($virtual = false) {
-    return ($virtual && isset($this->virtual_role)) ? $this->virtual_role : $this->main_role;
+    if (true === $virtual && isset($this->virtual_role)) {
+      return $this->virtual_role;
+    } else {
+      return $this->main_role;
+    }
   }
 
   //役職リスト取得
@@ -125,7 +138,7 @@ class User extends StackManager {
 
   //役職数取得
   public function GetRoleCount($sub = false) {
-    return count($this->role_list) - ($sub ? 1 : 0);
+    return count($this->role_list) - (true === $sub ? 1 : 0);
   }
 
   //所属陣営取得
@@ -164,12 +177,16 @@ class User extends StackManager {
   //日数に応じた憑依先の ID 取得
   public function GetPossessedTarget($type, $today) {
     $stack = $this->GetPartner($type);
-    if (is_null($stack)) return false;
+    if (is_null($stack)) {
+      return false;
+    }
 
     $date_list = array_keys($stack);
     krsort($date_list);
     foreach ($date_list as $date) {
-      if ($date <= $today) return $stack[$date];
+      if ($date <= $today) {
+	return $stack[$date];
+      }
     }
     return false;
   }
@@ -181,9 +198,9 @@ class User extends StackManager {
 
   //発言数を取得
   public function GetTalkCount($lock = false) {
-    if (! isset($this->talk_count) || $lock) {
+    if (false === isset($this->talk_count) || true === $lock) {
       $stack = TalkDB::GetUserTalkCount($lock);
-      $this->talk_count = $stack['date'] == DB::$ROOM->date ? $stack['talk_count'] : 0;
+      $this->talk_count = ($stack['date'] == DB::$ROOM->date) ? $stack['talk_count'] : 0;
     }
     return $this->talk_count;
   }
@@ -235,7 +252,7 @@ class User extends StackManager {
     $role_list = $this->role_list;
     if (true === $target_list[0]) { //仮想役職対応
       array_shift($target_list);
-      if (true === isset($this->virtual_role)) {
+      if (isset($this->virtual_role)) {
 	$role_list[] = $this->virtual_role;
       }
     }
@@ -253,7 +270,7 @@ class User extends StackManager {
     $role_list = $this->role_list;
     if (true === $target_list[0]) { //仮想役職対応
       array_shift($target_list);
-      if (true === isset($this->virtual_role)) {
+      if (isset($this->virtual_role)) {
 	$role_list[] = $this->virtual_role;
       }
     }
@@ -307,7 +324,7 @@ class User extends StackManager {
     }
 
     if (true === is_array($target)) {
-      if (true !== isset($target[$type])) {
+      if (false === isset($target[$type])) {
 	return false;
       }
 
@@ -360,14 +377,22 @@ class User extends StackManager {
   //役職情報から表示情報を作成する
   public function GenerateRoleName($main_only = false) {
     $str = RoleDataHTML::Generate($this->main_role); //メイン役職
-    if ($main_only) return $str;
+    if (true === $main_only) {
+      return $str;
+    }
 
     $role_count = $this->GetRoleList();
-    if (count($role_count) < 2) return $str; //サブ役職
+    if (count($role_count) < 2) { //サブ役職
+      return $str;
+    }
+
     $count = 1;
     foreach (RoleGroupSubData::$list as $class => $role_list) {
       foreach ($role_list as $sub_role) {
-	if (! $this->IsRole($sub_role)) continue;
+	if (false === $this->IsRole($sub_role)) {
+	  continue;
+	}
+
 	switch ($sub_role) {
 	case 'joker':
 	  $css = RoleUser::IsJoker($this) ? $class : 'chiroptera';
@@ -377,12 +402,38 @@ class User extends StackManager {
 	  $css = $this->IsDoomRole($sub_role) ? $class : 'chiroptera';
 	  break;
 
+	case 'male_status':
+	  $css = RoleUser::GetSex($this, true) === Sex::MALE ? 'role-male' : $class;
+	  break;
+
+	case 'female_status':
+	  $css = RoleUser::GetSex($this, true) === Sex::FEMALE ? 'role-female' : $class;
+	  break;
+
+	case 'gender_status':
+	  switch (RoleUser::GetGenderStatus($this)) {
+	  case Sex::MALE:
+	    $css = 'role-male';
+	    break;
+
+	  case Sex::FEMALE:
+	    $css = 'role-female';
+	    break;
+
+	  default:
+	    $css = $class;
+	    break;
+	  }
+	  break;
+
 	default:
 	  $css = $class;
 	  break;
 	}
 	$str .= RoleDataHTML::Generate($sub_role, $css, true);
-	if (++$count >= $role_count) break 2;
+	if (++$count >= $role_count) {
+	  break 2;
+	}
       }
     }
     return $str;
@@ -390,9 +441,12 @@ class User extends StackManager {
 
   //役職をパースして省略名を返す
   public function GenerateShortRoleName($heaven = false, $main_only = false) {
-    if (empty($this->main_role)) return;
+    if (empty($this->main_role)) {
+      return;
+    }
+
     if (isset($this->role_id)) { //キャッシュ判定
-      if ($main_only && isset(DB::$USER->short_role_main[$this->role_id])) {
+      if (true === $main_only && isset(DB::$USER->short_role_main[$this->role_id])) {
 	return DB::$USER->short_role_main[$this->role_id];
       } elseif (isset(DB::$USER->short_role[$this->role_id])) {
 	return DB::$USER->short_role[$this->role_id];
@@ -403,7 +457,7 @@ class User extends StackManager {
     $camp = $this->GetCamp();
     $name = RoleDataManager::GetShortName($this->main_role);
     $str  = $camp == Camp::HUMAN ? $name : HTML::GenerateSpan($name, $camp);
-    if ($main_only) {
+    if (true === $main_only) {
       $str = $this->handle_name . HTML::GenerateSpan(' ' . Text::QuoteBracket($str), 'add-role');
       if (isset($this->role_id)) {
 	DB::$USER->short_role_main[$this->role_id] = $str;
@@ -439,8 +493,9 @@ class User extends StackManager {
 	break;
       }
     }
-    $uname = $heaven ? $this->uname : DB::$USER->TraceExchange($this->id)->uname;
-    $str   = HTML::GenerateSpan(' ' . Text::QuoteBracket($str) . ' ' . Text::Quote($uname), 'add-role');
+    $uname = (true === $heaven) ? $this->uname : DB::$USER->TraceExchange($this->id)->uname;
+    $css   = 'add-role';
+    $str   = HTML::GenerateSpan(' ' . Text::QuoteBracket($str) . ' ' . Text::Quote($uname), $css);
     if (isset($this->role_id) && ! $this->IsRole('possessed_exchange')) {
       DB::$USER->short_role[$this->role_id] = $str;
     }
@@ -453,9 +508,15 @@ class User extends StackManager {
       Text::p(sprintf('%d: %s', $this->id, $this->uname), '★Initialize Talk Count');
       return;
     }
-    $items  = 'room_no, user_no, date, talk_count';
-    $values = sprintf("'%d', '%d', '%d', '%d'", DB::$ROOM->id, $this->id, DB::$ROOM->date, 0);
-    return DB::Insert('user_talk_count', $items, $values);
+
+    $list = [
+      'room_no'    => DB::$ROOM->id,
+      'user_no'    => $this->id,
+      'date'       => DB::$ROOM->date,
+      'talk_count' => 0
+    ];
+
+    return DB::Insert('user_talk_count', $list);
   }
 
   //個別 DB 更新処理
@@ -467,6 +528,7 @@ class User extends StackManager {
       Text::p($value, sprintf('★Change [%s] (%s)', $item, $this->uname));
       return true;
     }
+
     $set = sprintf('%s = %s', $item, is_null($value) ? 'NULL' : "'{$value}'");
     return UserDB::Update($set, [], $this->id);
   }
@@ -493,28 +555,41 @@ class User extends StackManager {
       Text::p(sprintf('%d -> %d: %s', $this->id, $id, $this->uname), '★Change ID');
       return;
     }
+
     return UserDB::UpdateID($id, $this->uname);
   }
 
   //player 更新処理
   public function UpdatePlayer() {
-    if (! isset($this->updated['role'])) return true;
+    if (false === isset($this->updated['role'])) {
+      return true;
+    }
+
     $role = $this->updated['role'];
     if (DB::$ROOM->IsTest()) {
       Text::p($role, sprintf('★Player (%s)', $this->uname));
       return true;
     }
-    $items  = 'room_no, date, scene, user_no, role';
-    $values = sprintf("%d, %d, '%s', %d, '%s'",
-      DB::$ROOM->id, DB::$ROOM->date, DB::$ROOM->scene, $this->id, $role
-    );
-    if (! DB::Insert('player', $items, $values)) return false;
+
+    $list = [
+      'room_no' => DB::$ROOM->id,
+      'date'    => DB::$ROOM->date,
+      'scene'   => DB::$ROOM->scene,
+      'user_no' => $this->id,
+      'role'    => $role
+    ];
+
+    if (false === DB::Insert('player', $list)) {
+      return false;
+    }
     return $this->Update('role_id', DB::GetInsertID());
   }
 
   //基幹死亡処理
   public function ToDead() {
-    if ($this->IsDead(true)) return false;
+    if ($this->IsDead(true)) {
+      return false;
+    }
 
     $this->UpdateLive(UserLive::DEAD);
     $this->Flag()->On(UserMode::DEAD);
@@ -523,12 +598,14 @@ class User extends StackManager {
 
   //蘇生処理
   public function Revive($virtual = false) {
-    if ($this->IsLive(true)) return false;
+    if ($this->IsLive(true)) {
+      return false;
+    }
 
     $this->UpdateLive(UserLive::LIVE);
     $this->Flag()->On(UserMode::REVIVE);
-    if (! $virtual) {
-      DB::$ROOM->ResultDead($this->handle_name, DeadReason::REVIVE_SUCCESS);
+    if (false === $virtual) {
+      DB::$ROOM->StoreDead($this->handle_name, DeadReason::REVIVE_SUCCESS);
     }
     return true;
   }
@@ -547,13 +624,15 @@ class User extends StackManager {
   //役職追加処理
   public function AddRole($role) {
     $base_role = $this->GetRole();
-    if (in_array($role, Text::Parse($base_role))) return false; //同じ役職は追加しない
+    if (in_array($role, Text::Parse($base_role))) { //同じ役職は追加しない
+      return false;
+    }
     $this->ChangeRole($base_role . ' ' . $role);
   }
 
   //仮想役職追加処理 (キャッシュ限定)
   public function AddVirtualRole($role) {
-    if (! in_array($role, $this->role_list)) {
+    if (false === in_array($role, $this->role_list)) {
       $this->role_list[] = $role;
     }
   }
@@ -581,7 +660,7 @@ class User extends StackManager {
 
   //遺言登録
   public function StoreLastWords($handle_name = null) {
-    if (! $this->IsDummyBoy() && RoleUser::LimitedStoreLastWords($this)) { //スキップ判定
+    if (false === $this->IsDummyBoy() && RoleUser::LimitedStoreLastWords($this)) { //スキップ判定
       return true;
     }
 
@@ -594,11 +673,18 @@ class User extends StackManager {
     }
 
     $message = UserDB::GetLastWords($this->id);
-    if (is_null($message)) return true;
+    if (is_null($message)) {
+      return true;
+    }
 
-    $items  = 'room_no, date, handle_name, message';
-    $values = sprintf("%d, %d, '%s', '%s'", DB::$ROOM->id, DB::$ROOM->date, $handle_name, $message);
-    return DB::Insert('result_lastwords', $items, $values);
+    $list = [
+      'room_no'     => DB::$ROOM->id,
+      'date'        => DB::$ROOM->date,
+      'handle_name' => $handle_name,
+      'message'     => $message
+    ];
+
+    return DB::Insert('result_lastwords', $list);
   }
 
   //投票処理
@@ -618,20 +704,25 @@ class User extends StackManager {
       }
       return true;
     }
-    $items = 'room_no, date, scene, type, uname, user_no, vote_count';
-    $values = sprintf("%d, %d, '%s', '%s', '%s', %d, %d",
-      DB::$ROOM->id, DB::$ROOM->date, DB::$ROOM->scene, $action,
-      $this->uname, $this->id, DB::$ROOM->vote_count
-    );
+
+    $list = [
+      'room_no'    => DB::$ROOM->id,
+      'date'       => DB::$ROOM->date,
+      'scene'      => DB::$ROOM->scene,
+      'type'       => $action,
+      'uname'      => $this->uname,
+      'user_no'    => $this->id,
+      'vote_count' => DB::$ROOM->vote_count
+    ];
     if (isset($target)) {
-      $items  .= ', target_no';
-      $values .= sprintf(", '%s'", $target);
+      $list['target_no'] =$target;
     }
     if (isset($vote_number)) {
-      $items  .= ', vote_number, revote_count';
-      $values .= sprintf(', %d, %d', $vote_number, RQ::Get()->revote_count);
+      $list['vote_number']  = $vote_number;
+      $list['revote_count'] = RQ::Get()->revote_count;
     }
-    return DB::Insert('vote', $items, $values);
+
+    return DB::Insert('vote', $list);
   }
 
   //-- ログ処理用 --//
@@ -653,7 +744,7 @@ class User extends StackManager {
   //-- private --//
   //仮想的な生死判定 (仮想なし > 突然死 > 蘇生 > 死亡 > 変動なし)
   private function IsDeadFlag($strict = false) {
-    if (! $strict) {
+    if (false === $strict) {
       return null;
     } elseif ($this->IsOn(UserMode::SUICIDE)) {
       return true;
@@ -705,7 +796,10 @@ class UserLoader {
 
   //ユーザ情報取得 (ユーザ ID 経由)
   public function ByID($id) {
-    if (is_null($id)) return new User();
+    if (is_null($id)) {
+      return new User();
+    }
+
     $stack = $id > 0 ? $this->rows : $this->kick;
     return isset($stack[$id]) ? $stack[$id] : new User();
   }
@@ -744,7 +838,7 @@ class UserLoader {
   public function TraceExchange($id) {
     $user = $this->ByID($id);
     $role = 'possessed_exchange';
-    if (! $user->IsRole($role) || ! DB::$ROOM->IsPlaying() ||
+    if (false === $user->IsRole($role) || false === DB::$ROOM->IsPlaying() ||
 	(DB::$ROOM->IsOff(RoomMode::LOG) && $user->IsDead())) {
       return $user;
     }
@@ -755,7 +849,7 @@ class UserLoader {
 
   //HN 取得
   public function GetHandleName($uname, $virtual = false) {
-    $user = $virtual ? $this->ByVirtualUname($uname) : $this->ByUname($uname);
+    $user = (true === $virtual) ? $this->ByVirtualUname($uname) : $this->ByUname($uname);
     return property_exists($user, 'handle_name') ? $user->handle_name : '';
   }
 
@@ -810,16 +904,26 @@ class UserLoader {
   public function GetFoxCount() {
     $count = 0;
     foreach ($this->rows as $user) {
-      if (RoleUser::IsFoxCount($user)) $count++;
+      if (RoleUser::IsFoxCount($user)) {
+	$count++;
+      }
     }
     return $count;
   }
 
   //特殊イベント情報セット
   public function SetEvent($force = false) {
-    if (DB::$ROOM->id < 1 || ! is_array($event_list = DB::$ROOM->GetEvent($force))) return;
-    $stack = DB::$ROOM->Stack()->Get('event');
+    if (DB::$ROOM->id < 1) {
+      return;
+    }
+
+    $event_list = DB::$ROOM->GetEvent($force);
     //Text::p($event_list, '◆Event [row]');
+    if (false === is_array($event_list)) {
+      return;
+    }
+
+    $stack = DB::$ROOM->Stack()->Get('event');
     foreach ($event_list as $event) {
       switch ($event['type']) {
       case EventType::WEATHER:
@@ -851,7 +955,10 @@ class UserLoader {
     EventManager::SetMultiple();
     //DB::$ROOM->Stack()->p('event', '◆EventStack');
 
-    if (DB::$ROOM->IsDay()) EventManager::AddVirtualRole(true); //昼限定
+    if (DB::$ROOM->IsDay()) { //昼限定
+      EventManager::AddVirtualRole(true);
+    }
+
     if (DB::$ROOM->IsPlaying()) { //昼夜両方
       EventManager::AddVirtualRole();
       EventManager::BadStatus();
@@ -872,7 +979,9 @@ class UserLoader {
     $evoke_scanner = [];
     $mind_evoke    = [];
     foreach ($this->rows as $user) {
-      if ($user->IsDummyBoy()) continue;
+      if ($user->IsDummyBoy()) {
+	continue;
+      }
 
       if ($user->IsRole('revive_priest')) {
 	if ($user->IsActive()) {
@@ -907,10 +1016,14 @@ class UserLoader {
   public function IsVirtualLive($id, $strict = false) {
     //憑依されている場合は憑依者の生死を返す
     $real_user = $this->ByReal($id);
-    if ($real_user->id != $id) return $real_user->IsLive($strict);
+    if ($real_user->id != $id) {
+      return $real_user->IsLive($strict);
+    }
 
     //憑依先に移動している場合は常に死亡扱い
-    if ($this->ByVirtual($id)->id != $id) return false;
+    if ($this->ByVirtual($id)->id != $id) {
+      return false;
+    }
 
     //憑依が無ければ本人の生死を返す
     return $this->ByID($id)->IsLive($strict);
@@ -919,10 +1032,12 @@ class UserLoader {
   //死亡処理
   public function Kill($id, $reason, $type = null) {
     $user = $this->ByReal($id);
-    if (! $user->ToDead()) return false;
+    if (false === $user->ToDead()) {
+      return false;
+    }
 
     $virtual = $this->ByVirtual($user->id);
-    DB::$ROOM->ResultDead($virtual->handle_name, $reason, $type);
+    DB::$ROOM->StoreDead($virtual->handle_name, $reason, $type);
 
     switch ($reason) {
     case DeadReason::NOVOTED:
@@ -932,7 +1047,7 @@ class UserLoader {
 
     default: //遺言処理
       $user->StoreLastWords($virtual->handle_name);
-      if (! $virtual->IsSame($user)) {
+      if (false === $virtual->IsSame($user)) {
 	$virtual->StoreLastWords();
       }
       break;
@@ -942,7 +1057,9 @@ class UserLoader {
 
   //突然死処理
   public function SuddenDeath($id, $reason, $type = null) {
-    if (! $this->Kill($id, $reason, $type)) return false;
+    if (false === $this->Kill($id, $reason, $type)) {
+      return false;
+    }
 
     $user = $this->ByReal($id);
     $user->Flag()->On(UserMode::SUICIDE);
@@ -994,9 +1111,14 @@ class UserLoader {
 
   //役職の生存判定
   public function IsLiveRole($role) {
-    if (! $this->IsAppear($role)) return false; //存在判定
+    if (false === $this->IsAppear($role)) { //存在判定
+      return false;
+    }
+
     foreach ($this->GetRoleUser($role) as $user) {
-      if ($user->IsLive(true)) return true;
+      if ($user->IsLive(true)) {
+	return true;
+      }
     }
     return false;
   }
@@ -1004,17 +1126,24 @@ class UserLoader {
   //-- ログ処理用 --//
   //仮想役職リストの保存
   public function SaveRoleList() {
-    foreach ($this->rows as $user) $user->SaveRoleList();
+    foreach ($this->rows as $user) {
+      $user->SaveRoleList();
+    }
   }
 
   //仮想役職リストの初期化
   public function ResetRoleList() {
-    foreach ($this->rows as $user) $user->ResetRoleList();
+    foreach ($this->rows as $user) {
+      $user->ResetRoleList();
+    }
   }
 
   //player の復元
   public function ResetPlayer() {
-    if (! isset($this->player->user_list)) return;
+    if (false === isset($this->player->user_list)) {
+      return;
+    }
+
     foreach ($this->player->user_list as $id => $stack) {
       $this->ByID($id)->ChangePlayer(max($stack));
     }
@@ -1031,14 +1160,19 @@ class UserLoader {
       }
       $id++;
     }
-    foreach ($this->kick as $user) $user->UpdateID(-1);
+
+    foreach ($this->kick as $user) {
+      $user->UpdateID(-1);
+    }
   }
 
   //ゲーム開始処理
   public function GameStart($init_talk) {
     foreach ($this->rows as $user) {
       $user->UpdatePlayer();
-      if ($init_talk) $user->InitializeTalkCount();
+      if ($init_talk) {
+	$user->InitializeTalkCount();
+      }
     }
   }
 
@@ -1095,15 +1229,21 @@ class UserLoader {
   //憑依情報追跡
   private function TraceVirtual($id, $type) {
     $user = $this->ByID($id);
-    if (! DB::$ROOM->IsPlaying()) return $user;
+    if (false === DB::$ROOM->IsPlaying()) {
+      return $user;
+    }
 
     switch ($type) {
     case 'possessed':
-      if (! $user->IsRole($type)) return $user;
+      if (false === $user->IsRole($type)) {
+	return $user;
+      }
       break;
 
     default:
-      if (! RoleUser::IsPossessed($user)) return $user;
+      if (false === RoleUser::IsPossessed($user)) {
+	return $user;
+      }
       break;
     }
 

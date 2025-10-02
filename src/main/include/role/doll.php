@@ -12,15 +12,20 @@ class Role_doll extends Role {
     $sub   = 'doll_partner';     //人形
     $stack = [$main => [], $sub => []];
     foreach (DB::$USER->Get() as $user) {
-      if ($this->IsActor($user)) continue;
+      if ($this->IsActor($user)) {
+	continue;
+      }
+
       if ($this->IsDisplayDollMaster($user)) {
 	$stack[$main][] = $user->handle_name;
       }
-      if ($flag && $this->IsDoll($user)) {
+      if (true === $flag && $this->IsDoll($user)) {
 	$stack[$sub][] = $user->handle_name;
       }
     }
-    if (! $flag) unset($stack[$sub]);
+    if (false === $flag) {
+      unset($stack[$sub]);
+    }
     return $stack;
   }
 
@@ -32,7 +37,7 @@ class Role_doll extends Role {
   //人形遣い枠表示判定
   final protected function IsDisplayDollMaster(User $user) {
     if ($this->IsDollMaster($user)) { //人形遣い
-      return ! $user->IsRole('toy_doll_master') || DB::$ROOM->date > 3;
+      return false === $user->IsRole('toy_doll_master') || DB::$ROOM->date > 3;
     }
     return $user->IsRole('puppet_mage') || $user->IsRoleGroup('scarlet'); //特殊・紅系
   }
@@ -44,7 +49,7 @@ class Role_doll extends Role {
 
   //人形判定
   final protected function IsDoll(User $user) {
-    return $user->IsMainGroup(CampGroup::DOLL) && ! $this->IsDollMaster($user);
+    return $user->IsMainGroup(CampGroup::DOLL) && false === $this->IsDollMaster($user);
   }
 
   public function Win($winner) {

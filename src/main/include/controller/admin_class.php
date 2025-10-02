@@ -3,7 +3,10 @@
 class JinrouAdmin {
   //村削除
   public static function DeleteRoom() {
-    if (! ServerConfig::DEBUG_MODE) HTML::OutputUnusableError();
+    if (true !== ServerConfig::DEBUG_MODE) {
+      HTML::OutputUnusableError();
+    }
+
     Loader::LoadRequest();
     RQ::Get()->ParseGetRoomNo();
 
@@ -21,7 +24,10 @@ class JinrouAdmin {
 
   //アイコン削除
   public static function DeleteIcon() {
-    if (! ServerConfig::DEBUG_MODE) HTML::OutputUnusableError();
+    if (true !== ServerConfig::DEBUG_MODE) {
+      HTML::OutputUnusableError();
+    }
+
     Loader::LoadRequest();
     RQ::Get()->ParseGetInt(RequestDataIcon::ID);
     $icon_no = RQ::Get()->icon_no;
@@ -36,11 +42,12 @@ class JinrouAdmin {
       HTML::OutputResult($title, Message::DB_ERROR_LOAD);
     }
 
-    //使用中判定
-    if (IconDB::Using($icon_no)) HTML::OutputResult($title, IconMessage::USING);
+    if (IconDB::Using($icon_no)) { //使用中判定
+      HTML::OutputResult($title, IconMessage::USING);
+    }
 
     $file = IconDB::GetFile($icon_no); //存在判定
-    if ($file === false || is_null($file)) {
+    if (false === $file || is_null($file)) {
       HTML::OutputResult($title, AdminMessage::DELETE_ICON_NOT_EXISTS);
     }
 
@@ -59,7 +66,7 @@ class JinrouAdmin {
     $footer = Text::LineFeed(HTML::FOOTER);
     for ($i = RQ::Get()->min_room_no; $i <= RQ::Get()->max_room_no; $i++) {
       RQ::Set(RequestDataGame::ID, $i);
-      foreach (array(false, true) as $flag) {
+      foreach ([false, true] as $flag) {
 	RQ::Set(RequestDataLogRoom::REVERSE, $flag);
 
 	DB::LoadRoom();

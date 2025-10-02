@@ -24,7 +24,7 @@ class Role_psycho_mage extends Role_mage {
     if ($user->IsMainCamp(Camp::OGRE) || $user->IsMainCamp(Camp::LOVERS)) {
       return $user->DistinguishCamp();
     } elseif ($user->IsMainGroup(CampGroup::MAD)) {
-      return $this->GetLiarResult(! $user->IsRole('swindle_mad'));
+      return $this->GetLiarResult(false === $user->IsRole('swindle_mad'));
     } elseif ($user->IsMainGroup(CampGroup::DEPRAVER) || $user->IsRoleGroup('dummy')) {
       return $this->GetLiarResult(true);
     } else {
@@ -39,6 +39,6 @@ class Role_psycho_mage extends Role_mage {
 
   //精神判定結果取得
   private function GetLiarResult($flag) {
-    return $flag ? 'psycho_mage_liar' : 'psycho_mage_normal';
+    return (true === $flag) ? 'psycho_mage_liar' : 'psycho_mage_normal';
   }
 }

@@ -13,14 +13,17 @@ class RoleUser {
     $stack  = [];
     while ($target->IsMainGroup(CampGroup::UNKNOWN_MANIA)) { //鵺系ならコピー先を辿る
       $id = $target->GetMainRoleTarget();
-      if (is_null($id) || in_array($id, $stack)) break;
+      if (is_null($id) || in_array($id, $stack)) {
+	break;
+      }
+
       $stack[] = $id;
       $target  = $reparse ? DB::$USER->ByID($id)->GetReparse() : DB::$USER->ByID($id);
     }
 
     if (self::IsDelayCopy($target)) { //時間差コピー能力者ならコピー先を辿る
       $id = $target->GetMainRoleTarget();
-      if (! is_null($id)) {
+      if (false === is_null($id)) {
 	$target = $reparse ? DB::$USER->ByID($id)->GetReparse() : DB::$USER->ByID($id);
 	if ($target->GetMainCamp(true) == Camp::MANIA) { //神話マニア陣営なら元に戻す
 	  $target = $user;
@@ -42,6 +45,54 @@ class RoleUser {
     return $user->IsMainGroup(CampGroup::FOX, CampGroup::CHILD_FOX);
   }
 
+  //-- 性別判定 --//
+  public static function GetSex(User $user, $display = false) {
+    //表示用は日数単位でキャッシュする
+    if (true === $display) {
+      $stack = $user->Stack();
+      $sex_stack = $stack->Get('gender_status');
+      //Text::p($sex_stack, "◆GetSex/Stack [{$user->uname}]");
+      if (is_null($sex_stack)) {
+	$stack->Init('gender_status');
+      } elseif (ArrayFilter::IsKey($sex_stack, DB::$ROOM->date)) {
+	$sex_list = ArrayFilter::GetList($sex_stack, DB::$ROOM->date);
+	return count($sex_list) > 0 ? ArrayFilter::GetMaxKey($sex_list) : null;
+      }
+    }
+
+    $actor = RoleLoader::GetActor(); //現在の $actor を確保して判定後に再設定する
+    $list = [];
+    foreach (RoleLoader::LoadUser($user, 'gender_status') as $filter) {
+      if (true === $display && $filter->IgnoreGenderStatusDate()) {
+	continue;
+      }
+      //Text::p($list, "◆GetSex [{$filter->role}]");
+      $list = $filter->GetSexList($list);
+    }
+    //Text::p($list, "◆GetSex [FilterEnd]");
+
+    if (true === $display) {
+      $stack->Set('gender_status', [DB::$ROOM->date => $list]);
+    }
+    if (isset($actor)) { //$actor が存在していたら再設定する。
+      RoleLoader::SetActor($actor);
+    }
+
+    if (count($list) > 0) {
+      return ArrayFilter::GetMaxKey($list);
+    } elseif (true === $display) {
+      return null;
+    } else {
+      return $user->sex;
+    }
+  }
+
+  //性転換の性別取得
+  public static function GetGenderStatus(User $user) {
+    $role = 'gender_status';
+    return RoleLoader::Load($role)->GetDisplayGenderStatusSex($user);
+  }
+
   //-- 役職判定 --//
   //恋人表記
   public static function IsContainLovers(User $user) {
@@ -57,17 +108,17 @@ class RoleUser {
   //-- 仲間判定 --//
   //共有者系
   public static function IsCommon(User $user) {
-    return $user->IsMainGroup(CampGroup::COMMON) && ! $user->IsRole('dummy_common');
+    return $user->IsMainGroup(CampGroup::COMMON) && false === $user->IsRole('dummy_common');
   }
 
   //人狼系
   public static function IsWolf(User $user) {
-    return $user->IsMainGroup(CampGroup::WOLF) && ! self::IsLonely($user);
+    return $user->IsMainGroup(CampGroup::WOLF) && false === self::IsLonely($user);
   }
 
   //妖狐系
   public static function IsFox(User $user) {
-    return $user->IsMainGroup(CampGroup::FOX) && ! self::IsLonely($user);
+    return $user->IsMainGroup(CampGroup::FOX) && false === self::IsLonely($user);
   }
 
   //孤立系
@@ -90,7 +141,10 @@ class RoleUser {
 
   //毒能力者
   public static function IsPoison(User $user) {
-    if (DB::$ROOM->IsEvent('no_poison')) return false; //無効判定
+    if (DB::$ROOM->IsEvent('no_poison')) { //無効判定
+      return false;
+    }
+
     return $user->IsRoleGroup('poison') && RoleLoader::Load($user->main_role)->IsPoison();
   }
 
@@ -117,8 +171,9 @@ class RoleUser {
   //-- 耐性判定 --//
   //暗殺反射
   public static function IsReflectAssassin(User $user) {
-    //無効判定
-    if (DB::$ROOM->IsEvent('no_reflect_assassin') || $user->IsDead(true)) return false;
+    if (DB::$ROOM->IsEvent('no_reflect_assassin') || $user->IsDead(true)) { //無効判定
+      return false;
+    }
 
     //常時反射
     if ($user->IsRole(RoleFilterData::$reflect_assassin) ||
@@ -131,8 +186,13 @@ class RoleUser {
       $rate = 30;
     } elseif ($user->IsMainCamp(Camp::OGRE)) {
       //天候判定
-      if (DB::$ROOM->IsEvent('full_ogre')) return true;
-      if (DB::$ROOM->IsEvent('seal_ogre')) return false;
+      if (DB::$ROOM->IsEvent('full_ogre')) {
+	return true;
+      }
+      if (DB::$ROOM->IsEvent('seal_ogre')) {
+	return false;
+      }
+
       $rate = RoleLoader::Load($user->main_role)->GetReflectAssassinRate();
     } else {
       $rate = 0;
@@ -142,28 +202,34 @@ class RoleUser {
       $rate += 30;
     }
     //Text::p($rate, sprintf('◆rate / %s [reflect]', $user->uname));
-    if ($rate < 1) return false;
+    if ($rate < 1) {
+      return false;
+    }
 
     return $rate >= 100 || Lottery::Percent($rate);
   }
 
   //呪返し
   public static function IsCursed(User $user) {
-    if (DB::$ROOM->IsEvent('no_cursed')) return false; //無効判定
+    if (DB::$ROOM->IsEvent('no_cursed')) { //無効判定
+      return false;
+    }
     return $user->IsLiveRoleGroup('cursed');
   }
 
   //覚醒天狼
   public static function IsSiriusWolf(User $user, $full = true) {
     $role = 'sirius_wolf';
-    if (! $user->IsRole($role)) return false;
+    if (false === $user->IsRole($role)) {
+      return false;
+    }
 
     if (RoleManager::Stack()->IsEmpty($role)) {
       $stack = RoleLoader::Load($role)->GetAbilitySiriusWolf();
     } else {
       $stack = RoleManager::Stack()->Get($role);
     }
-    return $stack[$full ? 'full' : Switcher::ON];
+    return $stack[true === $full ? 'full' : Switcher::ON];
   }
 
   //難題
@@ -212,26 +278,32 @@ class RoleUser {
   }
 
   //-- 行動判定 --//
-  //投票済み
-  public static function IsVote(User $user, array $list) {
-    if ($user->IsDummyBoy() || $user->IsDead()) return true;
+  //夜投票完了
+  public static function CompletedVoteNight(User $user, array $list) {
+    if ($user->IsDummyBoy() || $user->IsDead()) {
+      return true;
+    }
 
     foreach (RoleLoader::LoadUser($user, 'death_note') as $filter) {
-      if (! $filter->IsFinishVote($list)) return false;
+      if (false === $filter->CompletedVoteNight($list)) {
+	return false;
+      }
     }
-    return RoleLoader::LoadMain($user)->IsFinishVote($list);
+    return RoleLoader::LoadMain($user)->CompletedVoteNight($list);
   }
 
-  //未投票
-  public static function IsNoVote(User $user, array $list) {
-    return self::IsVote($user, $list) === false;
+  //夜投票未完了
+  public static function ImcompletedVoteNight(User $user, array $list) {
+    return false === self::CompletedVoteNight($user, $list);
   }
 
   //罠発動
   public static function DelayTrap(User $user, $id) {
     //Text::p($user->uname, '◆RoleUser [DelayTrap]');
     foreach (RoleLoader::LoadFilter('trap') as $filter) {
-      if ($filter->DelayTrap($user, $id)) return true;
+      if ($filter->DelayTrap($user, $id)) {
+	return true;
+      }
     }
     return false;
   }
@@ -279,7 +351,9 @@ class RoleUser {
     }
 
     foreach ($stack->Get($type) as $filter) {
-      if ($filter->GuardAssassin($user->id)) return true;
+      if ($filter->GuardAssassin($user->id)) {
+	return true;
+      }
     }
     return false;
   }
@@ -293,10 +367,12 @@ class RoleUser {
     }
 
     foreach ($stack->Get($type) as $filter) {
-      if ($filter->IsGuard($user->id)) return true;
+      if ($filter->IsGuard($user->id)) {
+	return true;
+      }
     }
 
-    if ($curse) {
+    if (true === $curse) {
       DB::$USER->Kill($user->id, DeadReason::CURSED);
     }
     return false;

@@ -16,7 +16,9 @@ class Role_enchant_mad extends Role {
     if (! DB::$ROOM->IsEvent($event)) return;
 
     $target = DB::$USER->ByID(DB::$ROOM->Stack()->Get($event));
-    if (! isset($target->icon_filename)) return;
+    if (false === isset($target->icon_filename)) {
+      return;
+    }
 
     foreach (DB::$USER->Get() as $user) {
       $user->icon_filename = $target->icon_filename;

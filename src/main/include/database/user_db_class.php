@@ -198,7 +198,9 @@ final class UserLoaderDB {
 
   //ユーザデータ取得 (ゲーム開始前)
   public static function LoadBeforegame($room_no) {
-    if ($room_no != DB::$ROOM->id) return null;
+    if ($room_no != DB::$ROOM->id) {
+      return null;
+    }
 
     $table = <<<EOF
 user_entry AS u
@@ -223,7 +225,9 @@ EOF;
 
   //ユーザデータ取得 (昼 + 下界)
   public static function LoadDay($room_no) {
-    if ($room_no != DB::$ROOM->id) return null;
+    if ($room_no != DB::$ROOM->id) {
+      return null;
+    }
 
     $table = <<<EOF
 user_entry AS u

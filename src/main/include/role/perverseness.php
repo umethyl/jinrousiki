@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('chicken');
 class Role_perverseness extends Role_chicken {
   protected function IsSuddenDeath() {
-    return $this->CountVoteTarget() > 1;
+    return $this->CountVoteKillTargetUser() > 1;
   }
 
   protected function GetSuddenDeathType() {

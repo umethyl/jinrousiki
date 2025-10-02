@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_white_fox extends Role_fox {
-  public function IsResistWolf() {
+  public function ResistWolfEatFox() {
     return false;
   }
 }

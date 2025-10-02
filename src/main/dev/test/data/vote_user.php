@@ -18,10 +18,10 @@ RQ::GetTest()->test_users[5]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[6]->role = 'eclipse_medium possessed[4-15] frostbite[7]';
 RQ::GetTest()->test_users[6]->live = UserLive::DEAD;
 
-RQ::GetTest()->test_users[7]->role = 'doll lovers[13] vega_lovers';
+RQ::GetTest()->test_users[7]->role = 'doll lovers[13] vega_lovers male_status[2] gender_status[3] female_status[4] male_status[6]';
 RQ::GetTest()->test_users[7]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[8]->role = 'anti_voodoo';
+RQ::GetTest()->test_users[8]->role = 'anti_voodoo male_status[3] gender_status[5]';
 RQ::GetTest()->test_users[8]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[9]->role = 'revive_fox joker[2] lovers[14] letter_exchange[4]';
@@ -57,7 +57,7 @@ RQ::GetTest()->test_users[18]->live = UserLive::DEAD;
 RQ::GetTest()->test_users[19]->role = 'barrier_wizard psycho_infected fake_lovers[13]';
 RQ::GetTest()->test_users[19]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[20]->role = 'follow_vampire downer_luck';
+RQ::GetTest()->test_users[20]->role = 'homogeneous_vampire downer_luck';
 RQ::GetTest()->test_users[20]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[21]->role = 'soul_mania[13] mind_friend[21]';
@@ -85,8 +85,8 @@ RQ::GetTest()->test_users[27]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[28]->role = 'doom_cat bad_luck';
 RQ::GetTest()->test_users[28]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[29]->role = 'involve_tengu mind_friend[29]';
+RQ::GetTest()->test_users[29]->role = 'tengu mind_friend[29]';
 RQ::GetTest()->test_users[29]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[30]->role = 'chill_fairy';
+RQ::GetTest()->test_users[30]->role = 'gender_fairy';
 RQ::GetTest()->test_users[30]->live = UserLive::LIVE;

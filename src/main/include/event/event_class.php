@@ -17,7 +17,7 @@ final class EventManager {
   //仮想役職セット
   public static function AddVirtualRole($day = false) {
     $method = __FUNCTION__;
-    foreach (self::Get($day ? 'virtual_role_day' : 'virtual_role') as $event) {
+    foreach (self::Get((true === $day) ? 'virtual_role_day' : 'virtual_role') as $event) {
       EventLoader::Load($event)->$method();
     }
   }
@@ -49,7 +49,9 @@ final class EventManager {
 
   //処刑者決定
   public static function DecideVoteKill() {
-    if (RoleManager::Stack()->Exists(VoteDayElement::VOTE_KILL)) return;
+    if (RoleManager::Stack()->Exists(VoteDayElement::VOTE_KILL)) {
+      return;
+    }
 
     $method = __FUNCTION__;
     foreach (EventFilterData::$decide_vote_kill as $event) {
@@ -116,6 +118,6 @@ final class EventManager {
 //-- イベント基底クラス --//
 abstract class Event {
   public function __construct() {
-    $this->name = Text::Cut(get_class($this), EventLoader::CLASS_PREFIX);
+    $this->name = Text::CutPop(get_class($this), EventLoader::CLASS_PREFIX);
   }
 }

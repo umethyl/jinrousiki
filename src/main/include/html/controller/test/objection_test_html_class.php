@@ -6,7 +6,7 @@ class ObjectionTestHTML {
     $url   = 'objection_test.php';
     $image = URL::Combine(JINROU_ROOT, GameConfig::OBJECTION_IMAGE);
 
-    Text::Printf(HTML::GetP(), HTML::GenerateLink($url, ObjectionTestMessage::RESET));
+    HTML::OutputP(HTML::GenerateLink($url, ObjectionTestMessage::RESET));
     TableHTML::OutputHeader(null, false);
     foreach ($stack as $name) {
       TableHTML::OutputTrHeader();

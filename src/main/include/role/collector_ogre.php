@@ -9,7 +9,7 @@
 */
 RoleLoader::LoadFile('ogre');
 class Role_collector_ogre extends Role_ogre {
-  protected function GetOgreWolfEatResistRate() {
+  protected function GetOgreResistWolfEatRate() {
     return 25;
   }
 
@@ -34,7 +34,6 @@ class Role_collector_ogre extends Role_ogre {
       }
       $stack[] = $role;
     }
-
     return true;
   }
 }

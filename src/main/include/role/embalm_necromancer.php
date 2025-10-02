@@ -9,10 +9,10 @@ class Role_embalm_necromancer extends Role_necromancer {
   public $result = RoleAbility::EMBALM_NECROMANCER;
 
   public function Necromancer(User $user, $flag) {
-    if ($flag) {
+    if (true === $flag) {
       return 'stolen';
     } else {
-      $camp = $this->GetVoteUser($user->uname)->GetWinCamp();
+      $camp = $this->GetVoteKillUser($user->uname)->GetWinCamp();
       return Text::AddFooter('embalm', $user->IsWinCamp($camp) ? 'agony' : 'reposeful');
     }
   }

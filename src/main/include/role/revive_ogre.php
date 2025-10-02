@@ -11,7 +11,7 @@ RoleLoader::LoadFile('ogre');
 class Role_revive_ogre extends Role_ogre {
   public $mix_in = ['psycho_mage', 'revive_pharmacist'];
 
-  protected function GetOgreWolfEatResistRate() {
+  protected function GetOgreResistWolfEatRate() {
     return 0;
   }
 

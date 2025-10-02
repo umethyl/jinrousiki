@@ -8,7 +8,7 @@
 RoleLoader::LoadFile('history_brownie');
 class Role_sun_brownie extends Role_history_brownie {
   public function VoteKillCounter(array $list) {
-    DB::$ROOM->SystemMessage('blinder', EventType::EVENT, 1);
+    DB::$ROOM->StoreEvent('blinder', EventType::EVENT, 1);
   }
 
   protected function GetWolfEatCounterEvent() {

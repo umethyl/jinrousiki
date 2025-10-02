@@ -8,8 +8,10 @@ class RoleDataHTML {
 
   //タグ生成
   public static function Generate($role, $css = null, $sub_role = false) {
-    $str = $sub_role ? Text::BR : '';
-    if (is_null($css)) $css = RoleDataManager::GetCSS($role);
+    $str = (true === $sub_role) ? Text::BR : '';
+    if (is_null($css)) {
+      $css = RoleDataManager::GetCSS($role);
+    }
     return $str . sprintf(self::SPAN, $css, RoleDataManager::GetName($role, $sub_role));
   }
 

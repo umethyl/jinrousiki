@@ -22,7 +22,7 @@ class Role_doll_master extends Role_doll {
   final protected function CountDoll() {
     $count = 0;
     foreach (DB::$USER->Get() as $user) {
-      if (! $user->IsInactive() && $this->IsDoll($user)) {
+      if (false === $user->IsInactive() && $this->IsDoll($user)) {
 	$count++;
       }
     }

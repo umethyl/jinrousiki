@@ -5,16 +5,19 @@
   ・能力結果：厄払い (天啓封印あり)
 */
 class Role_anti_voodoo extends Role {
-  public $action      = VoteAction::ANTI_VOODOO;
-  public $result      = RoleAbility::ANTI_VOODOO;
-  public $action_date = RoleActionDate::AFTER;
+  public $action = VoteAction::ANTI_VOODOO;
+  public $result = RoleAbility::ANTI_VOODOO;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message');
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::GUARD, RoleAbilityMessage::ANTI_VOODOO, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::GUARD, RoleAbilityMessage::ANTI_VOODOO, $this->action);
   }
 
   //厄払い先セット (憑依妨害 > 憑依者(強制送還) > 襲撃憑狼(襲撃キャンセル))
@@ -51,7 +54,7 @@ class Role_anti_voodoo extends Role {
     foreach ($this->GetStack(RoleVoteSuccess::ANTI_VOODOO) as $target_id => $flag) {
       $target = DB::$USER->ByVirtual($target_id)->handle_name;
       foreach ($this->GetStackKey($this->role, $target_id) as $id) { //成功者を検出
-	DB::$ROOM->ResultAbility($this->result, 'success', $target, $id);
+	DB::$ROOM->StoreAbility($this->result, 'success', $target, $id);
       }
     }
   }

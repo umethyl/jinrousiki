@@ -12,7 +12,9 @@ class Role_agitate_mad extends Role {
   }
 
   public function DecideVoteKill() {
-    if ($this->DecideVoteKillSame()) return;
+    if ($this->DecideVoteKillSame()) {
+      return;
+    }
 
     $uname = $this->GetVoteKill();
     foreach ($this->GetStack(VoteDayElement::MAX_VOTED) as $target_uname) {

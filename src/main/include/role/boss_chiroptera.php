@@ -8,6 +8,6 @@ class Role_boss_chiroptera extends Role {
   public $mix_in = ['protected'];
 
   protected function IsSacrifice(User $user) {
-    return ! $this->IsActor($user) && $user->IsMainCamp(Camp::CHIROPTERA);
+    return false === $this->IsActor($user) && $user->IsMainCamp(Camp::CHIROPTERA);
   }
 }

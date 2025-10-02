@@ -9,7 +9,7 @@ class Role_brownie extends Role {
     $stack = [];
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if (! RoleUser::IsAvoid($user)) {
+      if (false === RoleUser::IsAvoid($user)) {
 	$stack[] = $user->id;
       }
     }

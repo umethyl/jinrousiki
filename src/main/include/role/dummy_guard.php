@@ -25,7 +25,7 @@ class Role_dummy_guard extends Role_guard {
 
       $flag = true;
       if (! DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
-	DB::$ROOM->ResultAbility(RoleAbility::HUNTED, 'hunted', $user->handle_name, $actor->id);
+	DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $user->handle_name, $actor->id);
       }
     }
     if ($flag) DB::$USER->Kill($user->id, DeadReason::HUNTED);
@@ -46,7 +46,7 @@ class Role_dummy_guard extends Role_guard {
       }
 
       if (! DB::$ROOM->IsOption('seal_message')) { //常時護衛成功メッセージだけが出る
-	DB::$ROOM->ResultAbility(RoleAbility::GUARD, 'success', $target->GetName(), $user->id);
+	DB::$ROOM->StoreAbility(RoleAbility::GUARD, 'success', $target->GetName(), $user->id);
       }
     }
   }
@@ -57,7 +57,7 @@ class Role_dummy_guard extends Role_guard {
       DB::$USER->Kill($target->id, DeadReason::HUNTED);
       //憑依能力者は対象外なので仮想ユーザを引く必要なし
       if (! DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
-	DB::$ROOM->ResultAbility(RoleAbility::HUNTED, 'hunted', $target->handle_name, $id);
+	DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $target->handle_name, $id);
       }
     }
   }

@@ -2,7 +2,7 @@
 /*
   ◆蛻庵 (monk_fox)
   ○仕様
-  ・能力結果：霊能
+  ・能力結果：霊能 (70%)
   ・霊能：通常
 */
 RoleLoader::LoadFile('child_fox');
@@ -16,6 +16,10 @@ class Role_monk_fox extends Role_child_fox {
   }
 
   public function Necromancer(User $user, $flag) {
-    return ($flag || Lottery::Percent(30)) ? 'stolen' : $this->DistinguishNecromancer($user);
+    if (true === $flag || Lottery::Percent(30)) {
+      return 'stolen';
+    } else {
+      return $this->DistinguishNecromancer($user);
+    }
   }
 }

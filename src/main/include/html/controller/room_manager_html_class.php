@@ -29,7 +29,9 @@ class RoomManagerHTML {
     Text::Printf(self::GetCreateHeader(), $url, $command);
     OptionForm::Output();
     Text::Printf(self::GetCreateFooter(), $password, $submit);
-    if (OptionManager::IsChange()) HTML::OutputFooter();
+    if (OptionManager::IsChange()) {
+      HTML::OutputFooter();
+    }
   }
 
   //村情報出力

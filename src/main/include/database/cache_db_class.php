@@ -25,16 +25,13 @@ final class JinrouCacheDB {
       ->Into(['room_no', 'name', 'content', 'expire', 'hash'])->Duplicate();
 
     $filter = JinrouCacheManager::Load();
-    $now    = Time::Get();
-    $expire = $now + $filter->expire;
-    $filter->next = $expire;
-    $list = [
-      $filter->room_no, $filter->GetName(true), $content, $expire, $filter->hash,
-      $content, $expire, $filter->hash
-    ];
     if (CacheConfig::DEBUG_MODE) {
-      self::OutputTime($now, $expire, 'Insert');
+      self::OutputTime($filter, 'Insert');
     }
+    $list = [
+      $filter->room_no, $filter->GetName(true), $content, $filter->next, $filter->hash,
+      $content, $filter->next, $filter->hash
+    ];
 
     DB::Prepare($query->Build(), $list);
     return DB::Execute();
@@ -45,13 +42,10 @@ final class JinrouCacheDB {
     $query = self::GetQueryUpdate()->Update()->Where(['room_no', 'name']);
 
     $filter = JinrouCacheManager::Load();
-    $now    = Time::Get();
-    $expire = $now + $filter->expire;
-    $filter->next = $expire;
-    $list = [$content, $expire, $filter->hash, $filter->room_no, $filter->GetName(true)];
     if (CacheConfig::DEBUG_MODE) {
-      self::OutputTime($now, $expire, 'Updated');
+      self::OutputTime($filter, 'Updated');
     }
+    $list = [$content, $filter->next, $filter->hash, $filter->room_no, $filter->GetName(true)];
 
     DB::Prepare($query->Build(), $list);
     return DB::Execute();
@@ -59,7 +53,7 @@ final class JinrouCacheDB {
 
   //消去
   public static function Clear() {
-    $query = self::GetQuery()->Delete()->WhereLower('exipre');
+    $query = self::GetQuery()->Delete()->WhereLower('expire');
 
     DB::Prepare($query->Build(), [Time::Get() - CacheConfig::EXCEED]);
     return DB::Execute() && DB::Optimize('document_cache');
@@ -83,8 +77,8 @@ final class JinrouCacheDB {
   }
 
   //時刻出力 (デバッグ用)
-  private static function OutputTime($now, $expire, $name) {
-    JinrouCacheManager::OutputTime($now, $name);
-    JinrouCacheManager::OutputTime($expire);
+  private static function OutputTime(JinrouCache $filter, $name) {
+    JinrouCacheManager::OutputTime($filter->now, $name);
+    JinrouCacheManager::OutputTime($filter->next);
   }
 }

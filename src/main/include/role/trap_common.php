@@ -12,20 +12,22 @@ class Role_trap_common extends Role_common {
 
   public function VotePollReaction() {
     $stack = $this->GetStack();
-    if (! is_array($stack) || count($stack) < 1) return;
+    if (false === is_array($stack) || count($stack) < 1) {
+      return;
+    }
 
     $target_list = [];
     //非村人陣営の ID と仮想ユーザ名を収集
     foreach ($this->GetStackKey(VoteDayElement::TARGET_LIST) as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if (! $user->IsWinCamp(Camp::HUMAN)) {
+      if (false === $user->IsWinCamp(Camp::HUMAN)) {
 	$target_list[$user->id] = $user->GetVirtual()->uname;
       }
     }
     //Text::p($target_list, "◆InHuman [{$this->role}]");
 
     foreach (array_keys($stack) as $uname) { //策士の得票リストと照合
-      if ($this->GetVotedUname($uname) == array_values($target_list)) {
+      if ($this->GetVotePollList($uname) == array_values($target_list)) {
 	foreach (array_keys($target_list) as $id) {
 	  DB::$USER->Kill($id, DeadReason::TRAPPED);
 	}

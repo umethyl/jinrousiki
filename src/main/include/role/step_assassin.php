@@ -10,19 +10,19 @@ class Role_step_assassin extends Role_assassin {
   public $action = VoteAction::STEP_ASSASSIN;
   public $submit = VoteAction::ASSASSIN;
 
-  protected function IsVoteCheckboxLive($live) {
+  protected function IsVoteNightCheckboxLive($live) {
     return true;
   }
 
-  protected function IgnoreVoteCheckboxSelf() {
+  protected function DisableVoteNightCheckboxSelf() {
     return false;
   }
 
-  protected function GetVoteCheckboxType() {
+  protected function GetVoteNightCheckboxType() {
     return OptionFormType::CHECKBOX;
   }
 
-  public function ValidateVoteNightTargetList(array $list) {
+  protected function ValidateVoteNightTargetList(array $list) {
     return $this->ValidateStepVoteNightTargetList($list);
   }
 

@@ -7,7 +7,7 @@ class Role_voodoo_mad extends Role {
   public $action = VoteAction::VOODOO_MAD;
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::WOLF, RoleAbilityMessage::VOODOO, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::WOLF, RoleAbilityMessage::VOODOO, $this->action);
   }
 
   //呪術対象セット
@@ -29,7 +29,9 @@ class Role_voodoo_mad extends Role {
     $stack      = $this->GetStack('voodoo');
     $count_list = array_count_values($stack);
     foreach ($stack as $id => $target_id) {
-      if ($count_list[$target_id] < 2) continue;
+      if ($count_list[$target_id] < 2) {
+	continue;
+      }
       RoleUser::GuardCurse(DB::$USER->ByID($id)); //厄払い判定
     }
   }

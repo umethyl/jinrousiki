@@ -13,11 +13,13 @@ class Role_jealousy extends Role {
 
   public function VotePollReaction() {
     foreach ($this->GetStackKey() as $uname) {
-      if ($this->IsVoted($uname)) continue;
+      if ($this->IsVoteKill($uname)) {
+	continue;
+      }
 
       $cupid_list = []; //橋姫に投票したユーザのキューピッドの ID => 恋人の ID
-      foreach ($this->GetVotedUname($uname) as $voted_uname) {
-	$user = DB::$USER->ByRealUname($voted_uname);
+      foreach ($this->GetVotePollList($uname) as $target_uname) {
+	$user = DB::$USER->ByRealUname($target_uname);
 	foreach ($user->GetPartner('lovers', true) as $id) {
 	  $cupid_list[$id][] = $user->id;
 	}
@@ -26,7 +28,9 @@ class Role_jealousy extends Role {
       //同一キューピッドの恋人が複数いたらショック死
       foreach ($cupid_list as $cupid_id => $lovers_list) {
 	if (count($lovers_list) > 1) {
-	  foreach ($lovers_list as $id) $this->SuddenDeathKill($id);
+	  foreach ($lovers_list as $id) {
+	    $this->SuddenDeathKill($id);
+	  }
 	}
       }
     }

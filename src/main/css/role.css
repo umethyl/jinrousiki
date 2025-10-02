@@ -43,3 +43,5 @@
 .wisp         { color: #AA66FF; } /* 鬼火 */
 .lovers       { color: #FF66CC; } /* 恋人 */
 .step         { color: #669933; } /* 足音 */
+.role-male    { color: #0000FF; } /* 性別(男) */
+.role-female  { color: #FF0099; } /* 性別(女) */

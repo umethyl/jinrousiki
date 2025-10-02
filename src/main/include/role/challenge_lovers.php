@@ -22,11 +22,13 @@ class Role_challenge_lovers extends Role {
   protected function IsSuddenDeath() {
     $role = 'lovers';
     $cupid_list = $this->GetStack(); //QP データ
-    if (! is_array($cupid_list)) { //未設定なら登録
+    if (false === is_array($cupid_list)) { //未設定なら登録
       $cupid_list = [];
       foreach ($this->GetStackKey(VoteDayElement::TARGET_LIST) as $uname) {
 	$user = DB::$USER->ByRealUname($uname);
-	if (! $user->IsRole($role)) continue;
+	if (false === $user->IsRole($role)) {
+	  continue;
+	}
 
 	foreach ($user->GetPartner($role) as $id) {
 	  $cupid_list[$id][] = $user->id;
@@ -42,7 +44,9 @@ class Role_challenge_lovers extends Role {
     $id = $this->GetID();
     foreach ($this->GetActor()->GetPartner($role) as $cupid_id) {
       //難題持ちで自分のキューピッドが見つからない場合は抜けておく
-      if (! isset($cupid_list[$cupid_id])) return false;
+      if (false === isset($cupid_list[$cupid_id])) {
+	return false;
+      }
 
       foreach ($cupid_list[$cupid_id] as $lovers_id) {
 	if ($lovers_id != $id && in_array(DB::$USER->ByID($lovers_id)->uname, $stack)) {
@@ -57,7 +61,7 @@ class Role_challenge_lovers extends Role {
     return 'CHALLENGE';
   }
 
-  public function WolfEatResist() {
+  public function ResistWolfEat() {
     return RoleUser::IsChallengeLovers($this->GetActor());
   }
 }

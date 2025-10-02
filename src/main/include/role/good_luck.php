@@ -11,11 +11,15 @@ class Role_good_luck extends Role_decide {
   }
 
   public function DecideVoteKill() {
-    if ($this->IsVoteKill()) return;
+    if ($this->DetermineVoteKill()) {
+      return;
+    }
 
-    $stack =& $this->GetVotePossible();
+    $stack =& $this->GetVoteKillPossibleList();
     $key = array_search($this->GetStack(), $stack);
-    if ($key === false) return;
+    if (false === $key) {
+      return;
+    }
 
     unset($stack[$key]);
     if (count($stack) == 1) { //候補が一人になった場合は処刑者決定

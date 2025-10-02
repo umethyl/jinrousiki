@@ -6,13 +6,16 @@
   ・暗殺失敗：通常
 */
 class Role_assassin extends Role {
-  public $action      = VoteAction::ASSASSIN;
-  public $not_action  = VoteAction::NOT_ASSASSIN;
-  public $action_date = RoleActionDate::AFTER;
+  public $action     = VoteAction::ASSASSIN;
+  public $not_action = VoteAction::NOT_ASSASSIN;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   public function OutputAction() {
     $str = RoleAbilityMessage::ASSASSIN;
-    RoleHTML::OutputVote(VoteCSS::ASSASSIN, $str, $this->action, $this->not_action);
+    RoleHTML::OutputVoteNight(VoteCSS::ASSASSIN, $str, $this->action, $this->not_action);
   }
 
   protected function DisableNotAction() {

@@ -10,7 +10,7 @@ class Role_critical_duelist extends Role_valkyrja_duelist {
   public $mix_in = ['critical_voter'];
 
   protected function IgnoreFilterVoteDo() {
-    return ! Lottery::Percent(5);
+    return false === Lottery::Percent(5);
   }
 
   protected function FixSelfShoot() {

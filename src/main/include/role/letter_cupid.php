@@ -29,7 +29,7 @@ class Role_letter_cupid extends Role_cupid {
 	$user = DB::$USER->ByID($id);
 	if ($key == 0) { //先頭を次の送信側とする
 	  $user->AddDoom(1, 'letter_exchange');
-	  DB::$ROOM->ResultDead($user->handle_name, DeadReason::LETTER_EXCHANGE_MOVED);
+	  DB::$ROOM->StoreDead($user->handle_name, DeadReason::LETTER_EXCHANGE_MOVED);
 	} else {
 	  $user->AddDoom(0, 'letter_exchange');
 	}

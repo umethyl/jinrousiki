@@ -8,7 +8,10 @@ class Role_common extends Role {
   protected function GetPartner() {
     $stack = [];
     foreach (DB::$USER->Get() as $user) {
-      if ($this->IsActor($user)) continue;
+      if ($this->IsActor($user)) {
+	continue;
+      }
+
       if ($this->IsCommonPartner($user)) {
 	$stack[] = $user->handle_name;
       }
@@ -28,7 +31,9 @@ class Role_common extends Role {
 
   //囁き (共有囁き変換)
   final public function CommonWhisper(TalkBuilder $builder, TalkParser $talk) {
-    if (! $builder->flag->common_whisper) return false; //スキップ判定
+    if (! $builder->flag->common_whisper) { //スキップ判定
+      return false;
+    }
 
     $stack = [
       TalkElement::ID       => $builder->GetTalkID($talk),

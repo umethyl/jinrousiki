@@ -13,7 +13,7 @@ class Role_critical_voter extends Role_authority {
   }
 
   protected function IgnoreFilterVoteDo() {
-    return ! DB::$ROOM->IsEvent('critical') && ! Lottery::Percent(5);
+    return false === DB::$ROOM->IsEvent('critical') && false === Lottery::Percent(5);
   }
 
   protected function GetVoteDoCount() {
@@ -22,7 +22,7 @@ class Role_critical_voter extends Role_authority {
 
   protected function NoticeFilterVoteDo() {
     if (DB::$ROOM->IsOption('notice_critical')) {
-      DB::$ROOM->ResultDead($this->GetActor()->handle_name, DeadReason::ACTIVE_CRITICAL_VOTER);
+      DB::$ROOM->StoreDead($this->GetActor()->handle_name, DeadReason::ACTIVE_CRITICAL_VOTER);
     }
   }
 }

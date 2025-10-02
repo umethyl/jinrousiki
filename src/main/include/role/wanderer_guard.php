@@ -15,12 +15,15 @@ class Role_wanderer_guard extends Role_guard {
     $result    = RoleAbility::PENETRATION;
     $vote_data = RoleManager::GetVoteData();
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
-      if ($user->IsDead(true) || ! isset($vote_data[$this->action][$user->id])) continue;
+      if ($user->IsDead(true) ||
+	  false === ArrayFilter::IsAssocKey($vote_data, $this->action, $user->id)) {
+	continue;
+      }
 
       $target = DB::$USER->ByID($vote_data[$this->action][$user->id]);
       $target->AddRole('penetration');
-      if (! DB::$ROOM->IsOption('seal_message')) {
-	DB::$ROOM->ResultAbility($result, 'penetration', $target->GetName(), $user->GetID());
+      if (false === DB::$ROOM->IsOption('seal_message')) {
+	DB::$ROOM->StoreAbility($result, 'penetration', $target->GetName(), $user->GetID());
       }
     }
   }

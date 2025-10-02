@@ -2,7 +2,7 @@
 /*
   ◆山立 (step_guard)
   ○仕様
-  ・護衛失敗：制限なし
+  ・護衛制限：なし
 */
 RoleLoader::LoadFile('guard');
 class Role_step_guard extends Role_guard {
@@ -10,19 +10,19 @@ class Role_step_guard extends Role_guard {
   public $action = VoteAction::STEP_GUARD;
   public $submit = VoteAction::GUARD;
 
-  protected function IsVoteCheckboxLive($live) {
+  protected function IsVoteNightCheckboxLive($live) {
     return true;
   }
 
-  protected function GetVoteCheckboxType() {
+  protected function GetVoteNightCheckboxType() {
     return OptionFormType::CHECKBOX;
   }
 
-  public function ValidateVoteNightTargetList(array $list) {
+  protected function ValidateVoteNightTargetList(array $list) {
     return $this->ValidateStepVoteNightTargetList($list);
   }
 
-  public function IgnoreGuard(User $user) {
-    return null;
+  public function UnlimitedGuard() {
+    return true;
   }
 }

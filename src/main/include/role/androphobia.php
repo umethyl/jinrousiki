@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('chicken');
 class Role_androphobia extends Role_chicken {
   protected function IsSuddenDeath() {
-    return Sex::IsMale($this->GetVoteUser());
+    return Sex::IsMale($this->GetVoteKillUser());
   }
 
   protected function GetSuddenDeathType() {

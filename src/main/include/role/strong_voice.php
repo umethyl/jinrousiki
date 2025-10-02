@@ -9,13 +9,17 @@ class Role_strong_voice extends Role {
 
   //声量変換
   public function FilterVoice(&$voice, &$str) {
-    $voice = Text::Cut($this->role, '_', null, false);
+    $voice = Text::CutPick($this->role);
   }
 
   //声量シフト
   protected function ShiftVoice(&$voice, &$str, $up = true) {
-    if (($key = array_search($voice, $this->voice_list)) === false) return;
-    if ($up) {
+    $key = array_search($voice, $this->voice_list);
+    if (false === $key) {
+      return;
+    }
+
+    if (true === $up) {
       if (++$key >= count($this->voice_list)) {
 	$str = RoleTalkMessage::HOWLING;
 	return;

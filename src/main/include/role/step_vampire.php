@@ -16,9 +16,14 @@ class Role_step_vampire extends Role_vampire {
 
   public function VoteKillAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($uname) || ! Lottery::Percent(30)) continue;
+      if ($this->IsVoteKill($uname) || false === Lottery::Percent(30)) {
+	continue;
+      }
+
       $user = DB::$USER->ByRealUname($target_uname);
-      if ($user->IsDead(true)) continue;
+      if ($user->IsDead(true)) {
+	continue;
+      }
 
       //吸血鬼判定
       if ($user->IsMainGroup(CampGroup::VAMPIRE) ||
@@ -29,15 +34,15 @@ class Role_step_vampire extends Role_vampire {
     }
   }
 
-  protected function IsVoteCheckboxLive($live) {
+  protected function IsVoteNightCheckboxLive($live) {
     return true;
   }
 
-  protected function GetVoteCheckboxType() {
+  protected function GetVoteNightCheckboxType() {
     return OptionFormType::CHECKBOX;
   }
 
-  public function ValidateVoteNightTargetList(array $list) {
+  protected function ValidateVoteNightTargetList(array $list) {
     return $this->ValidateStepVoteNightTargetList($list);
   }
 }

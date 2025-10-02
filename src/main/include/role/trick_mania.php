@@ -26,6 +26,6 @@ class Role_trick_mania extends Role_mania {
     }
 
     $user->ReplaceRole($role, $user->DistinguishRoleGroup());
-    DB::$ROOM->ResultDead($user->handle_name, DeadReason::COPIED_TRICK, $user->GetMainRole());
+    DB::$ROOM->StoreDead($user->handle_name, DeadReason::COPIED_TRICK, $user->GetMainRole());
   }
 }

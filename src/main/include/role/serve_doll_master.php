@@ -15,27 +15,35 @@ class Role_serve_doll_master extends Role_doll_master {
     $this->OutputGuardResult();
   }
 
-  public function IgnoreGuard(User $user) {
+  public function GuardFailed(User $user) {
     return $this->CountDoll() < 1 && Lottery::Percent(70);
   }
 
   public function GuardAction(User $user) {
-    if (DB::$ROOM->IsEvent('no_sacrifice')) return; //蛍火は無効
-    if (ArrayFilter::IsInclude($this->GetStack(), $user->id)) return;
+    if (DB::$ROOM->IsEvent('no_sacrifice')) { //蛍火は無効
+      return;
+    }
+
+    if (ArrayFilter::IsInclude($this->GetStack(), $user->id)) {
+      return;
+    }
     $this->AddStack($user->id);
     $this->AddStack($user->id, $this->role . '_kill');
   }
 
-  //護衛判定後処理
   public function GuardFinishAction() {
     $target_stack = $this->GetStack($this->role . '_kill');
     //Text::p($target_stack, "◆Target [{$this->role}]");
-    if (! is_array($target_stack)) return;
+    if (false === is_array($target_stack)) {
+      return;
+    }
     RoleManager::Stack()->Clear($this->role . '_kill');
 
     $stack = Lottery::GetList($this->GetLiveDoll());
     foreach ($target_stack as $id) {
-      if (count($stack) < 1) return;
+      if (count($stack) < 1) {
+	return;
+      }
       DB::$USER->Kill(array_pop($stack), DeadReason::SACRIFICE);
     }
   }
@@ -48,7 +56,8 @@ class Role_serve_doll_master extends Role_doll_master {
   private function GetLiveDoll() {
     $stack = [];
     foreach (DB::$USER->Get() as $user) {
-      if ($user->IsLive(true) && $this->IsDoll($user) && ! RoleUser::IsAvoidLovers($user, true)) {
+      if ($user->IsLive(true) && $this->IsDoll($user) &&
+	  false === RoleUser::IsAvoidLovers($user, true)) {
 	$stack[] = $user->id;
       }
     }

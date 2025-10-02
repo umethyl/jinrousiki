@@ -13,7 +13,7 @@ class Role_critical_luck extends Role_upper_luck {
   }
 
   protected function IgnoreFilterVotePoll() {
-    return ! DB::$ROOM->IsEvent('critical') && ! Lottery::Percent(5);
+    return false === DB::$ROOM->IsEvent('critical') && false === Lottery::Percent(5);
   }
 
   protected function GetVotePollCount() {
@@ -22,7 +22,7 @@ class Role_critical_luck extends Role_upper_luck {
 
   protected function NoticeFilterVotePoll() {
     if (DB::$ROOM->IsOption('notice_critical')) {
-      DB::$ROOM->ResultDead($this->GetActor()->handle_name, DeadReason::ACTIVE_CRITICAL_LUCK);
+      DB::$ROOM->StoreDead($this->GetActor()->handle_name, DeadReason::ACTIVE_CRITICAL_LUCK);
     }
   }
 }

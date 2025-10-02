@@ -10,7 +10,10 @@ class Role_scarlet_angel extends Role_angel {
   public $mix_in = ['wolf'];
 
   protected function OutputAddPartner() {
-    if (! DB::$ROOM->IsNight()) return;
+    if (false === DB::$ROOM->IsNight()) {
+      return;
+    }
+
     $stack = $this->GetWolfPartner();
     RoleHTML::OutputPartner($stack['unconscious_list'], 'unconscious_list');
   }

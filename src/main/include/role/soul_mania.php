@@ -9,7 +9,7 @@
 RoleLoader::LoadFile('mania');
 class Role_soul_mania extends Role_mania {
   protected function IgnoreResult() {
-    return ! DB::$ROOM->IsDate(2);
+    return false === DB::$ROOM->IsDate(2);
   }
 
   protected function OutputAddResult() {
@@ -25,7 +25,7 @@ class Role_soul_mania extends Role_mania {
   protected function CopyAction(User $user, $role) {
     $actor = $this->GetActor();
     $actor->AddMainRole($user->id);
-    DB::$ROOM->ResultAbility($this->result, $role, $user->handle_name, $actor->id);
+    DB::$ROOM->StoreAbility($this->result, $role, $user->handle_name, $actor->id);
   }
 
   protected function GetCopiedRole() {
@@ -49,7 +49,7 @@ class Role_soul_mania extends Role_mania {
     $actor = $this->GetActor();
     $actor->ReplaceRole($user->GetID($this->role), $role);
     $actor->AddRole($this->GetCopiedRole());
-    DB::$ROOM->ResultAbility($this->result, $role, $actor->handle_name, $actor->id);
+    DB::$ROOM->StoreAbility($this->result, $role, $actor->handle_name, $actor->id);
   }
 
   //覚醒コピー変換リスト取得

@@ -20,7 +20,7 @@ class Role_patron extends Role_valkyrja_duelist {
     return false;
   }
 
-  protected function IgnoreVoteCheckboxSelf() {
+  protected function DisableVoteNightCheckboxSelf() {
     return true;
   }
 
@@ -33,12 +33,10 @@ class Role_patron extends Role_valkyrja_duelist {
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
-      if (! is_null($str)) return $str;
+      $this->ValidateVoteNightTarget($user, $user->IsLive());
       $stack[$id] = $user;
     }
     $this->SetStack($stack, 'target_list');
-    return null;
   }
 
   //後援者追加役職処理
@@ -53,7 +51,9 @@ class Role_patron extends Role_valkyrja_duelist {
     $count = 0;
     foreach (DB::$USER->GetRoleUser($role) as $user) {
       if ($user->IsPartner($role, $id)) {
-	if ($user->IsLive()) return true;
+	if ($user->IsLive()) {
+	  return true;
+	}
 	$count++;
       }
     }

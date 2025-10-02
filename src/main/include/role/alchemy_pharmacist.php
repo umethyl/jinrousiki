@@ -10,12 +10,12 @@ class Role_alchemy_pharmacist extends Role_pharmacist {
   public $mix_in = ['poison'];
 
   protected function SetDetoxFlag($uname) {
-    if (! $this->GetActor()->detox) {
+    if (false === $this->GetActor()->detox) {
       $this->GetActor()->{$this->role} = true;
     }
   }
 
   protected function IsPoisonTarget(User $user) {
-    return ! $user->IsCamp(Camp::HUMAN);
+    return false === $user->IsCamp(Camp::HUMAN);
   }
 }

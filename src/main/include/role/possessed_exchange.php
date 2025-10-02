@@ -12,10 +12,14 @@ class Role_possessed_exchange extends Role {
 
   protected function OutputAddResult() {
     $stack = $this->GetActor()->GetPartner($this->role);
-    if (! is_array($stack)) return;
+    if (false === is_array($stack)) {
+      return;
+    }
 
     $target = DB::$USER->ByID(array_shift($stack))->handle_name;
-    if (is_null($target)) return;
+    if (is_null($target)) {
+      return;
+    }
 
     if (DB::$ROOM->date < 3) {
       $header = 'exchange_header';

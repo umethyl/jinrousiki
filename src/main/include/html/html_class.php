@@ -1,6 +1,13 @@
 <?php
 //-- HTML 生成クラス --//
 class HTML {
+  //共通タグ生成
+  public static function GenerateTag($name, $str, $class = null, $id = null, $align = null) {
+    $header = self::GenerateTagHeader($name, $class, $id, $align);
+    $footer = self::GenerateTagFooter($name);
+    return $header . $str . $footer;
+  }
+
   //共通タグヘッダ生成
   public static function GenerateTagHeader($name, $class = null, $id = null, $align = null) {
     $str = $name;
@@ -79,12 +86,12 @@ class HTML {
 
   //div フッタ生成
   public static function GenerateDivFooter($return = false) {
-    return self::GenerateTagFooter('div') . ($return ? Text::LF : '');
+    return self::GenerateTagFooter('div') . (true === $return ? Text::LF : '');
   }
 
   //span 生成
   public static function GenerateSpan($str, $class = null, $id = null) {
-    return self::GenerateTagHeader('span', $class, $id) . $str . self::GenerateTagFooter('span');
+    return self::GenerateTag('span', $str, $class, $id);
   }
 
   //リンク生成
@@ -124,12 +131,12 @@ class HTML {
 
   //チェック済み生成
   public static function GenerateChecked($flag) {
-    return $flag ? self::GenerateAttribute('checked') : '';
+    return (true === $flag) ? self::GenerateAttribute('checked') : '';
   }
 
   //選択済み生成
   public static function GenerateSelected($flag) {
-    return $flag ? self::GenerateAttribute('selected') : '';
+    return (true === $flag) ? self::GenerateAttribute('selected') : '';
   }
 
   //窓を閉じるボタン生成
@@ -188,6 +195,16 @@ class HTML {
     echo self::LoadJavaScript($file, $path);
   }
 
+  //JavaScript ヘッダ出力
+  public static function OutputJavaScriptHeader() {
+    echo self::GenerateJavaScriptHeader();
+  }
+
+  //JavaScript フッタ出力
+  public static function OutputJavaScriptFooter() {
+    echo self::GenerateJavaScriptFooter();
+  }
+
   //HTML BODY ヘッダ出力
   public static function OutputBodyHeader($css = null, $on_load = null) {
     echo self::GenerateBodyHeader($css, $on_load);
@@ -243,6 +260,11 @@ class HTML {
     Text::Output(self::GenerateDivFooter($return));
   }
 
+  //p 出力
+  public static function OutputP($str) {
+    Text::Output(self::GenerateTag('p', $str));
+  }
+
   //リンク出力
   public static function OutputLink($url, $str, $line = false) {
     Text::Output(self::GenerateLink($url, $str), $line);
@@ -276,11 +298,6 @@ class HTML {
   //使用不可エラー出力
   public static function OutputUnusableError() {
     self::OutputResult(Message::DISABLE_ERROR, Message::UNUSABLE_ERROR);
-  }
-
-  //p タグ
-  public static function GetP() {
-    return '<p>%s</p>';
   }
 
   //HTML ヘッダタグ

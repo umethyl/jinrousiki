@@ -9,6 +9,6 @@ class Role_poison_wolf extends Role_wolf {
   public $mix_in = ['poison'];
 
   protected function IsPoisonTarget(User $user) {
-    return ! $user->IsMainGroup(CampGroup::WOLF);
+    return false === $user->IsMainGroup(CampGroup::WOLF);
   }
 }

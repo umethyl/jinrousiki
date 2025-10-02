@@ -16,12 +16,17 @@ class Role_lovers extends Role {
 
   //恋人表示 (委託あり)
   final protected function GetLoversPartner() {
-    if ($this->CallParent('IgnoreGetLoversPartner')) return [];
+    if ($this->CallParent('IgnoreGetLoversPartner')) {
+      return [];
+    }
 
     $this->SetStack($this->GetActor()->GetPartnerList());
     $stack = [];
     foreach (DB::$USER->Get() as $user) {
-      if ($this->IsActor($user)) continue;
+      if ($this->IsActor($user)) {
+	continue;
+      }
+
       if ($this->CallParent('IsLoversPartner', $user)) {
 	$stack[] = $user->GetName(); //憑依追跡
       }
@@ -49,7 +54,9 @@ class Role_lovers extends Role {
 
   //囁き (恋耳鳴)
   public function Whisper(TalkBuilder $builder, TalkParser $talk) {
-    if (! $builder->flag->sweet_ringing) return false; //スキップ判定
+    if (! $builder->flag->sweet_ringing) { //スキップ判定
+      return false;
+    }
 
     $sentence = RoleTalkMessage::LOVERS_TALK;
     $voice    = $talk->font_type;
@@ -91,7 +98,7 @@ class Role_lovers extends Role {
 	}
       }
 
-      if ($this->IsDepraver($user) && ! $user->IsDummyBoy()) {
+      if ($this->IsDepraver($user) && false === $user->IsDummyBoy()) {
 	$depraver_list[$user->id] = $user->id;
       }
     }
@@ -115,12 +122,17 @@ class Role_lovers extends Role {
       if (in_array($cupid_id, $fox_list)) { //背徳者後追い
 	foreach ($depraver_list as $depraver_id) {
 	  $user = DB::$USER->ByID($depraver_id); //背徳者の情報を取得
-	  if ($not_kill) {
-	    if (in_array($user->id, $followed_list)) continue;
+	  if (true === $not_kill) {
+	    if (in_array($user->id, $followed_list)) {
+	      continue;
+	    }
 	    $followed_list[] = $user->id;
 	  } else {
-	    if (! DB::$USER->Kill($user->id, DeadReason::FOX_FOLLOWED)) continue;
-	    if ($sudden_death) { //突然死の処理
+	    if (false === DB::$USER->Kill($user->id, DeadReason::FOX_FOLLOWED)) {
+	      continue;
+	    }
+
+	    if (true === $sudden_death) { //突然死の処理
 	      $talk = new RoomTalkStruct($user->handle_name . DeadMessage::$fox_followed);
 	      DB::$ROOM->Talk($talk);
 	    }
@@ -134,12 +146,17 @@ class Role_lovers extends Role {
       } else {
 	foreach ($cupid_list[$cupid_id] as $lovers_id) { //恋人後追い
 	  $user = DB::$USER->ByID($lovers_id); //恋人の情報を取得
-	  if ($not_kill) {
-	    if (in_array($user->id, $followed_list)) continue;
+	  if (true === $not_kill) {
+	    if (in_array($user->id, $followed_list)) {
+	      continue;
+	    }
 	    $followed_list[] = $user->id;
 	  } else {
-	    if (! DB::$USER->Kill($user->id, DeadReason::LOVERS_FOLLOWED)) continue;
-	    if ($sudden_death) { //突然死の処理
+	    if (false === DB::$USER->Kill($user->id, DeadReason::LOVERS_FOLLOWED)) {
+	      continue;
+	    }
+
+	    if (true === $sudden_death) { //突然死の処理
 	      $talk = new RoomTalkStruct($user->handle_name . DeadMessage::$lovers_followed);
 	      DB::$ROOM->Talk($talk);
 	    }
@@ -167,7 +184,9 @@ class Role_lovers extends Role {
 
   //後追い対象背徳者系判定
   private function IsDepraver(User $user) {
-    if ($user->IsDead(true) || RoleUser::IsContainLovers($user)) return false;
+    if ($user->IsDead(true) || RoleUser::IsContainLovers($user)) {
+      return false;
+    }
 
     if (RoleUser::IsDelayCopy($user)) { //時間差コピー能力者ならコピー先を辿る
       $id = $user->GetMainRoleTarget();
@@ -179,7 +198,9 @@ class Role_lovers extends Role {
 
   //連鎖後追い判定
   private function SetChainFollowed($id, array $list, array &$stack) {
-    if (in_array($id, $list) || in_array($id, $stack)) return;
+    if (in_array($id, $list) || in_array($id, $stack)) {
+      return;
+    }
     $stack[] = $id;
   }
 }

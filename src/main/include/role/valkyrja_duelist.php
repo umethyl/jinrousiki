@@ -8,8 +8,11 @@
   ・追加役職：なし
 */
 class Role_valkyrja_duelist extends Role {
-  public $action      = VoteAction::DUELIST;
-  public $action_date = RoleActionDate::FIRST;
+  public $action = VoteAction::DUELIST;
+
+  protected function GetActionDate() {
+    return RoleActionDate::FIRST;
+  }
 
   protected function GetPartner() {
     $id    = $this->GetID();
@@ -34,7 +37,7 @@ class Role_valkyrja_duelist extends Role {
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::DUELIST, RoleAbilityMessage::DUELIST, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::DUELIST, RoleAbilityMessage::DUELIST, $this->action);
   }
 
   protected function SetVoteNightFilter() {
@@ -47,15 +50,19 @@ class Role_valkyrja_duelist extends Role {
     return true;
   }
 
-  protected function IgnoreVoteCheckboxSelf() {
+  protected function DisableVoteNightCheckboxSelf() {
     return false;
   }
 
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return true;
   }
 
-  protected function IsVoteCheckboxChecked(User $user) {
+  protected function GetVoteNightCheckboxType() {
+    return OptionFormType::CHECKBOX;
+  }
+
+  protected function CheckedVoteNightCheckbox(User $user) {
     return $this->IsSelfShoot() && $this->IsActor($user);
   }
 
@@ -69,10 +76,6 @@ class Role_valkyrja_duelist extends Role {
     return false;
   }
 
-  protected function GetVoteCheckboxType() {
-    return OptionFormType::CHECKBOX;
-  }
-
   protected function GetVoteNightNeedCount() {
     return 2;
   }
@@ -82,25 +85,26 @@ class Role_valkyrja_duelist extends Role {
     $user_list  = [];
     sort($list);
     foreach ($list as $id) {
-      $user = DB::$USER->ByID($id); //投票先のユーザ情報を取得
-      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
-      if (! is_null($str)) return $str;
+      $user = DB::$USER->ByID($id); //投票先のユーザ情報
+      $this->ValidateVoteNightTarget($user, $user->IsLive());
       $user_list[$id] = $user;
-      $self_shoot |= $this->IsActor($user); //自分撃ち判定
+      if ($this->IsActor($user)) { //自分撃ち判定
+	$self_shoot = true;
+      }
     }
 
-    if (! $self_shoot) { //自分撃ちエラー判定
-      if ($this->FixSelfShoot()) { //自分撃ち固定
-	return VoteRoleMessage::TARGET_INCLUDE_MYSELF;
-      } elseif ($this->IsSelfShoot()) { //参加人数制限
-	return VoteRoleMessage::TARGET_MYSELF_COUNT;
+    //自分撃ちエラー判定 (自分撃ち固定 > 参加人数制限)
+    if (false === $self_shoot) {
+      if ($this->FixSelfShoot()) {
+	throw new UnexpectedValueException(VoteRoleMessage::TARGET_INCLUDE_MYSELF);
+      } elseif ($this->IsSelfShoot()) {
+	throw new UnexpectedValueException(VoteRoleMessage::TARGET_MYSELF_COUNT);
       }
     }
     $this->SetStack($user_list, 'target_list');
-    return null;
   }
 
-  public function VoteNightAction() {
+  public function SetVoteNightTargetListAction() {
     $role  = $this->GetActor()->GetID($this->GetPartnerRole());
     $list  = $this->GetStack('target_list');
     $stack = [];
@@ -129,7 +133,9 @@ class Role_valkyrja_duelist extends Role {
     foreach (DB::$USER->GetRoleUser($role) as $user) {
       if ($user->IsPartner($role, $id)) {
 	$target++;
-	if ($user->IsLive()) $count++;
+	if ($user->IsLive()) {
+	  $count++;
+	}
       }
     }
     return $target > 0 ? $count == 1 : $actor->IsLive();

@@ -24,7 +24,7 @@ class Role_altair_cupid extends Role_cupid {
       foreach ($user->GetPartner('lovers') as $cupid_id) {
 	if ($cupid_id == $target_id) {
 	  $user->AddRole('vega_lovers');
-	  DB::$ROOM->ResultDead($user->handle_name, DeadReason::VEGA_LOVERS);
+	  DB::$ROOM->StoreDead($user->handle_name, DeadReason::VEGA_LOVERS);
 	  return;
 	}
       }

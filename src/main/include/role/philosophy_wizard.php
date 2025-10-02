@@ -15,8 +15,13 @@ class Role_philosophy_wizard extends Role_wizard {
 
   protected function GetWizardList() {
     return [
-      'alchemy_pharmacist', 'cure_pharmacist', 'miasma_jealousy', 'miasma_mad', 'critical_mad',
-      'sweet_cupid', 'corpse_courier_mad'
+      'alchemy_pharmacist',
+      'cure_pharmacist',
+      'miasma_jealousy',
+      'miasma_mad',
+      'critical_mad',
+      'sweet_cupid',
+      'corpse_courier_mad'
     ];
   }
 }

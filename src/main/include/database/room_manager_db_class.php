@@ -44,7 +44,7 @@ final class RoomManagerDB {
 
   //現在の稼動数を取得
   public static function CountActive() {
-    $query =self:: GetQuery(['room_no']);
+    $query = self:: GetQuery(['room_no']);
 
     DB::Prepare($query->Build(), self::GetStatus());
     return DB::Count();

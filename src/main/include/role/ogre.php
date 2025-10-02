@@ -9,22 +9,25 @@
   ・暗殺反射確率：30%
 */
 class Role_ogre extends Role {
-  public $action      = VoteAction::OGRE;
-  public $not_action  = VoteAction::NOT_OGRE;
-  public $action_date = RoleActionDate::AFTER;
+  public $action     = VoteAction::OGRE;
+  public $not_action = VoteAction::NOT_OGRE;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   public function OutputAction() {
     $str = RoleAbilityMessage::OGRE;
-    RoleHTML::OutputVote(VoteCSS::OGRE, $str, $this->action, $this->not_action);
+    RoleHTML::OutputVoteNight(VoteCSS::OGRE, $str, $this->action, $this->not_action);
   }
 
   protected function DisableNotAction() {
     return DB::$ROOM->IsEvent('force_assassin_do');
   }
 
-  final public function WolfEatResist() {
+  final public function ResistWolfEat() {
     $event = $this->GetOgreEvent();
-    $rate  = is_null($event) ? $this->GetOgreWolfEatResistRate() : $event;
+    $rate  = is_null($event) ? $this->GetOgreResistWolfEatRate() : $event;
     //Text::p($rate, '◆Resist Rate [ogre]');
     return Lottery::Percent($rate);
   }
@@ -41,7 +44,7 @@ class Role_ogre extends Role {
   }
 
   //鬼陣営人狼襲撃無効確率取得
-  protected function GetOgreWolfEatResistRate() {
+  protected function GetOgreResistWolfEatRate() {
     return 30;
   }
 
@@ -152,7 +155,9 @@ class Role_ogre extends Role {
 
   //鬼陣営勝敗判定 (敗北確定生存者)
   final protected function IsOgreLoseSurvive() {
-    if ($this->IgnoreOgreLoseSurvive()) return false;
+    if ($this->IgnoreOgreLoseSurvive()) {
+      return false;
+    }
 
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsLive() && $this->RequireOgreWinDead($user)) {
@@ -174,7 +179,9 @@ class Role_ogre extends Role {
 
   //鬼陣営勝敗判定 (敗北確定全滅者)
   final protected function IsOgreLoseAllDead() {
-    if ($this->IgnoreOgreLoseAllDead()) return false;
+    if ($this->IgnoreOgreLoseAllDead()) {
+      return false;
+    }
 
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsLive() && $this->RequireOgreWinSurvive($user)) {

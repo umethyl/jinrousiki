@@ -7,19 +7,19 @@
 */
 RoleLoader::LoadFile('guard');
 class Role_grave_guard extends Role_guard {
-  protected function IgnoreDeadVoteIconPath() {
+  protected function FixLiveVoteNightIconPath() {
     return true;
   }
 
-  protected function IsVoteCheckboxLive($live) {
+  protected function IsVoteNightCheckboxLive($live) {
     return true;
   }
 
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return true;
   }
 
-  public function IgnoreGuard(User $user) {
+  public function GuardFailed(User $user) {
     return DB::$USER->IsVirtualLive($user->id) && Lottery::Percent(70);
   }
 

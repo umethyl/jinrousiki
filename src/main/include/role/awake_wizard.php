@@ -31,8 +31,10 @@ class Role_awake_wizard extends Role_wizard {
     }
   }
 
-  public function WolfEatResist() {
-    if (! $this->IsActorActive()) return false;
+  public function ResistWolfEat() {
+    if (false === $this->IsActorActive()) {
+      return false;
+    }
 
     $this->GetActor()->LostAbility();
     return true;

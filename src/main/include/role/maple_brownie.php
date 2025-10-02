@@ -11,16 +11,18 @@ class Role_maple_brownie extends Role {
 
   public function VoteKillReaction() {
     foreach ($this->GetStackKey() as $uname) {
-      $flag = $this->IsVoted($uname);
-      foreach ($this->GetVotedUname($uname) as $voted_uname) {
-	$user = DB::$USER->ByRealUname($voted_uname);
-	if ($user->IsDead(true) || RoleUser::IsAvoid($user)) continue;
+      $flag = $this->IsVoteKill($uname);
+      foreach ($this->GetVotePollList($uname) as $target_uname) {
+	$user = DB::$USER->ByRealUname($target_uname);
+	if ($user->IsDead(true) || RoleUser::IsAvoid($user)) {
+	  continue;
+	}
 
 	if ($user->IsWinCamp(Camp::HUMAN) && Lottery::Percent(30)) {
 	  $user->AddRole('critical_luck');
 	}
 
-	if ($flag && Lottery::Percent(30)) {
+	if (true === $flag && Lottery::Percent(30)) {
 	  $user->AddDoom(1, 'frostbite');
 	}
       }

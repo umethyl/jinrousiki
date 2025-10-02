@@ -8,7 +8,7 @@
 */
 RoleLoader::LoadFile('wolf');
 class Role_honey_wolf extends Role_wolf {
-  protected function FoxEatAction(User $user) {
+  protected function WolfEatFoxAction(User $user) {
     $this->Suicide();
   }
 
@@ -20,7 +20,9 @@ class Role_honey_wolf extends Role_wolf {
   //自決処理
   private function Suicide() {
     $user = $this->GetWolfVoter();
-    if ($user->IsRole('lovers') || DB::$USER->CountLiveWolf() < 2) return;
+    if ($user->IsRole('lovers') || DB::$USER->CountLiveWolf() < 2) {
+      return;
+    }
     DB::$USER->Kill($user->id, DeadReason::SUICIDE);
   }
 }

@@ -34,7 +34,7 @@ final class StepVoteTestController extends JinrouController {
     #DB::$USER->ByID(9)->live = UserLive::LIVE;
     DB::LoadSelf(18);
     foreach (DB::$USER->Get() as $user) {
-      if (! isset($user->target_no)) {
+      if (false === isset($user->target_no)) {
 	$user->target_no = 0;
       }
     }

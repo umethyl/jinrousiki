@@ -9,8 +9,9 @@ class Event_frostbite extends Event {
     $stack = [];
     foreach (RoleManager::Stack()->Get(VoteDayElement::USER_LIST) as $id => $uname) {
       $user = DB::$USER->ByID($id);
-      if ($user->IsLive(true) && ! RoleUser::IsAvoid($user, true) &&
-	  ! $user->IsDoomRole($this->name)) {
+      if ($user->IsLive(true) &&
+	  false === RoleUser::IsAvoid($user, true) &&
+	  false === $user->IsDoomRole($this->name)) {
 	$stack[] = $user->id;
       }
     }

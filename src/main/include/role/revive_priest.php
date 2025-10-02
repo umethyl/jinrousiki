@@ -12,10 +12,14 @@ class Role_revive_priest extends Role_priest {
   }
 
   protected function IgnoreSetPriest() {
-    if (DB::$ROOM->IsOpenCast()) return true;
+    if (DB::$ROOM->IsOpenCast()) {
+      return true;
+    }
 
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
-      if ($user->IsActive()) return false;
+      if ($user->IsActive()) {
+	return false;
+      }
     }
     return true;
   }
@@ -33,7 +37,9 @@ class Role_revive_priest extends Role_priest {
 
   protected function PriestAction() {
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
-      if ($user->IsDummyBoy() || ! $user->IsActive()) continue;
+      if ($user->IsDummyBoy() || false === $user->IsActive()) {
+	continue;
+      }
 
       if (RoleUser::IsContainLovers($user) || (DB::$ROOM->date > 3 && $user->IsLive(true))) {
 	$user->LostAbility();

@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('febris');
 class Role_frostbite extends Role_febris {
-  protected function GetResultFooter() {
+  protected function GetSuddenDeathResultFooter() {
     return $this->role . '_footer';
   }
 
@@ -15,7 +15,7 @@ class Role_frostbite extends Role_febris {
   }
 
   protected function IsSuddenDeath() {
-    return parent::IsSuddenDeath() && $this->CountVoted() == 0;
+    return parent::IsSuddenDeath() && $this->CountVotePollUser() == 0;
   }
 
   protected function GetSuddenDeathType() {

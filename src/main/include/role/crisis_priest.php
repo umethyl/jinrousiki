@@ -20,7 +20,7 @@ class Role_crisis_priest extends Role_priest {
   protected function PriestAction() {
     $data = $this->GetStack('priest');
     if (isset($data->crisis)) {
-      DB::$ROOM->ResultAbility($this->GetPriestResultType(), $data->crisis);
+      DB::$ROOM->StoreAbility($this->GetPriestResultType(), $data->crisis);
     }
   }
 }

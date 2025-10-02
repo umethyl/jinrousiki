@@ -10,13 +10,17 @@ class Role_protected extends Role {
     return true;
   }
 
-  public function WolfEatResist() {
-    if ($this->IgnoreSacrifice()) return false;
+  public function ResistWolfEat() {
+    if ($this->IgnoreSacrifice()) {
+      return false;
+    }
 
     $stack = [];
     foreach ($this->GetActor()->GetPartner($this->role) as $id) {
       $user = DB::$USER->ByID($id);
-      if ($this->IgnoreSacrificeTarget($user)) continue;
+      if ($this->IgnoreSacrificeTarget($user)) {
+	continue;
+      }
       $stack[] = $id;
     }
     return $this->Sacrifice($stack);
@@ -24,11 +28,16 @@ class Role_protected extends Role {
 
   //人狼襲撃得票カウンター (Mixin 用)
   public function WolfEatReaction() {
-    if ($this->IgnoreSacrifice()) return false;
+    if ($this->IgnoreSacrifice()) {
+      return false;
+    }
 
     $stack = [];
     foreach (DB::$USER->Get() as $user) {
-      if ($this->IgnoreSacrificeTarget($user)) continue;
+      if ($this->IgnoreSacrificeTarget($user)) {
+	continue;
+      }
+
       if ($this->CallParent('IsSacrifice', $user)) {
 	$stack[] = $user->id;
       }
@@ -41,20 +50,22 @@ class Role_protected extends Role {
     return false;
   }
 
-  //身代わり無効対象判定
-  private function IgnoreSacrificeTarget(User $user) {
-    return $user->IsDead(true) || RoleUser::IsAvoidLovers($user, true);
-  }
-
   //身代わり無効判定
   private function IgnoreSacrifice() {
     return DB::$ROOM->IsEvent('no_sacrifice');
   }
 
+  //身代わり無効対象判定
+  private function IgnoreSacrificeTarget(User $user) {
+    return $user->IsDead(true) || RoleUser::IsAvoidLovers($user, true);
+  }
+
   //身代わり処理
   private function Sacrifice(array $stack) {
     //Text::p($stack, sprintf('◆Sacrifice [%s]', $this->role));
-    if (count($stack) < 1) return false;
+    if (count($stack) < 1) {
+      return false;
+    }
 
     $id = Lottery::Get($stack);
     DB::$USER->Kill($id, DeadReason::SACRIFICE);

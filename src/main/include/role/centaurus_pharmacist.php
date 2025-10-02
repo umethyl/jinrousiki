@@ -10,7 +10,9 @@ class Role_centaurus_pharmacist extends Role_pharmacist {
 
   public function VoteKillAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($uname)) continue;
+      if ($this->IsVoteKill($uname)) {
+	continue;
+      }
 
       if ($this->DistinguishPoison(DB::$USER->ByRealUname($target_uname)) != 'nothing') {
 	DB::$USER->Kill(DB::$USER->UnameToNumber($uname), DeadReason::POISON_DEAD);

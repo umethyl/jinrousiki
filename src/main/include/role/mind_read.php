@@ -13,6 +13,6 @@ class Role_mind_read extends Role {
   public function IsMindRead() {
     return $this->GetTalkFlag('mind_read') &&
       $this->GetActor()->IsPartner($this->role, $this->GetViewer()->id) &&
-      ! $this->GetActor()->IsRole('unconscious');
+      false === $this->GetActor()->IsRole('unconscious');
   }
 }

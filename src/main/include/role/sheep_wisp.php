@@ -8,14 +8,14 @@
 RoleLoader::LoadFile('wisp');
 class Role_sheep_wisp extends Role_wisp {
   protected function IgnoreAbility() {
-    return ! $this->IsDoom();
+    return false === $this->IsDoom();
   }
 
   protected function IgnoreJammerMageResult(User $user) {
-    return ! $user->IsDoomRole($this->role);
+    return false === $user->IsDoomRole($this->role);
   }
 
   protected function GetWispRole($reverse) {
-    return $reverse ? 'wolf' : 'human';
+    return (true === $reverse) ? 'wolf' : 'human';
   }
 }

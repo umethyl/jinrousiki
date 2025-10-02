@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('copied');
 class Role_copied_teller extends Role_copied {
-  protected function GetResultDate() {
+  protected function GetCopiedResultDate() {
     return 4;
   }
 }

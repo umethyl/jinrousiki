@@ -11,7 +11,7 @@ RoleLoader::LoadFile('ogre');
 class Role_wise_ogre extends Role_ogre {
   public $mix_in = ['common'];
 
-  protected function GetOgreWolfEatResistRate() {
+  protected function GetOgreResistWolfEatRate() {
     return 40;
   }
 

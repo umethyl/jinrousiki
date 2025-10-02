@@ -8,7 +8,7 @@ class Role_chicken extends Role {
   //ショック死判定 (セット済み > 対象外 > 個別判定)
   final public function SuddenDeath() {
     $type = VoteDayElement::SUDDEN_DEATH;
-    if (! is_null($this->GetStack($type))) {
+    if (false === is_null($this->GetStack($type))) {
       return;
     } elseif ($this->CallParent('IgnoreSuddenDeath')) {
       return;
@@ -22,9 +22,14 @@ class Role_chicken extends Role {
     return false;
   }
 
+  //ショック死判定対象外判定 (憑依/回避)
+  final protected function IgnoreSuddenDeathAvoid() {
+    return false === $this->IsRealActor() || RoleUser::IsAvoidLovers($this->GetActor(), true);
+  }
+
   //ショック死セット判定
   protected function IsSuddenDeath() {
-    return $this->CountVoted() > 0;
+    return $this->CountVotePollUser() > 0;
   }
 
   //ショック死死因取得
@@ -33,13 +38,13 @@ class Role_chicken extends Role {
   }
 
   //投票先人数取得
-  final protected function CountVoteTarget() {
+  final protected function CountVoteKillTargetUser() {
     $stack = $this->GetStack(VoteDayElement::POLL_LIST);
-    return ArrayFilter::GetInt($stack, $this->GetVoteTargetUname());
+    return ArrayFilter::GetInt($stack, $this->GetVoteKillUname());
   }
 
   //得票人数取得
-  final protected function CountVoted() {
+  final protected function CountVotePollUser() {
     $stack = $this->GetStack(VoteDayElement::POLL_LIST);
     return ArrayFilter::GetInt($stack, $this->GetUname());
   }

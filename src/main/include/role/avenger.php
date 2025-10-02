@@ -21,7 +21,7 @@ class Role_avenger extends Role_valkyrja_duelist {
     return false;
   }
 
-  protected function IgnoreVoteCheckboxSelf() {
+  protected function DisableVoteNightCheckboxSelf() {
     return true;
   }
 
@@ -34,12 +34,10 @@ class Role_avenger extends Role_valkyrja_duelist {
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      $str  = $this->ValidateVoteNightTarget($user, $user->IsLive());
-      if (! is_null($str)) return $str;
+      $this->ValidateVoteNightTarget($user, $user->IsLive());
       $stack[$id] = $user;
     }
     $this->SetStack($stack, 'target_list');
-    return null;
   }
 
   public function Win($winner) {
@@ -49,7 +47,9 @@ class Role_avenger extends Role_valkyrja_duelist {
     $count = 0;
     foreach (DB::$USER->GetRoleUser($role) as $user) {
       if ($user->IsPartner($role, $id)) {
-	if ($user->IsLive()) return false;
+	if ($user->IsLive()) {
+	  return false;
+	}
 	$count++;
       }
     }

@@ -10,7 +10,7 @@ class Role_psycho_necromancer extends Role_necromancer {
   public $result = RoleAbility::PSYCHO_NECROMANCER;
 
   public function Necromancer(User $user, $flag) {
-    if ($flag) {
+    if (true === $flag) {
       return 'stolen';
     } elseif ($user->IsRoleGroup('copied')) {
       $result = 'mania';

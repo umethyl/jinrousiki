@@ -9,11 +9,15 @@ class Role_suspect extends Role {
   public $display_role = 'human';
 
   public function ConvertSay() {
-    if (! DB::$ROOM->IsDay() || DB::$ROOM->IsEvent('no_cute')) return false; //スキップ判定
+    if (! DB::$ROOM->IsDay() || DB::$ROOM->IsEvent('no_cute')) { //スキップ判定
+      return false;
+    }
 
     $rate = GameConfig::CUTE_WOLF_RATE * (DB::$ROOM->IsEvent('boost_cute') ? 5 : 1);
     //Text::p($rate, "◆Rate [{$this->role}]");
-    if (! Lottery::Percent($rate)) return false;
+    if (! Lottery::Percent($rate)) {
+      return false;
+    }
 
     if (RoleTalkMessage::CUTE_WOLF != '') {
       $str = RoleTalkMessage::CUTE_WOLF;

@@ -15,12 +15,10 @@ class Role_soul_vampire extends Role_vampire {
   }
 
   protected function InfectVampire(User $user) {
-    if (! RoleUser::IsAvoid($user)) {
-      $this->AddSuccess($user->id, RoleVoteSuccess::VAMPIRE_KILL);
-    }
+    $this->DelayInfectKill($user);
   }
 
   protected function InfectAction(User $user) {
-    DB::$ROOM->ResultAbility($this->result, $user->main_role, $user->GetName(), $this->GetID());
+    DB::$ROOM->StoreAbility($this->result, $user->main_role, $user->GetName(), $this->GetID());
   }
 }

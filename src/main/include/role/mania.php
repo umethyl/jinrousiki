@@ -6,12 +6,15 @@
   ・コピー役職：メイン役職
 */
 class Role_mania extends Role {
-  public $action      = VoteAction::MANIA;
-  public $result      = RoleAbility::MANIA;
-  public $action_date = RoleActionDate::FIRST;
+  public $action = VoteAction::MANIA;
+  public $result = RoleAbility::MANIA;
+
+  protected function GetActionDate() {
+    return RoleActionDate::FIRST;
+  }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::MANIA, RoleAbilityMessage::MANIA, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::MANIA, RoleAbilityMessage::MANIA, $this->action);
   }
 
   //コピー処理
@@ -39,7 +42,7 @@ class Role_mania extends Role {
     $actor = $this->GetActor();
     $actor->ReplaceRole($this->role, $role);
     $actor->AddRole($this->GetCopiedRole());
-    DB::$ROOM->ResultAbility($this->result, $role, $user->handle_name, $actor->id);
+    DB::$ROOM->StoreAbility($this->result, $role, $user->handle_name, $actor->id);
   }
 
   //コピー変化後役職取得

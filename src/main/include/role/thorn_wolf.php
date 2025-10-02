@@ -9,7 +9,7 @@ class Role_thorn_wolf extends Role_wolf {
   public function GuardCounter() {
     foreach (RoleManager::Stack()->GetKeyList(RoleVoteSuccess::GUARD) as $id) {
       $user = DB::$USER->ByID($id);
-      if (! RoleUser::IsAvoid($user)) {
+      if (false === RoleUser::IsAvoid($user)) {
 	$user->AddRole('thorn_cross');
       }
     }

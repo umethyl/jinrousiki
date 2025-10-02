@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('chicken');
 class Role_thorn_cross extends Role_chicken {
   protected function IsSuddenDeath() {
-    foreach ($this->GetVotedUname() as $uname) {
+    foreach ($this->GetVotePollList() as $uname) {
       if (DB::$USER->ByRealUname($uname)->IsRole('thorn_wolf') && Lottery::Percent(80)) {
 	return true;
       }

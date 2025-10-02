@@ -36,7 +36,7 @@ class Role_attempt_necromancer extends Role_necromancer {
     ksort($str_stack);
 
     foreach ($str_stack as $target) {
-      DB::$ROOM->ResultAbility($this->result, 'attempt', $target);
+      DB::$ROOM->StoreAbility($this->result, 'attempt', $target);
     }
   }
 }

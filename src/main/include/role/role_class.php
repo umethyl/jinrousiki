@@ -10,7 +10,9 @@ class RoleLoader extends LoadManager {
 
   //個別クラスロード (Mixin 用)
   public static function LoadMix($name) {
-    if (! self::LoadFile($name)) return null;
+    if (false === self::LoadFile($name)) {
+      return null;
+    }
     $class = self::CLASS_PREFIX . $name;
     return new $class();
   }
@@ -19,14 +21,15 @@ class RoleLoader extends LoadManager {
   //フィルタロード
   public static function LoadType($type, $shift = false, $virtual = false) {
     $stack = [];
-    $virtual |= $type == self::MAIN;
+    $virtual |= ($type == self::MAIN);
     foreach (self::GetList($type) as $role) {
-      if (! ($virtual ? self::$actor->IsRole(true, $role) : self::$actor->IsRole($role))) continue;
-      $stack[] = $role;
-      self::Load($role);
+      if ($virtual ? self::$actor->IsRole(true, $role) : self::$actor->IsRole($role)) {
+	$stack[] = $role;
+	self::Load($role);
+      }
     }
     $filter = self::GetFilter($stack);
-    return $shift ? array_shift($filter) : $filter;
+    return (true === $shift) ? array_shift($filter) : $filter;
   }
 
   //個別クラス取得 ($actor 参照型)
@@ -103,16 +106,20 @@ abstract class Role {
 
   //-- システム関数 --//
   public function __construct() {
-    $this->role = Text::Cut(get_class($this), RoleLoader::CLASS_PREFIX);
+    $this->role = Text::CutPop(get_class($this), RoleLoader::CLASS_PREFIX);
     //Text::p(get_class_vars(get_class($this)), "◆{$this->role}");
   }
 
   //Mixin 呼び出し
   public function __call($name, $args) {
-    if (! isset($this->mix_in)) return $this->ReturnError($name, 'Mixin');
+    if (false === isset($this->mix_in)) {
+      return $this->ReturnError($name, 'Mixin');
+    }
 
     $filter = $this->GetMethod($name);
-    if (is_null($filter)) return $this->ReturnError($name, 'Method');
+    if (is_null($filter)) {
+      return $this->ReturnError($name, 'Method');
+    }
 
     return call_user_func_array([$filter, $name], $args);
   }
@@ -170,7 +177,7 @@ abstract class Role {
 
   //Mixin 登録
   final public function AddMix($name) {
-    if (! isset($this->mix_in_list[$name])) {
+    if (false === isset($this->mix_in_list[$name])) {
       //Text::p($name, "◆{$this->role}");
       $this->mix_in_list[$name] = $this->LoadMix($name);
     }
@@ -203,7 +210,9 @@ abstract class Role {
   //Mixin 親クラス取得
   final protected function GetParent($method) {
     $class = RoleLoader::CLASS_PREFIX . $this->role;
-    if ($class == get_class($this)) return $this;
+    if ($class == get_class($this)) {
+      return $this;
+    }
     return method_exists($class, $method) ? RoleLoader::Load($this->role) : $this;
   }
 
@@ -215,8 +224,10 @@ abstract class Role {
   }
 
   //投票用 Mixin 存在判定
-  final protected function ExistVoteMix() {
-    if (! isset($this->mix_in) || ! isset($this->mix_in['vote'])) return false;
+  final protected function ExistsVoteMix() {
+    if (false === isset($this->mix_in) || false === isset($this->mix_in['vote'])) {
+      return false;
+    }
     $this->AddMix($this->mix_in['vote']);
     return true;
   }
@@ -267,7 +278,9 @@ abstract class Role {
   final protected function InitStack($name = null) {
     $data  = is_null($name) ? $this->role : $name;
     $stack = RoleManager::Stack()->Get($data);
-    if (! isset($stack)) RoleManager::Stack()->Init($data);
+    if (false === isset($stack)) {
+      RoleManager::Stack()->Init($data);
+    }
   }
 
   //データ追加
@@ -312,16 +325,16 @@ abstract class Role {
   //-- 投票能力判定 --//
   //投票能力判定
   final public function IsVote() {
-    if ($this->ExistVoteMix()) {
+    if ($this->ExistsVoteMix()) {
       return $this->CallVoteMix(__FUNCTION__);
     }
-    return ! is_null($this->action) && $this->IsVoteDate() && $this->IsAddVote();
+
+    return false === is_null($this->action) && $this->IsVoteDate() && $this->IsAddVote();
   }
 
   //投票可能日判定
   final protected function IsVoteDate() {
-    $type = isset($this->action_date) ? $this->action_date : null;
-    switch ($type) {
+    switch ($this->GetActionDate()) {
     case RoleActionDate::FIRST:
       return DB::$ROOM->IsDate(1);
 
@@ -333,6 +346,11 @@ abstract class Role {
     }
   }
 
+  //投票可能日タイプ取得
+  protected function GetActionDate() {
+    return null;
+  }
+
   //投票能力追加判定
   protected function IsAddVote() {
     return true;
@@ -341,7 +359,9 @@ abstract class Role {
   //-- 役職情報表示 --//
   //役職情報表示
   final public function OutputAbility() {
-    if ($this->IgnoreAbility()) return;
+    if ($this->IgnoreAbility()) {
+      return;
+    }
 
     $this->OutputImage();
     $this->OutputPartner();
@@ -358,7 +378,10 @@ abstract class Role {
 
   //役職画像表示
   final protected function OutputImage() {
-    if ($this->IgnoreImage()) return;
+    if ($this->IgnoreImage()) {
+      return;
+    }
+
     ImageManager::Role()->Output($this->GetImage());
   }
 
@@ -374,7 +397,9 @@ abstract class Role {
 
   //仲間情報表示
   final protected function OutputPartner() {
-    if ($this->IgnorePartner()) return;
+    if ($this->IgnorePartner()) {
+      return;
+    }
 
     foreach ($this->GetPartner() as $type => $list) {
       $this->OutputPartnerByType($list, $type);
@@ -402,7 +427,9 @@ abstract class Role {
 
   //能力結果表示
   final protected function OutputResult() {
-    if ($this->IgnoreResult()) return;
+    if ($this->IgnoreResult()) {
+      return;
+    }
 
     if (isset($this->result)) {
       RoleHTML::OutputResult($this->result);
@@ -420,7 +447,7 @@ abstract class Role {
 
   //投票能力表示
   public function OutputAction() {
-    if ($this->ExistVoteMix()) {
+    if ($this->ExistsVoteMix()) {
       return $this->CallVoteMix(__FUNCTION__);
     }
   }
@@ -445,7 +472,9 @@ abstract class Role {
   //生存仲間判定
   final protected function IsLivePartner() {
     foreach ($this->GetActor()->GetPartner($this->role) as $id) {
-      if (DB::$USER->ByID($id)->IsLive(true)) return true;
+      if (DB::$USER->ByID($id)->IsLive(true)) {
+	return true;
+      }
     }
     return false;
   }
@@ -490,41 +519,41 @@ abstract class Role {
     return $this->GetStack(VoteDayElement::VOTE_KILL);
   }
 
-  //処刑実行判定
-  final protected function IsVoteKill() {
-    return ! is_null($this->GetVoteKill());
+  //処刑者決定済判定
+  final protected function DetermineVoteKill() {
+    return false === is_null($this->GetVoteKill());
   }
 
   //処刑者判定
-  final protected function IsVoted($uname = null) {
+  final protected function IsVoteKill($uname = null) {
     return $this->GetVoteKill() == $this->GetUname($uname);
   }
 
-  //得票者名取得
-  final protected function GetVotedUname($uname = null) {
+  //処刑得票ユーザー名リスト取得
+  final protected function GetVotePollList($uname = null) {
     return $this->GetStackKey(VoteDayElement::TARGET_LIST, $this->GetUname($uname));
   }
 
-  //投票先ユーザ名取得
-  final protected function GetVoteTargetUname($uname = null) {
+  //処刑投票先ユーザ名取得
+  final protected function GetVoteKillUname($uname = null) {
     $stack = $this->GetStack(VoteDayElement::TARGET_LIST);
     return $stack[$this->GetUname($uname)];
   }
 
-  //投票者ユーザ取得
-  final protected function GetVoteUser($uname = null) {
-    return DB::$USER->ByRealUname($this->GetVoteTargetUname($uname));
+  //処刑投票先ユーザ取得
+  final protected function GetVoteKillUser($uname = null) {
+    return DB::$USER->ByRealUname($this->GetVoteKillUname($uname));
   }
 
-  //-- 投票データ表示 (夜) --//
-  //投票データセット (夜)
+  //-- 夜投票データ表示 --//
+  //夜投票データセット
   final public function SetVoteNight() {
-    if ($this->ExistVoteMix()) {
+    if ($this->ExistsVoteMix()) {
       return $this->CallVoteMix(__FUNCTION__);
     }
 
-    if (! $this->IsVote()) {
-      VoteHTML::OutputResult($this->GetDisabledVoteMessage());
+    if (false === $this->IsVote()) {
+      VoteHTML::OutputResult($this->GetDisabledVoteNightMessage());
     }
 
     foreach (['', 'not_', 'add_'] as $header) {
@@ -541,12 +570,12 @@ abstract class Role {
     $this->SetVoteNightFilter();
   }
 
-  //投票無効メッセージ取得
-  final protected function GetDisabledVoteMessage() {
+  //夜投票無効メッセージ取得
+  final protected function GetDisabledVoteNightMessage() {
     if (is_null($this->action)) {
       return VoteRoleMessage::NO_ACTION;
-    } elseif (! $this->IsVoteDate()) {
-      switch ($this->action_date) {
+    } elseif (false === $this->IsVoteDate()) {
+      switch ($this->GetActionDate()) {
       case RoleActionDate::FIRST:
 	return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
 
@@ -556,15 +585,15 @@ abstract class Role {
       default: //ここに来たらロジックエラー
 	return VoteHTML::OutputError(VoteMessage::INVALID_COMMAND);
       }
-    } elseif (! $this->IsAddVote()) {
-      return $this->GetDisabledAddVoteMessage();
+    } elseif (false === $this->IsAddVote()) {
+      return $this->GetDisabledAddVoteNightMessage();
     } else { //ここに来たらロジックエラー
       return VoteHTML::OutputError(VoteMessage::INVALID_COMMAND);
     }
   }
 
-  //投票無効メッセージ取得 (追加判定)
-  protected function GetDisabledAddVoteMessage() {
+  //夜投票無効メッセージ取得 (追加判定)
+  protected function GetDisabledAddVoteNightMessage() {
     return null;
   }
 
@@ -578,121 +607,123 @@ abstract class Role {
     return false;
   }
 
-  //投票データセット (夜) 追加処理
+  //夜投票データセット追加処理
   protected function SetVoteNightFilter() {}
 
-  //-- 投票画面表示 (夜) --//
-  //投票対象ユーザ取得
-  final public function GetVoteTargetUser() {
-    return $this->GetVoteTargetUserFilter(DB::$USER->Get());
+  //-- 夜投票画面表示 --//
+  //夜投票対象ユーザ取得
+  final public function GetVoteNightTargetUser() {
+    return $this->GetVoteNightTargetUserFilter(DB::$USER->Get());
   }
 
-  //投票対象ユーザフィルタ
-  protected function GetVoteTargetUserFilter(array $list) {
+  //夜投票対象ユーザフィルタ
+  protected function GetVoteNightTargetUserFilter(array $list) {
     return $list;
   }
 
-  //投票アイコンパス取得
-  final public function GetVoteIconPath(User $user, $live) {
-    if ($this->ExistVoteMix()) {
+  //夜投票アイコンパス取得
+  final public function GetVoteNightIconPath(User $user, $live) {
+    if ($this->ExistsVoteMix()) {
       $name = __FUNCTION__;
       return $this->GetVoteMix()->$name($user, $live);
     }
 
-    if ($live || $this->IgnoreDeadVoteIconPath()) {
-      $path = $this->GetPartnerVoteIconPath($user);
+    if (true === $live || $this->FixLiveVoteNightIconPath()) {
+      $path = $this->GetPartnerVoteNightIconPath($user);
       return is_null($path) ? Icon::GetFile($user->icon_filename) : $path;
     } else {
       return Icon::GetDead();
     }
   }
 
-  //投票アイコンパス生死判定スキップ判定
-  protected function IgnoreDeadVoteIconPath() {
+  //夜投票アイコンパス生存固定判定
+  protected function FixLiveVoteNightIconPath() {
     return false;
   }
 
-  //投票アイコンパス取得 (仲間)
-  protected function GetPartnerVoteIconPath(User $user) {
+  //夜投票アイコンパス取得 (仲間)
+  protected function GetPartnerVoteNightIconPath(User $user) {
     return null;
   }
 
-  //投票のチェックボックス取得
-  final public function GetVoteCheckbox(User $user, $id, $live) {
-    if ($this->ExistVoteMix()) {
+  //夜投票チェックボックス取得
+  final public function GetVoteNightCheckbox(User $user, $id, $live) {
+    if ($this->ExistsVoteMix()) {
       $name = __FUNCTION__;
       return $this->GetVoteMix()->$name($user, $id, $live);
     }
 
-    if (false === $this->IsVoteCheckbox($user, $live)) {
+    if ($this->IsVoteNightCheckbox($user, $live)) {
+      $type    = $this->GetVoteNightCheckboxType();
+      $checked = $this->CheckedVoteNightCheckbox($user);
+      return RoleHTML::GenerateVoteNightCheckbox($type, $id, $checked);
+    } else {
       return '';
     }
-    $checked = HTML::GenerateChecked($this->IsVoteCheckboxChecked($user));
-    $str     = sprintf(' id="%d" value="%d"%s>', $id, $id, $checked);
-    $type    = $this->GetVoteCheckboxType();
-    return Text::LineFeed(RoleHTML::GetVoteCheckboxHeader($type) . $str);
   }
 
-  //投票対象判定 (生死 / 本人 / 身代わり君 / 追加判定)
-  final protected function IsVoteCheckbox(User $user, $live) {
-    $self   = $this->IgnoreVoteCheckboxSelf() && $this->IsActor($user);
-    $dummy  = $this->IgnoreVoteCheckboxDummyBoy() && $user->IsDummyBoy();
-    $filter = $this->IsVoteCheckboxFilter($user);
-    return $this->IsVoteCheckboxLive($live) && ! $self && ! $dummy && $filter;
+  //夜投票対象判定 (生死 / 本人 / 身代わり君 / 追加判定)
+  final protected function IsVoteNightCheckbox(User $user, $live) {
+    $is_live = $this->IsVoteNightCheckboxLive($live);
+    $self    = $this->DisableVoteNightCheckboxSelf() && $this->IsActor($user);
+    $dummy   = $this->DisableVoteNightCheckboxDummyBoy() && $user->IsDummyBoy();
+    $filter  = $this->IsVoteNightCheckboxFilter($user);
+    return true === $is_live && false === $self && false === $dummy && true === $filter;
   }
 
-  //投票対象判定 (生死)
-  protected function IsVoteCheckboxLive($live) {
+  //夜投票対象判定 (生死)
+  protected function IsVoteNightCheckboxLive($live) {
     return $live;
   }
 
-  //投票対象判定 (本人除外)
-  protected function IgnoreVoteCheckboxSelf() {
+  //夜投票対象判定 (本人除外)
+  protected function DisableVoteNightCheckboxSelf() {
     return true;
   }
 
-  //投票対象判定 (身代わり君除外)
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  //夜投票対象判定 (身代わり君除外)
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return false;
   }
 
-  //投票対象判定 (追加)
-  protected function IsVoteCheckboxFilter(User $user) {
+  //夜投票対象判定 (追加)
+  protected function IsVoteNightCheckboxFilter(User $user) {
     return true;
   }
 
-  //投票対象自動チェック判定
-  protected function IsVoteCheckboxChecked(User $user) {
-    return false;
-  }
-
-  //投票のチェックボックス種別取得
-  protected function GetVoteCheckboxType() {
+  //夜投票チェックボックス種別取得
+  protected function GetVoteNightCheckboxType() {
     return OptionFormType::RADIO;
   }
 
+  //夜投票対象自動チェック判定
+  protected function CheckedVoteNightCheckbox(User $user) {
+    return false;
+  }
+
   //-- 投票処理 (夜) --//
-  //未投票チェック
-  final public function IsFinishVote(array $list) {
-    if ($this->ExistVoteMix()) {
+  //夜投票完了判定
+  final public function CompletedVoteNight(array $list) {
+    if ($this->ExistsVoteMix()) {
       $name = __FUNCTION__;
       return $this->GetVoteMix()->$name($list);
     }
 
-    return ! $this->IsVote() || $this->IgnoreFinishVote() || $this->ExistsAction($list);
+    return false === $this->IsVote() || $this->IgnoreCompletedVoteNight() ||
+      $this->ExistsAction($list);
   }
 
-  //未投票チェックスキップ判定
-  protected function IgnoreFinishVote() {
+  //夜投票完了判定スキップ判定
+  protected function IgnoreCompletedVoteNight() {
     return false;
   }
 
-  //投票コマンド存在判定
+  //夜投票コマンド存在判定
   protected function ExistsAction(array $list) {
     return $this->ExistsSelfAction($list);
   }
 
-  //個別投票コマンド存在判定
+  //個別夜投票コマンド存在判定
   final protected function ExistsSelfAction(array $list) {
     if ($this->DisableNotAction()) {
       unset($list[$this->not_action]);
@@ -701,102 +732,93 @@ abstract class Role {
       unset($list[$this->add_action]);
     }
     $id = $this->GetID();
-    return isset($list[$this->action][$id]) ||
+    return ArrayFilter::IsAssocKey($list, $this->action, $id) ||
       ArrayFilter::IsIncludeKey($list, $this->not_action, $id) ||
       ArrayFilter::IsIncludeKey($list, $this->add_action, $id);
   }
 
-  //投票対象者データセット (夜)
+  //夜投票対象者データセット
   final public function SetVoteNightTarget() {
-    if ($this->ExistVoteMix()) {
+    if ($this->ExistsVoteMix()) {
       return $this->CallVoteMix(__FUNCTION__);
     }
 
     $this->SetStack(RQ::Get()->situation, 'message');
-    $str = $this->VoteNight();
-    if (false === is_null($str)) {
-      VoteHTML::OutputResult(Text::Join(VoteRoleMessage::INVALID_TARGET, $str));
+    try {
+      $stack = RQ::Get()->target_no;
+      if (is_array($stack)) {
+	$this->ValidateVoteNightTargetList($stack);
+	$this->SetVoteNightTargetList($stack);
+	$this->CallParent('SetVoteNightTargetListAction');
+      } else {
+	$user = DB::$USER->ByID($stack);
+	$live = DB::$USER->IsVirtualLive($user->id); //生死判定は仮想を使う
+	$this->ValidateVoteNightTarget($user, $live);
+	
+	//憑依者がすでに死んでいたら元の投票先を見る (死者投票型対応)
+	$real = DB::$USER->ByReal($user->id);
+	$target = $real->IsLive() ? $real : $user;
+	$this->SetStack($target->id, RequestDataVote::TARGET);
+	$this->SetStack($user->handle_name, 'target_handle');
+      }
+    } catch (Exception $e) {
+      VoteHTML::OutputResult(Text::Join(VoteRoleMessage::INVALID_TARGET, $e->getMessage()));
     }
   }
 
-  //投票処理 (夜)
-  final protected function VoteNight() {
-    $stack = RQ::Get()->target_no;
-    if (is_array($stack)) {
-      $str = $this->ValidateVoteNightTargetList($stack);
-      if (! is_null($str)) return $str;
-
-      $str = $this->SetVoteNightTargetList($stack);
-      if (! is_null($str)) return $str;
-
-      $this->CallParent('VoteNightAction');
-    } else {
-      $user = DB::$USER->ByID($stack);
-      $live = DB::$USER->IsVirtualLive($user->id); //生死判定は仮想を使う
-      $str  = $this->ValidateVoteNightTarget($user, $live);
-      if (! is_null($str)) return $str;
-
-      //憑依者がすでに死んでいたら元の投票先を見る (死者投票型対応)
-      $real = DB::$USER->ByReal($user->id);
-      $target = $real->IsLive() ? $real : $user;
-      $this->SetStack($target->id, RequestDataVote::TARGET);
-      $this->SetStack($user->handle_name, 'target_handle');
-    }
-    return null;
-  }
-
-  //投票対象者チェック (複合投票型/Mixin あり)
-  public function ValidateVoteNightTargetList(array $list) {
+  //複合投票型夜投票無効判定
+  protected function ValidateVoteNightTargetList(array $list) {
     $count = $this->GetVoteNightNeedCount();
     if (count($list) != $count) {
-      return sprintf(VoteRoleMessage::INVALID_TARGET_COUNT, $count);
-    } else {
-      return null;
+      $str = sprintf(VoteRoleMessage::INVALID_TARGET_COUNT, $count);
+      throw new UnexpectedValueException($str);
     }
   }
 
-  //所要投票人数取得
+  //夜投票所要人数取得
   protected function GetVoteNightNeedCount() {
     return 2;
   }
 
-  //投票対象者セット (夜/複合投票型)
+  //複合投票型夜投票対象者セット
   public function SetVoteNightTargetList(array $list) {
     return null;
   }
 
-  //投票追加処理 (夜)
-  public function VoteNightAction() {}
+  //複合型夜投票対象者データセット追加処理
+  public function SetVoteNightTargetListAction() {}
 
-  //投票無効判定 (夜)
+  //夜投票無効判定
   final public function ValidateVoteNightTarget(User $user, $live) {
     if ($this->IsInvalidVoteNightTargetLive($live)) {
-      return $live ? VoteRoleMessage::TARGET_ALIVE : VoteRoleMessage::TARGET_DEAD;
-    } elseif ($this->IgnoreVoteCheckboxSelf() && $this->IsActor($user)) {
-      return VoteRoleMessage::TARGET_MYSELF;
-    } elseif ($this->IgnoreVoteCheckboxDummyBoy() && $user->IsDummyBoy()) {
-      return VoteRoleMessage::TARGET_DUMMY_BOY;
+      if (true === $live) {
+	throw new UnexpectedValueException(VoteRoleMessage::TARGET_ALIVE);
+      } else {
+	throw new UnexpectedValueException(VoteRoleMessage::TARGET_DEAD);
+      }
+    } elseif ($this->DisableVoteNightCheckboxSelf() && $this->IsActor($user)) {
+      throw new UnexpectedValueException(VoteRoleMessage::TARGET_MYSELF);
+    } elseif ($this->DisableVoteNightCheckboxDummyBoy() && $user->IsDummyBoy()) {
+      throw new UnexpectedValueException(VoteRoleMessage::TARGET_DUMMY_BOY);
     } else {
-      return $this->ValidateVoteNightTargetFilter($user);
+      $this->ValidateVoteNightTargetFilter($user);
     }
   }
 
-  //投票無効生死判定
+  //夜投票無効生死判定
   protected function IsInvalidVoteNightTargetLive($live) {
-    return ! $this->IsVoteCheckboxLive($live);
+    return false === $this->IsVoteNightCheckboxLive($live);
   }
 
-  //投票無効追加判定
-  protected function ValidateVoteNightTargetFilter(User $user) {
-    return null;
-  }
+  //夜投票無効追加判定
+  protected function ValidateVoteNightTargetFilter(User $user) {}
 
   //-- 投票集計処理 (夜) --//
   //成功データ追加
-  final protected function AddSuccess($target, $data = null, $null = false) {
+  final protected function AddSuccess($target, $data = null, $set_null = false) {
     $name  = is_null($data) ? $this->role : $data;
     $stack = RoleManager::Stack()->Get($name);
-    $stack[$target] = $null ? null : true;
+    $stack[$target] = (true === $set_null) ? null : true;
     RoleManager::Stack()->Set($name, $stack);
   }
 
@@ -836,7 +858,9 @@ abstract class Role {
 class RoleTalk {
   //location 判定
   public static function GetLocation(User $user, User $real) {
-    if (DB::$ROOM->IsEvent('blind_talk_night')) return TalkLocation::MONOLOGUE; //天候：風雨
+    if (DB::$ROOM->IsEvent('blind_talk_night')) { //天候：風雨
+      return TalkLocation::MONOLOGUE;
+    }
 
     if (RoleUser::IsCommon($user)) { //共有者
       return TalkLocation::COMMON;
@@ -855,7 +879,9 @@ class RoleTalk {
 
   //置換処理
   public static function Convert(&$say) {
-    if ($say == '') return null; //リロード時なら処理スキップ
+    if ($say == '') { //リロード時なら処理スキップ
+      return null;
+    }
 
     //文字数・行数チェック
     if (Text::Over($say, GameConfig::LIMIT_SAY) ||
@@ -878,16 +904,23 @@ class RoleTalk {
     RoleManager::Stack()->Set('say', $say);
     do { //発言置換処理
       foreach (RoleLoader::LoadUser($virtual, 'say_convert_virtual') as $filter) {
-	if ($filter->ConvertSay()) break 2;
+	if ($filter->ConvertSay()) {
+	  break 2;
+	}
       }
 
       foreach (RoleLoader::LoadUser(DB::$SELF, 'say_convert') as $filter) {
-	if ($filter->ConvertSay()) break 2;
+	if ($filter->ConvertSay()) {
+	  break 2;
+	}
       }
     } while (false);
 
     foreach ($virtual->GetPartner('bad_status', true) as $id => $date) { //妖精の処理
-      if ($date != DB::$ROOM->date) continue;
+      if ($date != DB::$ROOM->date) {
+	continue;
+      }
+
       foreach (RoleLoader::LoadUser(DB::$USER->ByID($id), 'say_bad_status') as $filter) {
 	$filter->ConvertSay();
       }

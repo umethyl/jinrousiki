@@ -6,7 +6,7 @@
 */
 RoleLoader::LoadFile('mania');
 class Role_unknown_mania extends Role_mania {
-  protected function IgnoreVoteCheckboxDummyBoy() {
+  protected function DisableVoteNightCheckboxDummyBoy() {
     return true;
   }
 

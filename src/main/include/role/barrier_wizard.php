@@ -16,15 +16,14 @@ class Role_barrier_wizard extends Role_wizard {
     return [RoleAbility::GUARD];
   }
 
-  protected function GetVoteCheckboxType() {
+  protected function GetVoteNightCheckboxType() {
     return OptionFormType::CHECKBOX;
   }
 
-  public function ValidateVoteNightTargetList(array $list) {
+  protected function ValidateVoteNightTargetList(array $list) {
     if (count($list) < 1 || 4 < count($list)) {
-      return VoteRoleMessage::INVALID_TARGET_RANGE;
+      throw new UnexpectedValueException(VoteRoleMessage::INVALID_TARGET_RANGE);
     }
-    return null;
   }
 
   public function SetVoteNightTargetList(array $list) {
@@ -33,8 +32,7 @@ class Role_barrier_wizard extends Role_wizard {
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
       $live = DB::$USER->IsVirtualLive($user->id); //生死判定は仮想を使う
-      $str  = $this->ValidateVoteNightTarget($user, $live);
-      if (! is_null($str)) return $str;
+      $this->ValidateVoteNightTarget($user, $live);
       $target_stack[$id] = DB::$USER->ByReal($id)->id;
       $handle_stack[$id] = $user->handle_name;
     }
@@ -43,7 +41,6 @@ class Role_barrier_wizard extends Role_wizard {
     ksort($handle_stack);
     $this->SetStack(ArrayFilter::Concat($target_stack), RequestDataVote::TARGET);
     $this->SetStack(ArrayFilter::Concat($handle_stack), 'target_handle');
-    return null;
   }
 
   protected function GetWizardList() {
@@ -59,14 +56,18 @@ class Role_barrier_wizard extends Role_wizard {
     foreach (Text::Parse($list) as $id) {
       $user = DB::$USER->ByID($id);
       $stack[$actor->id][] = $user->id;
-      $trapped   |= $this->InStack($user->id, RoleVoteTarget::TRAP);      //罠死判定
-      $frostbite |= $this->InStack($user->id, RoleVoteTarget::SNOW_TRAP); //凍傷判定
+      if ($this->InStack($user->id, RoleVoteTarget::TRAP)) { //罠死判定
+	$trapped = true;
+      }
+      if ($this->InStack($user->id, RoleVoteTarget::SNOW_TRAP)) { //凍傷判定
+	$frostbite = true;
+      }
     }
     $this->SetStack($stack);
 
-    if ($trapped) {
+    if (true === $trapped) {
       $this->AddSuccess($actor->id, RoleVoteSuccess::TRAPPED);
-    } elseif ($frostbite) {
+    } elseif (true === $frostbite) {
       $this->AddSuccess($actor->id, RoleVoteSuccess::FROSTBITE);
     }
   }

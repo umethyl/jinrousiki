@@ -10,6 +10,6 @@ class Role_voodoo_fox extends Role_fox {
   public $submit = VoteAction::VOODOO_MAD;
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::WOLF, RoleAbilityMessage::VOODOO, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::WOLF, RoleAbilityMessage::VOODOO, $this->action);
   }
 }

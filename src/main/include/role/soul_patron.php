@@ -9,10 +9,10 @@ class Role_soul_patron extends Role_patron {
   public $result = RoleAbility::PATRON;
 
   protected function IgnoreResult() {
-    return ! DB::$ROOM->IsDate(2);
+    return false === DB::$ROOM->IsDate(2);
   }
 
   protected function AddDuelistRole(User $user) {
-    DB::$ROOM->ResultAbility($this->result, $user->main_role, $user->handle_name, $this->GetID());
+    DB::$ROOM->StoreAbility($this->result, $user->main_role, $user->handle_name, $this->GetID());
   }
 }

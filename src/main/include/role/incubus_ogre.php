@@ -9,7 +9,7 @@
 */
 RoleLoader::LoadFile('ogre');
 class Role_incubus_ogre extends Role_ogre {
-  protected function GetOgreWolfEatResistRate() {
+  protected function GetOgreResistWolfEatRate() {
     return 40;
   }
 
@@ -26,7 +26,7 @@ class Role_incubus_ogre extends Role_ogre {
   }
 
   protected function RequireOgreWinDead(User $user) {
-    return ! $this->IsActor($user) && Sex::IsFemale($user);
+    return false === $this->IsActor($user) && Sex::IsFemale($user);
   }
 
   protected function IgnoreOgreLoseAllDead() {

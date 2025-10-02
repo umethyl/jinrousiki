@@ -7,7 +7,7 @@
 */
 class Role_letter_exchange extends Role {
   protected function IgnoreAbility() {
-    return DB::$ROOM->date > 2 && ! $this->IsDoom();
+    return DB::$ROOM->date > 2 && false === $this->IsDoom();
   }
 
   protected function GetImage() {
@@ -17,12 +17,15 @@ class Role_letter_exchange extends Role {
   //遺言更新
   public function UpdateLastWords() {
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
-      if ($user->IsDead(true) || ! $user->IsDoomRole($this->role)) continue;
+      if ($user->IsDead(true) || false === $user->IsDoomRole($this->role)) {
+	continue;
+      }
+
       $target = $this->GetTargetLoversPartner($user);
       $this->StoreLastWords($target, $user->id);
-      if (! RoleUser::LimitedLastWords($target)) {
+      if (false === RoleUser::LimitedLastWords($target)) {
 	$target->AddDoom(1, $this->role);
-	DB::$ROOM->ResultDead($target->handle_name, DeadReason::LETTER_EXCHANGE_MOVED);
+	DB::$ROOM->StoreDead($target->handle_name, DeadReason::LETTER_EXCHANGE_MOVED);
       }
     }
   }
@@ -31,14 +34,18 @@ class Role_letter_exchange extends Role {
   private function GetTargetLoversPartner(User $target) {
     $id = ArrayFilter::Pick($target->GetPartner('lovers', true)); //キューピッドのID
     foreach (DB::$USER->GetRoleUser('lovers') as $user) {
-      if (! $user->IsSame($target) && $user->IsPartner('lovers', $id)) return $user;
+      if (false === $user->IsSame($target) && $user->IsPartner('lovers', $id)) {
+	return $user;
+      }
     }
   }
 
   //遺言登録
   private function StoreLastWords(User $user, $id) {
     $str = DB::$ROOM->IsTest() ? $user->uname : UserDB::GetLastWords($id);
-    if (is_null($str)) return true;
+    if (is_null($str)) {
+      return true;
+    }
     $user->Update('last_words', $str);
   }
 }

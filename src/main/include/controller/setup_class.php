@@ -88,7 +88,7 @@ final class JinrouSetupController extends JinrouController {
   //カラム削除
   private static function DropColumn($table, $column) {
     $stack = SetupDB::ShowColumn($table);
-    if (! in_array($column, $stack)) {
+    if (false === in_array($column, $stack)) {
       return true;
     }
     $title  = SetupMessage::DROP_COLUMN . $table;
@@ -101,12 +101,18 @@ final class JinrouSetupController extends JinrouController {
     switch ($table) {
     case 'user_entry':
       //管理者登録
-      $items  = 'room_no, user_no, uname, handle_name, icon_no, profile, password, role, live';
-      $str    = "0, 0, '%s', '%s', 1, '%s', '%s', '%s', '%s'";
-      $values = sprintf($str,
-	GM::SYSTEM, Message::SYSTEM, GM::PROFILE, ServerConfig::PASSWORD, GM::ROLE, UserLive::LIVE
-      );
-      DB::Insert($table, $items, $values);
+      $list = [
+	'room_no'     => 0,
+	'user_no'     => 0,
+	'uname'       => GM::SYSTEM,
+	'handle_name' => Message::SYSTEM,
+	'icon_no'     => 1,
+	'profile'     => GM::PROFILE,
+	'password'    => ServerConfig::PASSWORD,
+	'role'        => GM::ROLE,
+	'live'        => UserLive::LIVE
+      ];
+      DB::Insert($table, $list);
       break;
 
     case 'user_icon':
@@ -114,22 +120,35 @@ final class JinrouSetupController extends JinrouController {
       $items = 'icon_no, icon_name, icon_filename, icon_width, icon_height, color';
 
       //身代わり君 (No. 0)
-      extract(SetupConfig::$dummy_boy_icon); //身代わり君アイコンの設定をロード
-      $values = "0, '{$name}', '{$file}', {$width}, {$height}, '{$color}'";
-      DB::Insert($table, $items, $values);
+      $list = [
+	'icon_no'       => 0,
+	'icon_name'     => SetupConfig::$dummy_boy_icon['name'],
+	'icon_filename' => SetupConfig::$dummy_boy_icon['file'],
+	'icon_width'    => SetupConfig::$dummy_boy_icon['width'],
+	'icon_height'   => SetupConfig::$dummy_boy_icon['height'],
+	'color'         => SetupConfig::$dummy_boy_icon['color']
+      ];
+      DB::Insert($table, $list);
 
       //初期アイコン
-      foreach (SetupConfig::$default_icon as $id => $list) {
-	extract($list);
-	$values = "{$id}, '{$name}', '{$file}', {$width}, {$height}, '{$color}'";
-	self::OutputResult(SetupMessage::ICON, $values, DB::Insert($table, $items, $values));
+      foreach (SetupConfig::$default_icon as $id => $stack) {
+	$list = [
+	  'icon_no'       => $id,
+	  'icon_name'     => $stack['name'],
+	  'icon_filename' => $stack['file'],
+	  'icon_width'    => $stack['width'],
+	  'icon_height'   => $stack['height'],
+	  'color'         => $stack['color']
+	];
+	$result = DB::Insert($table, $list);
+	self::OutputResult(SetupMessage::ICON, print_r($list, true), $result);
       }
       break;
 
     case 'count_limit':
       //ロックキー
       foreach (['room', 'icon'] as $value) {
-	DB::Insert($table, 'type', "'{$value}'");
+	DB::Insert($table, ['type' => $value]);
       }
       break;
     }

@@ -6,8 +6,10 @@
 */
 RoleLoader::LoadFile('fox');
 class Role_spell_fox extends Role_fox {
-  public function FoxEatCounter(User $user) {
-    if (! $this->IsActorActive()) return false;
+  public function WolfEatFoxCounter(User $user) {
+    if (false === $this->IsActorActive()) {
+      return false;
+    }
     $user->AddRole('spell_wisp');
     $this->GetActor()->LostAbility();
   }

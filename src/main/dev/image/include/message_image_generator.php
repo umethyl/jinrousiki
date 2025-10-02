@@ -54,10 +54,10 @@ class MessageImageGenerator {
     $this->size		= $size;
     $this->x_margin	= $x_margin;
     $this->y_margin	= $y_margin;
-    $this->def_col	= array(0, 0, 0);
-    $this->def_bgc	= array(255, 255, 255);
+    $this->def_col	= [0, 0, 0];
+    $this->def_bgc	= [255, 255, 255];
     $this->is_trans	= $is_trans;
-    $this->delimiters	= array();
+    $this->delimiters	= [];
 
     //フォント幅・高さの測定。もっといい定跡があればそちらに変更する予定。
     $r_a   = imagettfbbox($this->size, 0, $this->font, "A");
@@ -115,7 +115,9 @@ class MessageImageGenerator {
     返り値 正規表現文字列
   */
   public function GenerateDelimiterRegEx() {
-    if (count($this->delimiters) == 0) return '';
+    if (count($this->delimiters) == 0) {
+      return '';
+    }
 
     $regex_str = '/[';
     foreach ($this->delimiters as $d) {
@@ -142,7 +144,7 @@ class MessageImageGenerator {
     必要なら文字コード変換や正規表現の処理を実行する
   */
   public function GetMessage($str, $regex) {
-    $message = $regex == '' ? $str : preg_replace($regex, '', $str);
+    $message = ($regex == '') ? $str : preg_replace($regex, '', $str);
     return mb_convert_encoding($message, 'UTF-8', 'auto');
   }
 
@@ -151,9 +153,9 @@ class MessageImageGenerator {
     $msg 作成したいメッセージ文。改行有効。||で囲んだ部分を指定した色で書く
     返り値 画像データ
   */
-  public function GetImage($msg, $calib = array()) {
+  public function GetImage($msg, $calib = []) {
     //スタック用配列。一番下にどのデリミタともマッチしない文字列をセットしておく
-    $d_stack = array("default");
+    $d_stack = ['default'];
 
     //$plain_msg_len = strlen($plain_msg);
     //echo "plain_r: $plain_msg_len ";
@@ -184,7 +186,7 @@ class MessageImageGenerator {
 
       // 強調部分の色を変えつつ表示
       if ($regex_str == '') {
-	$array_msg = array(array($line, 0));
+	$array_msg = [[$line, 0]];
       } else {
 	$array_msg = preg_split($regex_str, $line, -1, PREG_SPLIT_OFFSET_CAPTURE);
       }
@@ -246,8 +248,8 @@ class MessageImageGenerator {
 /* サンプルとして紹介されていたBold出力関数。濃すぎるので没。
 function drawboldtext($image, $size, $angle, $x_cord, $y_cord, $color, $fontfile, $text)
 {
-   $_x = array(1, 0, 1, 0, -1, -1, 1, 0, -1);
-   $_y = array(0, -1, -1, 0, 0, -1, 1, 1, 1);
+   $_x = [1, 0, 1, 0, -1, -1, 1, 0, -1];
+   $_y = [0, -1, -1, 0, 0, -1, 1, 1, 1];
    for ($n=0;$n<=8;$n++)
    {
      ImageTTFText($image, $size, $angle, $x_cord+$_x[$n], $y_cord+$_y[$n], $color, $fontfile, $text);

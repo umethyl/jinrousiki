@@ -198,7 +198,9 @@ final class Cast {
 
   //身代わり君配役
   private static function CastDummyBoy() {
-    if (false === DB::$ROOM->IsDummyBoy()) return;
+    if (false === DB::$ROOM->IsDummyBoy()) {
+      return;
+    }
 
     self::SetDummyBoy();
     //self::Stack()->p(self::CAST, '◆dummy_boy');
@@ -417,12 +419,16 @@ final class Cast {
     $fix_uname_list = self::Stack()->Get(self::UNAME);
     $fix_role_list  = self::Stack()->Get(self::CAST);
     foreach ($stack as $role) {
-      if (count($rand_list) < 1) break;
+      if (count($rand_list) < 1) {
+	break;
+      }
 
       $id = array_shift($rand_list);
       if ($fix_uname_list[$id] == GM::DUMMY_BOY) {
 	$rand_list[] = $id;
-	if (count($rand_list) == 1) break;
+	if (count($rand_list) == 1) {
+	  break;
+	}
       } else {
 	$fix_role_list[$id] .= ' ' . $role;
 	self::Stack()->Add(self::DELETE, $role);
@@ -528,7 +534,9 @@ final class Cast {
 	$count  = array_sum($total_stack[$group]) - round($user_count / $rate);
 	//if ($count > 0) Text::p($count, "◆Calib [{$group}]"); //テスト用
 	for (; $count > 0; $count--) {
-	  if (array_sum($target) < 1) break;
+	  if (array_sum($target) < 1) {
+	    break;
+	  }
 	  //Text::p($target, sprintf('◆　　%d: before', $count));
 	  arsort($target);
 	  //Text::p($target, sprintf('◆　　%d: afetr', $count));
@@ -619,7 +627,7 @@ final class Cast {
     }
 
     asort(CastConfig::$duel_rate_list);
-    $max_role   = ArrayFilter::PickKey(CastConfig::$duel_rate_list, true); //最大確率の役職
+    $max_role   = ArrayFilter::PopKey(CastConfig::$duel_rate_list); //最大確率の役職
     $total_rate = array_sum(CastConfig::$duel_rate_list);
     $rest_count = $user_count - array_sum($stack);
     foreach (CastConfig::$duel_rate_list as $role => $rate) {
@@ -653,14 +661,14 @@ final class Cast {
       foreach ($option_list as $option) {
 	if (isset(CastConfig::$replace_role_list[$option])) { //サーバ設定
 	  $target = CastConfig::$replace_role_list[$option];
-	  $role   = Text::Cut($option);
+	  $role   = Text::CutPop($option);
 	} elseif ($order == 0) { //村人置換
-	  $target = Text::Cut($option, '_', 2);
+	  $target = Text::CutPop($option, '_', 2);
 	  $role   = 'human';
 	} else { //共有者・狂人・キューピッド置換
-	  $target = Text::Cut($option, '_', 2);
+	  $target = Text::CutPop($option, '_', 2);
 	  $group  = RoleDataManager::GetGroup($target);
-	  $role   = $group == 'angel' ? 'cupid' : Text::Cut($target);
+	  $role   = ($group == 'angel') ? 'cupid' : Text::CutPop($target);
 	}
 
 	$count = ArrayFilter::GetInt($list, $role);

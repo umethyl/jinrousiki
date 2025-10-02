@@ -13,15 +13,19 @@ class Role_earplug extends Role_strong_voice {
   public $mix_in = ['blinder'];
 
   public function FilterTalk(User $user, &$name, &$voice, &$str) {
-    if (! $this->IgnoreTalk()) $this->ShiftVoice($voice, $str, false);
+    if (false === $this->IgnoreTalk()) {
+      $this->ShiftVoice($voice, $str, false);
+    }
   }
 
   public function AddIgnoreTalk() {
-    return ! DB::$ROOM->IsPlaying() ||
+    return false === DB::$ROOM->IsPlaying() ||
       (DB::$ROOM->IsOn(RoomMode::LOG) && DB::$ROOM->IsEvent($this->role) && ! DB::$ROOM->IsDay());
   }
 
   public function FilterWhisper(&$voice, &$str) {
-    if (! $this->IgnoreTalk()) $this->ShiftVoice($voice, $str, false);
+    if (false === $this->IgnoreTalk()) {
+      $this->ShiftVoice($voice, $str, false);
+    }
   }
 }

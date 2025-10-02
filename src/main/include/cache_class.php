@@ -8,7 +8,7 @@ final class JinrouCacheManager {
   const LOG_LIST	= 'old_log_list';
 
   //クラスのロード
-  static function Load($name = null, $expire = null) {
+  static function Load($name = null, $expire = 0) {
     static $instance;
 
     if (is_null($instance)) {
@@ -103,7 +103,9 @@ final class JinrouCacheManager {
   //保存情報取得
   public static function Fetch($serialize = false) {
     $data = JinrouCacheDB::Get();
-    if (self::Expire($data)) return null;
+    if (self::Expire($data)) {
+      return null;
+    }
 
     self::Load()->updated = true;
     self::Load()->next    = $data['expire'];
@@ -129,7 +131,9 @@ final class JinrouCacheManager {
 
   //保存処理
   public static function Store($object, $serialize = false, $force = false) {
-    if (false === $force && self::Load()->updated) return;
+    if (false === $force && self::Load()->updated) {
+      return true;
+    }
 
     $content = gzdeflate($serialize ? serialize($object) : $object);
     if (JinrouCacheDB::Exists()) { //存在するならロックする
@@ -169,7 +173,9 @@ final class JinrouCacheManager {
 
   //有効期限切れ判定
   private static function Expire($data) {
-    if (is_null($data) || Time::Get() > $data['expire']) return true;
+    if (is_null($data) || Time::Get() > $data['expire']) {
+      return true;
+    }
     return isset(self::Load()->hash) && isset($data['hash']) && self::Load()->hash != $data['hash'];
   }
 }
@@ -178,20 +184,21 @@ final class JinrouCacheManager {
 final class JinrouCache {
   public $room_no = 0;
   public $name    = null;
+  public $now     = null;
   public $expire  = 0;
+  public $next    = null;
   public $hash    = null;
   public $updated = false; //更新済み判定
-  public $next    = null;
 
   //クラスの初期化
   public function __construct($name, $expire = 0) {
     $this->room_no = DB::ExistsRoom() ? DB::$ROOM->id : 0;
     $this->name    = $name;
+    $this->now     = Time::Get();
     $this->expire  = $expire;
+    $this->next    = $this->now + $this->expire;
     if (DB::ExistsRoom() && DB::ExistsUser()) {
       $this->hash = md5(DB::$ROOM->scene . DB::$USER->Count());
-    } else {
-      $this->hash = null;
     }
   }
 

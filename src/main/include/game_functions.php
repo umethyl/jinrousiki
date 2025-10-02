@@ -146,7 +146,10 @@ class Position {
     $stack = [];
     for ($i = -1; $i < 2; $i++) {
       $j = $num + $i * self::BASE;
-      if ($j < 1 || $max + 1 < $j) continue;
+      if ($j < 1 || $max + 1 < $j) {
+	continue;
+      }
+
       if ($j <= $max) {
 	$stack[] = $j;
       }
@@ -219,7 +222,7 @@ class Objection {
 
   //画像パス取得
   public static function GetImage() {
-    return GameConfig::OBJECTION_IMAGE . 'objection_' . self::GetUser()->sex . '.gif';
+    return GameConfig::OBJECTION_IMAGE . 'objection_' . Sex::Get(self::GetUser()) . '.gif';
   }
 
   //残り回数取得
@@ -234,7 +237,7 @@ class Objection {
       $user->objection++;
       $user->Update('objection', $user->objection);
 
-      $talk = new RoomTalkStruct($user->sex);
+      $talk = new RoomTalkStruct(Sex::Get($user));
       $talk->Set(TalkStruct::UNAME,  $user->uname);
       $talk->Set(TalkStruct::ACTION, TalkAction::OBJECTION);
       DB::$ROOM->Talk($talk);
@@ -250,7 +253,7 @@ class Objection {
       for ($i = 0; $i < $count; $i++) { //差分を計算 (index は 0 から)
 	//差分があれば性別を確認して音を鳴らす
 	if (isset($cookie[$i]) && $stack[$i] > $cookie[$i]) {
-	  SoundHTML::Output('objection_' . DB::$USER->ByID($i + 1)->sex);
+	  SoundHTML::Output('objection_' . Sex::Get(DB::$USER->ByID($i + 1)));
 	}
       }
     }
@@ -281,7 +284,9 @@ class Winner {
 
   //判定
   public static function Judge($draw = false) {
-    if (DB::$ROOM->IsTest()) return false;
+    if (DB::$ROOM->IsTest()) {
+      return false;
+    }
 
     //コピー能力者がいるのでキャッシュを更新するかクエリから引くこと
     $human  = UserLoaderDB::CountCamp(Camp::HUMAN);  //村人
@@ -303,7 +308,7 @@ class Winner {
       $winner = WinCamp::LOVERS;
     } elseif (DB::$ROOM->IsQuiz() && $quiz == 0) { //クイズ村 GM 死亡
       $winner = WinCamp::QUIZ_DEAD;
-    } elseif ($draw && DB::$ROOM->revote_count >= GameConfig::DRAW) { //引き分け
+    } elseif (true === $draw && DB::$ROOM->revote_count >= GameConfig::DRAW) { //引き分け
       $winner = WinCamp::DRAW;
     } else {
       return false;
@@ -353,7 +358,9 @@ class Winner {
     $result = self::WIN;
     $class  = null;
     $user   = $id > 0 ? DB::$USER->ByID($id) : DB::$SELF;
-    if ($user->id < 1) return $str;
+    if ($user->id < 1) {
+      return $str;
+    }
 
     $camp = $user->GetWinCamp(); //所属勝利陣営を取得
     switch ($winner) {

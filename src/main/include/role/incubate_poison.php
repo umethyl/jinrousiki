@@ -8,7 +8,7 @@
 RoleLoader::LoadFile('poison');
 class Role_incubate_poison extends Role_poison {
   protected function IgnoreResult() {
-    return ! $this->IsPoison();
+    return false === $this->IsPoison();
   }
 
   protected function OutputAddResult() {

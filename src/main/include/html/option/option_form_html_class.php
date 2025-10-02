@@ -24,7 +24,7 @@ class OptionFormHTML {
     $size = sprintf('%s_input', $filter->name);
     $str  = $filter->GetExplain();
     if (OptionManager::IsChange()) {
-      $name  = Text::Cut($filter->name);
+      $name  = Text::CutPop($filter->name);
       $value = DB::$ROOM->$name;
     } else {
       $value = null;
@@ -77,9 +77,11 @@ class OptionFormHTML {
 
   //JavaScript 出力
   public static function OutputJavaScript(array $list) {
-    echo HTML::GenerateJavaScriptHeader();
-    foreach ($list as $code) Text::Output($code);
-    echo HTML::GenerateJavaScriptFooter();
+    HTML::OutputJavaScriptHeader();
+    foreach ($list as $code) {
+      Text::Output($code);
+    }
+    HTML::OutputJavaScriptFooter();
   }
 
   //村作成オプションフォームタグ

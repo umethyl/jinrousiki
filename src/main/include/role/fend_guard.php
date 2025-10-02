@@ -6,8 +6,10 @@
 */
 RoleLoader::LoadFile('guard');
 class Role_fend_guard extends Role_guard {
-  public function WolfEatResist() {
-    if (! $this->IsActorActive()) return false;
+  public function ResistWolfEat() {
+    if (false === $this->IsActorActive()) {
+      return false;
+    }
 
     $this->GetActor()->LostAbility();
     return true;

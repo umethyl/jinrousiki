@@ -13,7 +13,7 @@ class Role_doom_chiroptera extends Role {
   }
 
   protected function IgnoreSuddenDeath() {
-    return ! $this->IsRealActor() || RoleUser::IsAvoidLovers($this->GetActor(), true);
+    return $this->IgnoreSuddenDeathAvoid();
   }
 
   protected function IsSuddenDeath() {

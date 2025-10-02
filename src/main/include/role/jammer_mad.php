@@ -7,7 +7,7 @@ class Role_jammer_mad extends Role {
   public $action = VoteAction::JAMMER;
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::WOLF, RoleAbilityMessage::JAMMER, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::WOLF, RoleAbilityMessage::JAMMER, $this->action);
   }
 
   //妨害対象セット (呪返し > 妨害無効 > 成立判定)

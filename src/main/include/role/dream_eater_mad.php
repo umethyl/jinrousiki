@@ -4,11 +4,14 @@
   ○仕様
 */
 class Role_dream_eater_mad extends Role {
-  public $action      = VoteAction::DREAM;
-  public $action_date = RoleActionDate::AFTER;
+  public $action = VoteAction::DREAM;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::WOLF, RoleAbilityMessage::DREAM_EATER, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::WOLF, RoleAbilityMessage::DREAM_EATER, $this->action);
   }
 
   //夢食い処理
@@ -17,7 +20,7 @@ class Role_dream_eater_mad extends Role {
     if ($user->IsLiveRole('dummy_guard', true)) { //対象が夢守人なら返り討ちに合う
       DB::$USER->Kill($actor->id, DeadReason::HUNTED);
       if (! DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
-	DB::$ROOM->ResultAbility(RoleAbility::HUNTED, 'hunted', $actor->handle_name, $user->id);
+	DB::$ROOM->StoreAbility(RoleAbility::HUNTED, 'hunted', $actor->handle_name, $user->id);
       }
       return;
     }

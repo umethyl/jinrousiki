@@ -35,13 +35,25 @@ final class UserManagerController extends JinrouController {
     $str   = UserManagerMessage::ERROR_INPUT_TEXT  . $back_url;
     $empty = UserManagerMessage::ERROR_INPUT_EMPTY . $back_url;
     if ($user_no < 1) {
-      if ($uname     == '') self::OutputError($title, UserManagerMessage::UNAME    . $str);
-      if ($password  == '') self::OutputError($title, UserManagerMessage::PASSWORD . $str);
+      if ($uname == '') {
+	self::OutputError($title, UserManagerMessage::UNAME . $str);
+      }
+      if ($password  == '') {
+	self::OutputError($title, UserManagerMessage::PASSWORD . $str);
+      }
     }
-    if ($handle_name == '') self::OutputError($title, UserManagerMessage::HANDLE_NAME . $str);
-    if (empty($sex))        self::OutputError($title, UserManagerMessage::SEX         . $empty);
-    if (empty($role))       self::OutputError($title, UserManagerMessage::WISH_ROLE   . $empty);
-    if (! is_int($icon_no)) self::OutputError($title, UserManagerMessage::ICON_NUMBER . $empty);
+    if ($handle_name == '') {
+      self::OutputError($title, UserManagerMessage::HANDLE_NAME . $str);
+    }
+    if (empty($sex)) {
+      self::OutputError($title, UserManagerMessage::SEX . $empty);
+    }
+    if (empty($role)) {
+      self::OutputError($title, UserManagerMessage::WISH_ROLE . $empty);
+    }
+    if (false === is_int($icon_no)) {
+      self::OutputError($title, UserManagerMessage::ICON_NUMBER . $empty);
+    }
 
     //文字数制限チェック
     $format = UserManagerMessage::ERROR_TEXT_LIMIT . $back_url;

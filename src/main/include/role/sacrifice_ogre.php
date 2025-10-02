@@ -28,12 +28,12 @@ class Role_sacrifice_ogre extends Role_ogre {
     return ['psycho_infected_list' => $stack];
   }
 
-  protected function GetOgreWolfEatResistRate() {
+  protected function GetOgreResistWolfEatRate() {
     return 0;
   }
 
   protected function IsSacrifice(User $user) {
-    return ! $this->IsActor($user) && $user->IsRole('psycho_infected');
+    return false === $this->IsActor($user) && $user->IsRole('psycho_infected');
   }
 
   public function GetReflectAssassinRate() {

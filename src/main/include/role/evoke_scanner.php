@@ -7,14 +7,14 @@
 RoleLoader::LoadFile('mind_scanner');
 class Role_evoke_scanner extends Role_mind_scanner {
   protected function IsAddVote() {
-    return ! DB::$ROOM->IsOpenCast();
+    return false === DB::$ROOM->IsOpenCast();
   }
 
   protected function GetMindRole() {
     return 'mind_evoke';
   }
 
-  protected function GetDisabledAddVoteMessage() {
+  protected function GetDisabledAddVoteNightMessage() {
     return VoteRoleMessage::OPEN_CAST;
   }
 }

@@ -11,13 +11,16 @@ class Role_agent_escaper extends Role_escaper {
     return DB::$ROOM->date > 2 && DB::$ROOM->date % 3 == 0;
   }
 
-  protected function GetDisabledAddVoteMessage() {
+  protected function GetDisabledAddVoteNightMessage() {
     return VoteRoleMessage::IMPOSSIBLE_VOTE_DAY;
   }
 
   protected function EscapeFailed(User $user) {
     foreach (Position::GetAround($user) as $id) {
-      if ($id == $user->id) continue;
+      if ($id == $user->id) {
+	continue;
+      }
+
       $target = DB::$USER->ByID($id);
       //Text::p($id, "◆Position [{$this->role}]");
       //Text::p("{$target->main_role}/{$target->GetReal()->main_role}", "◆Virtul/Real [{$id}]");

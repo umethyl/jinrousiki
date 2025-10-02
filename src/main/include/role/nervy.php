@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('chicken');
 class Role_nervy extends Role_chicken {
   protected function IsSuddenDeath() {
-    return $this->GetActor()->IsWinCamp($this->GetVoteUser()->GetWinCamp());
+    return $this->GetActor()->IsWinCamp($this->GetVoteKillUser()->GetWinCamp());
   }
 
   protected function GetSuddenDeathType() {

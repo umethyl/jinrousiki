@@ -13,6 +13,8 @@ class Role_divine_escaper extends Role_escaper {
   }
 
   protected function EscapeAction(User $user) {
-    if ($user->IsCamp(Camp::HUMAN)) $user->AddDoom(1, 'day_voter');
+    if ($user->IsCamp(Camp::HUMAN)) {
+      $user->AddDoom(1, 'day_voter');
+    }
   }
 }

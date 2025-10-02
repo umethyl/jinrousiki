@@ -9,7 +9,7 @@ RoleLoader::LoadFile('fox');
 class Role_immolate_fox extends Role_fox {
   public $mix_in = ['immolate_mad'];
 
-  public function FoxEatCounter(User $user) {
+  public function WolfEatFoxCounter(User $user) {
     $this->AddMusterRole();
   }
 

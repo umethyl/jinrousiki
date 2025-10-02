@@ -14,11 +14,13 @@ class Role_executor extends Role {
   }
 
   public function DecideVoteKill() {
-    if ($this->IsVoteKill() || ! is_array($this->GetStack())) return;
+    if ($this->DetermineVoteKill() || false === is_array($this->GetStack())) {
+      return;
+    }
 
     $stack = [];
-    foreach ($this->GetMaxVotedUname() as $uname) {
-      if (! DB::$USER->ByRealUname($uname)->IsWinCamp(Camp::HUMAN)) {
+    foreach ($this->GetDecideVoteKillPossibleList() as $uname) {
+      if (false === DB::$USER->ByRealUname($uname)->IsWinCamp(Camp::HUMAN)) {
 	$stack[$uname] = true;
       }
     }

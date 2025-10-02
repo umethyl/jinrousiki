@@ -82,6 +82,7 @@ class DeadMessage {
   public static $step                  = 'で足音が聞こえた…';				//足音
   public static $active_critical_voter = 'は会心が発動したようです';			//会心発動
   public static $active_critical_luck  = 'は痛恨が発動したようです';			//痛恨発動
+  public static $gender_status         = 'は今日一日性転換するようです';		//性転換発動
   public static $copied_trick          = 'は役職を奪われたようです';			//奇術コピー発動
 
   /* 花妖精 */

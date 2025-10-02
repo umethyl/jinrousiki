@@ -14,7 +14,7 @@ class Role_widow_priest extends Role_priest {
   }
 
   protected function IgnoreSetPriest() {
-    return ! DB::$ROOM->IsDate(1) || ! DB::$ROOM->IsDummyBoy();
+    return false === DB::$ROOM->IsDate(1) || false === DB::$ROOM->IsDummyBoy();
   }
 
   protected function IsAggregatePriestCamp() {
@@ -27,9 +27,12 @@ class Role_widow_priest extends Role_priest {
     $target    = $dummy_boy->handle_name;
 
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
-      if ($user->IsDummyBoy() || $user->IsDead(true)) continue;
+      if ($user->IsDummyBoy() || $user->IsDead(true)) {
+	continue;
+      }
+
       $user->AddRole('mind_sympathy');
-      DB::$ROOM->ResultAbility(RoleAbility::SYMPATHY, $result, $target, $user->id);
+      DB::$ROOM->StoreAbility(RoleAbility::SYMPATHY, $result, $target, $user->id);
     }
   }
 }

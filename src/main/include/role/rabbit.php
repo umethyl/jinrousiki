@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('chicken');
 class Role_rabbit extends Role_chicken {
   protected function IsSuddenDeath() {
-    return $this->CountVoted() == 0;
+    return $this->CountVotePollUser() == 0;
   }
 
   protected function GetSuddenDeathType() {

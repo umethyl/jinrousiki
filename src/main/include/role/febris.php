@@ -9,7 +9,7 @@
 RoleLoader::LoadFile('chicken');
 class Role_febris extends Role_chicken {
   protected function IgnoreAbility() {
-    return ! $this->IsDoom();
+    return false === $this->IsDoom();
   }
 
   protected function IgnoreImage() {
@@ -19,7 +19,7 @@ class Role_febris extends Role_chicken {
   protected function OutputAddResult() {
     $header = $this->GetImage() . '_header';
     $date   = $this->GetDoomDate();
-    $footer = $this->GetResultFooter();
+    $footer = $this->GetSuddenDeathResultFooter();
     RoleHTML::OutputAbilityResult($header, $date, $footer);
   }
 
@@ -29,7 +29,7 @@ class Role_febris extends Role_chicken {
   }
 
   //結果表示フッタ取得
-  protected function GetResultFooter() {
+  protected function GetSuddenDeathResultFooter() {
     return 'sudden_death_footer';
   }
 

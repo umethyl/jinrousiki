@@ -3,7 +3,7 @@
   ◆印狼 (ascetic_wolf)
   ○仕様
   ・能力結果：九字
-  ・投票数：+N (条件つき)
+  ・投票数：+N (周囲の生存人数依存)
 */
 RoleLoader::LoadFile('wolf');
 class Role_ascetic_wolf extends Role_wolf {
@@ -21,7 +21,9 @@ class Role_ascetic_wolf extends Role_wolf {
   private function CountAscetic() {
     $count = 1;
     foreach (Position::GetAround($this->GetActor()) as $id) {
-      if (! DB::$USER->IsVirtualLive($id)) $count++;
+      if (false === DB::$USER->IsVirtualLive($id)) {
+	$count++;
+      }
     }
     return $count;
   }

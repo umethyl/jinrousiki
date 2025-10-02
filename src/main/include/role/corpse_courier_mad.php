@@ -8,7 +8,7 @@ RoleLoader::LoadFile('critical_mad');
 class Role_corpse_courier_mad extends Role_critical_mad {
   public function VoteKillAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($target_uname)) {
+      if ($this->IsVoteKill($target_uname)) {
 	DB::$USER->ByRealUname($target_uname)->stolen_flag = true;
 	return;
       }

@@ -7,18 +7,21 @@
   ・勝利：生存
 */
 class Role_escaper extends Role {
-  public $action      = VoteAction::ESCAPE;
-  public $action_date = RoleActionDate::AFTER;
+  public $action = VoteAction::ESCAPE;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::ESCAPE, RoleAbilityMessage::ESCAPER, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::ESCAPE, RoleAbilityMessage::ESCAPER, $this->action);
   }
 
   //逃亡 (罠死 > 逃亡失敗 > 逃亡処理)
   final public function Escape(User $user) {
     if ($this->InStack($user->id, RoleVoteTarget::TRAP)) {
       DB::$USER->Kill($this->GetID(), DeadReason::TRAPPED);
-    } elseif (! DB::$ROOM->IsEvent('full_escape') && $this->EscapeFailed($user)) {
+    } elseif (false === DB::$ROOM->IsEvent('full_escape') && $this->EscapeFailed($user)) {
       DB::$USER->Kill($this->GetID(), DeadReason::ESCAPER_DEAD);
     } else {
       if ($this->InStack($user->id, RoleVoteTarget::SNOW_TRAP)) { //凍傷判定

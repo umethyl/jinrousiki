@@ -10,10 +10,10 @@ class Role_poison_fox extends Role_fox {
   public $mix_in = ['poison'];
 
   protected function IsPoisonTarget(User $user) {
-    return ! RoleUser::IsFoxCount($user);
+    return false === RoleUser::IsFoxCount($user);
   }
 
-  public function IsResistWolf() {
+  public function ResistWolfEatFox() {
     return false;
   }
 }

@@ -12,7 +12,7 @@ class Role_medium extends Role {
   }
 
   //判定結果登録 (システムメッセージ)
-  final public function InsertResult() {
+  final public function InsertMediumResult() {
     $flag = false; //巫女の出現判定
     foreach (DB::$USER->GetRole() as $role => $list) {
       if (RoleDataManager::IsMain($role) && RoleDataManager::IsGroup($role, $this->role)) {
@@ -20,7 +20,9 @@ class Role_medium extends Role {
 	break;
       }
     }
-    if (! $flag) return;
+    if (false === $flag) {
+      return;
+    }
 
     $stack = []; //突然死者を収集
     foreach (DB::$USER->Get() as $user) {
@@ -33,7 +35,7 @@ class Role_medium extends Role {
     ksort($stack); //出力は仮想ユーザ順
     foreach ($stack as $id => $camp) {
       $user = DB::$USER->ByID($id);
-      DB::$ROOM->ResultAbility($this->result, $camp, $user->handle_name);
+      DB::$ROOM->StoreAbility($this->result, $camp, $user->handle_name);
     }
   }
 }

@@ -21,13 +21,17 @@ class Option_no_silence extends OptionCheckbox {
       $stack = RQ::GetTest()->talk_count;
     } else {
       //スキップ判定 (超過前 or 未投票発言者あり)
-      if (GameTime::IsInTime() || TalkDB::CountNoVoteTalker() > 0) return;
+      if (GameTime::IsInTime() || TalkDB::CountNoVoteTalker() > 0) {
+	return;
+      }
       $stack = TalkDB::GetAllUserTalkCount();
     }
     //Text::p($stack, "◆TalkCount [{$this->name}]");
 
     foreach (DB::$USER->SearchLive() as $id => $name) {
-      if (ArrayFilter::GetInt($stack, $id) > 0) continue;
+      if (ArrayFilter::GetInt($stack, $id) > 0) {
+	continue;
+      }
       DB::$USER->SuddenDeath($id, DeadReason::SILENCE);
     }
   }

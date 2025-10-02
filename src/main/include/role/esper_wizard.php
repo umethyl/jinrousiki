@@ -19,18 +19,24 @@ class Role_esper_wizard extends Role_wizard {
   }
 
   protected function FairyAction(User $user) {
-    if ($user->IsDead(true)) return;
+    if ($user->IsDead(true)) {
+      return;
+    }
 
     $role = $this->GetWizard($this->GetFairyActionWizardList());
     switch ($role) {
     case 'death_warrant':
-      if (RoleUser::IsAvoid($user)) return;
+      if (RoleUser::IsAvoid($user)) {
+	return;
+      }
       $user->AddDoom(4, $role);
       break;
 
     case 'critical_luck':
     case 'spell_wisp':
-      if (RoleUser::IsAvoid($user)) return;
+      if (RoleUser::IsAvoid($user)) {
+	return;
+      }
       $user->AddRole($role);
       break;
 
@@ -43,8 +49,13 @@ class Role_esper_wizard extends Role_wizard {
   //悪戯魔法対象役職取得
   private function GetFairyActionWizardList() {
     return [
-      'death_warrant', 'critical_voter', 'critical_luck', 'sweet_ringing', 'deep_sleep',
-      'spell_wisp', 'levitation'
+      'death_warrant',
+      'critical_voter',
+      'critical_luck',
+      'sweet_ringing',
+      'deep_sleep',
+      'spell_wisp',
+      'levitation'
     ];
   }
 }

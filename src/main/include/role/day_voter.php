@@ -8,7 +8,7 @@
 RoleLoader::LoadFile('authority');
 class Role_day_voter extends Role_authority {
   protected function IgnoreAbility() {
-    return ! $this->IsDoom();
+    return false === $this->IsDoom();
   }
 
   protected function IgnoreFilterVoteDo() {

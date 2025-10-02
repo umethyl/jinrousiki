@@ -10,7 +10,9 @@ class Role_dummy_chiroptera extends Role {
 
   protected function GetPartner() {
     $stack = $this->GetActor()->GetPartner($this->role);
-    if (! is_array($stack)) return [];
+    if (false === is_array($stack)) {
+      return [];
+    }
 
     //仮想恋人作成結果を表示
     $stack[] = $this->GetID();
@@ -22,12 +24,6 @@ class Role_dummy_chiroptera extends Role {
     return ['cupid_pair' => $pair];
   }
 
-  protected function OutputAddPartner() {
-    foreach ($this->GetLoversPartner() as $type => $list) {
-      RoleHTML::OutputPartner($list, $type, 'lovers_footer');
-    }
-  }
-
   protected function IgnoreGetLoversPartner() {
     return $this->GetActor()->IsRole('lovers', 'fake_lovers', 'sweet_status');
   }
@@ -36,12 +32,20 @@ class Role_dummy_chiroptera extends Role {
     return $this->GetActor()->IsPartner($this->role, $user->id);
   }
 
-  public function VoteNightAction() {
+  protected function OutputAddPartner() {
+    foreach ($this->GetLoversPartner() as $type => $list) {
+      RoleHTML::OutputPartner($list, $type, 'lovers_footer');
+    }
+  }
+
+  public function SetVoteNightTargetListAction() {
     $list  = $this->GetStack('target_list');
     $stack = [];
     foreach ($list as $user) {
       $stack[] = $user->handle_name;
-      if (! $this->IsActor($user)) $this->GetActor()->AddMainRole($user->id);
+      if (false === $this->IsActor($user)) {
+	$this->GetActor()->AddMainRole($user->id);
+      }
     }
 
     $this->SetStack(ArrayFilter::ConcatKey($list), RequestDataVote::TARGET);

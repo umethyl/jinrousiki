@@ -14,7 +14,9 @@ final class Room extends StackManager {
 
   //-- 初期化・基本関数 --//
   public function __construct($request = null, $lock = false) {
-    if (is_null($request)) return;
+    if (is_null($request)) {
+      return;
+    }
 
     if ($request->IsVirtualRoom()) {
       $stack = $request->GetTestRoom();
@@ -35,7 +37,7 @@ final class Room extends StackManager {
   //-- データ取得関連 --//
   //勝敗情報を DB から取得
   public function LoadWinner() {
-    if (! isset($this->winner)) { //未設定ならキャッシュする
+    if (false === isset($this->winner)) { //未設定ならキャッシュする
       $this->winner = $this->IsTest() ? RQ::GetTest()->winner : RoomDB::Get('winner');
     }
     return $this->winner;
@@ -131,7 +133,9 @@ final class Room extends StackManager {
   //-- イベント関連 --//
   //イベント情報を DB から取得
   public function LoadEvent() {
-    if (! $this->IsPlaying()) return null;
+    if (false === $this->IsPlaying()) {
+      return null;
+    }
 
     $this->Stack()->Set('event', new FlagStack());
     $this->Stack()->Set('event_row', SystemMessageDB::GetEvent());
@@ -139,15 +143,17 @@ final class Room extends StackManager {
 
   //天候判定用の情報を DB から取得
   private function LoadWeather($shift = false) {
-    if (! $this->IsPlaying()) return null;
+    if (false === $this->IsPlaying()) {
+      return null;
+    }
 
     $date = $this->date;
-    if (($shift && RQ::Get()->reverse_log) || $this->IsAfterGame()) {
+    if ((true === $shift && RQ::Get()->reverse_log) || $this->IsAfterGame()) {
       $date++;
     }
 
     $result = SystemMessageDB::GetWeather($date);
-    if ($result !== false) {
+    if (false !== $result) {
       $this->Stack()->Set('weather', $result); //天候を格納
     } else {
       $this->Stack()->Clear('weather'); //ログ用に初期化する
@@ -169,9 +175,11 @@ final class Room extends StackManager {
 
   //イベント情報取得
   public function GetEvent($force = false) {
-    if (! $this->IsPlaying()) return [];
+    if (false === $this->IsPlaying()) {
+      return [];
+    }
 
-    if ($force || $this->Stack()->IsEmpty('event_row')) {
+    if (true === $force || $this->Stack()->IsEmpty('event_row')) {
       $this->LoadEvent();
     }
     return $this->Stack()->Get('event_row');
@@ -290,63 +298,35 @@ final class Room extends StackManager {
 
   //発言登録
   public function Talk(TalkStruct $talk) {
-    extract($talk->GetStruct());
     if ($this->IsTest()) {
-      $str = sprintf('★Talk: %s: %s: %s: %s: %s', $uname, $scene, $location, $action, $font_type);
-      Text::p(Text::ConvertLine($sentence), $str);
+      $stack = $talk->GetStruct();
+      $str = sprintf('★Talk: %s: %s: %s: %s: %s',
+	$stack[TalkStruct::UNAME],
+	$stack[TalkStruct::SCENE],
+	$stack[TalkStruct::LOCATION],
+	$stack[TalkStruct::ACTION],
+	$stack[TalkStruct::FONT_TYPE]
+      );
+      Text::p(Text::ConvertLine($stack[TalkStruct::SENTENCE]), $str);
       return true;
     }
-
-    switch ($scene) {
-    case RoomScene::BEFORE:
-    case RoomScene::AFTER:
-      $table = 'talk_' . $scene;
-      break;
-
-    default:
-      $table = 'talk';
-      break;
-    }
-    $items  = 'room_no, date, scene, uname, sentence, spend_time, time';
-    $values = "{$this->id}, {$this->date}, '{$scene}', '{$uname}', '{$sentence}', {$spend_time}, " .
-      "UNIX_TIMESTAMP()";
-
-    if (isset($action)) {
-      $items  .= ', action';
-      $values .= ", '{$action}'";
-    }
-    if (isset($location)) {
-      $items  .= ', location';
-      $values .= ", '{$location}'";
-    }
-    if (isset($font_type)) {
-      $items  .= ', font_type';
-      $values .= ", '{$font_type}'";
-    }
-    if (isset($role_id)) {
-      $items  .= ', role_id';
-      $values .= ", {$role_id}";
-    }
-    return DB::Insert($table, $items, $values);
+    return RoomTalkDB::Insert($talk);
   }
 
   //発言登録 (ゲーム開始前専用)
   public function TalkBeforeGame(RoomTalkBeforeGameStruct $talk) {
-    extract($talk->GetStruct());
     if ($this->IsTest()) {
-      $str = sprintf('★Talk: %s: %s: %s: %s', $uname, $handle_name, $color, $font_type);
-      Text::p(Text::ConvertLine($sentence), $str);
+      $stack = $talk->GetStruct();
+      $str = sprintf('★Talk: %s: %s: %s: %s',
+	$stack[RoomTalkBeforeGameStruct::UNAME],
+	$stack[RoomTalkBeforeGameStruct::HANDLE_NAME],
+	$stack[RoomTalkBeforeGameStruct::COLOR],
+	$stack[RoomTalkBeforeGameStruct::FONT_TYPE]
+      );
+      Text::p(Text::ConvertLine($stack[RoomTalkBeforeGameStruct::SENTENCE]), $str);
       return true;
     }
-
-    $items  = 'room_no, date, scene, uname, handle_name, color, sentence, time';
-    $values = "{$this->id}, 0, '{$this->scene}', '{$uname}', '{$handle_name}', '{$color}', " .
-      "'{$sentence}', UNIX_TIMESTAMP()";
-    if (isset($font_type)) {
-      $items  .= ', font_type';
-      $values .= ", '{$font_type}'";
-    }
-    return DB::Insert('talk_' . $this->scene, $items, $values);
+    return RoomTalkDB::InsertBeforeGame($talk);
   }
 
   //-- 時間関連 --//
@@ -357,7 +337,10 @@ final class Room extends StackManager {
 
   //超過警告メッセージ登録
   public function OvertimeAlert($str) {
-    if (RoomDB::IsOvertimeAlert()) return true;
+    if (RoomDB::IsOvertimeAlert()) {
+      return true;
+    }
+
     RoomTalk::StoreSystem($str);
     return RoomDB::UpdateOvertimeAlert(true);
   }
@@ -367,7 +350,9 @@ final class Room extends StackManager {
   public function LoadVote($kick = false) {
     if (RQ::Get()->IsVirtualRoom()) {
       $vote_list = RQ::GetTest()->vote->{$this->scene};
-      if (is_null($vote_list)) return null;
+      if (is_null($vote_list)) {
+	return null;
+      }
     } else {
       $vote_list = RoomDB::GetVote();
     }
@@ -376,10 +361,13 @@ final class Room extends StackManager {
     $stack = [];
     switch ($this->scene) {
     case RoomScene::BEFORE:
-      $type = $kick ? VoteAction::KICK : VoteAction::GAME_START;
+      $type = (true === $kick) ? VoteAction::KICK : VoteAction::GAME_START;
       foreach ($vote_list as $list) {
-	if ($list['type'] != $type) continue;
-	if ($kick) {
+	if ($list['type'] != $type) {
+	  continue;
+	}
+
+	if (true === $kick) {
 	  $stack[$list['user_no']][] = $list['target_no'];
 	} else {
 	  $stack[] = $list['user_no'];
@@ -424,8 +412,8 @@ final class Room extends StackManager {
   }
 
   //-- システムメッセージ関連 --//
-  //システムメッセージ登録
-  public function SystemMessage($str, $type, $add_date = 0) {
+  //イベント情報登録
+  public function StoreEvent($str, $type, $add_date = 0) {
     $date = $this->date + $add_date;
     if ($this->IsTest()) {
       Text::p("{$type} ({$date}): {$str}", '★SystemMessage');
@@ -435,13 +423,18 @@ final class Room extends StackManager {
       return true;
     }
 
-    $items  = 'room_no, date, type, message';
-    $values = "{$this->id}, {$date}, '{$type}', '{$str}'";
-    return DB::Insert('system_message', $items, $values);
+    $list = [
+      'room_no' => $this->id,
+      'date'    => $date,
+      'type'    => $type,
+      'message' => $str
+    ];
+
+    return DB::Insert('system_message', $list);
   }
 
   //死亡情報登録
-  public function ResultDead($name, $type, $result = null) {
+  public function StoreDead($name, $type, $result = null) {
     $date = $this->date;
     if ($this->IsTest()) {
       Text::p("{$name}: {$type} ({$date}): {$result}", '★ResultDead');
@@ -452,21 +445,24 @@ final class Room extends StackManager {
       return true;
     }
 
-    $items  = 'room_no, date, scene, type';
-    $values = "{$this->id}, {$date}, '{$this->scene}', '{$type}'";
+    $list = [
+      'room_no' => $this->id,
+      'date'    => $date,
+      'scene'   => $this->scene,
+      'type'    => $type
+    ];
     if (isset($name)) {
-      $items  .= ', handle_name';
-      $values .= ", '{$name}'";
+      $list['handle_name'] = $name;
     }
     if (isset($result)) {
-      $items  .= ', result';
-      $values .= ", '{$result}'";
+      $list['result'] = $result;
     }
-    return DB::Insert('result_dead', $items, $values);
+
+    return DB::Insert('result_dead', $list);
   }
 
   //能力発動結果登録
-  public function ResultAbility($type, $result, $target = null, $user_no = null) {
+  public function StoreAbility($type, $result, $target = null, $user_no = null) {
     $date = $this->date;
     if ($this->IsTest()) {
       Text::p("{$type}: {$result}: {$target}: {$user_no}", '★ResultAbility');
@@ -477,23 +473,26 @@ final class Room extends StackManager {
       return true;
     }
 
-    $items  = 'room_no, date, type';
-    $values = "{$this->id}, {$date}, '{$type}'";
+    $list = [
+      'room_no' => $this->id,
+      'date'    => $date,
+      'type'    => $type
+    ];
     foreach (['result', 'target', 'user_no'] as $data) {
       if (isset($$data)) {
-	$items  .= ", {$data}";
-	$values .= ", '{$$data}'";
+	$list[$data] = $$data;
       }
     }
-    return DB::Insert('result_ability', $items, $values);
+
+    return DB::Insert('result_ability', $list);
   }
 
   //天候登録
-  public function EntryWeather($id, $date, $priest = false) {
-    $this->SystemMessage($id, EventType::WEATHER, $date);
-    if ($priest) { //祈祷師の処理
+  public function StoreWeather($id, $date, $priest = false) {
+    $this->StoreEvent($id, EventType::WEATHER, $date);
+    if (true === $priest) { //祈祷師の処理
       $result = 'prediction_weather_' . WeatherManager::GetEvent($id);
-      $this->ResultAbility(RoleAbility::WEATHER_PRIEST, $result);
+      $this->StoreAbility(RoleAbility::WEATHER_PRIEST, $result);
     }
   }
 
@@ -505,7 +504,7 @@ final class Room extends StackManager {
 
   //シーンをずらす (主に仮想処理用)
   public function ShiftScene($unshift = false) {
-    if ($unshift) {
+    if (true === $unshift) {
       $this->date--;
       $this->SetScene(RoomScene::NIGHT);
     } else {
@@ -517,7 +516,9 @@ final class Room extends StackManager {
   //夜にする
   public function ChangeNight() {
     $this->SetScene(RoomScene::NIGHT);
-    if ($this->IsTest()) return true;
+    if ($this->IsTest()) {
+      return true;
+    }
 
     RoomDB::UpdateScene();
     $talk = new RoomTalkStruct('');
@@ -528,7 +529,9 @@ final class Room extends StackManager {
   //次の日にする
   public function ChangeDate() {
     $this->ShiftScene();
-    if ($this->IsTest()) return true;
+    if ($this->IsTest()) {
+      return true;
+    }
 
     RoomDB::UpdateScene(true);
     $talk = new RoomTalkStruct($this->date);
@@ -551,12 +554,12 @@ final class Room extends StackManager {
     $this->date++;
     $this->SetScene($this->IsOption('open_day') ? RoomScene::DAY : RoomScene::NIGHT);
     DB::$USER->GameStart($this->IsOption('limit_talk') || $this->IsOption('no_silence'));
-    if (! $this->IsTest()) {
+    if (false === $this->IsTest()) {
       RoomDB::Start();
     }
 
     //闇鍋配役隠蔽判定
-    if ($this->IsOptionGroup('chaos') && ! $this->IsOptionGroup('chaos_open_cast')) {
+    if ($this->IsOptionGroup('chaos') && false === $this->IsOptionGroup('chaos_open_cast')) {
       $str = TalkMessage::CHAOS;
     } else {
       $str = Cast::GenerateMessage(Cast::Stack()->Get(Cast::SUM));
@@ -566,7 +569,7 @@ final class Room extends StackManager {
       OptionLoader::Load('detective')->Designate();
     }
 
-    if (! $this->IsTest()) {
+    if (false === $this->IsTest()) {
       RoomDB::UpdateTime(); //最終書き込み時刻を更新
       Winner::Judge(); //配役時に勝敗が決定している可能性があるので勝敗判定を行う
     }
@@ -610,7 +613,7 @@ final class RoomTalk {
 }
 
 //-- Talk 構造体基底クラス --//
-abstract class TalkStruct {
+abstract class TalkStruct extends StructBase {
   const SCENE      = 'scene';
   const LOCATION   = 'location';
   const UNAME      = 'uname';
@@ -619,31 +622,6 @@ abstract class TalkStruct {
   const SENTENCE   = 'sentence';
   const FONT_TYPE  = 'font_type';
   const SPEND_TIME = 'spend_time';
-  protected $struct = [];
-
-  //セット
-  final public function Set($name, $data) {
-    //Text::p($data, "◆TalkStruct/Set[{$name}]");
-    if (array_key_exists($name, $this->struct)) {
-      $this->struct[$name] = $data;
-    } else {
-      throw new Exception("Invalid Key: {$name}: {$data}");
-    }
-  }
-
-  //取得
-  final public function Get($name) {
-    if (array_key_exists($name, $this->struct)) {
-      return $this->struct[$name];
-    } else {
-      throw new Exception("Invalid Key: {$name}");
-    }
-  }
-
-  //全データ取得
-  final public function GetStruct() {
-    return $this->struct;
-  }
 }
 
 //-- Room 用 Talk 構造体 --//

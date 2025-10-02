@@ -8,7 +8,7 @@
 class Role_blinder extends Role {
   //発言フィルタ
   public function FilterTalk(User $user, &$name, &$voice, &$str) {
-    if ($this->IgnoreTalk() || ! DB::$ROOM->IsDay() || $this->GetViewer()->IsSame($user)) {
+    if ($this->IgnoreTalk() || false === DB::$ROOM->IsDay() || $this->GetViewer()->IsSame($user)) {
       return;
     }
     $name = '';

@@ -10,7 +10,7 @@
 */
 RoleLoader::LoadFile('yaksa');
 class Role_dowser_yaksa extends Role_yaksa {
-  protected function GetOgreWolfEatResistRate() {
+  protected function GetOgreResistWolfEatRate() {
     return 40;
   }
 

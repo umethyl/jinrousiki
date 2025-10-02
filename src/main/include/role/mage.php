@@ -14,7 +14,7 @@ class Role_mage extends Role {
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
   }
 
   //占い (無効 > 失敗 > 失敗固定 > 呪返し > 通常)
@@ -38,19 +38,23 @@ class Role_mage extends Role {
 
   //占い失敗判定 (無効 → 厄払い > 占い妨害 > 幻系 → なし)
   final public function IsJammer(User $user) {
-    if ($this->IgnoreJammer()) return false; //無効判定
+    if ($this->IgnoreJammer()) { //無効判定
+      return false;
+    }
 
     //妨害要素個別判定
     $half    = DB::$ROOM->IsEvent('half_moon') && Lottery::Bool(); //半月
     $phantom = $user->IsLiveRoleGroup('phantom') && $user->IsActive(); //幻系
 
-    if ($half || $phantom) { //厄払いスキップ判定
-      if (RoleUser::GuardCurse($this->GetActor(), false)) return false;
+    if (true === $half || true === $phantom) { //厄払いスキップ判定
+      if (RoleUser::GuardCurse($this->GetActor(), false)) {
+	return false;
+      }
     }
 
-    if ($half || $this->InStack($this->GetID(), 'jammer')) { //占い妨害判定
+    if (true === $half || $this->InStack($this->GetID(), 'jammer')) { //占い妨害判定
       return true;
-    } elseif ($phantom) { //幻系判定 (発動を記録)
+    } elseif (true === $phantom) { //幻系判定 (発動を記録)
       $this->AddSuccess($user->id, RoleVoteSuccess::PHANTOM);
       return true;
     } else {
@@ -80,7 +84,7 @@ class Role_mage extends Role {
 
   //占い結果登録
   final public function SaveMageResult(User $user, $result, $action) {
-    return DB::$ROOM->ResultAbility($action, $result, $user->GetName(), $this->GetID());
+    return DB::$ROOM->StoreAbility($action, $result, $user->GetName(), $this->GetID());
   }
 
   //呪返し判定 (無効 → 厄払い > 対象判定 → なし)
@@ -88,7 +92,7 @@ class Role_mage extends Role {
     if ($this->CallParent('IgnoreCursed')) {
       return false;
     } elseif (RoleUser::IsCursed($user) || $this->InStack($user->id, 'voodoo')) {
-      return ! RoleUser::GuardCurse($this->GetActor());
+      return false === RoleUser::GuardCurse($this->GetActor());
     } else {
       return false;
     }
@@ -132,7 +136,9 @@ class Role_mage extends Role {
     } elseif ($user->IsRoleGroup('spell')) {
       return true;
     } elseif ($user->IsMainGroup(CampGroup::FOX)) {
-      return ! $user->IsRole('white_fox', 'black_fox', 'mist_fox', 'tiger_fox', 'sacrifice_fox');
+      return false === $user->IsRole(
+	'white_fox', 'black_fox', 'mist_fox', 'tiger_fox', 'sacrifice_fox'
+      );
     } else {
       return false;
     }
@@ -143,7 +149,9 @@ class Role_mage extends Role {
     foreach (RoleFilterData::$jammer_mage_result as $role) {
       if ($user->IsRole($role)) {
 	$result = RoleLoader::Load($role)->GetJammerMageResult($user, $reverse);
-	if (isset($result)) return $result;
+	if (isset($result)) {
+	  return $result;
+	}
       }
     }
 
@@ -153,14 +161,14 @@ class Role_mage extends Role {
 	      $user->IsRole('boss_chiroptera')) {
       return 'chiroptera';
     } else {
-      return ($this->IsMageWolf($user) xor $reverse) ? 'wolf' : 'human';
+      return ($this->IsMageWolf($user) xor true === $reverse) ? 'wolf' : 'human';
     }
   }
 
   //占い人狼判定 (人狼系 > 個別)
   final protected function IsMageWolf(User $user) {
     if ($user->IsMainGroup(CampGroup::WOLF)) {
-      return ! $user->IsRole('boss_wolf') && ! RoleUser::IsSiriusWolf($user);
+      return false === $user->IsRole('boss_wolf') && false === RoleUser::IsSiriusWolf($user);
     } else {
       return $user->IsRole(
 	'suspect', 'cute_mage', 'swindle_mad', 'black_fox', 'cute_chiroptera', 'cute_avenger'
@@ -198,12 +206,14 @@ class Role_mage extends Role {
 
   //呪殺身代わり能力者取得
   final protected function GetMageKillSacrificeList() {
-    if (DB::$ROOM->IsEvent('no_sacrifice')) return []; //天候判定
+    if (DB::$ROOM->IsEvent('no_sacrifice')) { //天候判定
+      return [];
+    }
 
     $stack = [];
     foreach (RoleFilterData::$sacrifice_mage as $role) {
       foreach (DB::$USER->GetRoleUser($role) as $target) {
-	if ($target->IsLive(true) && ! RoleUser::IsAvoidLovers($target, true)) {
+	if ($target->IsLive(true) && false === RoleUser::IsAvoidLovers($target, true)) {
 	  $stack[] = $target->id;
 	}
       }

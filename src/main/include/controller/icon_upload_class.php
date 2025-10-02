@@ -24,21 +24,31 @@ final class IconUploadController extends JinrouController {
 
     switch (RQ::Get()->command) {
     case 'upload':
+      self::ExecuteUpload();
       break;
 
-    case 'success': //セッション ID 情報を DB から削除
-      self::UploadSuccess();
+    case 'success':
+      self::ExecuteSuccess();
       break;
 
-    case 'cancel': //アイコン削除
-      self::UploadCancel();
+    case 'cancel':
+      self::ExecuteCancel();
       break;
 
     default:
       self::OutputResult(IconUploadMessage::COMMAND);
       break;
     }
+  }
 
+  protected static function Output() {
+    HTML::OutputHeader(IconUploadMessage::TITLE, 'icon_upload', true);
+    IconUploadHTML::Output();
+    HTML::OutputFooter();
+  }
+
+  //登録処理
+  private static function ExecuteUpload() {
     //アップロードされたファイルのエラーチェック
     if (@$_FILES['upfile']['error'][$i] != 0) {
       self::OutputResult(Text::Join(IconUploadMessage::FILE_UPLOAD, IconUploadMessage::RETRY));
@@ -105,39 +115,42 @@ final class IconUploadController extends JinrouController {
     }
 
     $icon_no = IconDB::GetNext(); //次のアイコン番号取得
-    if ($icon_no === false) self::OutputResult(Message::DB_ERROR_LOAD); //負荷エラー対策
+    if (false === $icon_no) { //負荷エラー対策
+      self::OutputResult(Message::DB_ERROR_LOAD);
+    }
 
     //ファイルをテンポラリからコピー
     $file_name = sprintf('%03s.%s', $icon_no, $ext); //ファイル名の桁を揃える
-    if (! move_uploaded_file($tmp_name, Icon::GetFile($file_name))) {
+    if (false === move_uploaded_file($tmp_name, Icon::GetFile($file_name))) {
       self::OutputResult(Text::Join(IconUploadMessage::FILE_COPY, IconUploadMessage::RETRY));
     }
 
     //データベースに登録
     $data = '';
-    $session_id = Session::Reset(); //セッション ID を取得
-    $items  = 'icon_no, icon_name, icon_filename, icon_width, icon_height, color, ' .
-      'session_id, regist_date';
-    $values = "{$icon_no}, '{$icon_name}', '{$file_name}', {$width}, {$height}, '{$color}', " .
-      "'{$session_id}', NOW()";
+    $icon_list = [
+      'icon_no'       => $icon_no,
+      'icon_name'     => $icon_name,
+      'icon_filename' => $file_name,
+      'icon_width'    => $width,
+      'icon_height'   => $height,
+      'color'         => $color,
+      'session_id'    => Session::Reset()
+    ];
 
     if ($appearance != '') {
-      $data   .= Text::BR . '[S]' . $appearance;
-      $items  .= ', appearance';
-      $values .= ", '{$appearance}'";
+      $data .= Text::BR . '[S] ' . $appearance;
+      $icon_list['appearance'] = $appearance;
     }
     if ($category != '') {
-      $data   .= Text::BR . '[C]' . $category;
-      $items  .= ', category';
-      $values .= ", '{$category}'";
+      $data .= Text::BR . '[C] ' . $category;
+      $icon_list['category'] = $category;
     }
     if ($author != '') {
-      $data   .= Text::BR . '[A]' . $author;
-      $items  .= ', author';
-      $values .= ", '{$author}'";
+      $data .= Text::BR . '[A] ' . $author;
+      $icon_list['author'] = $author;
     }
 
-    if (DB::Insert('user_icon', $items, $values)) {
+    if (IconDB::Insert($icon_list)) {
       DB::Commit();
       DB::Disconnect();
     } else {
@@ -155,17 +168,12 @@ final class IconUploadController extends JinrouController {
     self::OutputConfirm($list);
   }
 
-  protected static function Output() {
-    HTML::OutputHeader(IconUploadMessage::TITLE, 'icon_upload', true);
-    IconUploadHTML::Output();
-    HTML::OutputFooter();
-  }
-
   //登録完了
-  private static function UploadSuccess() {
+  private static function ExecuteSuccess() {
     $url = 'icon_view.php';
     $str = IconUploadMessage::SUCCESS . IconUploadMessage::JUMP_VIEW;
 
+    //登録管理用セッションデータ削除
     DB::Connect();
     if (false === IconDB::ClearSession(RQ::Get()->icon_no)) {
       $str = Text::Join($str, IconUploadMessage::SESSION_DELETE);
@@ -175,7 +183,7 @@ final class IconUploadController extends JinrouController {
   }
 
   //登録キャンセル
-  private static function UploadCancel() {
+  private static function ExecuteCancel() {
      DB::Connect();
     if (false === DB::Lock('icon')) { //トランザクション開始
       self::OutputResult(IconUploadMessage::DB_ERROR);

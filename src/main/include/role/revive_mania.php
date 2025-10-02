@@ -10,13 +10,20 @@ class Role_revive_mania extends Role_unknown_mania {
 
   public function WolfEatCounter(User $user) {
     //全体無効判定 (公開 > 天候)
-    if (DB::$ROOM->IsOpenCast() || DB::$ROOM->IsEvent('no_revive')) return false;
+    if (DB::$ROOM->IsOpenCast() || DB::$ROOM->IsEvent('no_revive')) {
+      return false;
+    }
 
     //コピー先無効判定 (不在 > 生存 > 蘇生制限)
     $id = $this->GetActor()->GetMainRoleTarget();
-    if (is_null($id)) return false;
+    if (is_null($id)) {
+      return false;
+    }
+
     $target = DB::$USER->ByID($id);
-    if ($target->IsLive(true) || RoleUser::LimitedRevive($target)) return false;
+    if ($target->IsLive(true) || RoleUser::LimitedRevive($target)) {
+      return false;
+    }
 
     $this->SetStack($id);
     //RoleManager::Stack()->p($this->role, '◆ResurrectTarget');
@@ -38,7 +45,7 @@ class Role_revive_mania extends Role_unknown_mania {
     } else { //憑依対応
       $user->ReturnPossessed('possessed');
       $user->Revive(true);
-      DB::$ROOM->ResultDead($real->handle_name, DeadReason::REVIVE_SUCCESS);
+      DB::$ROOM->StoreDead($real->handle_name, DeadReason::REVIVE_SUCCESS);
       $real->ReturnPossessed('possessed_target');
     }
     RoleManager::Stack()->Clear($this->role);

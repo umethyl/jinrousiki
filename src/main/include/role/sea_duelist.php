@@ -16,7 +16,9 @@ class Role_sea_duelist extends Role_valkyrja_duelist {
   public function VoteKillAction() {
     $stack = []; //ショック死対象者リスト
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($uname) || $this->IsVoted($target_uname)) continue;
+      if ($this->IsVoteKill($uname) || $this->IsVoteKill($target_uname)) {
+	continue;
+      }
 
       $user   = DB::$USER->ByUname($uname);
       $target = DB::$USER->ByRealUname($target_uname);
@@ -25,7 +27,9 @@ class Role_sea_duelist extends Role_valkyrja_duelist {
       }
     }
 
-    foreach ($stack as $id => $flag) $this->SuddenDeathKill($id); //ショック死処理
+    foreach ($stack as $id => $flag) { //ショック死処理
+      $this->SuddenDeathKill($id);
+    }
   }
 
   protected function GetSuddenDeathType() {

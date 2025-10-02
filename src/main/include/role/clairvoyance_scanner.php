@@ -8,8 +8,11 @@
 */
 RoleLoader::LoadFile('mind_scanner');
 class Role_clairvoyance_scanner extends Role_mind_scanner {
-  public $result      = RoleAbility::CLAIRVOYANCE;
-  public $action_date = RoleActionDate::AFTER;
+  public $result = RoleAbility::CLAIRVOYANCE;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3;
@@ -25,7 +28,7 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
   */
   public function Report(User $user) {
     foreach (RoleManager::GetVoteData() as $action => $vote_stack) {
-      if (Text::Search($action, '_NOT_DO') || ! isset($vote_stack[$user->id])) {
+      if (Text::Search($action, '_NOT_DO') || false === isset($vote_stack[$user->id])) {
 	continue;
       }
       $actor_id     = $this->GetID();
@@ -57,7 +60,7 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
 
       ksort($result_stack);
       foreach ($result_stack as $result) {
-	DB::$ROOM->ResultAbility($this->result, $result, $target_name, $actor_id);
+	DB::$ROOM->StoreAbility($this->result, $result, $target_name, $actor_id);
       }
     }
   }

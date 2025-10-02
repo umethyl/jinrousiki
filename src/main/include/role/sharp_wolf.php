@@ -14,10 +14,14 @@ class Role_sharp_wolf extends Role_wolf {
   }
 
   public function WolfEatAction(User $user) {
-    if (! $user->IsMainGroup(CampGroup::MAD) && ! RoleUser::IsPoison($user)) return false;
-    if (DB::$ROOM->IsOption('seal_message')) return true;
-    $id = $this->GetWolfVoter()->id;
-    DB::$ROOM->ResultAbility($this->result, 'wolf_avoid', $user->GetName(), $id);
+    if (false === $user->IsMainGroup(CampGroup::MAD) && false === RoleUser::IsPoison($user)) {
+      return false;
+    }
+
+    if (false === DB::$ROOM->IsOption('seal_message')) {
+      $id = $this->GetWolfVoter()->id;
+      DB::$ROOM->StoreAbility($this->result, 'wolf_avoid', $user->GetName(), $id);
+    }
     return true;
   }
 }

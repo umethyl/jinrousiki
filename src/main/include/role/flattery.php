@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('chicken');
 class Role_flattery extends Role_chicken {
   protected function IsSuddenDeath() {
-    return $this->CountVoteTarget() < 2;
+    return $this->CountVoteKillTargetUser() < 2;
   }
 
   protected function GetSuddenDeathType() {

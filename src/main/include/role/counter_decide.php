@@ -11,7 +11,9 @@ class Role_counter_decide extends Role_decide {
   }
 
   public function DecideVoteKill() {
-    if ($this->IsVoteKill()) return;
+    if ($this->DetermineVoteKill()) {
+      return;
+    }
 
     $stack = $this->GetVotePossible();
     foreach ($this->GetStack() as $actor => $target) {

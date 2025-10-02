@@ -18,11 +18,14 @@ class Role_fox extends Role {
     $sub   = 'child_fox_partner'; //子狐系
     $stack = [$main => [], $sub => []];
     foreach (DB::$USER->Get() as $user) {
-      if ($this->IsActor($user)) continue;
+      if ($this->IsActor($user)) {
+	continue;
+      }
+
       if ($user->IsRole('possessed_fox')) {
 	$stack[$main][] = $user->GetName(); //憑依追跡
       } elseif ($user->IsMainGroup(CampGroup::FOX)) {
-	if (! RoleUser::IsLonely($user)) {
+	if (false === RoleUser::IsLonely($user)) {
 	  $stack[$main][] = $user->handle_name;
 	}
       } elseif ($user->IsMainGroup(CampGroup::CHILD_FOX) || $user->IsRoleGroup('scarlet')) {
@@ -38,14 +41,15 @@ class Role_fox extends Role {
   }
 
   protected function IgnoreResult() {
-    return ! $this->IsResistWolf() || DB::$ROOM->date < 2 || DB::$ROOM->IsOption('seal_message');
+    return false === $this->ResistWolfEatFox() || DB::$ROOM->date < 2 ||
+      DB::$ROOM->IsOption('seal_message');
   }
 
-  //人狼襲撃耐性判定
-  public function IsResistWolf() {
+  //妖狐人狼襲撃耐性判定
+  public function ResistWolfEatFox() {
     return true;
   }
 
   //人狼襲撃カウンター
-  public function FoxEatCounter(User $user) {}
+  public function WolfEatFoxCounter(User $user) {}
 }

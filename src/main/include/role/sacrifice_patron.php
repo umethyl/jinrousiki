@@ -11,7 +11,7 @@ class Role_sacrifice_patron extends Role_patron {
     $this->AddPatronRole($user, 'protected');
   }
 
-  public function WolfEatResist() {
+  public function ResistWolfEat() {
     return true;
   }
 }

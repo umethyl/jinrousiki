@@ -6,6 +6,6 @@
 */
 class Role_death_selected extends Role {
   protected function IgnoreAbility() {
-    return ! $this->IsDoom();
+    return false === $this->IsDoom();
   }
 }

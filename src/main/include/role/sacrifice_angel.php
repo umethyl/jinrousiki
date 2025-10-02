@@ -18,7 +18,7 @@ class Role_sacrifice_angel extends Role_angel {
     return true;
   }
 
-  public function WolfEatResist() {
+  public function ResistWolfEat() {
     return true;
   }
 }

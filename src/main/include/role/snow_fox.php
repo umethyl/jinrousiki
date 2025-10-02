@@ -12,13 +12,17 @@ class Role_snow_fox extends Role_fox {
 
   public function VoteKillReaction() {
     foreach ($this->GetStackKey() as $uname) {
-      if ($this->IsVoted($uname)) continue;
+      if ($this->IsVoteKill($uname)) {
+	continue;
+      }
 
       $user = DB::$USER->ByRealUname($uname);
-      if (RoleUser::IsAvoidLovers($user, true)) continue;
+      if (RoleUser::IsAvoidLovers($user, true)) {
+	continue;
+      }
 
-      foreach ($this->GetVotedUname($uname) as $voted_uname) {
-	if (DB::$USER->ByRealUname($voted_uname)->IsMainGroup(CampGroup::MAD)) {
+      foreach ($this->GetVotePollList($uname) as $target_uname) {
+	if (DB::$USER->ByRealUname($target_uname)->IsMainGroup(CampGroup::MAD)) {
 	  $user->AddDoom(1, 'frostbite');
 	  break;
 	}

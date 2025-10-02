@@ -179,7 +179,7 @@ class Role_priest extends Role {
     $data = $this->GetStack('priest');
     $role = $this->GetPriestRole();
     $type = $this->CallParent('GetPriestType');
-    DB::$ROOM->ResultAbility($this->GetPriestResultType($role), $data->count[$type]);
+    DB::$ROOM->StoreAbility($this->GetPriestResultType($role), $data->count[$type]);
   }
 
   //司祭能力発動対象役職取得

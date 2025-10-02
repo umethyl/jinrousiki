@@ -14,16 +14,18 @@ class Role_saint extends Role {
   }
 
   public function DecideVoteKill() {
-    if ($this->IsVoteKill()) return;
+    if ($this->DetermineVoteKill()) {
+      return;
+    }
 
     $self   = [];
     $target = [];
-    foreach ($this->GetVotePossible() as $uname) {
+    foreach ($this->GetVoteKillPossibleList() as $uname) {
       $user = DB::$USER->ByRealUname($uname); //$uname は仮想ユーザ
       if ($user->IsRole('saint')) {
 	$self[] = $uname;
       }
-      if (! $user->IsWinCamp(Camp::HUMAN)) {
+      if (false === $user->IsWinCamp(Camp::HUMAN)) {
 	$target[] = $uname;
       }
     }

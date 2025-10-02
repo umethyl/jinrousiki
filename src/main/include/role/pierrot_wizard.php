@@ -33,6 +33,6 @@ class Role_pierrot_wizard extends Role_wizard {
   }
 
   protected function GetFairyActionResult() {
-    return 'PIERROT';
+    return DeadReason::PIERROT;
   }
 }

@@ -17,11 +17,13 @@ class Role_child_fox extends Role_fox {
   }
 
   public function OutputAction() {
-    if ($this->ExistVoteMix()) return $this->CallVoteMix(__FUNCTION__);
-    RoleHTML::OutputVote(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
+    if ($this->ExistsVoteMix()) {
+      return $this->CallVoteMix(__FUNCTION__);
+    }
+    RoleHTML::OutputVoteNight(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
   }
 
-  public function IsResistWolf() {
+  public function ResistWolfEatFox() {
     return false;
   }
 

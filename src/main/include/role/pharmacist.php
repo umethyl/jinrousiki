@@ -19,7 +19,10 @@ class Role_pharmacist extends Role {
   //毒能力情報セット
   final public function SetDetox() {
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($uname)) continue;
+      if ($this->IsVoteKill($uname)) {
+	continue;
+      }
+
       $str = $this->DistinguishPoison(DB::$USER->ByRealUname($target_uname));
       $this->AddStackName($str, 'pharmacist_result', $uname);
     }
@@ -27,8 +30,8 @@ class Role_pharmacist extends Role {
 
   //毒能力鑑定
   final protected function DistinguishPoison(User $user) {
-    //非毒能力者・夢毒者 > 強毒者 > 特殊 (騎士・誘毒者・連毒者・毒橋姫) > 通常
-    if (! $user->IsRoleGroup('poison') || $user->IsRole('dummy_poison')) {
+    //非毒能力者・夢毒者 > 強毒者 > 潜毒者 > 特殊 (騎士・誘毒者・連毒者・毒橋姫) > 通常
+    if (false === $user->IsRoleGroup('poison') || $user->IsRole('dummy_poison')) {
       return 'nothing';
     } elseif ($user->IsRole('strong_poison')) {
       return 'strong';
@@ -42,10 +45,15 @@ class Role_pharmacist extends Role {
   }
 
   //解毒
-  public function Detox() {
+  final public function Detox() {
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($uname)) continue;
-      if ($this->IsActor(DB::$USER->ByUname($target_uname))) $this->SetDetoxFlag($uname);
+      if ($this->IsVoteKill($uname)) {
+	continue;
+      }
+
+      if ($this->IsActor(DB::$USER->ByUname($target_uname))) {
+	$this->SetDetoxFlag($uname);
+      }
     }
   }
 
@@ -58,19 +66,24 @@ class Role_pharmacist extends Role {
   //ショック死抑制
   final public function Cure() {
     foreach ($this->GetStack() as $uname => $target_uname) {
-      if ($this->IsVoted($uname) || ! $this->IsActor(DB::$USER->ByUname($target_uname))) continue;
-      $this->GetActor()->cured_flag = true;
-      $this->AddStackName('cured', 'pharmacist_result', $uname);
+      if ($this->IsVoteKill($uname)) {
+	continue;
+      }
+
+      if ($this->IsActor(DB::$USER->ByUname($target_uname))) {
+	$this->GetActor()->cured_flag = true;
+	$this->AddStackName('cured', 'pharmacist_result', $uname);
+      }
     }
   }
 
   //鑑定結果登録
-  final public function SaveResult() {
+  final public function SavePharmacistResult() {
     foreach ($this->GetStack($this->role . '_result') as $uname => $result) {
       $user   = DB::$USER->ByUname($uname);
       $list   = $this->GetStack($user->GetMainRole(true));
       $target = DB::$USER->GetHandleName($list[$user->uname], true);
-      DB::$ROOM->ResultAbility($this->result, $result, $target, $user->id);
+      DB::$ROOM->StoreAbility($this->result, $result, $target, $user->id);
     }
   }
 }

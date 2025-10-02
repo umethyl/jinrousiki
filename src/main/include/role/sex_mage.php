@@ -17,7 +17,7 @@ class Role_sex_mage extends Role_psycho_mage {
     } elseif ($user->IsMainCamp(Camp::CHIROPTERA) || $user->IsMainCamp(Camp::OGRE)) {
       return $user->DistinguishCamp();
     } else {
-      return Sex::Get($user);
+      return Sex::Distinguish($user);
     }
   }
 }

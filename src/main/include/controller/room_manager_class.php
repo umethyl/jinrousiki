@@ -2,7 +2,10 @@
 //-- 村作成コントローラー --//
 final class RoomManagerController extends JinrouController {
   protected static function Load() {
-    if (false === DB::ConnectInHeader()) return false;
+    if (false === DB::ConnectInHeader()) {
+      return false;
+    }
+
     if (Loader::IsLoadedFile('index_class')) {
       self::Maintenance();
     }
@@ -73,7 +76,9 @@ final class RoomManagerController extends JinrouController {
 
   //メンテナンス処理
   private static function Maintenance() {
-    if (ServerConfig::DISABLE_MAINTENANCE) return; //スキップ判定
+    if (ServerConfig::DISABLE_MAINTENANCE) { //スキップ判定
+      return;
+    }
 
     RoomManagerDB::DieRoom();		//一定時間更新の無い村は廃村にする
     RoomManagerDB::ClearSession();	//終了した村のセッションデータを削除する
@@ -136,7 +141,9 @@ final class RoomManagerController extends JinrouController {
       foreach (['gm_login', 'dummy_boy'] as $option) {
 	if (DB::$ROOM->IsOption($option)) {
 	  OptionLoader::Load($option)->LoadPost();
-	  if (RQ::Get()->$option) break;
+	  if (RQ::Get()->$option) {
+	    break;
+	  }
 	}
       }
     }
@@ -256,7 +263,7 @@ final class RoomManagerController extends JinrouController {
       HTML::OutputResult(RoomManagerMessage::TITLE_CHANGE, $str);
     }
 
-    //登録処理
+    //-- 登録処理 --//
     $room_no = RoomManagerDB::GetNext(); //村番号を取得
     if (false === ServerConfig::DRY_RUN) {
       if (false === RoomManagerDB::Insert($room_no, $game_option, $option_role)) { //村作成
@@ -298,7 +305,9 @@ final class RoomManagerController extends JinrouController {
 
   //稼働中の村リスト出力
   private static function OutputList() {
-    if (ServerConfig::SECRET_ROOM) return; //シークレットテストモード
+    if (ServerConfig::SECRET_ROOM) { //シークレットテストモード
+      return;
+    }
 
     foreach (RoomManagerDB::GetList() as $stack) {
       RoomManagerHTML::OutputRoom($stack);
@@ -339,7 +348,7 @@ final class RoomManagerController extends JinrouController {
 
   //村作成入力値チェック
   private static function ValidateCreateInput() {
-    foreach (['room_name', 'room_comment'] as $type) { //村の名前・説明のデータチェック
+    foreach (['room_name', 'room_comment'] as $type) { //村の名前・説明
       RoomOption::LoadPost($type);
       if (RQ::Get()->$type == '') { //未入力チェック
 	RoomManagerHTML::OutputResult('empty', OptionManager::GenerateCaption($type));
@@ -351,7 +360,7 @@ final class RoomManagerController extends JinrouController {
       }
     }
 
-    RoomOption::LoadPost('max_user'); //最大人数チェック
+    RoomOption::LoadPost('max_user'); //最大人数
     if (false === in_array(RQ::Get()->max_user, RoomConfig::$max_user_list)) {
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_INPUT);
       HTML::OutputResult($title, RoomManagerMessage::ERROR_INPUT_MAX_USER);
@@ -360,16 +369,19 @@ final class RoomManagerController extends JinrouController {
 
   //村作成制限チェック
   private static function ValidateEstablishLimit() {
-    if (ServerConfig::DEBUG_MODE) return; //スキップ判定
+    if (ServerConfig::DEBUG_MODE) { //スキップ判定
+      return;
+    }
 
-    //ブラックリストチェック
+    //-- ブラックリスト --//
     if (Security::IsEstablishBlackList()) {
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
       HTML::OutputResult($title, RoomManagerMessage::ERROR_LIMIT_BLACK_LIST);
     }
 
+    //-- 村作成パスワード照合 --//
     $room_password = ServerConfig::ROOM_PASSWORD;
-    if (isset($room_password)) { //パスワードチェック
+    if (isset($room_password)) {
       $str = 'room_password';
       RQ::Get()->ParsePostStr($str);
       if (RQ::Get()->$str != $room_password) {
@@ -378,7 +390,8 @@ final class RoomManagerController extends JinrouController {
       }
     }
 
-    if (RoomManagerDB::CountActive() >= RoomConfig::MAX_ACTIVE_ROOM) { //最大稼働数チェック
+    //-- 最大稼働数制限 --//
+    if (RoomManagerDB::CountActive() >= RoomConfig::MAX_ACTIVE_ROOM) {
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
       $str   = Text::Join(
 	RoomManagerMessage::ERROR_LIMIT_MAX_ROOM, RoomManagerMessage::ERROR_WAIT_FINISH
@@ -386,7 +399,8 @@ final class RoomManagerController extends JinrouController {
       HTML::OutputResult($title, $str);
     }
 
-    if (RoomManagerDB::CountEstablish() > 0) { //同一ユーザの連続作成チェック
+    //-- 同一ユーザの連続作成制限 --//
+    if (RoomManagerDB::CountEstablish() > 0) {
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
       $str   = Text::Join(
 	RoomManagerMessage::ERROR_LIMIT_ESTABLISH, RoomManagerMessage::ERROR_WAIT_FINISH
@@ -394,7 +408,8 @@ final class RoomManagerController extends JinrouController {
       HTML::OutputResult($title, $str);
     }
 
-    $time = RoomManagerDB::GetLastEstablish(); //連続作成制限チェック
+    //-- 連続作成制限 --//
+    $time = RoomManagerDB::GetLastEstablish();
     if (isset($time) &&
 	Time::Get() - Time::ConvertTimeStamp($time, false) <= RoomConfig::ESTABLISH_WAIT) {
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
@@ -407,7 +422,9 @@ final class RoomManagerController extends JinrouController {
 
   //テスト用結果表示
   private static function p() {
-    if (true !== ServerConfig::DEBUG_MODE) return; //スキップ判定
+    if (true !== ServerConfig::DEBUG_MODE) { //スキップ判定
+      return;
+    }
 
     HTML::OutputHeader(RoomManagerMessage::TITLE);
     Text::p($_POST, '◆Post');

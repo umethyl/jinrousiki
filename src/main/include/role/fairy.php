@@ -19,15 +19,15 @@ class Role_fairy extends Role {
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote(VoteCSS::FAIRY, RoleAbilityMessage::FAIRY, $this->action);
+    RoleHTML::OutputVoteNight(VoteCSS::FAIRY, RoleAbilityMessage::FAIRY, $this->action);
   }
 
-  protected function GetDisabledAddVoteMessage() {
-    return $this->CallParent('GetDisabledFairyVoteMessage');
+  protected function GetDisabledAddVoteNightMessage() {
+    return $this->CallParent('GetDisabledFairyVoteNightMessage');
   }
 
-  //投票無効メッセージ取得 (悪戯能力者専用)
-  protected function GetDisabledFairyVoteMessage() {
+  //夜投票無効メッセージ取得 (悪戯能力者専用)
+  protected function GetDisabledFairyVoteNightMessage() {
     return null;
   }
 
@@ -43,7 +43,9 @@ class Role_fairy extends Role {
 
   //占い (悪戯)
   public function Mage(User $user) {
-    if ($this->IsJammer($user) || $this->IsCursed($user)) return false;
+    if ($this->IsJammer($user) || $this->IsCursed($user)) {
+      return false;
+    }
     $this->CallParent('FairyAction', $user);
   }
 
