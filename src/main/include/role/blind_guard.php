@@ -12,7 +12,7 @@ class Role_blind_guard extends Role_guard{
 
   function GuardFailed(){ return NULL; }
 
-  function GuardAction($user, $flag){ $user->AddRole('blinder'); }
+  function GuardAction(){ $this->GetVoter()->AddRole('blinder'); }
 
   protected function IsHunt($user){ return false; }
 }

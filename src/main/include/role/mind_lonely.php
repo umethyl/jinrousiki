@@ -10,6 +10,6 @@ class Role_mind_lonely extends Role{
   protected function IgnoreAbility(){ global $ROOM; return $ROOM->date < 2; }
 
   function Whisper($builder, $voice){
-    return $this->GetActor()->IsWolf() && parent::Whisper($builder, $voice);
+    return $this->GetActor()->IsWolf() && $this->filter->Whisper($builder, $voice);
   }
 }

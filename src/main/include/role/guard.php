@@ -35,7 +35,7 @@ class Role_guard extends Role{
   }
 
   //護衛
-  function Guard($user, $flag = false){
+  function Guard($user){
     global $ROOM, $ROLES, $USERS;
 
     $stack = array(); //護衛者検出
@@ -53,7 +53,7 @@ class Role_guard extends Role{
       if($failed = $filter->GuardFailed()) continue; //個別護衛失敗判定
       $result |= ! ($half && mt_rand(0, 1) > 0) && (! $limited || is_null($failed));
 
-      $filter->GuardAction($this->GetWolfVoter(), $flag); //護衛実行処理
+      $filter->GuardAction(); //護衛実行処理
       if(! $ROOM->IsOption('seal_message') &&
 	 $actor->IsFirstGuardSuccess($user->uname)){ //護衛成功メッセージを登録
 	$ROOM->SystemMessage($actor->GetHandleName($user->uname), 'GUARD_SUCCESS');
@@ -79,7 +79,7 @@ class Role_guard extends Role{
   function GuardFailed(){ return false; }
 
   //護衛処理
-  function GuardAction($user, $flag){}
+  function GuardAction(){}
 
   //狩り
   function Hunt($user){

@@ -364,7 +364,7 @@ class TwitterConfigBase{
 
     //投稿
     $to = new TwitterOAuth($this->key_ck, $this->key_cs, $this->key_at, $this->key_as);
-    $response = $to->OAuthRequest('https://api.twitter.com/1/statuses/update.json', 'POST',
+    $response = $to->OAuthRequest('https://api.twitter.com/1.1/statuses/update.json', 'POST',
 				  array('status' => $message));
 
     if(! ($response === false || (strrpos($response, 'error')))) return true;

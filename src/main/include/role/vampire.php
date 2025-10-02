@@ -47,7 +47,7 @@ class Role_vampire extends Role{
     foreach(array_keys($this->GetStack('escaper'), $user->uname) as $uname){ //逃亡巻き添え判定
       $this->SetInfectTarget($uname);
     }
-    if($ROLES->LoadMain(new User('guard'))->Guard($user, true)) return; //護衛判定
+    if($ROLES->LoadMain(new User('guard'))->Guard($user)) return; //護衛判定
     if($user->IsDead(true) || $user->IsRoleGroup('escaper')) return; //スキップ判定
 
     //吸血リスト登録

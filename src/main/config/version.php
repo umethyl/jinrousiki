@@ -1,13 +1,13 @@
 <?php
 class ScriptInfo{
   //パッケージのバージョン
-  public $version = 'Ver. 1.5.6';
+  public $version = 'Ver. 1.5.6 (Patch 3)';
 
   //パッケージの最終更新日
-  public $last_update = '2013/04/16 (Tue) 00:48';
+  public $last_update = '2014/04/19 23:15:23';
 
   //パッケージ化した時の Revision
-  public $revision = 734;
+  public $revision = 1083;
 
   //パッケージ名
   public $package = '<a href="http://sourceforge.jp/projects/jinrousiki/">人狼式</a>';
