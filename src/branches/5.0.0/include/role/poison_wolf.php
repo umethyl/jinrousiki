@@ -1,0 +1,14 @@
+<?php
+/*
+  ◆毒狼 (poison_wolf)
+  ○仕様
+  ・毒：人狼系以外
+*/
+RoleLoader::LoadFile('wolf');
+class Role_poison_wolf extends Role_wolf {
+  public $mix_in = ['poison'];
+
+  protected function IsPoisonTarget(User $user) {
+    return false === $user->IsMainGroup(CampGroup::WOLF);
+  }
+}

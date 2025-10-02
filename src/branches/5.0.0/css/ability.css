@@ -1,0 +1,27 @@
+@charset "utf-8";
+/* class RoleHTML */
+.ability { /* 共通デザイン */
+  padding: 0 3em;
+  color: #FFFAFA;
+  font-size: 14pt;
+  font-weight: bold;
+}
+.ability-dead { /* 死んでいる場合 */
+  background-color: #CC0000;
+}
+.ability-partner { /* 仲間の表示 */
+  border: 1px solid;
+  border-collapse: collapse;
+}
+.ability-partner td {
+  border: 1px solid;
+  vertical-align: middle;
+}
+.ability-result { /* 能力の結果表示 */
+  border: 1px solid #000000;
+  border-collapse: collapse;
+}
+.ability-result td {
+  border: 0px solid #000000;
+  vertical-align: middle;
+}
