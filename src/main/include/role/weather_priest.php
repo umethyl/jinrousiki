@@ -7,7 +7,7 @@
 RoleManager::LoadFile('priest');
 class Role_weather_priest extends Role_priest {
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2 || DB::$ROOM->date % 3 == 0;
+    return DB::$ROOM->date < 2;
   }
 
   protected function IgnoreSetPriest() {
@@ -18,8 +18,8 @@ class Role_weather_priest extends Role_priest {
   public function Priest() {
     $data = $this->GetStack('priest');
 
-    //スキップ判定
-    if (DB::$ROOM->date % 3 == 0 &&
+    //スキップ判定 (天変地異なら常時発動)
+    if (! DB::$ROOM->IsOption('full_weather') && DB::$ROOM->date % 3 == 0 &&
 	$data->count['total'] - $data->count['human_side'] <= $data->count['wolf'] * 2) {
       return false;
     }
@@ -28,6 +28,10 @@ class Role_weather_priest extends Role_priest {
     //試行テスト
     //$stack = array(); for ($i = 0; $i < 20; $i++) @$stack[Lottery::Draw($list)]++;
     //ksort($stack); Text::p($stack);
+
+    if (DB::$ROOM->IsOption('full_weather') && DB::$ROOM->IsDate(1)) { //天変地異対応
+      DB::$ROOM->EntryWeather(Lottery::Draw($list), 1);
+    }
 
     $weather = Lottery::Draw($list);
     //$weather = 44; //テスト用
@@ -94,6 +98,7 @@ class Role_weather_priest extends Role_priest {
     $calib_role_list = array(
       'human'              => 24,
       'suspect'            => 42,
+      'critical_mage'      =>  4,
       'bacchus_medium'     => 21,
       'critical_jealousy'  =>  4,
       'brownie'            => 24,

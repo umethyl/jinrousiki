@@ -53,14 +53,14 @@ class Role_possessed_wolf extends Role_wolf {
 	if (isset($target->id)) {
 	  $target->dead_flag = false; //死亡フラグをリセット
 	  DB::$USER->Kill($target->id, 'WOLF_KILLED');
-	  if ($target->revive_flag) $target->Update('live', 'live'); //蘇生対応
+	  if ($target->revive_flag) $target->UpdateLive(UserLive::LIVE); //蘇生対応
 	}
       }
       elseif ($user->possessed_reset) { //憑依リセット
 	if (isset($target->id)) {
 	  $target->dead_flag = false; //死亡フラグをリセット
 	  DB::$USER->Kill($target->id, 'WOLF_KILLED');
-	  if ($target->revive_flag) $target->Update('live', 'live'); //蘇生対応
+	  if ($target->revive_flag) $target->UpdateLive(UserLive::LIVE); //蘇生対応
 	}
 
 	if (! $user->IsSame($virtual)) { //憑依中なら元の体に戻される
@@ -79,7 +79,7 @@ class Role_possessed_wolf extends Role_wolf {
       elseif ($user->possessed_cancel || $target->revive_flag) { //憑依失敗
 	$target->dead_flag = false; //死亡フラグをリセット
 	DB::$USER->Kill($target->id, 'WOLF_KILLED');
-	if ($target->revive_flag) $target->Update('live', 'live'); //蘇生対応
+	if ($target->revive_flag) $target->UpdateLive(UserLive::LIVE); //蘇生対応
 	continue;
       }
       else { //憑依成功

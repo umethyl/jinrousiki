@@ -43,5 +43,6 @@ class Role_dummy_mania extends Role_soul_mania {
     'yaksa'		=> 'succubus_yaksa',
     'duelist'		=> 'sea_duelist',
     'avenger'		=> 'cute_avenger',
-    'patron'		=> 'critical_patron');
+    'patron'		=> 'critical_patron',
+    'tengu'		=> 'eclipse_tengu');
 }

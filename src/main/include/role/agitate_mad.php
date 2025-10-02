@@ -5,8 +5,8 @@
   ・処刑者決定：同一投票先 + 残りをまとめてショック死
 */
 class Role_agitate_mad extends Role {
-  public $mix_in = 'decide';
-  public $vote_day_type = 'real';
+  public $mix_in = array('decide');
+  public $vote_day_type = 'stack';
   public $sudden_death  = 'AGITATED';
 
   public function DecideVoteKill() {

@@ -30,8 +30,6 @@ class UserManagerMessage {
   /* 入力フォーム (性別) */
   const SEX = '性別';
   const SEX_EXPLAIN = '特に意味は無いかも……';
-  const MALE   = '男性';
-  const FEMALE = '女性';
 
   /* 入力フォーム (プロフィール) */
   const PROFILE = 'プロフィール';
@@ -86,6 +84,7 @@ class UserManagerMessage {
   const CHECK_UNAME       = 'ユーザ名「%s」は使用できません。';
   const CHECK_HANDLE_NAME = '村人名「%s」は使用できません。';
   const CHECK_SEX         = '無効な性別です。';
+  const CHECK_WISH_ROLE   = '無効な役割希望です。';
   const CHECK_ICON        = '無効なアイコン番号です。';
 
   /* 入村エラー */

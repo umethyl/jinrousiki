@@ -8,10 +8,17 @@ class Option_real_time extends CheckRoomOptionItem {
 
   public function LoadPost() {
     RQ::Get()->ParsePostOn($this->name);
-    if (RQ::Get()->{$this->name}) {
-      RQ::Get()->ParsePostInt(sprintf('%s_day', $this->name), sprintf('%s_night', $this->name));
+    if (! RQ::Get()->{$this->name}) return false;
+
+    $post_day   = sprintf('%s_day',   $this->name);
+    $post_night = sprintf('%s_night', $this->name);
+    RQ::Get()->ParsePostInt($post_day, $post_night);
+    $day   = RQ::Get()->$post_day;
+    $night = RQ::Get()->$post_night;
+    if ($day < 1 || 99 < $day || $night < 1 || 99 < $night) {
+      RoomManagerHTML::OutputResult('time');
     }
-    return RQ::Get()->{$this->name};
+    $this->Set(sprintf('%s:%d:%d', $this->name, $day, $night));
   }
 
   public function GetCaption() {

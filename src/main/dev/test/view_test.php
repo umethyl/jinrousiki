@@ -8,7 +8,7 @@ Loader::LoadFile('test_class', 'cast_config');
 Loader::LoadRequest('RequestBaseGame', true);
 
 //-- 仮想村データをセット --//
-DevRoom::Initialize(array('name' => '表示テスト村', 'scene' => 'day'));
+DevRoom::Initialize(array('name' => '表示テスト村', 'scene' => RoomScene::DAY));
 DevUser::Initialize(11,
   array( 1 => 'mage',
 	 2 => 'human',
@@ -26,29 +26,29 @@ DevUser::Complement();
 
 //-- 設定調整 --//
 #CastConfig::$decide = 11;
-#RQ::GetTest()->test_users[3]->live = 'kick';
+#RQ::GetTest()->test_users[3]->live = UserLive::KICK;
 
 //-- データ収集 --//
 //DB::Connect(); //DB接続 (必要なときだけ設定する)
 DevRoom::Load();
 DB::$ROOM->date = 1;
 switch (@$_GET['scene']) {
-case 'beforegame':
-case 'day':
-case 'night':
+case RoomScene::BEFORE:
+case RoomScene::DAY:
+case RoomScene::NIGHT:
   DB::$ROOM->SetScene($_GET['scene']);
   break;
 
 default
-  DB::$ROOM->SetScene('beforegame');
+  DB::$ROOM->SetScene(RoomScene::BEFORE);
   break;
 }
 DevUser::Load();
 
 //テストデータ設定
-DB::$USER->rows[3]->live = 'dead';
-DB::$USER->rows[7]->live = 'dead';
-DB::$USER->rows[8]->live = 'dead';
+DB::$USER->ByID(3)->live = UserLive::DEAD;
+DB::$USER->ByID(7)->live = UserLive::DEAD;
+DB::$USER->ByID(8)->live = UserLive::DEAD;
 
 if (false) {
   switch (intval($_GET['dummy_boy'])) {
@@ -111,7 +111,7 @@ HTML::OutputBodyHeader(sprintf('%s/game_%s', JINROU_CSS, DB::$ROOM->scene));
 GameHTML::OutputPlayer();
 HTML::OutputFooter(true);
 
-//Text::p(DB::$USER->rows[1]);
+//Text::p(DB::$USER->ByID(GM::ID));
 //Text::p($dead_list);
 echo <<<EOF
 [昼]：<br>

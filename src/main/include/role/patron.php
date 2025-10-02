@@ -34,13 +34,15 @@ class Role_patron extends Role_valkyrja_duelist {
   }
 
   //後援者追加役職取得
-  protected function GetPatronRole() { return $this->GetActor()->GetID($this->patron_role); }
+  protected function GetPatronRole() {
+    return $this->GetActor()->GetID($this->patron_role);
+  }
 
   public function Win($winner) {
     $actor = $this->GetActor();
     $id    = $actor->id;
     $count = 0;
-    foreach (DB::$USER->rows as $user) {
+    foreach (DB::$USER->GetRoleUser($this->partner_role) as $user) {
       if ($user->IsPartner($this->partner_role, $id)) {
 	if ($user->IsLive()) return true;
 	$count++;

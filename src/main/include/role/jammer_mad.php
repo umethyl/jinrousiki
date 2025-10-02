@@ -13,12 +13,11 @@ class Role_jammer_mad extends Role {
 
   //妨害対象セット
   final public function SetJammer(User $user) {
-    $class = $this->GetClass($method = 'IsJammer');
-    if ($class->$method($user)) $this->AddStack($user->id, 'jammer');
+    if ($this->IsJammerSuccess($user)) $this->AddStack($user->id, 'jammer');
   }
 
   //妨害対象セット成立判定
-  public function IsJammer(User $user) {
+  public function IsJammerSuccess(User $user) {
     $filter_list = RoleManager::LoadFilter('guard_curse'); //厄払い・妨害無効フィルタ
     if ($user->IsCursed() || in_array($user->id, $this->GetStack('voodoo'))) { //呪返し判定
       $actor = $this->GetActor();
@@ -32,6 +31,12 @@ class Role_jammer_mad extends Role {
     foreach ($filter_list as $filter) { //妨害無効判定
       if ($filter->IsGuard($user->id)) return false;
     }
+
+    return $this->CallParent('IsAddJammer');
+  }
+
+  //追加妨害成立判定
+  public function IsAddJammer() {
     return true;
   }
 }

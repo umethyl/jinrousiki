@@ -128,9 +128,9 @@ class OldLogHTML {
       if (isset($str)) return $str;
     }
 
-    if (DB::$ROOM->watch_mode) { //観戦モード判定
-      DB::$ROOM->status = 'playing';
-      DB::$ROOM->SetScene('day');
+    if (DB::$ROOM->IsOn('watch')) { //観戦モード判定
+      DB::$ROOM->status = RoomStatus::PLAYING;
+      DB::$ROOM->SetScene(RoomScene::DAY);
     }
 
     $list = array(
@@ -147,8 +147,7 @@ class OldLogHTML {
     } else {
       $str = HTML::GenerateHeader($title, 'old_log', true);
     }
-    $url = RQ::Get()->db_no > 0 ? sprintf('?db_no=%d', RQ::Get()->db_no) : '';
-    $str .= HTML::GenerateLink('old_log.php' . $url, Message::BACK) . Text::BRLF;
+    $str .= HTML::GenerateLink('old_log.php', Message::BACK) . Text::BRLF;
     $str .= DB::$ROOM->GenerateTitleTag(true) . Text::BRLF;
     $str .= RoomOption::GenerateImage() . Text::BRLF;
     $str .= sprintf('<a href="#beforegame">%s</a>' . Text::LF, OldLogMessage::BEFORE);
@@ -198,7 +197,9 @@ class OldLogHTML {
       $builder->set_reverse = $is_reverse;
       $builder->AddOption('reverse', $is_reverse      ? 'on' : 'off');
       $builder->AddOption('watch',   RQ::Get()->watch ? 'on' : 'off');
-      if (RQ::Get()->name) $builder->AddOption('name', RQ::Get()->name);
+      foreach (array('name', 'room_name', 'role') as $option) {
+	if (RQ::Get()->$option) $builder->AddOption($option, RQ::Get()->$option);
+      }
       $db_no = RQ::Get()->db_no;
       if (is_int($db_no) && $db_no > 0) $builder->AddOption('db_no', $db_no);
     }
@@ -221,6 +222,9 @@ class OldLogHTML {
 	$base_url = 'old_log.php?room_no=' . DB::$ROOM->id;
 	if (is_int(RQ::Get()->db_no) && RQ::Get()->db_no > 0) {
 	  $base_url .= '&db_no=' . RQ::Get()->db_no;
+	  $view_url  = '&db_no=' . RQ::Get()->db_no;
+	} else {
+	  $view_url = '';
 	}
 	if (RQ::Get()->watch) $base_url .= '&watch=on';
 
@@ -256,7 +260,7 @@ class OldLogHTML {
       RoomOption::SetStack();
 
       $str .= sprintf($format . Text::LF,
-	DB::$ROOM->id, DB::$ROOM->id, $vanish, $base_url, DB::$ROOM->GenerateName(),
+	DB::$ROOM->id, $view_url, DB::$ROOM->id, $vanish, $base_url, DB::$ROOM->GenerateName(),
 	DB::$ROOM->user_count, Image::GenerateMaxUser(DB::$ROOM->max_user), DB::$ROOM->date,
 	RQ::Get()->watch ? '-' : Image::Winner()->Generate(DB::$ROOM->winner),
 	DB::$ROOM->GenerateComment(), $establish, $vanish, $login, $log_link,
@@ -318,19 +322,19 @@ EOF;
   //通常ログ出力
   private static function GenerateLog() {
     if (RQ::Get()->reverse_log) {
-      $str = self::GenerateTalk(0, 'beforegame');
-      if (DB::$ROOM->IsOption('open_day')) $str .= self::GenerateTalk(0, 'day');
+      $str = self::GenerateTalk(0, RoomScene::BEFORE);
+      if (DB::$ROOM->IsOption('open_day')) $str .= self::GenerateTalk(0, RoomScene::DAY);
       for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
 	$str .= self::GenerateTalk($i, '');
       }
-      $str .= Winner::Generate() . self::GenerateTalk(DB::$ROOM->last_date, 'aftergame');
+      $str .= Winner::Generate() . self::GenerateTalk(DB::$ROOM->last_date, RoomScene::AFTER);
     }
     else {
-      $str = self::GenerateTalk(DB::$ROOM->last_date, 'aftergame') . Winner::Generate();
+      $str = self::GenerateTalk(DB::$ROOM->last_date, RoomScene::AFTER) . Winner::Generate();
       for ($i = DB::$ROOM->last_date; $i > 0; $i--) {
 	$str .= self::GenerateTalk($i, '');
       }
-      $str .= self::GenerateTalk(0, 'beforegame');
+      $str .= self::GenerateTalk(0, RoomScene::BEFORE);
     }
     return $str;
   }
@@ -355,32 +359,41 @@ EOF;
   private static function GenerateTalk($date, $scene) {
     $flag_border_game = false;
     switch ($scene) { //シーンに合わせたデータをセット
-    case 'beforegame':
+    case RoomScene::BEFORE:
       $table_class = $scene;
-      if (DB::$ROOM->watch_mode || DB::$ROOM->single_view_mode) {
+      if (DB::$ROOM->IsOn('watch') || DB::$ROOM->IsOn('single')) {
 	DB::$USER->ResetRoleList();
-	unset(DB::$ROOM->event);
+	DB::$ROOM->ResetEvent();
       }
       if (! RQ::Get()->reverse_log) DB::$USER->ResetPlayer(); //player 復元処理
       break;
 
-    case 'aftergame':
+    case RoomScene::AFTER:
       $table_class = $scene;
-      if (DB::$ROOM->watch_mode || DB::$ROOM->single_view_mode) {
+      if (DB::$ROOM->IsOn('watch') || DB::$ROOM->IsOn('single')) {
 	DB::$USER->ResetRoleList();
-	unset(DB::$ROOM->event);
+	DB::$ROOM->ResetEvent();
       }
       if (RQ::Get()->reverse_log) DB::$USER->ResetPlayer(); //player 復元処理
       break;
 
     case 'heaven_only':
-      $table_class = RQ::Get()->reverse_log && $date != 1 ? 'day' : 'night'; //2日目以降は昼から
+      if (RQ::Get()->reverse_log && $date != 1) {
+	$table_class = RoomScene::DAY; //2日目以降は昼から
+      } else {
+	$table_class = RoomScene::NIGHT;
+      }
       break;
 
     default:
       $flag_border_game = true;
-      $table_class = RQ::Get()->reverse_log && $date != 1 ? 'day' : 'night'; //2日目以降は昼から
-      if (DB::$ROOM->watch_mode || DB::$ROOM->single_view_mode) {
+      if (RQ::Get()->reverse_log && $date != 1) {
+	$table_class = RoomScene::DAY; //2日目以降は昼から
+      } else {
+	$table_class = RoomScene::NIGHT;
+      }
+
+      if (DB::$ROOM->IsOn('watch') || DB::$ROOM->IsOn('single')) {
 	DB::$USER->ResetRoleList();
 	DB::$USER->SetEvent(true);
       }
@@ -391,7 +404,7 @@ EOF;
     $str = '';
     if ($flag_border_game && ! RQ::Get()->reverse_log) {
       DB::$ROOM->date = $date + 1;
-      DB::$ROOM->SetScene('day');
+      DB::$ROOM->SetScene(RoomScene::DAY);
       $str .= GameHTML::GenerateLastWords() . GameHTML::GenerateDead(); //死亡者を出力
     }
     DB::$ROOM->date = $date;
@@ -400,13 +413,14 @@ EOF;
 
     $id = DB::$ROOM->IsPlaying() ? 'date' . DB::$ROOM->date : DB::$ROOM->scene;
     $builder = new TalkBuilder('talk ' . $table_class, $id);
+    if (ServerConfig::DEBUG_MODE) Talk::SetBuilder($builder); //デバッグ発言出力用
     if (RQ::Get()->reverse_log) $builder->GenerateTimeStamp();
 
     foreach (TalkDB::GetLog($date, $scene) as $talk) {
       switch ($talk->scene) {
-      case 'day':
-      case 'night':
-	if ($talk->scene == DB::$ROOM->scene || $talk->location == 'dummy_boy') break;
+      case RoomScene::DAY:
+      case RoomScene::NIGHT:
+	if ($talk->scene == DB::$ROOM->scene || $talk->location == TalkLocation::DUMMY_BOY) break;
 	$str .= $builder->Refresh() . self::GenerateSceneChange($date);
 	DB::$ROOM->SetScene($talk->scene);
 	$builder->Begin('talk ' . $talk->scene);
@@ -422,12 +436,12 @@ EOF;
       //突然死で勝敗が決定したケース
       if ($date == DB::$ROOM->last_date && DB::$ROOM->IsDay()) {
 	$str .= GameHTML::GenerateVote();
-	DB::$ROOM->SetScene('night');
+	DB::$ROOM->SetScene(RoomScene::NIGHT);
 	$str .= GameHTML::GenerateDead();
       }
 
       DB::$ROOM->date = $date + 1;
-      DB::$ROOM->SetScene('day');
+      DB::$ROOM->SetScene(RoomScene::DAY);
       $str .= GameHTML::GenerateDead() . GameHTML::GenerateLastWords(); //遺言を出力
     }
     return $str;
@@ -439,7 +453,7 @@ EOF;
     if (RQ::Get()->heaven_only) return $str;
     DB::$ROOM->date = $date;
     if (RQ::Get()->reverse_log) {
-      DB::$ROOM->SetScene('night');
+      DB::$ROOM->SetScene(RoomScene::NIGHT);
       $str .= GameHTML::GenerateVote() . GameHTML::GenerateDead();
     } else {
       $str .= GameHTML::GenerateDead() . GameHTML::GenerateVote();
@@ -528,7 +542,7 @@ EOF;
   private static function GetGenerateListFormat() {
     return <<<EOF
 <tr>
-<td class="number" rowspan="3"><a href="game_view.php?room_no=%d">%d</a></td>
+<td class="number" rowspan="3"><a href="game_view.php?room_no=%d%s">%d</a></td>
 <td class="title%s"><a href="%s">%s</a></td>
 <td class="upper">%d %s</td>
 <td class="upper">%d</td>

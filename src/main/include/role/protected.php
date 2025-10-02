@@ -18,7 +18,7 @@ class Role_protected extends Role {
   public function WolfEatReaction() {
     if ($this->IgnoreSacrifice()) return false;
     $stack = array();
-    $class = $this->GetClass($method = 'IsSacrifice');
+    $class = $this->GetParent($method = 'IsSacrifice');
     foreach (DB::$USER->rows as $user) {
       if ($user->IsLive(true) && ! $user->IsAvoidLovers(true) && $class->$method($user)) {
 	$stack[] = $user->id;
@@ -36,9 +36,7 @@ class Role_protected extends Role {
   private function Sacrifice(array $stack) {
     //Text::p($stack, sprintf('◆Sacrifice [%s]', $this->role));
     if (count($stack) < 1) return false;
-    $id = Lottery::Get($stack);
-    DB::$USER->Kill($id, 'SACRIFICE');
-    $this->AddStack($id, 'sacrifice');
+    DB::$USER->Kill(Lottery::Get($stack), 'SACRIFICE');
     return true;
   }
 }

@@ -22,11 +22,11 @@ class OldLog {
   private static function LoadRoom() {
     DB::LoadRoom();
     DB::$ROOM->LoadOption();
-    DB::$ROOM->SetFlag('log_mode');
-    DB::$ROOM->watch_mode       = RQ::Get()->watch;
-    DB::$ROOM->single_view_mode = RQ::Get()->user_no > 0;
-    DB::$ROOM->personal_mode    = RQ::Get()->personal_result;
-    DB::$ROOM->last_date        = DB::$ROOM->date;
+    DB::$ROOM->SetFlag('log');
+    DB::$ROOM->Flag()->Set('watch',    RQ::Get()->watch);
+    DB::$ROOM->Flag()->Set('single',   RQ::Get()->user_no > 0);
+    DB::$ROOM->Flag()->Set('personal', RQ::Get()->personal_result);
+    DB::$ROOM->last_date = DB::$ROOM->date;
   }
 
   //ユーザ情報ロード
@@ -34,12 +34,12 @@ class OldLog {
     DB::LoadUser();
     DB::$USER->SetEvent(true);
     DB::$USER->player = RoomDB::GetPlayer();
-    if (DB::$ROOM->watch_mode || DB::$ROOM->single_view_mode) DB::$USER->SaveRoleList();
+    if (DB::$ROOM->IsOn('watch') || DB::$ROOM->IsOn('single')) DB::$USER->SaveRoleList();
   }
 
   //本人情報ロード
   private static function LoadSelf() {
-    DB::$ROOM->single_view_mode ? DB::LoadSelf(RQ::Get()->user_no) : DB::LoadViewer();
-    if (DB::$ROOM->watch_mode) DB::$SELF->live = 'live';
+    DB::$ROOM->IsOn('single') ? DB::LoadSelf(RQ::Get()->user_no) : DB::LoadViewer();
+    if (DB::$ROOM->IsOn('watch')) DB::$SELF->live = UserLive::LIVE;
   }
 }

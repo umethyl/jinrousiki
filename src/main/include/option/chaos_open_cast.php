@@ -12,14 +12,7 @@ class Option_chaos_open_cast extends SelectorRoomOptionItem {
       $filter = OptionManager::GetClass($class);
       if (isset($filter) && $filter->enable) $this->form_list[$class] = $name;
     }
-    if (OptionManager::$change) {
-      foreach ($this->form_list as $key => $value) {
-	if (DB::$ROOM->IsOption($key)) {
-	  $this->value = $value;
-	  break;
-	}
-      }
-    }
+    if (OptionManager::IsChange()) $this->SetFormValue('key');
   }
 
   public function LoadPost() {

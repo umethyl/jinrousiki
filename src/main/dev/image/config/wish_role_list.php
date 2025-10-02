@@ -42,6 +42,7 @@ class WishRoleList {
   public $role_duelist          = array('message' => '←決闘者');
   public $role_avenger          = array('message' => '←復讐者');
   public $role_patron           = array('message' => '←後援者');
+  public $role_tengu            = array('message' => '←天狗');
   public $role_mania            = array('message' => '←神話マニア');
   public $role_unknown_mania    = array('message' => '←鵺');
 }

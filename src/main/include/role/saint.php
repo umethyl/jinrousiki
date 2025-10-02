@@ -6,7 +6,7 @@
   ・処刑者決定：候補者の内訳によって変化
 */
 class Role_saint extends Role {
-  public $mix_in = 'decide';
+  public $mix_in = array('decide');
   public $display_role  = 'human';
   public $vote_day_type = 'target';
 

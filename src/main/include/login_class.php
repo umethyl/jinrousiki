@@ -12,7 +12,7 @@ class Login {
 	self::Output(LoginMessage::FAILED_TITLE, $body);
       }
     }
-    elseif (Session::Certify(false)) { //セッション ID から自動ログイン
+    elseif (Session::Certify()) { //セッション ID から自動ログイン
       self::Output(LoginMessage::AUTO_TITLE, LoginMessage::AUTO_BODY, 'game_frame');
     }
     else { //単に呼ばれただけなら観戦ページに移動させる
@@ -64,7 +64,7 @@ class LoginDB {
 SELECT user_no FROM user_entry
 WHERE room_no = ? AND uname = ? AND password = ? AND live <> ?
 EOF;
-    DB::Prepare($query, array(RQ::Get()->room_no, $uname, $password, 'kick'));
+    DB::Prepare($query, array(RQ::Get()->room_no, $uname, $password, UserLive::KICK));
     return DB::Count() == 1;
   }
 
@@ -74,7 +74,8 @@ EOF;
 UPDATE user_entry SET session_id = ?
 WHERE room_no = ? AND uname = ? AND password = ? AND live <> ?
 EOF;
-    DB::Prepare($query, array(Session::GetID(true), RQ::Get()->room_no, $uname, $password, 'kick'));
+    $list = array(Session::GetUniqID(), RQ::Get()->room_no, $uname, $password, UserLive::KICK);
+    DB::Prepare($query, $list);
     return DB::Execute();
   }
 }

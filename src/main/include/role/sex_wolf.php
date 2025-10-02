@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_sex_wolf extends Role_wolf {
-  public $mix_in = 'sex_mage';
+  public $mix_in = array('sex_mage');
   public $result = 'SEX_WOLF_RESULT';
 
   protected function IgnoreResult() {

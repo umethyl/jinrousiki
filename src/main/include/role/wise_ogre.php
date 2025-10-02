@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('ogre');
 class Role_wise_ogre extends Role_ogre {
-  public $mix_in = 'common';
+  public $mix_in = array('common');
   public $resist_rate  = 40;
   public $reduce_rate  =  2;
   public $reflect_rate = 40;

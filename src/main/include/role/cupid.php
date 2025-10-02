@@ -7,6 +7,7 @@
 */
 class Role_cupid extends Role {
   public $action = 'CUPID_DO';
+  public $action_date_type = 'first';
   public $self_shoot  = false;
   public $shoot_count = 2;
 
@@ -30,14 +31,6 @@ class Role_cupid extends Role {
     RoleHTML::OutputVote('cupid-do', 'cupid_do', $this->action);
   }
 
-  public function IsVote() {
-    return DB::$ROOM->IsDate(1);
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
-  }
-
   protected function SetVoteNightFilter() {
     $flag = DB::$USER->GetUserCount() < GameConfig::CUPID_SELF_SHOOT;
     $this->SetStack($flag, 'self_shoot');
@@ -57,7 +50,7 @@ class Role_cupid extends Role {
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   protected function GetVoteNightNeedCount() {

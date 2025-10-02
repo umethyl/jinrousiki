@@ -22,7 +22,7 @@ class Role_border_priest extends Role_priest {
     $result = $this->GetResult();
     foreach (DB::$USER->GetRoleID($this->role) as $id) {
       $count = 0;
-      foreach (DB::$ROOM->vote as $vote_stack) {
+      foreach (DB::$ROOM->Stack()->Get('vote') as $vote_stack) {
 	foreach ($vote_stack as $stack) {
 	  if ($stack['target_no'] == $id) $count++;
 	}

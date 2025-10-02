@@ -13,10 +13,11 @@ class Option_critical extends CheckRoomOptionItem {
     return '全員に「会心」「痛恨」がつきます。';
   }
 
-  public function Cast(array &$list, &$rand) {
-    foreach (array_keys($list) as $id) {
-      $list[$id] .= ' critical_voter critical_luck';
-    }
+  protected function GetCastAllRole($id) {
+    return 'critical_voter critical_luck';
+  }
+
+  protected function GetResultCastList() {
     return array('critical_voter', 'critical_luck');
   }
 }

@@ -1,4 +1,5 @@
 <?php
+//-- ◆ 文字化け抑制 --//
 class Paparazzi {
   public $version = 'paparazzi Ver. 2.0 beta2';
   public $date;
@@ -7,7 +8,7 @@ class Paparazzi {
   public $log;
 
   function __construct() {
-    $this->date   = date('Y-m-d H:i:s');
+    $this->date   = Time::GetDateTime(Time::Get());
     $this->time   = microtime();
     $this->memory = memory_get_usage();
     $this->log    = array();

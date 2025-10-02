@@ -28,6 +28,7 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <p>
 さ～<br>
 <a href="#doom">死の宣告</a>
+<a href="#dead_message">死亡メッセージ</a>
 <a href="#vote_kill_counter">処刑カウンター</a>
 <a href="#decide">処刑者決定</a>
 <a href="#vote_action">処刑投票</a>
@@ -36,9 +37,10 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <a href="#sudden_death">ショック死</a>
 <a href="#anti_sudden_death">ショック死抑制</a>
 <a href="#camp">陣営</a>
-<a href="#wolf_kill_counter">人狼襲撃カウンター</a>
 </p>
 <p>
+<a href="#wolf_kill_avoid">人狼襲撃回避</a>
+<a href="#wolf_kill_counter">人狼襲撃カウンター</a>
 <a href="#resist_wolf">人狼襲撃耐性</a>
 <a href="#psycho">精神</a>
 <a href="#sex">性別</a>
@@ -47,6 +49,7 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 </p>
 <p>
 た～<br>
+<a href="#win">追加勝利条件</a>
 <a href="#critical_luck">痛恨</a>
 <a href="#same">同一表示</a>
 <a href="#frostbite">凍傷</a>
@@ -75,6 +78,8 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <a href="#sacrifice">身代わり</a>
 <a href="#blinder">目隠し</a>
 <a href="#soul">役職鑑定</a>
+<a href="#last_words_decieve">遺言偽装</a>
+<a href="#last_words_update">遺言更新</a>
 <a href="#last_words_limit">遺言制限</a>
 <a href="#dummy">夢</a>
 <a href="#necromancer">霊能</a>
@@ -134,7 +139,7 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 </pre>
 <h3 id="mage_ogre">鬼</h3>
 <pre>
-<a href="ogre.php">鬼陣営</a>
+<a href="wolf.php#tiger_wolf">虎狼</a>・<a href="fox.php#tiger_fox">虎狐</a>・<a href="ogre.php">鬼陣営</a>
 <a href="sub_role.php#wisp">鬼火</a>
 </pre>
 
@@ -177,7 +182,7 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 
 <h2 id="wisp">鬼火付加能力者</h2>
 <pre>
-<a href="wolf.php#fire_wolf">火狼</a>・<a href="wolf.php#fire_mad">煙々羅</a>・<a href="fox.php#spell_fox">宙狐</a>・<a href="mania.php#fire_mania">青行灯</a>
+<a href="wolf.php#fire_wolf">火狼</a>・<a href="wolf.php#fire_mad">煙々羅</a>・<a href="fox.php#spell_fox">宙狐</a>・<a href="fox.php#fire_depraver">紂王</a>・<a href="mania.php#fire_mania">青行灯</a>
 </pre>
 
 <h2 id="guard_hunt">狩り対象者</h2>
@@ -213,7 +218,8 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 
 <h2 id="guard">護衛能力者</h2>
 <pre>
-<a href="human.php#guard">狩人</a>・<a href="human.php#hunter_guard">猟師</a>・<a href="human.php#blind_guard">夜雀</a>・<a href="human.php#gatekeeper_guard">門番</a>・<a href="human.php#step_guard">山立</a>・<a href="human.php#wanderer_guard">一寸法師</a>・<a href="human.php#reflect_guard">侍</a>・<a href="human.php#poison_guard">騎士</a>・<a href="human.php#fend_guard">忍者</a>・<a href="human.php#elder_guard">老兵</a>・<a href="human.php#barrier_wizard">結界師</a>
+<a href="human.php#guard">狩人</a>・<a href="human.php#hunter_guard">猟師</a>・<a href="human.php#blind_guard">夜雀</a>・<a href="human.php#gatekeeper_guard">門番</a>・<a href="human.php#step_guard">山立</a>・<a href="human.php#wanderer_guard">一寸法師</a>・<a href="human.php#reflect_guard">侍</a>・<a href="human.php#poison_guard">騎士</a>・<a href="human.php#fend_guard">忍者</a>・<a href="human.php#elder_guard">老兵</a>
+<a href="human.php#barrier_brownie">産土神</a>・<a href="human.php#barrier_wizard">結界師</a>・<a href="human.php#serve_doll_master">奉公童女</a>
 <a href="human.php#wizard">魔法使い</a>(<a href="human.php#guard">狩人</a>)・<a href="human.php#soul_wizard">八卦見</a>(<a href="human.php#poison_guard">騎士</a>)
 </pre>
 
@@ -263,6 +269,20 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <a href="human.php#tough">益荒男</a>・<a href="human.php#cursed_brownie">祟神</a>・<a href="human.php#doom_doll">蓬莱人形</a>
 </pre>
 
+<h2 id="dead_message">死亡メッセージ閲覧能力者</h2>
+<h3 id="dead_message_reason">死因型</h3>
+<pre>
+<a href="human.php#yama_necromancer">閻魔</a>
+</pre>
+<h3 id="dead_message_revive">蘇生型</h3>
+<pre>
+<a href="human.php#attempt_necromancer">蟲姫</a>・<a href="ogre.php#vajra_yaksa">金剛夜叉</a>
+</pre>
+<h3 id="dead_message_wolf_failed">人狼襲撃失敗型</h3>
+<pre>
+<a href="human.php#eye_scanner">目目連</a>・<a href="wolf.php#eye_wolf">瞳狼</a>
+</pre>
+
 <h2 id="vote_kill_counter">処刑カウンター能力者</h2>
 <h3 id="vote_kill_counter_solo">個別型</h3>
 <pre>
@@ -298,6 +318,10 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <pre>
 <a href="human.php#spell_common">葛の葉</a>・<a href="lovers.php#sweet_cupid">弁財天</a>
 <a href="human.php#philosophy_wizard">賢者</a>(<a href="lovers.php#sweet_cupid">弁財天</a>)
+</pre>
+<h3 id="vote_action_wisp">鬼火付加型</h3>
+<pre>
+<a href="wolf.php#fire_mad">煙々羅</a>・<a href="fox.php#fire_depraver">紂王</a>
 </pre>
 <h3 id="vote_action_self">自己付加型 (紫系)</h3>
 <pre>
@@ -339,7 +363,8 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <h2 id="sudden_death">ショック死発動能力者</h2>
 <h3 id="sudden_death_direct">直接型</h3>
 <pre>
-<a href="human.php#bacchus_medium">神主</a>・<a href="human.php#seal_medium">封印師</a>・<a href="human.php#eclipse_medium">蝕巫女</a>・<a href="human.php#jealousy">橋姫</a>・<a href="human.php#thunder_brownie">雷公</a>・<a href="wolf.php#agitate_mad">扇動者</a>・<a href="wolf.php#follow_mad">舟幽霊</a>・<a href="lovers.php#cursed_angel">堕天使</a>・<a href="chiroptera.php#doom_chiroptera">蝉蝙蝠</a>・<a href="duelist.php#cowboy_duelist">無鉄砲者</a>・<a href="duelist.php#sea_duelist">海御前</a>
+<a href="human.php#bacchus_medium">神主</a>・<a href="human.php#seal_medium">封印師</a>・<a href="human.php#eclipse_medium">蝕巫女</a>・<a href="human.php#jealousy">橋姫</a>・<a href="human.php#thunder_brownie">雷公</a>・<a href="wolf.php#agitate_mad">扇動者</a>・<a href="wolf.php#follow_mad">舟幽霊</a>・<a href="lovers.php#cursed_angel">堕天使</a>
+<a href="chiroptera.php#doom_chiroptera">蝉蝙蝠</a>・<a href="duelist.php#cowboy_duelist">無鉄砲者</a>・<a href="duelist.php#sea_duelist">海御前</a>・<a href="tengu.php">天狗陣営</a>
 <a href="sub_role.php#chicken_group">小心者系</a>・<a href="sub_role.php#challenge_lovers">難題</a>
 </pre>
 <h3 id="sudden_death_indirect">間接型</h3>
@@ -366,11 +391,16 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 </pre>
 <h3 id="camp_distinguish">鑑定能力型</h3>
 <pre>
-<a href="human.php#embalm_necromancer">死化粧師</a>・<a href="human.php#emissary_necromancer">密偵</a>・<a href="human.php#medium_group">巫女系</a>・<a href="human.php#priest">司祭</a>・<a href="human.php#bishop_priest">司教</a>・<a href="human.php#weather_priest">祈祷師</a>・<a href="human.php#high_priest">大司祭</a>・<a href="human.php#crisis_priest">預言者</a>・<a href="human.php#holy_priest">聖徳道士</a>・<a href="human.php#revive_priest">天人</a>
+<a href="human.php#embalm_necromancer">死化粧師</a>・<a href="human.php#emissary_necromancer">密偵</a>・<a href="human.php#medium_group">巫女系</a>・<a href="human.php#priest">司祭</a>・<a href="human.php#bishop_priest">司教</a>・<a href="human.php#weather_priest">祈祷師</a>・<a href="human.php#high_priest">大司祭</a>・<a href="human.php#crisis_priest">預言者</a>・<a href="human.php#holy_priest">聖徳道士</a>・<a href="human.php#revive_priest">天人</a>・<a href="tengu.php#priest_tengu">鼻高天狗</a>
 </pre>
 <h3 id="camp_only">限定型</h3>
 <pre>
 <a href="human.php#snipe_poison">狙毒者</a>・<a href="human.php#alchemy_pharmacist">錬金術師</a>・<a href="human.php#professional_assassin">仕事人</a>・<a href="human.php#divine_escaper">麒麟</a>・<a href="lovers.php#cursed_angel">堕天使</a>
+</pre>
+
+<h2 id="wolf_kill_avoid">人狼襲撃回避能力者</h2>
+<pre>
+<a href="wolf.php#doom_wolf">冥狼</a>・<a href="wolf.php#sex_wolf">雛狼</a>・<a href="wolf.php#sharp_wolf">鋭狼</a>・<a href="wolf.php#hungry_wolf">餓狼</a>
 </pre>
 
 <h2 id="wolf_kill_counter">人狼襲撃カウンター能力者</h2>
@@ -418,7 +448,7 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <h2 id="revive">蘇生能力者</h2>
 <h3 id="revive_other">他者蘇生型</h3>
 <pre>
-<a href="human.php#revive_medium">風祝</a>・<a href="human.php#poison_cat_group">猫又系</a>・<a href="fox.php#revive_fox">仙狐</a>・<a href="mania.php#revive_mania">五徳猫</a>
+<a href="human.php#revive_medium">風祝</a>・<a href="human.php#poison_cat_group">猫又系</a>・<a href="human.php#revive_doll_master">西行法師</a>・<a href="fox.php#revive_fox">仙狐</a>・<a href="mania.php#revive_mania">五徳猫</a>
 </pre>
 <h3 id="revive_self">自己蘇生型</h3>
 <pre>
@@ -430,10 +460,15 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <a href="human.php#revive_rule">基本ルール[蘇生]</a>参照
 </pre>
 
+<h2 id="win">追加勝利条件所持能力者</h2>
+<pre>
+<a href="human.php#doll_group">上海人形系</a>(<a href="human.php#doll_rule_doll_master">人形遣い系</a>は除く)・<a href="human.php#escaper_group">逃亡者系</a>・<a href="wolf.php#emperor_wolf">帝狼</a>・<a href="wolf.php#immolate_mad">殉教者</a>・<a href="fox.php#immolate_fox">野狐禅</a>・<a href="fox.php#critical_fox">寿羊弧</a>
+</pre>
+
 <h2 id="critical_luck">痛恨能力者</h2>
 <h3 id="critical_luck_active">能動型</h3>
 <pre>
-<a href="human.php#critical_jealousy">人魚</a>・<a href="wolf.php#critical_mad">釣瓶落とし</a>・<a href="fox.php#critical_fox">寿羊狐</a>・<a href="duelist.php#critical_avenger">狂骨</a>
+<a href="human.php#critical_mage">一言主神</a>・<a href="human.php#critical_jealousy">人魚</a>・<a href="wolf.php#critical_mad">釣瓶落とし</a>・<a href="fox.php#critical_fox">寿羊狐</a>・<a href="duelist.php#critical_avenger">狂骨</a>
 </pre>
 <h3 id="critical_luck_reactive">受動型</h3>
 <pre>
@@ -523,6 +558,14 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <pre>
 <a href="human.php#scarlet_doll">和蘭人形</a>・<a href="wolf.php#scarlet_wolf">紅狼</a>・<a href="fox.php#scarlet_fox">紅狐</a>・<a href="lovers.php#scarlet_angel">紅天使</a>・<a href="vampire.php#scarlet_vampire">屍鬼</a>・<a href="chiroptera.php#scarlet_chiroptera">紅蝙蝠</a>・<a href="mania.php#scarlet_mania">紅天女</a>
 </pre>
+<h3 id="partner_doll_master">人形遣い型</h3>
+<pre>
+<a href="human.php#puppet_mage">傀儡師</a>
+</pre>
+<h3 id="partner_delay">時間差型</h3>
+<pre>
+<a href="human.php#toy_doll_master">玩具姫</a>
+</pre>
 
 <h2 id="febris">熱病能力者</h2>
 <h3 id="febris_active">能動型</h3>
@@ -574,7 +617,7 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 </pre>
 <h3 id="talk_convert_indirect">間接型</h3>
 <pre>
-<a href="human.php#spell_common">葛の葉</a>(<a href="sub_role.php#cute_camouflage">魔が言</a>)・<a href="human.php#divorce_jealousy">縁切地蔵</a>(<a href="sub_role.php#confession">告白</a>)・<a href="vampire.php#passion_vampire">牡丹灯籠</a>(<a href="sub_role.php#passion">恋色迷彩</a>)
+<a href="human.php#spell_common">葛の葉</a>(<a href="sub_role.php#cute_camouflage">魔が言</a>)・<a href="human.php#divorce_jealousy">縁切地蔵</a>(<a href="sub_role.php#confession">告白</a>)・<a href="vampire.php#passion_vampire">牡丹灯籠</a>(<a href="sub_role.php#passion">恋色迷彩</a>)・<a href="tengu.php#passion_tengu">尼天狗</a>(<a href="sub_role.php#passion">恋色迷彩</a>)
 </pre>
 <h3 id="talk_convert_fairy">悪戯型</h3>
 <pre>
@@ -619,7 +662,7 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <h2 id="sacrifice">身代わり能力者</h2>
 <h3 id="sacrifice_active">能動型</h3>
 <pre>
-<a href="human.php#sacrifice_common">首領</a>・<a href="human.php#doll_master">人形遣い</a>・<a href="fox.php#sacrifice_fox">白蔵主</a>・<a href="vampire.php#sacrifice_vampire">吸血公</a>・<a href="chiroptera.php#boss_chiroptera">大蝙蝠</a>・<a href="ogre.php#sacrifice_ogre">酒呑童子</a>
+<a href="human.php#sacrifice_common">首領</a>・<a href="human.php#doll_rule_doll_master">人形遣い系</a>・<a href="fox.php#sacrifice_fox">白蔵主</a>・<a href="vampire.php#sacrifice_vampire">吸血公</a>・<a href="chiroptera.php#boss_chiroptera">大蝙蝠</a>・<a href="ogre.php#sacrifice_ogre">酒呑童子</a>
 <a href="sub_role.php#protected">庇護者</a>
 </pre>
 <h3 id="sacrifice_reactive">受動型</h3>
@@ -636,7 +679,7 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <h2 id="soul">役職鑑定能力者</h2>
 <h3 id="soul_high">上位型</h3>
 <pre>
-<a href="human.php#soul_mage">魂の占い師</a>・<a href="human.php#soul_necromancer">雲外鏡</a>・<a href="human.php#soul_assassin">辻斬り</a>・<a href="wolf.php#tongue_wolf">舌禍狼</a>・<a href="vampire.php#soul_vampire">吸血姫</a>
+<a href="human.php#soul_mage">魂の占い師</a>・<a href="human.php#soul_necromancer">雲外鏡</a>・<a href="human.php#soul_assassin">辻斬り</a>・<a href="wolf.php#tongue_wolf">舌禍狼</a>・<a href="vampire.php#soul_vampire">吸血姫</a>・<a href="tengu.php#soul_tengu">大天狗</a>
 <a href="human.php#soul_wizard">八卦見</a>(<a href="human.php#soul_mage">魂の占い師</a>・<a href="human.php#soul_assassin">辻斬り</a>)・<a href="human.php#awake_wizard">比丘尼</a>(<a href="human.php#soul_mage">魂の占い師</a>)・<a href="human.php#spiritism_wizard">交霊術師</a>(<a href="human.php#soul_necromancer">雲外鏡</a>)・<a href="human.php#pierrot_wizard">道化師</a>(<a href="human.php#soul_mage">魂の占い師</a>)
 </pre>
 <h3 id="soul_copy">コピー型</h3>
@@ -645,10 +688,26 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <a href="sub_role.php#mind_sympathy">共感者</a>(<a href="#mind_sympathy">共感能力者</a>)
 </pre>
 
+<h2 id="last_words_decieve">遺言偽装能力者</h2>
+<pre>
+<a href="wolf.php#decieve_wolf">欺狼</a>・<a href="wolf.php#possessed_wolf">憑狼</a>
+</pre>
+
+<h2 id="last_words_update">遺言更新能力者</h2>
+<pre>
+<a href="sub_role.php#mind_evoke">口寄せ</a>・<a href="sub_role.php#letter_exchange">交換日記</a>
+</pre>
+
 <h2 id="last_words_limit">遺言制限能力者</h2>
+<h3 id="last_words_limit_update">更新制限型</h3>
 <pre>
 <a href="human.php#reporter">ブン屋</a>・<a href="human.php#soul_assassin">辻斬り</a>・<a href="human.php#evoke_scanner">イタコ</a>・<a href="human.php#escaper_group">逃亡者系</a>
-<a href="sub_role.php#no_last_words">筆不精</a>・<a href="sub_role.php#possessed_exchange">交換憑依</a>
+<a href="sub_role.php#no_last_words">筆不精</a>
+</pre>
+
+<h3 id="last_words_limit_save">公開制限型</h3>
+<pre>
+<a href="sub_role.php#letter_exchange">交換日記</a>・<a href="sub_role.php#possessed_exchange">交換憑依</a>
 </pre>
 
 <h2 id="dummy">夢能力者</h2>
@@ -659,11 +718,11 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <h2 id="necromancer">霊能 (特殊判定)</h2>
 <h3 id="necromancer_role">役職 (特殊人狼)</h3>
 <pre>
-<a href="wolf.php#boss_wolf">白狼</a>・<a href="wolf.php#mist_wolf">霧狼</a>・<a href="wolf.php#phantom_wolf">幻狼</a>・<a href="wolf.php#cursed_wolf">呪狼</a>・<a href="wolf.php#possessed_wolf">憑狼</a>
+<a href="wolf.php#boss_wolf">白狼</a>・<a href="wolf.php#mist_wolf">霧狼</a>・<a href="wolf.php#tiger_wolf">虎狼</a>・<a href="wolf.php#phantom_wolf">幻狼</a>・<a href="wolf.php#cursed_wolf">呪狼</a>・<a href="wolf.php#possessed_wolf">憑狼</a>
 </pre>
 <h3 id="necromancer_fox">妖狐</h3>
 <pre>
-<a href="fox.php#white_fox">白狐</a>・<a href="fox.php#black_fox">黒狐</a>・<a href="fox.php#mist_fox">霧狐</a>・<a href="fox.php#phantom_fox">幻狐</a>・<a href="fox.php#sacrifice_fox">白蔵主</a>・<a href="fox.php#possessed_fox">憑狐</a>・<a href="fox.php#cursed_fox">天狐</a>
+<a href="fox.php#white_fox">白狐</a>・<a href="fox.php#black_fox">黒狐</a>・<a href="fox.php#mist_fox">霧狐</a>・<a href="fox.php#tiger_fox">虎狐</a>・<a href="fox.php#phantom_fox">幻狐</a>・<a href="fox.php#sacrifice_fox">白蔵主</a>・<a href="fox.php#possessed_fox">憑狐</a>・<a href="fox.php#cursed_fox">天狐</a>
 </pre>
 <h3 id="necromancer_child_fox">子狐</h3>
 <pre>
@@ -676,6 +735,10 @@ InfoHTML::OutputRoleHeader('能力者逆引き');
 <h3 id="necromancer_ogre">鬼</h3>
 <pre>
 <a href="ogre.php">鬼陣営</a>
+</pre>
+<h3 id="necromancer_tengu">天狗</h3>
+<pre>
+<a href="tengu.php">天狗陣営</a>
 </pre>
 
 <h2 id="trap">罠能力者</h2>

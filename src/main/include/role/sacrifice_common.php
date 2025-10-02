@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('common');
 class Role_sacrifice_common extends Role_common {
-  public $mix_in = 'protected';
+  public $mix_in = array('protected');
 
   public function IsSacrifice(User $user) {
     return $user->IsRole('human', 'chiroptera');

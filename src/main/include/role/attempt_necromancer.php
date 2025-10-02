@@ -12,10 +12,10 @@ class Role_attempt_necromancer extends Role_necromancer {
   public function NecromancerNight() {
     $stack = array();
 
-    $user = RoleManager::GetStack('wolf_target');
+    $user = RoleManager::Stack()->Get('wolf_target');
     if ($user->IsLive(true)) $stack[$user->id] = true; //人狼襲撃
 
-    $data = RoleManager::GetStack('vote_data');
+    $data = RoleManager::Stack()->Get('vote_data');
     foreach (array('ASSASSIN_DO', 'OGRE_DO') as $action) { //暗殺・人攫い
       foreach ($data[$action] as $id) {
 	if (DB::$USER->ByID($id)->IsLive(true)) $stack[$id] = true;

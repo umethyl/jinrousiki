@@ -20,6 +20,7 @@ HTML::OutputHeader('情報一覧 - [メニュー]', 'info/menu', true);
 <li><a target="body" href="history/">サーバ更新履歴</a></li>
 <li><a target="body" href="history/top.php">TOPページ更新履歴</a></li>
 <li>★☆★☆★☆★</li>
+<li><a target="body" href="develop/admin.php">管理者向け情報</a></li>
 <li><a target="body" href="develop/">開発者向け情報</a></li>
 <li><a target="body" href="develop/history.php">開発履歴</a></li>
 <li><a target="body" href="develop/debug.php">デバッグ情報</a></li>

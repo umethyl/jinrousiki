@@ -6,13 +6,15 @@
 */
 class Role_poison extends Role {
   //毒発動判定
-  public function IsPoison() { return true; }
+  public function IsPoison() {
+    return true;
+  }
 
   //毒対象者選出 (処刑)
   final public function GetPoisonVoteTarget(array $list) {
     $stack     = array();
     $aspirator = array();
-    $class = $this->GetClass($method = 'IsPoisonTarget');
+    $class = $this->GetParent($method = 'IsPoisonTarget');
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       if ($user->IsLive(true) && ! $user->IsAvoidPoison(true) && $class->$method($user)) {
@@ -27,5 +29,7 @@ class Role_poison extends Role {
   }
 
   //毒対象者判定
-  public function IsPoisonTarget(User $user) { return true; }
+  public function IsPoisonTarget(User $user) {
+    return true;
+  }
 }

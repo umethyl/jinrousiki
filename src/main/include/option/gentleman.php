@@ -13,12 +13,12 @@ class Option_gentleman extends CheckRoomOptionItem {
     return '全員に性別に応じた「紳士」「淑女」がつきます';
   }
 
-  public function Cast(array &$list, &$rand) {
-    $stack = array('male' => 'gentleman', 'female' => 'lady');
-    $uname_list = RoleManager::GetStack('uname_list');
-    foreach (array_keys($list) as $id) {
-      $list[$id] .= ' ' . $stack[DB::$USER->ByUname($uname_list[$id])->sex];
-    }
-    return array_values($stack);
+  protected function GetCastAllRole($id) {
+    $stack = Cast::Stack()->Get('fix_uname');
+    return DB::$USER->ByUname($stack[$id])->IsMale() ? 'gentleman' : 'lady';
+  }
+
+  protected function GetResultCastList() {
+    return array('gentleman', 'lady');
   }
 }

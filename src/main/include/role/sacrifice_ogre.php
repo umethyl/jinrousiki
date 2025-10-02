@@ -10,7 +10,7 @@
 */
 RoleManager::LoadFile('ogre');
 class Role_sacrifice_ogre extends Role_ogre {
-  public $mix_in = 'protected';
+  public $mix_in = array('protected');
   public $resist_rate  =  0;
   public $reduce_base  =  3;
   public $reduce_rate  =  5;
@@ -20,8 +20,8 @@ class Role_sacrifice_ogre extends Role_ogre {
     /* 2日目の時点で洗脳者が発生する特殊イベントを実装したら対応すること */
     if (DB::$ROOM->date < 2) return;
     $stack = array();
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsRole('psycho_infected')) $stack[] = $user->handle_name;
+    foreach (DB::$USER->GetRoleUser('psycho_infected') as $user) {
+      $stack[] = $user->handle_name;
     }
     RoleHTML::OutputPartner($stack, 'psycho_infected_list');
   }

@@ -14,8 +14,4 @@ class Option_mind_open extends CheckRoomOptionItem {
   public function GetExplain() {
     return '全員に「公開者」がつきます';
   }
-
-  public function Cast(array &$list, &$rand) {
-    return $this->CastAll($list);
-  }
 }

@@ -9,7 +9,7 @@
 */
 RoleManager::LoadFile('ogre');
 class Role_poison_ogre extends Role_ogre {
-  public $mix_in = 'poison';
+  public $mix_in = array('poison');
   public $reduce_rate = 3;
 
   public function Win($winner) {

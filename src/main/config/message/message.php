@@ -27,16 +27,6 @@ class Message {
   const UNUSABLE_ERROR = 'このスクリプトは使用できない設定になっています。';
   const INVALID_ROOM   = '無効な村番地です';
 
-  /* 時間 */
-  const HOUR   = '時間';
-  const MINUTE = '分';
-  const SECOND = '秒';
-
-  /* システムユーザ */
-  const SYSTEM    = 'システム';
-  const DUMMY_BOY = '身代わり君';
-  const GM        = 'GM';
-
   /* 区切り文字 */
   const COLON = '：';
 
@@ -52,6 +42,24 @@ class Message {
   const TRIP_FORMAT  = '"%s" 又は "%s" の文字も使用不可です。';
   const TRIP_ERROR   = '村人登録 [入力エラー]';
 
+  /* システムユーザ */
+  const SYSTEM    = 'システム';
+  const DUMMY_BOY = '身代わり君';
+  const GM        = 'GM';
+
+  /* 身代わり君 */
+  const DUMMY_BOY_PROFILE    = '僕はおいしくないよ'; //プロフィールコメント
+  const DUMMY_BOY_LAST_WORDS = '僕はおいしくないって言ったのに……'; //遺言
+
+  /* 時間 */
+  const HOUR   = '時間';
+  const MINUTE = '分';
+  const SECOND = '秒';
+
+  /* 性別 */
+  const MALE   = '男性';
+  const FEMALE = '女性';
+
   /* ログ */
   const LOG_NORMAL         = '正';
   const LOG_REVERSE        = '逆';
@@ -63,10 +71,6 @@ class Message {
   const LOG_WATCH_REVERSE  = '逆&amp;観';
   const LOG_WOLF           = '正&amp;狼';
   const LOG_WOLF_REVERSE   = '逆&amp;狼';
-
-  /* 身代わり君 */
-  const DUMMY_BOY_PROFILE    = '僕はおいしくないよ'; //プロフィールコメント
-  const DUMMY_BOY_LAST_WORDS = '僕はおいしくないって言ったのに……'; //遺言
 
   /* ランダムメッセージ挿入 */
   //GameConfig::RANDOM_MESSAGE を true にすると、この配列の中身がランダムに表示される

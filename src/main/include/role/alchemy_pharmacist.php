@@ -7,7 +7,7 @@
 */
 RoleManager::LoadFile('pharmacist');
 class Role_alchemy_pharmacist extends Role_pharmacist {
-  public $mix_in = 'poison';
+  public $mix_in = array('poison');
 
   protected function SetDetoxFlag($uname) {
     if (! $this->GetActor()->detox) $this->GetActor()->{$this->role} = true;

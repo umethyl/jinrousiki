@@ -7,13 +7,14 @@
 */
 RoleManager::LoadFile('wizard');
 class Role_barrier_wizard extends Role_wizard {
-  public $action   = 'SPREAD_WIZARD_DO';
-  public $submit   = 'wizard_do';
+  public $mix_in = array('guard');
+  public $action = 'SPREAD_WIZARD_DO';
+  public $submit = 'wizard_do';
   public $wizard_list = array('barrier_wizard' => 'SPREAD_WIZARD_DO');
   public $result_list = array('GUARD_SUCCESS');
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function CheckVoteNightTarget(array $list) {
@@ -83,10 +84,4 @@ class Role_barrier_wizard extends Role_wizard {
       return 1;
     }
   }
-
-  public function IgnoreGuard() {
-    return false;
-  }
-
-  public function GuardAction() {}
 }

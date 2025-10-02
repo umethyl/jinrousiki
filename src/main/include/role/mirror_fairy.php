@@ -8,23 +8,16 @@
 RoleManager::LoadFile('fairy');
 class Role_mirror_fairy extends Role_fairy {
   public $action = 'CUPID_DO';
+  public $action_date_type = 'first';
   public $submit = 'fairy_do';
   public $event_day = 'vote_duel';
-
-  public function IsVote() {
-    return DB::$ROOM->IsDate(1);
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
-  }
 
   public function IsVoteCheckbox(User $user, $live) {
     return $live && ! $user->IsDummyBoy();
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function SetVoteNightUserList(array $list) {
@@ -59,6 +52,10 @@ class Role_mirror_fairy extends Role_fairy {
       if ($USERS->IsVirtualLive($key))   $stack[] = $key;
       if ($USERS->IsVirtualLive($value)) $stack[] = $value;
     }
-    if (count($stack) > 1) DB::$ROOM->event->{$this->event_day} = $stack;
+
+    if (count($stack) > 1) {
+      DB::$ROOM->Stack()->Set($this->event_day, $stack);
+      DB::$ROOM->Stack()->Get('event')->On($this->event_day);
+    }
   }
 }

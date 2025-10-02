@@ -6,6 +6,7 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 <p>
 <a href="#basic_option">基本</a>
 <a href="#dummy_boy_option">身代わり君</a>
+<a href="#talk_option">会話</a>
 <a href="#open_cast_option">霊界公開</a>
 <a href="#add_role_option">追加役職</a>
 <a href="#special_option">特殊村</a>
@@ -14,8 +15,7 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 
 <h2 id="basic_option">基本設定</h2>
 <p>
-<?php InfoHTML::OutputCategory(array('wish_role', 'real_time', 'wait_morning', 'open_vote',
-'settle')); ?>
+<?php InfoHTML::OutputCategory(array('wish_role', 'real_time', 'open_vote', 'settle')); ?>
 </p>
 <p>
 <?php InfoHTML::OutputCategory(array('seal_message', 'open_day', 'necessary_name',
@@ -33,12 +33,6 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 <ul>
 <li><?php OptionManager::OutputExplain('real_time'); ?></li>
 <li>昼と夜を個別に設定できます → <a href="script_info.php#difference_real_time">初期設定</a></li>
-</ul>
-
-<h3 id="wait_morning"><?php OptionManager::OutputCaption('wait_morning'); ?> [Ver. 1.4.0 β17～]</h3>
-<ul>
-<li><?php OptionManager::OutputExplain('wait_morning'); ?> → <a href="script_info.php#difference_wait_morning">待機時間設定</a></li>
-<li>発言が制限されている間は画面の上方に「待機時間中です」という趣旨のメッセージが表示されます</li>
 </ul>
 
 <h3 id="open_vote"><?php OptionManager::OutputCaption('open_vote'); ?></h3>
@@ -119,6 +113,42 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 <li><a href="#chaos"><?php OptionManager::OutputCaption('chaos'); ?></a>の固定配役に村人を一人追加します</li>
 <li><a href="#replace_human"><?php OptionManager::OutputCaption('replace_human'); ?></a>オプションが付いていても村人を一人確保します</li>
 <li><a href="#duel"><?php OptionManager::OutputCaption('duel'); ?></a>・<a href="#festival"><?php OptionManager::OutputCaption('festival'); ?></a>の配役は入れ替えません (最初から存在する場合のみ有効)</li>
+</ul>
+
+
+<h2 id="talk_option">会話設定</h2>
+<p>
+<?php InfoHTML::OutputCategory(array('wait_morning', 'limit_talk', 'secret_talk', 'no_silence')); ?>
+</p>
+
+<h3 id="wait_morning"><?php OptionManager::OutputCaption('wait_morning'); ?> [Ver. 1.4.0 β17～]</h3>
+<ul>
+<li><?php OptionManager::OutputExplain('wait_morning'); ?> → <a href="script_info.php#difference_wait_morning">待機時間設定</a></li>
+<li>発言が制限されている間は画面の上方に「待機時間中です」という趣旨のメッセージが表示されます</li>
+</ul>
+
+<h3 id="limit_talk"><?php OptionManager::OutputCaption('limit_talk'); ?> [Ver. 3.0.0 α1～]</h3>
+<ul>
+<li><?php OptionManager::OutputExplain('limit_talk'); ?></li>
+<li>画面内に発言数の情報が表示され、制限数を超えると発言できなくなります</li>
+<li>秘密発言は発言数にカウントされません</li>
+</ul>
+
+<h3 id="secret_talk"><?php OptionManager::OutputCaption('secret_talk'); ?> [Ver. 3.0.0 α1～]</h3>
+<ul>
+<li><?php OptionManager::OutputExplain('secret_talk'); ?></li>
+</ul>
+
+<h3 id="no_silence"><?php OptionManager::OutputCaption('no_silence'); ?> [Ver. 3.0.0 α5～]</h3>
+<ul>
+<li><?php OptionManager::OutputExplain('no_silence'); ?></li>
+<li>未投票突然死と違い、投票はリセットされません</li>
+<li>突然死した人への処刑投票は無効票となり、集計されません</li>
+<li>ショック死判定は突然死した人への処刑投票も有効になります</li>
+<li>突然死した人の処刑投票は無効となります (投票結果にも載りません)</li>
+<li><a href="spec.php#dead_day_silence">死因</a>は全員に公表されます</li>
+<li>超過前に全員が投票を完了した場合は突然死処理を行いません</li>
+<li><a href="#open_day">1日目</a>には適用されません</li>
 </ul>
 
 
@@ -277,7 +307,7 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 'blinder', 'mind_open', 'critical', 'sudden_death', 'perverseness')); ?>
 </p>
 <p>
-<?php InfoHTML::OutputCategory(array('joker', 'death_note', 'weather', 'festival')); ?>
+<?php InfoHTML::OutputCategory(array('joker', 'death_note', 'weather', 'full_weather', 'festival')); ?>
 </p>
 <p>
 <?php InfoHTML::OutputCategory(array('replace_human', 'full_mad', 'full_cupid', 'full_quiz',
@@ -376,6 +406,14 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 <li>発生するのは 3 の倍数の日です (3 → 6 → 9 → ...)</li>
 <li>各天候の発生率は設定ファイルで変更できます</li>
 <li>天候の詳細は専用ページを参照して下さい → <a href="weather.php">天候システム</a></li>
+</ul>
+
+<h3 id="full_weather"><?php OptionManager::OutputCaption('full_weather'); ?> [Ver. 3.0.0 β1～]</h3>
+<ul>
+<li><?php OptionManager::OutputExplain('full_weather'); ?></li>
+<li>基本仕様は<a href="#weather"><?php OptionManager::OutputCaption('weather'); ?></a>を参照してください</li>
+<li><a href="#weather"><?php OptionManager::OutputCaption('weather'); ?></a>と同時に設定できません</li>
+<li><a href="#open_day">1日目</a>には適用されません</li>
 </ul>
 
 <h3 id="festival"><?php OptionManager::OutputCaption('festival'); ?> [Ver. 1.4.0 β9～]</h3>
@@ -577,7 +615,7 @@ InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
   <li>以下のような使い方を想定しています</li>
   <ol>
     <li>GM がクイズを出題してゲーム開始</li>
-    <li>人狼が適当なタイミングで GM を噛む</li>
+    <li>人狼が適当なタイミングで GM を襲撃する</li>
     <li>夜が明けたらユーザが解答する</li>
     <li>全員解答したら GM が正解発表</li>
     <li>ユーザは不正解なら GM に投票、正解なら GM 以外に投票</li>

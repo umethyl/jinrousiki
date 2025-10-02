@@ -26,12 +26,16 @@ class RoleAbilityMessage {
   static public $fairy_do         = '悪戯する人を選択してください';		//妖精
   static public $ogre_do          = '攫う人を選択してください';			//鬼
   static public $duelist_do       = '結びつける人を選択してください';		//決闘者
+  static public $tengu_do         = '神通力をかける人を選択してください';	//天狗
   static public $mania_do         = '能力を真似る人を選択してください';		//神話マニア
   static public $death_note_do    = '名前を書く人を選択してください';		//デスノート
 
   /* 投票済み情報 */
-  const SETTLE_VOTED = ' さんに投票済み';
+  const VOTED        = '投票済み';
   const NOT_VOTED    = 'まだ投票していません';
+  const SETTLE_VOTED = 'さんに投票済み';
+  const CANCEL_VOTED = 'キャンセル投票済み';
+  const HONORIFIC    = 'さん';
 
   /* 処刑投票情報 */
   const VOTE_COUNT   = '投票 %d 回目：';

@@ -7,13 +7,10 @@
 */
 RoleManager::LoadFile('chicken');
 class Role_panelist extends Role_chicken {
+  public $mix_in = array('watcher');
   public $sudden_death = 'PANELIST';
 
   public function IsSuddenDeath() {
     return $this->GetVoteUser()->IsRole('quiz');
-  }
-
-  public function FilterVoteDo(&$count) {
-    $count = 0;
   }
 }

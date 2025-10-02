@@ -18,9 +18,9 @@ class Role_reverse_assassin extends Role_assassin {
       }
       else {
 	if ($this->IgnoreResurrect($target)) continue; //反魂対象外判定
-	$stack = RoleManager::GetStack('reverse');
+	$stack = RoleManager::Stack()->Get('reverse');
 	$stack[$target_id] = isset($stack[$target_id]) ? ! $stack[$target_id] : true;
-	RoleManager::SetStack('reverse', $stack);
+	RoleManager::Stack()->Set('reverse', $stack);
       }
     }
   }
@@ -57,7 +57,7 @@ class Role_reverse_assassin extends Role_assassin {
 	}
 
 	//特殊ケースなのでベタに処理
-	$virtual->Update('live', 'live');
+	$virtual->UpdateLive(UserLive::LIVE);
 	$virtual->revive_flag = true;
 	DB::$ROOM->ResultDead($virtual->handle_name, 'REVIVE_SUCCESS');
       }

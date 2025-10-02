@@ -3,6 +3,7 @@
   ◆彦星 (altair_cupid)
   ○仕様
   ・追加役職：共鳴者 (両方) + 織姫 (相手)
+  ・恋人抽選：織姫
 */
 RoleManager::LoadFile('cupid');
 class Role_altair_cupid extends Role_cupid {
@@ -12,7 +13,6 @@ class Role_altair_cupid extends Role_cupid {
     $user->AddRole($this->GetActor()->GetID('mind_friend'));
   }
 
-  //織姫抽選処理
   public function LotteryLovers() {
     $target_id = Lottery::Get(DB::$USER->GetRoleID($this->role)); //対象彦星を抽選
     foreach ($this->GetLoversList() as $id) { //恋人一覧から検索

@@ -151,7 +151,7 @@ CO するべきかどうかは、コピーした役職次第です。
 
 <h3 id="scarlet_mania">紅天女 (占い結果：村人 / 霊能結果：村人) [Ver. 2.2.0 α7～]</h3>
 <pre>
-<a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える特殊な神話マニア。
+<a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える特殊な神話マニア。
 コピー能力は<a href="#mania">神話マニア</a>と同じ。
 役職が変化すると<a href="sub_role.php#copied_nymph">元紅天女</a>がつく。
 </pre>
@@ -254,8 +254,8 @@ CO するべきかどうかは、コピーした役職次第です。
 </tr>
 <tr>
   <td><a href="human.php#brownie_group">座敷童子系</a></td>
-  <td><a href="human.php#history_brownie">白澤</a></td>
-  <td>Ver. 1.4.0 β16～</td>
+  <td><a href="human.php#barrier_brownie">産土神</a></td>
+  <td>Ver. 3.0.0 α5～</td>
 </tr>
 <tr>
   <td><a href="human.php#wizard_group">魔法使い系</a></td>
@@ -264,8 +264,8 @@ CO するべきかどうかは、コピーした役職次第です。
 </tr>
 <tr>
   <td><a href="human.php#doll_group">上海人形系</a></td>
-  <td><a href="human.php#doll_master">人形遣い</a></td>
-  <td></td>
+  <td><a href="human.php#serve_doll_master">奉公童女</a></td>
+  <td>Ver. 3.0.0 α4～</td>
 </tr>
 <tr>
   <td><a href="human.php#escaper_group">逃亡者系</a></td>
@@ -351,6 +351,11 @@ CO するべきかどうかは、コピーした役職次第です。
   <td><a href="duelist.php#patron_group">後援者系</a></td>
   <td><a href="duelist.php#sacrifice_patron">身代わり地蔵</a></td>
   <td>Ver. 1.5.0 β4～</td>
+</tr>
+<tr>
+  <td><a href="tengu.php#tengu_group">天狗系</a></td>
+  <td><a href="tengu.php#soul_tengu">大天狗</a></td>
+  <td>Ver. 3.0.0 α2～</td>
 </tr>
 <tr>
   <td>神話マニア陣営</td>
@@ -560,6 +565,11 @@ CO するべきかどうかは、コピーした役職次第です。
   <td><a href="duelist.php#patron_group">後援者系</a></td>
   <td><a href="duelist.php#critical_patron">ひんな神</a></td>
   <td>Ver. 1.5.0 β6～</td>
+</tr>
+<tr>
+  <td><a href="tengu.php#tengu_group">天狗系</a></td>
+  <td><a href="tengu.php#eclipse_tengu">木っ端天狗</a></td>
+  <td>Ver. 3.0.0 α2～</td>
 </tr>
 <tr>
   <td>神話マニア陣営</td>

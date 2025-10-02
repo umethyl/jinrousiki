@@ -14,8 +14,4 @@ class Option_deep_sleep extends CheckRoomOptionItem {
   public function GetExplain() {
     return '全員に「爆睡者」がつきます';
   }
-
-  public function Cast(array &$list, &$rand) {
-    return $this->CastAll($list);
-  }
 }

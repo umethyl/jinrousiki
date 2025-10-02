@@ -30,6 +30,11 @@ class Text {
     return sha1(ServerConfig::SALT . $str);
   }
 
+  //改行コードを <br> に変換する (PHP5.3 以下の nl2br() だと <br /> 固定なので HTML 4.01 だと不向き)
+  static function Line($str) {
+    return str_replace(self::LF, self::BR, $str);
+  }
+
   //トリップ変換
   /*
     変換テスト結果＠2ch (2009/07/26)
@@ -130,11 +135,6 @@ class Text {
     return $str;
   }
 
-  //改行コードを <br> に変換する (PHP5.3 以下の nl2br() だと <br /> 固定なので HTML 4.01 だと不向き)
-  static function Line(&$str) {
-    return $str = str_replace(self::LF, self::BR, $str);
-  }
-
   /* デバッグ用 */
   //改行タグ付きテキスト出力
   static function d($str = '') {
@@ -153,6 +153,13 @@ class Text {
     if (! is_null($name)) echo $name . ': ';
     var_dump($data);
     self::d();
+  }
+
+  //Talk 出力
+  static function t($data, $name = null) {
+    if (! class_exists('Talk')) return self::p($data, $name);
+    if (is_null($builder = Talk::GetBuilder())) return self::p($data, $name);
+    $builder->AddDebug($data, $name);
   }
 }
 
@@ -251,6 +258,16 @@ class Time {
     return ServerConfig::ADJUST_TIME ? gmdate($format, $time) : date($format, $time);
   }
 
+  //DATETIME 形式の日時を返す
+  static function GetDateTime($time) {
+    return self::GetDate('Y-m-d H:i:s', $time);
+  }
+
+  //TIMESPAMP 形式の日時を返す
+  static function GetTimeStamp($time) {
+    return self::GetDate('Y/m/d (D) H:i:s', $time);
+  }
+
   //時間 (秒) を変換する
   static function Convert($seconds) {
     $hours   = 0;
@@ -275,7 +292,61 @@ class Time {
   static function ConvertTimeStamp($time_stamp, $date = true) {
     $time = strtotime($time_stamp);
     if (ServerConfig::ADJUST_TIME) $time += ServerConfig::OFFSET_SECONDS;
-    return $date ? self::GetDate('Y/m/d (D) H:i:s', $time) : $time;
+    return $date ? self::GetTimeStamp($time) : $time;
+  }
+}
+
+//-- 性別関連クラス --//
+class Sex {
+  const MALE   = 'male';
+  const FEMALE = 'female';
+
+  //定数・表示変換リスト取得
+  static function GetList() {
+    return array(self::MALE => Message::MALE, self::FEMALE => Message::FEMALE);
+  }
+
+  //性別リスト存在判定
+  static function Exists($sex) {
+    return array_key_exists($sex, self::GetList());
+  }
+}
+
+//-- 外部リンク生成の基底クラス --//
+class ExternalLinkBuilder {
+  const TIME = 5; //タイムアウト時間 (秒)
+
+  //サーバ通信状態チェック
+  static function CheckConnection($url) {
+    $url_stack = explode('/', $url);
+    $host = $url_stack[2];
+    if (! ($io = @fsockopen($host, 80, $status, $str, self::TIME))) return false;
+
+    stream_set_timeout($io, self::TIME);
+    $format = 'GET / HTTP/1.1%sHost: %s%sConnection: Close' . Text::CRLF . Text::CRLF;
+    fwrite($io, sprintf($format, Text::CRLF, $host, Text::CRLF));
+    $data = fgets($io, 128);
+    $stream_stack = stream_get_meta_data($io);
+    fclose($io);
+    return ! $stream_stack['timed_out'];
+  }
+
+  //出力
+  static function Output($title, $data) {
+    echo <<<EOF
+<fieldset>
+<legend>{$title}</legend>
+<div class="game-list"><dl>{$data}</dl></div>
+</fieldset>
+
+EOF;
+  }
+
+  //タイムアウトメッセージ出力
+  static function OutputTimeOut($title, $url) {
+    $format = '%s: Connection timed out (%d seconds)' . Text::LF;
+    $stack  = explode('/', $url);
+    self::Output($title, sprintf($format, $stack[2], self::TIME));
   }
 }
 
@@ -381,6 +452,11 @@ EOF;
 </form>
 EOF;
     return sprintf($format . Text::LF, $str, Text::BR, Message::CLOSE_WINDOW);
+  }
+
+  //警告メッセージ生成
+  static function GenerateWarning($str) {
+    return sprintf('<font color="#FF0000">%s</font>', $str);
   }
 
   //CSS 読み込み

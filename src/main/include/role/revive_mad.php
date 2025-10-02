@@ -5,12 +5,9 @@
   ・人狼襲撃：蘇生 + 共鳴
 */
 class Role_revive_mad extends Role {
-  public $mix_in = 'revive_pharmacist';
+  public $mix_in = array('revive_pharmacist');
 
-  public function Resurrect() {
-    if (! $this->filter->Resurrect()) return false;
-
-    //共鳴処理
+  public function ResurrectAction() {
     $role = $this->GetActor()->GetID('mind_friend');
     $this->GetActor()->AddRole($role);
     $this->GetWolfVoter()->AddRole($role);

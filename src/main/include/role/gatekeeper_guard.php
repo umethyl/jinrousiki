@@ -6,10 +6,12 @@
 */
 RoleManager::LoadFile('guard');
 class Role_gatekeeper_guard extends Role_guard {
-  public $hunt = false;
-
   protected function SetGuardAction(User $user) {
     $this->AddStack($user->id);
+  }
+
+  public function IgnoreHunt() {
+    return true;
   }
 
   //対暗殺護衛

@@ -6,5 +6,5 @@
 */
 RoleManager::LoadFile('fox');
 class Role_elder_fox extends Role_fox {
-  public function FilterVoteDo(&$count) { $count++; }
+  public $mix_in = array('authority');
 }

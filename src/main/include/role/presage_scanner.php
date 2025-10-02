@@ -11,7 +11,7 @@ class Role_presage_scanner extends Role_mind_scanner {
 
   public function WolfEatCounter(User $voter) {
     $actor = $this->GetActor();
-    foreach (DB::$USER->rows as $user) {
+    foreach (DB::$USER->GetRoleUser($this->mind_role) as $user) {
       if ($user->IsPartner($this->mind_role, $actor->id)) {
 	DB::$ROOM->ResultAbility('PRESAGE_RESULT', $voter->GetName(), $actor->GetName(), $user->id);
 	break;

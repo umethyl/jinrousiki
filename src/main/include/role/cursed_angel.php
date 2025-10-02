@@ -7,7 +7,7 @@
 */
 RoleManager::LoadFile('angel');
 class Role_cursed_angel extends Role_angel {
-  public $mix_in = 'chicken';
+  public $mix_in = array('chicken');
   public $sudden_death = 'SEALED';
 
   protected function IsSympathy(User $a, User $b) {

@@ -9,30 +9,28 @@
 class Role_guard extends Role {
   public $action = 'GUARD_DO';
   public $result = 'GUARD_SUCCESS';
-  public $hunt   = true;
+  public $action_date_type = 'after';
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message');
   }
 
   protected function OutputAddResult() {
-    if ($this->hunt) $this->OutputAbilityResult('GUARD_HUNTED');
+    if (! $this->IgnoreHunt()) $this->OutputAbilityResult('GUARD_HUNTED');
     $this->OutputGuardAddResult();
   }
 
   //追加結果表示 (狩人系専用)
   protected function OutputGuardAddResult() {}
 
+  //護衛結果表示 (Mixin 用)
+  final public function OutputGuardResult() {
+    if ($this->IgnoreResult()) return;
+    $this->OutputAbilityResult($this->result);
+  }
+
   public function OutputAction() {
     RoleHTML::OutputVote('guard-do', 'guard_do', $this->action);
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
   }
 
   //護衛先セット
@@ -79,8 +77,9 @@ class Role_guard extends Role {
 	$result |= ! ($half && Lottery::Bool()) && (! $limited || is_null($ignore));
       }
 
-      $filter->GuardAction(); //護衛実行処理
+      $filter->GuardAction($user); //護衛実行処理
       //護衛成功メッセージを登録
+      if ($filter->IgnoreGuardSuccess()) continue;
       $this->AddSuccess($actor->id, 'guard_success'); //成功者を登録
       if (! DB::$ROOM->IsOption('seal_message') && $actor->IsFirstGuardSuccess($user->id)) {
 	DB::$ROOM->ResultAbility($this->result, 'success', $user->GetName(), $actor->id);
@@ -94,31 +93,22 @@ class Role_guard extends Role {
     return array_keys($this->GetStack('guard'), $id);
   }
 
-  //護衛制限判定
-  private function IsGuardLimited(User $user) {
-    if ($user->IsRoleGroup('priest')) { //司祭系
-      return ! $user->IsRole('crisis_priest', 'widow_priest', 'revive_priest');
-    }
-    if ($user->IsMainGroup('assassin')) return true; //暗殺者系
-    if ($user->IsRole('sacrifice_common', 'doll_master')) return true; //身代わり能力者
-
-    //上位能力者
-    return $user->IsRole(
-      'prince', 'step_mage', 'emissary_necromancer', 'reporter', 'detective_common',
-      'spell_common', 'clairvoyance_scanner', 'soul_wizard', 'barrier_wizard', 'pierrot_wizard');
-  }
-
   //護衛失敗判定
   public function IgnoreGuard() {
     return false;
   }
 
   //護衛処理
-  public function GuardAction() {}
+  public function GuardAction(User $user) {}
+
+  //護衛成功登録スキップ判定
+  public function IgnoreGuardSuccess() {
+    return false;
+  }
 
   //狩り
   final public function Hunt(User $user) {
-    if (! $this->hunt || $this->IgnoreHunt($user) || ! $this->IsHunt($user)) return;
+    if ($this->CallParent('IgnoreHunt') || ! $this->IsHunt($user)) return;
     DB::$USER->Kill($user->id, 'HUNTED');
     if (! DB::$ROOM->IsOption('seal_message')) { //狩りメッセージを登録
       DB::$ROOM->ResultAbility('GUARD_HUNTED', 'hunted', $user->GetName(), $this->GetID());
@@ -126,13 +116,13 @@ class Role_guard extends Role {
   }
 
   //狩りスキップ判定
-  protected function IgnoreHunt(User $user) {
-    //対象が身代わり死していた場合はスキップ
-    return in_array($user->uname, $this->GetStack('sacrifice')) || $user->IsAvoidLovers(true);
+  public function IgnoreHunt() {
+    return false;
   }
 
   //狩り対象判定
   protected function IsHunt(User $user) {
+    if ($this->IgnoreHuntTarget($user)) return false;
     if ($this->IsAddHunt($user)) return true; //追加狩り対象
     if ($user->IsMainGroup('mad')) { //特殊狂人
       return ! $user->IsRole(
@@ -148,11 +138,35 @@ class Role_guard extends Role {
       'phantom_fox', 'voodoo_fox', 'revive_fox', 'doom_fox', 'trap_fox', 'cursed_fox',
       'cursed_angel', 'incubus_vampire', 'succubus_vampire', 'doom_vampire', 'sacrifice_vampire',
       'soul_vampire', 'poison_chiroptera', 'cursed_chiroptera', 'boss_chiroptera', 'cursed_avenger',
-      'critical_avenger');
+      'critical_avenger', 'soul_tengu');
   }
 
   //追加狩り対象判定
   protected function IsAddHunt(User $user) {
     return false;
+  }
+
+  //護衛制限判定
+  private function IsGuardLimited(User $user) {
+    if ($user->IsRoleGroup('priest')) { //司祭系
+      return ! $user->IsRole('crisis_priest', 'widow_priest', 'revive_priest');
+    }
+
+    //暗殺者系・人形遣い系
+    if ($user->IsMainGroup('assassin') || $user->IsRoleGroup('doll_master')) {
+      return true;
+    }
+
+    //上位能力者・身代わり能力者
+    return $user->IsRole(
+      'prince', 'step_mage', 'emissary_necromancer', 'reporter',
+      'detective_common', 'sacrifice_common', 'spell_common', 'clairvoyance_scanner',
+      'barrier_brownie', 'soul_wizard', 'barrier_wizard', 'pierrot_wizard');
+  }
+
+  //狩りスキップ対象者判定
+  private function IgnoreHuntTarget(User $user) {
+    //対象が身代わり死していた場合はスキップ
+    return in_array($user->uname, $this->GetStack('sacrifice')) || $user->IsAvoidLovers(true);
   }
 }

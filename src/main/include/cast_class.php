@@ -1,6 +1,18 @@
 <?php
 //-- 配役基礎クラス --//
 class Cast {
+  private static $stack; //スタックデータ
+
+  //スタックロード
+  static function LoadStack() {
+    self::$stack = new Stack();
+  }
+
+  //スタック取得
+  static function Stack() {
+    return self::$stack;
+  }
+
   //人数とゲームオプションに応じた役職テーブルを返す
   static function Get($user_count) {
     //人数に応じた配役リストを取得
@@ -52,7 +64,7 @@ class Cast {
 
     if ($role_count != $user_count) { //配列長をチェック
       $str = sprintf(VoteMessage::CAST_MISMATCH_COUNT, $user_count, $role_count);
-      if (DB::$ROOM->test_mode) {
+      if (DB::$ROOM->IsTest()) {
 	Text::p($str);
 	return $role_fill_list;
       }
@@ -62,8 +74,83 @@ class Cast {
     return $role_fill_list;
   }
 
+  //配役人数通知リストを生成する
+  static function GenerateMessage(array $role_count_list, $css = false) {
+    if (DB::$ROOM->IsOption('chaos_open_cast_camp')) {
+      $chaos = 'camp';
+    } elseif (DB::$ROOM->IsOption('chaos_open_cast_role')) {
+      $chaos = 'role';
+    } else {
+      $chaos = null;
+    }
+
+    switch ($chaos) {
+    case 'camp':
+      $header    = VoteMessage::CAMP_HEADER;
+      $main_type = VoteMessage::CAMP_FOOTER;
+      $main_role_list = array();
+      foreach ($role_count_list as $role => $count) {
+	if (RoleData::IsMain($role)) {
+	  @$main_role_list[RoleData::GetCamp($role, true)] += $count;
+	}
+      }
+      break;
+
+    case 'role':
+      $header    = VoteMessage::GROUP_HEADER;
+      $main_type = VoteMessage::GROUP_FOOTER;
+      $main_role_list = array();
+      foreach ($role_count_list as $role => $count) {
+	if (RoleData::IsMain($role)) {
+	  @$main_role_list[RoleData::GetGroup($role)] += $count;
+	}
+      }
+      break;
+
+    default:
+      $header    = VoteMessage::ROLE_HEADER;
+      $main_type = '';
+      $main_role_list = $role_count_list;
+      break;
+    }
+
+    switch ($chaos) {
+    case 'camp':
+    case 'role':
+      $sub_type = VoteMessage::GROUP_FOOTER;
+      $sub_role_list = array();
+      foreach ($role_count_list as $role => $count) {
+	if (! RoleData::IsSub($role)) continue;
+	foreach (RoleData::$sub_role_group_list as $list) {
+	  if (in_array($role, $list)) {
+	    @$sub_role_list[$list[0]] += $count;
+	  }
+	}
+      }
+      break;
+
+    default:
+      $sub_type = '';
+      $sub_role_list = $role_count_list;
+      break;
+    }
+
+    $stack = array();
+    foreach (RoleData::GetDiff($main_role_list) as $role => $name) {
+      if ($css) $name = RoleDataHTML::GenerateMain($role);
+      $stack[] = $name . $main_type . $main_role_list[$role];
+    }
+
+    foreach (RoleData::GetDiff($sub_role_list, true) as $role => $name) {
+      $stack[] = '(' . $name . $sub_type . $sub_role_list[$role] . ')';
+    }
+    return $header . implode(Message::SPACER, $stack);
+  }
+
   //身代わり君の配役処理
-  static function SetDummyBoy(array &$fix_role_list, array &$role_list) {
+  static function SetDummyBoy() {
+    $role_list = self::Stack()->Get('role');
+
     //役職固定オプション判定
     $fix_role = null;
     if (DB::$ROOM->IsOption('gerd') && in_array('human', $role_list)) {
@@ -75,8 +162,8 @@ class Cast {
 
     if (isset($fix_role)) {
       if (($key = array_search($fix_role, $role_list)) !== false) {
-	$fix_role_list[] = $fix_role;
-	unset($role_list[$key]);
+	self::Stack()->Add('fix_role', $fix_role);
+	self::Stack()->DeleteKey('role', $key);
       }
       return;
     }
@@ -91,60 +178,109 @@ class Cast {
 	  continue 2;
 	}
       }
-      $fix_role_list[] = $role;
+      self::Stack()->Add('fix_role', $role);
+      self::Stack()->Set('role', $role_list);
       break;
     }
   }
 
-  //サブ役職配布
-  static function SetSubRole(array &$fix_role_list) {
-    $rand_keys = Lottery::GetList(array_keys($fix_role_list)); //人数分の ID リストをランダムに取得
-    //Text::p($rand_keys, '◆rand_keys');
+  //希望制配役処理
+  static function SetWishRole() {
+    $stack = self::Stack();
+    $stack->Set('wish_group', DB::$ROOM->IsChaosWish()); //特殊村用
 
-    OptionManager::$stack = RoleFilterData::$disable_cast; //割り振り対象外役職のリスト
+    foreach ($stack->Get('uname') as $uname) {
+      $role = self::GetWishRole($uname); //希望役職を取得
+      //Text::v($role, $uname);
+      if (($key = self::GetWishRoleKey($role)) !== false) { //希望役職存在判定
+	$stack->Add('fix_uname', $uname);
+	$stack->Add('fix_role', $role);
+	$stack->DeleteKey('role', $key);
+      }
+      else {
+	$stack->Add('remain', $uname); //決まらなかった場合は未決定リスト行き
+      }
+    }
+
+    $stack->Clear('wish_group');
+  }
+
+  //未決定者を全て統合
+  static function SetMergeRemain(array $uname_list) {
+    $stack = self::Stack();
+
+    $stack->Set('fix_uname', array_merge($stack->Get('fix_uname'), $uname_list));
+
+    //配役はランダム配布
+    $list = array_merge($stack->Get('fix_role'), Lottery::GetList($stack->Get('role')));
+    $stack->Set('fix_role', $list);
+
+    $stack->Init('role'); //残り配役リストをリセット
+  }
+
+  //サブ役職配布
+  static function SetSubRole() {
+    //個人配布用乱数をセット
+    $stack = self::Stack()->Get('fix_role');
+    self::Stack()->Set('rand', Lottery::GetList(array_keys($stack)));
+    //self::Stack()->p('rand', '◆Rand/Base');
+
+    //割り振り対象外役職のリスト
+    OptionManager::Stack()->Set('delete', RoleFilterData::$disable_cast);
+
     //サブ役職テスト用
     /*
     $stack = array('wisp', 'black_wisp', 'spell_wisp', 'foughten_wisp', 'gold_wisp');
+    $rand_list      = self::Stack()->Get('rand');
+    $fix_uname_list = self::Stack()->Get('fix_uname');
+    $fix_role_list  = self::Stack()->Get('fix_role');
     foreach ($stack as $role) {
-      while (count($rand_keys) > 0) {
-	$id = array_shift($rand_keys);
-	if ($fix_uname_list[$id] == 'dummy_boy') {
-	  $rand_keys[] = $id;
-	  if (count($rand_keys) == 1) break;
-	  continue;
-	}
-	OptionManager::$stack[] = $role;
+      if (count($rand_list) < 1) break;
+
+      $id = array_shift($rand_list);
+      if ($fix_uname_list[$id] == GM::DUMMY_BOY) {
+	$rand_list[] = $id;
+	if (count($rand_list) == 1) break;
+      }
+      else {
 	$fix_role_list[$id] .= ' ' . $role;
-	break;
+	OptionManager::Stack()->Add('delete', $role);
       }
     }
+    //OptionManager::Stack()->p('delete', '◆DeleteRoleList');
+    self::Stack()->Set('rand', $rand_list);
+    self::Stack()->Set('fix_role', $fix_role_list);
     */
-    OptionManager::Cast($fix_role_list, $rand_keys);
+
+    OptionManager::Cast();
+    //OptionManager::Stack()->p('delete', '◆DeleteRoleList');
+    //self::Stack()->p('rand', '◆Rand');
 
     //闇鍋モード処理
     if (DB::$ROOM->IsOption('no_sub_role') || ! DB::$ROOM->IsOptionGroup('chaos')) return;
 
     //ランダムなサブ役職のコードリストを作成
     if (DB::$ROOM->IsOption('sub_role_limit_easy')) {
-      $sub_role_keys = ChaosConfig::$chaos_sub_role_limit_easy_list;
+      $sub_role_list = ChaosConfig::$chaos_sub_role_limit_easy_list;
     }
     elseif (DB::$ROOM->IsOption('sub_role_limit_normal')) {
-      $sub_role_keys = ChaosConfig::$chaos_sub_role_limit_normal_list;
+      $sub_role_list = ChaosConfig::$chaos_sub_role_limit_normal_list;
     }
     elseif (DB::$ROOM->IsOption('sub_role_limit_hard')) {
-      $sub_role_keys = ChaosConfig::$chaos_sub_role_limit_hard_list;
+      $sub_role_list = ChaosConfig::$chaos_sub_role_limit_hard_list;
     }
     else {
-      $sub_role_keys = RoleData::GetList(true);
+      $sub_role_list = RoleData::GetList(true);
     }
-    //Text::p(OptionManager::$stack, '◆DeleteRoleList');
+    $sub_role_list = array_diff($sub_role_list, OptionManager::Stack()->Get('delete'));
+    //Text::p($sub_role_list, '◆SubRoleList');
 
-    $sub_role_keys = array_diff($sub_role_keys, OptionManager::$stack);
-    //Text::p($sub_role_keys, '◆SubRoleList');
-    shuffle($sub_role_keys);
-    foreach ($rand_keys as $id) {
-      $fix_role_list[$id] .= ' ' . array_pop($sub_role_keys);
+    shuffle($sub_role_list);
+    $stack = self::Stack()->Get('fix_role');
+    foreach (self::Stack()->Get('rand') as $id) {
+      $stack[$id] .= ' ' . array_pop($sub_role_list);
     }
+    self::Stack()->Set('fix_role', $stack);
   }
 
   //身代わり君の配役対象外役職リスト取得
@@ -156,6 +292,31 @@ class Cast {
     $role = 'detective_common';
     if (DB::$ROOM->IsOption('detective') && ! in_array($role, $stack)) $stack[] = $role;
     return $stack;
+  }
+
+  //希望役職取得
+  private static function GetWishRole($uname) {
+    $role = DB::$USER->GetWishRole($uname); //希望役職を取得
+    if ($role == '' || ! Lottery::Percent(CastConfig::WISH_ROLE_RATE)) return null;
+
+    if (self::Stack()->Get('wish_group')) { //特殊村はグループ単位で希望処理を行なう
+      $stack = array();
+      foreach (self::Stack()->Get('role') as $stack_role) {
+	if ($role == RoleData::GetGroup($stack_role)) {
+	  $stack[] = $stack_role;
+	}
+      }
+      return Lottery::Get($stack);
+    }
+    else {
+      return $role;
+    }
+  }
+
+  //希望役職判定
+  private static function GetWishRoleKey($role) {
+    if (is_null($role)) return false;
+    return array_search($role, self::Stack()->Get('role'));
   }
 
   //闇鍋モード配役処理
@@ -439,6 +600,6 @@ class Cast {
 
   //エラーメッセージ出力
   private static function Output($str) {
-    VoteHTML::OutputResult(sprintf(VoteMessage::ERROR_CAST, $str), ! DB::$ROOM->test_mode);
+    VoteHTML::OutputResult(sprintf(VoteMessage::ERROR_CAST, $str), ! DB::$ROOM->IsTest());
   }
 }

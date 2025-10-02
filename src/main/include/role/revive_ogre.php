@@ -7,7 +7,7 @@
 */
 RoleManager::LoadFile('ogre');
 class Role_revive_ogre extends Role_ogre {
-  public $mix_in = 'revive_pharmacist';
+  public $mix_in = array('revive_pharmacist');
   public $resist_rate  =  0;
   public $reduce_rate  =  2;
   public $reflect_rate = 40;
@@ -20,9 +20,11 @@ class Role_revive_ogre extends Role_ogre {
     return true;
   }
 
-  public function Resurrect() {
-    $user = $this->GetActor();
-    $rate = is_null($event = $this->GetEvent()) ? 40 : $event;
-    if ($this->IsResurrect($user) && Lottery::Percent($rate)) $user->Revive();
+  public function IsResurrect() {
+    return Lottery::Percent(is_null($event = $this->GetEvent()) ? 40 : $event);
+  }
+
+  public function IsResurrectLost() {
+    return false;
   }
 }

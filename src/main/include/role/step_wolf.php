@@ -5,7 +5,7 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_step_wolf extends Role_wolf {
-  public $mix_in = 'step_mage';
+  public $mix_in = array('step_mage');
   public $action     = 'STEP_WOLF_EAT';
   public $add_action = 'SILENT_WOLF_EAT';
   public $submit     = 'wolf_eat';
@@ -21,7 +21,7 @@ class Role_step_wolf extends Role_wolf {
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function CheckVoteNightTarget(array $list) {
@@ -39,7 +39,7 @@ class Role_step_wolf extends Role_wolf {
       $root_list[] = $id;
     } else {
       $id     = $this->GetActor()->id;
-      $max    = count(DB::$USER->rows);
+      $max    = DB::$USER->GetUserCount();
       $vector = null;
       $count  = 0;
       do {

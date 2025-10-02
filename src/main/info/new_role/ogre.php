@@ -52,6 +52,10 @@ InfoHTML::OutputRoleHeader('鬼陣営');
   <td>鬼</td>
 </tr>
 </table>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#mage">特殊占い判定能力者</a>・<a href="ability.php#psycho">精神関連能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
+</pre>
 
 
 <h2 id="ogre_do">人攫いの仕様</h2>
@@ -489,7 +493,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#attempt_necromancer">蟲姫</a>・<a href="ability.php#ogre_anti_human">鬼陣営/非村人陣営勝利型</a>
+<a href="ability.php#ogre_anti_human">鬼陣営/非村人陣営勝利型</a>・<a href="ability.php#dead_message">死亡メッセージ閲覧能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

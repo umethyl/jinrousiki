@@ -6,6 +6,8 @@ class TopPageConfig {
 
   //表示する他のサーバのリスト (トップページ用)
   static public $server_list = array(
+  //-- 設定例 --//
+/*
     'cirno' => array('name' => '真・チルノ鯖',
 		      'url' => 'http://jinrousiki.sourceforge.jp/cirno/',
 		      'encode' => 'UTF-8',
@@ -19,5 +21,6 @@ class TopPageConfig {
 		   'separator' => '',
 		   'footer' => '',
 		   'disable' => false)
+*/
 					 );
 }

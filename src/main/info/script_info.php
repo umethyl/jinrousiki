@@ -35,11 +35,12 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 
 <ul>
   <li><a href="#difference_title_system">システム関連</a>
+  <li><a href="#difference_title_talk">発言関連</a>
   <li><a href="#difference_title_role">役職関連</a>
   <li><a href="#difference_title_room">村作成関連</a>
   <li><a href="#difference_title_time">時間関連</a>
   <li><a href="#difference_title_network">外部サーバ連携</a>
-  <li><a href="#difference_cache">データキャッシュ</a></li>
+  <li><a href="#difference_title_cache">データキャッシュ</a></li>
   <li><a href="#difference_title_limit">制限事項</a>
 </ul>
 
@@ -54,9 +55,8 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
   <li><a href="#difference_die_room">自動廃村</a></li>
   <li><a href="#difference_message">システムメッセージを画像に</a></li>
   <li><a href="#difference_deadman">死亡者の順序がランダム表示</a></li>
-  <li><a href="#difference_last_words">遺言</a></li>
-  <li><a href="#difference_night_talk">夜の独り言</a></li>
   <li><a href="#difference_auto_reload">自動リロード</a></li>
+  <li><a href="#difference_async_reload">非同期リロード</a></li>
   <li><a href="#difference_sound">音でお知らせ</a></li>
   <li><a href="#difference_objection">異議ありボタン</a></li>
   <li><a href="#difference_icon_view">アイコン表示</a></li>
@@ -130,39 +130,21 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 注意しなければいけないことはリロードするたびにランダムに順序が変更されるということです。
 </div>
 
-<h4 id="difference_last_words">遺言</h4>
-<div>
-処刑されたり、<a href="rule.php#rule_role_wolf">人狼</a>に襲われたり、<a href="rule.php#rule_role_fox">妖狐</a>が占われて死亡した時にあらかじめ設定しておいた遺言が次の日の朝に公開されます。<br>
-これは昼の会議中になんとなく言えなかったことや自分の考えをまとめたものを書いておくことで、もしもの時に効果を発揮します。<br>
-遺言でさらなる情報を得て、推理の材料にしてください。<br>
-設定方法は発言の文字の大きさ (強く発言する・通常どおり発言する・弱く発言する) の欄の一番下に「遺言を残す」という項目があります。<br>
-この項目を選択して文章を送信すれば遺言がセットされます。<br>
-「半角スペース一つ」のみを遺言にセットすることで遺言を消去できます。<br>
-死亡後は遺言のセットはできません。<br>
-サーバ管理者が設定することで遺言の設定をゲーム開始前に限定できます。<br>
-現在の設定は [ <?php printf('遺言制限%s', GameConfig::LIMIT_LAST_WORDS ? 'あり' : 'なし'); ?> ] です。
-</div>
-<h5>Ver. 2.0.0 RC1～</h5>
-<div>
-遺言制限機能実装
-</div>
-<h5>Ver. 1.4.9 / Ver. 1.5.0 β1～</h5>
-<div>
-「半角スペース一つ」のみを遺言にセットすることで遺言を消去できます。
-</div>
-
-<h4 id="difference_night_talk">夜の独り言</h4>
-<div>
-<a href="rule.php#rule_role_wolf">人狼</a>、<a href="rule.php#rule_role_common">共有者</a>以外は夜に会話することは出来ませんが、発言すると独り言となり、本人と死亡者(天国モード)からは見ることができます。<br>
-ただし、「<a href="game_option.php#not_open_cast"><?php OptionManager::OutputCaption('not_open_cast'); ?></a>」オプションが設定されている場合は見えません。<br>
-暇つぶしにでも使ってください。
-</div>
-
 <h4 id="difference_auto_reload">自動リロード</h4>
 <div>
 自動でリロードするように設定することができます。<br>
 リロード間隔は、[ <?php Info::OutputAutoReload(); ?> ] のどれかを設定することができます。<br>
 サーバ管理者が設定することで観戦画面でも使用できます (現在の設定は [ <?php echo GameConfig::AUTO_RELOAD ? '有効' : '無効'; ?> ] です)。
+</div>
+
+<h4 id="difference_async_reload">非同期リロード [Ver. 3.0.0 β1～]</h4>
+<div>
+<p>
+※ 次期バージョン搭載予定機能です。まだ試作段階なので使用しないで下さい。
+</p>
+非同期でリロードするように設定することができます。<br>
+<a href="#difference_auto_reload">自動リロード</a>と同時に設定することで、全体をリロードすることなく、会話部分のみをリロードできます。<br>
+サーバ管理者が設定することで有効になります (現在の設定は [ <?php echo GameConfig::ASYNC ? '有効' : '無効'; ?> ] です)。
 </div>
 
 <h4 id="difference_sound">音でお知らせ</h4>
@@ -208,6 +190,48 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 <h5>Ver. 1.5.0 β6～</h5>
 <div>
 トリップ入力専用欄の実装。
+</div>
+
+<h3 id="difference_title_talk">発言関連</h3>
+<ul>
+  <li><a href="#difference_last_words">遺言</a></li>
+  <li><a href="#difference_night_talk">夜の独り言</a></li>
+  <li><a href="#difference_secret_talk">秘密発言</a></li>
+</ul>
+
+<h4 id="difference_last_words">遺言</h4>
+<div>
+処刑されたり、<a href="rule.php#rule_role_wolf">人狼</a>に襲われたり、<a href="rule.php#rule_role_fox">妖狐</a>が占われて死亡した時にあらかじめ設定しておいた遺言が次の日の朝に公開されます。<br>
+これは昼の会議中になんとなく言えなかったことや自分の考えをまとめたものを書いておくことで、もしもの時に効果を発揮します。<br>
+遺言でさらなる情報を得て、推理の材料にしてください。<br>
+設定方法は発言の文字の大きさ (強く発言・通常の発言・弱く発言) の欄の一番下に「遺言を残す」という項目があります。<br>
+この項目を選択して文章を送信すれば遺言がセットされます。<br>
+「半角スペース一つ」のみを遺言にセットすることで遺言を消去できます。<br>
+死亡後は遺言のセットはできません。<br>
+サーバ管理者が設定することで遺言の設定をゲーム開始前に限定できます。<br>
+現在の設定は [ <?php printf('遺言制限%s', GameConfig::LIMIT_LAST_WORDS ? 'あり' : 'なし'); ?> ] です。
+</div>
+<h5>Ver. 2.0.0 RC1～</h5>
+<div>
+遺言制限機能実装
+</div>
+<h5>Ver. 1.4.9 / Ver. 1.5.0 β1～</h5>
+<div>
+「半角スペース一つ」のみを遺言にセットすることで遺言を消去できます。
+</div>
+
+<h4 id="difference_night_talk">夜の独り言</h4>
+<div>
+<a href="rule.php#rule_role_wolf">人狼</a>、<a href="rule.php#rule_role_common">共有者</a>以外は夜に会話することは出来ませんが、発言すると独り言となり、本人と死亡者(天国モード)からは見ることができます。<br>
+ただし、「<a href="game_option.php#not_open_cast"><?php OptionManager::OutputCaption('not_open_cast'); ?></a>」オプションが設定されている場合は見えません。<br>
+暇つぶしにでも使ってください。
+</div>
+
+<h4 id="difference_secret_talk">秘密発言 [Ver. 3.0.0 α1～]</h4>
+<div>
+発言の文字の大きさ (通常の発言など) の欄に「秘密の発言」という項目があります。<br>
+ゲームプレイ中の昼のみ、専用の表示となって出力され、本人と公開状態の霊界からしか見えません。<br>
+「<a href="game_option.php#secret_talk">秘密会話あり</a>」オプションを設定すると仲間から見えるようになります。
 </div>
 
 <h3 id="difference_title_role">役職関連</h3>
@@ -345,7 +369,7 @@ PC の時計をサーバと合わせる必要がなくなりました。
 サーバ管理者が設定した Twitter アカウントに村立て情報を投稿することができます。
 </div>
 
-<h3 id="difference_cache">データキャッシュ [Ver. 2.2.0 α8～]</h3>
+<h3 id="difference_title_cache">データキャッシュ [Ver. 2.2.0 α8～]</h3>
 <div>
 システムの負荷を下げるために一定時間、データのキャッシュを取る事ができます (サーバ管理者設定)。<br>
 各個別設定を有効にするには全体設定が有効化されている必要があります。<br>

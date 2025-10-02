@@ -4,5 +4,5 @@
   ○仕様
 */
 class Role_revive_brownie extends Role {
-  public $mix_in = 'revive_pharmacist';
+  public $mix_in = array('revive_pharmacist');
 }

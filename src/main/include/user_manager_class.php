@@ -37,8 +37,9 @@ class UserManager {
     }
     if ($handle_name == '') self::OutputError($title, UserManagerMessage::HANDLE_NAME . $str);
     if ($profile     == '') self::OutputError($title, UserManagerMessage::PROFILE     . $str);
-    if (! is_int($icon_no)) self::OutputError($title, UserManagerMessage::ICON_NUMBER . $empty);
     if (empty($sex))        self::OutputError($title, UserManagerMessage::SEX         . $empty);
+    if (empty($role))       self::OutputError($title, UserManagerMessage::WISH_ROLE   . $empty);
+    if (! is_int($icon_no)) self::OutputError($title, UserManagerMessage::ICON_NUMBER . $empty);
 
     //文字数制限チェック
     $format = UserManagerMessage::ERROR_TEXT_LIMIT . $back_url;
@@ -51,7 +52,8 @@ class UserManager {
 	    'config' => GameConfig::LIMIT_UNAME),
       array('str'    => $profile,
 	    'name'   => UserManagerMessage::PROFILE,
-	    'config' => GameConfig::LIMIT_PROFILE));
+	    'config' => GameConfig::LIMIT_PROFILE)
+    );
     foreach ($limit_list as $limit) {
       if (strlen($limit['str']) > $limit['config']) {
 	self::OutputError($title, sprintf($format, $limit['name'], $limit['config']));
@@ -59,14 +61,14 @@ class UserManager {
     }
 
     //例外チェック
-    if ($uname == 'dummy_boy' || $uname == 'system') {
+    if ($uname == GM::SYSTEM || $uname == GM::DUMMY_BOY) {
       self::OutputError($title, sprintf(UserManagerMessage::CHECK_UNAME . $back_url, $uname));
     }
     if ($user_no < 1 && self::IsSystemName($handle_name)) {
       $format = UserManagerMessage::CHECK_HANDLE_NAME;
       self::OutputError($title, sprintf($format . $back_url, $handle_name));
     }
-    if ($sex != 'male' && $sex != 'female') {
+    if (! Sex::Exists($sex)) {
       self::OutputError($title, UserManagerMessage::CHECK_SEX . $back_url);
     }
     if ($icon_no < ($user_no > 0 ? 0 : 1) || ! IconDB::IsEnable($icon_no)) {
@@ -82,13 +84,19 @@ class UserManager {
     if (! DB::$ROOM->IsWaiting()) { //ゲーム開始判定
       self::OutputError(UserManagerMessage::LOGIN, UserManagerMessage::PLAYING);
     }
-    DB::$ROOM->ParseOption(); //名前・トリップ必須オプション用
+    DB::$ROOM->ParseOption(true);
 
     //DB から現在のユーザ情報を取得 (ロック付き)
     RQ::Load('RequestBase', true);
-    RQ::Get()->room_no      = $room_no;
-    RQ::Get()->retrive_type = 'entry_user';
+    RQ::Set('room_no', $room_no);
+    RQ::Get('retrieve_type', 'entry_user');
     DB::LoadUser();
+
+    //希望役職チェック
+    $stack = DB::$ROOM->IsOption('wish_role') ? OptionManager::GetWishRole() : array('none');
+    if (! in_array($role, $stack)) {
+      self::OutputError($title, UserManagerMessage::CHECK_WISH_ROLE . $back_url);
+    }
 
     $user_count = DB::$USER->GetUserCount(); //現在の KICK されていない住人の数を取得
     if ($user_no < 1 && $user_count >= DB::$ROOM->max_user) { //定員オーバー判定
@@ -143,8 +151,7 @@ class UserManager {
 
       if ($target->UpdateList($stack) && DB::Commit()) {
 	self::OutputError($title, HTML::GenerateCloseWindow(UserManagerMessage::CHANGE_SUCCESS));
-      }
-      else {
+      } else {
 	self::OutputError(Message::DB_ERROR, Message::DB_ERROR_LOAD . $back_url);
       }
     }
@@ -380,18 +387,19 @@ EOF;
     $male   = '';
     $female = '';
     switch (RQ::Get()->sex) {
-    case 'male':
+    case Sex::MALE:
       $male = ' checked';
       break;
 
-    case 'female':
+    case Sex::FEMALE:
       $female = ' checked';
       break;
     }
 
-    printf($format . Text::LF, self::PATH, UserManagerMessage::SEX,
-	   self::PATH, UserManagerMessage::MALE, $male,
-	   self::PATH, UserManagerMessage::FEMALE, $female,
+    printf($format . Text::LF,
+	   self::PATH, UserManagerMessage::SEX,
+	   self::PATH, Message::MALE,   $male,
+	   self::PATH, Message::FEMALE, $female,
 	   UserManagerMessage::SEX_EXPLAIN);
   }
 
@@ -417,42 +425,18 @@ EOF;
 <tr>
 <td class="role"><img src="%s/role.gif" alt="%s"></td>
 <td colspan="2">
+<table>
+<tr>
 EOF;
     printf($format . Text::LF, self::PATH, UserManagerMessage::WISH_ROLE);
 
-    $stack = array('none');
-    if (DB::$ROOM->IsChaosWish()) {
-      $stack = array_merge($stack, RoleData::GetGroupList());
-    }
-    elseif (DB::$ROOM->IsOption('gray_random')) {
-      array_push($stack, 'human', 'wolf', 'mad', 'fox');
-    }
-    else {
-      array_push($stack, 'human', 'wolf');
-      if (DB::$ROOM->IsQuiz()) {
-	array_push($stack, 'mad', 'common', 'fox');
-      }
-      else {
-	array_push($stack, 'mage', 'necromancer', 'mad', 'guard', 'common');
-	if (DB::$ROOM->IsOption('detective')) $stack[] = 'detective_common';
-	$stack[] = 'fox';
-      }
-      foreach (array('poison', 'assassin', 'boss_wolf', 'depraver') as $role) {
-	if (DB::$ROOM->IsOption($role)) $stack[] = $role;
-      }
-      if (DB::$ROOM->IsOption('poison_wolf')) array_push($stack, 'poison_wolf', 'pharmacist');
-      foreach (array('possessed_wolf', 'sirius_wolf', 'child_fox', 'cupid') as $role) {
-	if (DB::$ROOM->IsOption($role)) $stack[] = $role;
-      }
-      if (DB::$ROOM->IsOption('medium')) array_push($stack, 'medium', 'mind_cupid');
-      if (DB::$ROOM->IsOptionGroup('mania') && ! in_array('mania', $stack)) $stack[] = 'mania';
-    }
-
-    echo '<table>' . Text::LF . '<tr>';
     $format = <<<EOF
 <td><label for="%s"><input type="radio" id="%s" name="role" value="%s"%s><img src="%s/role_%s.gif" alt="%s"></label></td>
 EOF;
+
+    $stack = OptionManager::GetWishRole();
     $count = 0;
+    $check_role = in_array(RQ::Get()->role, $stack) ? RQ::Get()->role : 'none';
     foreach ($stack as $role) {
       if ($count > 0 && $count % 4 == 0) Text::Output(Text::TR); //4個ごとに改行
       $count++;
@@ -461,7 +445,7 @@ EOF;
       } else {
 	$alt = UserManagerMessage::WISH_ROLE_ALT . RoleData::GetName($role);
       }
-      $checked = RQ::Get()->role == $role ? ' checked' : '';
+      $checked = $check_role == $role ? ' checked' : '';
       printf($format . Text::LF, $role, $role, $role, $checked, self::PATH, $role, $alt);
     }
     Text::Output('</tr>' . Text::LF . '</table>' . Text::LF . '</td>' . Text::LF . '</tr>');

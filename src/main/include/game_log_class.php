@@ -12,10 +12,10 @@ class GameLog {
   //データロード
   private static function Load() {
     DB::Connect();
-    Session::Certify();
+    Session::Login();
 
     DB::LoadRoom();
-    DB::$ROOM->SetFlag('log_mode', 'single_log_mode');
+    DB::$ROOM->SetFlag('log');
     DB::LoadUser();
     DB::LoadSelf();
   }
@@ -29,8 +29,8 @@ class GameLog {
   //シーンチェック
   private static function Check() {
     switch (RQ::Get()->scene) {
-    case 'aftergame':
-    case 'heaven':
+    case RoomScene::AFTER:
+    case RoomScene::HEAVEN:
       if (! DB::$ROOM->IsFinished()) { //霊界・ゲーム終了後はゲーム終了後のみ
 	self::OutputResult(GameLogMessage::PLAYING);
       }
@@ -55,8 +55,8 @@ class GameLog {
     GameHTML::OutputHeader('game_log');
     self::OutputHeader();
 
-    if (RQ::Get()->scene == 'heaven') {
-      DB::$ROOM->SetFlag('heaven_mode'); //念のためセット
+    if (RQ::Get()->scene == RoomScene::HEAVEN) {
+      DB::$ROOM->SetFlag('heaven'); //念のためセット
       Talk::OutputHeaven();
       HTML::OutputFooter(true);
     }
@@ -65,7 +65,7 @@ class GameLog {
     if (RQ::Get()->user_no > 0 && DB::$SELF->IsDummyBoy() && ! DB::$ROOM->IsOption('gm_login')) {
       Loader::LoadFile('image_class');
       DB::LoadSelf(RQ::Get()->user_no);
-      DB::$SELF->live = 'live';
+      DB::$SELF->live = UserLive::LIVE;
       RoleHTML::OutputAbility();
     }
 
@@ -85,23 +85,23 @@ class GameLog {
   //ヘッダー出力
   private static function OutputHeader() {
     switch (RQ::Get()->scene) {
-    case 'beforegame':
+    case RoomScene::BEFORE:
       $scene = GameLogMessage::BEFOREGAME;
       break;
 
-    case 'day':
+    case RoomScene::DAY:
       $scene = sprintf(GameLogMessage::DAY, DB::$ROOM->date);
       break;
 
-    case 'night':
+    case RoomScene::NIGHT:
       $scene = sprintf(GameLogMessage::NIGHT, DB::$ROOM->date);
       break;
 
-    case 'aftergame':
+    case RoomScene::AFTER:
       $scene = sprintf(GameLogMessage::AFTERGAME, DB::$ROOM->date);
       break;
 
-    case 'heaven':
+    case RoomScene::HEAVEN:
       $scene = GameLogMessage::HEAVEN;
       break;
     }

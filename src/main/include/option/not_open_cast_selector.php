@@ -10,14 +10,7 @@ class Option_not_open_cast_selector extends SelectorRoomOptionItem {
   public function __construct() {
     parent::__construct();
     $this->value = GameOptionConfig::$default_not_open_cast;
-    if (OptionManager::$change) {
-      foreach ($this->form_list as $option) {
-	if (DB::$ROOM->IsOption($option)) {
-	  $this->value = $option;
-	  break;
-	}
-      }
-    }
+    if (OptionManager::IsChange()) $this->SetFormValue('value');
   }
 
   public function GetItem() {

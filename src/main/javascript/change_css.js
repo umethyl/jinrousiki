@@ -1,3 +1,8 @@
 function change_css(scene) {
-  parent.up.document.getElementById('scene').href = 'css/game_' + scene + '.css';
+  var e = parent.up.document.getElementById('scene');
+  if (e) {
+    e.href = 'css/game_' + scene + '.css';
+    return true;
+  }
+  return false;
 }

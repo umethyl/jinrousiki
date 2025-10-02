@@ -4,6 +4,9 @@
   ○仕様
   ・得票数：-1
 */
-class Role_star extends Role {
-  public function FilterVotePoll(&$count) { $count--; }
+RoleManager::LoadFile('upper_luck');
+class Role_star extends Role_upper_luck {
+  public function GetVotePollCount() {
+    return -1;
+  }
 }

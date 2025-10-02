@@ -4,8 +4,13 @@
   ○仕様
   ・投票数：0
 */
-class Role_watcher extends Role {
-  public function FilterVoteDo(&$count) {
-    $count = 0;
+RoleManager::LoadFile('authority');
+class Role_watcher extends Role_authority {
+  public function GetVoteDoCount() {
+    return 0;
+  }
+
+  public function IsUpdateFilterVoteDo() {
+    return true;
   }
 }

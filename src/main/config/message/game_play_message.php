@@ -5,6 +5,7 @@ class GamePlayMessage {
   static public $header_play_sound    = '音';
   static public $header_icon          = 'アイコン';
   static public $header_name          = '名前';
+  static public $header_async         = '非同期';
   static public $header_list_down_on  = '↓リスト';
   static public $header_list_down_off = '↑リスト';
   static public $header_describe_room = 'OP';
@@ -39,8 +40,10 @@ class GamePlayMessage {
   const NOVOTED_COUNT      = '未投票：%d人';
 
   /* 発言 */
-  const SAY_LIMIT = '文字数または行数が多すぎたので発言できませんでした'; //発言数上限
-  const SILENCE   = '・・・・・・・・・・ %s ほどの沈黙が続いた'; //沈黙判定 (会話で時間経過制)
+  const SAY_LIMIT  = '文字数または行数が多すぎたので発言できませんでした'; //発言数上限
+  const SILENCE    = '・・・・・・・・・・ %s ほどの沈黙が続いた'; //沈黙判定 (会話で時間経過制)
+  const LIMIT_TALK = '今日の発言数制限に達したので発言できませんでした'; //発言数制限制
+  const TALK_COUNT = '発言数制限';
 
   /* 投票情報 (クイズ村 GM 専用) */
   const QUIZ_VOTED_NAME  = '名前';

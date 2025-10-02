@@ -8,7 +8,7 @@
 */
 RoleManager::LoadFile('wizard');
 class Role_awake_wizard extends Role_wizard {
-  public $mix_in = 'mage';
+  public $mix_in = array('mage');
   public $wizard_list = array(
     'mage' => 'MAGE_DO', 'stargazer_mage' => 'MAGE_DO', 'sex_mage' => 'MAGE_DO');
   public $result_list = array('MAGE_RESULT');

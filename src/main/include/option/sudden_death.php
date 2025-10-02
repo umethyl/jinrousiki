@@ -15,14 +15,27 @@ class Option_sudden_death extends CheckRoomOptionItem {
     return '全員に投票でショック死するサブ役職のどれかがつきます';
   }
 
-  public function Cast(array &$list, &$rand) {
-    $stack = array_diff(RoleData::$sub_role_group_list['sudden-death'], $this->disable_list);
-    $role_list = $stack;
-    foreach (array_keys($list) as $id) { //全員に小心者系を何かつける
-      $role = Lottery::Get($stack);
-      $list[$id] .= ' ' . $role;
-      if ($role == 'impatience') $stack = array_diff($stack, array('impatience')); //短気は一人だけ
+  protected function GetCastAllRole($id) {
+    if (Cast::Stack()->IsEmpty($this->name)) { //未セットなら初期化
+      $stack = $this->GetSuddenDeathList();
+      Cast::Stack()->Set($this->name, $stack);
+    } else {
+      $stack = Cast::Stack()->Get($this->name);
     }
-    return $role_list;
+
+    $role = Lottery::Get($stack);
+    if ($role == 'impatience') { //短気は一人だけ
+      Cast::Stack()->DeleteDiff($this->name, array($role));
+    }
+    return $role;
+  }
+
+  protected function GetResultCastList() {
+    return $this->GetSuddenDeathList();
+  }
+
+  //配役対象小心者系リスト取得
+  private function GetSuddenDeathList() {
+    return array_diff(RoleData::$sub_role_group_list['sudden-death'], $this->disable_list);
   }
 }

@@ -10,7 +10,7 @@ class Option_dummy_boy_selector extends SelectorRoomOptionItem {
   public function __construct() {
     parent::__construct();
     $this->value = GameOptionConfig::$default_dummy_boy;
-    if (OptionManager::$change) $this->enable = false;
+    if (OptionManager::IsChange()) $this->enable = false;
   }
 
   public function LoadPost() {

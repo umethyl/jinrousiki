@@ -7,7 +7,7 @@
 */
 RoleManager::LoadFile('guard');
 class Role_hunter_guard extends Role_guard {
-  public function GuardAction() {
+  public function GuardAction(User $user) {
     if ($this->GetVoter()->IsSame($this->GetWolfVoter())) {
       DB::$USER->Kill($this->GetID(), 'WOLF_KILLED');
     }

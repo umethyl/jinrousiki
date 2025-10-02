@@ -6,12 +6,13 @@
   ・蘇生後：なし
 */
 class Role_poison_cat extends Role {
-  public $mix_in = 'poison';
-  public $action      = 'POISON_CAT_DO';
-  public $not_action  = 'POISON_CAT_NOT_DO';
+  public $mix_in = array('poison');
+  public $action     = 'POISON_CAT_DO';
+  public $not_action = 'POISON_CAT_NOT_DO';
+  public $result     = 'POISON_CAT_RESULT';
+  public $action_date_type = 'after';
   public $submit      = 'revive_do';
   public $not_submit  = 'revive_not_do';
-  public $result      = 'POISON_CAT_RESULT';
   public $revive_rate = 25;
   public $missfire_rate;
 
@@ -29,19 +30,23 @@ class Role_poison_cat extends Role {
     RoleHTML::OutputVote('revive-do', $this->submit, $this->action, $this->not_action);
   }
 
-  public function IsVote() {
-    return DB::$ROOM->date > 1 && ! DB::$ROOM->IsOpenCast();
+  protected function IsAddVote() {
+    return ! DB::$ROOM->IsOpenCast() && $this->CallParent('IsReviveVote');
   }
 
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+  //投票能力判定 (蘇生能力者専用)
+  public function IsReviveVote() {
+    return true;
   }
 
   protected function IgnoreVoteFilter() {
     if (DB::$ROOM->IsOpenCast()) return VoteRoleMessage::OPEN_CAST;
-    $self  = 'Role_' . $this->role;
-    $class = $this->GetClass($method = 'IgnoreVoteAction');
-    return method_exists($self, $method) ? $class->$method() : null;
+    return $this->CallParent('IgnoreReviveVoteFilter');
+  }
+
+  //投票スキップ追加判定 (蘇生能力者専用)
+  public function IgnoreReviveVoteFilter() {
+    return null;
   }
 
   public function GetVoteIconPath(User $user, $live) {
@@ -61,10 +66,8 @@ class Role_poison_cat extends Role {
     $target = $this->GetReviveTarget($user);
     $result = is_null($target) || ! $this->ReviveUser($target) ? 'failed' : 'success';
     if ($result == 'success') {
-      if (! DB::$ROOM->IsEvent('full_revive')) { //雷雨ならスキップ
-	$class = $this->GetClass($method = 'ReviveAction');
-	$class->$method();
-      }
+      //雷雨ならスキップ
+      if (! DB::$ROOM->IsEvent('full_revive')) $this->CallParent('ReviveAction');
     }
     else {
       $target = $user;
@@ -78,19 +81,25 @@ class Role_poison_cat extends Role {
 
   //蘇生対象者取得
   final protected function GetReviveTarget(User $user) {
-    //蘇生データ取得
-    $event  = DB::$ROOM->IsEvent('full_revive') ? 100 : (DB::$ROOM->IsEvent('no_revive') ? 0 : null);
-    $class  = $this->GetClass($method = 'GetReviveRate');
-    $revive = isset($event) ? $event : $class->$method(); //蘇生率
+    //-- 蘇生データ取得 --//
+    if (DB::$ROOM->IsEvent('full_revive')) { //天候
+      $event = 100;
+    } else {
+      $event = DB::$ROOM->IsEvent('no_revive') ? 0 : null;
+    }
+    $revive = isset($event) ? $event : $this->CallParent('GetReviveRate'); //蘇生率
     if ($this->IsBoostRevive()) $revive = min(100, ceil($revive * 1.3));
 
-    $missfire = isset($event) ? 0 :
-      (isset($this->missfire_rate) ? $this->missfire_rate : floor($revive / 5)); //誤爆率
+    if (isset($event)) { //誤爆率
+      $missfire = 0;
+    } else {
+      $missfire = isset($this->missfire_rate) ? $this->missfire_rate : floor($revive / 5);
+    }
     if (DB::$ROOM->IsEvent('missfire_revive')) $missfire *= 2;
     if ($missfire > $revive) $missfire = $revive;
 
-    $rand = mt_rand(1, 100); //蘇生判定用乱数
-    //$rand = 5; //mt_rand(1, 10); //テスト用
+    $rand = Lottery::GetPercent(); //蘇生判定用乱数
+    //$rand = 5; Lottery::Rand(10); //テスト用
     //Text::p("{$revive} ({$missfire})", "◆Info: {$this->GetUname()} => {$user->uname}");
     //Text::p($rand, sprintf('◆Rate: %s', $this->GetUname()));
 
@@ -114,7 +123,8 @@ class Role_poison_cat extends Role {
     }
     //$target = DB::$USER->ByID(24); //テスト用
     //Text::p($user->uname, '◆ReviveUser');
-    return $user->IsReviveLimited() ? null : $user; //蘇生失敗判定
+    $class = $this->GetParent($method = 'IgnoreReviveTarget');
+    return $class->$method($user) || $user->IsReviveLimited() ? null : $user; //蘇生失敗判定
   }
 
   //蘇生率取得
@@ -130,6 +140,11 @@ class Role_poison_cat extends Role {
       $this->SetStack($flag, $data);
     }
     return $flag;
+  }
+
+  //蘇生制限対象者判定
+  public function IgnoreReviveTarget(User $user) {
+    return false;
   }
 
   //蘇生実行
@@ -150,7 +165,7 @@ class Role_poison_cat extends Role {
 	}
       }
       elseif ($user->IsLive(true)) { //生存者 (憑依状態確定)
-	if ($virtual->IsReviveLimited()) return false; //蘇生辞退者対応
+	if ($virtual->IsDrop()) return false; //蘇生辞退者対応
 
 	//見かけ上の蘇生処理
 	$user->ReturnPossessed('possessed_target');

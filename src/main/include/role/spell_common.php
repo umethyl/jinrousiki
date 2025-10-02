@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('common');
 class Role_spell_common extends Role_common {
-  public $mix_in = 'critical_mad';
+  public $mix_in = array('critical_mad');
   public $vote_day_type = 'init';
 
   public function SetVoteAction(User $user) {

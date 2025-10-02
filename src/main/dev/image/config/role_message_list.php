@@ -36,6 +36,10 @@ class RoleMessageList {
     'message' => "[役割] [|村人|陣営] [#占い師#系]\n　あなたは#審神者#です。夜の投票時にあなたと投票先の通り道で^足音^が鳴ります。黙破りし^足音^は真実の調べ。神意を解し偽神を暴くのです！",
     'type' => 'mage', 'delimiter' => array('^' => 'step'));
 
+  public $critical_mage = array(
+    'message' => "[役割] [|村人|陣営] [#占い師#系]\n　あなたは#一言主神#です。占った人に^痛恨^をつけてしまいます。悪事も一言、善事も一言。その神力を思うがままに振るうのです。",
+    'type' => 'mage', 'delimiter' => array('^' => 'luck'));
+
   public $soul_mage = array(
     'message' => "[役割] [|村人|陣営] [#占い師#系]\n　あなたは#魂の占い師#、役職を知ることができる#占い師#です。自らの運命をも、その魂で切り開くことができるはずです。",
     'type' => 'mage');
@@ -93,7 +97,7 @@ class RoleMessageList {
     'type' => 'medium', 'delimiter' => array('^' => 'vote', ':' => 'ogre'));
 
   public $seal_medium = array(
-    'message' => "[役割] [|村人|陣営] [#巫女#系]\n　あなたは#封印師#です。_突然死_した人の所属陣営を知ることができます。また、^処刑^投票した人の限定能力を封じることができます。\n　あなたに与えられたのは破邪の聖印。数多の邪悪は、その輝きの前には無力です。その力を振るい、無辜なる村人を救うのです！",
+    'message' => "[役割] [|村人|陣営] [#巫女#系]\n　あなたは#封印師#です。_突然死_した人の所属陣営を知ることができます。また、^処刑^投票した人の限定能力を封じることができます。\n　あなたに与えられたのは破邪の聖印。数多の邪悪は、その輝きの前には無力です。その力を振るい、無辜なる村人達を救うのです！",
     'type' => 'bacchus_medium');
 
   public $revive_medium = array(
@@ -320,6 +324,10 @@ class RoleMessageList {
     'message' => "[役割] [|村人|陣営] [#さとり#系]\n　あなたは#猩々#です。二日目から誰か一人のその夜の能力の行使先が誰なのかを知ることができます。\n　夜に彷徨い酒に酔い、誰かと酒宴に興じることで、夜のひとときを共有し土産話を持ち帰るのです！",
     'type' => 'mind_scanner');
 
+  public $eye_scanner = array(
+    'message' => "[役割] [|村人|陣営] [#さとり#系]\n　あなたは#目目連#です。_人狼_の襲撃が失敗した場合、その理由を知ることができます。\n　あなたの幾多の瞳は夜闇に潜み、_狼_が獲物を捕え損ねる姿を静かに見ているのです。",
+    'type' => 'presage_scanner');
+
   public $step_scanner = array(
     'message' => "[役割] [|村人|陣営] [#さとり#系]\n　あなたは#雷神#です。夜の投票先の周辺に会話能力者が居た場合は一定確率で_足音_が鳴ります。\n　迅雷を空に鳴動させながら、人々に闇夜に入り混じっている密談の場所を伝えてやるのです。",
     'type' => 'mind_scanner', 'delimiter' => array('_' => 'step'));
@@ -389,6 +397,10 @@ class RoleMessageList {
   public $history_brownie = array(
     'message' => "[役割] [|村人|陣営] [#座敷童子#系]\n　あなたは#白澤#です。=人狼=に襲撃されたら次の日の夜を飛ばしてしまいます。どんな悲惨な夜も歴史に残さなければ消えてしまうのです。",
     'type' => 'brownie', 'delimiter' => array('=' => 'wolf'));
+
+  public $barrier_brownie = array(
+    'message' => "[役割] [|村人|陣営] [#座敷童子#系]\n　あなたは#産土神#です。低確率で|村人陣営|を=人狼=の襲撃から*護衛*することができます。地縁で繋った村人たちを遍く守るのです。",
+    'type' => 'history_brownie', 'delimiter' => array('*' => 'guard'));
 
   public $wizard = array(
     'message' => "[役割] [|村人|陣営] [#魔法使い#系]\n　あなたは#魔法使い#です。二日目以降、夜に誰か一人に#魔法#をかけることができます。\n　#魔法#は様々に形を変え村に驚きをもたらします。あなたの力で奇跡を起こすのです！",
@@ -462,6 +474,18 @@ class RoleMessageList {
     'message' => "[役割] [|村人|陣営] [#上海人形#系]\n　あなたは#人形遣い#です。_人狼_に襲撃されても#人形#を犠牲にして生き延びることができます。\n　#人形#を盾にする力で長生きし易い立場を活かし、あなたの手腕で村を勝利に導きましょう！",
     'type' => 'doll', 'delimiter' => array('_' => 'wolf'));
 
+  public $toy_doll_master = array(
+    'message' => "[役割] [|村人|陣営] [#上海人形#系]\n　あなたは#玩具姫#です。#人形#に#人形遣い#と認識されるまで一定日数かかります。糸が縛るはあなたか#人形#か。#人形#と共に明日を目指すのです。",
+    'type' => 'doll_master');
+
+  public $revive_doll_master = array(
+    'message' => "[役割] [|村人|陣営] [#上海人形#系]\n　あなたは#西行法師#です。死んだ人を誰か一人^蘇生^でき、#人形#がいると成功率が上がります。\n　心持たない怪物である他の#人形#たちを礎に、この寂しさを紛らわせる者を創り出すのです。",
+    'type' => 'doll_master', 'delimiter' => array('^' => 'revive'));
+
+  public $serve_doll_master = array(
+    'message' => "[役割] [|村人|陣営] [#上海人形#系]\n　あなたは#奉公童女#です。#人形#を犠牲にして誰か一人を_人狼_の襲撃から^護衛^することができます。\n　祈りを込めあなたに似せた赤い衣の#人形#を犠牲者にそっと抱かせ、村人を_人狼_から守るのです。",
+    'type' => 'doll_master', 'delimiter' => array('^' => 'guard'));
+
   public $escaper = array(
     'message' => "[役割] [|村人|陣営] [#逃亡者#系]\n　あなたは#逃亡者#です。死亡したら敗北となり、夜の#逃亡#先で_人狼_に遭遇したら死んでしまいます。\n　逃亡生活で培った直感と判断力を武器として、安住の地を取り戻すまで_人狼_から逃げ切るのです！",
     'type' => 'human', 'delimiter' => array('#' => 'escaper', '_' => 'wolf'));
@@ -498,6 +522,10 @@ class RoleMessageList {
     'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|霧狼|です。#占い師#に占われると_蝙蝠_と判定されます。紛いの羽音で村の目を欺き、夜霧に紛れて村を混乱へ導くのです！",
     'type' => 'boss_wolf', 'delimiter' => array('_' => 'chiroptera'));
 
+  public $tiger_wolf = array(
+    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|虎狼|です。#占い師#に占われると_鬼_と判定されます。恐怖と因果を其の身に刻み、すべてを喰らう虎となれ。",
+    'type' => 'boss_wolf', 'delimiter' => array('_' => 'ogre'));
+
   public $gold_wolf = array(
     'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|金狼|です。#ひよこ鑑定士#に占われると_蝙蝠_と判定されます。_蝙蝠_に疑惑の目を向けさせ、|狼|の勝利に貢献してもらうのです！",
     'type' => 'mist_wolf');
@@ -517,6 +545,10 @@ class RoleMessageList {
   public $wise_wolf = array(
     'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|賢狼|です。#妖狐#の念話を感知することができます。人の中に潜む#狐#の吐息を正しく聞き分け、仲間に知らせるのです！",
     'type' => 'wolf', 'delimiter' => array('#' => 'fox'));
+
+  public $eye_wolf = array(
+    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|瞳狼|です。|人狼|の襲撃が失敗した場合、その理由を知ることができます。鋭き瞳で邪魔する者を見極め、排除するのです！",
+    'type' => 'wolf');
 
   public $disguise_wolf = array(
     'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|朔狼|です。|人狼系|に_処刑投票_すると|囁き狂人|に変化します。隠れた月を捕らえられるものはいません、村を絶望へと誘うのです。",
@@ -692,7 +724,7 @@ class RoleMessageList {
     'type' => 'amaze_mad', 'delimiter' => array('_' => 'luck'));
 
   public $fire_mad = array(
-    'message' => "[役割] [|人狼|陣営] [|狂人|系]\n　あなたは|煙々羅|です。一定日数おきに、#処刑#投票先が死ななかった場合は_天火_にさせることができます。\n　揺らめく煙はあなた自身。あなたの存在が、村人から心の余裕を奪い、真実をその煙で覆い隠すのです。",
+    'message' => "[役割] [|人狼|陣営] [|狂人|系]\n　あなたは|煙々羅|です。一定日数おきに、#処刑#投票先が死ななかった場合は_天火_を灯すことができます。\n　揺らめく煙はあなた自身。あなたの存在が村人から心の余裕を奪い、真実をその煙で覆い隠すのです。",
     'type' => 'amaze_mad', 'delimiter' => array('_' => 'wisp'));
 
   public $follow_mad = array(
@@ -726,6 +758,10 @@ class RoleMessageList {
   public $mist_fox = array(
     'message' => "[役割] [|妖狐|陣営] [|妖狐|系]\n　あなたは|霧狐|です。占われても_呪殺_されませんが、:蝙蝠:判定が出される上に、^霊能者^には見抜かれてしまいます。\n　其の身に負うは闇の宿命、夜の王たる=吸血鬼=の証。深く静かな霧の中で機会を窺い、全ての敵を騙し抜くのです！",
     'type' => 'white_fox', 'delimiter' => array(':' => 'chiroptera', '=' => 'vampire'));
+
+  public $tiger_fox = array(
+    'message' => "[役割] [|妖狐|陣営] [|妖狐|系]\n　あなたは|虎狐|です。占われても_呪殺_されませんが、:鬼:判定が出される上に、^霊能者^には見抜かれてしまいます。\n　真実は矮小な存在であれども、あなたの張り子は見抜かれません。借り物の権威を以て全てを騙し抜くのです！",
+    'type' => 'white_fox', 'delimiter' => array(':' => 'ogre'));
 
   public $gold_fox = array(
     'message' => "[役割] [|妖狐|陣営] [|妖狐|系]\n　あなたは|金狐|です。_ひよこ鑑定士_に占われると^蝙蝠^と判定されます。^蝙蝠^に村や#狼#の矛先を向けさせ、その隙に|狐|の勝利を頂くのです！",
@@ -851,6 +887,10 @@ class RoleMessageList {
     'message' => "[役割] [|妖狐|陣営] [|背徳者|系]\n　あなたは|背徳者|です。|妖狐|の勝利があなたの勝利となります。徳に背きしこの身体、崇敬するあなたに捧げます。",
     'type' => 'fox', 'delimiter' => array('_' => 'mage'));
 
+  public $fire_depraver = array(
+    'message' => "[役割] [|妖狐|陣営] [|背徳者|系]\n　あなたは|紂王|です。一定日数おきに、^処刑^投票先が死ななかった場合は:狐火:を灯すことができます。\n　身がとろける快楽は他者をも虜と成す。さあ、王の寵愛を受けさせ、あなたがたの僕とさせるのだ。",
+    'type' => 'depraver', 'delimiter' => array('^' => 'vote', ':' => 'wisp'));
+
   public $sacrifice_depraver = array(
     'message' => "[役割] [|妖狐|陣営] [|背徳者|系]\n　あなたは|伊呂具秦公|です。|妖狐|の_呪殺_に対して自分の命と引き換えに守ることができます。\n　幼い夢に選ばれたあなたは|妖狐|を呪いから守る代わりに白鳥となり天へと旅立つでしょう。",
     'type' => 'depraver');
@@ -882,6 +922,10 @@ class RoleMessageList {
   public $sweet_cupid = array(
     'message' => "[役割] [|恋人|陣営] [|キューピッド|系]\n　あなたは|弁財天|です。初日の夜に誰か二人を#共鳴者#つきの|恋人|にすることができます。また、_処刑_投票先を^恋耳鳴^にさせることができます。\n　あなたの矢は種族を超えた愛となり、あなたの投票は闇夜に聞こえる|恋人|の囁きを届ける。恋を奏でる詩人となり、村を愛で満たすのです！",
     'type' => 'mind_cupid', 'delimiter' => array('_' => 'vote', '^' => 'no_last_words'));
+
+  public $letter_cupid = array(
+    'message' => "[役割] [|恋人|陣営] [|キューピッド|系]\n　あなたは|文車妖妃|です。初日の夜に誰か二人を|恋人|同士にして、さらに|交換日記|を付与できます。\n　|恋人|たちのささめきを、秘められた睦言をその身に収め、嫉妬に燃える業火から守り通すのです！",
+    'type' => 'cupid');
 
   public $minstrel_cupid = array(
     'message' => "[役割] [|恋人|陣営] [|キューピッド|系]\n　あなたは|吟遊詩人|です。二日目からあなたの夜の独り言が|恋人|にも聞こえるようになります。\n　あなたの奏でる物語は|恋人|達を導きます。伝説を、そして世界を余すことなく奏でましょう。",
@@ -1252,6 +1296,30 @@ class RoleMessageList {
     'message' => "[役割] [|決闘者|陣営] [|後援者|系]\n　あなたは|ひんな神|です。初日の夜に誰か一人を|受援者|にし、さらに#ひんな持ち#を与えます。また、稀に_処刑_#得票数#が +100 されます。\n　死人の土から造られて、あなたは望まぬ願いを叶え続けるだろう。願いの対価を刺し与え、時は来たぞと硬い地の下に還るでしょう。",
     'type' => 'patron', 'delimiter' => array('#' => 'luck', '_' => 'vote'));
 
+  public $tengu = array(
+    'message' => "[役割] [|天狗|陣営] [|天狗|系]\n　あなたは|天狗|です。2日目昼の時点の#村人#・_人狼_のうち、人数が少ない側の陣営を勝利させることが勝利条件になります。\n　弱きを助け強きを挫く為に|神通力|を使い、災いを成す者を知らせる使いとして、村の者達にその力を知らしめるのです。",
+    'delimiter' => array('|' => 'tengu', '#' => 'human', '_' => 'wolf'));
+
+  public $soul_tengu = array(
+    'message' => "[役割] [|天狗|陣営] [|天狗|系]\n　あなたは|大天狗|です。|神通力|の対象者の役職を知ることができます。驕れる者は久しからず。人の業も獣の力も、あなたの前では児戯の類。",
+    'type' => 'tengu');
+
+  public $passion_tengu = array(
+    'message' => "[役割] [|天狗|陣営] [|天狗|系]\n　あなたは|尼天狗|です。|神通力|が成功すると^恋色迷彩^をつけることができます。まんまと誑かし、仕舞えぬ恋着に心乱させてやりましょう。",
+    'type' => 'tengu', 'delimiter' => array('^' => 'liar'));
+
+  public $meteor_tengu = array(
+    'message' => "[役割] [|天狗|陣営] [|天狗|系]\n　あなたは|流星天狗|です。|神通力|が成功すると|神隠し|を行うことができます。煌めく生命は悉く消すのが、あなたの宿命。吠えよ凶星！",
+    'type' => 'tengu');
+
+  public $priest_tengu = array(
+    'message' => "[役割] [|天狗|陣営] [|天狗|系]\n　あなたは|鼻高天狗|です。|神通力|に加えて、一定日数後から現在生きている#村人陣営#・_人狼陣営_の総数を知ることができます。\n　天の八衢に悠然と立ち、見渡す先は天上天下。闇に蠢き災厄をもたらす根源を隈無く照らし、迷いし者の道標となるのです！",
+    'type' => 'tengu');
+
+  public $eclipse_tengu = array(
+    'message' => "[役割] [|天狗|陣営] [|天狗|系]\n　あなたは|木っ端天狗|です。|神通力|が一定確率で自分に跳ね返ってしまいます。\n　あなたの力は諸刃の剣。時には声を張り上げ、討つべき者を見つけるのです。",
+    'type' => 'tengu');
+
   public $mania = array(
     'message' => "[役割] [|神話マニア|陣営] [|神話マニア|系]\n　あなたは|神話マニア|です。初日の夜に指定した人のメイン役職をコピーすることができます。\n　星の数ほどある神話。誰を相手取るかによって何が最も適切なのかを的確に選び取るのです！",
     'delimiter' => array('|' => 'mania'));
@@ -1505,6 +1573,10 @@ class RoleMessageList {
     'message' => "　あなたは|臆病者|です。この事態に混乱するあなたは声の大きさが安定しません。",
     'type' => 'strong_voice');
 
+  public $tengu_voice = array(
+    'message' => "　あなたは|天狗倒し|に苛まされているので、時々|大声|を出してしまいます。",
+    'type' => 'strong_voice');
+
   public $no_last_words = array(
     'message' => "　あなたは|筆不精|なので遺言を遺すことができません。",
     'delimiter' => array('|' => 'no_last_words'));
@@ -1603,12 +1675,21 @@ class RoleMessageList {
 
   public $challenge_lovers = array(
     'message' => "　あなたは|難題|に挑戦しています。４日目夜までは#人狼#の襲撃・_毒_などを無効化し、^暗殺^を反射できます。\n　５日目昼以降は耐性を失う上に、あなたの|恋人|と:処刑:投票先を合わせないと=ショック死=してしまいます。",
-    'delimiter' => array('|' => 'lovers', '#' => 'wolf', '_' => 'poison',
-			 '^' => 'assassin', ':' => 'vote', '=' => 'chicken'));
+    'type' => 'cupid_pair',
+    'delimiter' => array('#' => 'wolf', '_' => 'poison', '^' => 'assassin', ':' => 'vote',
+			 '=' => 'chicken'));
 
   public $vega_lovers = array(
     'message' => "　あなたは|織姫|です。#人狼#の襲撃・_毒_などを無効化し、^暗殺^を反射できます。\n　また、:処刑:=投票数=・*得票数*がともに０になり、:処刑者:決定能力を持ちます。",
     'type' => 'challenge_lovers', 'delimiter' => array('=' => 'authority', '*' => 'luck'));
+
+  public $letter_exchange = array(
+    'message' => "　あなたは|恋人|と|交換日記|を送りあうことになりました。",
+    'type' => 'cupid_pair');
+
+  public $letter_exchange_today = array(
+    'message' => "　あなたは|恋人|と|交換日記|を送りあうことになりました。今夜の_遺言_が相手に届きます。",
+    'type' => 'cupid_pair', 'delimiter' => array('_' => 'no_last_words'));
 
   public $joker = array(
     'message' => "　あなたは|ジョーカー|を所持しています。所持したままゲーム終了すると無条件で敗北になります。\n　#処刑#投票先が生きていた場合に押し付けることができますが、例外があるので気をつけましょう。",
@@ -1616,7 +1697,7 @@ class RoleMessageList {
 
   public $sweet_status = array(
     'message' => "　あなたは|恋人|と別れました……",
-    'type' => 'challenge_lovers');
+    'type' => 'cupid_pair');
 
   public $death_note = array(
     'message' => "　あなたは|デスノート|を所持しています。夜に村人一人を|暗殺|することができます。",
@@ -1788,6 +1869,7 @@ class RoleMessageList {
   public $result_mage = array('message' => "さんは|占い師|でした", 'delimiter' => array('|' => 'mage'));
   public $result_puppet_mage = array('message' => "さんは|傀儡師|でした", 'type' => 'result_mage');
   public $result_step_mage = array('message' => "さんは|審神者|でした", 'type' => 'result_mage');
+  public $result_critical_mage = array('message' => "さんは|一言主神|でした", 'type' => 'result_mage');
   public $result_soul_mage = array('message' => "さんは|魂の占い師|でした", 'type' => 'result_mage');
   public $result_psycho_mage = array('message' => "さんは|精神鑑定士|でした", 'type' => 'result_mage');
   public $result_sex_mage = array('message' => "さんは|ひよこ鑑定士|でした", 'type' => 'result_mage');
@@ -1873,6 +1955,7 @@ class RoleMessageList {
   public $result_evoke_scanner = array('message' => "さんは|イタコ|でした", 'type' => 'result_mind_scanner');
   public $result_presage_scanner = array('message' => "さんは|件|でした", 'type' => 'result_mind_scanner');
   public $result_clairvoyance_scanner = array('message' => "さんは|猩々|でした", 'type' => 'result_mind_scanner');
+  public $result_eye_scanner = array('message' => "さんは|目目連|でした", 'type' => 'result_mind_scanner');
   public $result_step_scanner = array('message' => "さんは|雷神|でした", 'type' => 'result_mind_scanner');
   public $result_whisper_scanner = array('message' => "さんは|囁騒霊|でした", 'type' => 'result_mind_scanner');
   public $result_howl_scanner = array('message' => "さんは|吠騒霊|でした", 'type' => 'result_mind_scanner');
@@ -1893,6 +1976,7 @@ class RoleMessageList {
   public $result_cursed_brownie = array('message' => "さんは|祟神|でした", 'type' => 'result_brownie');
   public $result_sun_brownie = array('message' => "さんは|八咫烏|でした", 'type' => 'result_brownie');
   public $result_history_brownie = array('message' => "さんは|白澤|でした", 'type' => 'result_brownie');
+  public $result_barrier_brownie = array('message' => "さんは|産土神|でした", 'type' => 'result_brownie');
   public $result_wizard = array('message' => "さんは|魔法使い|でした", 'delimiter' => array('|' => 'wizard'));
   public $result_soul_wizard = array('message' => "さんは|八卦見|でした", 'type' => 'result_wizard');
   public $result_awake_wizard = array('message' => "さんは|比丘尼|でした", 'type' => 'result_wizard');
@@ -1911,6 +1995,9 @@ class RoleMessageList {
   public $result_scarlet_doll = array('message' => "さんは|和蘭人形|でした", 'type' => 'result_doll');
   public $result_silver_doll = array('message' => "さんは|露西亜人形|でした", 'type' => 'result_doll');
   public $result_doll_master = array('message' => "さんは|人形遣い|でした", 'type' => 'result_doll');
+  public $result_toy_doll_master = array('message' => "さんは|玩具姫|でした", 'type' => 'result_doll');
+  public $result_revive_doll_master = array('message' => "さんは|西行法師|でした", 'type' => 'result_doll');
+  public $result_serve_doll_master = array('message' => "さんは|奉公童女|でした", 'type' => 'result_doll');
   public $result_escaper = array('message' => "さんは|逃亡者|でした", 'delimiter' => array('|' => 'escaper'));
   public $result_psycho_escaper = array('message' => "さんは|迷い人|でした", 'type' => 'result_escaper');
   public $result_incubus_escaper = array('message' => "さんは|一角獣|でした", 'type' => 'result_escaper');
@@ -1920,11 +2007,13 @@ class RoleMessageList {
   public $result_wolf = array('message' => "さんは|人狼|でした", 'delimiter' => array('|' => 'wolf'));
   public $result_boss_wolf = array('message' => "さんは|白狼|でした", 'type' => 'result_wolf');
   public $result_mist_wolf = array('message' => "さんは|霧狼|でした", 'type' => 'result_wolf');
+  public $result_tiger_wolf = array('message' => "さんは|虎狼|でした", 'type' => 'result_wolf');
   public $result_gold_wolf = array('message' => "さんは|金狼|でした", 'type' => 'result_wolf');
   public $result_phantom_wolf = array('message' => "さんは|幻狼|でした", 'type' => 'result_wolf');
   public $result_cursed_wolf = array('message' => "さんは|呪狼|でした", 'type' => 'result_wolf');
   public $result_quiet_wolf = array('message' => "さんは|静狼|でした", 'type' => 'result_wolf');
   public $result_wise_wolf = array('message' => "さんは|賢狼|でした", 'type' => 'result_wolf');
+  public $result_eye_wolf = array('message' => "さんは|瞳狼|でした", 'type' => 'result_wolf');
   public $result_disguise_wolf = array('message' => "さんは|朔狼|でした", 'type' => 'result_wolf');
   public $result_purple_wolf = array('message' => "さんは|紫狼|でした", 'type' => 'result_wolf');
   public $result_snow_wolf = array('message' => "さんは|雪狼|でした", 'type' => 'result_wolf');
@@ -1977,6 +2066,7 @@ class RoleMessageList {
   public $result_white_fox = array('message' => "さんは|白狐|でした", 'type' => 'result_fox');
   public $result_black_fox = array('message' => "さんは|黒狐|でした", 'type' => 'result_fox');
   public $result_mist_fox = array('message' => "さんは|霧狐|でした", 'type' => 'result_fox');
+  public $result_tiger_fox = array('message' => "さんは|虎狐|でした", 'type' => 'result_fox');
   public $result_gold_fox = array('message' => "さんは|金狐|でした", 'type' => 'result_fox');
   public $result_phantom_fox = array('message' => "さんは|幻狐|でした", 'type' => 'result_fox');
   public $result_purple_fox = array('message' => "さんは|紫狐|でした", 'type' => 'result_fox');
@@ -2008,6 +2098,7 @@ class RoleMessageList {
   public $result_vindictive_fox = array('message' => "さんは|昼狐|でした", 'type' => 'result_child_fox');
   public $result_critical_fox = array('message' => "さんは|寿羊狐|でした", 'type' => 'result_child_fox');
   public $result_depraver = array('message' => "さんは|背徳者|でした", 'type' => 'result_fox');
+  public $result_fire_depraver = array('message' => "さんは|紂王|でした", 'type' => 'result_depraver');
   public $result_sacrifice_depraver = array('message' => "さんは|伊呂具秦公|でした", 'type' => 'result_depraver');
   public $result_silver_depraver = array('message' => "さんは|頭人|でした", 'type' => 'result_depraver');
   public $result_cupid = array('message' => "さんは|キューピッド|でした", 'delimiter' => array('|' => 'lovers'));
@@ -2016,6 +2107,7 @@ class RoleMessageList {
   public $result_altair_cupid = array('message' => "さんは|彦星|でした", 'type' => 'result_cupid');
   public $result_mind_cupid = array('message' => "さんは|女神|でした", 'type' => 'result_cupid');
   public $result_sweet_cupid = array('message' => "さんは|弁財天|でした", 'type' => 'result_cupid');
+  public $result_letter_cupid = array('message' => "さんは|文車妖妃|でした", 'type' => 'result_cupid');
   public $result_minstrel_cupid = array('message' => "さんは|吟遊詩人|でした", 'type' => 'result_cupid');
   public $result_triangle_cupid = array('message' => "さんは|小悪魔|でした", 'type' => 'result_cupid');
   public $result_nephila_cupid = array('message' => "さんは|絡新婦|でした", 'type' => 'result_cupid');
@@ -2110,6 +2202,12 @@ class RoleMessageList {
   public $result_shepherd_patron = array('message' => "さんは|羊飼い|でした", 'type' => 'result_patron');
   public $result_plumage_patron = array('message' => "さんは|鬼車鳥|でした", 'type' => 'result_patron');
   public $result_critical_patron = array('message' => "さんは|ひんな神|でした", 'type' => 'result_patron');
+  public $result_tengu = array('message' => "さんは|天狗|でした", 'delimiter' => array('|' => 'tengu'));
+  public $result_soul_tengu = array('message' => "さんは|大天狗|でした", 'type' => 'result_tengu');
+  public $result_passion_tengu = array('message' => "さんは|尼天狗|でした", 'type' => 'result_tengu');
+  public $result_meteor_tengu = array('message' => "さんは|流星天狗|でした", 'type' => 'result_tengu');
+  public $result_priest_tengu = array('message' => "さんは|鼻高天狗|でした", 'type' => 'result_tengu');
+  public $result_eclipse_tengu = array('message' => "さんは|木っ端天狗|でした", 'type' => 'result_tengu');
   public $result_mania = array('message' => "さんは|神話マニア|でした", 'delimiter' => array('|' => 'mania'));
   public $result_trick_mania = array('message' => "さんは|奇術師|でした", 'type' => 'result_mania');
   public $result_basic_mania = array('message' => "さんは|求道者|でした", 'type' => 'result_mania');
@@ -2144,6 +2242,8 @@ class RoleMessageList {
   public $result_embalm_agony = array('message' => "さんの死顔は|苦悶|の表情でした", 'type' => 'result_wolf');
   public $result_attempt = array('message' => "さんは命を狙われたようです");
   public $result_wolf_avoid = array('message' => "さんへの|襲撃|を回避しました", 'type' => 'result_wolf');
+  public $result_tengu_camp_human = array('message' => "あなたは|村人陣営|に味方することにしました", 'type' => 'result_human');
+  public $result_tengu_camp_wolf = array('message' => "あなたは|人狼陣営|に味方することにしました", 'type' => 'result_wolf');
 
   public $mage_result = array('message' => "|占い|結果： ", 'type' => 'result_mage');
   public $voodoo_killer_success = array('message' => "さんの|解呪|に成功しました！", 'type' => 'result_mage');
@@ -2174,6 +2274,9 @@ class RoleMessageList {
   public $border_priest_header = array(
     'message' => "|神託|結果： 昨夜、あなたの境界に触れた人数は",
     'type' => 'priest_header');
+  public $priest_tengu_header = array(
+    'message' => "|神託|結果： 現在、生存している#村人陣営#・_人狼陣営_の合計は",
+    'type' => 'priest_header', 'delimiter' => array('_' => 'wolf'));
   public $guard_hunted = array('message' => "さんを|狩る|ことに成功しました！", 'type' => 'result_guard');
   public $guard_success = array('message' => "さん|護衛|成功！", 'type' => 'result_guard');
   public $guard_penetration = array('message' => "さんに|護衛貫通|を付加しました", 'type' => 'result_guard');
@@ -2198,9 +2301,8 @@ class RoleMessageList {
   public $sympathy_result = array('message' => "|共感|結果： ", 'type' => 'result_mind_scanner');
   public $presage_result_header = array('message' => "|受託|結果： ", 'type' => 'result_mind_scanner');
   public $clairvoyance_result_header = array('message' => "|透視|結果： ", 'type' => 'result_mind_scanner');
-  public $clairvoyance_result_footer = array(
-    'message' => "さんに能力を行使したようです",
-    'type' => 'result_mind_scanner');
+  public $clairvoyance_result_footer = array('message' => "さんに能力を行使したようです", 'type' => 'result_mind_scanner');
+  public $tengu_result = array('message' => "|神通力|結果： ", 'type' => 'result_tengu');
 
   public $prediction_weather_grassy = array('message' => "|スコール|です", 'type' => 'liar');
   public $prediction_weather_mower = array('message' => "|酸性雨|です", 'type' => 'no_last_words');
@@ -2267,4 +2369,9 @@ class RoleMessageList {
   public $prediction_weather_no_cute = array('message' => "|野分|です", 'type' => 'no_last_words');
   public $prediction_weather_strong_voice = array('message' => "|時化|です", 'type' => 'strong_voice');
   public $prediction_weather_weak_voice = array('message' => "|細雪|です", 'type' => 'strong_voice');
+  public $prediction_weather_full_tengu = array('message' => "|天狗風|です", 'type' => 'tengu');
+  public $prediction_weather_seal_tengu = array('message' => "|無風|です", 'type' => 'tengu');
+  public $prediction_weather_settle = array('message' => "|彩雲|です", 'delimiter' => array('|' => 'vote'));
+  public $prediction_weather_star_fairy = array('message' => "|星空|です", 'type' => 'chiroptera');
+  public $prediction_weather_flower_fairy = array('message' => "|花吹雪|です", 'type' => 'chiroptera');
 }

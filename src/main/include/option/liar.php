@@ -13,10 +13,7 @@ class Option_liar extends CheckRoomOptionItem {
     return 'ランダムで「狼少年」がつきます';
   }
 
-  public function Cast(array &$list, &$rand) {
-    foreach (array_keys($list) as $id) {
-      if (Lottery::Percent(70)) $list[$id] .= ' ' . $this->name;
-    }
-    return array($this->name);
+  protected function IgnoreCastAll($id) {
+    return ! Lottery::Percent(70);
   }
 }

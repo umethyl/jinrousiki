@@ -15,12 +15,16 @@ class Option_quiz extends CheckRoomOptionItem {
     return 'GM が出題者になり、プレイヤー全員に回答者がつきます。';
   }
 
-  public function Cast(array &$list, &$rand) {
-    $role  = 'panelist';
-    $stack = RoleManager::GetStack('uname_list');
-    foreach (array_keys($list) as $id) {
-      if ($stack[$id] != 'dummy_boy') $list[$id] .= ' ' . $role;
-    }
-    return array($role);
+  protected function IgnoreCastAll($id) {
+    $stack = Cast::Stack()->Get('fix_uname');
+    return $stack[$id] == GM::DUMMY_BOY;
+  }
+
+  protected function GetCastAllRole($id) {
+    return 'panelist';
+  }
+
+  protected function GetResultCastList() {
+    return array('panelist');
   }
 }

@@ -7,7 +7,7 @@ class Option_gm_password extends TextRoomOptionItem {
 
   public function __construct() {
     parent::__construct();
-    if (OptionManager::$change) {
+    if (OptionManager::IsChange()) {
       $this->enable = false;
     } else {
       $this->enable = GameOptionConfig::$gm_login_enable;

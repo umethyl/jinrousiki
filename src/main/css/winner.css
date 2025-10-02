@@ -55,6 +55,10 @@
   background-color: #F05070;
   color: #FFFAFA;
 }
+.winner-tengu { /* 天狗勝利 */
+  background-color: #A02525;
+  color: #FFFAFA;
+}
 .winner-draw { /* 引き分け */
   background-color: #CCEECC;
   color: #000000;

@@ -7,22 +7,15 @@
 RoleManager::LoadFile('fairy');
 class Role_sweet_fairy extends Role_fairy {
   public $action = 'CUPID_DO';
+  public $action_date_type = 'first';
   public $submit = 'fairy_do';
-
-  public function IsVote() {
-    return DB::$ROOM->IsDate(1);
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
-  }
 
   public function IsVoteCheckbox(User $user, $live) {
     return $live && ! $user->IsDummyBoy();
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function SetVoteNightUserList(array $list) {

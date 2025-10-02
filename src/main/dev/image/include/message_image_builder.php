@@ -27,6 +27,7 @@ class MessageImageBuilder {
     'chiroptera'	=> array('R' => 136, 'G' => 136, 'B' => 136),
     'ogre'		=> array('R' => 224, 'G' => 144, 'B' =>   0),
     'duelist'		=> array('R' => 240, 'G' =>  80, 'B' => 112),
+    'tengu'		=> array('R' => 192, 'G' =>  48, 'B' =>  48),
     'mania'		=> array('R' => 192, 'G' => 160, 'B' =>  96),
     'vote'		=> array('R' => 153, 'G' => 153, 'B' =>   0),
     'chicken'		=> array('R' =>  51, 'G' => 204, 'B' => 255),

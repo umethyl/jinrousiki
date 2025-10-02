@@ -9,7 +9,7 @@
   ・人狼襲撃耐性：無効 (5 日目以内)
 */
 class Role_challenge_lovers extends Role {
-  public $mix_in = 'chicken';
+  public $mix_in = array('chicken');
   public $sudden_death = 'CHALLENGE';
 
   protected function IgnoreAbility() {
@@ -31,7 +31,7 @@ class Role_challenge_lovers extends Role {
 	  }
 	}
       }
-      //Text::p($cupid_list, 'QP');
+      //Text::p($cupid_list, '◆QP');
       $this->SetStack($cupid_list);
     }
     $target = $this->GetStack('vote_target');

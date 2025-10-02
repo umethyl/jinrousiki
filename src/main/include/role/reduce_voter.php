@@ -4,6 +4,9 @@
   ○仕様
   ・投票数：-1
 */
-class Role_reduce_voter extends Role {
-  public function FilterVoteDo(&$count) { $count--; }
+RoleManager::LoadFile('authority');
+class Role_reduce_voter extends Role_authority {
+  public function GetVoteDoCount() {
+    return -1;
+  }
 }

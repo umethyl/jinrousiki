@@ -5,20 +5,25 @@
 */
 RoleManager::LoadFile('mage');
 class Role_step_mage extends Role_mage {
-  public $action   = 'STEP_MAGE_DO';
-  public $submit   = 'mage_do';
+  public $action = 'STEP_MAGE_DO';
+  public $submit = 'mage_do';
 
   public function IsVoteCheckbox(User $user, $live) {
     return ! $this->IsActor($user);
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function CheckVoteNightTarget(array $list) {
+    return $this->CheckStepVoteNightTarget($list);
+  }
+
+  //投票対象チェック (足音用)
+  public function CheckStepVoteNightTarget(array $list) {
     $id     = $this->GetActor()->id;
-    $max    = count(DB::$USER->rows);
+    $max    = DB::$USER->GetUserCount();
     $vector = null;
     $count  = 0;
     $stack  = array();

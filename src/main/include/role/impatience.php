@@ -7,7 +7,7 @@
 */
 RoleManager::LoadFile('chicken');
 class Role_impatience extends Role_chicken {
-  public $mix_in = 'decide';
+  public $mix_in = array('decide');
   public $vote_day_type = 'target';
   public $sudden_death  = 'IMPATIENCE';
 

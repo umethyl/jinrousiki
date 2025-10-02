@@ -60,6 +60,9 @@ HTML::OutputHeader('新役職情報 - [メニュー]', 'info/menu', true);
 <li><a target="body" href="duelist.php#avenger_group">復讐者系</a></li>
 <li><a target="body" href="duelist.php#patron_group">後援者系</a></li>
 <li>★☆★☆★☆★</li>
+<li><a target="body" href="tengu.php">&lt;天狗陣営&gt;</a></li>
+<li><a target="body" href="tengu.php#tengu_group">天狗系</a></li>
+<li>★☆★☆★☆★</li>
 <li><a target="body" href="mania.php">&lt;神話マニア陣営&gt;</a></li>
 <li><a target="body" href="mania.php#mania_group">神話マニア系</a></li>
 <li><a target="body" href="mania.php#unknown_mania_group">鵺系</a></li>

@@ -5,6 +5,8 @@ class SharedServerConfig {
 
   //表示する他のサーバのリスト
   static public $server_list = array(
+  //-- 設定例 --//
+/*
     'cirno' => array('name' => '真・チルノ鯖',
 		      'url' => 'http://jinrousiki.sourceforge.jp/cirno/',
 		      'encode' => 'UTF-8',
@@ -18,5 +20,6 @@ class SharedServerConfig {
 		   'separator' => '',
 		   'footer' => '',
 		   'disable' => false),
+*/
 				     );
 }

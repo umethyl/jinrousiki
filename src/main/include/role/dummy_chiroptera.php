@@ -4,7 +4,7 @@
   ○仕様
 */
 class Role_dummy_chiroptera extends Role {
-  public $mix_in = 'self_cupid';
+  public $mix_in = array('vote' => 'self_cupid');
   public $display_role = 'self_cupid';
 
   protected function OutputPartner() {
@@ -20,7 +20,7 @@ class Role_dummy_chiroptera extends Role {
       }
       RoleHTML::OutputPartner($pair, 'cupid_pair');
     }
-    if (is_array($target)) $this->OutputLovers($target);
+    if (is_array($stack)) $this->OutputLovers($stack);
   }
 
   //仮想恋人表示
@@ -36,30 +36,6 @@ class Role_dummy_chiroptera extends Role {
   //処理委託判定
   private function IgnoreOutputLovers() {
     return $this->GetActor()->IsRole('lovers', 'fake_lovers', 'sweet_status');
-  }
-
-  public function OutputAction() {
-    $this->filter->OutputAction();
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->IsDate(1);
-  }
-
-  public function SetVoteNight() {
-    $this->filter->SetVoteNight();
-  }
-
-  public function GetVoteCheckbox(User $user, $id, $live) {
-    return $this->filter->GetVoteCheckbox($user, $id, $live);
-  }
-
-  public function IsFinishVote(array $list) {
-    return $this->filter->IsFinishVote($list);
-  }
-
-  public function CheckVoteNight() {
-    $this->filter->CheckVoteNight();
   }
 
   public function VoteNightAction() {

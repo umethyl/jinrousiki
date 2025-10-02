@@ -12,8 +12,4 @@ class Option_passion extends CheckRoomOptionItem {
   public function GetExplain() {
     return '全員に「恋色迷彩」がつきます';
   }
-
-  public function Cast(array &$list, &$rand) {
-    return $this->CastAll($list);
-  }
 }

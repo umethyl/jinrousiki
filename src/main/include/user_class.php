@@ -57,6 +57,14 @@ class User {
     $this->Parse($this->GetRole());
   }
 
+  //役職再パース + Stack 処理
+  public function StackReparse() {
+    $role = $this->GetRole();
+    if ($this->role == $role) return;
+    //Text::p($role, "◆StackReparse [{$this->uname}]");
+    $this->reparse = new self($role);
+  }
+
   //player 入れ替え処理
   public function ChangePlayer($id) {
     if (! isset(DB::$USER->player) || ! isset($this->role_id) || $this->role_id == $id) {
@@ -75,6 +83,16 @@ class User {
   //仮想ユーザ取得
   public function GetVirtual() {
     return DB::$USER->ByVirtual($this->id);
+  }
+
+  //実ユーザ取得
+  public function GetReal() {
+    return DB::$USER->ByReal($this->id);
+  }
+
+  //再パースユーザ取得
+  public function GetReparse() {
+    return isset($this->reparse) ? $this->reparse : $this;
   }
 
   //ユーザ ID 取得
@@ -98,9 +116,9 @@ class User {
   }
 
   //所属陣営取得
-  public function GetCamp($win = false) {
+  public function GetCamp($win = false, $reparse = false) {
     $type = $win ? 'win_camp' : 'main_camp';
-    if (! isset($this->$type)) DB::$USER->SetCamp($this, $type);
+    if (! isset($this->$type)) DB::$USER->SetCamp($this, $type, $reparse);
     return $this->$type;
   }
 
@@ -134,7 +152,7 @@ class User {
 
   //周辺 ID を取得
   public function GetAround() {
-    $max   = count(DB::$USER->rows);
+    $max   = DB::$USER->GetUserCount();
     $num   = $this->id;
     $stack = array();
     for ($i = -1; $i < 2; $i++) {
@@ -157,21 +175,30 @@ class User {
     return $this->GetFilter($this->main_role);
   }
 
+  //発言数を取得
+  public function GetTalkCount($lock = false) {
+    if (! isset($this->talk_count) || $lock) {
+      $stack = TalkDB::GetUserTalkCount($lock);
+      $this->talk_count = $stack['date'] == DB::$ROOM->date ? $stack['talk_count'] : 0;
+    }
+    return $this->talk_count;
+  }
+
   //生存フラグ判定
   public function IsLive($strict = false) {
     $dead = $this->IsDeadFlag($strict);
-    return is_null($dead) ? $this->live == 'live' : ! $dead;
+    return is_null($dead) ? $this->live == UserLive::LIVE : ! $dead;
   }
 
   //死亡フラグ判定
   public function IsDead($strict = false) {
     $dead = $this->IsDeadFlag($strict);
-    return is_null($dead) ? $this->live == 'dead' || $this->IsDrop() : $dead;
+    return is_null($dead) ? $this->live == UserLive::DEAD || $this->IsDrop() : $dead;
   }
 
   //蘇生辞退フラグ判定
   public function IsDrop() {
-    return $this->live == 'drop';
+    return $this->live == UserLive::DROP;
   }
 
   //同一ユーザ判定
@@ -191,7 +218,7 @@ class User {
 
   //身代わり君判定
   public function IsDummyBoy($strict = false) {
-    return $this->IsSameName('dummy_boy') && ! ($strict && DB::$ROOM->IsQuiz());
+    return $this->IsSameName(GM::DUMMY_BOY) && ! ($strict && DB::$ROOM->IsQuiz());
   }
 
   //役職判定
@@ -281,12 +308,12 @@ class User {
 
   //男性判定
   public function IsMale() {
-    return $this->sex == 'male';
+    return $this->sex == Sex::MALE;
   }
 
   //女性判定
   public function IsFemale() {
-    return $this->sex == 'female';
+    return $this->sex == Sex::FEMALE;
   }
 
   //共有者系判定
@@ -324,7 +351,7 @@ class User {
   //子狐系判定
   public function IsChildFox($vote = false) {
     if ($vote) {
-      return $this->IsRole('child_fox', 'sex_fox', 'stargazer_fox', 'jammer_fox');
+      return $this->IsRole(RoleFilterData::$vote_child_fox);
     } else {
       return $this->IsMainGroup('child_fox');
     }
@@ -365,17 +392,7 @@ class User {
   //ジョーカー所持者判定
   public function IsJoker($shift = false) {
     if (! $this->IsRole('joker')) return false;
-    if (DB::$ROOM->IsFinished()) {
-      if (! isset($this->joker_flag)) DB::$USER->SetJoker();
-      return $this->joker_flag;
-    }
-    elseif ($this->IsDead()) {
-      return false;
-    }
-
-    $date = DB::$ROOM->date - ($shift ? 1 : 0);
-    if ($date == 1 || DB::$ROOM->IsNight()) $date++;
-    return $this->GetDoomDate('joker') == $date;
+    return RoleManager::GetClass('joker')->IsJoker($this, $shift);
   }
 
   //期間限定表示役職
@@ -398,7 +415,8 @@ class User {
 
   //蘇生能力者判定
   public function IsReviveGroup($active = false) {
-    return ($this->IsMainGroup('poison_cat') || $this->IsRole('revive_medium', 'revive_fox')) &&
+    return ($this->IsMainGroup('poison_cat') ||
+	    $this->IsRole('revive_medium', 'revive_doll_master', 'revive_fox')) &&
       ! ($active && ! $this->IsActive());
   }
 
@@ -407,7 +425,7 @@ class User {
     return $this->IsDrop() || (isset($this->possessed_reset) && $this->possessed_reset) ||
       $this->IsLovers() || $this->IsMainGroup('poison_cat', 'depraver') ||
       $this->IsRoleGroup('revive') || $this->IsDelayMania() ||
-      $this->IsRole('detective_common', 'scarlet_vampire', 'resurrect_mania');
+      $this->IsRole(RoleFilterData::$revive_limited);
   }
 
   //暗殺反射判定
@@ -415,7 +433,7 @@ class User {
     if (DB::$ROOM->IsEvent('no_reflect_assassin') || $this->IsDead(true)) return false; //無効判定
 
     //常時反射
-    if ($this->IsRole('reflect_guard', 'detective_common', 'cursed_fox', 'soul_vampire') ||
+    if ($this->IsRole(RoleFilterData::$reflect_assassin) ||
 	$this->IsSiriusWolf(false) || $this->IsAvoidLovers()) {
       return true;
     }
@@ -443,16 +461,12 @@ class User {
 
   //憑依能力者判定 (被憑依者とコード上で区別するための関数)
   public function IsPossessedGroup() {
-    return $this->IsRole('possessed_wolf', 'possessed_mad', 'possessed_fox');
+    return $this->IsRole(RoleFilterData::$possessed_group);
   }
 
   //憑依制限判定
   public function IsPossessedLimited() {
-    return $this->IsPossessedGroup() ||
-      $this->IsRole(
-        'detective_common', 'revive_priest', 'revive_pharmacist', 'revive_brownie', 'revive_doll',
-	'revive_wolf', 'revive_mad', 'revive_cupid', 'scarlet_vampire', 'revive_ogre',
-	'revive_avenger', 'resurrect_mania');
+    return $this->IsPossessedGroup() || $this->IsRole(RoleFilterData::$possessed_limited);
   }
 
   //呪返し判定
@@ -467,8 +481,10 @@ class User {
 
   //遺言制限判定
   public function IsLastWordsLimited($save = false) {
-    $stack = array('reporter', 'soul_assassin', 'evoke_scanner', 'no_last_words');
-    if ($save) $stack[] = 'possessed_exchange';
+    $stack = RoleFilterData::$last_words_limited;
+    if ($save) {
+      array_push($stack, 'possessed_exchange', 'letter_exchange');
+    }
     return $this->IsMainGroup('escaper') || $this->IsRole($stack);
   }
 
@@ -481,7 +497,7 @@ class User {
 
   //毒回避判定
   public function IsAvoidPoison() {
-    return $this->IsRole('poison_vampire', 'horse_ogre', 'plumage_patron') || $this->IsAvoid(true);
+    return $this->IsRole(RoleFilterData::$avoid_poison) || $this->IsAvoid(true);
   }
 
   //人外カウント判定
@@ -507,6 +523,15 @@ class User {
   //有効シーン判定
   public function CheckScene() {
     return $this->last_load_scene == DB::$ROOM->scene;
+  }
+
+  //投票済み判定
+  public function ExistsVote() {
+    if (DB::$ROOM->IsBeforeGame()) {
+      return DB::$ROOM->Stack()->ExistsArray('vote', $this->id);
+    } else {
+      return DB::$ROOM->Stack()->ExistsKey('vote', $this->id);
+    }
   }
 
   //未投票チェック
@@ -581,6 +606,7 @@ class User {
       case 'vega_lovers':
       case 'fake_lovers':
       case 'possessed_exchange':
+      case 'letter_exchange':
 	$str .= sprintf('<span class="%s">%s</span>', 'lovers', $name);
 	break;
 
@@ -620,9 +646,21 @@ class User {
 EOF;
   }
 
+  //発言数初期化処理
+  public function InitializeTalkCount() {
+    if (DB::$ROOM->IsTest()) {
+      Text::p(sprintf('%d: %s', $this->id, $this->uname), '◆Initialize Talk Count');
+      return;
+    }
+
+    $items  = 'room_no, user_no, date, talk_count';
+    $values = sprintf("'%d', '%d', '%d', '%d'", DB::$ROOM->id, $this->id, DB::$ROOM->date, 0);
+    return DB::Insert('user_talk_count', $items, $values);
+  }
+
   //個別 DB 更新処理
   public function Update($item, $value) {
-    if (DB::$ROOM->test_mode) {
+    if (DB::$ROOM->IsTest()) {
       if (is_null($value)) $value = 'NULL (reset)';
       Text::p($value, sprintf('Change [%s] (%s)', $item, $this->uname));
       return true;
@@ -642,9 +680,14 @@ EOF;
     return UserDB::Update(implode(',', $set_stack), $stack, $this->id);
   }
 
+  //生存情報更新処理
+  public function UpdateLive($live) {
+    return $this->Update('live', $live);
+  }
+
   //ID 更新処理 (KICK 後処理用)
   public function UpdateID($id) {
-    if (DB::$ROOM->test_mode) {
+    if (DB::$ROOM->IsTest()) {
       Text::p(sprintf('%d -> %d: %s', $this->id, $id, $this->uname), 'Change ID');
       return;
     }
@@ -655,7 +698,7 @@ EOF;
   public function UpdatePlayer() {
     if (! isset($this->updated['role'])) return true;
     $role = $this->updated['role'];
-    if (DB::$ROOM->test_mode) {
+    if (DB::$ROOM->IsTest()) {
       Text::p($role, sprintf('Player (%s)', $this->uname));
       return true;
     }
@@ -669,7 +712,7 @@ EOF;
   //基幹死亡処理
   public function ToDead() {
     if ($this->IsDead(true)) return false;
-    $this->Update('live', 'dead');
+    $this->UpdateLive(UserLive::DEAD);
     $this->dead_flag = true;
     return true;
   }
@@ -677,7 +720,7 @@ EOF;
   //蘇生処理
   public function Revive($virtual = false) {
     if ($this->IsLive(true)) return false;
-    $this->Update('live', 'live');
+    $this->UpdateLive(UserLive::LIVE);
     $this->revive_flag = true;
     if (! $virtual) DB::$ROOM->ResultDead($this->handle_name, 'REVIVE_SUCCESS');
     return true;
@@ -716,14 +759,6 @@ EOF;
     $this->AddRole(sprintf('%s[%d]', $role, DB::$ROOM->date + $date));
   }
 
-  //ジョーカーの移動処理
-  public function AddJoker($shift = false) {
-    if ($shift) DB::$ROOM->ShiftScene(true); //一時的に前日に巻戻す
-    $this->AddDoom(1, 'joker');
-    DB::$ROOM->ResultDead($this->handle_name, 'JOKER_MOVED');
-    if ($shift) DB::$ROOM->ShiftScene(); //日時を元に戻す
-  }
-
   //能力喪失処理
   public function LostAbility() {
     $this->AddRole('lost_ability');
@@ -739,7 +774,7 @@ EOF;
   public function SaveLastWords($handle_name = null) {
     if (! $this->IsDummyBoy() && $this->IsLastWordsLimited(true)) return true; //スキップ判定
     if (is_null($handle_name)) $handle_name = $this->handle_name;
-    if (DB::$ROOM->test_mode) {
+    if (DB::$ROOM->IsTest()) {
       Text::p(sprintf('%s (%s)', $handle_name, $this->uname), 'LastWords');
       return true;
     }
@@ -753,14 +788,13 @@ EOF;
 
   //投票処理
   public function Vote($action, $target = null, $vote_number = null) {
-    if (DB::$ROOM->test_mode) {
+    if (DB::$ROOM->IsTest()) {
       if (DB::$ROOM->IsDay()) {
-	$stack = array('user_no'   => $this->id, 'uname' => $this->uname,
-		       'target_no' => $target, 'vote_number'  => $vote_number);
+	$stack = array('user_no'   => $this->id, 'uname'       => $this->uname,
+		       'target_no' => $target,   'vote_number' => $vote_number);
 	RQ::GetTest()->vote->day[$this->uname] = $stack;
-	//Text::p($stack, 'Vote');
-      }
-      else {
+	//Text::p($stack, '◆Vote');
+      } else {
 	Text::p(sprintf('%s: %s: %s', $action, $this->uname, $target), 'Vote');
       }
       return true;
@@ -855,7 +889,7 @@ class UserData {
     $user = $this->ByID($id);
     $role = 'possessed_exchange';
     if (! $user->IsRole($role) || ! DB::$ROOM->IsPlaying() ||
-	(! DB::$ROOM->log_mode && $user->IsDead())) {
+	(DB::$ROOM->IsOff('log') && $user->IsDead())) {
       return $user;
     }
 
@@ -869,14 +903,19 @@ class UserData {
     return property_exists($user, 'handle_name') ? $user->handle_name : '';
   }
 
-  //身代わり君 ID 取得 (現状は 1 で固定)
+  //身代わり君 ID 取得 (現状は固定値)
   public function GetDummyBoyID() {
-    return 1;
+    return GM::ID;
   }
 
   //ユーザ数カウント
-  public function GetUserCount($all = false) {
-    return count($all ? $this->name : $this->rows);
+  public function GetUserCount() {
+    return count($this->rows);
+  }
+
+  //全ユーザ数カウント
+  public function GetAllUserCount() {
+    return count($this->name);
   }
 
   //生存者を取得する
@@ -907,7 +946,7 @@ class UserData {
   }
 
   //所属陣営を判定してキャッシュする
-  public function SetCamp(User $user, $type) {
+  public function SetCamp(User $user, $type, $reparse = false) {
     if ($type == 'win_camp' && $user->IsLovers(true)) {
       $user->$type = 'lovers';
       return;
@@ -919,12 +958,12 @@ class UserData {
       $id = $target->GetMainRoleTarget();
       if (is_null($id) || in_array($id, $stack)) break;
       $stack[] = $id;
-      $target  = $this->ByID($id);
+      $target  = $reparse ? $this->ByID($id)->GetReparse() : $this->ByID($id);
     }
 
     //時間差コピー能力者ならコピー先を辿る
     if ($target->IsDelayMania() && ! is_null($id = $target->GetMainRoleTarget())) {
-      $target = $this->ByID($id);
+      $target = $reparse ? $this->ByID($id)->GetReparse() : $this->ByID($id);
       if ($target->IsRoleGroup('mania')) $target = $user; //神話マニア系なら元に戻す
     }
     $user->$type = $target->DistinguishCamp();
@@ -933,43 +972,45 @@ class UserData {
   //特殊イベント情報セット
   public function SetEvent($force = false) {
     if (DB::$ROOM->id < 1 || ! is_array($event_list = DB::$ROOM->GetEvent($force))) return;
+    $stack = DB::$ROOM->Stack()->Get('event');
     //Text::p($event_list, '◆Event [row]');
     foreach ($event_list as $event) {
       switch ($event['type']) {
-      case 'WEATHER':
-	$id = (int)$event['message'];
-	DB::$ROOM->event->weather = $id;
-	DB::$ROOM->event->{WeatherData::GetEvent($id)} = true;
+      case 'EVENT':
+	$stack->On($event['message']);
 	break;
 
-      case 'EVENT':
-	DB::$ROOM->event->{$event['message']} = true;
+      case 'BLIND_VOTE':
+	$date = DB::$ROOM->date - (DB::$ROOM->IsDay() ? 1 : 0);
+	$stack->Set('blind_vote', $date == $event['message']);
+	break;
+
+      case 'SAME_FACE':
+	$stack->On('same_face');
+	DB::$ROOM->Stack()->Set('same_face', $event['message']);
+	break;
+
+      case 'WEATHER':
+	$id = (int)$event['message'];
+	$stack->On(WeatherData::GetEvent($id));
+	DB::$ROOM->Stack()->Set('weather', $id);
 	break;
 
       case 'VOTE_DUEL':
 	RoleManager::LoadMain($this->ByID($event['message']))->SetEvent($this);
 	break;
-
-      case 'SAME_FACE':
-	DB::$ROOM->event->same_face = $event['message'];
-	break;
-
-      case 'BLIND_VOTE':
-	$date = DB::$ROOM->date - (DB::$ROOM->IsDay() ? 1 : 0);
-	DB::$ROOM->event->blind_vote = $date == $event['message'];
-	break;
       }
     }
 
     if (DB::$ROOM->IsEvent('hyper_critical')) {
-      DB::$ROOM->event->critical_voter = true;
-      DB::$ROOM->event->critical_luck  = true;
+      $stack->On('critical_voter');
+      $stack->On('critical_luck');
     }
     elseif (DB::$ROOM->IsEvent('aurora')) {
-      DB::$ROOM->event->blinder   = true;
-      DB::$ROOM->event->mind_open = true;
+      $stack->On('blinder');
+      $stack->On('mind_open');
     }
-    //Text::p(DB::$ROOM->event, '◆Event');
+    //DB::$ROOM->Stack()->p('event', '◆EventStack');
 
     if (DB::$ROOM->IsDay()) { //昼限定
       foreach (RoleFilterData::$event_virtual_day as $role) {
@@ -1047,6 +1088,7 @@ class UserData {
 
     switch ($reason) {
     case 'NOVOTED':
+    case 'SILENCE':
     case 'POSSESSED_TARGETED':
       return true;
 
@@ -1064,7 +1106,17 @@ class UserData {
     $user = $this->ByReal($id);
     $user->suicide_flag = true;
 
-    $str = $reason == 'NOVOTED' ? 'novoted' : 'sudden_death';
+    switch ($reason) {
+    case 'NOVOTED':
+    case 'SILENCE':
+      $str = strtolower($reason);
+      break;
+
+    default:
+      $str ='sudden_death';
+      break;
+    }
+
     DB::$ROOM->Talk($user->GetName() . ' ' . DeadMessage::$$str);
     return true;
   }
@@ -1109,49 +1161,6 @@ class UserData {
     return false;
   }
 
-  //ジョーカーの最終所持者判定
-  public function SetJoker() {
-    $id = null;
-    $max_date = 1;
-    foreach ($this->rows as $user) {
-      if (! $user->IsRole('joker')) continue;
-      $date = $user->GetDoomDate('joker');
-      if ($date > $max_date || ($date == $max_date && $user->IsLive())) {
-	$id = $user->id;
-	$max_date = $date;
-      }
-      $user->joker_flag = false;
-    }
-    $this->ByID($id)->joker_flag = true;
-    return $id;
-  }
-
-  //ジョーカーの再配布処理
-  public function ResetJoker($shift = false) {
-    if (! DB::$ROOM->IsOption('joker')) return false;
-    $stack = array();
-    foreach ($this->rows as $user) {
-      if ($user->IsDead(true)) continue;
-      if ($user->IsJoker()) return; //現在の所持者が生存していた場合はスキップ
-      $stack[] = $user;
-    }
-    if (count($stack) > 0) Lottery::Get($stack)->AddJoker($shift);
-  }
-
-  //デスノートの再配布処理 (オプションチェック判定は不要？)
-  public function ResetDeathNote() {
-    $stack = array();
-    foreach ($this->rows as $user) {
-      if ($user->IsLive(true)) $stack[] = $user;
-    }
-    if (count($stack) < 1) return;
-    $user = Lottery::Get($stack);
-    $user->AddDoom(0, 'death_note');
-    DB::$ROOM->ShiftScene(true); //一時的に前日に巻戻す
-    DB::$ROOM->ResultDead($user->handle_name, 'DEATH_NOTE_MOVED');
-    DB::$ROOM->ShiftScene();
-  }
-
   //-- ログ処理用 --//
   //仮想役職リストの保存
   public function SaveRoleList() {
@@ -1175,24 +1184,45 @@ class UserData {
     }
   }
 
+  //-- 投票処理用 --//
+  //KICK の後処理
+  public function UpdateKick() {
+    $id = 1;
+    foreach ($this->rows as $user) {
+      if ($user->id != $id) {
+	$user->UpdateID($id);
+	$user->id = $id;
+      }
+      $id++;
+    }
+    foreach ($this->kick as $user) $user->UpdateID(-1);
+  }
+
+  //ゲーム開始処理
+  public function GameStart($init_talk) {
+    foreach ($this->rows as $user) {
+      $user->UpdatePlayer();
+      if ($init_talk) $user->InitializeTalkCount();
+    }
+  }
+
   //-- private --//
   //村情報のロード処理
   private function Load(RequestBase $request, $lock = false) {
     if ($request->IsVirtualRoom()) { //仮想モード
       $user_list = $request->GetTest()->test_users;
-      if (is_int($user_list)) $user_list = UserDataDB::LoadRandom($user_list);
     }
-    elseif (isset($request->retrive_type)) { //特殊モード
-      switch ($request->retrive_type) {
+    elseif (isset($request->retrieve_type)) { //特殊モード
+      switch ($request->retrieve_type) {
       case 'entry_user': //入村処理
 	$user_list = UserDataDB::LoadEntryUser($request->room_no);
 	break;
 
-      case 'beforegame': //ゲーム開始前
+      case RoomScene::BEFORE: //ゲーム開始前
 	$user_list = UserDataDB::LoadBeforegame($request->room_no);
 	break;
 
-      case 'day': //昼 + 下界
+      case RoomScene::DAY: //昼 + 下界
 	$user_list = UserDataDB::LoadDay($request->room_no);
 	break;
       }
@@ -1200,7 +1230,7 @@ class UserData {
     else {
       $user_list = UserDataDB::Load($request->room_no, $lock);
     }
-    if (class_exists('RoleManager')) RoleManager::ConstructStack();
+    if (class_exists('RoleManager')) RoleManager::LoadStack();
     $this->Parse($user_list);
   }
 
@@ -1215,7 +1245,7 @@ class UserData {
 
     foreach ($user_list as $user) {
       $user->Parse();
-      if ($user->id >= 0 && $user->live != 'kick') { //KICK 判定
+      if ($user->id >= 0 && $user->live != UserLive::KICK) { //KICK 判定
 	$this->rows[$user->id] = $user;
 	foreach ($user->role_list as $role) {
 	  if (! empty($role)) $this->role[$role][] = $user->id;
@@ -1226,7 +1256,7 @@ class UserData {
       }
       $this->name[$user->uname] = $user->id;
     }
-    if (! DB::$ROOM->log_mode) $this->SetEvent();
+    if (DB::$ROOM->IsOff('log')) $this->SetEvent();
     return count($this->name);
   }
 
@@ -1281,8 +1311,8 @@ EOF;
   //キック済み判定
   static function IsKick($uname) {
     $query = 'SELECT user_no FROM user_entry WHERE room_no = ? AND live = ? AND uname = ?';
-    DB::Prepare($query, array(RQ::Get()->room_no, 'kick', $uname));
-    return DB::Count() > 0;
+    DB::Prepare($query, array(RQ::Get()->room_no, UserLive::KICK, $uname));
+    return DB::Exists();
   }
 
   //重複ユーザ判定
@@ -1290,24 +1320,24 @@ EOF;
     $query = <<<EOF
 SELECT user_no FROM user_entry WHERE room_no = ? AND live = ? AND (uname = ? OR handle_name = ?)
 EOF;
-    DB::Prepare($query, array(RQ::Get()->room_no, 'live', $uname, $handle_name));
-    return DB::Count() > 0;
+    DB::Prepare($query, array(RQ::Get()->room_no, UserLive::LIVE, $uname, $handle_name));
+    return DB::Exists();
   }
 
   //重複 HN 判定
   static function IsDuplicateName($user_no, $handle_name) {
     $query = <<<EOF
-SELECT user_no FROM user_entry WHERE room_no = ? AND user_no != ? AND live = ? AND handle_name = ?
+SELECT user_no FROM user_entry WHERE room_no = ? AND user_no <> ? AND live = ? AND handle_name = ?
 EOF;
-    DB::Prepare($query, array(RQ::Get()->room_no, $user_no, 'live', $handle_name));
-    return DB::Count() > 0;
+    DB::Prepare($query, array(RQ::Get()->room_no, $user_no, UserLive::LIVE, $handle_name));
+    return DB::Exists();
   }
 
   //重複 IP 判定
   static function IsDuplicateIP() {
     $query = 'SELECT user_no FROM user_entry WHERE room_no = ? AND live = ? AND ip_address = ?';
-    DB::Prepare($query, array(RQ::Get()->room_no, 'live', Security::GetIP()));
-    return DB::Count() > 0;
+    DB::Prepare($query, array(RQ::Get()->room_no, UserLive::LIVE, Security::GetIP()));
+    return DB::Exists();
   }
 
   //ユーザ登録処理
@@ -1318,10 +1348,10 @@ EOF;
     $values = "{$room_no}, {$user_no}, '{$uname}', '{$handle_name}', {$icon_no}, '{$sex}', " .
       "'{$crypt_password}', 'live'";
 
-    if ($uname != 'dummy_boy') {
-      $session_id = Session::GetID(true);
-      $ip_address = Security::GetIP();
-      $last_load_scene = 'beforegame';
+    if ($uname != GM::DUMMY_BOY) {
+      $session_id      = Session::GetUniqID();
+      $ip_address      = Security::GetIP();
+      $last_load_scene = RoomScene::BEFORE;
     }
 
     $stack = array('profile', 'role', 'session_id', 'last_words', 'ip_address', 'last_load_scene');
@@ -1352,7 +1382,7 @@ EOF;
   //キック処理
   static function Kick($id) {
     $query = 'UPDATE user_entry SET live = ?, session_id = NULL WHERE room_no = ? AND user_no = ?';
-    DB::Prepare($query, array('kick', DB::$ROOM->id, $id));
+    DB::Prepare($query, array(UserLive::KICK, DB::$ROOM->id, $id));
     return DB::FetchBool();
   }
 
@@ -1388,7 +1418,7 @@ SELECT user_no FROM vote WHERE room_no = ? AND date = ? AND vote_count = ? AND u
 EOF;
     $list = array(DB::$ROOM->id, DB::$ROOM->date, DB::$ROOM->vote_count, DB::$SELF->id);
     DB::Prepare($query, $list);
-    return DB::Count() > 0;
+    return DB::Exists();
   }
 }
 
@@ -1447,24 +1477,10 @@ EOF;
     return DB::FetchClass('User');
   }
 
-  //指定した人数分のユーザ情報を全村からランダムに取得する (テスト用)
-  static function LoadRandom($count) {
-    $query = <<<EOF
-SELECT room_no, (@new_user_no := @new_user_no + 1) AS id, uname, handle_name, profile,
-  sex, role, role_id, objection, live, last_load_scene, icon_filename, color
-FROM (SELECT room_no, uname FROM user_entry WHERE room_no > 0 GROUP BY uname) AS finder
-  LEFT JOIN user_entry USING (room_no, uname) LEFT JOIN user_icon USING (icon_no)
-ORDER BY RAND() LIMIT {$count}
-EOF;
-    DB::Execute('SET @new_user_no := 0');
-    DB::Prepare($query);
-    return DB::FetchClass('User');
-  }
-
   //生存陣営カウント
-  static function GetCampCount($type) {
+  static function CountCamp($type) {
     $query = 'SELECT user_no FROM user_entry WHERE room_no = ? AND live = ? AND user_no > ? AND ';
-    $list  = array(DB::$ROOM->id, 'live', 0);
+    $list  = array(DB::$ROOM->id, UserLive::LIVE, 0);
 
     switch ($type) {
     case 'human':

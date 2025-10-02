@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('fox');
 class Role_emerald_fox extends Role_fox {
-  public $mix_in = 'mage';
+  public $mix_in = array('mage');
   public $action = 'MAGE_DO';
 
   public function OutputAction() {

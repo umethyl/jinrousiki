@@ -4,7 +4,7 @@
   ○仕様
 */
 class Role_thunder_brownie extends Role {
-  public $vote_day_type = 'real';
+  public $vote_day_type = 'stack';
 
   //落雷判定
   public function SetThunderbolt(array $list) {

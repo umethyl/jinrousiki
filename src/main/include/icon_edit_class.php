@@ -60,7 +60,7 @@ class IconEdit {
     $query = implode(', ', $query_stack);
     //self::Output($query, $url); //テスト用
 
-    if (IconDB::Update($icon_no, $query)) {
+    if (IconDB::Update($icon_no, $query) && DB::Commit()) {
       $str = sprintf('%s?icon_no=%d', self::URL, $icon_no);
       HTML::OutputResult(IconEditMessage::TITLE, IconEditMessage::SUCCESS, $str);
     } else {

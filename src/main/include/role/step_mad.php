@@ -4,7 +4,7 @@
   ○仕様
 */
 class Role_step_mad extends Role {
-  public $mix_in = 'step_mage';
+  public $mix_in = array('step_mage');
   public $action     = 'STEP_DO';
   public $not_action = 'STEP_NOT_DO';
 
@@ -17,14 +17,18 @@ class Role_step_mad extends Role {
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function CheckVoteNightTarget(array $list) {
+    return $this->CheckStepVoteNightTarget($list);
+  }
+
+  public function CheckStepVoteNightTarget(array $list) {
     sort($list);
 
-    $id  = array_shift($list);
-    $max = count(DB::$USER->rows);
+    $id     = array_shift($list);
+    $max    = DB::$USER->GetUserCount();
     $vector = null;
     $count  = 0;
     $root_list = array($id);

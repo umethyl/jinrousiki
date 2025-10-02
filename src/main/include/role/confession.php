@@ -10,11 +10,12 @@ class Role_confession extends Role {
   public function ConvertSay() {
     if (! DB::$ROOM->IsDay() || ! Lottery::Percent(3)) return false; //スキップ判定
 
+    $role   = 'lovers';
     $target = $this->GetActor()->partner_list;
     $stack  = array();
-    foreach (DB::$USER->rows as $user) {
+    foreach (DB::$USER->GetRoleUser($role) as $user) {
       if ($this->IsActor($user)) continue;
-      if ($user->IsPartner('lovers', $target)) $stack[] = $user->GetName(); //憑依追跡
+      if ($user->IsPartner($role, $target)) $stack[] = $user->GetName(); //憑依追跡
     }
     if (count($stack) < 1) return false;
 

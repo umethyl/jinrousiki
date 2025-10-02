@@ -6,7 +6,7 @@ class CastTest {
     GameHTML::OutputPlayer();
     VoteGameStart::Aggregate();
     DB::$ROOM->date++;
-    DB::$ROOM->SetScene('night');
+    DB::$ROOM->SetScene(RoomScene::NIGHT);
     foreach (DB::$USER->rows as $user) $user->Reparse();
     GameHTML::OutputPlayer();
     HTML::OutputFooter();
@@ -411,15 +411,15 @@ class VoteTest {
       }
       else {
 	switch (DB::$ROOM->scene) {
-	case 'beforegame':
+	case RoomScene::BEFORE:
 	  VoteHTML::OutputBeforeGame();
 	  break;
 
-	case 'day':
+	case RoomScene::DAY:
 	  VoteHTML::OutputDay();
 	  break;
 
-	case 'night':
+	case RoomScene::NIGHT:
 	  VoteHTML::OutputNight();
 	  break;
 
@@ -507,7 +507,7 @@ class VoteTest {
   static function OutputResult() {
     foreach (DB::$USER->rows as $user) {
       unset($user->virtual_role);
-      $user->live = $user->IsLive(true) ? 'live' : 'dead';
+      $user->live = $user->IsLive(true) ? UserLive::LIVE : UserLive::DEAD;
       $user->Reparse();
       $user->target_no = 0;
     }
@@ -517,7 +517,7 @@ class VoteTest {
     DB::$USER->SetEvent();
     GameHTML::OutputDead();
 
-    //DB::$ROOM->status = 'finished';
+    //DB::$ROOM->status = RoomStatus::FINISHED;
     GameHTML::OutputPlayer();
     RoleHTML::OutputAbility();
     foreach (DB::$USER->rows as $user) {
@@ -529,8 +529,8 @@ class VoteTest {
   //勝敗結果表示
   static function OutputWinner() {
     Loader::LoadFile('winner_message');
-    DB::$ROOM->log_mode      = false;
-    DB::$ROOM->personal_mode = false;
+    DB::$ROOM->Flag()->Off('log');
+    DB::$ROOM->Flag()->Off('personal');
     Winner::Output();
     HTML::OutputFooter();
   }
@@ -539,7 +539,7 @@ class VoteTest {
   static function ConvertTalk() {
     if (RQ::Get()->say == '') return;
     RoleTalk::Convert(RQ::Get()->say);
-    RoleTalk::Save(RQ::Get()->say, 'day', 0);
+    RoleTalk::Save(RQ::Get()->say, RoomScene::DAY, 0);
   }
 
   //投票集計処理 (昼)
@@ -565,10 +565,30 @@ class VoteTest {
     echo GameHTML::ParseVote($stack, DB::$ROOM->date);
 
     DB::$ROOM->date++;
-    DB::$ROOM->log_mode = false; //イベント確認用
-    DB::$ROOM->SetScene('day'); //イベント確認用
-    //DB::$ROOM->SetScene('night');
+    DB::$ROOM->Flag()->Off('log'); //イベント確認用
+    DB::$ROOM->SetScene(RoomScene::DAY); //イベント確認用
+    //DB::$ROOM->SetScene(RoomScene::NIGHT);
     DB::LoadSelf($self_id);
+  }
+
+  //役職判定情報
+  static function OutputDistinguishMage() {
+    $user   = new User();
+    $filter = RoleManager::GetClass('mage');
+    foreach (RoleData::$main_role_list as $role => $name) {
+      $user->Parse($role);
+      Text::p($role, $filter->DistinguishMage($user));
+    }
+  }
+
+  //闇鍋配役 (系列合計)
+  static function OutputChaosSumGroup() {
+    $stack = array();
+    foreach (ChaosConfig::$chaos_hyper_random_role_list as $role => $rate) {
+      $group = RoleData::GetGroup($role);
+      isset($stack[$group]) ? $stack[$group] += $rate : $stack[$group] = $rate;
+    }
+    Text::p($stack);
   }
 }
 
@@ -608,15 +628,15 @@ class StepVoteTest {
       }
       else {
 	switch (DB::$ROOM->scene) {
-	case 'beforegame':
+	case RoomScene::BEFORE:
 	  VoteHTML::OutputBeforeGame();
 	  break;
 
-	case 'day':
+	case RoomScene::DAY:
 	  VoteHTML::OutputDay();
 	  break;
 
-	case 'night':
+	case RoomScene::NIGHT:
 	  VoteHTML::OutputNight();
 	  break;
 

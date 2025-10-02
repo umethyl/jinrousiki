@@ -6,5 +6,7 @@
 */
 RoleManager::LoadFile('doll');
 class Role_friend_doll extends Role_doll {
-  public $display_doll = true;
+  protected function IsDisplayDoll() {
+    return true;
+  }
 }

@@ -2,21 +2,22 @@
 //-- オプションマネージャ --//
 class OptionManager {
   const PATH = '%s/option/%s.php';
-  public  static $stack;
-  public  static $change = false;
   private static $file  = array();
   private static $class = array();
+  private static $stack; //スタックデータ
 
   //特殊普通村編成リスト
   private static $role_list = array(
     'detective', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf',
     'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'cupid',
-    'medium', 'mania');
+    'medium', 'mania'
+  );
 
   //特殊サブ配役リスト
   private static $cast_list = array(
-    'decide', 'authority', 'joker', 'deep_sleep', 'blinder', 'mind_open',
-    'perverseness', 'liar', 'gentleman', 'passion', 'critical', 'sudden_death', 'quiz');
+    'decide', 'authority', 'joker', 'deep_sleep', 'blinder', 'mind_open', 'perverseness',
+    'liar', 'gentleman', 'passion', 'critical', 'sudden_death', 'quiz'
+  );
 
   //ファイルロード
   static function Load($name) {
@@ -27,9 +28,28 @@ class OptionManager {
     return true;
   }
 
+  //スタックロード
+  static function LoadStack() {
+    self::$stack = new Stack();
+  }
+
+  //スタック取得
+  static function Stack() {
+    return self::$stack;
+  }
+
   //クラス取得
   static function GetClass($name) {
     return self::Load($name) ? self::LoadClass($name) : null;
+  }
+
+  // 村オプション変更判定
+  static function IsChange() {
+    if (is_null(self::$stack)) {
+      self::LoadStack();
+      self::Stack()->Set('change', false);
+    }
+    return self::Stack()->Get('change');
   }
 
   //特殊普通村の配役処理
@@ -42,15 +62,15 @@ class OptionManager {
   }
 
   //ユーザ配役処理
-  static function Cast(array &$list, &$rand) {
-    $delete = self::$stack;
+  static function Cast() {
+    $delete = self::Stack()->Get('delete');
     foreach (self::$cast_list as $option) {
       if (DB::$ROOM->IsOption($option) && self::Load($option)) {
-	$stack = self::LoadClass($option)->Cast($list, $rand);
+	$stack = self::LoadClass($option)->Cast();
 	if (is_array($stack)) $delete = array_merge($delete, $stack);
       }
     }
-    self::$stack = $delete;
+    self::Stack()->Set('delete', $delete);
   }
 
   //役職置換処理
@@ -59,6 +79,38 @@ class OptionManager {
     $list[$base]--;
     isset($list[$target]) ? $list[$target]++ : $list[$target] = 1;
     return true;
+  }
+
+  //希望役職リスト取得
+  static function GetWishRole() {
+    $stack = array('none');
+    if (DB::$ROOM->IsChaosWish()) {
+      $stack = array_merge($stack, RoleData::GetGroupList());
+    }
+    elseif (DB::$ROOM->IsOption('gray_random')) {
+      array_push($stack, 'human', 'wolf', 'mad', 'fox');
+    }
+    else {
+      array_push($stack, 'human', 'wolf');
+      if (DB::$ROOM->IsQuiz()) {
+	array_push($stack, 'mad', 'common', 'fox');
+      }
+      else {
+	array_push($stack, 'mage', 'necromancer', 'mad', 'guard', 'common');
+	if (DB::$ROOM->IsOption('detective')) $stack[] = 'detective_common';
+	$stack[] = 'fox';
+      }
+      foreach (array('poison', 'assassin', 'boss_wolf', 'depraver') as $role) {
+	if (DB::$ROOM->IsOption($role)) $stack[] = $role;
+      }
+      if (DB::$ROOM->IsOption('poison_wolf')) array_push($stack, 'poison_wolf', 'pharmacist');
+      foreach (array('possessed_wolf', 'sirius_wolf', 'child_fox', 'cupid') as $role) {
+	if (DB::$ROOM->IsOption($role)) $stack[] = $role;
+      }
+      if (DB::$ROOM->IsOption('medium')) array_push($stack, 'medium', 'mind_cupid');
+      if (DB::$ROOM->IsOptionGroup('mania') && ! in_array('mania', $stack)) $stack[] = 'mania';
+    }
+    return $stack;
   }
 
   //オプション名生成

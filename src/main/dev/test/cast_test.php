@@ -15,7 +15,7 @@ RQ::AddTestRoom('option_role', 'decide');
 #RQ::AddTestRoom('option_role', 'detective');
 RQ::AddTestRoom('option_role', 'joker');
 #RQ::AddTestRoom('option_role', 'gentleman');
-#RQ::AddTestRoom('option_role', 'sudden_death');
+RQ::AddTestRoom('option_role', 'sudden_death');
 #RQ::AddTestRoom('option_role', 'replace_human');
 #RQ::AddTestRoom('option_role', 'full_mania');
 RQ::AddTestRoom('option_role', 'chaos_open_cast');
@@ -54,7 +54,7 @@ DevUser::Complement();
 
 //-- 設定調整 --//
 #CastConfig::$decide = 11;
-#RQ::GetTest()->test_users[3]->live = 'kick';
+#RQ::GetTest()->test_users[3]->live = UserLive::KICK;
 
 //-- データロード --//
 //DB::Connect(); //DB接続 (必要なときだけ設定する)

@@ -8,17 +8,10 @@
 */
 class Role_escaper extends Role {
   public $action = 'ESCAPE_DO';
+  public $action_date_type = 'after';
 
   public function OutputAction() {
     RoleHTML::OutputVote('escape-do', 'escape_do', $this->action);
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
   }
 
   //逃亡

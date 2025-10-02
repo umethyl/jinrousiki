@@ -5,5 +5,5 @@
 */
 RoleManager::LoadFile('doll');
 class Role_revive_doll extends Role_doll {
-  public $mix_in = 'revive_pharmacist';
+  public $mix_in = array('revive_pharmacist');
 }

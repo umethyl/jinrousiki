@@ -38,8 +38,8 @@ class Role_priest extends Role {
     $flag = false;
     $data = new StdClass();
     $data->list  = array();
-    $data->count = array('total' => 0, 'human' => 0, 'wolf' => 0, 'fox' => 0, 'lovers' => 0,
-			 'human_side' => 0, 'dead' => 0, 'dream' => 0, 'sub_role' => 0);
+    $data->type  = array();
+    $data->count = array('total' => 0, 'human' => 0, 'wolf' => 0, 'fox' => 0, 'lovers' => 0);
     $this->SetStack($data);
 
     //-- 司祭系の出現判定 --//
@@ -54,11 +54,17 @@ class Role_priest extends Role {
     $data = $this->GetStack();
 
     //-- 天候判定 --//
-    if (DB::$ROOM->IsOption('weather') && DB::$ROOM->date % 3 == 1) {
+    if (DB::$ROOM->IsOption('full_weather') ||
+	(DB::$ROOM->IsOption('weather') && DB::$ROOM->date % 3 == 1)) {
       $role = 'weather_priest';
       $flag = true;
       $data->$role = true;
-      if (! in_array($role, $data->list)) $data->list[] = $role;
+      if (! in_array($role, $data->list)) {
+	$data->list[] = $role;
+      }
+      if (! in_array('human_side', $data->type)) {
+	$data->type[] = 'human_side';
+      }
     }
 
     //-- 司祭情報収集判定 --//
@@ -67,10 +73,20 @@ class Role_priest extends Role {
       return;
     }
 
+    //情報収集リスト初期化
+    foreach (array('human_side', 'dead', 'sub_role', 'dream', 'tengu') as $type) {
+      if (in_array($type, $data->type)) {
+	$data->count[$type] = 0;
+      }
+    }
+    //Text::p($data, '◆Priest[Base]');
+
     //-- 陣営情報収集 --//
     foreach (DB::$USER->rows as $user) {
       if ($user->IsDead(true)) {
-	if (! $user->IsCamp('human', true)) $data->count['dead']++;
+	if (isset($data->count['dead']) && ! $user->IsCamp('human', true)) {
+	  $data->count['dead']++;
+	}
 	continue;
       }
       $data->count['total']++;
@@ -84,20 +100,28 @@ class Role_priest extends Role {
       }
       else {
 	$data->count['human']++;
-	if ($dummy_user->IsCamp('human')) $data->count['human_side']++;
+	if (isset($data->count['human_side']) && $dummy_user->IsCamp('human')) {
+	  $data->count['human_side']++;
+	}
       }
 
       if ($user->IsLovers()) $data->count['lovers']++;
 
-      if (in_array('dowser_priest', $data->list)) {
+      if (isset($data->count['sub_role'])) {
 	$data->count['sub_role'] += count($dummy_user->role_list) - 1;
       }
 
-      if (in_array('dummy_priest', $data->list) &&
+      if (isset($data->count['dream']) &&
 	  ($user->IsRoleGroup('dummy') || $user->IsMainGroup('fairy'))) {
 	$data->count['dream']++;
       }
+
+      if (isset($data->count['tengu']) && $user->IsLive(true) &&
+	  ($user->IsCamp('human', true) || $user->IsCamp('wolf', true))) {
+	$data->count['tengu']++;
+      }
     }
+    //Text::p($data, '◆Priest[Count]');
 
     //-- 人外勝利前日判定 --//
     if (in_array('crisis_priest', $data->list) || in_array('revive_priest', $data->list)) {
@@ -124,6 +148,7 @@ class Role_priest extends Role {
     if ($this->IgnoreSetPriest()) return;
     $stack = $this->GetStack('priest');
     $stack->list[] = $this->role;
+    $stack->type[] = $this->CallParent('GetPriestType');
     $this->SetStack($stack, 'priest');
   }
 
@@ -140,10 +165,10 @@ class Role_priest extends Role {
   //司祭能力
   public function Priest() {
     if ($this->IgnorePriest()) return;
-    $data  = $this->GetStack('priest');
-    $role  = $this->GetPriestRole();
-    $class = $this->GetClass($method = 'GetPriestType');
-    DB::$ROOM->ResultAbility($this->GetResult($role), $data->count[$class->$method()]);
+    $data = $this->GetStack('priest');
+    $role = $this->GetPriestRole();
+    $type = $this->CallParent('GetPriestType');
+    DB::$ROOM->ResultAbility($this->GetResult($role), $data->count[$type]);
   }
 
   //司祭能力スキップ判定

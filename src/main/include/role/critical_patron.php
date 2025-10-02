@@ -7,9 +7,10 @@
 */
 RoleManager::LoadFile('patron');
 class Role_critical_patron extends Role_patron {
+  public $mix_in = array('critical_luck');
   public $patron_role = 'occupied_luck';
 
-  public function FilterVotePoll(&$count) {
-    if (Lottery::Percent(5)) $count += 100;
+  public function IgnoreFilterVotePoll() {
+    return ! Lottery::Percent(5);
   }
 }

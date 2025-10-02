@@ -5,11 +5,8 @@ class GameOptionConfig {
   static $wish_role_enable  = true; //役割希望制
   static $default_wish_role = false;
 
-  static $real_time_enable  = true; //リアルタイム制 (初期設定は TimeConfig->default_day/night 参照)
+  static $real_time_enable  = true; //リアルタイム制 (初期設定は TimeConfig::DEFAULT_DAY/NIGHT 参照)
   static $default_real_time = true;
-
-  static $wait_morning_enable  = true; //早朝待機制 (待機時間設定は TimeConfig->wait_morning 参照)
-  static $default_wait_morning = false;
 
   static $open_vote_enable  = true; //投票した票数を公表する
   static $default_open_vote = false;
@@ -38,6 +35,19 @@ class GameOptionConfig {
 
   static $gerd_enable  = true; //ゲルト君モード
   static $default_gerd = false;
+
+  //-- 会話設定 --//
+  static $wait_morning_enable  = true; //早朝待機制 (待機時間設定は TimeConfig::WAIT_MORNING 参照)
+  static $default_wait_morning = false;
+
+  static $limit_talk_enable  = true; //発言数制限制 (初期設定は GameConfig::LIMIT_TALK_COUNT 参照)
+  static $default_limit_talk = false;
+
+  static $secret_talk_enable  = true; //秘密会話あり
+  static $default_secret_talk = false;
+
+  static $no_silence_enable  = true; //沈黙禁止
+  static $default_no_silence = false;
 
   //-- 霊界公開設定 --//
   static $not_open_cast_enable  = true; //霊界で配役を公開しない
@@ -142,6 +152,9 @@ class GameOptionConfig {
   static $weather_enable  = true; //天候あり
   static $default_weather = false;
 
+  static $full_weather_enable  = true; //天変地異
+  static $default_full_weather = false;
+
   static $festival_enable  = true; //お祭り村
   static $default_festival = false;
 
@@ -215,7 +228,9 @@ class GameOptionConfig {
     'p' => 'P：音鳴村',
     'q' => 'Q：雛村',
     'r' => 'R：妖精村',
-    's' => 'S：霊能村');
+    's' => 'S：霊能村',
+    't' => 'T：天狗村',
+    'u' => 'U：背信村');
 
   static $boost_rate_enable = true; //出現率変動モード
   static $boost_rate_list = array(
@@ -230,7 +245,9 @@ class GameOptionConfig {
     'h' => 'H：無毒村',
     'i' => 'I：強心村',
     'j' => 'J：封呪村',
-    'k' => 'K：封夢村');
+    'k' => 'K：封夢村',
+    'l' => 'L：結束村',
+    'm' => 'M：天道村');
 
   //配役通知設定
   static $chaos_open_cast_enable      = true; //配役内訳を表示する

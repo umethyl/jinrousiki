@@ -7,7 +7,7 @@
 */
 RoleManager::LoadFile('fox');
 class Role_poison_fox extends Role_fox {
-  public $mix_in = 'poison';
+  public $mix_in = array('poison');
   public $resist_wolf = false;
 
   public function IsPoisonTarget(User $user) {

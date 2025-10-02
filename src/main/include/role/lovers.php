@@ -99,10 +99,8 @@ class Role_lovers extends Role {
 	    $user->suicide_flag = true;
 	  }
 
-	  foreach ($user->GetPartner($this->role, true) as $id) { //恋人後追い判定
-	    if (! (in_array($id, $checked_list) || in_array($id, $lost_cupid_list))) { //連鎖判定
-	      $lost_cupid_list[] = $id;
-	    }
+	  foreach ($user->GetPartner($this->role, true) as $id) { //恋人連鎖後追い判定
+	    $this->SetChainFollowed($id, $checked_list, $lost_cupid_list);
 	  }
 	}
       } else {
@@ -118,20 +116,16 @@ class Role_lovers extends Role {
 	    $user->suicide_flag = true;
 	  }
 
-	  foreach ($user->GetPartner($this->role) as $id) { //恋人追加後追い判定
-	    if (! (in_array($id, $checked_list) || in_array($id, $lost_cupid_list))) { //連鎖判定
-	      $lost_cupid_list[] = $id;
-	    }
+	  foreach ($user->GetPartner($this->role) as $id) { //恋人連鎖後追い判定
+	    $this->SetChainFollowed($id, $checked_list, $lost_cupid_list);
 	  }
 
 	  if (in_array($user->id, $fox_live_list)) { //妖狐死亡判定
 	    unset($fox_live_list[$user->id]);
 	    //Text::p($fox_live_list, '◆List [fox/live]');
-	    if (count($fox_live_list) < 1) {
+	    if (count($fox_live_list) < 1) { //背徳者連鎖後追い判定
 	      $id = array_shift(array_values($fox_list));
-	      if (! (in_array($id, $checked_list) || in_array($id, $lost_cupid_list))) { //連鎖判定
-		$lost_cupid_list[] = $id;
-	      }
+	      $this->SetChainFollowed($id, $checked_list, $lost_cupid_list);
 	    }
 	  }
 	}
@@ -152,5 +146,11 @@ class Role_lovers extends Role {
     }
 
     return $user->IsMainGroup('depraver');
+  }
+
+  //連鎖後追い判定
+  private function SetChainFollowed($id, array $list, array &$stack) {
+    if (in_array($id, $list) || in_array($id, $stack)) return;
+    $stack[] = $id;
   }
 }

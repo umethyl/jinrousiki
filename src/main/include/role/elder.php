@@ -5,7 +5,9 @@
   ・投票数：+1 (3% で +100)
 */
 class Role_elder extends Role {
-  public function FilterVoteDo(&$count) {
-    $count += Lottery::Percent(3) ? 100 : 1;
+  public $mix_in = array('authority');
+
+  public function GetVoteDoCount() {
+    return Lottery::Percent(3) ? 100 : 1;
   }
 }

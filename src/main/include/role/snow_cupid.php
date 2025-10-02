@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('cupid');
 class Role_snow_cupid extends Role_cupid {
-  public $mix_in = 'critical_mad';
+  public $mix_in = array('critical_mad');
   public $vote_day_type = 'init';
 
   public function SetVoteAction(User $user) {

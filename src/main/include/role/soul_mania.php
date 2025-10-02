@@ -23,9 +23,9 @@ class Role_soul_mania extends Role_mania {
     'assassin'		=> 'soul_assassin',
     'mind_scanner'	=> 'clairvoyance_scanner',
     'jealousy'		=> 'miasma_jealousy',
-    'brownie'		=> 'history_brownie',
+    'brownie'		=> 'barrier_brownie',
     'wizard'		=> 'soul_wizard',
-    'doll'		=> 'doll_master',
+    'doll'		=> 'serve_doll_master',
     'escaper'		=> 'divine_escaper',
     'wolf'		=> 'sirius_wolf',
     'mad'		=> 'whisper_mad',
@@ -42,10 +42,17 @@ class Role_soul_mania extends Role_mania {
     'yaksa'		=> 'dowser_yaksa',
     'duelist'		=> 'critical_duelist',
     'avenger'		=> 'revive_avenger',
-    'patron'		=> 'sacrifice_patron');
+    'patron'		=> 'sacrifice_patron',
+    'tengu'		=> 'soul_tengu');
 
   protected function IgnoreResult() {
     return ! DB::$ROOM->IsDate(2);
+  }
+
+  protected function OutputAddResult() {
+    if ($this->GetActor()->IsCamp('tengu', true)) { //天狗陣営コピー時は所属陣営を通知する
+      $this->OutputAbilityResult('TENGU_CAMP_RESULT');
+    }
   }
 
   protected function GetManiaRole(User $user) {

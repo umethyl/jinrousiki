@@ -7,6 +7,7 @@
 class Role_trap_mad extends Role {
   public $action      = 'TRAP_MAD_DO';
   public $not_action  = 'TRAP_MAD_NOT_DO';
+  public $action_date_type = 'after';
   public $submit      = 'trap_do';
   public $not_submit  = 'trap_not_do';
   public $trap_action = 'trap';
@@ -16,14 +17,6 @@ class Role_trap_mad extends Role {
     if (! $this->IgnoreTrap()) {
       RoleHTML::OutputVote('wolf-eat', $this->submit, $this->action, $this->not_action);
     }
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
   }
 
   protected function IgnoreVoteFilter() {

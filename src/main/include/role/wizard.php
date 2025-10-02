@@ -6,6 +6,7 @@
 */
 class Role_wizard extends Role {
   public $action = 'WIZARD_DO';
+  public $action_date_type = 'after';
   public $wizard_list = array(
     'mage' => 'MAGE_DO', 'psycho_mage' => 'MAGE_DO', 'guard' => 'GUARD_DO',
     'assassin' => 'ASSASSIN_DO', 'sex_mage' => 'MAGE_DO');
@@ -23,14 +24,6 @@ class Role_wizard extends Role {
 
   public function OutputAction() {
     RoleHTML::OutputVote('wizard-do', 'wizard_do', $this->action);
-  }
-
-  public function IsVote() {
-    return parent::IsVote() && DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
   }
 
   //魔法セット (返り値：昼：魔法 / 夜：投票タイプ)

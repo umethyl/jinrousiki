@@ -62,7 +62,7 @@ class JinrouAdmin {
 	RQ::Set('reverse_log', $flag);
 
 	DB::LoadRoom();
-	DB::$ROOM->SetFlag('log_mode');
+	DB::$ROOM->SetFlag('log');
 	DB::$ROOM->last_date = DB::$ROOM->date;
 
 	DB::LoadUser();

@@ -8,9 +8,10 @@ class GameUpMessage {
   const SUBMIT = '送信/リロード';
 
   /* セレクタ */
-  const STRONG     = '強く発言する';
-  const NORMAL     = '通常通り発言する';
-  const WEAK       = '弱く発言する';
+  const STRONG     = '強く発言';
+  const NORMAL     = '通常の発言';
+  const WEAK       = '弱く発言';
+  const SECRET     = '秘密の発言';
   const LAST_WORDS = '遺言を残す';
 
   /* 投票リンク */

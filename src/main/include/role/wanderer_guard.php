@@ -12,7 +12,7 @@ class Role_wanderer_guard extends Role_guard {
 
   public function WolfEatFailedCounter() {
     $result    = 'GUARD_PENETRATION';
-    $vote_data = RoleManager::GetStack('vote_data');
+    $vote_data = RoleManager::Stack()->Get('vote_data');
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
       if ($user->IsDead(true) || ! isset($vote_data[$this->action][$user->id])) continue;
       $target = DB::$USER->ByID($vote_data[$this->action][$user->id]);

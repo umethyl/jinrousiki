@@ -8,7 +8,7 @@
 */
 RoleManager::LoadFile('wizard');
 class Role_mimic_wizard extends Role_wizard {
-  public $mix_in = 'mage';
+  public $mix_in = array('mage');
   public $wizard_list = array('mage' => 'MAGE_DO', 1 => 'MAGE_DO');
   public $result_list = array('MAGE_RESULT', 'MIMIC_WIZARD_RESULT');
 

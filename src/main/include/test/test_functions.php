@@ -9,7 +9,7 @@ class DevRoom {
     RQ::Set('reverse_log', null);
     $base_list = array(
      'id' => RQ::Get()->room_no, 'comment' => '',
-     'date' => 0, 'scene' => 'beforegame', 'status' => 'waiting',
+     'date' => 0, 'scene' => RoomScene::BEFORE, 'status' => RoomStatus::WAITING,
      'game_option' => 'dummy_boy real_time:6:4 wish_role',
      'option_role' => '', 'vote_count' => 1
     );
@@ -25,10 +25,10 @@ class DevRoom {
   //村データロード
   static function Load() {
     DB::LoadRoom();
-    DB::$ROOM->SetFlag('test_mode', 'log_mode');
-    DB::$ROOM->SetScene('beforegame');
+    DB::$ROOM->SetFlag('test', 'log');
+    DB::$ROOM->SetScene(RoomScene::BEFORE);
     DB::$ROOM->revote_count = 0;
-    if (! isset(DB::$ROOM->vote)) DB::$ROOM->vote = array();
+    if (DB::$ROOM->Stack()->IsEmpty('vote')) DB::$ROOM->Stack()->Init('vote');
   }
 
   //イベント情報取得
@@ -86,7 +86,7 @@ class DevRoom {
       printf($str, $i);
       $role_list = Cast::Get($user_count);
       if ($role_list == '') break;
-      Text::p(VoteGameStart::GenerateRoleNameList(array_count_values($role_list), true));
+      Text::p(Cast::GenerateMessage(array_count_values($role_list), true));
     }
   }
 }
@@ -99,8 +99,8 @@ class DevUser {
 
   // ユーザの初期データ
   static $user_list = array(
-     1 => array('uname'         => 'dummy_boy',
-		'handle_name'   => '身代わり君',
+     1 => array('uname'         => GM::DUMMY_BOY,
+		'handle_name'   => Message::DUMMY_BOY,
 		'icon_filename' => '../img/dummy_boy_user_icon.jpg',
 		'color'         => '#000000'),
      2 => array('uname'         => 'light_gray',
@@ -131,7 +131,7 @@ class DevUser {
 		'handle_name'   => '金'),
     15 => array('uname'         => 'frame',
 		'handle_name'   => '炎'),
-    16 => array('uname'         => 'scarlet',
+    16 => array('uname'         => 'crimson',
 		'handle_name'   => '紅'),
     17 => array('uname'         => 'ice',
 		'handle_name'   => '氷'),
@@ -151,6 +151,16 @@ class DevUser {
 		'handle_name'   => '月'),
     25 => array('uname'         => 'sun',
 		'handle_name'   => '太陽'),
+    26 => array('uname'         => 'scarlet',
+		'handle_name'   => '緋色'),
+    27 => array('uname'         => 'sky',
+		'handle_name'   => '空'),
+    28 => array('uname'         => 'sea',
+		'handle_name'   => '海'),
+    29 => array('uname'         => 'forest',
+		'handle_name'   => '森'),
+    30 => array('uname'         => 'violet',
+		'handle_name'   => '菫'),
 			    );
 
   //ユーザデータ初期化
@@ -170,12 +180,12 @@ class DevUser {
   }
 
   //ユーザデータ補完
-  static function Complement($scene = 'beforegame') {
+  static function Complement($scene = RoomScene::BEFORE) {
     foreach (RQ::GetTest()->test_users as $id => $user) {
       $user->room_no = RQ::Get()->room_no;
       $user->role_id = $id;
-      if (! isset($user->live))    $user->live    = 'live';
-      if (! isset($user->sex))     $user->sex     = $id % 2 == 0 ? 'female' : 'male';
+      if (! isset($user->live))    $user->live    = UserLive::LIVE;
+      if (! isset($user->sex))     $user->sex     = $id % 2 == 0 ? Sex::FEMALE : Sex::MALE;
       if (! isset($user->profile)) $user->profile = $id;
       $user->last_load_scene = $scene;
       if ($id > 1) {
@@ -196,7 +206,7 @@ class DevUser {
     }
     if (DB::$ROOM->IsDate(1)) { //初日は死亡者ゼロ
       foreach (DB::$USER->rows as $user) {
-	if ($user->IsDead()) $user->live = 'live';
+	if ($user->IsDead()) $user->live = UserLive::LIVE;
       }
     }
   }
@@ -286,6 +296,7 @@ EOF;
       case 'FAIRY_DO':
       case 'OGRE_DO':
       case 'DUELIST_DO':
+      case 'TENGU_DO':
       case 'DEATH_NOTE_DO':
       case 'ASSASSIN_NOT_DO':
       case 'POSSESSED_NOT_DO':

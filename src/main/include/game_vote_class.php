@@ -11,7 +11,7 @@ class GameVote {
   //データロード
   private static function Load() {
     DB::Connect();
-    Session::Certify();
+    Session::Login();
     if (! DB::Transaction()) VoteHTML::OutputResult(VoteMessage::DB_ERROR); //トランザクション開始
 
     DB::LoadRoom(true); //村情報 (ロック付き)
@@ -71,15 +71,15 @@ class GameVote {
     }
     else {
       switch (DB::$ROOM->scene) {
-      case 'beforegame':
+      case RoomScene::BEFORE:
 	VoteHTML::OutputBeforeGame();
 	break;
 
-      case 'day':
+      case RoomScene::DAY:
 	VoteHTML::OutputDay();
 	break;
 
-      case 'night':
+      case RoomScene::NIGHT:
 	VoteHTML::OutputNight();
 	break;
 

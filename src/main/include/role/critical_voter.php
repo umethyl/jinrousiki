@@ -4,8 +4,13 @@
   ○仕様
   ・投票数：+100 (5% / 天候「烈日」)
 */
-class Role_critical_voter extends Role {
-  public function FilterVoteDo(&$count) {
-    if (DB::$ROOM->IsEvent('critical') || Lottery::Percent(5)) $count += 100;
+RoleManager::LoadFile('authority');
+class Role_critical_voter extends Role_authority {
+  public function IgnoreFilterVoteDo() {
+    return ! DB::$ROOM->IsEvent('critical') && ! Lottery::Percent(5);
+  }
+
+  public function GetVoteDoCount() {
+    return 100;
   }
 }

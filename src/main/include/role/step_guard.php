@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('guard');
 class Role_step_guard extends Role_guard {
-  public $mix_in = 'step_mage';
+  public $mix_in = array('step_mage');
   public $action = 'STEP_GUARD_DO';
   public $submit = 'guard_do';
 
@@ -15,11 +15,11 @@ class Role_step_guard extends Role_guard {
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function CheckVoteNightTarget(array $list) {
-    return $this->filter->CheckVoteNightTarget($list);
+    return $this->CheckStepVoteNightTarget($list);
   }
 
   public function IgnoreGuard() {

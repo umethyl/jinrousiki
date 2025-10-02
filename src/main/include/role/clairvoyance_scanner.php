@@ -8,19 +8,12 @@
 */
 RoleManager::LoadFile('mind_scanner');
 class Role_clairvoyance_scanner extends Role_mind_scanner {
-  public $mind_role = null;
   public $result = 'CLAIRVOYANCE_RESULT';
+  public $action_date_type = 'after';
+  public $mind_role = null;
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3;
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
   }
 
   /*

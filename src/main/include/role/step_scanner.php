@@ -8,38 +8,31 @@
 */
 RoleManager::LoadFile('mind_scanner');
 class Role_step_scanner extends Role_mind_scanner {
-  public $mix_in = 'step_mad';
-  public $action    = 'STEP_SCANNER_DO';
+  public $mix_in = array('step_mad', 'step_mage');
+  public $action = 'STEP_SCANNER_DO';
+  public $action_date_type = 'after';
   public $mind_role = null;
-
-  public function IsVote() {
-    return DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
-  }
 
   public function IsVoteCheckbox(User $user, $live) {
     return true;
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function CheckVoteNightTarget(array $list) {
-    return $this->filter->CheckVoteNightTarget($list);
+    return $this->CheckStepVoteNightTarget($list);
   }
 
   //範囲透視
   public function StepScan(array $list) {
     //周辺ID取得
     //Text::p($list, '◆Target [Vote]');
-    $max   = count(DB::$USER->rows);
+    $max   = DB::$USER->GetUserCount();
     $stack = array();
     foreach ($list as $id) {
-      $stack = array_merge($stack, array_values($this->filter->GetChain($id, $max)));
+      $stack = array_merge($stack, array_values($this->GetChain($id, $max)));
     }
 
     $around_list = array();
@@ -50,7 +43,7 @@ class Role_step_scanner extends Role_mind_scanner {
     //Text::p($around_list, '◆Target [Around]');
 
     //確率判定
-    $rate = min(80, count($around_list) * 10);
+    $rate = min(80, count($around_list) * 8);
     //Text::p($rate, '◆Rate');
     if (Lottery::Percent(100 - $rate)) return;
 
@@ -65,6 +58,6 @@ class Role_step_scanner extends Role_mind_scanner {
 	break;
       }
     }
-    if ($step_flag) $this->filter->Step($list);
+    if ($step_flag) $this->Step($list);
   }
 }

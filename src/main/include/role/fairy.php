@@ -6,7 +6,7 @@
   ・発言変換：悪戯
 */
 class Role_fairy extends Role {
-  public $mix_in = 'mage';
+  public $mix_in = array('mage');
   public $action = 'FAIRY_DO';
   public $bad_status = null;
 

@@ -8,11 +8,13 @@
 */
 RoleManager::LoadFile('guard');
 class Role_elder_guard extends Role_guard {
-  public $hunt = false;
+  public $mix_in = array('authority');
 
   public function IgnoreGuard() {
     return Lottery::Percent(30) ? true : null;
   }
 
-  public function FilterVoteDo(&$count) { $count++; }
+  public function IgnoreHunt() {
+    return true;
+  }
 }

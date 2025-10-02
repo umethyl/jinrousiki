@@ -12,8 +12,4 @@ class Option_perverseness extends CheckRoomOptionItem {
   public function GetExplain() {
     return '全員に「天邪鬼」がつきます。一部のサブ役職系オプションが強制オフになります';
   }
-
-  public function Cast(array &$list, &$rand) {
-    return $this->CastAll($list);
-  }
 }

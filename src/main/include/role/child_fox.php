@@ -7,11 +7,11 @@
 */
 RoleManager::LoadFile('fox');
 class Role_child_fox extends Role_fox {
-  public $mix_in = 'mage';
-  public $resist_wolf = false;
+  public $mix_in = array('mage');
   public $action = 'CHILD_FOX_DO';
   public $result = 'CHILD_FOX_RESULT';
   public $submit = 'mage_do';
+  public $resist_wolf = false;
   public $mage_failed = 'failed';
 
   protected function IgnoreResult() {
@@ -19,6 +19,7 @@ class Role_child_fox extends Role_fox {
   }
 
   public function OutputAction() {
+    if ($this->ExistVoteMix()) return $this->CallVoteMix(__FUNCTION__);
     RoleHTML::OutputVote('mage-do', $this->submit, $this->action);
   }
 

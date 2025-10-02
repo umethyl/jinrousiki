@@ -10,12 +10,11 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'role_depraver';
-//$role = 'prediction_weather_weak_voice';
-$role = 'step_scanner';
+//$role = 'role_tengu';
+//$role = 'prediction_weather_flower_fairy';
+$role = 'eye_scanner';
 
 $calib_list = array();
-//$calib_list = array(0.5,0,0,0,-1,-0.5,0,0,0.5,0.5); //位置調整例 (step_wolf)
 
 $test_mode   = false;
 $save_mode   = false;

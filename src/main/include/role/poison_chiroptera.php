@@ -5,7 +5,7 @@
   ・毒：人外カウント or 蝙蝠陣営
 */
 class Role_poison_chiroptera extends Role {
-  public $mix_in = 'poison';
+  public $mix_in = array('poison');
 
   public function IsPoisonTarget(User $user) {
     return $user->IsInhuman() || $user->IsMainCamp('chiroptera');

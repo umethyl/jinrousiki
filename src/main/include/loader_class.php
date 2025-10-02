@@ -21,15 +21,17 @@ class Loader {
     'copyright_config'     => array('version', 'info_functions'),
     'database_class'       => 'database_config',
     'system_class'         => 'room_class', //常時ロードされる
-    'room_class'           => 'option_class',
+    'room_class'           => array('room_data_class', 'option_class'),
     'option_class'         => 'option_message',
     'room_option_class'    => array('room_config', 'time_config', 'game_config',
 				    'game_option_config', 'option_class', 'room_option_item_class'),
     'option_form_class'    => 'room_option_class',
-    'user_class'           => array('role_data_class', 'game_functions'),
+    'user_class'           => array('user_data_class', 'role_data_class', 'game_functions'),
     'role_class'           => array('role_talk_message', 'role_ability_message'),
     'talk_class'           => array('game_config', 'talk_message', 'vote_talk_message',
-				    'role_talk_message', 'user_class', 'role_class'),
+				    'role_talk_message', 'talk_data_class', 'user_class',
+				    'role_class'),
+    'session_class'        => 'user_data_class',
     'icon_class'           => 'icon_config',
     'user_icon_class'      => array('user_icon_config', 'icon_message'),
     'sound_class'          => 'sound_config',
@@ -55,19 +57,20 @@ class Loader {
     'game_log_class'       => array('game_log_message', 'session_class', 'talk_class'),
     'old_log_class'        => 'old_log_functions',
     'user_manager_class'   => array('room_config', 'game_config', 'user_manager_message',
-				    'talk_message', 'session_class', 'cookie_class', 'room_class',
-				    'user_class', 'cache_class', 'icon_functions'),
+				    'talk_message', 'talk_data_class', 'session_class',
+				    'cookie_class', 'room_class', 'user_class', 'cache_class',
+				    'icon_functions'),
     'icon_view_class'      => array('session_class', 'icon_functions'),
     'icon_edit_class'      => array('icon_edit_message', 'icon_functions'),
     'icon_upload_class'    => array('icon_upload_message', 'session_class', 'icon_functions'),
-    'setup_class'          => array('setup_config', 'version', 'database_class'),
+    'setup_class'          => array('setup_config', 'version', 'database_class', 'user_data_class'),
     'index_functions'      => array('top_page_config', 'menu_config', 'bbs_config',
 				    'shared_server_config', 'version', 'top_page_message',
 				    'option_form_class'),
     'functions'            => 'message',
     'game_functions'       => array('game_message', 'dead_message'),
-    'game_vote_functions'  => array('game_config', 'talk_message', 'vote_message',
-				    'vote_role_message', 'game_functions'),
+    'game_vote_functions'  => array('vote_message', 'vote_role_message', 'talk_class',
+				    'game_functions'),
     'icon_functions'       => array('icon_class', 'user_icon_class'),
     'old_log_functions'    => array('old_log_config', 'cast_config', 'game_message',
 				    'old_log_message', 'image_class', 'room_option_class',
@@ -203,7 +206,6 @@ class Loader {
     case 'shared_server_config':
     case 'twitter_config':
     case 'top_page_config':
-    case 'src_upload_config':
     case 'setup_config':
       $path = JINROU_CONF . '/server';
       break;

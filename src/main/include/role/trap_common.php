@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('common');
 class Role_trap_common extends Role_common {
-  public $vote_day_type = 'real';
+  public $vote_day_type = 'stack';
 
   public function VotedReaction() {
     if (! is_array($stack = $this->GetStack())) return;

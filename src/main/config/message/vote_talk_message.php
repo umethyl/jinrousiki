@@ -35,6 +35,7 @@ class VoteTalkMessage {
   static public $OGRE_DO           = ' に狙いをつけました';		//鬼
   static public $OGRE_NOT_DO       = ' は人攫いを行いませんでした';	//鬼 (キャンセル)
   static public $DUELIST_DO        = ' に宿命を結び付けました';		//決闘者
+  static public $TENGU_DO          = ' に神通力を使います';		//天狗
   static public $MANIA_DO          = ' の能力を真似ることにしました';	//神話マニア
   static public $DEATH_NOTE_DO     = ' の名前を書きました';		//デスノート
   static public $DEATH_NOTE_NOT_DO = ' はデスノートを使いませんでした';	//デスノート (キャンセル)

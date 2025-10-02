@@ -58,6 +58,10 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
   <td>性別</td>
 </tr>
 </table>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#necromancer">特殊霊能判定能力者</a>
+</pre>
 
 
 <h2 id="vampire_do">吸血の仕様</h2>
@@ -295,7 +299,7 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 <h3 id="scarlet_vampire">屍鬼 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 1.5.0 β6～]</h3>
 <h4>[耐性] 人狼襲撃：死亡 + 蘇生 (40%) / 蘇生：不可 / 憑依：無効</h4>
 <pre>
-<a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える特殊な吸血鬼。
+<a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える特殊な吸血鬼。
 人狼に襲撃されて死亡した場合、一定確率 (40%) で蘇生する。
 </pre>
 <ol>

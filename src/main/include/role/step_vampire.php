@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('vampire');
 class Role_step_vampire extends Role_vampire {
-  public $mix_in = 'step_mage';
+  public $mix_in = array('step_mage');
   public $action = 'STEP_VAMPIRE_DO';
   public $submit = 'vampire_do';
   public $vote_day_type = 'init';
@@ -16,11 +16,11 @@ class Role_step_vampire extends Role_vampire {
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function CheckVoteNightTarget(array $list) {
-    return $this->filter->CheckVoteNightTarget($list);
+    return $this->CheckStepVoteNightTarget($list);
   }
 
   public function VoteAction() {

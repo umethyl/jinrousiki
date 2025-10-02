@@ -7,7 +7,7 @@
 */
 RoleManager::LoadFile('cupid');
 class Role_sweet_cupid extends Role_cupid {
-  public $mix_in = 'critical_mad';
+  public $mix_in = array('critical_mad');
   public $vote_day_type = 'init';
 
   protected function AddCupidRole(User $user) {

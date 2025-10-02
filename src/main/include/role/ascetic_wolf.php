@@ -6,12 +6,14 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_ascetic_wolf extends Role_wolf {
+  public $mix_in = array('authority');
+
   protected function OutputAddResult() {
     RoleHTML::OutputAbilityResult('ability_ascetic_' . $this->GetAsceticCount(), null);
   }
 
-  public function FilterVoteDo(&$count) {
-    $count += floor($this->GetAsceticCount() / 3);
+  public function GetVoteDoCount() {
+    return floor($this->GetAsceticCount() / 3);
   }
 
   //周囲の生存者判定

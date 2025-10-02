@@ -7,9 +7,9 @@
 */
 RoleManager::LoadFile('common');
 class Role_critical_common extends Role_common {
-  public function FilterVoteDo(&$count) { $count++; }
+  public $mix_in = array('authority', 'critical_luck');
 
-  public function FilterVotePoll(&$count) {
-    if (Lottery::Percent(5)) $count += 100;
+  public function IgnoreFilterVotePoll() {
+    return ! Lottery::Percent(5);
   }
 }

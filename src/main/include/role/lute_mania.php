@@ -8,7 +8,7 @@ RoleManager::LoadFile('unknown_mania');
 class Role_lute_mania extends Role_unknown_mania {
   //足音処理
   public function Step() {
-    $list  = RoleManager::GetStack('vote_data');
+    $list  = RoleManager::Stack()->Get('vote_data');
     $id    = $list['MANIA_DO'][$this->GetID()];
     $stack = array();
     foreach ($this->LotteryChainStep($this->GetChainStep($id), $id) as $target_id) {

@@ -30,7 +30,7 @@ class JinrouCookie {
 
     /* 「異議」あり */
     if (DB::$ROOM->IsAfterGame()) return; //ゲーム終了ならスキップ
-    $user_count = DB::$USER->GetUserCount(true); //KICK も含めたユーザ総数を取得
+    $user_count = DB::$USER->GetAllUserCount(); //KICK も含めたユーザ総数を取得
     $objection_list = array_fill(0, $user_count, 0); //配列をセット (index は 0 から)
 
     //ユーザ全体の「異議」ありを集計

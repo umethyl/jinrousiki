@@ -7,6 +7,7 @@
 */
 class Role_valkyrja_duelist extends Role {
   public $action = 'DUELIST_DO';
+  public $action_date_type = 'first';
   public $partner_role   = 'rival';
   public $partner_header = 'duelist_pair';
   public $check_self_shoot = true;
@@ -16,7 +17,7 @@ class Role_valkyrja_duelist extends Role {
   protected function OutputPartner() {
     $id    = $this->GetID();
     $stack = array();
-    foreach (DB::$USER->rows as $user) {
+    foreach (DB::$USER->GetRoleUser($this->partner_role) as $user) {
       if ($user->IsPartner($this->partner_role, $id)) $stack[] = $user->handle_name;
     }
     RoleHTML::OutputPartner($stack, $this->partner_header);
@@ -24,14 +25,6 @@ class Role_valkyrja_duelist extends Role {
 
   public function OutputAction() {
     RoleHTML::OutputVote('duelist-do', 'duelist_do', $this->action);
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->IsDate(1);
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
   }
 
   protected function SetVoteNightFilter() {
@@ -48,7 +41,7 @@ class Role_valkyrja_duelist extends Role {
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   protected function GetVoteNightNeedCount() {
@@ -103,7 +96,7 @@ class Role_valkyrja_duelist extends Role {
     $id     = $actor->id;
     $target = 0;
     $count  = 0;
-    foreach (DB::$USER->rows as $user) {
+    foreach (DB::$USER->GetRoleUser($this->partner_role) as $user) {
       if ($user->IsPartner($this->partner_role, $id)) {
 	$target++;
 	if ($user->IsLive()) $count++;

@@ -8,7 +8,11 @@ class Option_max_user extends SelectorRoomOptionItem {
   public function __construct() {
     parent::__construct();
     $this->conf_name = RoomConfig::$max_user_list;
-    $this->value     = OptionManager::$change ? DB::$ROOM->max_user : RoomConfig::$default_max_user;
+    if (OptionManager::IsChange()) {
+      $this->value = DB::$ROOM->max_user;
+    } else {
+      $this->value = RoomConfig::$default_max_user;
+    }
   }
 
   public function LoadPost() {

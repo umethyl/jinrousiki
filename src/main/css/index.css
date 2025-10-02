@@ -13,16 +13,16 @@ body {
 img {
   border: 0;
 }
-.comment { /* サーバ名 */
+.comment {
   text-align: right;
   font-weight: bold;
 }
-noscript { /* JavaScript が無効の場合のワーニング */
+noscript {
   color: #FF0000;
   font-size: 15pt;
   font-weight: bold;
 }
-#main { /* 全体の table */
+#main {
   border: 0;
   width: 100%;
   padding: 5px;
@@ -33,7 +33,7 @@ noscript { /* JavaScript が無効の場合のワーニング */
 .menu {
   width: 140px;
 }
-.information { /* Information (中身は info/top.php) */
+.information {
   margin: 10px 10px;
 }
 .information h1, .information h2, .information h3, .information h4 {
@@ -44,7 +44,7 @@ noscript { /* JavaScript が無効の場合のワーニング */
 .information h2 { font-size: 100%; }
 .information h3 { font-size: 100%; }
 .information h4 { font-size: 100%; }
-#footer { /* フッター (バージョン情報など) */
+#footer {
   margin-bottom: 5px;
   text-align: right;
   font-size: 80%;

@@ -9,6 +9,10 @@ class Option_necessary_name extends CheckRoomOptionItem {
     if (GameConfig::TRIP) parent::__construct();
   }
 
+  protected function IgnorePost() {
+    return ! GameConfig::TRIP;
+  }
+
   public function GetCaption() {
     return 'ユーザ名必須';
   }

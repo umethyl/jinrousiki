@@ -13,9 +13,9 @@ class Option_authority extends CheckRoomOptionItem {
     return '投票の票数が二票になります [兼任]';
   }
 
-  public function Cast(array &$list, &$rand) {
-    if (RoleManager::GetStack('user_count') >= CastConfig::${$this->name}) {
-      return $this->CastOnce($list, $rand);
+  public function Cast() {
+    if (Cast::Stack()->Get('user_count') >= CastConfig::${$this->name}) {
+      return $this->CastOnce();
     }
   }
 }

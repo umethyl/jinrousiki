@@ -13,9 +13,8 @@ class Role_rival extends Role {
   protected function OutputPartner() {
     $target = $this->GetActor()->partner_list;
     $stack  = array();
-    foreach (DB::$USER->rows as $user) {
-      if ($this->IsActor($user)) continue;
-      if ($user->IsPartner($this->role, $target)) {
+    foreach (DB::$USER->GetRoleUser($this->role) as $user) {
+      if ($this->IsRival($user, $target)) {
 	$stack[] = $user->handle_name; //憑依追跡なし
       }
     }
@@ -28,12 +27,18 @@ class Role_rival extends Role {
       $flag = false;
       return;
     }
-    $stack = $this->GetActor()->partner_list;
-    foreach (DB::$USER->rows as $user) {
-      if (! $this->IsActor($user) && $user->IsPartner($this->role, $stack) && $user->IsLive()) {
+
+    $target = $this->GetActor()->partner_list;
+    foreach (DB::$USER->GetRoleUser($this->role) as $user) {
+      if ($this->IsRival($user, $target) && $user->IsLive()) {
 	$flag = false;
 	return;
       }
     }
+  }
+
+  //宿敵判定
+  private function IsRival(User $user, array $target) {
+    return ! $this->IsActor($user) && $user->IsPartner($this->role, $target);
   }
 }

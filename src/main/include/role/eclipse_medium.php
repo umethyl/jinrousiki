@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('medium');
 class Role_eclipse_medium extends Role_medium {
-  public $mix_in = 'chicken';
+  public $mix_in = array('chicken');
   public $display_role = 'medium';
   public $sudden_death = 'SEALED';
 

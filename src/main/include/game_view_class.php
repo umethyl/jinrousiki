@@ -9,10 +9,10 @@ class GameView {
 
   //データロード
   private static function Load() {
-    DB::Connect();
+    DB::Connect(RQ::Get()->db_no);
 
     DB::LoadRoom(); //村情報
-    DB::$ROOM->SetFlag('view_mode');
+    DB::$ROOM->SetFlag('view');
     DB::$ROOM->system_time = Time::Get();
 
     //シーンに応じた追加クラスをロード
@@ -20,7 +20,7 @@ class GameView {
       Loader::LoadFile('winner_message');
     } else { //ゲームオプション表示
       Loader::LoadFile('cast_config', 'image_class', 'room_option_class');
-      if (DB::$ROOM->IsBeforeGame()) RQ::Set('retrive_type', DB::$ROOM->scene);
+      if (DB::$ROOM->IsBeforeGame()) RQ::Set('retrieve_type', DB::$ROOM->scene);
     }
 
     DB::LoadUser(); //ユーザ情報

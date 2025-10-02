@@ -25,6 +25,7 @@ HTML::OutputBodyHeader();
 <a href="chiroptera.php">蝙蝠陣営</a>
 <a href="ogre.php">鬼陣営</a>
 <a href="duelist.php">決闘者陣営</a>
+<a href="tengu.php">天狗陣営</a>
 <a href="mania.php">神話マニア陣営</a>
 <a href="sub_role.php">サブ役職</a>
 </p>
@@ -113,7 +114,14 @@ Ver. 2.3.0
 <a href="#ver230a4">α4</a>
 <a href="#ver230a5">α5</a>
 <a href="#ver230a6">α6</a>
-<a href="#ver230a7">α7</a>
+<a href="#ver230a7">α7</a><br>
+Ver. 3.0.0
+<a href="#ver300a2">α2</a>
+<a href="#ver300a3">α3</a>
+<a href="#ver300a4">α4</a>
+<a href="#ver300a5">α5</a>
+<a href="#ver300a6">α6</a>
+<a href="#ver300a7">α7</a>
 </p>
 
 <p>
@@ -163,7 +171,10 @@ Ver. 2.2.0
 Ver. 2.3.0
 <a href="#sub_ver230a2">α2</a>
 <a href="#sub_ver230a3">α3</a>
-<a href="#sub_ver230a7">α7</a>
+<a href="#sub_ver230a7">α7</a><br>
+Ver. 3.0.0
+<a href="#sub_ver300a2">α2</a>
+<a href="#sub_ver300a6">α6</a>
 </p>
 
 <table id="main_role">
@@ -668,7 +679,7 @@ Ver. 2.3.0
   <td><a href="fox.php#fox_group">妖狐系</a></td>
   <td>村人<br>(呪殺)</td>
   <td>村人</td>
-  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える妖狐。</td>
+  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える妖狐。</td>
   <td>Ver. 1.4.0 α24</td>
 </tr>
 <tr>
@@ -713,7 +724,7 @@ Ver. 2.3.0
   <td><a href="wolf.php#wolf_group">人狼系</a></td>
   <td>人狼</td>
   <td>人狼</td>
-  <td class="ability"><a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える人狼。</td>
+  <td class="ability"><a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える人狼。</td>
   <td>Ver. 1.4.0 α24</td>
 </tr>
 <tr>
@@ -1163,8 +1174,8 @@ Ver. 2.3.0
   <td><a href="human.php#doll_group">上海人形系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">他の国で言う「奴隷」。<br>勝利条件は「<a href="human.php#doll_master">人形遣い</a>が全員死亡している + 村人陣営の勝利」で、自身の生死は不問。<br>
-    <a href="human.php#doll_master">人形遣い</a>が人狼に襲撃されたら代わりに死亡する。</td>
+  <td class="ability">他の国で言う「奴隷」。<br>勝利条件は「<a href="human.php#doll_rule_doll_master">人形遣い系</a>が全員死亡している + 村人陣営の勝利」で、自身の生死は不問。<br>
+    <a href="human.php#doll_rule_doll_master">人形遣い系</a>が人狼に襲撃されたら代わりに死亡する。</td>
   <td>Ver. 1.4.0 β10</td>
 </tr>
 <tr>
@@ -1173,7 +1184,7 @@ Ver. 2.3.0
   <td><a href="human.php#doll_group">上海人形系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">他の国で言う「貴族」。<br>人狼に襲撃された時、他の人形遣い以外の人形系の人を身代わりして生き延びることができる。</td>
+  <td class="ability">他の国で言う「貴族」。<br>人狼に襲撃された時、<a href="human.php#doll_rule_doll_master">人形遣い系</a>以外の人形を身代わりして生き延びることができる。</td>
   <td>Ver. 1.4.0 β10</td>
 </tr>
 <tr>
@@ -1182,7 +1193,7 @@ Ver. 2.3.0
   <td><a href="human.php#doll_group">上海人形系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">毒を持った人形。毒の対象は<a href="human.php#doll_group">上海人形系</a>以外 (<a href="human.php#doll_master">人形遣い</a>には中る)。</td>
+  <td class="ability">毒を持った人形。毒の対象は<a href="human.php#doll_group">上海人形系</a>以外 (<a href="human.php#doll_rule_doll_master">人形遣い系</a>には中る)。</td>
   <td>Ver. 1.4.0 β10</td>
 </tr>
 <tr>
@@ -1933,7 +1944,7 @@ Ver. 2.3.0
   <td><a href="human.php#doll_group">上海人形系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、他の<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える人形。</td>
+  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、他の<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える人形。</td>
   <td>Ver. 1.4.0 β21</td>
 </tr>
 <tr>
@@ -1942,7 +1953,7 @@ Ver. 2.3.0
   <td><a href="human.php#doll_group">上海人形系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability"><a href="human.php#doll_master">人形遣い</a>が誰か分からない人形。</td>
+  <td class="ability"><a href="human.php#doll_rule_doll_master">人形遣い系</a>が誰か分からない人形。</td>
   <td>Ver. 1.4.0 β21</td>
 </tr>
 <tr>
@@ -1951,7 +1962,7 @@ Ver. 2.3.0
   <td><a href="chiroptera.php#chiroptera_group">蝙蝠系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える蝙蝠。
+  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える蝙蝠。
   </td>
   <td>Ver. 1.4.0 β21</td>
 </tr>
@@ -2300,7 +2311,7 @@ Ver. 2.3.0
   <td><a href="lovers.php#angel_group">天使系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える特殊な天使。<br>夜に<a href="human.php#unconscious">無意識</a>が誰か分かり、矢を撃った相手に<a href="sub_role.php#mind_sympathy">共感者</a>を付加する。</td>
+  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える特殊な天使。<br>夜に<a href="human.php#unconscious">無意識</a>が誰か分かり、矢を撃った相手に<a href="sub_role.php#mind_sympathy">共感者</a>を付加する。</td>
   <td>Ver. 1.5.0 β1</td>
 </tr>
 <tr>
@@ -2473,7 +2484,7 @@ Ver. 2.3.0
   <td><a href="vampire.php#vampire_group">吸血鬼系</a></td>
   <td>蝙蝠</td>
   <td>蝙蝠</td>
-  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える特殊な吸血鬼。
+  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える特殊な吸血鬼。
   </td>
   <td>Ver. 1.5.0 β6</td>
 </tr>
@@ -2564,7 +2575,7 @@ Ver. 2.3.0
   <td><a href="human.php#mage_group">占い師系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability"><a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える特殊な占い師。</td>
+  <td class="ability"><a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える特殊な占い師。</td>
   <td>Ver. 1.5.0 β8</td>
 </tr>
 <tr>
@@ -3137,7 +3148,7 @@ Ver. 2.3.0
   <td><a href="mania.php#mania_group">神話マニア系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える特殊な神話マニア。</td>
+  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える特殊な神話マニア。</td>
   <td>Ver. 2.2.0 α7</td>
 </tr>
 <tr>
@@ -3283,6 +3294,159 @@ Ver. 2.3.0
   <td>村人</td>
   <td class="ability">夜の投票時に自分の投票先で足音が鳴る特殊な暗殺者。<br>暗殺成立時には<a href="sub_role.php#febris">熱病</a>を付加する。</td>
   <td>Ver. 2.3.0 α7</td>
+</tr>
+<tr id="ver300a2">
+  <td><a href="tengu.php#tengu">天狗</a></td>
+  <td><a href="tengu.php">天狗</a></td>
+  <td><a href="tengu.php#tengu_group">天狗系</a></td>
+  <td>村人</td>
+  <td>天狗</td>
+  <td class="ability">天狗陣営の基本種。<br>2 日目昼時点の配役を元に、<a href="human.php">村人陣営</a>・<a href="wolf.php">人狼陣営</a>のどちらかにつく。</td>
+  <td>Ver. 3.0.0 α2</td>
+</tr>
+<tr>
+  <td><a href="tengu.php#soul_tengu">大天狗</a></td>
+  <td><a href="tengu.php">天狗</a></td>
+  <td><a href="tengu.php#tengu_group">天狗系</a></td>
+  <td>村人</td>
+  <td>天狗</td>
+  <td class="ability">神通力の対象者の役職を知る事ができる上位天狗。</td>
+  <td>Ver. 3.0.0 α2</td>
+</tr>
+<tr>
+  <td><a href="tengu.php#eclipse_tengu">木っ端天狗</a></td>
+  <td><a href="tengu.php">天狗</a></td>
+  <td><a href="tengu.php#tengu_group">天狗系</a></td>
+  <td>村人</td>
+  <td>天狗</td>
+  <td class="ability">50% の確率で成功した神通力が自分に跳ね返ってしまう劣化天狗。</td>
+  <td>Ver. 3.0.0 α2</td>
+</tr>
+<tr id="ver300a3">
+  <td><a href="fox.php#fire_depraver">紂王</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#depraver_group">背徳者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">処刑投票先に<a href="sub_role.php#spell_wisp">狐火</a>を付加する背徳者。</td>
+  <td>Ver. 3.0.0 α3</td>
+</tr>
+<tr>
+  <td><a href="wolf.php#tiger_wolf">虎狼</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#wolf_group">人狼系</a></td>
+  <td>鬼</td>
+  <td>虎狼</td>
+  <td class="ability">占い結果が「鬼」、霊能結果が「虎狼」と判定される人狼。</td>
+  <td>Ver. 3.0.0 α3</td>
+</tr>
+<tr>
+  <td><a href="fox.php#tiger_fox">虎狐</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#fox_group">妖狐系</a></td>
+  <td>鬼<br>(呪殺無し)</td>
+  <td>妖狐</td>
+  <td class="ability">占い結果が「鬼」、霊能結果が「妖狐」と判定される妖狐。</td>
+  <td>Ver. 3.0.0 α3</td>
+</tr>
+<tr id="ver300a4">
+  <td><a href="human.php#toy_doll_master">玩具姫</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#doll_group">上海人形系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">一定日数後まで人形に<a href="human.php#doll_rule_partner">人形遣い系</a>と認識されない人形遣い。</td>
+  <td>Ver. 3.0.0 α4</td>
+</tr>
+<tr>
+  <td><a href="human.php#revive_doll_master">西行法師</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#doll_group">上海人形系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">蘇生能力を持つ人形遣い。</td>
+  <td>Ver. 3.0.0 α4</td>
+</tr>
+<tr>
+  <td><a href="human.php#serve_doll_master">奉公童女</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#doll_group">上海人形系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">人形を犠牲に護衛できる人形遣い。</td>
+  <td>Ver. 3.0.0 α4</td>
+</tr>
+<tr id="ver300a5">
+  <td><a href="human.php#critical_mage">一言主神</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#mage_group">占い師系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">占い先に<a href="sub_role.php#critical_luck">痛恨</a>を付加してしまう特殊な占い師。</td>
+  <td>Ver. 3.0.0 α5</td>
+</tr>
+<tr>
+  <td><a href="tengu.php#passion_tengu">尼天狗</a></td>
+  <td><a href="tengu.php">天狗</a></td>
+  <td><a href="tengu.php#tengu_group">天狗系</a></td>
+  <td>村人</td>
+  <td>天狗</td>
+  <td class="ability">神通力が成功したら<a href="sub_role.php#passion">恋色迷彩</a>を付加する特殊な天狗。</td>
+  <td>Ver. 3.0.0 α5</td>
+</tr>
+<tr>
+  <td><a href="human.php#barrier_brownie">産土神</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#brownie_group">座敷童子系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">特殊な護衛能力を持つ、座敷童子の亜種。</td>
+  <td>Ver. 3.0.0 α5</td>
+</tr>
+<tr id="ver300a6">
+  <td><a href="lovers.php#letter_cupid">文車妖妃</a></td>
+  <td><a href="lovers.php">恋人</a></td>
+  <td><a href="lovers.php#cupid_group">キューピッド系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">矢を撃った二人に<a href="sub_role.php#letter_exchange">交換日記</a>を付加する上位キューピッド。</td>
+  <td>Ver. 3.0.0 α6</td>
+</tr>
+<tr>
+  <td><a href="human.php#eye_scanner">目目連</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#mind_scanner_group">さとり系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">前日の<a href="wolf.php#wolf_eat_failed">人狼襲撃失敗</a>が分かる特殊なさとり。</td>
+  <td>Ver. 3.0.0 α6</td>
+</tr>
+<tr>
+  <td><a href="wolf.php#eye_wolf">瞳狼</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#wolf_group">人狼系</a></td>
+  <td>人狼</td>
+  <td>人狼</td>
+  <td class="ability">前日の<a href="wolf.php#wolf_eat_failed">人狼襲撃失敗</a>が分かる人狼。</td>
+  <td>Ver. 3.0.0 α6</td>
+</tr>
+<tr id="ver300a7">
+  <td><a href="tengu.php#meteor_tengu">流星天狗</a></td>
+  <td><a href="tengu.php">天狗</a></td>
+  <td><a href="tengu.php#tengu_group">天狗系</a></td>
+  <td>村人</td>
+  <td>天狗</td>
+  <td class="ability">神通力が成功したら神隠し (特殊呪殺) を行う特殊な天狗。</td>
+  <td>Ver. 3.0.0 α7</td>
+</tr>
+<tr>
+  <td><a href="tengu.php#priest_tengu">鼻高天狗</a></td>
+  <td><a href="tengu.php">天狗</a></td>
+  <td><a href="tengu.php#tengu_group">天狗系</a></td>
+  <td>村人</td>
+  <td>天狗</td>
+  <td class="ability">神通力に加え、特殊な司祭能力も持つ上位天狗。</td>
+  <td>Ver. 3.0.0 α7</td>
 </tr>
 </table>
 
@@ -4065,6 +4229,20 @@ Ver. 2.3.0
     <td>無し</td>
     <td class="ability"><a href="ability.php#guard">護衛能力</a>を完全無効化する。</td>
     <td>Ver. 2.3.0 α7</td>
+  </tr>
+  <tr id="sub_ver300a2">
+    <td><a href="sub_role.php#tengu_voice">天狗倒し</a></td>
+    <td><a href="sub_role.php#strong_voice_group">大声系</a></td>
+    <td>強制</td>
+    <td class="ability">高確率で発言が<a href="sub_role.php#strong_voice">大声</a>になる。</td>
+    <td>Ver. 3.0.0 α2</td>
+  </tr>
+  <tr id="sub_ver300a6">
+    <td><a href="sub_role.php#letter_exchange">交換日記</a></td>
+    <td><a href="sub_role.php#lovers_group">恋人系</a></td>
+    <td>強制</td>
+    <td class="ability"><a href="sub_role.php#lovers">恋人</a>に遺言を送る。</td>
+    <td>Ver. 3.0.0 α6</td>
   </tr>
 </table>
 

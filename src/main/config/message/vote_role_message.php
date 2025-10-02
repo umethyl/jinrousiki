@@ -32,6 +32,7 @@ class VoteRoleMessage {
   static public $OGRE_DO           = '対象を攫う';		//鬼
   static public $OGRE_NOT_DO       = '誰も攫わない';		//鬼(キャンセル)
   static public $DUELIST_DO        = '対象を結びつける';	//決闘者
+  static public $TENGU_DO          = '対象に神通力をかける';	//天狗
   static public $MANIA_DO          = '対象を真似る';		//神話マニア
   static public $DEATH_NOTE_DO     = '対象の名前を書く';	//デスノート
   static public $DEATH_NOTE_NOT_DO = '誰の名前も書かない';	//デスノート(キャンセル)

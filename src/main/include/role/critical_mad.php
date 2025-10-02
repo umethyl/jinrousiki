@@ -8,7 +8,7 @@ class Role_critical_mad extends Role {
   public $vote_day_type = 'init';
 
   public function VoteAction() {
-    $class = $this->GetClass($method = 'SetVoteAction');
+    $class = $this->GetParent($method = 'SetVoteAction');
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
       $user = DB::$USER->ByRealUname($target_uname);

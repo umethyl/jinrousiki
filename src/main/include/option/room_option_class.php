@@ -9,20 +9,24 @@ class RoomOption {
   static $game_option = array();
   static $role_option = array();
   static $icon_order  = array(
-    'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'gerd', 'wait_morning', 'open_vote',
-    'settle', 'seal_message', 'open_day', 'necessary_name', 'necessary_trip', 'not_open_cast',
-    'auto_open_cast', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf',
-    'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'cupid',
-    'medium', 'mania', 'decide', 'authority', 'detective', 'liar', 'gentleman', 'passion',
-    'deep_sleep', 'blinder', 'mind_open', 'sudden_death', 'perverseness', 'critical', 'joker',
-    'death_note', 'weather', 'festival', 'replace_human', 'full_mad', 'full_cupid', 'full_quiz',
-    'full_vampire', 'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania', 'change_common',
-    'change_hermit_common', 'change_mad', 'change_fanatic_mad', 'change_whisper_mad',
-    'change_immolate_mad', 'change_cupid', 'change_mind_cupid', 'change_triangle_cupid',
-    'change_angel', 'change_exchange_angel', 'duel', 'gray_random', 'step', 'quiz', 'chaos',
-    'chaosfull', 'chaos_hyper', 'chaos_verso', 'topping', 'boost_rate', 'chaos_open_cast',
-    'chaos_open_cast_camp', 'chaos_open_cast_role', 'secret_sub_role', 'no_sub_role',
-    'sub_role_limit_easy', 'sub_role_limit_normal', 'sub_role_limit_hard');
+    'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'gerd', 'open_vote', 'settle',
+    'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
+    'wait_morning', 'limit_talk', 'secret_talk', 'no_silence',
+    'not_open_cast', 'auto_open_cast',
+    'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf', 'possessed_wolf',
+    'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'cupid', 'medium', 'mania',
+    'decide', 'authority', 'detective', 'liar', 'gentleman', 'passion', 'deep_sleep', 'blinder',
+    'mind_open', 'sudden_death', 'perverseness', 'critical', 'joker', 'death_note',
+    'weather', 'full_weather', 'festival',
+    'replace_human', 'full_mad', 'full_cupid', 'full_quiz', 'full_vampire', 'full_chiroptera',
+    'full_patron', 'full_mania', 'full_unknown_mania',
+    'change_common', 'change_hermit_common', 'change_mad', 'change_fanatic_mad',
+    'change_whisper_mad', 'change_immolate_mad', 'change_cupid', 'change_mind_cupid',
+    'change_triangle_cupid', 'change_angel', 'change_exchange_angel',
+    'duel', 'gray_random', 'step', 'quiz',
+    'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'topping', 'boost_rate',
+    'chaos_open_cast', 'chaos_open_cast_camp', 'chaos_open_cast_role', 'secret_sub_role',
+    'no_sub_role', 'sub_role_limit_easy', 'sub_role_limit_normal', 'sub_role_limit_hard');
   static $max_user = 0;
 
   //オプション情報ロード
@@ -58,6 +62,13 @@ class RoomOption {
   static function Set($type, $name) {
     RQ::Set($name, true);
     if (! in_array($name, self::$$type)) array_push(self::$$type, $name);
+  }
+
+  //オプション登録 (専用処理つき)
+  static function SetFilter($option) {
+    $filter = OptionManager::GetClass($option);
+    text::p($filter);
+    RoomManager::p();
   }
 
   //オプションをパースしてスタック登録

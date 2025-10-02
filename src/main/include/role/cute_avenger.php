@@ -5,5 +5,5 @@
 */
 RoleManager::LoadFile('avenger');
 class Role_cute_avenger extends Role_avenger {
-  public $mix_in = 'suspect';
+  public $mix_in = array('suspect');
 }

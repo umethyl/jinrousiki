@@ -219,7 +219,7 @@ class RequestBase {
 //-- game 用共通クラス --//
 class RequestBaseGame extends RequestBase {
   public function __construct() {
-    $this->ParseGetInt('room_no', 'auto_reload');
+    $this->ParseGetInt('db_no', 'room_no', 'auto_reload');
     $min = min(GameConfig::$auto_reload_list);
     if ($this->auto_reload != 0 && $this->auto_reload < $min) $this->auto_reload = $min;
     $this->add_role = null;
@@ -228,19 +228,78 @@ class RequestBaseGame extends RequestBase {
 
 //-- game play 用共通クラス --//
 class RequestBaseGamePlay extends RequestBaseGame {
+  private $url_stack = array();
+
   public function __construct() {
     parent::__construct();
-    $this->ParseGetOn('play_sound', 'icon', 'name', 'list_down');
+    $this->ParseGetOn('play_sound', 'icon', 'name', 'list_down', 'async');
+    if (! GameConfig::ASYNC) $this->async = false;
   }
 
   protected function GetURL($auto_reload = false) {
     $url = '?room_no=' . $this->room_no;
     if ($this->auto_reload > 0 || $auto_reload) $url .= '&auto_reload=' . $this->auto_reload;
+    if ($this->async)      $url .= '&async=on';
     if ($this->play_sound) $url .= '&play_sound=on';
     if ($this->icon)       $url .= '&icon=on';
     if ($this->name)       $url .= '&name=on';
     if ($this->list_down)  $url .= '&list_down=on';
     return $url;
+  }
+
+  /** ON/OFF値のクエリパラメータをスタックに追加します。 */
+  public function StackOnParam($name, $emptyIfOff = true) {
+    $this->StackOnValue($name, $this->$name, $emptyIfOff);
+  }
+
+  /** bool型の値をクエリパラメータとしてスタックに追加します。 */
+  public function StackOnValue($name, $value, $emptyIfOff = true) {
+    $value = $value ? 'on' : 'off';
+    if (!$emptyIfOff || $value === 'on') {
+      $this->url_stack[$name] = $value;
+    }
+    else {
+      $this->url_stack[$name] = '';
+    }
+  }
+
+
+  /** 整数値のクエリパラメータをスタックに追加します。 */
+  public function StackIntParam($name, $emptyIfZero = true) {
+    $value = intval($this->$name);
+    if (!$emptyIfZero || $value != 0) {
+      $this->url_stack[$name] = $value;
+    }
+    else {
+      $this->url_stack[$name] = '';
+    }
+  }
+
+  /** 文字列型のクエリパラメータをスタックに追加します。 */
+  public function StackRawParam($name) {
+    $this->url_stack[$name] = $this->$name;
+  }
+
+  /** スタックされたクエリパラメータを直接取得します。 */
+  public function GetRawUrlStack(array $except = null, array $filter = null) {
+    $diff = empty($except)
+      ? $this->url_stack
+      : array_diff_key($this->url_stack, array_flip($except));
+
+    return empty($filter)
+        ? $diff
+        : array_intersect_key($diff, array_flip($filter));
+  }
+
+  /** スタックされたクエリパラメータを結合して取得します。 */
+  public function GenerateUrl(array $except = null, array $filter = null) {
+    $query = '';
+    foreach ($this->GetRawUrlStack($except, $filter) as $name => $value) {
+      if ($value != '') {
+	$query .= sprintf('&%s=%s', $name, urlencode($value));
+      }
+    }
+    return $query;
   }
 }
 
@@ -358,15 +417,15 @@ class RequestGameLog extends RequestBase {
 
   private function IsInvalidScene() {
     switch ($this->scene) {
-    case 'beforegame':
+    case RoomScene::BEFORE:
       return $this->date != 0;
 
-    case 'day':
-    case 'night':
+    case RoomScene::DAY:
+    case RoomScene::NIGHT:
       return $this->date < 1;
 
-    case 'aftergame':
-    case 'heaven':
+    case RoomScene::AFTER:
+    case RoomScene::HEAVEN:
       return false;
 
     default:
@@ -408,7 +467,7 @@ class RequestOldLog extends RequestBase {
 			'sex', 'wolf_sight', 'personal_result', 'role_list');
     }
     else {
-      $this->ParseGetData('reverse', 'name');
+      $this->ParseGetData('reverse', 'name', 'room_name', 'role');
       $this->ParseGet('SetPage', 'page');
     }
   }
@@ -448,19 +507,5 @@ class RequestIconUpload extends RequestBaseIcon {
 class RequestSharedRoom extends RequestBase {
   public function __construct() {
     $this->ParseGetInt('id');
-  }
-}
-
-//-- src/upload.php --//
-class RequestSrcUpload extends RequestBase {
-  public function __construct() {
-    if (Security::CheckValue($_FILES)) die();
-    Text::Encode();
-    $this->ParsePostStr('name', 'caption', 'user', 'password');
-    $file = new StdClass();
-    foreach ($this->GetSource('file') as $key => $value) {
-      $file->$key = $value;
-    }
-    $this->file = $file;
   }
 }

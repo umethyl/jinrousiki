@@ -27,7 +27,9 @@ class JinrouSetup {
   }
 
   //テーブル存在確認
-  private static function Exists($table) { return in_array($table, self::$table_list); }
+  private static function Exists($table) {
+    return in_array($table, self::$table_list);
+  }
 
   //対象バージョン確認
   private static function IsRevision($revision) {
@@ -72,7 +74,8 @@ class JinrouSetup {
 
   //カラム削除
   private static function DropColumn($table, $column) {
-    $stack = DB::FetchColumn('SHOW COLUMNS FROM ' . $table);
+    DB::Prepare('SHOW COLUMNS FROM ' . $table);
+    $stack = DB::FetchColumn();
     if (! in_array($column, $stack)) return true;
     self::Output('カラム削除: ' . $table, $column, SetupDB::DropColumn($table, $column));
   }
@@ -83,8 +86,8 @@ class JinrouSetup {
     case 'user_entry':
       //管理者登録
       $items  = 'room_no, user_no, uname, handle_name, icon_no, profile, password, role, live';
-      $str    = "0, 0, 'system', 'システム', 1, 'ゲームマスター', '%s', 'GM', 'live'";
-      $values = sprintf($str, ServerConfig::PASSWORD);
+      $str    = "0, 0, '%s', 'システム', 1, 'ゲームマスター', '%s', 'GM', '%s'";
+      $values = sprintf($str, GM::SYSTEM, ServerConfig::PASSWORD, UserLive::LIVE);
       DB::Insert($table, $items, $values);
       break;
 
@@ -247,11 +250,12 @@ class JinrouSetup {
       Text::p($name, '設定完了済み');
       return;
     }
-    self::$table_list = DB::FetchColumn('SHOW TABLES'); //テーブルのリストをセット
+    DB::Prepare('SHOW TABLES');
+    self::$table_list = DB::FetchColumn(); //テーブルのリストをセット
 
     $stack = array(
       'room', 'user_entry', 'player',
-      'talk', 'talk_beforegame', 'talk_aftergame',
+      'talk', 'talk_beforegame', 'talk_aftergame', 'user_talk_count',
       'vote', 'system_message',
       'result_ability', 'result_dead', 'result_lastwords', 'result_vote_kill',
       'user_icon',
@@ -288,40 +292,46 @@ class SetupDB {
 
   //権限設定
   static function Grant($name) {
-    return DB::FetchBool(sprintf('GRANT ALL ON %s.* TO %s', $name, DatabaseConfig::USER), true);
+    DB::Prepare(sprintf('GRANT ALL ON %s.* TO %s', $name, DatabaseConfig::USER));
+    return DB::FetchBool(true);
   }
 
   //データベース作成
   static function CreateDatabase($name) {
-    return DB::FetchBool(sprintf('CREATE DATABASE %s DEFAULT CHARSET utf8', $name));
+    DB::Prepare(sprintf('CREATE DATABASE %s DEFAULT CHARSET utf8', $name));
+    return DB::FetchBool();
   }
 
   //テーブル作成
   static function CreateTable($table) {
-    $schema = self::GetSchema($table);
-    return DB::FetchBool(sprintf('CREATE TABLE %s(%s) ENGINE = InnoDB', $table, $schema));
+    DB::Prepare(sprintf('CREATE TABLE %s(%s) ENGINE = InnoDB', $table, self::GetSchema($table)));
+    return DB::FetchBool();
   }
 
   //型変更
   static function ChangeColumn($table, $column) {
     $schema = self::GetColumn($table, $column);
-    return DB::FetchBool(sprintf('ALTER TABLE %s CHANGE %s %s', $table, $column, $schema));
+    DB::Prepare(sprintf('ALTER TABLE %s CHANGE %s %s', $table, $column, $schema));
+    return DB::FetchBool();
   }
 
   //インデックス再生成
   static function RegenerateIndex($table, $index, $value) {
-    $query  = 'ALTER TABLE %s DROP INDEX %s, ADD INDEX %s (%s)';
-    return DB::FetchBool(sprintf($query, $table, $index, $index, $value));
+    $query = 'ALTER TABLE %s DROP INDEX %s, ADD INDEX %s (%s)';
+    DB::Prepare(sprintf($query, $table, $index, $index, $value));
+    return DB::FetchBool();
   }
 
   //テーブル削除
   static function DropTable($table) {
-    return DB::FetchBool(sprintf('DROP TABLE %s', $table));
+    DB::Prepare(sprintf('DROP TABLE %s', $table));
+    return DB::FetchBool();
   }
 
   //カラム削除
   static function DropColumn($table, $column) {
-    return DB::FetchBool(sprintf('ALTER TABLE %s DROP %s', $table, $column));
+    DB::Prepare(sprintf('ALTER TABLE %s DROP %s', $table, $column));
+    return DB::FetchBool();
   }
 
   //スキーマ取得
@@ -381,6 +391,13 @@ id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, room_no MEDIUMINT UNSIGNED 
   action VARCHAR(32), sentence TEXT, font_type VARCHAR(32), spend_time SMALLINT UNSIGNED,
   time INT(20) NOT NULL,
 INDEX talk_aftergame_index(room_no)
+EOF;
+
+    case 'user_talk_count':
+      return <<<EOF
+room_no MEDIUMINT UNSIGNED NOT NULL, user_no SMALLINT, date TINYINT UNSIGNED,
+  talk_count SMALLINT UNSIGNED,
+INDEX user_talk_count_index(room_no, user_no)
 EOF;
 
     case 'vote':
@@ -590,7 +607,7 @@ EOF;
       return $column . ' TINYINT UNSIGNED NOT NULL';
 
     case 'type':
-      return $column . ' VARCHAR(32)';
+      return 'type VARCHAR(32)';
 
     case 'color':
       return 'color VARCHAR(7)';

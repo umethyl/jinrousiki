@@ -71,8 +71,12 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
   <td>性別</td>
 </tr>
 </table>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#psycho">精神関連能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
+</pre>
 
-<h2 id="partner">仲間表示</h2>
+<h2 id="partner">仲間表示 [Ver. 1.4.0 α3-7～]</h2>
 <ol>
 <li><a href="#silver_fox">銀狐</a>・<a href="#critical_fox">寿羊弧</a>以外の全ての妖狐は<a href="#silver_fox">銀狐</a>以外の<a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>が誰か分かる。</li>
 <li><a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>からは<a href="#depraver_group">背徳者系</a>は分からない。</li>
@@ -97,14 +101,8 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <a href="#fox_group">妖狐系</a>から<a href="#child_fox">子狐</a>が誰か分かる。
 <a href="#fox_group">妖狐系</a>と<a href="#child_fox">子狐</a>は別枠で表示される。
 </pre>
-<h5>Ver. 1.4.0 α3-7～</h5>
-<pre>
-全ての妖狐は<a href="#child_fox">子狐</a>以外の<a href="#fox_group">妖狐系</a>が誰か分かる。
-<a href="#child_fox">子狐</a>は全ての妖狐が誰か分かる。
-同一の枠で表示されるので種類は不明。
-</pre>
 
-<h2 id="talk">夜の会話 (念話)</h2>
+<h2 id="talk">夜の会話 (念話) [Ver. 1.4.0 α3-7～]</h2>
 <ol>
 <li><a href="#silver_fox">銀狐</a>以外の<a href="#fox_group">妖狐系</a>は夜に会話 (念話) できる。</li>
 <li>2日目以降は<a href="human.php#telepath_scanner">念騒霊</a>の独り言も表示される。<a href="human.php#leader_common">指導者</a>の発言とは区別できない。</li>
@@ -113,11 +111,6 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <li><a href="wolf.php#wise_wolf">賢狼</a>・<a href="ogre.php#wise_ogre">夜行鬼</a>には念話が<a href="human.php#common_group">共有者</a>の囁きに変換されて表示される。</li>
 <li><a href="sub_role.php#mind_lonely">はぐれ者</a>になると夜の発言が独り言になり、念話に参加できなくなる (<a href="#silver_fox">銀狐</a>と同じ)。</li>
 </ol>
-<h5>Ver. 1.4.0 α3-7～</h5>
-<pre>
-全ての<a href="#fox_group">妖狐系</a>は夜に会話 (念話) できる。
-<a href="#child_fox_group">子狐系</a>は念話を見ることも参加することもできない。
-</pre>
 
 
 <h2 id="fox_group">妖狐系</h2>
@@ -126,14 +119,15 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <a href="#white_fox">白狐</a>
 <a href="#black_fox">黒狐</a>
 <a href="#mist_fox">霧狐</a>
+<a href="#tiger_fox">虎狐</a>
 <a href="#gold_fox">金狐</a>
 <a href="#phantom_fox">幻狐</a>
 <a href="#purple_fox">紫狐</a>
 <a href="#snow_fox">雪狐</a>
 <a href="#poison_fox">管狐</a>
-<a href="#blue_fox">蒼狐</a>
 </p>
 <p>
+<a href="#blue_fox">蒼狐</a>
 <a href="#spell_fox">宙狐</a>
 <a href="#sacrifice_fox">白蔵主</a>
 <a href="#emerald_fox">翠狐</a>
@@ -143,9 +137,9 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <a href="#possessed_fox">憑狐</a>
 <a href="#doom_fox">冥狐</a>
 <a href="#trap_fox">狡狐</a>
-<a href="#cursed_fox">天狐</a>
 </p>
 <p>
+<a href="#cursed_fox">天狐</a>
 <a href="#elder_fox">古狐</a>
 <a href="#cute_fox">萌狐</a>
 <a href="#scarlet_fox">紅狐</a>
@@ -171,7 +165,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#mage_human">特殊占い判定能力者</a>
+<a href="ability.php#mage_human">特殊占い判定能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -186,7 +180,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#mage_wolf">特殊占い判定能力者</a>
+<a href="ability.php#mage_wolf">特殊占い判定能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -202,12 +196,27 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#mage_chiroptera">特殊占い判定能力者</a>
+<a href="ability.php#mage_chiroptera">特殊占い判定能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="wolf.php#mist_wolf">霧狼</a>の妖狐バージョンです。
 <a href="human.php#dummy_mage">夢見人</a>にも捉まるので対占いは辛いですが、騙りを把握しやすくなります。
+</pre>
+
+<h3 id="tiger_fox">虎狐 (占い結果：鬼(呪殺無し) / 霊能結果：妖狐) [Ver. 3.0.0 α3～]</h3>
+<h4>[耐性] 人狼襲撃：無効</h4>
+<pre>
+占い結果が「鬼」、霊能結果が「妖狐」と判定される妖狐。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#mage_ogre">特殊占い判定能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="wolf.php#tiger_wolf">虎狼</a>の妖狐バージョンです。
+<a href="ogre.php">鬼陣営</a>が占われることに対するリスクを上げる事が狙いです。
 </pre>
 
 <h3 id="gold_fox">金狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 1.4.0 β8～]</h3>
@@ -233,7 +242,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#phantom">占い妨害能力者</a>・<a href="ability.php#seal">封印対象者</a>
+<a href="ability.php#phantom">占い妨害能力者</a>・<a href="ability.php#seal">封印対象者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -246,6 +255,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <pre>
 処刑投票先が<a href="wolf.php">人狼陣営</a>だった場合は自分に<a href="sub_role.php#death_warrant">死の宣告</a>を付加してしまう妖狐。
 </pre>
+<h4>処刑投票能力</h4>
 <ol>
 <li><a href="sub_role.php#lovers">恋人</a>・<a href="sub_role.php#fake_lovers">愛人</a>は恋人陣営と判定する。</li>
 <li><a href="sub_role.php#death_warrant">死の宣告</a>の発動日は投票した昼から数えて 3 日後の昼。</li>
@@ -268,6 +278,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <pre>
 自分に処刑投票してきた人が<a href="wolf.php#mad_group">狂人系</a>だった場合は自分に<a href="sub_role.php#frostbite">凍傷</a>を付加してしまう妖狐。
 </pre>
+<h4>処刑投票能力</h4>
 <ol>
 <li><a href="sub_role.php#frostbite">凍傷</a>の発動日は投票された翌日の昼。</li>
 <li><a href="../spec.php#vote_day">判定</a>は処刑者決定後。</li>
@@ -346,6 +357,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 占いで呪殺されず、<a href="wolf.php#wolf_group">人狼</a>に襲撃された時に、<a href="#child_fox_group">子狐系</a>・<a href="chiroptera.php#chiroptera_group">蝙蝠系</a>を身代わりにして
 生き延びる事ができる妖狐。
 </pre>
+<h4>身代わり能力</h4>
 <ol>
 <li>身代わりが発生した場合、<a href="wolf.php#wolf_group">人狼</a>の襲撃は失敗扱い。</li>
 <li>身代わりで死亡した人の死因は「誰かの犠牲となって死亡したようです」。</li>
@@ -354,7 +366,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#mage_human">特殊占い判定能力者</a>・<a href="ability.php#sacrifice">身代わり能力者</a>
+<a href="ability.php#mage_human">特殊占い判定能力者</a>・<a href="ability.php#sacrifice">身代わり能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -369,6 +381,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <pre>
 一度だけ、占った人が<a href="#talk">念話</a>できない妖狐だった場合に自分と占った人を<a href="sub_role.php#mind_friend">共鳴者</a>にする妖狐。
 </pre>
+<h4>占い能力</h4>
 <ol>
   <li>能力の発動対象は<a href="#silver_fox">銀狐</a>・<a href="#child_fox_group">子狐系</a>・<a href="sub_role.php#mind_lonely">はぐれ者</a>の妖狐のいずれか。</li>
   <li>インターフェイスは占いと同じだが、結果は何も表示されない。</li>
@@ -443,6 +456,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <pre>
 一度だけ、死体に憑依することができる妖狐。
 </pre>
+<h4>憑依能力</h4>
 <ol>
 <li>身代わり君・<a href="wolf.php">人狼陣営</a>・<a href="lovers.php">恋人陣営</a>・<a href="ability.php#possessed_limit">憑依制限能力者</a>には憑依できない。</li>
 <li>憑依を実行した時に<a href="human.php#anti_voodoo">厄神</a>に護衛されると憑依に失敗する。</li>
@@ -467,7 +481,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#sacrifice_cat">猫神</a>・<a href="ability.php#possessed">憑依能力者</a>・<a href="ability.php#seal">封印対象者</a>
+<a href="human.php#sacrifice_cat">猫神</a>・<a href="ability.php#possessed">憑依能力者</a>・<a href="ability.php#seal">封印対象者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -522,7 +536,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#anti_assassin">暗殺耐性能力者</a>・<a href="ability.php#cursed_group">呪い能力者</a>
+<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#anti_assassin">暗殺耐性能力者</a>・<a href="ability.php#cursed_group">呪い能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -569,11 +583,11 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <h3 id="scarlet_fox">紅狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 1.4.0 α24～]</h3>
 <h4>[耐性] 人狼襲撃：無効</h4>
 <pre>
-<a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える妖狐。
+<a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える妖狐。
 </pre>
 <h5>Ver. 1.4.0 β21～</h5>
 <pre>
-<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える。
+<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える。
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -615,7 +629,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#immolate_mad">殉教者</a>・<a href="mania.php#dummy_mania">夢語部</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#win">追加勝利条件所持能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -797,7 +811,8 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#emperor_wolf">帝狼</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#critical_luck">痛恨能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>・<a href="ability.php#vote_action">処刑投票能力者</a>
+<a href="ability.php#win">追加勝利条件所持能力者</a>・<a href="ability.php#critical_luck">痛恨能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -812,6 +827,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </p>
 <p>
 <a href="#depraver">背徳者</a>
+<a href="#fire_depraver">紂王</a>
 <a href="#sacrifice_depraver">伊呂具秦公</a>
 <a href="#silver_depraver">頭人</a>
 </p>
@@ -850,11 +866,35 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 他国に実在する役職です。
 </pre>
 
+<h3 id="fire_depraver">紂王 (占い結果：村人 / 霊能結果：村人) [Ver. 3.0.0 α3～]</h3>
+<h4>[耐性] 蘇生：不可 / 反魂：無効</h4>
+<pre>
+処刑投票先に<a href="sub_role.php#spell_wisp">狐火</a>を付加する背徳者。
+</pre>
+<ol>
+<li>発動は 3 の倍数の昼。</li>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合でも有効。</li>
+<li>対象が死亡していた場合は無効 (例：処刑・毒死)。</li>
+<li>自分が処刑された場合は無効。</li>
+<li><a href="ability.php#special_resist">特殊耐性能力者</a>には無効。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#wisp">鬼火付加能力者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="wolf.php#fire_mad">煙々羅</a>の背徳者バージョンです。
+妖狐役を他に押し付けることが可能になりますが、
+同時に呪殺した占い師に信用を渡してしまうことになります。
+</pre>
+
 <h3 id="sacrifice_depraver">伊呂具秦公 (占い結果：村人 / 霊能結果：村人) [Ver. 2.3.0 α4～]</h3>
 <h4>[耐性] 蘇生：不可 / 反魂：無効</h4>
 <pre>
 <a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>の呪殺に対して身代わりになる背徳者。
 </pre>
+<h4>呪殺身代わり能力</h4>
 <ol>
 <li><a href="../spec.php#vote_night">呪殺成立</a>時に生存している伊呂具秦公がいる場合のみ有効。</li>
 <li>身代わりが発生した場合の死因は「呪殺された」。</li>
@@ -866,7 +906,13 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </li>
 <li><a href="sub_role.php#spell_wisp">狐火</a>による呪殺でも有効。</li>
 <li>自分が<a href="sub_role.php#vega_lovers">織姫</a>の場合は能力無効。</li>
+<li><a href="../weather.php#weather_no_sacrifice">蛍火</a>の場合は能力無効。</li>
 </ol>
+<h5>Ver. 3.0.0 α5～</h5>
+<pre>
+<a href="../weather.php#weather_no_sacrifice">蛍火</a>の場合は能力無効。
+</pre>
+
 <h4>関連役職</h4>
 <pre>
 <a href="mania.php#soul_mania">覚醒者</a>

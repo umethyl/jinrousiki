@@ -97,7 +97,7 @@ class IconUpload {
       self::OutputResult(sprintf(IconUploadMessage::DUPLICATE, $icon_name));
     }
 
-    $icon_no = IconDB::GetNumber(); //次のアイコン番号取得
+    $icon_no = IconDB::GetNext(); //次のアイコン番号取得
     if ($icon_no === false) self::OutputResult(Message::DB_ERROR_LOAD); //負荷エラー対策
 
     //ファイルをテンポラリからコピー

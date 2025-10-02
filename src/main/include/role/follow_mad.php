@@ -5,7 +5,7 @@
   ・道連れ：投票先がショック死していたら誰か一人をさらにショック死させる
 */
 class Role_follow_mad extends Role {
-  public $vote_day_type = 'real';
+  public $vote_day_type = 'stack';
   public $sudden_death  = 'FOLLOWED';
 
   public function Followed(array $list) {

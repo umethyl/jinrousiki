@@ -8,7 +8,8 @@ class GameTime {
     $pass_time  = DB::$ROOM->system_time - $start_time;
     if (DB::$ROOM->IsOption('wait_morning') && DB::$ROOM->IsDay()) { //早朝待機制
       $base_time += TimeConfig::WAIT_MORNING; //制限時間を追加する
-      DB::$ROOM->event->wait_morning = $pass_time <= TimeConfig::WAIT_MORNING; //待機判定
+      //待機判定
+      DB::$ROOM->Stack()->Get('event')->Set('wait_morning', $pass_time <= TimeConfig::WAIT_MORNING);
     }
     $left_time = max(0, $base_time - $pass_time); //残り時間
     return $start_time + $base_time;
@@ -29,17 +30,41 @@ class GameTime {
     return Time::Convert($full_time * $base_left_time * 60 * 60 / $base_time);
   }
 
+  //残り時間取得
+  static function GetLeftTime() {
+    if (DB::$ROOM->IsRealTime()) { //リアルタイム制
+      self::GetRealPass($left_time);
+    } else {
+      self::GetTalkPass($left_time);
+    }
+    return $left_time;
+  }
+
+  //経過時間取得
+  static function GetPass() {
+    if (DB::$ROOM->IsRealTime()) { //リアルタイム制
+      return self::GetRealPass($left_time);
+    } else {
+      return self::GetTalkPass($left_time);
+    }
+  }
+
   //リアルタイム表示に使う JavaScript の変数を出力
   static function OutputTimer($end_time, $type = null, $flag = false) {
     $format = <<<EOF
 <script language="JavaScript"><!--
 var sentence       = "%s";
-var end_date       = %s * 1 + (new Date() - %s);
+var std_time       = (new Date() - %s);
+var end_date       = %s * 1 + std_time;
 var diff_seconds   = Math.floor((%s - %s) / 1000);
 var sound_flag     = %s;
 var sound_file     = "%s";
 var countdown_flag = %s;
 var alert_distance = %d;
+
+function updateEndDate(value) {
+  end_date = value + std_time;
+}
 %s
 EOF;
     $end_date = self::GetJavaScriptDate($end_time);
@@ -47,7 +72,8 @@ EOF;
     echo HTML::LoadJavaScript('output_realtime');
     printf($format . Text::LF,
 	   DB::$ROOM->IsDay() ? GameMessage::TIME_LIMIT_DAY : GameMessage::TIME_LIMIT_NIGHT,
-	   $end_date, self::GetJavaScriptDate(DB::$ROOM->system_time),
+	   self::GetJavaScriptDate(DB::$ROOM->system_time),
+	   $end_date,
 	   $end_date, self::GetJavaScriptDate(DB::$ROOM->scene_start_time),
 	   isset($type) ? 'true' : 'false',
 	   isset($type) && class_exists('Sound') ? Sound::Generate($type) : '',
@@ -68,14 +94,14 @@ EOF;
 class Winner {
   //勝敗チェック
   static function Check($check_draw = false) {
-    if (DB::$ROOM->test_mode) return false;
+    if (DB::$ROOM->IsTest()) return false;
 
     //コピー能力者がいるのでキャッシュを更新するかクエリから引くこと
-    $human  = UserDataDB::GetCampCount('human');  //村人
-    $wolf   = UserDataDB::GetCampCount('wolf');   //人狼
-    $fox    = UserDataDB::GetCampCount('fox');    //妖狐
-    $lovers = UserDataDB::GetCampCount('lovers'); //恋人
-    $quiz   = UserDataDB::GetCampCount('quiz');   //出題者
+    $human  = UserDataDB::CountCamp('human');  //村人
+    $wolf   = UserDataDB::CountCamp('wolf');   //人狼
+    $fox    = UserDataDB::CountCamp('fox');    //妖狐
+    $lovers = UserDataDB::CountCamp('lovers'); //恋人
+    $quiz   = UserDataDB::CountCamp('quiz');   //出題者
 
     //-- 吸血鬼の勝利判定 --//
     $vampire = false;
@@ -162,8 +188,8 @@ EOF;
 
     /* 個々の勝敗結果 */
     //スキップ判定 (勝敗未決定/観戦モード/ログ閲覧モード)
-    if (is_null($winner) || DB::$ROOM->view_mode ||
-	(DB::$ROOM->log_mode && ! DB::$ROOM->single_view_mode && ! DB::$ROOM->personal_mode)) {
+    if (is_null($winner) || DB::$ROOM->IsOn('view') ||
+	(DB::$ROOM->IsOn('log') && DB::$ROOM->IsOff('single') && DB::$ROOM->IsOff('personal'))) {
       return $id > 0 ? WinnerMessage::$personal_none : $str;
     }
 
@@ -186,7 +212,7 @@ EOF;
       break;
 
     default:
-      RoleManager::SetStack('class', null);
+      RoleManager::Stack()->Set('class', null);
       switch ($camp) {
       case 'human':
       case 'wolf':
@@ -220,6 +246,10 @@ EOF;
 	}
 	break;
 
+      case 'tengu':
+	$win_flag = RoleManager::GetClass($camp)->Win($winner);
+	break;
+
       default:
 	$win_flag = $winner == $camp;
 	break;
@@ -231,9 +261,12 @@ EOF;
       }
 
       if ($win_flag) {
-	$class = is_null(RoleManager::GetStack('class')) ? $camp : RoleManager::GetStack('class');
-      }
-      else {
+	if (is_null(RoleManager::Stack()->Get('class'))) {
+	  $class = $camp;
+	} else {
+	  $class = RoleManager::Stack()->Get('class');
+	}
+      } else {
 	$result = 'lose';
 	$class  = $result;
       }
@@ -312,7 +345,7 @@ class GameHTML {
   //ログへのリンク生成
   static function GenerateLogLink() {
     $url    = 'old_log.php?room_no=' . DB::$ROOM->id;
-    $header = DB::$ROOM->view_mode ? GameMessage::LOG_LINK_VIEW : GameMessage::LOG_LINK;
+    $header = DB::$ROOM->IsOn('view') ? GameMessage::LOG_LINK_VIEW : GameMessage::LOG_LINK;
     $str    = HTML::GenerateLogLink($url, true, Text::BRLF . $header);
 
     $header = GameMessage::LOG_LINK_ROLE;
@@ -321,7 +354,7 @@ class GameHTML {
 
   //プレイヤー一覧生成
   static function GeneratePlayer($heaven = false) {
-    //Text::p(DB::$ROOM->event);
+    //DB::$ROOM->Stack()->p('event', '◆Event');
     //キャッシュデータをセット
     $is_open     = DB::$ROOM->IsOpenData(true);
     $beforegame  = DB::$ROOM->IsBeforegame();
@@ -335,12 +368,10 @@ class GameHTML {
       $trip_from = array(Message::TRIP, Message::TRIP_CONVERT);
       $trip_to   = array(Message::TRIP . Text::BR, Message::TRIP_CONVERT . Text::BR);
       $is_sex    = DB::$ROOM->IsFinished() && RQ::Get()->sex;
-      if ($is_sex) {
-	$sex_list = array('male' => '男性', 'female' => '女性');
-      }
+      if ($is_sex) $sex_list = Sex::GetList();
     }
     if ($admin && DB::$ROOM->IsNight()) {
-      if (! isset(DB::$ROOM->vote)) DB::$ROOM->LoadVote();
+      if (DB::$ROOM->Stack()->IsEmpty('vote')) DB::$ROOM->LoadVote();
       $vote_data = DB::$ROOM->ParseVote(); //投票情報をパース
     }
 
@@ -352,15 +383,15 @@ class GameHTML {
 
       //投票済み判定
       switch (DB::$ROOM->scene) {
-      case 'beforegame':
+      case RoomScene::BEFORE:
 	$voted = $user->vote_type == 'GAMESTART' || $user->IsDummyBoy(true);
 	break;
 
-      case 'day':
+      case RoomScene::DAY:
 	$voted = $is_open && $user->target_no > 0;
 	break;
 
-      case 'night':
+      case RoomScene::NIGHT:
 	$voted = $admin && $user->CheckVote($vote_data);
 	break;
 
@@ -373,7 +404,7 @@ class GameHTML {
 
       //生死情報に応じたアイコンを設定
       $path = $base_path . $user->icon_filename;
-      if ($beforegame || DB::$ROOM->watch_mode || DB::$USER->IsVirtualLive($id)) {
+      if ($beforegame || DB::$ROOM->IsOn('watch') || DB::$USER->IsVirtualLive($id)) {
 	$live  = sprintf('(%s)', GameMessage::LIVE);
 	$mouse = '';
       }
@@ -385,7 +416,7 @@ class GameHTML {
 	$mouse .= ' onMouseout="this.src=' . "'{$path}'" . '"';
       }
 
-      if (DB::$ROOM->personal_mode) {
+      if (DB::$ROOM->IsOn('personal')) {
 	$live .= sprintf(Text::BR . '(%s)', Winner::Generate($user->id));
       }
 
@@ -427,7 +458,7 @@ class GameHTML {
     $str = self::GenerateWeather() . self::LoadDead(); //天候メッセージも表示する
 
     //ログ閲覧モード以外なら前のシーンの死亡メッセージを追加
-    if (DB::$ROOM->log_mode || DB::$ROOM->test_mode || DB::$ROOM->date < 2 ||
+    if (DB::$ROOM->IsOn('log') || DB::$ROOM->IsTest() || DB::$ROOM->date < 2 ||
 	(DB::$ROOM->IsDate(2) && DB::$ROOM->Isday())) {
       return $str;
     }
@@ -439,7 +470,9 @@ class GameHTML {
   //遺言生成
   static function GenerateLastWords($shift = false) {
     //スキップ判定
-    if (! (DB::$ROOM->IsPlaying() || DB::$ROOM->log_mode) || DB::$ROOM->personal_mode) return null;
+    if (! (DB::$ROOM->IsPlaying() || DB::$ROOM->IsOn('log')) || DB::$ROOM->IsOn('personal')) {
+      return null;
+    }
 
     $stack_list = SystemMessageDB::GetLastWords($shift);
     if (count($stack_list) < 1) return null;
@@ -454,8 +487,8 @@ EOF;
     $str = '';
     foreach (Lottery::GetList($stack_list) as $stack) { //表示順はランダム
       extract($stack);
-      Text::Line($message);
-      $str .= sprintf($format . Text::LF, $handle_name, GameMessage::LAST_WORDS_FOOTER, $message);
+      $str .= sprintf($format . Text::LF,
+		      $handle_name, GameMessage::LAST_WORDS_FOOTER, Text::Line($message));
     }
 
     $format = <<<EOF
@@ -474,7 +507,7 @@ EOF;
     if (DB::$ROOM->IsEvent('blind_vote') && ! DB::$ROOM->IsOpenData()) return null; //傘化け判定
 
     //昼なら前日、夜ならの今日の集計を表示
-    $date = (DB::$ROOM->IsDay() && ! DB::$ROOM->log_mode) ? DB::$ROOM->date - 1 : DB::$ROOM->date;
+    $date = (DB::$ROOM->IsDay() && DB::$ROOM->IsOff('log')) ? DB::$ROOM->date - 1 : DB::$ROOM->date;
     return self::LoadVote($date);
   }
 
@@ -486,19 +519,21 @@ EOF;
     if (RQ::Get()->auto_reload > 0) $url .= sprintf('&auto_reload=%d', RQ::Get()->auto_reload);
     if (RQ::Get()->play_sound)      $url .= '&play_sound=on';
     if (RQ::Get()->list_down)       $url .= '&list_down=on';
+    if (RQ::Get()->async)           $url .= '&async=on';
 
     //-- 引数と状態を照合して移動の有無を判定する --//
     //ゲーム画面→天国モード (ゲーム中に死亡)
     if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDead() &&
-	! (DB::$ROOM->dead_mode || DB::$ROOM->heaven_mode || DB::$ROOM->log_mode)) {
+	! (DB::$ROOM->IsOn('dead') || DB::$ROOM->IsOn('heaven') || DB::$ROOM->IsOn('log'))) {
       $jump = $url . '&dead_mode=on';
       $str  = GameMessage::JUMP_HEAVEN;
     }
-    elseif (DB::$ROOM->IsAfterGame() && DB::$ROOM->dead_mode) { //天国モード→ゲーム終了画面
+    elseif (DB::$ROOM->IsAfterGame() && DB::$ROOM->IsOn('dead')) { //天国モード→ゲーム終了画面
       $jump = $url;
       $str  = GameMessage::JUMP_AFTERGAME;
     }
-    elseif (DB::$SELF->IsLive() && (DB::$ROOM->dead_mode || DB::$ROOM->heaven_mode)) { //蘇生など
+    //霊界→ゲーム画面 (蘇生など)
+    elseif (DB::$SELF->IsLive() && (DB::$ROOM->IsOn('dead') || DB::$ROOM->IsOn('heaven'))) {
       $jump = $url;
       $str  = GameMessage::JUMP_PLAYING;
     }
@@ -515,20 +550,46 @@ EOF;
     HTML::OutputHeader($title, $css);
     HTML::OutputCSS(sprintf('css/game_%s', DB::$ROOM->scene));
 
-    $on_load = null;
-    if (! DB::$ROOM->log_mode) { //過去ログ閲覧時は不要
+    if (DB::$ROOM->IsOff('log')) { //過去ログ閲覧時は不要
       HTML::OutputJavaScript('change_css');
       $on_load = sprintf("change_css('%s');", DB::$ROOM->scene);
     }
+    else {
+      $on_load = '';
+    }
 
-    if (RQ::Get()->auto_reload != 0 && ! DB::$ROOM->IsAfterGame()) { //自動リロードをセット
+    if (DB::$ROOM->IsAfterGame()) {
+      //ゲーム終了後は自動更新しない
+    }
+    elseif (RQ::Get()->async) {
+      HTML::OutputJavaScript('game_async');
+      //リクエストパラメータのハッシュ
+      if (method_exists(RQ::Get(), 'GetRawUrlStack')) {
+        $params = array();
+        foreach (RQ::Get()->GetRawUrlStack() as $name => $value) {
+          $params[] = "'{$name}':'{$value}'";
+        }
+        $params = '{'.implode(',', $params).'}';
+      }
+      else {
+        $params = '{}';
+      }
+      //ゲーム進行のハッシュ
+      $room_status = array();
+      $room_status[] = sprintf("'date':'%s'", DB::$ROOM->date);
+      $room_status[] = sprintf("'scene':'%s'", DB::$ROOM->scene);
+      $room_status = '{'.implode(',', $room_status).'}';
+      //非同期処理の起動
+      $on_load .= sprintf("game_async(%s, %s);", $params, $room_status); 
+    }
+    elseif (RQ::Get()->auto_reload != 0) { //自動リロードをセット
       self::OutputAutoReloadHeader();
     }
 
     //ゲーム中、リアルタイム制なら経過時間を Javascript でリアルタイム表示
     $game_top = '<a id="game_top"></a>';
     if (DB::$ROOM->IsPlaying() && DB::$ROOM->IsRealTime() &&
-	! (DB::$ROOM->heaven_mode || DB::$ROOM->log_mode)) {
+	! (DB::$ROOM->IsOn('heaven') || DB::$ROOM->IsOn('log'))) {
       $end_time   = GameTime::GetRealPass($left_time);
       $sound_type = null;
       $alert_flag = false;
@@ -536,7 +597,7 @@ EOF;
       if ($left_time < 1 && DB::$SELF->IsLive()) { //超過判定
 	DB::$ROOM->LoadVote(); //投票情報を取得
 	if (DB::$ROOM->IsDay()) { //未投票判定
-	  $novote_flag = ! array_key_exists(DB::$SELF->id, DB::$ROOM->vote);
+	  $novote_flag = ! DB::$SELF->ExistsVote();
 	}
 	elseif (DB::$ROOM->IsNight()) {
 	  $novote_flag = DB::$SELF->CheckVote(DB::$ROOM->ParseVote()) === false;
@@ -599,11 +660,11 @@ EOF;
     }
     else {
       switch (DB::$ROOM->scene) {
-      case 'day':
+      case RoomScene::DAY:
 	$str = GameMessage::TIME_LIMIT_DAY;
 	break;
 
-      case 'night':
+      case RoomScene::NIGHT:
 	$str = GameMessage::TIME_LIMIT_NIGHT;
 	break;
       }
@@ -616,11 +677,11 @@ EOF;
     $format = '<div class="system-vote">%s</div>' . Text::LF;
     if (is_null($str)) {
       switch (DB::$ROOM->scene) {
-      case 'day':
+      case RoomScene::DAY:
 	$str = GameMessage::TIME_LIMIT_DAY;
 	break;
 
-      case 'night':
+      case RoomScene::NIGHT:
 	$str = GameMessage::TIME_LIMIT_NIGHT;
 	break;
       }
@@ -636,7 +697,7 @@ EOF;
 
   //再投票メッセージ出力
   static function OutputRevote() {
-    if (RQ::Get()->play_sound && ! DB::$ROOM->view_mode && DB::$ROOM->vote_count > 1 &&
+    if (RQ::Get()->play_sound && DB::$ROOM->IsOff('view') && DB::$ROOM->vote_count > 1 &&
 	DB::$ROOM->vote_count > JinrouCookie::$vote_count) {
       Sound::Output('revote'); //音を鳴らす (未投票突然死対応)
     }
@@ -668,7 +729,7 @@ EOF;
 
   //指定した日付の投票結果をロードして ParseVote() に渡す
   private static function LoadVote($date) {
-    if (DB::$ROOM->personal_mode) return null; //スキップ判定
+    if (DB::$ROOM->IsOn('personal')) return null; //スキップ判定
     return self::ParseVote(SystemMessageDB::GetVote($date), $date);
   }
 
@@ -731,6 +792,7 @@ EOF;
       break;
 
     case 'NOVOTED':
+    case 'SILENCE':
       $base  = false;
       $class = 'sudden-death';
       break;
@@ -754,6 +816,19 @@ EOF;
       if (! $open_reason) return;
       $base  = false;
       $class = 'fairy';
+      break;
+
+    case 'LETTER_EXCHANGE_MOVED':
+      if (! $open_reason) return;
+      $base  = false;
+      $class = 'lovers';
+      break;
+
+    case 'WOLF_FAILED':
+      if (! $open_reason && ! self::FilterShowWolfFailed()) return;
+      $base   = false;
+      $class  = 'wolf';
+      $action = strtolower($type . '_' . $result);
       break;
 
     case 'STEP':
@@ -782,44 +857,44 @@ EOF;
   //天候メッセージ生成
   private static function GenerateWeather() {
     //スキップ判定
-    if (! isset(DB::$ROOM->event->weather) ||
-	(DB::$ROOM->log_mode && ! DB::$ROOM->test_mode && DB::$ROOM->IsNight())) {
+    if (DB::$ROOM->Stack()->IsEmpty('weather') ||
+	(DB::$ROOM->IsOn('log') && ! DB::$ROOM->IsTest() && DB::$ROOM->IsNight())) {
       return '';
     }
 
     $format  = '<div class="weather">' . GameMessage::WEATHER . '</div>';
-    $weather = WeatherData::Get(DB::$ROOM->event->weather);
+    $weather = WeatherData::Get(DB::$ROOM->Stack()->Get('weather'));
     return sprintf($format, $weather['name'], $weather['caption']);
   }
 
   //死因表示判定処理
   private static function FilterShowReason() {
-    $flag = RoleManager::GetStack('show_reason');
+    $flag = RoleManager::Stack()->Get('show_reason');
     if (is_null($flag)) {
-      $flag = self::IsShowReason();
-      RoleManager::SetStack('show_reason', $flag);
+      $flag = DB::$SELF->IsLive() && DB::$SELF->IsRole(RoleFilterData::$show_reason);
+      RoleManager::Stack()->Set('show_reason', $flag);
     }
     return $flag;
-  }
-
-  //死因表示判定
-  private static function IsShowReason() {
-    return DB::$SELF->IsLive() && DB::$SELF->IsRole(RoleFilterData::$show_reason);
   }
 
   //蘇生失敗表示判定処理
   private static function FilterShowReviveFailed() {
-    $flag = RoleManager::GetStack('show_revive_failed');
+    $flag = RoleManager::Stack()->Get('show_revive_failed');
     if (is_null($flag)) {
-      $flag = self::IsShowReviveFailed();
-      RoleManager::SetStack('show_revive_failed', $flag);
+      $flag = DB::$ROOM->IsFinished() || DB::$SELF->IsDead() ||
+	DB::$SELF->IsRole(RoleFilterData::$show_revive_failed);
+      RoleManager::Stack()->Set('show_revive_failed', $flag);
     }
     return $flag;
   }
 
-  //蘇生失敗表示判定
-  private static function IsShowReviveFailed() {
-    return DB::$ROOM->IsFinished() || DB::$SELF->IsDead() ||
-      DB::$SELF->IsRole(RoleFilterData::$show_revive_failed);
+  //人狼襲撃失敗表示判定
+  private static function FilterShowWolfFailed() {
+    $flag = RoleManager::Stack()->Get('show_wolf_failed');
+    if (is_null($flag)) {
+      $flag = DB::$SELF->IsLive() && DB::$SELF->IsRole(RoleFilterData::$show_wolf_failed);
+      RoleManager::Stack()->Set('show_wolf_failed', $flag);
+    }
+    return $flag;
   }
 }

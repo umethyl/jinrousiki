@@ -5,7 +5,7 @@ class RoleManager {
   static $file  = array(); //ロード済みファイル
   static $class = array(); //ロード済みクラス
   static $actor; //対象ユーザ
-  private static $get; //スタックデータ
+  private static $stack; //スタックデータ
 
   //フィルタロード
   static function Load($type, $shift = false, $virtual = false) {
@@ -22,8 +22,9 @@ class RoleManager {
 
   //ファイルロード
   static function LoadFile($name) {
-    if (is_null($name) || ! file_exists($file = self::GetPath($name))) return false;
+    if (is_null($name)) return false;
     if (in_array($name, self::$file)) return true;
+    if (! file_exists($file = self::GetPath($name))) return false;
     require_once($file);
     self::$file[] = $name;
     return true;
@@ -47,14 +48,19 @@ class RoleManager {
     return new $class();
   }
 
+  //スタックロード
+  static function LoadStack() {
+    self::$stack = new Stack();
+  }
+
+  //スタック取得
+  static function Stack() {
+    return self::$stack;
+  }
+
   //個別クラス取得 ($actor を参照していない事を確認すること)
   static function GetClass($role) {
     return (self::LoadFile($role) && self::LoadClass($role)) ? self::$class[$role] : null;
-  }
-
-  //データ取得
-  static function GetStack($name) {
-    return isset(self::$get->$name) ? self::$get->$name : null;
   }
 
   //ユーザ取得
@@ -70,41 +76,6 @@ class RoleManager {
   //ユーザセット
   static function SetActor(User $user) {
     self::$actor = $user;
-  }
-
-  //データセット
-  static function SetStack($name, $data) {
-    self::$get->$name = $data;
-  }
-
-  //スタック初期化
-  static function ConstructStack() {
-    self::$get = new StdClass();
-  }
-
-  //データ初期化
-  static function InitStack($name) {
-    self::SetStack($name, array());
-  }
-
-  //データ消去
-  static function UnsetStack($name) {
-    unset(self::$get->$name);
-  }
-
-  //データ未設定 (空文字) 判定
-  static function IsEmpty($name) {
-    return self::GetStack($name) == '';
-  }
-
-  //データ存在判定
-  static function ExistStack($name) {
-    return count(self::GetStack($name)) > 0;
-  }
-
-  //データ表示 (デバッグ用)
-  static function p($data = null, $name = null) {
-    Text::p(isset($data) ? self::GetStack($data) : self::$get, $name);
   }
 
   //クラスのロード済み判定
@@ -148,14 +119,14 @@ class RoleFilterData {
   static $display_real = array(
     'copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller',
     'lost_ability', 'muster_ability', 'lovers', 'sweet_status', 'challenge_lovers', 'vega_lovers',
-    'fake_lovers', 'possessed_exchange', 'joker', 'rival', 'death_note');
+    'fake_lovers', 'possessed_exchange', 'letter_exchange', 'joker', 'rival', 'death_note');
 
   //常時表示サブ役職 (仮想 / 順番依存あり)
   static $display_virtual = array(
     'death_selected', 'febris', 'frostbite', 'death_warrant', 'day_voter', 'wirepuller_luck',
-    'occupied_luck', 'mind_open', 'mind_read', 'mind_evoke', 'mind_lonely', 'mind_receiver',
-    'mind_friend', 'mind_sympathy', 'mind_sheep', 'mind_presage', 'wisp', 'black_wisp',
-    'spell_wisp', 'foughten_wisp', 'gold_wisp', 'sheep_wisp', 'aspirator');
+    'occupied_luck', 'tengu_voice', 'mind_open', 'mind_read', 'mind_evoke', 'mind_lonely',
+    'mind_receiver', 'mind_friend', 'mind_sympathy', 'mind_sheep', 'mind_presage', 'wisp',
+    'black_wisp', 'spell_wisp', 'foughten_wisp', 'gold_wisp', 'sheep_wisp', 'aspirator');
 
   //非表示サブ役職 (呼び出し抑制用)
   static $display_none = array(
@@ -167,14 +138,14 @@ class RoleFilterData {
   //初期配役抑制役職
   static $disable_cast = array(
     'febris', 'frostbite', 'death_warrant', 'panelist', 'cute_camouflage', 'confession',
-    'day_voter', 'wirepuller_luck', 'occupied_luck', 'mind_read', 'mind_receiver', 'mind_friend',
-    'mind_sympathy', 'mind_evoke', 'mind_presage', 'mind_lonely', 'mind_sheep', 'sheep_wisp',
-    'lovers', 'challenge_lovers', 'vega_lovers', 'fake_lovers', 'possessed_exchange', 'joker',
-    'rival', 'enemy', 'supported', 'death_note', 'death_selected', 'possessed_target', 'possessed',
-    'infected', 'psycho_infected', 'bad_status', 'sweet_status', 'protected', 'penetration',
-    'aspirator', 'lost_ability', 'muster_ability', 'changed_disguise', 'changed_therian',
-    'changed_vindictive', 'copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul',
-    'copied_teller');
+    'day_voter', 'wirepuller_luck', 'occupied_luck', 'tengu_voice', 'mind_read', 'mind_receiver',
+    'mind_friend', 'mind_sympathy', 'mind_evoke', 'mind_presage', 'mind_lonely', 'mind_sheep',
+    'sheep_wisp', 'lovers', 'challenge_lovers', 'vega_lovers', 'fake_lovers', 'possessed_exchange',
+    'letter_exchange', 'joker', 'rival', 'enemy', 'supported', 'death_note', 'death_selected',
+    'possessed_target', 'possessed', 'infected', 'psycho_infected', 'bad_status', 'sweet_status',
+    'protected', 'penetration', 'aspirator', 'lost_ability', 'muster_ability', 'changed_disguise',
+    'changed_therian', 'changed_vindictive', 'copied', 'copied_trick', 'copied_basic',
+    'copied_nymph', 'copied_soul', 'copied_teller');
 
   //発言表示
   static $talk = array('blinder', 'earplug', 'speaker');
@@ -219,7 +190,8 @@ class RoleFilterData {
 
   //声量
   static $voice = array('strong_voice', 'normal_voice', 'weak_voice', 'inside_voice',
-			'outside_voice', 'upper_voice', 'downer_voice', 'random_voice');
+			'outside_voice', 'upper_voice', 'downer_voice', 'random_voice',
+			'tengu_voice');
 
   //霊界遺言登録
   static $heaven_last_words = array('mind_evoke');
@@ -229,6 +201,9 @@ class RoleFilterData {
 
   //蘇生失敗閲覧
   static $show_revive_failed = array('attempt_necromancer', 'vajra_yaksa');
+
+  //人狼襲撃失敗閲覧
+  static $show_wolf_failed = array('eye_scanner', 'eye_wolf');
 
   //処刑投票 (メイン)
   static $vote_do_main = array(
@@ -249,17 +224,20 @@ class RoleFilterData {
     'upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck', 'random_luck',
     'occupied_luck', 'wirepuller_luck', 'vega_lovers');
 
-  //処刑投票能力者
-  static $vote_day = array(
+  //処刑投票能力者 (メイン)
+  static $vote_day_main = array(
     'saint', 'executor', 'bacchus_medium', 'seal_medium', 'trap_common', 'spell_common',
     'pharmacist', 'cure_pharmacist', 'revive_pharmacist', 'alchemy_pharmacist',
     'centaurus_pharmacist', 'jealousy', 'divorce_jealousy', 'miasma_jealousy', 'critical_jealousy',
     'thunder_brownie', 'harvest_brownie', 'maple_brownie', 'cursed_brownie',  'disguise_wolf',
     'purple_wolf', 'snow_wolf', 'corpse_courier_mad', 'amaze_mad', 'agitate_mad', 'miasma_mad',
     'critical_mad', 'fire_mad', 'follow_mad', 'purple_fox', 'snow_fox', 'critical_fox',
-    'sweet_cupid', 'snow_cupid', 'quiz', 'step_vampire', 'cowboy_duelist', 'sea_duelist',
-    'cursed_avenger', 'critical_avenger', 'impatience', 'decide', 'plague', 'counter_decide',
-    'dropout', 'good_luck', 'bad_luck', 'authority', 'rebel', 'vega_lovers');
+    'fire_depraver', 'sweet_cupid', 'snow_cupid', 'quiz', 'step_vampire', 'cowboy_duelist',
+    'sea_duelist', 'cursed_avenger', 'critical_avenger');
+
+  //処刑投票能力者 (サブ)
+  static $vote_day_sub = array('impatience', 'decide', 'plague',
+    'counter_decide', 'dropout', 'good_luck', 'bad_luck', 'authority', 'rebel', 'vega_lovers');
 
   //処刑投票補正能力者
   static $vote_correct = array('cowboy_duelist', 'rebel');
@@ -283,8 +261,9 @@ class RoleFilterData {
   static $vote_action = array(
     'seal_medium', 'bacchus_medium', 'cowboy_duelist', 'sea_duelist', 'centaurus_pharmacist',
     'spell_common', 'miasma_jealousy', 'critical_jealousy', 'corpse_courier_mad', 'amaze_mad',
-    'miasma_mad', 'fire_mad', 'critical_mad', 'critical_fox', 'critical_avenger', 'purple_wolf',
-    'purple_fox', 'cursed_avenger', 'sweet_cupid', 'snow_cupid', 'step_vampire', 'disguise_wolf');
+    'miasma_mad', 'fire_mad', 'fire_depraver', 'critical_mad', 'critical_fox', 'critical_avenger',
+    'purple_wolf', 'purple_fox', 'cursed_avenger', 'sweet_cupid', 'snow_cupid', 'step_vampire',
+    'disguise_wolf');
 
   //霊能
   static $necromancer = array(
@@ -326,13 +305,17 @@ class RoleFilterData {
 
   //人狼襲撃得票カウンター (+ 身代わり能力者)
   static $wolf_eat_reaction = array(
-    'therian_mad', 'immolate_mad', 'sacrifice_common', 'doll_master', 'sacrifice_fox',
-    'sacrifice_vampire', 'boss_chiroptera', 'sacrifice_ogre');
+    'therian_mad', 'immolate_mad', 'sacrifice_common', 'doll_master', 'toy_doll_master',
+    'revive_doll_master', 'serve_doll_master', 'sacrifice_fox', 'sacrifice_vampire',
+    'boss_chiroptera', 'sacrifice_ogre');
 
   //人狼襲撃カウンター
   static $wolf_eat_counter = array(
     'ghost_common', 'presage_scanner', 'cursed_brownie', 'sun_brownie', 'history_brownie',
     'miasma_fox', 'revive_mania', 'mind_sheep');
+
+  //毒回避判定
+  static $avoid_poison = array('poison_vampire', 'horse_ogre', 'plumage_patron');
 
   //襲撃毒死回避
   static $avoid_poison_eat = array('guide_poison', 'poison_jealousy', 'poison_wolf');
@@ -341,7 +324,7 @@ class RoleFilterData {
   static $trap = array('trap_mad', 'snow_trap_mad');
 
   //護衛
-  static $guard = array('guard', 'barrier_wizard');
+  static $guard = array('guard', 'barrier_wizard', 'barrier_brownie');
 
   //対暗殺護衛
   static $guard_assassin = array('gatekeeper_guard');
@@ -364,7 +347,7 @@ class RoleFilterData {
   static $priest_return = array('revive_priest');
 
   //恋人抽選
-  static $lottery_lovers = array('altair_cupid', 'exchange_angel');
+  static $lottery_lovers = array('altair_cupid', 'letter_cupid', 'exchange_angel');
 
   //時間差コピー
   static $delay_copy = array('soul_mania', 'dummy_mania');
@@ -374,6 +357,28 @@ class RoleFilterData {
 
   //人狼襲撃失敗カウンター
   static $wolf_eat_failed_counter = array('wanderer_guard');
+
+  //投票型子狐系判定
+  static $vote_child_fox = array('child_fox', 'sex_fox', 'stargazer_fox', 'jammer_fox');
+
+  //蘇生制限判定
+  static $revive_limited = array('detective_common', 'scarlet_vampire', 'resurrect_mania');
+
+  //憑依能力者判定
+  static $possessed_group = array('possessed_wolf', 'possessed_mad', 'possessed_fox');
+
+  //憑依制限判定
+  static $possessed_limited = array(
+    'detective_common', 'revive_priest', 'revive_pharmacist', 'revive_brownie', 'revive_doll',
+    'revive_wolf', 'revive_mad', 'revive_cupid', 'scarlet_vampire', 'revive_ogre',
+    'revive_avenger', 'resurrect_mania');
+
+  //暗殺反射判定 (常時反射)
+  static $reflect_assassin = array('reflect_guard', 'detective_common', 'cursed_fox',
+				   'soul_vampire');
+
+  //遺言制限判定
+  static $last_words_limited = array('reporter', 'soul_assassin', 'evoke_scanner', 'no_last_words');
 
   //イベントセット
   static $event_virtual = array(
@@ -395,53 +400,147 @@ class RoleFilterData {
 //-- 役職の基底クラス --//
 abstract class Role {
   public $role;
-  public $action;
-  public $not_action;
-  public $add_action;
-  public $submit;
-  public $not_submit;
-  public $add_submit;
 
   public function __construct() {
     $this->role = array_pop(explode('Role_', get_class($this)));
-    if (isset($this->mix_in)) {
-      $this->filter = RoleManager::LoadMix($this->mix_in);
-      $this->filter->role = $this->role;
-      //Text::p(get_class_vars(get_class($this)));
-      if (isset($this->display_role)) $this->filter->display_role = $this->display_role;
-    }
+    //Text::p(get_class_vars(get_class($this)), "◆{$this->role}");
   }
 
-  //Mixin 呼び出し用
+  //-- 基礎関数 --//
+  //Mixin 呼び出し
   public function __call($name, $args) {
-    $format = 'Error: %s not found: %s: %s()';
-    if (! is_object($this->filter)) {
-      Text::p(sprintf($format, 'Mixin', get_class($this), $name));
-      return false;
-    }
-    if (! method_exists($this->filter, $name)) {
-      Text::p(sprintf($format, 'Method', get_class($this), $name));
-      return false;
-    }
-    return call_user_func_array(array($this->filter, $name), $args);
+    if (! isset($this->mix_in)) return $this->ReturnError($name, 'Mixin');
+
+    $filter = $this->GetMethod($name);
+    if (is_null($filter)) return $this->ReturnError($name, 'Method');
+
+    return call_user_func_array(array($filter, $name), $args);
   }
 
-  //メソッド保持クラス取得 (Mixin 用)
-  final protected function GetClass($method) {
-    $class = 'Role_' . $this->role;
+  //プロパティ呼び出し
+  public function __get($name) {
+    switch ($name) {
+    case 'action':
+    case 'not_action':
+    case 'add_action':
+    case 'submit':
+    case 'not_submit':
+    case 'add_submit':
+      $this->$name = null;
+      return;
+
+    case 'mix_in':
+    case 'mix_in_list':
+    case 'method_list':
+      $this->$name = array();
+      return;
+
+    default:
+      $this->ReturnError($name, 'Property');
+      return null;
+    }
+  }
+
+  //クラス名取得
+  final protected function GetClassName() {
+    return 'Role_' . $this->role;
+  }
+
+  //-- Mixin 関連 --//
+  //Mixin 呼び出しエラー
+  final protected function ReturnError($name, $type) {
+    switch ($type) {
+    case 'Property':
+      $target = sprintf('$%s', $name);
+      break;
+
+    default:
+      $target = sprintf('%s()', $name);
+      break;
+    }
+    $format = '%sError: %s not found: %s: %s';
+    Text::p(sprintf($format, Message::SYMBOL, $type, get_class($this), $target));
+    return false;
+  }
+
+  //Mixin ロード
+  final protected function LoadMix($name) {
+    $filter = RoleManager::LoadMix($name);
+    $filter->role = $this->role;
+    if (isset($this->display_role)) $filter->display_role = $this->display_role;
+    return $filter;
+  }
+
+  //Mixin 登録
+  final public function AddMix($name) {
+    if (! isset($this->mix_in_list[$name])) {
+      //Text::p($name, "◆{$this->role}");
+      $this->mix_in_list[$name] = $this->LoadMix($name);
+    }
+    return $this;
+  }
+
+  //親クラス取得 (Mixin 用)
+  final protected function GetParent($method) {
+    $class = $this->GetClassName();
     if ($class == get_class($this)) return $this;
     return method_exists($class, $method) ? RoleManager::GetClass($this->role) : $this;
   }
 
-  //プロパティ取得 (Mixin 用)
-  final protected function GetProperty($property) {
-    $class  = 'Role_' . $this->role;
-    $mix_in = new $class();
-    if (isset($mix_in->$property)) return $mix_in->$property;
-    return isset($this->$property) ? $this->$property : null;
+  //親クラス実行
+  final protected function CallParent($method) {
+    //Text::p($method, "◆CallParent [{$this->role}]");
+    return $this->GetParent($method)->$method();
   }
 
-  //public function __get($name) { return null; } //メモ
+  //Mixin クラス取得
+  final protected function GetMix($name) {
+    return isset($this->mix_in_list[$name]) ? $this->mix_in_list[$name] : null;
+  }
+
+  //Mixin メソッド保持クラス取得
+  final protected function GetMethod($name) {
+    if (isset($this->method_list[$name])) {
+      //Text::t($name . '/' . $this->method_list[$name], "◆Method/Cache [{$this->role}]");
+      return $this->GetMix($this->method_list[$name]);
+    }
+    //Text::t($name, "◆Method/Search [{$this->role}]");
+
+    foreach ($this->mix_in as $role) {
+      $filter = $this->AddMix($role)->GetMix($role);
+      if (method_exists($filter, $name)) {
+	$this->method_list[$name] = $role;
+	return $filter;
+      }
+    }
+    return null;
+  }
+
+  //プロパティ取得 (Mixin 用)
+  final protected function GetProperty($name) {
+    if ($this->GetClassName() != get_class($this)) {
+      $filter = RoleManager::GetClass($this->role);
+      if (isset($filter->$name)) return $filter->$name;
+    }
+    return isset($this->$name) ? $this->$name : null;
+  }
+
+  //投票用 Mixin 存在判定
+  final protected function ExistVoteMix() {
+    if (! isset($this->mix_in) || ! isset($this->mix_in['vote'])) return false;
+    $this->AddMix($this->mix_in['vote']);
+    return true;
+  }
+
+  //投票用 Mixin 取得
+  final protected function GetVoteMix() {
+    return $this->GetMix($this->mix_in['vote']);
+  }
+
+  //投票用 Mixin 実行
+  final protected function CallVoteMix($name) {
+    return $this->GetVoteMix()->$name();
+  }
 
   //-- 汎用関数 --//
   //ユーザ取得
@@ -461,37 +560,37 @@ abstract class Role {
 
   //データ取得
   final protected function GetStack($name = null, $fill = false) {
-    $stack = RoleManager::GetStack(is_null($name) ? $this->role : $name);
+    $stack = RoleManager::Stack()->Get(is_null($name) ? $this->role : $name);
     return isset($stack) ? $stack : ($fill ? array() : null);
   }
 
   //データセット
   final protected function SetStack($data, $role = null) {
-    RoleManager::SetStack(is_null($role) ? $this->role : $role, $data);
+    RoleManager::Stack()->Set(is_null($role) ? $this->role : $role, $data);
   }
 
   //データ初期化
   final protected function InitStack($name = null) {
     $data  = is_null($name) ? $this->role : $name;
-    $stack = RoleManager::GetStack($data);
-    if (! isset($stack)) RoleManager::InitStack($data);
+    $stack = RoleManager::Stack()->Get($data);
+    if (! isset($stack)) RoleManager::Stack()->Init($data);
   }
 
   //データ追加
   final protected function AddStack($data, $role = null, $id = null) {
     if (is_null($id)) $id = $this->GetID();
     $name  = is_null($role) ? $this->role : $role;
-    $stack = RoleManager::GetStack($name);
+    $stack = RoleManager::Stack()->Get($name);
     $stack[$id] = $data;
-    RoleManager::SetStack($name, $stack);
+    RoleManager::Stack()->Set($name, $stack);
   }
 
   //データ追加 (Uname 用)
   final protected function AddStackName($data, $role = null, $uname = null) {
     $name  = is_null($role) ? $this->role : $role;
-    $stack = RoleManager::GetStack($name);
+    $stack = RoleManager::Stack()->Get($name);
     $stack[$this->GetUname($uname)] = $data;
-    RoleManager::SetStack($name, $stack);
+    RoleManager::Stack()->Set($name, $stack);
   }
 
   //同一ユーザ判定
@@ -505,8 +604,29 @@ abstract class Role {
   }
 
   //投票能力判定
-  public function IsVote() {
-    return ! is_null($this->action);
+  final public function IsVote() {
+    if ($this->ExistVoteMix()) return $this->CallVoteMix(__FUNCTION__);
+    return ! is_null($this->action) && $this->IsVoteDate() && $this->IsAddVote();
+  }
+
+  //投票可能日判定
+  final protected function IsVoteDate() {
+    $type = isset($this->action_date_type) ? $this->action_date_type : null;
+    switch ($type) {
+    case 'first':
+      return DB::$ROOM->IsDate(1);
+
+    case 'after':
+      return DB::$ROOM->date > 1;
+
+    default:
+      return true;
+    }
+  }
+
+  //投票能力追加判定
+  protected function IsAddVote() {
+    return true;
   }
 
   //-- 役職情報表示 --//
@@ -516,11 +636,13 @@ abstract class Role {
     $this->OutputImage();
     $this->OutputPartner();
     $this->OutputResult();
-    if ($this->IsVote() && DB::$ROOM->IsNight()) $this->OutputAction();
+    if (DB::$ROOM->IsNight() && $this->IsVote()) $this->OutputAction();
   }
 
   //役職情報表示判定
-  protected function IgnoreAbility() { return false; }
+  protected function IgnoreAbility() {
+    return false;
+  }
 
   //役職画像表示
   final protected function OutputImage() {
@@ -529,7 +651,9 @@ abstract class Role {
   }
 
   //役職画像表示判定
-  protected function IgnoreImage() { return false; }
+  protected function IgnoreImage() {
+    return false;
+  }
 
   //役職画像表示対象取得
   protected function GetImage() {
@@ -547,7 +671,9 @@ abstract class Role {
   }
 
   //能力結果表示判定
-  protected function IgnoreResult() { return false; }
+  protected function IgnoreResult() {
+    return false;
+  }
 
   //追加結果表示
   protected function OutputAddResult() {}
@@ -606,6 +732,12 @@ abstract class Role {
     case 'BISHOP_PRIEST_RESULT':
       $type   = 'priest';
       $header = 'bishop_priest_header';
+      $footer = 'priest_footer';
+      break;
+
+    case 'PRIEST_TENGU_RESULT':
+      $type   = 'priest';
+      $header = 'priest_tengu_header';
       $footer = 'priest_footer';
       break;
 
@@ -727,12 +859,23 @@ abstract class Role {
       $limit  = true;
       break;
 
+    case 'TENGU_RESULT':
+      $type   = 'mage';
+      $header = 'tengu_result';
+      $limit  = true;
+      break;
+
+    case 'TENGU_CAMP_RESULT':
+      $type = 'weather_priest';
+      break;
+
     default:
+      if (DB::$ROOM->IsTest()) Text::p($action, '◆Invalid Action');
       return false;
     }
 
     $target_date = DB::$ROOM->date - 1;
-    if (DB::$ROOM->test_mode) {
+    if (DB::$ROOM->IsTest()) {
       $result_list = DevRoom::GetAbility($target_date, $action, $limit);
     } else {
       $result_list = SystemMessageDB::GetAbility($target_date, $action, $limit);
@@ -795,7 +938,9 @@ abstract class Role {
   }
 
   //投票能力表示
-  public function OutputAction() {}
+  public function OutputAction() {
+    if ($this->ExistVoteMix()) return $this->CallVoteMix(__FUNCTION__);
+  }
 
   //-- 発言処理 --//
   //閲覧者取得
@@ -842,13 +987,9 @@ abstract class Role {
       $this->AddStackName($uname);
       break;
 
-    case 'real':
-      if ($this->IsRealActor()) $this->AddStackName($uname);
-      break;
-
     case 'init':
       $this->InitStack();
-      if ($this->IsRealActor()) $this->AddStackName($uname);
+      $this->AddStackName($uname);
       break;
 
     case 'both':
@@ -865,7 +1006,7 @@ abstract class Role {
 
   //処刑実行判定
   final protected function IsVoteKill() {
-    return $this->GetVoteKill() != '';
+    return ! is_null($this->GetVoteKill());
   }
 
   //処刑者判定
@@ -892,7 +1033,10 @@ abstract class Role {
   //-- 投票データ表示 (夜) --//
   //投票データセット (夜)
   public function SetVoteNight() {
-    if (is_null($this->action)) {
+    if ($this->ExistVoteMix()) {
+      return $this->CallVoteMix(__FUNCTION__);
+    }
+    elseif (is_null($this->action)) {
       VoteHTML::OutputResult(VoteRoleMessage::NO_ACTION);
     }
     else {
@@ -915,10 +1059,28 @@ abstract class Role {
   }
 
   //投票無効メッセージ取得
-  protected function GetIgnoreMessage() { return null; }
+  protected function GetIgnoreMessage() {
+    if (! $this->IsAddVote()) { //投票能力追加判定で無効の場合は追加判定からメッセージを取得する
+      return $this->IgnoreVoteFilter();
+    }
+
+    $type = isset($this->action_date_type) ? $this->action_date_type : null;
+    switch ($type) {
+    case 'first':
+      return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
+
+    case 'after':
+      return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
+
+    default:
+      return true;
+    }
+  }
 
   //投票スキップ追加判定
-  protected function IgnoreVoteFilter() { return null; }
+  protected function IgnoreVoteFilter() {
+    return null;
+  }
 
   //投票データセット (夜) 追加処理
   protected function SetVoteNightFilter() {}
@@ -931,11 +1093,19 @@ abstract class Role {
 
   //投票のアイコンパス取得
   public function GetVoteIconPath(User $user, $live) {
+    if ($this->ExistVoteMix()) {
+      $name = __FUNCTION__;
+      return $this->GetVoteMix()->$name($user, $live);
+    }
     return $live ? Icon::GetFile($user->icon_filename) : Icon::GetDead();
   }
 
   //投票のチェックボックス取得
   public function GetVoteCheckbox(User $user, $id, $live) {
+    if ($this->ExistVoteMix()) {
+      $name = __FUNCTION__;
+      return $this->GetVoteMix()->$name($user, $id, $live);
+    }
     if (! $this->IsVoteCheckbox($user, $live)) return '';
     $checked = $this->IsVoteCheckboxChecked($user) ? ' checked' : '';
     $str     = sprintf(' id="%d" value="%d"%s>', $id, $id, $checked);
@@ -948,21 +1118,29 @@ abstract class Role {
   }
 
   //投票対象自動チェック判定
-  protected function IsVoteCheckboxChecked(User $user) { return false; }
+  protected function IsVoteCheckboxChecked(User $user) {
+    return false;
+  }
 
   //投票のチェックボックスヘッダ取得
   protected function GetVoteCheckboxHeader() {
-    return '<input type="radio" name="target_no"';
+    return RoleHTML::GetVoteCheckboxHeader('radio');
   }
 
   //-- 投票処理 (夜) --//
   //未投票チェック
   public function IsFinishVote(array $list) {
+    if ($this->ExistVoteMix()) {
+      $name = __FUNCTION__;
+      return $this->GetVoteMix()->$name($list);
+    }
     return ! $this->IsVote() || $this->IgnoreFinishVote() || $this->ExistsAction($list);
   }
 
   //未投票チェックスキップ判定
-  protected function IgnoreFinishVote() { return false; }
+  protected function IgnoreFinishVote() {
+    return false;
+  }
 
   //投票コマンド存在判定
   protected function ExistsAction(array $list) {
@@ -979,6 +1157,8 @@ abstract class Role {
 
   //投票結果チェック (夜)
   public function CheckVoteNight() {
+    if ($this->ExistVoteMix()) return $this->CallVoteMix(__FUNCTION__);
+
     $this->SetStack(RQ::Get()->situation, 'message');
     $str = $this->VoteNight();
     if (! is_null($str)) {
@@ -996,8 +1176,7 @@ abstract class Role {
       $str = $this->SetVoteNightUserList($stack);
       if (! is_null($str)) return $str;
 
-      $class = $this->GetClass($method = 'VoteNightAction');
-      $class->$method();
+      $this->CallParent('VoteNightAction');
     }
     else {
       $user = DB::$USER->ByID($stack);
@@ -1005,7 +1184,10 @@ abstract class Role {
       $str  = $this->IgnoreVoteNight($user, $live);
       if (! is_null($str)) return $str;
 
-      $this->SetStack(DB::$USER->ByReal($user->id)->id, 'target_no');
+      //憑依者がすでに死んでいたら元の投票先を見る (死者投票型対応)
+      $real = DB::$USER->ByReal($user->id);
+      $target = $real->IsLive() ? $real : $user;
+      $this->SetStack($target->id, 'target_no');
       $this->SetStack($user->handle_name, 'target_handle');
     }
     return null;
@@ -1041,9 +1223,9 @@ abstract class Role {
   //成功データ追加
   protected function AddSuccess($target, $data = null, $null = false) {
     $name  = is_null($data) ? $this->role : $data;
-    $stack = RoleManager::GetStack($name);
+    $stack = RoleManager::Stack()->Get($name);
     $stack[$target] = $null ? null : true;
-    RoleManager::SetStack($name, $stack);
+    RoleManager::Stack()->Set($name, $stack);
   }
 
   //投票者取得
@@ -1063,7 +1245,9 @@ abstract class Role {
 
   //-- 勝敗判定 --//
   //勝利判定
-  public function Win($winner) { return true; }
+  public function Win($winner) {
+    return true;
+  }
 
   //生存判定
   protected function IsLive($strict = false) {
@@ -1078,6 +1262,30 @@ abstract class Role {
 
 //-- 発言処理クラス (Role 拡張) --//
 class RoleTalk {
+  //location 判定
+  static function GetLocation(User $user, User $real) {
+    if (DB::$ROOM->IsEvent('blind_talk_night')) { //天候：風雨
+      return TalkLocation::MONOLOGUE;
+    }
+    elseif ($user->IsWolf(true)) { //人狼
+      //犬神判定
+      return $real->IsRole('possessed_mad') ? TalkLocation::MONOLOGUE : TalkLocation::WOLF;
+    }
+    elseif ($user->IsRole('whisper_mad')) { //囁き狂人
+      //犬神判定
+      return $real->IsRole('possessed_mad') ? TalkLocation::MONOLOGUE : TalkLocation::MAD;
+    }
+    elseif ($user->IsCommon(true)) { //共有者
+      return TalkLocation::COMMON;
+    }
+    elseif ($user->IsFox(true)) { //妖狐
+      return TalkLocation::FOX;
+    }
+    else { //独り言
+      return TalkLocation::MONOLOGUE;
+    }
+  }
+
   //置換処理
   static function Convert(&$say) {
     if ($say == '') return null; //リロード時なら処理スキップ
@@ -1095,7 +1303,7 @@ class RoleTalk {
     //if (DB::$SELF->IsDead()) return false; //テスト用
 
     $virtual = DB::$SELF->GetVirtual(); //仮想ユーザを取得
-    RoleManager::SetStack('say', $say);
+    RoleManager::Stack()->Set('say', $say);
     do { //発言置換処理
       RoleManager::SetActor($virtual);
       foreach (RoleManager::Load('say_convert_virtual') as $filter) {
@@ -1120,8 +1328,8 @@ class RoleTalk {
     foreach (RoleManager::Load('say') as $filter) {
       $filter->ConvertSay(); //他のサブ役職の処理
     }
-    $say = RoleManager::GetStack('say');
-    RoleManager::UnsetStack('say');
+    $say = RoleManager::Stack()->Get('say');
+    RoleManager::Stack()->Clear('say');
     return true;
   }
 
@@ -1181,13 +1389,17 @@ class RoleHTML {
 
   //仲間表示
   static function OutputPartner(array $list, $header, $footer = null) {
-    if (count($list) < 1) return false; //仲間がいなければ表示しない
+    if (count($list) < 1) return; //仲間がいなければ表示しない
+
     $list[] = '</td>';
-    $str = '<table class="ability-partner"><tr>' . Text::LF .
-      Image::Role()->Generate($header, null, true)  . Text::LF .
-      '<td>　' . implode('さん　', $list)  . Text::LF;
-    if ($footer) $str .= Image::Role()->Generate($footer, null, true)  . Text::LF;
-    Text::Output($str . '</tr></table>');
+    $stack = array(
+      '<table class="ability-partner"><tr>',
+      Image::Role()->Generate($header, null, true),
+      '<td>' . Message::SPACER . implode(RoleAbilityMessage::HONORIFIC . Message::SPACER, $list)
+    );
+    if ($footer) $stack[] = Image::Role()->Generate($footer, null, true);
+    $stack[] = '</tr></table>';
+    Text::Output(implode(Text::LF, $stack));
   }
 
   //現在の憑依先表示
@@ -1206,8 +1418,7 @@ class RoleHTML {
     $format = '<div class="self-vote">%s%s</div>' . Text::LF;
     $vote_count = sprintf(RoleAbilityMessage::VOTE_COUNT, DB::$ROOM->revote_count + 1);
     if (is_null(DB::$SELF->target_no)) {
-      $str = sprintf('<font color="#FF0000">%s</font>', RoleAbilityMessage::NOT_VOTED);
-      printf($format, $vote_count, $str);
+      printf($format, $vote_count, HTML::GenerateWarning(RoleAbilityMessage::NOT_VOTED));
 
       $str = RoleAbilityMessage::$vote_kill;
       printf('<span class="ability vote-do">%s</span>' . Text::BRLF, $str);
@@ -1220,63 +1431,13 @@ class RoleHTML {
 
   //夜の未投票メッセージ出力
   static function OutputVote($class, $sentence, $type, $not_type = '') {
-    $stack = DB::$ROOM->test_mode ? array() : DB::$SELF->LoadVote($type, $not_type);
+    $stack = DB::$ROOM->IsTest() ? array() : DB::$SELF->LoadVote($type, $not_type);
     if (count($stack) < 1) {
       $str = RoleAbilityMessage::$$sentence;
+    } else {
+      $str = self::GetVoteMessage($stack, $type, $not_type);
     }
-    else {
-      switch ($type) {
-      case 'WOLF_EAT':
-      case 'STEP_WOLF_EAT':
-      case 'SILENT_WOLF_EAT':
-      case 'CUPID_DO':
-      case 'DUELIST_DO':
-	$str = '投票済み';
-	break;
-
-      case 'STEP_MAGE_DO':
-      case 'STEP_GUARD_DO':
-      case 'STEP_ASSASSIN_DO':
-      case 'STEP_SCANNER_DO':
-      case 'SPREAD_WIZARD_DO':
-      case 'STEP_VAMPIRE_DO':
-	$str_stack = array();
-	foreach (explode(' ', $stack['target_no']) as $id) {
-	  $user = DB::$USER->ByVirtual($id);
-	  $str_stack[$user->id] = $user->handle_name;
-	}
-	ksort($str_stack);
-	$str = implode('さん ', $str_stack) . 'さんに投票済み';
-	break;
-
-      case 'STEP_DO':
-	if ($not_type != '' && $stack['type'] == $not_type) {
-	  $str = 'キャンセル投票済み';
-	  break;
-	}
-	$str_stack = array();
-	foreach (explode(' ', $stack['target_no']) as $id) {
-	  $user = DB::$USER->ByVirtual($id);
-	  $str_stack[$user->id] = $user->handle_name;
-	}
-	ksort($str_stack);
-	$str = implode('さん ', $str_stack) . 'さんに投票済み';
-	break;
-
-      default:
-	if ($not_type != '' && $stack['type'] == $not_type) {
-	  $str = 'キャンセル投票済み';
-	}
-	elseif ($type == 'POISON_CAT_DO' || $type == 'POSSESSED_DO') {
-	  $str = DB::$USER->ByID($stack['target_no'])->handle_name . 'さんに投票済み';
-	}
-	else {
-	  $str = DB::$USER->ByVirtual($stack['target_no'])->handle_name . 'さんに投票済み';
-	}
-	break;
-      }
-    }
-    printf('<span class="ability %s">%s</span><br>' . Text::LF, $class, $str);
+    printf('<span class="ability %s">%s</span>' . Text::BRLF, $class, $str);
   }
 
   //能力発動結果を表示する
@@ -1286,5 +1447,69 @@ class RoleHTML {
     if (isset($target)) $str .= '<td>' . $target . '</td>' . Text::LF;
     if (isset($footer)) $str .= Image::Role()->Generate($footer, null, true) . Text::LF;
     Text::Output($str . '</tr></table>');
+  }
+
+  //投票のチェックボックスヘッダ取得
+  static function GetVoteCheckboxHeader($type) {
+    switch ($type) {
+    case 'radio':
+      return '<input type="radio" name="target_no"';
+
+    case 'checkbox':
+      return '<input type="checkbox" name="target_no[]"';
+    }
+  }
+
+  //夜の投票済みメッセージを取得
+  private static function GetVoteMessage(array $stack, $type, $not_type = '') {
+    switch ($type) {
+    case 'WOLF_EAT':
+    case 'STEP_WOLF_EAT':
+    case 'SILENT_WOLF_EAT':
+    case 'CUPID_DO':
+    case 'DUELIST_DO':
+      return RoleAbilityMessage::VOTED;
+
+    case 'STEP_MAGE_DO':
+    case 'STEP_GUARD_DO':
+    case 'STEP_ASSASSIN_DO':
+    case 'STEP_SCANNER_DO':
+    case 'SPREAD_WIZARD_DO':
+    case 'STEP_VAMPIRE_DO':
+      return self::GetMultiVoteMessage($stack);
+
+    case 'STEP_DO':
+      if ($not_type != '' && $stack['type'] == $not_type) {
+	return RoleAbilityMessage::CANCEL_VOTED;
+      }
+      return self::GetMultiVoteMessage($stack);
+
+    case 'POISON_CAT_DO':
+    case 'POSSESSED_DO':
+      if ($not_type != '' && $stack['type'] == $not_type) {
+	return RoleAbilityMessage::CANCEL_VOTED;
+      }
+      $user = DB::$USER->ByID($stack['target_no']);
+      return $user->handle_name . RoleAbilityMessage::SETTLE_VOTED;
+
+    default:
+      if ($not_type != '' && $stack['type'] == $not_type) {
+	return RoleAbilityMessage::CANCEL_VOTED;
+      }
+      $user = DB::$USER->ByVirtual($stack['target_no']);
+      return $user->handle_name . RoleAbilityMessage::SETTLE_VOTED;
+    }
+  }
+
+  //夜の投票済みメッセージを取得 (複数投票型)
+  private static function GetMultiVoteMessage(array $stack) {
+    $str_stack = array();
+    foreach (explode(' ', $stack['target_no']) as $id) {
+      $user = DB::$USER->ByVirtual($id);
+      $str_stack[$user->id] = $user->handle_name;
+    }
+    ksort($str_stack);
+    $str = RoleAbilityMessage::HONORIFIC . ' ';
+    return implode($str, $str_stack) . RoleAbilityMessage::SETTLE_VOTED;
   }
 }

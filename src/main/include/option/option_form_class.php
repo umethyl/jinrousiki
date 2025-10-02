@@ -4,10 +4,12 @@ class OptionForm {
   private static $order = array(
     'room_name', 'room_comment', 'max_user',
     'base' => null,
-    'wish_role', 'real_time', 'wait_morning', 'open_vote', 'settle', 'seal_message', 'open_day',
-    'necessary_name', 'necessary_trip',
+    'wish_role', 'real_time', 'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name',
+    'necessary_trip',
     'dummy_boy' => null,
     'dummy_boy_selector', 'gm_password', 'gerd',
+    'talk' => null,
+    'wait_morning', 'limit_talk', 'secret_talk', 'no_silence',
     'open_cast' => null,
     'not_open_cast_selector',
     'add_role' => null,
@@ -16,8 +18,8 @@ class OptionForm {
     'decide', 'authority',
     'special' => null,
     'liar', 'gentleman', 'passion', 'sudden_death', 'perverseness', 'deep_sleep', 'mind_open',
-    'blinder', 'critical', 'joker', 'death_note', 'detective', 'weather', 'festival',
-    'replace_human_selector', 'change_common_selector', 'change_mad_selector',
+    'blinder', 'critical', 'joker', 'death_note', 'detective', 'weather', 'full_weather',
+    'festival', 'replace_human_selector', 'change_common_selector', 'change_mad_selector',
     'change_cupid_selector',
     'special_cast' => null,
     'special_role',
@@ -58,6 +60,10 @@ class OptionForm {
       $str = self::GenerateRealtime($filter);
       break;
 
+    case 'limit_talk':
+      $str = self::GenerateLimitTalk($filter);
+      break;
+
     case 'selector':
       $str = self::GenerateSelector($filter);
       break;
@@ -72,11 +78,12 @@ class OptionForm {
   //境界線出力
   private static function OutputSeparator($group) {
     OptionFormHTML::OutputSeparator();
-    if (OptionManager::$change) return;
+    if (OptionManager::IsChange()) return;
 
     switch ($group) {
     case 'base':
     case 'dummy_boy':
+    case 'talk':
       $flag = 'false';
       break;
 
@@ -106,7 +113,7 @@ class OptionForm {
 
   //チェックボックス生成 (リアルタイム制専用)
   private static function GenerateRealtime(Option_real_time $filter) {
-    if (OptionManager::$change) {
+    if (OptionManager::IsChange()) {
       $day   = DB::$ROOM->game_option->list[$filter->name][0];
       $night = DB::$ROOM->game_option->list[$filter->name][1];
     } else {
@@ -114,6 +121,18 @@ class OptionForm {
       $night = TimeConfig::DEFAULT_NIGHT;
     }
     $footer = OptionFormHTML::GenerateRealtime($filter, $day, $night);
+
+    return OptionFormHTML::GenerateCheckbox($filter, 'checkbox', $footer);
+  }
+
+  //チェックボックス生成 (発言制限制専用)
+  private static function GenerateLimitTalk(Option_limit_talk $filter) {
+    if (OptionManager::IsChange() && DB::$ROOM->IsOption($filter->name)) {
+      $count = array_shift(DB::$ROOM->game_option->list[$filter->name]);
+    } else {
+      $count = GameConfig::LIMIT_TALK_COUNT;
+    }
+    $footer = OptionFormHTML::GenerateLimitTalk($filter, $count);
 
     return OptionFormHTML::GenerateCheckbox($filter, 'checkbox', $footer);
   }
@@ -128,7 +147,7 @@ class OptionForm {
       $str .= OptionFormHTML::GenerateSelectorOption($code, $selected, $label);
     }
 
-    if (! OptionManager::$change && isset($filter->javascript)) {
+    if (! OptionManager::IsChange() && isset($filter->javascript)) {
       self::$javascript[] = $filter->javascript;
     }
 
@@ -193,8 +212,12 @@ EOF;
   static function GenerateTextbox(TextRoomOptionItem $filter) {
     $format = '<input type="%s" name="%s" id="%s" size="%d" value="%s">%s';
     $size   = sprintf('%s_input', $filter->name);
-    $value  = OptionManager::$change ? DB::$ROOM->{array_pop(explode('_', $filter->name))} : null;
     $str    = $filter->GetExplain();
+    if (OptionManager::IsChange()) {
+      $value = DB::$ROOM->{array_pop(explode('_', $filter->name))};
+    } else {
+      $value = null;
+    }
 
     return sprintf($format,
 		   $filter->type, $filter->name, $filter->name, RoomConfig::$$size, $value,
@@ -221,6 +244,15 @@ EOF;
 		   $filter->name, $day, Message::MINUTE,
 		   OptionMessage::REALTIME_NIGHT, Message::COLON,
 		   $filter->name, $night, Message::MINUTE);
+  }
+
+  //発言数フォーム生成 (発言数制限制用)
+  static function GenerateLimitTalk(Option_limit_talk $filter, $count) {
+    $format = '(%s%s<input type="text" name="%s" value="%d" size="2" maxlength="2">)';
+
+    return sprintf($format,
+		   Text::Line($filter->GetExplain()), Message::SPACER,
+		   $filter->name . '_count', $count);
   }
 
   //セレクタ生成

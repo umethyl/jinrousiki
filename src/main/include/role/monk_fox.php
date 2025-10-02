@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('child_fox');
 class Role_monk_fox extends Role_child_fox {
-  public $mix_in = 'necromancer';
+  public $mix_in = array('necromancer');
   public $action = null;
   public $result = 'MONK_FOX_RESULT';
 

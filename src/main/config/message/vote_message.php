@@ -84,6 +84,7 @@ class VoteMessage {
   //昼
   const NEEDLESS_VOTE = '処刑：初日は投票不要です';
   const ALREADY_VOTE  = '処刑：投票済み';
+  const INVALID_COUNT = '処刑：投票回数が一致しません';
   const INVALID_VOTE  = '処刑：無効な投票先です';
   const VOTE_SELF     = '処刑：自分には投票できません';
   const VOTE_DEAD     = '処刑：死者には投票できません';

@@ -10,8 +10,9 @@ class DB {
   private static $parameter   = null;
   private static $transaction = false;
   private static $table_list  = array(
-    'room', 'user_entry', 'player', 'talk', 'talk_beforegame', 'talk_aftergame', 'system_message',
-    'result_ability', 'result_dead', 'result_lastwords', 'result_vote_kill', 'vote');
+    'room', 'user_entry', 'player', 'talk', 'talk_beforegame', 'talk_aftergame',
+    'user_talk_count', 'system_message', 'result_ability', 'result_dead', 'result_lastwords',
+    'result_vote_kill', 'vote');
 
   //データベース接続クラス生成
   /*
@@ -51,11 +52,11 @@ class DB {
 
   //PDO インスタンス初期化
   static function Initialize($dsn) {
-    $pdo = new PDO($dsn, DatabaseConfig::USER, DatabaseConfig::PASSWORD);
+    $options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . DatabaseConfig::ENCODE);
+    $pdo = new PDO($dsn, DatabaseConfig::USER, DatabaseConfig::PASSWORD, $options);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
     self::$instance = $pdo;
-    self::Execute('SET NAMES ' . DatabaseConfig::ENCODE);
     return self::$instance;
   }
 
@@ -120,22 +121,15 @@ class DB {
   }
 
   //SQL 実行
-  static function Execute($query = null, $quiet = false) {
+  static function Execute($quiet = false) {
     try {
-      if (isset($query)) {
-	return self::$instance->query($query);
+      if (is_null(self::$statement)) return false;
+      self::$statement->execute(self::$parameter);
+      if (self::$display) { //statement 表示 (デバッグ用)
+	Text::p(self::$statement);
+	Text::p(self::$parameter);
       }
-      elseif (isset(self::$statement)) {
-	self::$statement->execute(self::$parameter);
-	if (self::$display) { //statement 表示 (デバッグ用)
-	  Text::p(self::$statement);
-	  Text::p(self::$parameter);
-	}
-	return self::$statement;
-      }
-      else {
-	return false;
-      }
+      return self::$statement;
     }
     catch (PDOException $e) {
       self::Reset();
@@ -158,33 +152,33 @@ class DB {
     HTML::OutputResult(ServerConfig::TITLE . Message::ERROR_TITLE, $str);
   }
 
-  //コミット付き実行
-  static function ExecuteCommit($query = null) {
-    return self::FetchBool($query) && self::Commit();
-  }
-
   //実行結果を bool で受け取る
-  static function FetchBool($query = null, $quiet = false) {
-    return self::Execute($query, $quiet) !== false;
+  static function FetchBool($quiet = false) {
+    return self::Execute($quiet) !== false;
   }
 
   //単体の値を取得
-  static function FetchResult($query = null) {
-    $stmt = self::Execute($query);
+  static function FetchResult() {
+    $stmt = self::Execute();
     self::Reset();
     return $stmt instanceOf PDOStatement && $stmt->rowCount() > 0 ? $stmt->fetchColumn() : false;
   }
 
   //該当するデータの行数を取得
-  static function Count($query = null) {
-    $stmt = self::Execute($query);
+  static function Count() {
+    $stmt = self::Execute();
     self::Reset();
     return $stmt instanceOf PDOStatement ? $stmt->rowCount() : 0;
   }
 
+  //存在判定
+  static function Exists() {
+    return self::Count() > 0;
+  }
+
   //一次元の配列を取得
-  static function FetchColumn($query = null) {
-    $stmt = self::Execute($query);
+  static function FetchColumn() {
+    $stmt = self::Execute();
     self::Reset();
     return $stmt instanceOf PDOStatement ? $stmt->fetchAll(PDO::FETCH_COLUMN) : array();
   }
@@ -192,14 +186,6 @@ class DB {
   //連想配列を取得
   static function FetchAssoc($shift = false) {
     $stmt = self::Execute();
-    self::Reset();
-    $stack = $stmt instanceOf PDOStatement ? $stmt->fetchAll(PDO::FETCH_ASSOC) : array();
-    return $shift ? array_shift($stack) : $stack;
-  }
-
-  //連想配列を取得 (互換用)
-  static function FetchArray($query, $shift = false) {
-    $stmt = self::Execute($query);
     self::Reset();
     $stack = $stmt instanceOf PDOStatement ? $stmt->fetchAll(PDO::FETCH_ASSOC) : array();
     return $shift ? array_shift($stack) : $stack;
@@ -215,14 +201,16 @@ class DB {
 
   //データベース登録
   static function Insert($table, $items, $values) {
-    return self::FetchBool("INSERT INTO {$table}({$items}) VALUES({$values})");
+    self::Prepare("INSERT INTO {$table}({$items}) VALUES({$values})");
+    return self::FetchBool();
   }
 
   //村削除
   static function DeleteRoom($room_no) {
-    $query = 'DELETE FROM %s WHERE room_no = %d';
+    $query = 'DELETE FROM %s WHERE room_no = ?';
     foreach (self::$table_list as $table) {
-      if (! self::FetchBool(sprintf($query, $table, $room_no))) return false;
+      self::Prepare(sprintf($query, $table), array($room_no));
+      if (! self::FetchBool()) return false;
     }
     return true;
   }
@@ -230,7 +218,8 @@ class DB {
   //最適化
   static function Optimize($name = null) {
     $query = is_null($name) ? implode(',', self::$table_list) : $name;
-    return self::ExecuteCommit('OPTIMIZE TABLE ' . $query);
+    self::Prepare('OPTIMIZE TABLE ' . $query);
+    return self::FetchBool() && self::Commit();
   }
 
   //村情報ロード
@@ -255,7 +244,7 @@ class DB {
 
   //本人情報ロード (身代わり君)
   static function LoadDummyBoy() {
-    self::LoadSelf(1);
+    self::LoadSelf(GM::ID);
   }
 
   //村情報セット
@@ -279,7 +268,7 @@ class DB {
     $title = Message::DB_ERROR_CONNECT;
     $body  = $title . ': ' . $str;
     if ($header) {
-      Text::d(sprintf('<font color="#FF0000">%s</font>', $body));
+      Text::d(HTML::GenerateWarning($body));
       if ($exit) HTML::OutputFooter($exit);
       return false;
     }

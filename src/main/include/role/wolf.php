@@ -123,26 +123,30 @@ class Role_wolf extends Role {
     $target = $this->GetWolfTarget();
     $target->wolf_eat    = false;
     $target->wolf_killed = false;
-    if (RoleManager::GetStack('skip') || DB::$ROOM->IsQuiz()) return; //スキップ判定
+    if (RoleManager::Stack()->Get('skip') || DB::$ROOM->IsQuiz()) return; //スキップ判定
 
     $actor = $this->GetWolfVoter();
     if (! $actor->IsSiriusWolf(false)) { //罠判定 (覚醒天狼は無効)
       foreach (RoleManager::LoadFilter('trap') as $filter) {
-	if ($filter->TrapStack($actor, $target->id)) return;
+	if ($filter->TrapStack($actor, $target->id)) {
+	  DB::$ROOM->ResultDead(null, 'WOLF_FAILED', 'TRAP');
+	  return;
+	}
       }
     }
     $this->SetStack($actor, 'voter');
 
     //逃亡者の巻き添え判定
-    foreach (array_keys(RoleManager::GetStack('escaper'), $target->id) as $id) {
+    foreach (array_keys(RoleManager::Stack()->Get('escaper'), $target->id) as $id) {
       DB::$USER->Kill($id, 'WOLF_KILLED'); //死亡処理
     }
 
     //護衛判定 (護衛能力判定を天狼判定の前に行うこと)
     if (DB::$ROOM->date > 1 && RoleManager::GetClass('guard')->Guard($target) &&
 	! $actor->IsSiriusWolf()) {
-      //RoleManager::p('guard_success', '◆GuardSuccess');
+      //RoleManager::Stack()->p('guard_success', '◆GuardSuccess');
       RoleManager::LoadMain($actor)->GuardCounter();
+      DB::$ROOM->ResultDead(null, 'WOLF_FAILED', 'GUARD');
       return;
     }
     if ($this->IgnoreWolfEat()) return; //襲撃耐性判定
@@ -176,12 +180,23 @@ class Role_wolf extends Role {
     if (! $actor->IsSiriusWolf()) { //特殊襲撃失敗判定 (サブの判定が先/完全覚醒天狼は無効)
       RoleManager::SetActor($target);
       foreach (RoleManager::Load('wolf_eat_resist') as $filter) {
-	if ($filter->WolfEatResist()) return true;
+	if ($filter->WolfEatResist()) {
+	  DB::$ROOM->ResultDead(null, 'WOLF_FAILED', 'RESIST');
+	  return true;
+	}
       }
+
       //確率無効タイプ (鬼陣営)
-      if ($target->IsOgre() && RoleManager::LoadMain($target)->WolfEatResist()) return true;
+      if ($target->IsOgre() && RoleManager::LoadMain($target)->WolfEatResist()) {
+	DB::$ROOM->ResultDead(null, 'WOLF_FAILED', 'OGRE');
+	return true;
+      }
     }
-    if (DB::$ROOM->date > 1 && $target->IsMainGroup('escaper')) return true; //逃亡者系判定
+
+    if (DB::$ROOM->date > 1 && $target->IsMainGroup('escaper')) { //逃亡者系判定
+      DB::$ROOM->ResultDead(null, 'WOLF_FAILED', 'ESCAPER');
+      return true;
+    }
 
     $wolf_filter = RoleManager::LoadMain($actor);
     if ($wolf_filter->WolfEatSkip($target)) return true; //人狼襲撃失敗判定
@@ -189,9 +204,16 @@ class Role_wolf extends Role {
 
     RoleManager::SetActor($target); //人狼襲撃得票カウンター + 身代わり能力者処理
     foreach (RoleManager::Load('wolf_eat_reaction') as $filter) {
-      if ($filter->WolfEatReaction()) return true;
+      if ($filter->WolfEatReaction()) {
+	DB::$ROOM->ResultDead(null, 'WOLF_FAILED', 'REACTION');
+	return true;
+      }
     }
-    if ($wolf_filter->WolfEatAction($target)) return true; //人狼襲撃能力処理
+
+    if ($wolf_filter->WolfEatAction($target)) { //人狼襲撃能力処理
+      DB::$ROOM->ResultDead(null, 'WOLF_FAILED', 'ACTION');
+      return true;
+    }
 
     RoleManager::SetActor($target);  //人狼襲撃カウンター処理
     foreach (RoleManager::Load('wolf_eat_counter') as $filter) {
@@ -205,8 +227,10 @@ class Role_wolf extends Role {
     if ($user->IsWolf()) { //人狼系判定 (例：銀狼出現)
       $this->WolfEatSkipAction($user);
       $user->wolf_eat = true; //襲撃は成功扱い
+      DB::$ROOM->ResultDead(null, 'WOLF_FAILED', 'WOLF');
       return true;
     }
+
     if ($user->IsFox()) { //妖狐判定
       $filter = RoleManager::LoadMain($user);
       if (! $filter->resist_wolf) return false;
@@ -218,6 +242,7 @@ class Role_wolf extends Role {
 	DB::$ROOM->ResultAbility('FOX_EAT', 'targeted', null, $user->id);
       }
       $user->wolf_eat = true; //襲撃は成功扱い
+      DB::$ROOM->ResultDead(null, 'WOLF_FAILED', 'FOX');
       return true;
     }
     return false;

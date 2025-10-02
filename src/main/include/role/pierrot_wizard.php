@@ -8,7 +8,7 @@
 */
 RoleManager::LoadFile('wizard');
 class Role_pierrot_wizard extends Role_wizard {
-  public $mix_in = 'mage';
+  public $mix_in = array('mage');
   public $wizard_list = array(
     'soul_mage' => 'MAGE_DO', 1 => 'ASSASSIN_DO', 2 => 'FAIRY_DO', 'grass_fairy' => 'FAIRY_DO',
     'star_fairy' => 'FAIRY_DO', 'flower_fairy' => 'FAIRY_DO', 'ice_fairy' => 'FAIRY_DO',
@@ -19,7 +19,7 @@ class Role_pierrot_wizard extends Role_wizard {
   public function SetAssassin(User $user) {
     $actor = $this->GetActor();
     foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
-      if ($filter->DelayTrap($actor, $user->id)) return;
+      if ($filter->TrapStack($actor, $user->id)) return;
     }
     foreach (RoleManager::LoadFilter('guard_assassin') as $filter) { //対暗殺護衛判定
       if ($filter->GuardAssassin($user->id)) return;

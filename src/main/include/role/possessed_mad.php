@@ -6,8 +6,10 @@
   ・投票数：+1 (憑依成立 3 日後)
 */
 class Role_possessed_mad extends Role {
+  public $mix_in = array('authority');
   public $action     = 'POSSESSED_DO';
   public $not_action = 'POSSESSED_NOT_DO';
+  public $action_date_type = 'after';
   public $ability = 'ability_possessed_mad';
 
   protected function IgnoreResult() {
@@ -16,7 +18,7 @@ class Role_possessed_mad extends Role {
 
   protected function OutputAddResult() {
     RoleHTML::OutputPossessed();
-    if ($this->IsActive()) RoleHTML::OutputAbilityResult($this->ability, null);
+    if (! $this->IgnoreFilterVoteDo()) RoleHTML::OutputAbilityResult($this->ability, null);
   }
 
   //現在の憑依先 (Mixin 用)
@@ -33,14 +35,6 @@ class Role_possessed_mad extends Role {
 
   public function IsMindReadPossessed(User $user) {
     return $user->IsSame($this->GetViewer());
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
   }
 
   protected function IgnoreVoteFilter() {
@@ -63,8 +57,9 @@ class Role_possessed_mad extends Role {
     return $live ? VoteRoleMessage::TARGET_ALIVE : null;
   }
 
-  public function FilterVoteDo(&$count) {
-    if ($this->IsActive()) $count++;
+  public function IgnoreFilterVoteDo() {
+    $list = $this->GetActor()->GetPartner('possessed_target', true);
+    return count($list) < 1 || DB::$ROOM->date < min(array_keys($list)) + 2;
   }
 
   //憑依情報セット
@@ -74,7 +69,7 @@ class Role_possessed_mad extends Role {
     }
 
     //無効判定 (蘇生/憑依制限/無効陣営/憑依済み)
-    $class = $this->GetClass($method = 'IgnorePossessed');
+    $class = $this->GetParent($method = 'IgnorePossessed');
     if ($user->revive_flag || $user->IsPossessedLimited() ||
 	$class->$method($user->GetCamp(true)) || ! $user->IsSame(DB::$USER->ByReal($user->id))) {
       return false;
@@ -95,11 +90,5 @@ class Role_possessed_mad extends Role {
 	$this->AddStack($target_id, 'possessed', $id);
       }
     }
-  }
-
-  //追加能力発動判定
-  private function IsActive() {
-    $list = $this->GetActor()->GetPartner('possessed_target', true);
-    return count($list) > 0 && DB::$ROOM->date > min(array_keys($list)) + 1;
   }
 }

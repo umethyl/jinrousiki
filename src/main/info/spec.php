@@ -8,6 +8,7 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 <a href="#dummy_boy">身代わり君 (GM)</a>
 <a href="#win">勝利判定</a>
 <a href="#dead">死因一覧</a>
+<a href="#wolf_failed">人狼襲撃失敗一覧</a>
 <a href="#vote">投票</a>
 <a href="#revive_refuse">蘇生辞退システム</a>
 </p>
@@ -170,6 +171,11 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 <li>ショック死 (<a href="new_role/ability.php#sudden_death">ショック死発動能力者</a>・<a href="weather.php#weather_thunderbolt">天候：青天の霹靂</a>)</li>
 </ul>
 
+<h4 id="dead_day_silence">～<?php echo DeadMessage::$silence; ?> [Ver. 3.0.0 α5～]</h4>
+<ul>
+<li>未発言突然死</li>
+</ul>
+
 <h3 id="dead_night">夜</h3>
 <h4>～<?php echo DeadMessage::$deadman; ?></h4>
 <ul>
@@ -187,6 +193,7 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 <li>夢食い (<a href="new_role/wolf.php#dream_eater_mad">獏</a>)</li>
 <li>呪殺 (<a href="new_role/human.php#mage_group">占い師系</a>)</li>
 <li>呪返し (<a href="new_role/ability.php#cursed_group">呪い能力者</a>・<a href="new_role/human.php#voodoo_killer">陰陽師</a>)</li>
+<li>神隠し (<a href="new_role/tengu.php#meteor_tengu">流星天狗</a>)</li>
 <li>憑依 (<a href="new_role/ability.php#possessed_direct">憑依能力者/直接型</a>)</li>
 <li>憑依解放 (<a href="new_role/human.php#anti_voodoo">厄神</a>)</li>
 <li>人外尾行 (<a href="new_role/human.php#reporter">ブン屋</a>)</li>
@@ -216,6 +223,52 @@ InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 <h4>～<?php echo DeadMessage::$pierrot_a; ?> (一例) [Ver. 1.5.0 α8～]</h4>
 <ul>
 <li>魔法 (<a href="new_role/human.php#pierrot_wizard">道化師</a>)</li>
+</ul>
+
+<h2 id="wolf_failed">人狼襲撃失敗一覧 [Ver. 3.0.0α6～]</h2>
+<h3><?php echo DeadMessage::$wolf_failed_trap; ?> [Ver. 3.0.0 α6～]</h3>
+<ul>
+<li><a href="new_role/ability.php#trap">罠能力</a>発動</li>
+</ul>
+
+<h3><?php echo DeadMessage::$wolf_failed_guard; ?> [Ver. 3.0.0 α6～]</h3>
+<ul>
+<li><a href="new_role/ability.php#guard">護衛能力</a>発動</li>
+</ul>
+
+<h3><?php echo DeadMessage::$wolf_failed_resist; ?> [Ver. 3.0.0 α6～]</h3>
+<ul>
+<li><a href="new_role/ability.php#resist_wolf">人狼襲撃耐性能力者</a> (一部) 襲撃</li>
+</ul>
+
+<h3><?php echo DeadMessage::$wolf_failed_ogre; ?> [Ver. 3.0.0 α6～]</h3>
+<ul>
+<li><a href="new_role/ogre.php">鬼陣営</a>襲撃</li>
+</ul>
+
+<h3><?php echo DeadMessage::$wolf_failed_escaper; ?> [Ver. 3.0.0 α6～]</h3>
+<ul>
+<li><a href="new_role/human.php#escaper_group">逃亡者系</a>襲撃</li>
+</ul>
+
+<h3><?php echo DeadMessage::$wolf_failed_wolf; ?> [Ver. 3.0.0 α6～]</h3>
+<ul>
+<li><a href="new_role/wolf.php#wolf_group">人狼系</a>襲撃</li>
+</ul>
+
+<h3><?php echo DeadMessage::$wolf_failed_fox; ?> [Ver. 3.0.0 α6～]</h3>
+<ul>
+<li><a href="new_role/fox.php#fox_group">妖狐系</a>襲撃</li>
+</ul>
+
+<h3><?php echo DeadMessage::$wolf_failed_reaction; ?> [Ver. 3.0.0 α6～]</h3>
+<ul>
+<li><a href="new_role/wolf.php#therian_mad">獣人</a>・<a href="new_role/ability.php#sacrifice">身代わり能力者</a>襲撃</li>
+</ul>
+
+<h3><?php echo DeadMessage::$wolf_failed_action; ?> [Ver. 3.0.0 α6～]</h3>
+<ul>
+<li><a href="new_role/ability.php#wolf_kill_avoid">人狼襲撃回避能力</a>発動</li>
 </ul>
 
 <h2 id="vote">投票処理の仕様</h2>

@@ -17,7 +17,13 @@ class Role_blinder extends Role {
   //スキップ判定
   public function IgnoreTalk() {
     $user = $this->GetViewer();
-    return ! $user->virtual_live && ! DB::$USER->IsVirtualLive($user->id);
+    $live = ! $user->virtual_live && ! DB::$USER->IsVirtualLive($user->id);
+    return $live || $this->CallParent('AddIgnoreTalk');
+  }
+
+  //追加スキップ判定
+  public function AddIgnoreTalk() {
+    false;
   }
 
   //囁きフィルタ

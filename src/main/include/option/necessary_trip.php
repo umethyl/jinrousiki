@@ -9,6 +9,10 @@ class Option_necessary_trip extends CheckRoomOptionItem {
     if (GameConfig::TRIP) parent::__construct();
   }
 
+  protected function IgnorePost() {
+    return ! GameConfig::TRIP;
+  }
+
   public function GetCaption() {
     return 'トリップ必須';
   }

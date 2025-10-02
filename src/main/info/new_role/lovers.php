@@ -29,6 +29,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <li>ゲーム終了時に恋人が二人以上生存している。</li>
 <li><a href="wolf.php">人狼</a>を全滅させるか、生存カウントの村人の生存数を人狼の生存数以下にする。</li>
 <li>勝利条件を満たした<a href="vampire.php">吸血鬼</a>が存在する場合は恋人陣営勝利となる。</li>
+<li>生存者が全て恋人になった場合は恋人陣営勝利となる。</li>
 <li>自身や自分の作った恋人の生死は不問。</li>
 </ol>
 
@@ -52,9 +53,9 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 
 <h2 id="cupid_do">投票の仕様</h2>
 <ol>
-<li>初日の夜に「<a href="sub_role.php#lovers">恋人</a>」にする人を二人選びます (人数は例外あり)。</li>
-<li>投票結果は即座に反映されます。</li>
-<li>自分以外を恋人の対象に選ぶことができる (<a href="../rule.php#system_vote">他人撃ち</a>) 人数の制限は管理者設定項目です。</li>
+<li>初日の夜に「<a href="sub_role.php#lovers">恋人</a>」にする人を二人選ぶ (人数は例外あり)。</li>
+<li>投票結果は即座に反映される。</li>
+<li>自分以外を恋人の対象に選ぶことができる (<a href="../rule.php#system_vote">他人撃ち</a>) 人数の制限は管理者が設定する。</li>
 </ol>
 
 
@@ -66,9 +67,12 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <a href="#altair_cupid">彦星</a>
 <a href="#mind_cupid">女神</a>
 <a href="#sweet_cupid">弁財天</a>
+<a href="#letter_cupid">文車妖妃</a>
 <a href="#minstrel_cupid">吟遊詩人</a>
 <a href="#triangle_cupid">小悪魔</a>
 <a href="#nephila_cupid">絡新婦</a>
+</p>
+<p>
 <a href="#revive_cupid">邪仙</a>
 <a href="#snow_cupid">寒戸婆</a>
 </p>
@@ -131,6 +135,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 自分撃ち固定で、矢を撃った二人に<a href="sub_role.php#mind_friend">共鳴者</a>を付加するキューピッド。
 矢を撃った相手に<a href="sub_role.php#vega_lovers">織姫</a>が付く。
 </pre>
+<h5>織姫付加判定</h5>
 <ol>
 <li><a href="sub_role.php#vega_lovers">織姫</a>が付加されるのは一つの村で一人だけ。</li>
 <li>彦星が複数居た場合は抽選が発生し、一人だけが選出される。</li>
@@ -170,6 +175,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 矢を撃った二人を<a href="sub_role.php#mind_friend">共鳴者</a>にする上位キューピッド。
 処刑投票先に<a href="sub_role.php#sweet_ringing">恋耳鳴</a>を付加する。
 </pre>
+<h5>恋耳鳴付加判定</h5>
 <ol>
 <li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合でも有効。</li>
 <li>対象が死亡していた場合は無効 (例：処刑・毒死)。</li>
@@ -184,6 +190,30 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 鉄村人狼のプレイヤーさんとの雑談から生まれた役職です。
 テーマは「恋人の甘い会話を雰囲気だけおすそ分け」で、実利はあまりありません。
 むしろ能力を発動すると不利になるので自分撃ちの場合は注意が必要です。
+</pre>
+
+<h3 id="letter_cupid">文車妖妃 (占い結果：村人 / 霊能結果：村人) [Ver. 3.0.0 α6～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：交換日記</h4>
+<pre>
+矢を撃った二人に<a href="sub_role.php#letter_exchange">交換日記</a>を付加する上位キューピッド。
+</pre>
+<h5>交換日記付加判定</h5>
+<ol>
+<li>判定が有効だった場合に両方に付加される。</li>
+<li>どちらが送る側になるかは文車妖妃から付加される時点でランダムに決定される。</li>
+<li>対象者が<a href="ability.php#last_words_limit">遺言制限能力者</a>であっても有効。</li>
+<li>対象者のいずれかが複数のキューピッドから矢を打たれていた場合は無効。<br>
+例4-1) X[文車妖妃] -> A-B / Y[キューピッド] -> B-C → 無効<br>
+例4-2) X[文車妖妃] -> A-B / Y[キューピッド] -> A-B → 無効<br>
+例4-3) X[文車妖妃] -> A-B / Y[キューピッド] -> C-D → 有効
+</li>
+<li>文車妖妃が複数出現してもカップルが重なっていなければ共に有効。<br>
+例5-1) X[文車妖妃] -> A-B / Y[文車妖妃] -> C-D → X・Y 共に有効
+</li>
+</ol>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="sub_role.php#letter_exchange">交換日記</a>の実装用に作成された役職です。
 </pre>
 
 <h3 id="minstrel_cupid">吟遊詩人 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β1～]</h3>
@@ -258,6 +288,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <pre>
 処刑投票先が恋人なら<a href="sub_role.php#frostbite">凍傷</a>を付加してしまうキューピッド。
 </pre>
+<h5>凍傷付加判定</h5>
 <ol>
 <li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合でも有効。</li>
 <li>対象が死亡していた場合は無効 (例：処刑・毒死)。</li>
@@ -337,11 +368,12 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <pre>
 矢を撃った二人を<a href="sub_role.php#possessed_exchange">交換憑依</a>させてしまう特殊な天使。
 </pre>
+<h5>交換憑依付加判定</h5>
 <ol>
 <li>矢が競合した場合は抽選が発生し、一組だけが入れ替わる。<br>
   例) A-B・B-C と矢を撃たれた → A-B または B-C のどちらかだけが入れ替わる。
 </li>
-<li><a href="ability.php#possessed_direct">憑依能力者(直接型)</a>が対象だった場合は交換憑依は発生しない。</li>
+<li><a href="ability.php#possessed_direct">憑依能力者 (直接型)</a> が対象だった場合は交換憑依は発生しない。</li>
 <li>他人撃ちをした場合、矢を撃った本人には交換憑依が成立したかどうかは分からない。</li>
 </ol>
 <h4>関連役職</h4>
@@ -394,7 +426,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <h3 id="scarlet_angel">紅天使 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β1～]</h3>
 <h4>[恋人作成能力] 自分撃ち固定：無し / 付加：共感者</h4>
 <pre>
-<a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える特殊な天使。
+<a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_rule_doll_master">人形遣い系</a>に見える特殊な天使。
 夜に<a href="human.php#unconscious">無意識</a>が誰か分かる (人狼系の<a href="wolf.php#partner">仲間表示</a>参照)。
 矢を撃った相手に<a href="sub_role.php#mind_sympathy">共感者</a>を付加する。
 </pre>
@@ -416,6 +448,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 陣営の判定法則は<a href="human.php#medium_rule">巫女</a>と同じ。
 <a href="sub_role.php#lovers">恋人</a>に処刑投票されるとショック死する。
 </pre>
+<h5>ショック死判定</h5>
 <ol>
 <li><a href="../spec.php#vote_day">判定</a>はショック死処理内部で行う。</li>
 <li>ショック死した場合の死因は「封印された」。</li>

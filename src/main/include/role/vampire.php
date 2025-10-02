@@ -7,9 +7,10 @@
 */
 class Role_vampire extends Role {
   public $action = 'VAMPIRE_DO';
+  public $action_date_type = 'after';
 
   protected function OutputPartner() {
-    /* 2日目の時点で感染者・洗脳者が発生する特殊イベントを実装したら対応すること */
+    /* 1日目の時点で感染者・洗脳者が発生する特殊イベントを実装したら対応すること */
     if (DB::$ROOM->date < 2) return;
     $id = $this->GetID();
     $partner = 'infected';
@@ -26,14 +27,6 @@ class Role_vampire extends Role {
 
   public function OutputAction() {
     RoleHTML::OutputVote('vampire-do', 'vampire_do', $this->action);
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
   }
 
   //吸血対象セット
@@ -57,7 +50,7 @@ class Role_vampire extends Role {
       RoleManager::LoadMain($user)->InfectVampire($actor); //吸血鬼襲撃
     }
     elseif ($user->IsDelayMania() && $user->IsCamp('vampire')) {
-      if (! $user->IsAvoid()) $this->AddSuccess($user->id, 'vampire_kill'); //時間差コピー能力者
+      $this->AddSuccess($user->id, 'vampire_kill'); //時間差コピー能力者
     }
     else {
       $this->SetInfectTarget($user->id);
@@ -86,7 +79,9 @@ class Role_vampire extends Role {
 
     foreach ($this->GetStack('vampire') as $id => $stack) {
       $filter = RoleManager::LoadMain(DB::$USER->ByID($id));
-      foreach ($stack as $target_id) $filter->Infect(DB::$USER->ByID($target_id));
+      foreach ($stack as $target_id) {
+	$filter->Infect(DB::$USER->ByID($target_id));
+      }
     }
   }
 

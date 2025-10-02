@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('assassin');
 class Role_step_assassin extends Role_assassin {
-  public $mix_in = 'step_mad';
+  public $mix_in = array('step_mad');
   public $action = 'STEP_ASSASSIN_DO';
   public $submit = 'assassin_do';
 
@@ -15,11 +15,11 @@ class Role_step_assassin extends Role_assassin {
   }
 
   protected function GetVoteCheckboxHeader() {
-    return '<input type="checkbox" name="target_no[]"';
+    return RoleHTML::GetVoteCheckboxHeader('checkbox');
   }
 
   public function CheckVoteNightTarget(array $list) {
-    return $this->filter->CheckVoteNightTarget($list);
+    return $this->CheckStepVoteNightTarget($list);
   }
 
   //範囲暗殺
@@ -34,7 +34,9 @@ class Role_step_assassin extends Role_assassin {
     }
   }
 
-  protected function SetAssassinTarget(User $user) { return; }
+  protected function SetAssassinTarget(User $user) {
+    return;
+  }
 
   protected function AssassinAction(User $user) {
     $user->AddDoom(1, 'febris');

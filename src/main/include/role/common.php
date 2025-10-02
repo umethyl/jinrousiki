@@ -21,6 +21,11 @@ class Role_common extends Role {
 
   //囁き
   public function Whisper(TalkBuilder $builder, $voice) {
+    return $this->CommonWhisper($builder, $voice);
+  }
+
+  //囁き (共有囁き変換)
+  final public function CommonWhisper(TalkBuilder $builder, $voice) {
     if (! $builder->flag->common_whisper) return false; //スキップ判定
 
     $stack = array(

@@ -6,9 +6,10 @@
 */
 RoleManager::LoadFile('valkyrja_duelist');
 class Role_critical_duelist extends Role_valkyrja_duelist {
+  public $mix_in = array('critical_voter');
   public $self_shoot = true;
 
-  public function FilterVoteDo(&$count) {
-    if (Lottery::Percent(5)) $count += 100;
+  public function IgnoreFilterVoteDo() {
+    return ! Lottery::Percent(5);
   }
 }

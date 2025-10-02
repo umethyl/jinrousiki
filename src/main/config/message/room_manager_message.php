@@ -42,16 +42,15 @@ class RoomManagerMessage {
 
   /* 入力エラー */
   const ERROR_INPUT = '入力エラー';
-  const ERROR_INPUT_EMPTY    = 'が記入されていない。';
-  const ERROR_INPUT_LIMIT    = 'の文字数が長すぎる。';
-  const ERROR_INPUT_NG_WORD  = 'に入力禁止文字列が含まれている。';
-  const ERROR_INPUT_MAX_USER = '無効な最大人数です。';
-  const ERROR_INPUT_PASSWORD = '有効な GM ログインパスワードが設定されていません。';
+  const ERROR_INPUT_EMPTY      = 'が記入されていない。';
+  const ERROR_INPUT_LIMIT      = 'の文字数が長すぎる。';
+  const ERROR_INPUT_LIMIT_OVER = 'が 0 以下、または 99 以上である。';
+  const ERROR_INPUT_NG_WORD    = 'に入力禁止文字列が含まれている。';
+  const ERROR_INPUT_MAX_USER   = '無効な最大人数です。';
+  const ERROR_INPUT_PASSWORD   = '有効な GM ログインパスワードが設定されていません。';
 
   /* リアルタイム制 */
   const ERROR_INPUT_REAL_TIME_HEADER = 'リアルタイム制の昼・夜の時間';
-  const ERROR_INPUT_REAL_TIME_EMPTY  = 'を記入していない。';
-  const ERROR_INPUT_REAL_TIME_OVER   = 'が 0 以下、または 99 以上である。';
   const ERROR_INPUT_REAL_TIME_EM     = 'を全角で入力している。';
   const ERROR_INPUT_REAL_TIME_NUMBER = 'が数字ではない。';
 

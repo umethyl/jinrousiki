@@ -22,6 +22,7 @@ class DeadMessage {
   static public $vampire_killed     = 'は血を吸い尽くされたようです';			//吸血
   static public $assassin_killed    = 'は暗殺されたようです';				//暗殺
   static public $ogre_killed        = 'は鬼に攫われたようです';				//人攫い
+  static public $tengu_killed       = 'は神隠しに遭ったようです';			//神隠し
   static public $priest_returned    = 'は天に帰ったようです';				//天人帰還
   static public $revive_success     = 'は生き返りました';				//蘇生成功
   static public $revive_failed      = 'の蘇生に失敗したようです';			//蘇生失敗
@@ -29,37 +30,51 @@ class DeadMessage {
   static public $suicide            = 'は自決したようです';				//自決
 
   /* ショック死 */
-  static public $chicken            = 'は小心者だったようです';			//小心者
-  static public $rabbit             = 'はウサギだったようです';			//ウサギ
-  static public $perverseness       = 'は天邪鬼だったようです';			//天邪鬼
-  static public $flattery           = 'はゴマすりだったようです';		//ゴマすり
-  static public $celibacy           = 'は独身貴族だったようです';		//独身貴族
-  static public $nervy              = 'は自信家だったようです';			//自信家
-  static public $androphobia        = 'は男性恐怖症だったようです';		//男性恐怖症
-  static public $gynophobia         = 'は女性恐怖症だったようです';		//女性恐怖症
-  static public $impatience         = 'は短気だったようです';			//短気
-  static public $febris             = 'は熱病にかかったようです';		//熱病
-  static public $frostbite          = 'は凍傷にかかったようです';		//凍傷
-  static public $warrant            = 'は死の宣告を受けたようです';		//死の宣告
-  static public $panelist           = 'は解答者 (不正解) だったようです';	//解答者
-  static public $challenge          = 'は難題を解けなかったようです';		//難題
-  static public $sealed             = 'は封印されたようです';			//封印師
-  static public $drunk              = 'は神主に酔い潰されたようです';		//神主
-  static public $jealousy           = 'は橋姫に妬まれたようです';		//橋姫
-  static public $agitated           = 'は扇動に巻き込まれたようです';		//扇動者
-  static public $followed           = 'は道連れにされたようです';		//舟幽霊
-  static public $duel               = 'は宿敵に退治されたようです';		//決闘者
-  static public $thunderbolt        = 'は落雷を受けたようです';			//青天の霹靂
+  static public $chicken       = 'は小心者だったようです';		//小心者
+  static public $rabbit        = 'はウサギだったようです';		//ウサギ
+  static public $perverseness  = 'は天邪鬼だったようです';		//天邪鬼
+  static public $flattery      = 'はゴマすりだったようです';		//ゴマすり
+  static public $celibacy      = 'は独身貴族だったようです';		//独身貴族
+  static public $nervy         = 'は自信家だったようです';		//自信家
+  static public $androphobia   = 'は男性恐怖症だったようです';		//男性恐怖症
+  static public $gynophobia    = 'は女性恐怖症だったようです';		//女性恐怖症
+  static public $impatience    = 'は短気だったようです';		//短気
+  static public $febris        = 'は熱病にかかったようです';		//熱病
+  static public $frostbite     = 'は凍傷にかかったようです';		//凍傷
+  static public $warrant       = 'は死の宣告を受けたようです';		//死の宣告
+  static public $panelist      = 'は解答者 (不正解) だったようです';	//解答者
+  static public $challenge     = 'は難題を解けなかったようです';	//難題
+  static public $sealed        = 'は封印されたようです';		//封印師
+  static public $drunk         = 'は神主に酔い潰されたようです';	//神主
+  static public $jealousy      = 'は橋姫に妬まれたようです';		//橋姫
+  static public $agitated      = 'は扇動に巻き込まれたようです';	//扇動者
+  static public $followed      = 'は道連れにされたようです';		//舟幽霊
+  static public $duel          = 'は宿敵に退治されたようです';		//決闘者
+  static public $tengu_escape  = 'は雲隠れしたようです';		//天狗
+  static public $thunderbolt   = 'は落雷を受けたようです';		//青天の霹靂
+
+  /* 人狼襲撃失敗 */
+  static public $wolf_failed_trap     = '人狼は罠に阻まれたようです';		//罠
+  static public $wolf_failed_guard    = '人狼は護衛に阻まれたようです';		//護衛
+  static public $wolf_failed_resist   = '人狼は耐性に阻まれたようです';		//襲撃先耐性
+  static public $wolf_failed_ogre     = '人狼は鬼の耐性に阻まれたようです';	//鬼耐性
+  static public $wolf_failed_escaper  = '人狼は逃亡者を襲撃したようです';	//逃亡者襲撃
+  static public $wolf_failed_wolf     = '人狼は人狼を襲撃したようです';		//人狼襲撃
+  static public $wolf_failed_fox      = '人狼は妖狐を襲撃したようです';		//妖狐襲撃
+  static public $wolf_failed_reaction = '人狼は能力に阻まれたようです';		//身代わり他
+  static public $wolf_failed_action   = '人狼は襲撃を回避したようです';		//人狼能力
 
   /* 特殊 */
-  static public $novoted            = 'は突然お亡くなりになられました';		//未投票突然死
-  static public $sudden_death       = 'はショック死しました';			//投票系ショック死
-  static public $lovers_followed    = 'は恋人の後を追い自殺しました';		//恋人後追い
-  static public $fox_followed       = 'は妖狐の後を追い自殺しました';		//背徳者後追い
-  static public $vega_lovers        = 'は織姫に選ばれました';			//織姫
-  static public $joker_moved        = 'にジョーカーが移動したようです';		//ジョーカー移動
-  static public $death_note_moved   = 'にデスノートが移動したようです';		//デスノート移動
-  static public $step               = 'で足音が聞こえた…';			//足音
+  static public $novoted              = 'は突然お亡くなりになられました';		//未投票突然死
+  static public $silence               = 'は沈黙していたようです';			//未発言突然死
+  static public $sudden_death          = 'はショック死しました';			//投票系ショック死
+  static public $lovers_followed       = 'は恋人の後を追い自殺しました';		//恋人後追い
+  static public $fox_followed          = 'は妖狐の後を追い自殺しました';		//背徳者後追い
+  static public $vega_lovers           = 'は織姫に選ばれました';			//織姫
+  static public $joker_moved           = 'にジョーカーが移動したようです';		//ジョーカー移動
+  static public $death_note_moved      = 'にデスノートが移動したようです';		//デスノート移動
+  static public $letter_exchange_moved = 'に交換日記が移動したようです';		//交換日記移動
+  static public $step                  = 'で足音が聞こえた…';				//足音
 
   /* 花妖精 */
   static public $flowered_a = 'の頭の上に松の花が咲きました';

@@ -13,9 +13,9 @@ class Option_decide extends CheckRoomOptionItem {
     return '投票が同数の時、決定者の投票先が優先されます [兼任]';
   }
 
-  public function Cast(array &$list, &$rand) {
-    if (RoleManager::GetStack('user_count') >= CastConfig::${$this->name}) {
-      return $this->CastOnce($list, $rand);
+  public function Cast() {
+    if (Cast::Stack()->Get('user_count') >= CastConfig::${$this->name}) {
+      return $this->CastOnce();
     }
   }
 }

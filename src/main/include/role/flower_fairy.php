@@ -11,4 +11,9 @@ class Role_flower_fairy extends Role_fairy {
   protected function FairyAction(User $user) {
     DB::$ROOM->ResultDead($user->GetName(), $this->result, Lottery::GetRange('A', 'Z'));
   }
+
+  //悪戯 (天候)
+  public function FairyEvent() {
+    $this->FairyAction(DB::$USER->ByID(Lottery::Get(array_keys(DB::$USER->GetLivingUsers()))));
+  }
 }

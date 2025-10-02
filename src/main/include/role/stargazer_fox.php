@@ -7,7 +7,7 @@
 */
 RoleManager::LoadFile('child_fox');
 class Role_stargazer_fox extends Role_child_fox {
-  public $mix_in = 'stargazer_mage';
+  public $mix_in = array('stargazer_mage');
 
   public function IgnoreCursed() {
     return true;

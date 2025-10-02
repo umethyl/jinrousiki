@@ -68,7 +68,9 @@ class DocumentCache {
   }
 
   //インスタンス取得
-  static function Get() { return self::$instance; }
+  static function Get() {
+    return self::$instance;
+  }
 
   //保存名取得
   static function GetName($hash = false) {
@@ -76,7 +78,9 @@ class DocumentCache {
   }
 
   //汎用検索情報取得
-  static function GetKey() { return array(self::Get()->room_no, self::GetName(true)); }
+  static function GetKey() {
+    return array(self::Get()->room_no, self::GetName(true));
+  }
 
   //保存情報取得
   static function GetData($serialize = false) {
@@ -138,12 +142,12 @@ class DocumentCache {
       $str = '';
       break;
     }
-    printf($format, Time::GetDate('Y-m-d H:i:s', self::Get()->next), $str);
+    printf($format, Time::GetDateTime(self::Get()->next), $str);
   }
 
   //時刻出力
   static function OutputTime($time, $name = 'Next Update') {
-    Text::p($name, Time::GetDate('Y-m-d H:i:s', $time));
+    Text::p($name, Time::GetDateTime($time));
   }
 
   //有効期限切れ判定
@@ -155,18 +159,18 @@ class DocumentCache {
 
 //-- DB アクセス (DocumentCache 拡張) --//
 class DocumentCacheDB {
-  //存在チェック
-  static function Exists() {
-    $query = 'SELECT expire FROM document_cache WHERE room_no = ? AND name = ?';
-    DB::Prepare($query, DocumentCache::GetKey());
-    return DB::Count() > 0;
-  }
-
   //取得
   static function Get() {
     $query = 'SELECT content, expire, hash FROM document_cache WHERE room_no = ? AND name = ?';
     DB::Prepare($query, DocumentCache::GetKey());
     return DB::FetchAssoc(true);
+  }
+
+  //存在判定
+  static function Exists() {
+    $query = 'SELECT expire FROM document_cache WHERE room_no = ? AND name = ?';
+    DB::Prepare($query, DocumentCache::GetKey());
+    return DB::Exists();
   }
 
   //排他更新用ロック
@@ -211,7 +215,7 @@ EOF;
   }
 
   //消去
-  static function Clean() {
+  static function Clear() {
     $query = 'DELETE FROM document_cache WHERE expire < ?';
     DB::Prepare($query, array(Time::Get() - CacheConfig::EXCEED));
     return DB::Execute() && DB::Optimize('document_cache');

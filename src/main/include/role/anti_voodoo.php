@@ -6,6 +6,7 @@
 class Role_anti_voodoo extends Role {
   public $action = 'ANTI_VOODOO_DO';
   public $result = 'ANTI_VOODOO_SUCCESS';
+  public $action_date_type = 'after';
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message');
@@ -13,14 +14,6 @@ class Role_anti_voodoo extends Role {
 
   public function OutputAction() {
     RoleHTML::OutputVote('guard-do', 'anti_voodoo_do', $this->action);
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
   }
 
   //厄払い先セット

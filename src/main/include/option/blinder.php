@@ -14,8 +14,4 @@ class Option_blinder extends CheckRoomOptionItem {
   public function GetExplain() {
     return '全員に「目隠し」がつきます';
   }
-
-  public function Cast(array &$list, &$rand) {
-    return $this->CastAll($list);
-  }
 }

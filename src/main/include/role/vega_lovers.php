@@ -9,19 +9,19 @@
   ・人狼襲撃耐性：無効
 */
 class Role_vega_lovers extends Role {
-  public $mix_in = 'decide';
+  public $mix_in = array('decide', 'watcher', 'upper_luck');
   public $vote_day_type = 'target';
 
   protected function IgnoreAbility() {
     return DB::$ROOM->date < 2;
   }
 
-  public function FilterVoteDo(&$count) {
-    $count = 0;
+  public function GetVotePollCount() {
+    return 0;
   }
 
-  public function FilterVotePoll(&$count) {
-    $count = 0;
+  public function IsUpdateFilterVotePoll() {
+    return true;
   }
 
   public function WolfEatResist() {

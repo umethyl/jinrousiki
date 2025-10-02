@@ -1,7 +1,7 @@
 <?php
 require_once('init.php');
 Loader::LoadFile('role_data_class', 'room_option_class', 'info_functions');
-InfoHTML::OutputHeader('天候システム');
+InfoHTML::OutputHeader('天候システム', 0, 'weather');
 ?>
 <p>
 <a href="#game_option">関連オプション</a>
@@ -10,6 +10,7 @@ InfoHTML::OutputHeader('天候システム');
 </p>
 <p>
 <a href="#type_talk">会話妨害</a>
+<a href="#type_dead">死亡欄妨害</a>
 <a href="#type_vote_day">処刑投票妨害</a>
 <a href="#type_ability">能力強化・封印</a>
 </p>
@@ -17,6 +18,7 @@ InfoHTML::OutputHeader('天候システム');
 <h2 id="game_option">関連オプション</h2>
 <ul>
   <li><a href="game_option.php#weather"><?php OptionManager::OutputCaption('weather'); ?></a></li>
+  <li><a href="game_option.php#full_weather"><?php OptionManager::OutputCaption('full_weather'); ?></a></li>
 </ul>
 
 <h2 id="summary">一覧</h2>
@@ -30,7 +32,9 @@ Ver. 1.5.0
 Ver. 2.2.0
 <a href="#ver220a4">α4</a><br>
 Ver. 2.3.0
-<a href="#ver230rc1">RC1</a>
+<a href="#ver230rc1">RC1</a><br>
+Ver. 3.0.0
+<a href="#ver300rc1">RC1</a>
 </p>
 <table>
 <tr>
@@ -371,7 +375,7 @@ Ver. 2.3.0
 </tr>
 <tr id="ver220a4">
   <td><a href="#weather_random_step"><?php WeatherData::OutputName(55); ?></a></td>
-  <td><a href="#type_ability">能力強化・封印</a></td>
+  <td><a href="#type_dead">死亡欄妨害</a></td>
   <td><?php WeatherData::OutputCaption(55); ?></td>
   <td>Ver. 2.2.0 α4</td>
 </tr>
@@ -428,6 +432,36 @@ Ver. 2.3.0
   <td><a href="#type_talk">会話妨害</a></td>
   <td><?php WeatherData::OutputCaption(64); ?></td>
   <td>Ver. 2.3.0 RC1</td>
+</tr>
+<tr id="ver300rc1">
+  <td><a href="#weather_full_tengu"><?php WeatherData::OutputName(65); ?></a></td>
+  <td><a href="#type_ability">能力強化・封印</a></td>
+  <td><?php WeatherData::OutputCaption(65); ?></td>
+  <td>Ver. 3.0.0 RC1</td>
+</tr>
+<tr>
+  <td><a href="#weather_seal_tengu"><?php WeatherData::OutputName(66); ?></a></td>
+  <td><a href="#type_ability">能力強化・封印</a></td>
+  <td><?php WeatherData::OutputCaption(66); ?></td>
+  <td>Ver. 3.0.0 RC1</td>
+</tr>
+<tr>
+  <td><a href="#weather_settle"><?php WeatherData::OutputName(67); ?></a></td>
+  <td><a href="#type_vote_day">処刑投票妨害</a></td>
+  <td><?php WeatherData::OutputCaption(67); ?></td>
+  <td>Ver. 3.0.0 RC1</td>
+</tr>
+<tr>
+  <td><a href="#weather_star_fairy"><?php WeatherData::OutputName(68); ?></a></td>
+  <td><a href="#type_dead">死亡欄妨害</a></td>
+  <td><?php WeatherData::OutputCaption(68); ?></td>
+  <td>Ver. 3.0.0 RC1</td>
+</tr>
+<tr>
+  <td><a href="#weather_flower_fairy"><?php WeatherData::OutputName(69); ?></a></td>
+  <td><a href="#type_dead">死亡欄妨害</a></td>
+  <td><?php WeatherData::OutputCaption(69); ?></td>
+  <td>Ver. 3.0.0 RC1</td>
 </tr>
 </table>
 
@@ -540,6 +574,7 @@ Ver. 2.3.0
   <td></td>
 </tr>
 </table>
+
 
 <h2 id="type_talk">会話妨害</h2>
 <p>
@@ -718,8 +753,36 @@ Ver. 2.3.0
   <li><a href="new_role/sub_role.php#mind_read_group">サトラレ系</a>には影響がありません (通常通り見えます)。</li>
 </ul>
 
+<h2 id="type_dead">死亡欄妨害</h2>
+<p>
+<a href="#weather_random_step">霜柱</a>
+<a href="#weather_star_fairy">星空</a>
+<a href="#weather_flower_fairy">花吹雪</a>
+</p>
+
+<h3 id="weather_random_step">霜柱 [Ver. 2.2.0 α4～]</h3>
+<ul>
+  <li>生存者の位置で<a href="new_role/ability.php#step">足音</a>が鳴ります。</li>
+  <li>発動率は 20%、最大で 3 人です。</li>
+  <li>処理のタイミングは<a href="new_role/ability.php#step">足音能力者</a>の処理と同じです。</li>
+</ul>
+
+<h3 id="weather_star_fairy">星空 [Ver. 3.0.0 RC1～]</h3>
+<ul>
+  <li><a href="new_role/chiroptera.php#star_fairy">星妖精</a>の能力が発動します。</li>
+  <li>夜の投票完了時点の生存者からランダムで一人が対象になります。</li>
+  <li><a href="new_role/ability.php#phantom">占い妨害</a>・<a href="new_role/ability.php#cursed_group">呪い</a>などの他の能力の影響を受けません。</li>
+</ul>
+
+<h3 id="weather_flower_fairy">花吹雪 [Ver. 3.0.0 RC1～]</h3>
+<ul>
+  <li><a href="new_role/chiroptera.php#flower_fairy">花妖精</a>の能力が発動します。</li>
+  <li>仕様は<a href="#weather_star_fairy">星空</a>と同じです。</li>
+</ul>
+
 <h2 id="type_vote_day">処刑投票妨害</h2>
 <p>
+<a href="#weather_settle">彩雲</a>
 <a href="#weather_brownie">慈雨</a>
 <a href="#weather_critical_luck">タライ</a>
 <a href="#weather_hyper_critical">台風</a>
@@ -735,6 +798,11 @@ Ver. 2.3.0
 <a href="#weather_thunderbolt">青天の霹靂</a>
 <a href="#weather_no_sudden_death">凪</a>
 </p>
+
+<h3 id="weather_settle">彩雲 [Ver. 3.0.0 RC1～]</h3>
+<ul>
+  <li>処刑投票処理に<a href="game_option.php#settle">決着村</a>の仕様が適用されます。</li>
+</ul>
 
 <h3 id="weather_brownie">慈雨 [Ver. 1.5.0 α3～]</h3>
 <ul>
@@ -840,18 +908,19 @@ Ver. 2.3.0
 <a href="#weather_no_reflect_assassin">日蝕</a>
 <a href="#weather_full_ogre">朧月</a>
 <a href="#weather_seal_ogre">叢雲</a>
+<a href="#weather_full_tengu">天狗風</a>
+<a href="#weather_seal_tengu">無風</a>
 <a href="#weather_no_trap">雪明り</a>
 <a href="#weather_no_contact">花曇</a>
-<a href="#weather_no_poison">旱魃</a>
-<a href="#weather_full_revive">雷雨</a>
 </p>
 <p>
+<a href="#weather_no_poison">旱魃</a>
+<a href="#weather_full_revive">雷雨</a>
 <a href="#weather_missfire_revive">疎雨</a>
 <a href="#weather_no_revive">快晴</a>
 <a href="#weather_no_dream">熱帯夜</a>
 <a href="#weather_psycho_infected">濃霧</a>
 <a href="#weather_no_last_words">涙雨</a>
-<a href="#weather_random_step">霜柱</a>
 <a href="#weather_no_step">地吹雪</a>
 </p>
 
@@ -886,6 +955,10 @@ Ver. 2.3.0
   <li>占い能力は<a href="new_role/fox.php#emerald_fox">翠狐</a>・<a href="new_role/fox.php#child_fox_group">子狐系</a>も含まれます。</li>
   <li>無効化される能力者も投票自体は必要です (集計処理をする際になかったことにされます)。</li>
 </ul>
+<h5>Ver. 1.5.0 α6～Ver. 3.0.0 RC1</h5>
+<ul>
+  <li><a href="new_role/human.php#mimic_wizard">物真似師</a>・<a href="new_role/human.php#spiritism_wizard">交霊術師</a>の霊能力も無効化されます。</li>
+</ul>
 
 <h3 id="weather_full_wizard">霧雨 [Ver. 1.5.0 α8～]</h3>
 <ul>
@@ -917,6 +990,11 @@ Ver. 2.3.0
 <h3 id="weather_no_sacrifice">蛍火 [Ver. 1.5.0 α9～]</h3>
 <ul>
   <li><a href="new_role/ability.php#sacrifice_active">身代わり能力</a>が無効化されます。</li>
+  <li><a href="new_role/human.php#serve_doll_master">奉公童女</a>の護衛身代わり能力・<a href="new_role/fox.php#sacrifice_depraver">伊呂具秦公</a>の呪殺身代わり能力も無効化されます。</li>
+</ul>
+<h5>Ver. 3.0.0 α5～</h5>
+<ul>
+  <li><a href="new_role/human.php#serve_doll_master">奉公童女</a>の護衛身代わり能力・<a href="new_role/fox.php#sacrifice_depraver">伊呂具秦公</a>の呪殺身代わり能力も無効化されます。</li>
 </ul>
 
 <h3 id="weather_force_assassin_do">紅月 [Ver. 1.5.0 α8～]</h3>
@@ -946,6 +1024,16 @@ Ver. 2.3.0
 <ul>
   <li><a href="new_role/ogre.php">鬼陣営</a>の人狼襲撃無効・暗殺反射・人攫いの成功率が 0% になります。</li>
   <li><a href="new_role/ogre.php#revive_ogre">茨木童子</a>の蘇生率が 0% になります。</li>
+</ul>
+
+<h3 id="weather_full_tengu">天狗風 [Ver. 3.0.0 RC1～]</h3>
+<ul>
+  <li><a href="new_role/tengu.php">天狗陣営</a>の<a href="new_role/tengu.php#tengu_do">神通力</a>の成功率が 100%、<a href="new_role/tengu.php#rule_sudden_death">ショック死</a>の発動率が 0% になります。</li>
+</ul>
+
+<h3 id="weather_seal_tengu">無風 [Ver. 3.0.0 RC1～]</h3>
+<ul>
+  <li><a href="new_role/tengu.php">天狗陣営</a>の<a href="new_role/tengu.php#tengu_do">神通力</a>の成功率が 0%、<a href="new_role/tengu.php#rule_sudden_death">ショック死</a>の発動率が 100% になります。</li>
 </ul>
 
 <h3 id="weather_no_trap">雪明り [Ver. 1.5.0 α9～]</h3>
@@ -1018,13 +1106,6 @@ Ver. 2.3.0
 <h3 id="weather_no_last_words">涙雨 [Ver. 1.5.0 α3～]</h3>
 <ul>
   <li>全員に<a href="new_role/sub_role.php#no_last_words">筆不精</a>がつきます。</li>
-</ul>
-
-<h3 id="weather_random_step">霜柱 [Ver. 2.2.0 α4～]</h3>
-<ul>
-  <li>生存者の位置で<a href="new_role/ability.php#step">足音</a>が鳴ります。</li>
-  <li>発動率は 20%、最大で 3 人です。</li>
-  <li>処理のタイミングは<a href="new_role/ability.php#step">足音能力者</a>の処理と同じです。</li>
 </ul>
 
 <h3 id="weather_no_step">地吹雪 [Ver. 2.2.0 α4～]</h3>

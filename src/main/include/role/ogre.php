@@ -8,6 +8,7 @@
 class Role_ogre extends Role {
   public $action     = 'OGRE_DO';
   public $not_action = 'OGRE_NOT_DO';
+  public $action_date_type = 'after';
   public $resist_rate  = 30;
   public $reduce_base  =  1;
   public $reduce_rate  =  5;
@@ -15,14 +16,6 @@ class Role_ogre extends Role {
 
   public function OutputAction() {
     RoleHTML::OutputVote('ogre-do', 'ogre_do', $this->action, $this->not_action);
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->date > 1;
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::IMPOSSIBLE_FIRST_DAY;
   }
 
   protected function SetVoteNightFilter() {
@@ -38,7 +31,7 @@ class Role_ogre extends Role {
     if ($this->IsDead()) return false;
     if ($winner == 'wolf') return true;
     foreach (DB::$USER->rows as $user) {
-      if ($user->IsLiveRoleGroup('wolf')) return true;
+      if ($user->IsLive() && $user->IsMainGroup('wolf')) return true;
     }
     return false;
   }

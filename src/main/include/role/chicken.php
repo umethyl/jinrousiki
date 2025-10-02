@@ -10,13 +10,10 @@ class Role_chicken extends Role {
   //ショック死判定
   final public function SuddenDeath() {
     $type = 'sudden_death';
-    if ($this->GetStack($type) != '') return; //すでにセットされていたらスキップ
+    if (! is_null($this->GetStack($type))) return; //すでにセットされていたらスキップ
 
-    $class = $this->GetClass($method = 'IgnoreSuddenDeath');
-    if ($class->$method()) return;
-
-    $class = $this->GetClass($method = 'IsSuddenDeath');
-    if ($class->$method()) $this->SetStack($this->GetProperty($type), $type);
+    if ($this->CallParent('IgnoreSuddenDeath')) return;
+    if ($this->CallParent('IsSuddenDeath')) $this->SetStack($this->GetProperty($type), $type);
   }
 
   //ショック死判定対象外判定

@@ -46,6 +46,14 @@ body { /* AA 用 */
 .user-talk td {
   border-bottom: 1px dashed #C0C0C0;
 }
+.secret { /* 秘密発言 */
+  color: #FFFFFF;
+  background-color: #808080;
+}
+.secret td {
+  font-size: 8pt;
+  font-weight: lighter;
+}
 .user-name { /* プレイヤー名 */
   width: 200px;
 }

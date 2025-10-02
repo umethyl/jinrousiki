@@ -13,6 +13,6 @@ class Role_power_ogre extends Role_ogre {
 
   public function Win($winner) {
     return $this->IsLive() &&
-      count(DB::$USER->GetLivingUsers()) <= ceil(count(DB::$USER->rows) / 3);
+      count(DB::$USER->GetLivingUsers()) <= ceil(DB::$USER->GetUserCount() / 3);
   }
 }

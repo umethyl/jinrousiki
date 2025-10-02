@@ -46,6 +46,7 @@ EOF;
 <option value="strong">%s</option>
 <option value="normal" selected>%s</option>
 <option value="weak">%s</option>
+<option value="secret">%s</option>
 <option value="last_words">%s</option>
 </select><br>
 [<a class="vote" href="game_vote.php%s">%s</a>]
@@ -57,7 +58,7 @@ EOF;
 
     printf($format . Text::LF, GameUpMessage::SUBMIT,
 	   GameUpMessage::STRONG, GameUpMessage::NORMAL, GameUpMessage::WEAK,
-	   GameUpMessage::LAST_WORDS,
+	   GameUpMessage::SECRET, GameUpMessage::LAST_WORDS,
 	   RQ::Get()->url, GameUpMessage::VOTE, GameUpMessage::TOP);
   }
 }

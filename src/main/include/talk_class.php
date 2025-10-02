@@ -1,6 +1,8 @@
 <?php
 //-- 発言処理クラス --//
 class Talk {
+  private static $instance = null; //TalkBuilder クラス
+
   //会話取得
   static function Get() {
     $builder = new TalkBuilder('talk');
@@ -29,6 +31,16 @@ class Talk {
   static function OutputHeaven() {
     return self::GetHeaven()->Output();
   }
+
+  //TalkBuilder クラス登録
+  static function SetBuilder(TalkBuilder $builder) {
+    self::$instance = $builder;
+  }
+
+  //TalkBuilder クラス取得
+  static function GetBuilder() {
+    return self::$instance;
+  }
 }
 
 //-- 発言パーサ --//
@@ -48,31 +60,31 @@ class TalkParser {
 	$this->$key = $data;
       }
     }
-    if (isset($this->time)) $this->date_time = Time::GetDate('Y/m/d (D) H:i:s', $this->time);
+    if (isset($this->time)) $this->date_time = Time::GetTimeStamp($this->time);
     $this->Parse();
   }
 
   //データ解析
   private function Parse() {
     switch ($this->uname) { //システムユーザ系の処理
-    case 'system':
+    case GM::SYSTEM:
       switch ($this->action) {
-      case 'MORNING':
+      case TalkAction::MORNING:
 	$this->sentence = sprintf(TalkMessage::MORNING, $this->sentence);
 	return;
 
-      case 'NIGHT':
+      case TalkAction::NIGHT:
 	$this->sentence = TalkMessage::NIGHT;
 	return;
       }
       return;
 
-    case 'dummy_boy':
-      if ($this->location == 'system') $this->ParseSystem();
+    case GM::DUMMY_BOY:
+      if ($this->location == TalkLocation::SYSTEM) $this->ParseSystem();
       return;
     }
 
-    if ($this->location == 'system') $this->ParseSystem();
+    if ($this->location == TalkLocation::SYSTEM) $this->ParseSystem();
   }
 
   //投票データ解析
@@ -214,7 +226,7 @@ class TalkBuilder {
 
   //発言生成
   public function Generate(TalkParser $talk) {
-    //Text::p($talk);
+    //$this->AddDebug(print_r($talk, true), '◆talk[row]');
     //発言ユーザを取得
     /*
       $uname は必ず $talk から取得すること。
@@ -223,29 +235,28 @@ class TalkBuilder {
     */
     $actor = DB::$USER->ByUname($talk->uname);
     $real  = $actor;
-    if (DB::$ROOM->log_mode && isset($talk->role_id)) { //役職スイッチ処理
+    if (DB::$ROOM->IsOn('log') && isset($talk->role_id)) { //役職スイッチ処理
       //閲覧者のスイッチに伴う可視性のリロード処理
       if ($actor->ChangePlayer($talk->role_id) && $actor->IsSame($this->actor)) {
-	//Text::p($talk->role_id, 'Switch');
+	//$this->AddDebug($talk->role_id, '◆Switch');
 	$this->LoadFilter();
 	$this->LoadFlag();
       }
     }
-    switch ($talk->scene) {
-    case 'day':
-    case 'night':
+
+    switch ($talk->scene) { //仮想ユーザセット
+    case RoomScene::DAY:
+    case RoomScene::NIGHT:
       $virtual = DB::$USER->ByVirtual($actor->id);
       if (! $actor->IsSame($virtual)) $actor = $virtual;
       break;
     }
 
-    //基本パラメータを取得
-    if ($talk->uname == 'system') {
+    if ($talk->uname == GM::SYSTEM) { //基本パラメータを取得
       $symbol    = '';
       $name      = '';
       $actor->id = 0;
-    }
-    else {
+    } else {
       $symbol = TalkHTML::GenerateSymbol(isset($talk->color) ? $talk->color : $actor->color);
       $name   = isset($talk->handle_name) ? $talk->handle_name : $actor->handle_name;
     }
@@ -253,14 +264,13 @@ class TalkBuilder {
     //実ユーザを取得
     if (RQ::Get()->add_role && $actor->id > 0) { //役職表示モード対応
       $real_user = isset($real) ? $real : $actor;
-      $name .= $real_user->GenerateShortRoleName($talk->scene == 'heaven');
-    }
-    else {
+      $name .= $real_user->GenerateShortRoleName($talk->scene == RoomScene::HEAVEN);
+    } else {
       $real_user = DB::$USER->ByRealUname($talk->uname);
     }
 
     switch ($talk->location) {
-    case 'system': //システムメッセージ
+    case TalkLocation::SYSTEM: //システムメッセージ
       $str = $talk->sentence;
       if (isset($talk->time)) $str .= TalkHTML::GenerateTime($talk->date_time);
 
@@ -270,8 +280,8 @@ class TalkBuilder {
 	$sex = empty($talk->sex) ? $actor->sex : $talk->sex;
 	return $this->AddSystemMessage($name . $str, 'objection-' . $sex);
 
-      case 'MORNING':
-      case 'NIGHT':
+      case TalkAction::MORNING:
+      case TalkAction::NIGHT:
 	return $this->AddSystem($str);
 
       default: //ゲーム開始前の投票 (例：KICK) は常時表示
@@ -282,7 +292,7 @@ class TalkBuilder {
       }
       return false;
 
-    case 'dummy_boy': //身代わり君専用システムメッセージ
+    case TalkLocation::DUMMY_BOY: //身代わり君専用システムメッセージ
       $str = Message::SYMBOL . $real_user->handle_name . Message::SPACER . $talk->sentence;
       if (GameConfig::QUOTE_TALK) $str = sprintf(TalkMessage::QUOTE, $str);
       if (isset($talk->time)) $str .= TalkHTML::GenerateTime($talk->date_time);
@@ -290,7 +300,40 @@ class TalkBuilder {
     }
 
     switch ($talk->scene) {
-    case 'day':
+    case RoomScene::DAY:
+      if ($talk->location == TalkLocation::SECRET && ! $this->flag->open_talk) {
+	if (DB::$ROOM->IsOption('secret_talk')) {
+	  //Text::p(RoleTalk::GetLocation($actor));
+	  $mind_read = $this->IsMindRead($actor, $real_user); //特殊発言透過判定
+	  switch (RoleTalk::GetLocation($actor, $real_user)) {
+	  case TalkLocation::COMMON: //共有者
+	    if ($this->flag->common || $mind_read) break;
+	    return false;
+
+	  case TalkLocation::WOLF: //人狼
+	    if ($this->flag->wolf || $mind_read) break;
+	    return false;
+
+	  case TalkLocation::MAD: //囁き狂人
+	    if ($this->flag->wolf || $mind_read) break;
+	    return false;
+
+	  case TalkLocation::FOX: //妖狐
+	    if ($this->flag->fox || $mind_read) break;
+	    return false;
+
+	  case TalkLocation::MONOLOGUE: //独り言
+	    if ($this->flag->dummy_boy || $mind_read || $this->actor->IsSameName($talk->uname)) {
+	      break;
+	    }
+	    return false;
+	  }
+	}
+	elseif (! $actor->IsSelf()) {
+	  return false;
+	}
+      }
+
       //強風判定 (身代わり君と本人は対象外)
       if (DB::$ROOM->IsEvent('blind_talk_day') &&
 	  ! $this->flag->dummy_boy && ! $this->actor->IsSameName($talk->uname)) {
@@ -306,36 +349,36 @@ class TalkBuilder {
       }
       return $this->Add($actor, $talk, $real);
 
-    case 'night':
+    case RoomScene::NIGHT:
       if ($this->flag->open_talk) {
 	$class = '';
 	$voice = $talk->font_type;
 	switch ($talk->location) {
-	case 'common':
+	case TalkLocation::COMMON:
 	  $class  = 'night-common';
 	  $name  .= TalkHTML::GenerateInfo(TalkMessage::COMMON);
 	  $voice .= ' ' . $class;
 	  break;
 
-	case 'wolf':
+	case TalkLocation::WOLF:
 	  $class  = 'night-wolf';
 	  $name  .= TalkHTML::GenerateInfo(TalkMessage::WOLF);
 	  $voice .= ' ' . $class;
 	  break;
 
-	case 'mad':
+	case TalkLocation::MAD:
 	  $class  = 'night-wolf';
 	  $name  .= TalkHTML::GenerateInfo(TalkMessage::MAD);
 	  $voice .= ' ' . $class;
 	  break;
 
-	case 'fox':
+	case TalkLocation::FOX:
 	  $class  = 'night-fox';
 	  $name  .= TalkHTML::GenerateInfo(TalkMessage::FOX);
 	  $voice .= ' ' . $class;
 	  break;
 
-	case 'self_talk':
+	case TalkLocation::MONOLOGUE:
 	  $class  = 'night-self-talk';
 	  $name  .= TalkHTML::GenerateSelfTalk();
 	  break;
@@ -357,7 +400,7 @@ class TalkBuilder {
 	$mind_read = $this->IsMindRead($actor, $real_user); //特殊発言透過判定
 	RoleManager::SetActor($actor);
 	switch ($talk->location) {
-	case 'common': //共有者
+	case TalkLocation::COMMON: //共有者
 	  if ($this->flag->common || $mind_read) return $this->Add($actor, $talk, $real);
 
 	  $filter = RoleManager::LoadMain($actor);
@@ -369,7 +412,7 @@ class TalkBuilder {
 	  }
 	  return false;
 
-	case 'wolf': //人狼
+	case TalkLocation::WOLF: //人狼
 	  if ($this->flag->wolf || $mind_read) return $this->Add($actor, $talk, $real);
 
 	  $filter = RoleManager::LoadMain($actor);
@@ -381,7 +424,7 @@ class TalkBuilder {
 	  }
 	  return false;
 
-	case 'mad': //囁き狂人
+	case TalkLocation::MAD: //囁き狂人
 	  if ($this->flag->wolf || $mind_read) return $this->Add($actor, $talk, $real);
 
 	  foreach (RoleManager::Load('talk_whisper') as $filter) {
@@ -389,7 +432,7 @@ class TalkBuilder {
 	  }
 	  return false;
 
-	case 'fox': //妖狐
+	case TalkLocation::FOX: //妖狐
 	  if ($this->flag->fox || $mind_read) return $this->Add($actor, $talk, $real);
 
 	  RoleManager::SetActor(DB::$SELF);
@@ -403,7 +446,7 @@ class TalkBuilder {
 	  }
 	  return false;
 
-	case 'self_talk': //独り言
+	case TalkLocation::MONOLOGUE: //独り言
 	  if ($this->flag->dummy_boy || $mind_read || $this->actor->IsSameName($talk->uname)) {
 	    return $this->Add($actor, $talk, $real);
 	  }
@@ -421,7 +464,7 @@ class TalkBuilder {
       }
       return false;
 
-    case 'heaven':
+    case RoomScene::HEAVEN:
       if (! $this->flag->open_talk) return false;
       if (isset($talk->time)) $name .= Text::BR . TalkHTML::GenerateInfo($talk->date_time);
 
@@ -461,24 +504,24 @@ class TalkBuilder {
   //時刻生成
   public function GenerateTimeStamp() {
     switch (DB::$ROOM->scene) {
-    case 'day': //OP の昼限定
-      if (! DB::$ROOM->IsDate(1)) return false;
-      $type     = 'start_datetime'; //ゲーム開始時刻
-      $sentence = TalkMessage::GAME_START;
-      break;
-
-    case 'beforegame':
+    case RoomScene::BEFORE:
       $type     = 'establish_datetime'; //村立て時刻
       $sentence = TalkMessage::ESTABLISH;
       break;
 
-    case 'night':
+    case RoomScene::DAY: //OP の昼限定
       if (! DB::$ROOM->IsDate(1)) return false;
       $type     = 'start_datetime'; //ゲーム開始時刻
       $sentence = TalkMessage::GAME_START;
       break;
 
-    case 'aftergame':
+    case RoomScene::NIGHT:
+      if (! DB::$ROOM->IsDate(1)) return false;
+      $type     = 'start_datetime'; //ゲーム開始時刻
+      $sentence = TalkMessage::GAME_START;
+      break;
+
+    case RoomScene::AFTER:
       $type     = 'finish_datetime'; //ゲーム終了時刻
       $sentence = TalkMessage::GAME_END;
       break;
@@ -487,12 +530,12 @@ class TalkBuilder {
       return false;
     }
 
-    if (is_null($time = RoomDB::Fetch($type))) return false;
+    if (is_null($time = RoomDB::Get($type))) return false;
     $talk = new TalkParser();
     $talk->sentence = $sentence . Time::ConvertTimeStamp($time);
-    $talk->uname    = 'system';
+    $talk->uname    = GM::SYSTEM;
     $talk->scene    = DB::$ROOM->scene;
-    $talk->location = 'system';
+    $talk->location = TalkLocation::SYSTEM;
     $this->Generate($talk);
   }
 
@@ -509,7 +552,7 @@ class TalkBuilder {
       }
       $stack[$key] = $$key;
     }
-    Text::Line($str);
+    $str = Text::Line($str);
     if (GameConfig::QUOTE_TALK) $str = sprintf(TalkMessage::QUOTE, $str);
 
     foreach (array('str', 'symbol', 'user_info', 'voice') as $key) {
@@ -520,8 +563,8 @@ class TalkBuilder {
   }
 
   //デバッグ用
-  public function AddDebug($str) {
-    $stack = array('str' => $str, 'symbol' => '', 'user_info' => '', 'voice' => null);
+  public function AddDebug($str, $symbol = '') {
+    $stack = array('str' => $str, 'symbol' => $symbol, 'user_info' => '', 'voice' => null);
     return $this->AddRaw($stack);
   }
 
@@ -558,8 +601,8 @@ class TalkBuilder {
   private function LoadFilter() {
     $this->actor->virtual_live |= false;
     RoleManager::SetActor($this->actor);
-    RoleManager::SetStack('viewer', $this->actor);
-    RoleManager::SetStack('builder', $this);
+    RoleManager::Stack()->Set('viewer', $this->actor);
+    RoleManager::Stack()->Set('builder', $this);
     $this->filter = RoleManager::Load('talk');
   }
 
@@ -573,10 +616,10 @@ class TalkBuilder {
     $flag->wolf      = DB::$SELF->IsWolf(true) || $this->actor->IsRole('whisper_mad');
     $flag->fox       = DB::$SELF->IsFox(true);
     $flag->lovers    = DB::$SELF->IsLovers();
-    $flag->mind_read = DB::$ROOM->date > 1 && (DB::$ROOM->single_view_mode || DB::$SELF->IsLive());
+    $flag->mind_read = DB::$ROOM->date > 1 && (DB::$ROOM->IsOn('single') || DB::$SELF->IsLive());
     $flag->open_talk = DB::$ROOM->IsOpenData();
 
-    if (DB::$ROOM->watch_mode) $flag->wolf |= RQ::Get()->wolf_sight; //狼視点モード
+    if (DB::$ROOM->IsOn('watch')) $flag->wolf |= RQ::Get()->wolf_sight; //狼視点モード
     foreach (array('common', 'wolf', 'fox') as $type) { //身代わり君の上書き判定
       $flag->$type |= $flag->dummy_boy;
     }
@@ -619,7 +662,7 @@ class TalkBuilder {
     $symbol = TalkHTML::GenerateSymbol(isset($talk->color) ? $talk->color : $user->color);
     $name   = isset($talk->handle_name) ? $talk->handle_name : $user->handle_name;
     if (RQ::Get()->add_role && $user->id != 0) { //役職表示モード対応
-      if ($talk->scene == 'heaven') {
+      if ($talk->scene == RoomScene::HEAVEN) {
 	$real = $user;
       } elseif (is_null($real)) {
 	$real = DB::$USER->ByReal($user->id);
@@ -631,7 +674,7 @@ class TalkBuilder {
     }
 
     if (DB::$ROOM->IsNight() &&
-	(($talk->location == 'self_talk' && ! $user->IsRole('dummy_common')) ||
+	(($talk->location == TalkLocation::MONOLOGUE && ! $user->IsRole('dummy_common')) ||
 	 $user->IsRole('leader_common', 'mind_read', 'mind_open'))) {
       $name .= TalkHTML::GenerateSelfTalk();
     }
@@ -644,18 +687,19 @@ class TalkBuilder {
     if (isset($talk->time)) $name .= Text::BR . TalkHTML::GenerateInfo($talk->date_time);
 
     $stack = array(
-      'str'        => $str,
-      'symbol'     => $symbol,
-      'user_info'  => $name,
-      'voice'      => $voice
+      'str'       => $str,
+      'symbol'    => $symbol,
+      'user_info' => $name,
+      'voice'     => $voice
     );
+    if ($talk->location == TalkLocation::SECRET) $stack['row_class'] = 'secret';
+
     return $this->AddRaw($stack);
   }
 
   //システムユーザ発言
   private function AddSystem($str, $class = 'system-user') {
-    Text::Line($str);
-    $this->cache .= TalkHTML::GenerateSystem($str, $class);
+    $this->cache .= TalkHTML::GenerateSystem(Text::Line($str), $class);
     return true;
   }
 
@@ -675,24 +719,24 @@ class TalkDB {
     $format = 'SELECT %s FROM %s WHERE room_no = ?';
     $select = 'scene, location, uname, action, sentence, font_type';
     switch (DB::$ROOM->scene) {
-    case 'beforegame':
+    case RoomScene::BEFORE:
       $table = 'talk_' . DB::$ROOM->scene;
       $select .= ', handle_name, color';
       break;
 
-    case 'aftergame':
+    case RoomScene::AFTER:
       $table = 'talk_' . DB::$ROOM->scene;
       break;
 
     default:
       $table = 'talk';
-      if (DB::$ROOM->log_mode) $select .= ', role_id';
+      if (DB::$ROOM->IsOn('log')) $select .= ', role_id';
       break;
     }
 
     if ($heaven) {
       $table = 'talk';
-      $scene = 'heaven';
+      $scene = RoomScene::HEAVEN;
     } else {
       $scene = DB::$ROOM->scene;
     }
@@ -720,14 +764,14 @@ class TalkDB {
     if (RQ::Get()->time) $select .= ', time';
 
     switch ($set_scene) {
-    case 'beforegame':
+    case RoomScene::BEFORE:
       $table  .= '_' . $set_scene;
       $select .= ', handle_name, color';
       $format .= 'scene = ?';
       $list[] = $set_scene;
       break;
 
-    case 'aftergame':
+    case RoomScene::AFTER:
       $table .= '_' . $set_scene;
       $format .= 'scene = ?';
       $list[] = $set_scene;
@@ -735,7 +779,7 @@ class TalkDB {
 
     case 'heaven_only':
       $format .= 'date = ? AND (scene = ? OR uname = ?)';
-      array_push($list, $set_date, 'heaven', 'system');
+      array_push($list, $set_date, RoomScene::HEAVEN, GM::SYSTEM);
       break;
 
     default:
@@ -743,15 +787,15 @@ class TalkDB {
       $format .= 'date = ? AND scene IN ';
       $list[] = $set_date;
 
-      $stack = array('day', 'night');
-      if (RQ::Get()->heaven_talk) $stack[] = 'heaven';
+      $stack = array(RoomScene::DAY, RoomScene::NIGHT);
+      if (RQ::Get()->heaven_talk) $stack[] = RoomScene::HEAVEN;
       $format .= sprintf('(%s)', implode(',', array_fill(0, count($stack), '?')));
       $list = array_merge($list, $stack);
       break;
     }
-    if (DB::$ROOM->personal_mode) { //個人結果表示モード
+    if (DB::$ROOM->IsOn('personal')) { //個人結果表示モード
       $format .= ' AND uname = ?';
-      $list[] = 'system';
+      $list[] = GM::SYSTEM;
     }
     $query = sprintf($format, $select, $table);
     $query .= ' ORDER BY id ' . (RQ::Get()->reverse_log ? 'ASC' : 'DESC'); //ログの表示順
@@ -770,6 +814,57 @@ EOF;
     return DB::FetchAssoc();
   }
 
+  //発言数取得
+  static function GetUserTalkCount($lock = false) {
+    $query = <<<EOF
+SELECT date, talk_count FROM user_talk_count WHERE room_no = ? AND user_no = ?
+EOF;
+    if ($lock) $query .= ' FOR UPDATE';
+    DB::Prepare($query, array(DB::$ROOM->id, DB::$SELF->id));
+    return DB::FetchAssoc(true);
+  }
+
+  //発言数取得 (全ユーザ)
+  static function GetAllUserTalkCount() {
+    $query = <<<EOF
+SELECT user_no, talk_count FROM user_talk_count WHERE room_no = ? AND date = ?
+EOF;
+    DB::Prepare($query, array(DB::$ROOM->id, DB::$ROOM->date));
+
+    $result = array();
+    foreach (DB::FetchAssoc() as $stack) {
+      $result[$stack['user_no']] = $stack['talk_count'];
+    }
+    return $result;
+  }
+
+  //発言済み + 未投票ユーザ人数取得
+  static function GetNotVoteTalkUserCount() {
+    $query = <<<EOF
+SELECT u.user_no FROM user_entry AS u
+INNER JOIN user_talk_count AS t USING (room_no, user_no)
+LEFT JOIN vote AS v ON u.room_no = v.room_no AND u.user_no = v.user_no
+  AND t.date = v.date AND vote_count = ?
+WHERE u.room_no = ? AND t.date = ? AND live = ? AND talk_count > 0 AND v.room_no IS NULL
+EOF;
+    $list = array(DB::$ROOM->vote_count, DB::$ROOM->id, DB::$ROOM->date, UserLive::LIVE);
+    DB::Prepare($query, $list);
+    return DB::Count();
+  }
+
+  //発言数更新
+  static function UpdateUserTalkCount() {
+    $query = 'UPDATE user_talk_count SET date = ?, ';
+    if (DB::$SELF->talk_count == 0) {
+      $query .= 'talk_count = 1';
+    } else {
+      $query .= 'talk_count = talk_count + 1';
+    }
+    $query .= ' WHERE room_no = ? AND user_no = ?';
+    DB::Prepare($query, array(DB::$ROOM->date, DB::$ROOM->id, DB::$SELF->id));
+    return DB::FetchBool();
+  }
+
   //会話経過時間取得
   static function GetSpendTime() {
     $query = 'SELECT SUM(spend_time) FROM talk WHERE room_no = ? AND date = ? AND scene = ?';
@@ -780,8 +875,8 @@ EOF;
   //最終シーンの夜の発言の有無を検出
   static function ExistsLastNight() {
     $query = 'SELECT id FROM talk WHERE room_no = ? AND date = ? AND scene = ?';
-    DB::Prepare($query, array(DB::$ROOM->id, DB::$ROOM->date, 'night'));
-    return DB::Count() > 0;
+    DB::Prepare($query, array(DB::$ROOM->id, DB::$ROOM->date, RoomScene::NIGHT));
+    return DB::Exists();
   }
 }
 

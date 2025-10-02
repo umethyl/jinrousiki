@@ -15,7 +15,7 @@ abstract class RoomOptionItem {
     $enable  = sprintf('%s_enable',  $this->name);
     $default = sprintf('default_%s', $this->name);
     $this->enable = isset(GameOptionConfig::$$enable) ? GameOptionConfig::$$enable : true;
-    if (OptionManager::$change && $this->type == 'checkbox') {
+    if (OptionManager::IsChange() && ($this->type == 'checkbox' || $this->type == 'limit_talk')) {
       $this->value = DB::$ROOM->IsOption($this->name);
     }
     elseif (isset(GameOptionConfig::$$default)) {
@@ -28,6 +28,11 @@ abstract class RoomOptionItem {
 
   //フォームデータ取得
   abstract public function LoadPost();
+
+  //フォームデータ取得スキップ判定
+  protected function IgnorePost() {
+    return false;
+  }
 
   //スタックからデータ取得
   final protected function GetStack() {
@@ -57,6 +62,11 @@ abstract class RoomOptionItem {
     return 'game_option.php#' . $this->name;
   }
 
+  //オプション登録
+  final protected function Set($name) {
+    RoomOption::Set($this->group, $name);
+  }
+
   //村用画像生成
   public function GenerateImage() {
     return Image::Room()->Generate($this->name, $this->GetRoomCaption());
@@ -71,17 +81,46 @@ abstract class RoomOptionItem {
     return OptionHTML::GenerateRoomCaption($image, $url, $caption, $explain);
   }
 
+  //配役処理
+  public function Cast() {
+    return $this->CastAll();
+  }
+
   //配役処理 (一人限定)
-  final protected function CastOnce(array &$list, &$rand, $str = '') {
+  final protected function CastOnce($str = '') {
+    $rand = Cast::Stack()->Get('rand');
+    $list = Cast::Stack()->Get('fix_role');
+
     $list[array_pop($rand)] .= ' ' . $this->name . $str;
-    return array($this->name);
+
+    Cast::Stack()->Set('rand', $rand);
+    Cast::Stack()->Set('fix_role', $list);
+    return $this->GetResultCastList();
   }
 
   //配役処理 (全員)
-  final protected function CastAll(array &$list) {
+  final protected function CastAll() {
+    $list = Cast::Stack()->Get('fix_role');
     foreach (array_keys($list) as $id) {
-      $list[$id] .= ' ' . $this->name;
+      if ($this->IgnoreCastAll($id)) continue;
+      $list[$id] .= ' ' . $this->GetCastAllRole($id);
     }
+    Cast::Stack()->Set('fix_role', $list);
+    return $this->GetResultCastList();
+  }
+
+  //配役スキップ判定
+  protected function IgnoreCastAll($id) {
+    return false;
+  }
+
+  //役職取得
+  protected function GetCastAllRole($id) {
+    return $this->name;
+  }
+
+  //配役済み役職リスト取得
+  protected function GetResultCastList() {
     return array($this->name);
   }
 }
@@ -93,9 +132,9 @@ abstract class CheckRoomOptionItem extends RoomOptionItem {
   public $form_value = 'on';
 
   public function LoadPost() {
+    if ($this->IgnorePost()) return false;
     RQ::Get()->ParsePostOn($this->name);
-    if (RQ::Get()->{$this->name}) array_push(RoomOption::${$this->group}, $this->name);
-    return RQ::Get()->{$this->name};
+    if (RQ::Get()->{$this->name}) $this->Set($this->name);
   }
 
   protected function GetRoomCaption() {
@@ -124,6 +163,7 @@ abstract class SelectorRoomOptionItem extends RoomOptionItem {
   }
 
   public function LoadPost() {
+    if ($this->IgnorePost()) return false;
     RQ::Get()->ParsePostData($this->name);
     if (is_null(RQ::Get()->{$this->name})) return false;
 
@@ -131,7 +171,7 @@ abstract class SelectorRoomOptionItem extends RoomOptionItem {
     $flag = in_array($post, $this->form_list);
     if ($flag) {
       RQ::Set($post, $flag);
-      array_push(RoomOption::${$this->group}, $post);
+      $this->Set($post);
     }
     RQ::Set($this->name, $flag);
   }
@@ -160,6 +200,18 @@ abstract class SelectorRoomOptionItem extends RoomOptionItem {
     return $this->item_list;
   }
 
+  //選択値セット
+  protected function SetFormValue($type) {
+    foreach ($this->form_list as $key => $value) {
+      if ($type == 'int' && ! is_int($key)) continue;
+
+      if (DB::$ROOM->IsOption($type == 'key' ? $key : $value)) {
+	$this->value = $value;
+	break;
+      }
+    }
+  }
+
   //有効判定
   private function IsEnable($name) {
     $enable = sprintf('%s_enable', $name);
@@ -173,6 +225,7 @@ abstract class TextRoomOptionItem extends RoomOptionItem {
   public $type  = 'textbox';
 
   public function LoadPost() {
+    if ($this->IgnorePost()) return false;
     RQ::Get()->ParsePost('Escape', $this->name);
   }
 }

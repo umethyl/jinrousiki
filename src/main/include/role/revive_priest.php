@@ -51,6 +51,6 @@ class Role_revive_priest extends Role_priest {
   private function IsPriestReturn() {
     $data = $this->GetStack('priest');
     return DB::$ROOM->IsDate(4) || isset($data->crisis) || $data->count['wolf'] == 1 ||
-      count(DB::$USER->rows) >= $data->count['total'] * 2;
+      DB::$USER->GetUserCount() >= $data->count['total'] * 2;
   }
 }

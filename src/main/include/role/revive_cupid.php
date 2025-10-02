@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('cupid');
 class Role_revive_cupid extends Role_cupid {
-  public $mix_in = 'revive_pharmacist';
+  public $mix_in = array('revive_pharmacist');
 
   protected function AddCupidRole(User $user) {
     $user->AddRole('death_warrant[7]');

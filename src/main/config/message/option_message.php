@@ -7,6 +7,7 @@ class OptionMessage {
   static $category_base      = '基本オプション';
   static $category_dummy_boy = '身代わり君設定';
   static $category_open_cast = '霊界公開設定';
+  static $category_talk      = '会話設定';
   static $category_add_role  = '追加役職設定';
   static $category_special   = '特殊設定';
 

@@ -6,7 +6,7 @@ class Option_topping extends SelectorRoomOptionItem {
   public function  __construct() {
     parent::__construct();
     $this->form_list = GameOptionConfig::${$this->source};
-    if (OptionManager::$change && DB::$ROOM->IsOption($this->name)) {
+    if (OptionManager::IsChange() && DB::$ROOM->IsOption($this->name)) {
       $this->value = DB::$ROOM->option_role->list[$this->name][0];
     }
   }

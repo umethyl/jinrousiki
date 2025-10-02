@@ -7,20 +7,13 @@
 class Role_mania extends Role {
   public $action = 'MANIA_DO';
   public $result = 'MANIA_RESULT';
+  public $action_date_type = 'first';
   public $copied = 'copied';
   public $delay_copy = false;
   public $camp_copy  = false;
 
   public function OutputAction() {
     RoleHTML::OutputVote('mania-do', 'mania_do', $this->action);
-  }
-
-  public function IsVote() {
-    return DB::$ROOM->IsDate(1);
-  }
-
-  protected function GetIgnoreMessage() {
-    return VoteRoleMessage::POSSIBLE_ONLY_FIRST_DAY;
   }
 
   //コピー処理

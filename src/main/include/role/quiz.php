@@ -5,8 +5,8 @@
   ・処刑者決定：同一投票先
 */
 class Role_quiz extends Role {
-  public $mix_in = 'decide';
-  public $vote_day_type = 'real';
+  public $mix_in = array('decide');
+  public $vote_day_type = 'stack';
 
   protected function IgnoreResult() {
     return ! DB::$ROOM->IsOptionGroup('chaos');

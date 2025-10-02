@@ -8,7 +8,7 @@ class Role_prince extends Role {
   //処刑キャンセル
   public function VoteCancel(User $user) {
     if (! $user->IsActive() || $user->IsCamp('lovers', true)) return;
-    $user->Update('live', 'live');
+    $user->UpdateLive(UserLive::LIVE);
     $user->revive_flag = true;
     $user->LostAbility();
     DB::$ROOM->ResultDead($user->handle_name, 'VOTE_CANCELLED');

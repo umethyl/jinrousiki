@@ -295,7 +295,7 @@ InfoHTML::OutputRoleHeader('サブ役職');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#divorce_jealousy">縁切地蔵</a>・<a href="vampire.php#passion_vampire">牡丹灯篭</a>
+<a href="human.php#divorce_jealousy">縁切地蔵</a>・<a href="vampire.php#passion_vampire">牡丹灯篭</a>・<a href="tengu.php#passion_tengu">尼天狗</a>
 </pre>
 <h5>Ver. 2.2.0 α4～</h5>
 <pre>
@@ -568,6 +568,10 @@ InfoHTML::OutputRoleHeader('サブ役職');
 <pre>
 5日目以降、処刑投票数が +1 される。
 </pre>
+<h4>関連役職</h4>
+<pre>
+<a href="human.php#scripter">執筆者</a>
+</pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="human.php#scripter">執筆者</a>の能力をサブ役職に転化してみました。
@@ -796,6 +800,7 @@ RPG でよくある「クリティカルヒット」を再現してみました�
 <a href="#upper_voice">メガホン</a>
 <a href="#downer_voice">マスク</a>
 <a href="#random_voice">臆病者</a>
+<a href="#tengu_voice">天狗倒し</a>
 </p>
 
 <h3 id="strong_voice">大声 [Ver. 1.4.0 α3-7～]</h3>
@@ -879,6 +884,17 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 <pre>
 固定があるならランダムもありだろうと思って作ってみました。
 唐突に大声になるのは固定より鬱陶しいかも。
+</pre>
+
+<h3 id="tengu_voice">天狗倒し [Ver. 3.0.0 α2～]</h3>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+高確率 (15%) で発言が<a href="#strong_voice">大声</a>になる。
+<a href="../chaos.php#secret_sub_role">サブ役職非公開</a>設定でも必ず表示される。
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="tengu.php">天狗陣営</a>用に実装されたサブ役職です。
 </pre>
 
 
@@ -1184,7 +1200,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#evoke_scanner">イタコ</a>
+<a href="human.php#evoke_scanner">イタコ</a>・<a href="ability.php#last_words_update">遺言更新能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1292,7 +1308,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="fox.php#spell_fox">宙狐</a>
+<a href="fox.php#spell_fox">宙狐</a>・<a href="fox.php#fire_depraver">紂王</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1341,6 +1357,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 <a href="#challenge_lovers">難題</a>
 <a href="#vega_lovers">織姫</a>
 <a href="#fake_lovers">愛人</a>
+<a href="#letter_exchange">交換日記</a>
 <a href="#possessed_exchange">交換憑依</a>
 </p>
 
@@ -1373,7 +1390,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 <li><a href="wolf.php#wolf_group">人狼</a>の襲撃無効</li>
 <li><a href="ability.php#poison">毒</a>・<a href="wolf.php#follow_mad">舟幽霊</a>・<a href="ability.php#vote_kill_counter_solo">処刑カウンター能力者(個別型)</a> の能力の対象外 (処刑時)</li>
 <li>
-  <a href="human.php#cursed_brownie">祟神</a>・<a href="ability.php#doom_day_active">死の宣告能力者(処刑能動型)</a>・<a href="ability.php#vote_kill_counter_random">処刑カウンター能力者(確率付与型)</a><br>
+  <a href="human.php#critical_mage">一言主神</a>・<a href="human.php#cursed_brownie">祟神</a>・<a href="fox.php#fire_depraver">紂王</a>・<a href="tengu.php#meteor_tengu">流星天狗</a>・<a href="ability.php#doom_day_active">死の宣告能力者(処刑能動型)</a>・<a href="ability.php#vote_kill_counter_random">処刑カウンター能力者(確率付与型)</a><br>
   <a href="ability.php#vote_action_luck">処刑投票能力者(得票数変化型)</a>・<a href="ability.php#febris_active">熱病能力者(能動型)</a> の能力無効 (処刑時)
 </li>
 <li><a href="human.php#assassin_spec">暗殺反射</a></li>
@@ -1429,6 +1446,10 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 <li>処刑投票数・得票数ゼロ</li>
 <li>処刑者決定能力 (<a href="../spec.php#vote_day">優先順位</a>低め)</li>
 </ol>
+<h5>Ver. 3.0.0 α5～</h5>
+<pre>
+<a href="human.php#serve_doll_master">奉公童女</a>の護衛の身代わりになることがあるバグを修正
+</pre>
 <h5>Ver. 2.3.0 α4～</h5>
 <pre>
 <a href="ability.php#sacrifice">身代わり</a>能力無効 (<a href="fox.php#sacrifice_depraver">伊呂具秦公</a>を含む)
@@ -1463,6 +1484,44 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 恋人を持たないキューピッド相当です。
 </pre>
 
+<h3 id="letter_exchange">交換日記 [Ver. 3.0.0 α6～]</h3>
+<h4>[役職表示] 特殊</h4>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+<a href="#lovers">恋人</a>に遺言を送る。
+死亡しても遺言が公開されない。
+</pre>
+<h5>役職表示</h4>
+<ol>
+<li>遺言を送る側にのみ表示される。</li>
+<li>2 日目のみ例外で、受け取る側にも交換日記が付いていることが表示される。</li>
+</ol>
+<h5>遺言更新</h4>
+<ol>
+<li>更新は<a href="../spec.php#vote_night">後追い処理</a>の後で、その時点の遺言の内容を送る。</li>
+<li>処理を行う際に死亡していた場合は更新されない。</li>
+<li>遺言が未設定だった場合は更新されない。</li>
+<li>自分の遺言は更新されない (初期化はされない)。</li>
+</ol>
+<h5>交換日記移動</h4>
+<ol>
+<li>遺言更新処理後に相手に移動する。</li>
+<li>遺言未設定で更新されない場合でも移動する。</li>
+<li>処理を行う際に死亡していた場合は移動しない。</li>
+<li>相手が<a href="ability.php#last_words_limit">遺言制限能力者 (更新制限型)</a> だった場合は移動しない。</li>
+<li>移動しなかった場合は交換日記が消滅する。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="lovers.php#letter_cupid">文車妖妃</a>・<a href="ability.php#last_words_update">遺言更新能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+遺言を共有する能力を形にしてみました。
+<a href="#mind_friend">共鳴者</a>は人狼などの会話ができる能力だった場合に扱いづらいので
+<a href="#lovers">恋人</a>同士の秘密の情報共有としては最も優れた手段となります。
+</pre>
+
 <h3 id="possessed_exchange">交換憑依 [Ver. 1.4.0 β11～]</h3>
 <h4>[役職表示] 2 日目限定</h4>
 <h4>[配役制限] 役職付加専用</h4>
@@ -1473,7 +1532,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 <li>憑依先の相手と完全に入れ替わり、実質他人にログインしているような状態になる。</li>
 <li>2 日目に入れ替わる相手が誰か予告が表示されて、3 日目に入れ替えが実行される。</li>
 <li><a href="#mind_sympathy">共感者</a>が付加されるので事前に相手の役職が分かる。</li>
-<li>交換憑依が発生した二人は死亡しても<a href="ability.php#last_words_limit">遺言</a>が表示されない。</li>
+<li>交換憑依が発生した二人は死亡しても遺言が公開されない。</li>
 <li>入れ替え前に遺言を残しておくと、入れ替わった後で相方にメッセージを残せる事になる。</li>
 </ol>
 <h5>Ver. 1.4.0 β15～</h5>
@@ -1690,7 +1749,7 @@ B：「恋人陣営の勝利」
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="duelist.php#avenger_group">復讐者系</a>の勝利条件判定に実装されたサブ役職です。
-<a href="human.php#doll_group">上海人形</a>から見た<a href="human.php#doll_master">人形遣い</a>に相当します。
+<a href="human.php#doll_group">上海人形</a>から見た<a href="human.php#doll_rule_doll_master">人形遣い系</a>に相当します。
 </pre>
 
 <h3 id="supported">受援者 [Ver. 1.5.0 β3～]</h3>

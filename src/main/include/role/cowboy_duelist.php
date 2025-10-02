@@ -8,11 +8,10 @@
 */
 RoleManager::LoadFile('valkyrja_duelist');
 class Role_cowboy_duelist extends Role_valkyrja_duelist {
+  public $mix_in = array('reduce_voter');
   public $self_shoot = true;
   public $vote_day_type = 'init';
   public $sudden_death  = 'DUEL';
-
-  public function FilterVoteDo(&$count) { $count--; }
 
   public function VoteCorrect() {
     //データ取得

@@ -6,9 +6,9 @@
   ・処刑者決定：同一投票先 & 非村人
 */
 class Role_executor extends Role {
-  public $mix_in = 'decide';
+  public $mix_in = array('decide');
   public $display_role  = 'human';
-  public $vote_day_type = 'real';
+  public $vote_day_type = 'stack';
 
   public function DecideVoteKill() {
     if ($this->IsVoteKill() || ! is_array($this->GetStack())) return;

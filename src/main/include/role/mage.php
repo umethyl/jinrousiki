@@ -23,6 +23,7 @@ class Role_mage extends Role {
       return $this->SaveMageResult($user, $this->mage_failed, $this->result);
     }
     if ($this->IsCursed($user)) return false;
+    $this->MageAction($user);
     return $this->SaveMageResult($user, $this->GetMageResult($user), $this->result);
   }
 
@@ -61,7 +62,9 @@ class Role_mage extends Role {
   }
 
   //呪返し無効判定
-  public function IgnoreCursed() { return false; }
+  public function IgnoreCursed() {
+    return false;
+  }
 
   //厄払いフィルタ取得
   final protected function GetGuardCurse() {
@@ -71,6 +74,9 @@ class Role_mage extends Role {
     }
     return $stack;
   }
+
+  //占い追加処理
+  protected function MageAction(User $user) {}
 
   //占い結果取得
   protected function GetMageResult(User $user) {
@@ -88,7 +94,7 @@ class Role_mage extends Role {
 
     if ($user->IsRoleGroup('spell')) return true; //呪殺対象者判定
     if ($user->IsMainGroup('fox')) { //妖狐系判定
-      return ! $user->IsRole('white_fox', 'black_fox', 'mist_fox', 'sacrifice_fox');
+      return ! $user->IsRole('white_fox', 'black_fox', 'mist_fox', 'tiger_fox', 'sacrifice_fox');
     }
     return false;
   }
@@ -96,15 +102,17 @@ class Role_mage extends Role {
   //呪殺処理
   final public function MageKill() {
     $stack = array(); //呪殺身代わり能力者
-    foreach (RoleFilterData::$sacrifice_mage as $role) {
-      foreach (DB::$USER->GetRoleUser($role) as $target) {
-	if ($target->IsLive(true) && ! $target->IsAvoidLovers(true)) {
-	  $stack[] = $target->id;
+    if (! DB::$ROOM->IsEvent('no_sacrifice')) { //蛍火は無効
+      foreach (RoleFilterData::$sacrifice_mage as $role) {
+	foreach (DB::$USER->GetRoleUser($role) as $target) {
+	  if ($target->IsLive(true) && ! $target->IsAvoidLovers(true)) {
+	    $stack[] = $target->id;
+	  }
 	}
       }
+      //Text::p($stack, '◆List[sacrifice_mage]');
+      if (count($stack) > 0) $stack = Lottery::GetList($stack);
     }
-    //Text::p($stack, '◆List[sacrifice_mage]');
-    if (count($stack) > 0) $stack = Lottery::GetList($stack);
 
     $fox_list   = array(); //妖狐カウント
     $other_list = array(); //それ以外
@@ -138,7 +146,7 @@ class Role_mage extends Role {
     if ($user->IsRole('black_wisp'))     return $reverse ? 'human' : 'wolf';
 
     //特殊役職判定
-    if ($user->IsMainCamp('ogre')) return 'ogre';
+    if ($user->IsMainCamp('ogre') || $user->IsRoleGroup('tiger')) return 'ogre';
     if ($user->IsMainGroup('vampire') || $user->IsRoleGroup('mist') ||
 	$user->IsRole('boss_chiroptera')) {
       return 'chiroptera';

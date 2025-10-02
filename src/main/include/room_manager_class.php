@@ -44,8 +44,9 @@ class RoomManager {
     if (! DB::Lock('room')) RoomManagerHTML::OutputResult('busy'); //トランザクション開始
 
     if (RQ::Get()->change_room) {
-      OptionManager::$change = true;
-      Session::Certify();
+      OptionManager::LoadStack();
+      OptionManager::Stack()->Set('change', true);
+      Session::Login();
       DB::SetRoom(RoomManagerDB::Load(true));
 
       $title  = RoomManagerMessage::TITLE_CHANGE . ' ' . Message::ERROR_TITLE;
@@ -77,19 +78,12 @@ class RoomManager {
 
     //-- ゲームオプションをセット --//
     RoomOption::LoadPost('wish_role', 'real_time');
-    if (RQ::Get()->real_time) { //制限時間チェック
-      $day   = RQ::Get()->real_time_day;
-      $night = RQ::Get()->real_time_night;
-      if ($day < 1 || 100 < $day || $night < 1 || 100 < $night) {
-	RoomManagerHTML::OutputResult('time');
-      }
-      RoomOption::Set(RoomOption::GAME_OPTION, sprintf('real_time:%d:%d', $day, $night));
-      RoomOption::LoadPost('wait_morning');
-    }
+    if (RQ::Get()->real_time) RoomOption::LoadPost('wait_morning');
     RoomOption::LoadPost(
-      'open_vote', 'settle', 'seal_message', 'open_day', 'dummy_boy_selector',
-      'not_open_cast_selector', 'perverseness', 'replace_human_selector', 'special_role');
-    if (GameConfig::TRIP) RoomOption::LoadPost('necessary_name', 'necessary_trip');
+      'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
+      'limit_talk', 'secret_talk', 'dummy_boy_selector', 'not_open_cast_selector', 'perverseness',
+      'replace_human_selector', 'special_role');
+
     if (RQ::Get()->change_room) { //変更できないオプションを自動セット
       foreach (array('gm_login', 'dummy_boy') as $option) {
 	if (DB::$ROOM->IsOption($option)) {
@@ -147,10 +141,11 @@ class RoomManager {
 
       if (! RQ::Get()->perverseness) RoomOption::LoadPost('sudden_death');
       RoomOption::LoadPost(
-	'joker', 'death_note', 'detective', 'weather', 'festival', 'change_common_selector',
+	'joker', 'death_note', 'detective', 'full_weather', 'festival', 'change_common_selector',
 	'change_mad_selector', 'change_cupid_selector');
+      if (! RQ::Get()->full_weather)   RoomOption::LoadPost('weather');
     }
-    RoomOption::LoadPost('liar', 'gentleman', 'passion', 'deep_sleep', 'mind_open',
+    RoomOption::LoadPost('no_silence', 'liar', 'gentleman', 'passion', 'deep_sleep', 'mind_open',
 			 'blinder', 'critical');
 
     $game_option = RoomOption::Get(RoomOption::GAME_OPTION);
@@ -165,7 +160,7 @@ class RoomManager {
 	'game_option' => $game_option,
 	'option_role' => $option_role
       );
-      if (! RoomDB::Update($list)) RoomManagerHTML::OutputResult('busy');
+      if (! RoomManagerDB::Update($list)) RoomManagerHTML::OutputResult('busy');
 
       //システムメッセージ
       $str = Message::SYSTEM . Message::COLON . RoomManagerMessage::CHANGE;
@@ -186,14 +181,14 @@ class RoomManager {
       }
 
       //身代わり君を入村させる
-      if (RQ::Get()->dummy_boy && RoomManagerDB::GetUserCount($room_no) == 0) {
+      if (RQ::Get()->dummy_boy && RoomManagerDB::CountUser($room_no) == 0) {
 	$list = array(
 	  'room_no'     => $room_no,
-	  'user_no'     => 1,
-	  'uname'       => 'dummy_boy',
+	  'user_no'     => GM::ID,
+	  'uname'       => GM::DUMMY_BOY,
 	  'handle_name' => $dummy_boy_handle_name,
 	  'password'    => $dummy_boy_password,
-	  'sex'         => 'male',
+	  'sex'         => Sex::MALE,
 	  'icon_no'     => RQ::Get()->gerd ? UserIconConfig::GERD : 0,
 	  'profile'     => Message::DUMMY_BOY_PROFILE,
 	  'last_words'  => Message::DUMMY_BOY_LAST_WORDS
@@ -206,7 +201,7 @@ class RoomManager {
     //JinrouRSS::Update(); //RSS更新 //テスト中
 
     if (CacheConfig::ENABLE) {
-      DocumentCacheDB::Clean(); //コミットも内部で行う
+      DocumentCacheDB::Clear(); //コミットも内部で行う
     } else {
       DB::Commit();
     }
@@ -231,9 +226,10 @@ class RoomManager {
       return;
     }
 
-    OptionManager::$change = RQ::Get()->room_no > 0;
-    if (OptionManager::$change) {
-      Session::Certify();
+    OptionManager::LoadStack();
+    OptionManager::Stack()->Set('change', RQ::Get()->room_no > 0);
+    if (OptionManager::IsChange()) {
+      Session::Login();
       DB::SetRoom(RoomManagerDB::Load());
 
       $title  = RoomManagerMessage::TITLE_CHANGE . ' ' . Message::ERROR_TITLE;
@@ -345,14 +341,14 @@ EOF;
       }
     }
 
-    if (RoomManagerDB::GetActiveCount() >= RoomConfig::MAX_ACTIVE_ROOM) { //最大稼働数チェック
+    if (RoomManagerDB::CountActive() >= RoomConfig::MAX_ACTIVE_ROOM) { //最大稼働数チェック
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
       $str   = RoomManagerMessage::ERROR_LIMIT_MAX_ROOM . Text::BRLF .
 	RoomManagerMessage::ERROR_WAIT_FINISH;
       HTML::OutputResult($title, $str);
     }
 
-    if (RoomManagerDB::GetEstablishCount() > 0) { //同一ユーザの連続作成チェック
+    if (RoomManagerDB::CountEstablish() > 0) { //同一ユーザの連続作成チェック
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
       $str   = RoomManagerMessage::ERROR_LIMIT_ESTABLISH . Text::BRLF .
 	RoomManagerMessage::ERROR_WAIT_FINISH;
@@ -384,51 +380,6 @@ EOF;
 
 //-- データベースアクセス (RoomManager 拡張) --//
 class RoomManagerDB {
-  const SELECT = 'SELECT room_no';
-  const WHERE  = ' FROM room WHERE status IN (?, ?)';
-
-  private static $status = array('waiting', 'playing');
-
-  //稼働中の村取得
-  static function GetList() {
-    $query = <<<EOF
-SELECT room_no AS id, name, comment, game_option, option_role, max_user, status
-FROM room WHERE status IN (?, ?) ORDER BY room_no DESC
-EOF;
-    DB::Prepare($query, self::$status);
-    return DB::FetchAssoc();
-  }
-
-  //最終村作成時刻を取得
-  static function GetLastEstablish() {
-    DB::Prepare('SELECT MAX(establish_datetime)' . self::WHERE, self::$status);
-    return DB::FetchResult();
-  }
-
-  //現在の稼動数を取得
-  static function GetActiveCount() {
-    DB::Prepare(self::SELECT . self::WHERE, self::$status);
-    return DB::Count();
-  }
-
-  //現在の稼動数を取得 (本人作成限定)
-  static function GetEstablishCount() {
-    $list = array_merge(self::$status, array(Security::GetIP()));
-    DB::Prepare(self::SELECT . self::WHERE . ' AND establisher_ip = ?', $list);
-    return DB::Count();
-  }
-
-  //次の村番号を取得
-  static function GetNext() {
-    return (int)DB::FetchResult('SELECT MAX(room_no) FROM room') + 1;
-  }
-
-  //ユーザ数取得
-  static function GetUserCount($room_no) {
-    DB::Prepare('SELECT user_no FROM user_entry WHERE room_no = ?', array($room_no));
-    return DB::Count();
-  }
-
   //村情報取得
   static function Load($lock = false) {
     $query = <<<EOF
@@ -440,6 +391,47 @@ EOF;
     return DB::FetchClass('Room', true);
   }
 
+  //稼働中の村取得
+  static function GetList() {
+    $query = <<<EOF
+SELECT room_no AS id, name, comment, game_option, option_role, max_user, status
+FROM room WHERE status IN (?, ?) ORDER BY room_no DESC
+EOF;
+    DB::Prepare($query, self::SetStatus());
+    return DB::FetchAssoc();
+  }
+
+  //最終村作成時刻を取得
+  static function GetLastEstablish() {
+    DB::Prepare(self::SetQuery('MAX(establish_datetime)'), self::SetStatus());
+    return DB::FetchResult();
+  }
+
+  //次の村番号を取得
+  static function GetNext() {
+    DB::Prepare(self::SetColumn('MAX(room_no)'));
+    return (int)DB::FetchResult() + 1;
+  }
+
+  //現在の稼動数を取得
+  static function CountActive() {
+    DB::Prepare(self::SetQuery('room_no'), self::SetStatus());
+    return DB::Count();
+  }
+
+  //現在の稼動数を取得 (本人作成限定)
+  static function CountEstablish() {
+    $list = array_merge(self::SetStatus(), array(Security::GetIP()));
+    DB::Prepare(self::SetQuery('room_no') . ' AND establisher_ip = ?', $list);
+    return DB::Count();
+  }
+
+  //ユーザ数取得
+  static function CountUser($room_no) {
+    DB::Prepare('SELECT user_no FROM user_entry WHERE room_no = ?', array($room_no));
+    return DB::Count();
+  }
+
   //村作成
   static function Insert($room_no, $game_option, $option_role) {
     $query = <<<EOF
@@ -449,22 +441,34 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, NOW
 EOF;
     $list = array(
       $room_no, RQ::Get()->room_name, RQ::Get()->room_comment, RQ::Get()->max_user, $game_option,
-      $option_role, 'waiting', 0, 'beforegame', 1, Security::GetIP());
+      $option_role, RoomStatus::WAITING, 0, RoomScene::BEFORE, 1, Security::GetIP());
     DB::Prepare($query, $list);
+    return DB::Execute();
+  }
+
+  //村データ UPDATE
+  static function Update(array $list) {
+    $query  = 'UPDATE room SET %s WHERE room_no = ?';
+    $update = array();
+    foreach ($list as $key => $value) {
+      $update[] = sprintf("%s = '%s'", $key, $value);
+    }
+    DB::Prepare(sprintf($query, implode(', ', $update)), array(DB::$ROOM->id));
     return DB::Execute();
   }
 
   //廃村処理
   /*
     厳密な処理をするには room のロックが必要になるが、廃村処理はペナルティ的な措置であり
-    パフォーマンスの観点から見ても割に合わないと評価してロックは行っていない
+    パフォーマンスの観点から見ても割に合わないと評価してロックは行わない
   */
   static function DieRoom() {
     $query = <<<EOF
 UPDATE room SET status = ?, scene = ?
 WHERE status IN (?, ?) AND last_update_time < UNIX_TIMESTAMP() - ?
 EOF;
-    $list = array('finished', 'aftergame', 'waiting', 'playing', RoomConfig::DIE_ROOM);
+    $list = array(RoomStatus::FINISHED, RoomScene::AFTER,
+		  RoomStatus::WAITING, RoomStatus::PLAYING, RoomConfig::DIE_ROOM);
     DB::Prepare($query, $list);
     return DB::Execute();
   }
@@ -472,7 +476,7 @@ EOF;
   //セッションクリア
   /*
     厳密な処理をするには room, user_entry のロックが必要になるが、
-    仕様上、強制排除措置にあたるので敢えてロックは行わずに処理を行う
+    仕様上、強制排除措置にあたるので敢えてロックは行わない
   */
   static function ClearSession() {
     $query = <<<EOF
@@ -481,8 +485,23 @@ SET u.session_id = NULL
 WHERE u.session_id IS NOT NULL AND r.status = ? AND
   (r.finish_datetime IS NULL OR r.finish_datetime < DATE_SUB(NOW(), INTERVAL ? SECOND))
 EOF;
-    DB::Prepare($query, array('finished', RoomConfig::KEEP_SESSION));
+    DB::Prepare($query, array(RoomStatus::FINISHED, RoomConfig::KEEP_SESSION));
     return DB::Execute();
+  }
+
+  //基本 SELECT セット
+  private static function SetColumn($column) {
+    return sprintf('SELECT %s FROM room', $column);
+  }
+
+  //基本 SQL セット
+  private static function SetQuery($column) {
+    return self::SetColumn($column) . ' WHERE status IN (?, ?)';
+  }
+
+  //基本選択条件セット
+  private static function SetStatus() {
+    return array(RoomStatus::WAITING, RoomStatus::PLAYING);
   }
 }
 
@@ -507,8 +526,8 @@ EOF;
     else {
       $delete = '';
     }
-    $status_list = array('waiting' => RoomManagerMessage::WAITING,
-			 'playing' => RoomManagerMessage::PLAYING);
+    $status_list = array(RoomStatus::WAITING => RoomManagerMessage::WAITING,
+			 RoomStatus::PLAYING => RoomManagerMessage::PLAYING);
 
     printf($format . Text::LF,
 	   $delete, $ROOM->id,
@@ -533,7 +552,7 @@ EOF;
 EOF;
 
     //パラメータセット
-    if (OptionManager::$change) {
+    if (OptionManager::IsChange()) {
       $url     = sprintf('?room_no=%d', RQ::Get()->room_no);
       $command = 'change_room';
       $submit  = RoomManagerMessage::SUBMIT_CHANGE;
@@ -561,7 +580,7 @@ EOF;
     printf($header . Text::LF, $url, $command);
     OptionForm::Output();
     printf($footer . Text::LF, $password, $submit);
-    if (OptionManager::$change) HTML::OutputFooter();
+    if (OptionManager::IsChange()) HTML::OutputFooter();
   }
 
   //結果出力
@@ -586,10 +605,16 @@ EOF;
       HTML::OutputResult($title, RoomManagerMessage::ERROR_INPUT_PASSWORD);
       break;
 
+    case 'limit_over':
+      $stack = array($str . RoomManagerMessage::ERROR_INPUT_EMPTY,
+		     $str . RoomManagerMessage::ERROR_INPUT_LIMIT_OVER);
+      HTML::OutputResult($title, $header . self::GenerateErrorList($stack));
+      break;
+
     case 'time':
       $error_header = RoomManagerMessage::ERROR_INPUT_REAL_TIME_HEADER;
-      $stack = array($error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_EMPTY,
-		     $error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_OVER,
+      $stack = array($error_header . RoomManagerMessage::ERROR_INPUT_EMPTY,
+		     $error_header . RoomManagerMessage::ERROR_INPUT_LIMIT_OVER,
 		     $error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_EM,
 		     $error_header . RoomManagerMessage::ERROR_INPUT_REAL_TIME_NUMBER);
       HTML::OutputResult($title, $header . self::GenerateErrorList($stack));

@@ -197,7 +197,7 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="#doom_duelist">黒幕</a>の<a href="sub_role.php#perverseness">天邪鬼</a>バージョンで、「あまのさぐめ」と読みます。
-東方 Project の鬼神正邪がモチーフです。
+東方 Project の鬼人正邪がモチーフです。
 </pre>
 
 <h3 id="sea_duelist">海御前 (占い結果：村人 / 霊能結果：村人) [Ver. 2.2.0 α6～]</h3>

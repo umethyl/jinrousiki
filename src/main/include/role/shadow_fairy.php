@@ -8,7 +8,7 @@ RoleManager::LoadFile('fairy');
 class Role_shadow_fairy extends Role_fairy {
   public function BadStatus(UserData $USERS) {
     $base_date = DB::$ROOM->date; //判定用の日付
-    if ((DB::$ROOM->watch_mode || DB::$ROOM->single_view_mode) && ! RQ::Get()->reverse_log) {
+    if ((DB::$ROOM->IsOn('watch') || DB::$ROOM->IsOn('single')) && ! RQ::Get()->reverse_log) {
       $base_date--;
     }
 

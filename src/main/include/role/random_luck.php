@@ -4,8 +4,9 @@
   ○仕様
   ・得票数：-2 ～ +2
 */
-class Role_random_luck extends Role {
-  public function FilterVotePoll(&$count) {
-    $count += Lottery::GetRange(-2, 2);
+RoleManager::LoadFile('upper_luck');
+class Role_random_luck extends Role_upper_luck {
+  public function GetVotePollCount() {
+    return Lottery::GetRange(-2, 2);
   }
 }

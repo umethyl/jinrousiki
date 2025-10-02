@@ -7,46 +7,19 @@
 */
 RoleManager::LoadFile('fox');
 class Role_revive_fox extends Role_fox {
-  public $mix_in = 'poison_cat';
-  public $action     = 'POISON_CAT_DO';
-  public $not_action = 'POISON_CAT_NOT_DO';
-  public $submit     = 'revive_do';
-  public $not_submit = 'revive_not_do';
+  public $mix_in = array('vote' => 'poison_cat');
 
   protected function OutputAddResult() {
     if (DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message')) return;
     $this->OutputAbilityResult('POISON_CAT_RESULT');
   }
 
-  public function OutputAction() {
-    if ($this->GetActor()->IsActive() && ! DB::$ROOM->IsOpenCast()) {
-      RoleHTML::OutputVote('revive-do', $this->submit, $this->action, $this->not_action);
-    }
+  public function IsReviveVote() {
+    return $this->GetActor()->IsActive();
   }
 
-  public function IsVote() {
-    return $this->filter->IsVote() && $this->GetActor()->IsActive();
-  }
-
-  public function SetVoteNight() {
-    $this->filter->SetVoteNight();
-  }
-
-  //投票無効追加判定
-  public function IgnoreVoteAction() {
-    return $this->GetActor()->IsActive() ? null : VoteRoleMessage::LOST_ABILITY;
-  }
-
-  public function GetVoteIconPath(User $user, $live) {
-    return $this->filter->GetVoteIconPath($user, $live);
-  }
-
-  public function IsVoteCheckbox(User $user, $live) {
-    return $this->filter->IsVoteCheckbox($user, $live);
-  }
-
-  public function IgnoreVoteNight(User $user, $live) {
-    return $this->filter->IgnoreVoteNight($user, $live);
+  public function IgnoreReviveVoteFilter() {
+    return $this->IsReviveVote() ? null : VoteRoleMessage::LOST_ABILITY;
   }
 
   public function GetReviveRate() {
