@@ -1,0 +1,37 @@
+body{
+  background-image: url("img/icon_upload_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-attachment: fixed;
+  background-color: #FFFFFF;
+}
+.title{
+  border: 0;
+  margin: 1px 0 1em 0;
+}
+.link{text-align:right;}
+.caution{
+  text-align: right;
+  color: #FF0000;
+  font-size: 80%;
+}
+legend{
+  margin-top: 5px;
+  color: #000000;
+  font-size: 20px;
+  font-weight: bold;
+}
+label{font-weight: bold;}
+input{
+  border: 1px solid #000000;
+  background-color: #F0F8FF;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+table.color{
+  width: 600px;
+  font-size : 11px;
+  font-family : "ms ui gothic";
+  line-height : 13px;
+}
+table.color label{font-weight: normal;}

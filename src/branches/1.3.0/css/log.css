@@ -1,0 +1,186 @@
+a:link{   color: #0000FF;}
+a:visited{color: #0000FF;}
+a:active{ color: #FF0000;}
+a:hover{  color: #FF0000;}
+body{
+  background-color: #F0F8FF;
+  color: #000000;
+}
+table.main{
+  border: 0;
+  border-collapse: collapse;
+}
+table.user{
+  font-size:10pt;
+  border: 1px dotted #000000;
+}
+table.user td{vertical-align: top;}
+tabele.user img{border: 2px;}
+.day{
+  border: 0;
+  border-collapse: collapse;
+  background-color: #FFF0F5;
+  color: #000000;
+  font-size: 12pt;
+  font-family: "ÇlÇr ÇoÉSÉVÉbÉN";
+}
+.night{
+  border-style: none;
+  border-collapse: collapse;
+  background-color: #000030;
+  color: #FFFAFA;
+  font-size: 12pt;
+  font-family: "ÇlÇr ÇoÉSÉVÉbÉN";
+}
+.beforegame{
+  border: 0;
+  border-collapse: collapse;
+  background-color: #FFF5EE;
+  color: #000000;
+  font-size: 12pt;
+  font-family: "ÇlÇr ÇoÉSÉVÉbÉN";
+}
+.aftergame{background-color: #F0F8FF; color: #000000;}
+.heaven{
+  border-bottom: 1px dashed #C0C0C0;
+  background-color: #CCCCCC;
+  color: #000000;
+  vertical-align: middle;
+}
+.system{
+  border-top: 1px dashed #C0C0C0;
+  background-color: #EFEFEF;
+  color: #000000;
+  text-align: left;
+  font-weight: bold;
+}
+.system-action{
+  border-top: 1px dashed #C0C0C0;
+  text-align: left;
+  vertical-align: middle;
+  background-color: #AAAA33;
+  color: #FFFAFA;
+  font-weight: bold;
+}
+.system-wolf{
+  border-top: 1px dashed #C0C0C0;
+  background-color: #CC3300;
+  color: #FFFAFA;
+  text-align: left;
+  font-weight: bold;
+}
+.system-lastwords{
+  background-color:#CCDDFF;
+  color: #000000;;
+  font-weight:bold;
+}
+.system-lastwords td{
+  vertical-align: middle;
+  text-align: left
+  background-color: #CCDDFF;
+  color: #000000;
+  font-weight: bold;
+}
+table.lastwords{border-width: 0;}
+table.lastwords tr{background-color:#eeeeff;}
+table.lastwords td{
+  border-top: 1px dashed #C0C0C0;
+  background-color:#EEEEFF;
+  color: #000000;
+  text-align: left;
+  vertical-align: middle;
+}
+.contest-man{
+  border-top: 1px dashed #C0C0C0;
+  background-color:#336699;
+  color: #FFFAFA;
+  text-align: left;
+  font-weight: bold;
+}
+.contest-woman{
+  border-top: 1px dashed #C0C0C0;
+  background-color:#FF0099;
+  color: #FFFAFA;
+  text-align: left;
+  font-weight: bold;
+}
+.name{
+  border-top: 1px dashed #C0C0C0;
+  text-align: left;
+  vertical-align: middle;
+}
+.say{
+  margin-left: 1px;
+  border-top: 1px dashed #C0C0C0;
+  text-align: left;
+  vertical-align: middle;
+}
+.normal{font-size: 12pt;}
+.small{
+  font-size: 8pt;
+  font-weight: lighter;
+}
+.big{
+  font-size: 20pt;
+  font-weight: bold;
+}
+.column {
+  margin: 0px;
+  border-width: 1px 0px 0px 1px;
+  border-style: solid;
+  border-color: #FFFFFF;
+  padding: 3px 3px 3px 6px;
+  color: #FFFFFF;
+  background-color: #526CD6;
+}
+.row{
+  margin: 0px;
+  border-width: 1px 0px 0px 1px;
+  border-style: solid;
+  border-color: #FFFFFF;
+  padding: 3px 3px 3px 6px;
+  color: #333333;
+  background-color: #F2EACE;
+}
+.soliloguy{
+  border-top: 1px dashed #C0C0C0;
+  text-align: left;
+  vertical-align: middle;
+  color:  #FFFAFA;
+}
+.soliloguy-wolf{
+  border-top: 1px dashed #C0C0C0;
+  text-align: left;
+  vertical-align: middle;
+  color:  #FFCCFF;
+}
+.vote{
+  border-top: 1px dashed #C0C0C0;
+  text-align: left;
+  background-color: #999900;
+  color: #FFFAFA;
+  font-weight:bold
+}
+.vote-result{
+  border: 0;
+  background-color: #FFFAFA;
+  color: #666600;
+  font-weight:bold;
+}
+.death{
+  border: 0;
+  background-color: #FFFAFA;
+  color: #990000;
+  font-weight:bold;
+}
+wolf-eat{
+  background-color: #FFFAFA;
+  color: #000000;
+  font-weight:bold;
+}
+
+/* åªç›ÇÕñ¢égóp */
+#talk dt {
+  width : 20% ;
+  float : left ;
+}

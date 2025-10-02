@@ -1,0 +1,14 @@
+@import url(game.css);
+/* OutputGuestHTMLHeader() */
+.login{ /* 村名とユーザログインフォームの table */
+  border: 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+.login-link{text-align: right;} /* 更新 & 戻る  */
+.login-link span{font-weight: bold;} /* 住民登録 */
+.login label{ /* ユーザ名 & パスワード */
+  margin-right: 5px;
+  font-weight: bold;
+}
+.login-password{ime-mode: disabled;} /* ログインパスワード */

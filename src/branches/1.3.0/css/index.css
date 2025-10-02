@@ -1,0 +1,78 @@
+a{text-decoration:none;}
+a:link{   color: #0000FF;}
+a:hover{  color: #999999; text-decoration: underline;}
+a:visited{color: #0000FF;}
+body{
+  background-color: #FFFFFF;
+  background-image: url("../img/top_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-attachment: fixed;
+}
+img{border: 0;}
+.comment{ /* サーバ名 */
+  text-align: right;
+  font-weight: bold;
+}
+noscript{ /* JavaScript が無効の場合のワーニング */
+  color: #FF0000;
+  font-size: 15pt;
+  font-weight: bold;
+}
+table.main{ /* 全体の table */
+  border: 0;
+  width: 100%;
+  padding: 5px;
+}
+table.main td{vertical-align: top;}
+.menu{ /* メニュー */
+  border: 1px solid #CC3300;
+  width: 140px;
+  padding: 5px 1px;
+  background-color: #CCFFCC;
+  text-align: center;
+  font-weight: bold;
+}
+ul{ /* メニューのリンク */
+  list-style-type: none;
+  margin-left: -32px;
+  _margin-left: 8px; /* IE6 対応 */
+  line-height: 150%;
+  font-size: 95%;
+}
+.log{ /* HTML化ログ */
+ color: #3333CC;
+ font-weight: bold;
+}
+fieldset{margin-bottom: 10px;} /* 右側の枠 */
+legend{font-weight: bold;} /* fieldset(右側の枠) のタイトル */
+.information{ /* Information (中身は info/index.html) */
+  margin: 20px 20px;
+  line-height: 135%;
+}
+.information ul{list-style-type: circle;}
+.game-list{ /* ゲーム一覧 (中身は game_manager.php) */
+  margin: 20px 20px 30px;
+  line-height: 135%;
+  font-weight: bold;
+}
+.game-list div{text-align: right;}
+form{margin-top: 10px;} /* 村の作成フォーム */
+label{ /* 村作成のオプション名 */
+  margin-left: 1em;
+  font-weight: bold;
+}
+input, select{ /* 設定項目 */
+  background-color: #F0F8FF;
+  border:1px solid #C0C0C0;
+}
+.text{border:1px solid #C0C0C0;} /* 村の名前, 説明など */
+.explain{font-size: 80%;} /* オプションの説明 */
+.explain input{border: 0px solid #000000;} /* 昼, 夜の時間 */
+.make{text-align: right;} /* 作成ボタン */
+.make input{border: 1px solid #000000;}
+.footer{ /* フッター (素材のリンクなど) */
+  margin-bottom: 5px;
+  text-align:right;
+  font-size: 80%;
+}

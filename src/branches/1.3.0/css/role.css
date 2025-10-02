@@ -1,0 +1,13 @@
+.human{      color: #000000;} /* 村人 */
+.wolf{       color: #FF0000;} /* 人狼 */
+.mage{       color: #9933FF;} /* 占い師 */
+.necromancer{color: #006699;} /* 霊能者 */
+.mad{        color: #FF0000;} /* 狂人 */
+.guard{      color: #3399FF;} /* 狩人 */
+.common{     color: #CC6633;} /* 共有者 */
+.fox{        color: #CC0099;} /* 妖狐 */
+.poison{     color: #009966;} /* 埋毒者 */
+.cupid{      color: #FF66CC;} /* キューピッド */
+.authority{  color: #666633;} /* 権力者 */
+.decide{     color: #999999;} /* 決定者 */
+.lovers{     color: #FF66CC;} /* 恋人 */
