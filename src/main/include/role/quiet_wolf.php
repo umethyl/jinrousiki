@@ -4,9 +4,9 @@
   ○仕様
   ・遠吠え：非表示
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_quiet_wolf extends Role_wolf {
-  public function Howl(TalkBuilder $builder, $voice) {
+  public function Howl(TalkBuilder $builder, TalkParser $talk) {
     return false;
   }
 }

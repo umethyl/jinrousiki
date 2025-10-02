@@ -5,7 +5,7 @@ body {
   background-image: url("../../img/bg/cast.png");
 }
 th, td {
-  filter: alpha(opacity=70, enabled=70);
+  filter: Alpha(opacity=70);
   -moz-opacity: 0.7;
   opacity: 0.7;
   background-color: #FCFCF6;

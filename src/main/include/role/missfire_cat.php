@@ -4,8 +4,13 @@
   ○仕様
   ・蘇生率：30% / 誤爆率：30%
 */
-RoleManager::LoadFile('poison_cat');
+RoleLoader::LoadFile('poison_cat');
 class Role_missfire_cat extends Role_poison_cat {
-  public $revive_rate   = 30;
-  public $missfire_rate = 30;
+  protected function GetReviveRate() {
+    return 30;
+  }
+
+  protected function GetMissfireRate($revive) {
+    return $this->GetReviveRate();
+  }
 }

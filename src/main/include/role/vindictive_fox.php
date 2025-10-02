@@ -4,7 +4,7 @@
   ○仕様
   ・変化：妖狐
 */
-RoleManager::LoadFile('child_fox');
+RoleLoader::LoadFile('child_fox');
 class Role_vindictive_fox extends Role_child_fox {
   public $mix_in = null;
   public $action = null;

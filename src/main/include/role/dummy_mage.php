@@ -5,12 +5,23 @@
   ・役職表示：占い師
   ・占い：反転
 */
-RoleManager::LoadFile('mage');
+RoleLoader::LoadFile('mage');
 class Role_dummy_mage extends Role_mage {
   public $display_role = 'mage';
 
-  public function Mage(User $user) {
-    if (DB::$ROOM->IsEvent('no_dream')) return; //熱帯夜ならスキップ
-    $this->SaveMageResult($user, $this->DistinguishMage($user, true), $this->result);
+  protected function IgnoreMage() {
+    return DB::$ROOM->IsEvent('no_dream'); //天候判定 (熱帯夜)
+  }
+
+  protected function IgnoreJammer() {
+    return true;
+  }
+
+  public function IgnoreCursed() {
+    return true;
+  }
+
+  protected function GetMageResult(User $user) {
+    return $this->DistinguishMage($user, true);
   }
 }

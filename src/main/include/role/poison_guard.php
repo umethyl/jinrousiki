@@ -5,13 +5,13 @@
   ・護衛失敗：制限なし
   ・毒：夜限定
 */
-RoleManager::LoadFile('guard');
+RoleLoader::LoadFile('guard');
 class Role_poison_guard extends Role_guard {
-  public function IgnoreGuard() {
-    return null;
-  }
-
   public function IsPoison() {
     return DB::$ROOM->IsNight();
+  }
+
+  public function IgnoreGuard(User $user) {
+    return null;
   }
 }

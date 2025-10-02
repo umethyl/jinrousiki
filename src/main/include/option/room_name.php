@@ -2,7 +2,7 @@
 /*
   ◆村の名前 (room_name)
 */
-class Option_room_name extends TextRoomOptionItem {
+class Option_room_name extends OptionText {
   public function GetCaption() {
     return '村の名前';
   }

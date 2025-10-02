@@ -4,9 +4,11 @@
   ○仕様
   ・神通力：神隠し
 */
-RoleManager::LoadFile('tengu');
+RoleLoader::LoadFile('tengu');
 class Role_meteor_tengu extends Role_tengu {
   protected function TenguKill(User $user) {
-    if (! $user->IsAvoid()) DB::$USER->Kill($user->id, 'TENGU_KILLED');
+    if (! RoleUser::IsAvoid($user)) {
+      DB::$USER->Kill($user->id, DeadReason::TENGU_KILLED);
+    }
   }
 }

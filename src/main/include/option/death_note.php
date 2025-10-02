@@ -2,8 +2,8 @@
 /*
   ◆デスノート村 (death_note)
 */
-class Option_death_note extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_death_note extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return 'デスノート村';

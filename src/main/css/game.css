@@ -71,6 +71,9 @@
 .dead-type-fairy        { color: #888888; }
 .dead-type-step         { color: #669933; }
 .dead-type-sudden-death { color: #33CCFF; }
+.dead-type-authority    { color: #666633; }
+.dead-type-luck         { color: #66CC99; }
+.dead-type-mania        { color: #C0A060; }
 /* GenerateWeatherReport() */
 .weather {
   padding: 7px 0 7px 6em;

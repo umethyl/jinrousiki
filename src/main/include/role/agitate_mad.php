@@ -5,9 +5,11 @@
   ・処刑者決定：同一投票先 + 残りをまとめてショック死
 */
 class Role_agitate_mad extends Role {
-  public $mix_in = array('decide');
-  public $vote_day_type = 'stack';
-  public $sudden_death  = 'AGITATED';
+  public $mix_in = array('chicken', 'decide');
+
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::ADD;
+  }
 
   public function DecideVoteKill() {
     if ($this->DecideVoteKillSame()) return;
@@ -18,5 +20,9 @@ class Role_agitate_mad extends Role {
 	$this->SuddenDeathKill(DB::$USER->ByRealUname($target_uname)->id);
       }
     }
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'AGITATED';
   }
 }

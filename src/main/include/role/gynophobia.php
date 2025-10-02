@@ -4,11 +4,13 @@
   ○仕様
   ・ショック死：女性に投票
 */
-RoleManager::LoadFile('chicken');
+RoleLoader::LoadFile('chicken');
 class Role_gynophobia extends Role_chicken {
-  public $sudden_death = 'GYNOPHOBIA';
+  protected function IsSuddenDeath() {
+    return Sex::IsFemale($this->GetVoteUser());
+  }
 
-  public function IsSuddenDeath() {
-    return $this->GetVoteUser()->IsFemale();
+  protected function GetSuddenDeathType() {
+    return 'GYNOPHOBIA';
   }
 }

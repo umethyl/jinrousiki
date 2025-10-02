@@ -4,7 +4,7 @@
   ○仕様
   ・配役：村人 → 神話マニア
 */
-OptionManager::Load('replace_human');
+OptionLoader::LoadFile('replace_human');
 class Option_full_mania extends Option_replace_human {
   public function GetCaption() {
     return '神話マニア村';

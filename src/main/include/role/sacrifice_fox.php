@@ -5,12 +5,15 @@
   ・人狼襲撃耐性：身代わり
   ・身代わり：子狐系・蝙蝠系
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_sacrifice_fox extends Role_fox {
   public $mix_in = array('protected');
-  public $resist_wolf = false;
 
-  public function IsSacrifice(User $user) {
-    return $user->IsChildFox() || $user->IsMainGroup('chiroptera');
+  public function IsResistWolf() {
+    return false;
+  }
+
+  protected function IsSacrifice(User $user) {
+    return $user->IsMainGroup(CampGroup::CHILD_FOX, CampGroup::CHIROPTERA);
   }
 }

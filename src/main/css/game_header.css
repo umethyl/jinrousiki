@@ -48,6 +48,10 @@
   vertical-align: middle;
   font-size:11pt;
 }
+.closing {
+  font-weight: bold;
+  color: #CC0000;
+}
 .option-on {
 }
 .option-off {

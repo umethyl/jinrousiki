@@ -6,16 +6,21 @@
 */
 class Role_enchant_mad extends Role {
   public $mix_in = array('vote' => 'light_fairy');
-  public $bad_status = 'same_face';
 
-  public function BadStatus(UserData $USERS) {
-    if (! DB::$ROOM->IsEvent($this->bad_status)) return;
+  protected function GetBadStatus() {
+    return 'same_face';
+  }
 
-    $target = $USERS->ByID(DB::$ROOM->Stack()->Get($this->bad_status));
+  public function BadStatus() {
+    $event = $this->GetBadStatus();
+    if (! DB::$ROOM->IsEvent($event)) return;
+
+    $target = DB::$USER->ByID(DB::$ROOM->Stack()->Get($event));
     if (! isset($target->icon_filename)) return;
-    foreach ($USERS->rows as $user) {
+
+    foreach (DB::$USER->Get() as $user) {
       $user->icon_filename = $target->icon_filename;
     }
-    DB::$ROOM->Stack()->Clear($this->bad_status);
+    DB::$ROOM->Stack()->Clear($event);
   }
 }

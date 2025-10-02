@@ -2,7 +2,7 @@
 /*
   ◆完全通知 (chaos_open_cast_full)
 */
-OptionManager::Load('chaos_open_cast_none');
+OptionLoader::LoadFile('chaos_open_cast_none');
 class Option_chaos_open_cast_full extends Option_chaos_open_cast_none {
   public function GetName() {
     return '完全通知';

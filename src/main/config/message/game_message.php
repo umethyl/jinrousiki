@@ -14,6 +14,7 @@ class GameMessage {
   const ROOM_NUMBER_FOOTER  = '番地';
   const ROOM_COMMENT_HEADER = '～';
   const ROOM_COMMENT_FOOTER = '～';
+  const ROOM_MAX_USER       = '最大%d人';
 
   /* 自動更新 */
   const AUTO_RELOAD        = '[自動更新]';
@@ -28,6 +29,7 @@ class GameMessage {
   const LOG_LINK_ROLE = '[役職表示ログ]';
 
   /* タイムテーブル */
+  const CLOSING    = '[募集停止中]';
   const TIME_TABLE = '%d 日目<span>(生存者 %d 人)</span>';
 
   /* タイムリミット */

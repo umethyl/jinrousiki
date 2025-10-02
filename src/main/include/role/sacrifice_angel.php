@@ -6,10 +6,12 @@
   ・共感者判定：常時有効
   ・人狼襲撃耐性：無効
 */
-RoleManager::LoadFile('angel');
+RoleLoader::LoadFile('angel');
 class Role_sacrifice_angel extends Role_angel {
   protected function AddCupidRole(User $user) {
-    if (! $this->IsActor($user)) $user->AddRole($this->GetActor()->GetID('protected'));
+    if (! $this->IsActor($user)) {
+      $user->AddRole($this->GetActor()->GetID('protected'));
+    }
   }
 
   protected function IsSympathy(User $a, User $b) {

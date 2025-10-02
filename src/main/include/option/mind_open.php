@@ -4,8 +4,8 @@
   ○仕様
   ・配役：全員に公開者
 */
-class Option_mind_open extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_mind_open extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return '白夜村';

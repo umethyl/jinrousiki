@@ -7,7 +7,7 @@
 class Role_elder extends Role {
   public $mix_in = array('authority');
 
-  public function GetVoteDoCount() {
+  protected function GetVoteDoCount() {
     return Lottery::Percent(3) ? 100 : 1;
   }
 }

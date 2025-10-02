@@ -2,15 +2,27 @@
 /*
   ◆痛恨 (critical_luck)
   ○仕様
+  ・役職表示：無し
   ・得票数：+100 (5% / 天候「烈日」)
+  ・得票数補正通知：急所通知
 */
-RoleManager::LoadFile('upper_luck');
+RoleLoader::LoadFile('upper_luck');
 class Role_critical_luck extends Role_upper_luck {
-  public function IgnoreFilterVotePoll() {
+  protected function IgnoreImage() {
+    return true;
+  }
+
+  protected function IgnoreFilterVotePoll() {
     return ! DB::$ROOM->IsEvent('critical') && ! Lottery::Percent(5);
   }
 
-  public function GetVotePollCount() {
+  protected function GetVotePollCount() {
     return 100;
+  }
+
+  protected function NoticeFilterVotePoll() {
+    if (DB::$ROOM->IsOption('notice_critical')) {
+      DB::$ROOM->ResultDead($this->GetActor()->handle_name, DeadReason::ACTIVE_CRITICAL_LUCK);
+    }
   }
 }

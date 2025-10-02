@@ -4,6 +4,6 @@
   ○仕様
   ・対呪殺：身代わり
 */
-RoleManager::LoadFile('depraver');
+RoleLoader::LoadFile('depraver');
 class Role_sacrifice_depraver extends Role_depraver {
 }

@@ -4,7 +4,9 @@
   ○仕様
   ・処刑者決定：自分
 */
-RoleManager::LoadFile('decide');
+RoleLoader::LoadFile('decide');
 class Role_bad_luck extends Role_decide {
-  public $vote_day_type = 'self';
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::ACTOR;
+  }
 }

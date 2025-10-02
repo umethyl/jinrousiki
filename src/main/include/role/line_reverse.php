@@ -9,7 +9,7 @@
 */
 class Role_line_reverse extends Role {
   public function ConvertSay() {
-    $str = implode(Text::LF, array_reverse(explode(Text::LF, $this->GetStack('say'))));
+    $str = ArrayFilter::ConcatReverse(Text::Parse($this->GetStack('say'), Text::LF), Text::LF);
     $this->SetStack($str, 'say');
   }
 }

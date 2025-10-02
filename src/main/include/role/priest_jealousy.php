@@ -17,7 +17,7 @@ class Role_priest_jealousy extends Role {
     $this->OutputPriestResult();
   }
 
-  public function GetPriestType() {
+  protected function GetPriestType() {
     return 'lovers';
   }
 }

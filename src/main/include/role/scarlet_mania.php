@@ -4,7 +4,9 @@
   ○仕様
   ・コピー：メイン役職
 */
-RoleManager::LoadFile('mania');
+RoleLoader::LoadFile('mania');
 class Role_scarlet_mania extends Role_mania {
-  public $copied = 'copied_nymph';
+  protected function GetCopiedRole() {
+    return 'copied_nymph';
+  }
 }

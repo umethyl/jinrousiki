@@ -2,17 +2,22 @@
 /*
   ◆元神話マニア (copied)
   ○仕様
-  ・結果表示：2日目
+  ・役職表示：無し
+  ・能力結果：コピー結果 (2 日目)
 */
 class Role_copied extends Role {
-  public $result = 'MANIA_RESULT';
-  public $display_date = 2;
+  public $result = RoleAbility::MANIA;
 
   protected function IgnoreImage() {
     return true;
   }
 
   protected function IgnoreResult() {
-    return ! DB::$ROOM->IsDate($this->display_date);
+    return ! DB::$ROOM->IsDate($this->GetResultDate());
+  }
+
+  //結果表示日取得
+  protected function GetResultDate() {
+    return 2;
   }
 }

@@ -4,26 +4,21 @@
   ○仕様
 */
 class Role_voodoo_mad extends Role {
-  public $action = 'VOODOO_MAD_DO';
-  public $submit = 'voodoo_do';
+  public $action = VoteAction::VOODOO_MAD;
 
   public function OutputAction() {
-    RoleHTML::OutputVote('wolf-eat', $this->submit, $this->action);
+    RoleHTML::OutputVote(VoteCSS::WOLF, RoleAbilityMessage::VOODOO, $this->action);
   }
 
   //呪術対象セット
   final public function SetVoodoo(User $user) {
-    if ($user->IsCursed()) { //呪返し判定
-      $actor = $this->GetActor();
-      foreach ($this->GetGuardCurse() as $filter) { //厄払い判定
-	if ($filter->IsGuard($actor->id)) return false;
-      }
-      DB::$USER->Kill($actor->id, 'CURSED');
+    if (RoleUser::IsCursed($user)) { //呪返し判定
+      RoleUser::GuardCurse($this->GetActor()); //厄払い判定
       return false;
     }
 
-    if (in_array($user->id, $this->GetStack('voodoo_killer'))) { //陰陽師の解呪判定
-      $this->AddSuccess($user->id, 'voodoo_killer_success');
+    if ($this->InStack($user->id, 'voodoo_killer')) { //陰陽師の解呪判定
+      $this->AddSuccess($user->id, RoleVoteSuccess::VOODOO_KILLER);
     } else {
       $this->AddStack($user->id, 'voodoo');
     }
@@ -31,25 +26,11 @@ class Role_voodoo_mad extends Role {
 
   //呪術能力者の呪返し処理
   final public function VoodooToVoodoo() {
-    $stack       = $this->GetStack('voodoo');
-    $count_list  = array_count_values($stack);
-    $filter_list = $this->GetGuardCurse();
+    $stack      = $this->GetStack('voodoo');
+    $count_list = array_count_values($stack);
     foreach ($stack as $id => $target_id) {
       if ($count_list[$target_id] < 2) continue;
-      $user = DB::$USER->ByID($id);
-      foreach ($filter_list as $filter) { //厄払い判定
-	if ($filter->IsGuard($user->id)) continue 2;
-      }
-      DB::$USER->Kill($user->id, 'CURSED');
+      RoleUser::GuardCurse(DB::$USER->ByID($id)); //厄払い判定
     }
-  }
-
-  //厄払いフィルタ取得
-  protected function GetGuardCurse() {
-    if (! is_array($stack = $this->GetStack($type = 'guard_curse'))) {
-      $stack = RoleManager::LoadFilter($type);
-      $this->SetStack($stack, $type);
-    }
-    return $stack;
   }
 }

@@ -4,8 +4,8 @@
   ○仕様
   ・配役：全員に目隠し
 */
-class Option_blinder extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_blinder extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return '宵闇村';

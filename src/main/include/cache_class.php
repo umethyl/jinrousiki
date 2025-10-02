@@ -1,9 +1,177 @@
 <?php
-//-- キャッシュコントロールクラス --//
-class DocumentCache {
-  private static $enable   = null; //有効設定
-  private static $instance = null;
+//-- キャッシュマネージャ --//
+class JinrouCacheManager {
+  const TALK_VIEW	= 'talk_view';
+  const TALK_PLAY	= 'talk_play';
+  const TALK_HEAVEN	= 'talk_heaven';
+  const LOG		= 'old_log';
+  const LOG_LIST	= 'old_log_list';
 
+  //クラスのロード
+  static function Load($name = null, $expire = null) {
+    static $instance;
+
+    if (is_null($instance)) {
+      $instance = new JinrouCache($name, $expire);
+    }
+    return $instance;
+  }
+
+  //有効判定
+  static function Enable($type) {
+    static $flag;
+
+    if (is_null($flag)) { //未設定ならキャッシュする
+      switch ($type) {
+      case self::TALK_VIEW:
+	$count  = CacheConfig::TALK_VIEW_COUNT;
+	$enable = CacheConfig::ENABLE_TALK_VIEW && $count <= DB::$USER->Count();
+	break;
+
+      case self::TALK_PLAY:
+	$count  = CacheConfig::TALK_PLAY_COUNT;
+	$enable = CacheConfig::ENABLE_TALK_PLAY && $count <= DB::$USER->Count();
+	break;
+
+      case self::TALK_HEAVEN:
+	$count  = CacheConfig::TALK_HEAVEN_COUNT;
+	$enable = CacheConfig::ENABLE_TALK_HEAVEN && $count <= DB::$USER->Count();
+	break;
+
+      case self::LOG:
+	$enable = CacheConfig::ENABLE_OLD_LOG;
+	break;
+
+      case self::LOG_LIST:
+	$enable = CacheConfig::ENABLE_OLD_LOG_LIST;
+	break;
+
+      default:
+	$enable = false;
+	break;
+      }
+      $flag = CacheConfig::ENABLE && $enable;
+    }
+    return $flag;
+  }
+
+  //キャッシュ取得
+  public static function Get($type) {
+    switch ($type) {
+    case self::TALK_VIEW:
+      self::Load($type, CacheConfig::TALK_VIEW_EXPIRE);
+      $filter = self::FetchTalk();
+      self::Save($filter, true);
+      self::Output($type);
+      return $filter;
+
+    case self::TALK_PLAY:
+      $cache_name = $type;
+      if (RQ::Get()->icon) {
+	$cache_name .= '_icon';
+      }
+      if (RQ::Get()->name) {
+	$cache_name .= '_name';
+      }
+      self::Load($cache_name, CacheConfig::TALK_PLAY_EXPIRE);
+      $filter = self::FetchTalk(Talk::Stack()->Get(Talk::UPDATE));
+      self::Save($filter, true, Talk::Stack()->Get(Talk::UPDATE));
+      self::Output($type);
+      return $filter;
+
+    case self::TALK_HEAVEN:
+      $cache_name = $type;
+      if (RQ::Get()->icon) {
+	$cache_name .= '_icon';
+      }
+      self::Load($cache_name, CacheConfig::TALK_HEAVEN_EXPIRE);
+      $filter = self::FetchTalk(Talk::Stack()->Get(Talk::UPDATE), true);
+      self::Save($filter, true, Talk::Stack()->Get(Talk::UPDATE));
+      self::Output($type);
+      return $filter;
+
+    case self::LOG:
+      self::Load($type . '/' . print_r(RQ::Get(), true), CacheConfig::OLD_LOG_EXPIRE);
+      return self::Fetch();
+
+    case self::LOG_LIST:
+      self::Load($type, CacheConfig::OLD_LOG_LIST_EXPIRE);
+      return self::Fetch();
+    }
+  }
+
+  //保存情報取得
+  public static function Fetch($serialize = false) {
+    $data = JinrouCacheDB::Get();
+    if (self::Expire($data)) return null;
+
+    self::Load()->updated = true;
+    self::Load()->next    = $data['expire'];
+    if (CacheConfig::DEBUG_MODE) self::OutputTime($data['expire']);
+    $content = gzinflate($data['content']);
+
+    return $serialize ? unserialize($content) : $content;
+  }
+
+  //会話情報取得
+  public static function FetchTalk($force = false, $heaven = false) {
+    if (! $force) {
+      $filter = self::Fetch(true);
+      if (isset($filter) && $filter instanceOf TalkBuilder) return $filter;
+    }
+
+    return $heaven ? Talk::FetchHeaven() : Talk::Fetch();
+  }
+
+  //保存処理
+  public static function Save($object, $serialize = false, $force = false) {
+    if (! $force && self::Load()->updated) return;
+
+    $content = gzdeflate($serialize ? serialize($object) : $object);
+    if (JinrouCacheDB::Exists()) { //存在するならロックする
+      DB::Transaction();
+      $data = JinrouCacheDB::Lock();
+      if (! $force && ! self::Expire($data)) {
+	self::Load()->next = $data['expire'];
+	return DB::Rollback();
+      }
+      JinrouCacheDB::Update($content);
+      return DB::Commit();
+    } else {
+      return JinrouCacheDB::Insert($content);
+    }
+  }
+
+  //キャッシュ情報出力
+  public static function Output($type) {
+    $str = CacheMessage::RELOAD . Time::GetDateTime(self::Load()->next);
+    switch ($type) {
+    case self::TALK_VIEW:
+      $str .= ' ' . Text::Quote(CacheMessage::RELOAD_TALK_VIEW);
+      break;
+
+    case self::TALK_PLAY:
+    case self::TALK_HEAVEN:
+      $str .= ' ' . Text::Quote(CacheMessage::RELOAD_TALK_PLAY);
+      break;
+    }
+    HTML::OutputDiv($str, 'talk-cache');
+  }
+
+  //時刻出力
+  public static function OutputTime($time, $name = 'Next Update') {
+    Text::p($name, Time::GetDateTime($time));
+  }
+
+  //有効期限切れ判定
+  private static function Expire($data) {
+    if (is_null($data) || Time::Get() > $data['expire']) return true;
+    return isset(self::Load()->hash) && isset($data['hash']) && self::Load()->hash != $data['hash'];
+  }
+}
+
+//-- キャッシュコントロールクラス --//
+class JinrouCache {
   public $room_no = 0;
   public $name    = null;
   public $expire  = 0;
@@ -12,218 +180,24 @@ class DocumentCache {
   public $next    = null;
 
   //クラスの初期化
-  private function __construct($name, $expire = 0) {
-    $this->room_no = isset(DB::$ROOM) ? DB::$ROOM->id : 0;
+  public function __construct($name, $expire = 0) {
+    $this->room_no = DB::ExistsRoom() ? DB::$ROOM->id : 0;
     $this->name    = $name;
     $this->expire  = $expire;
-    if (isset(DB::$ROOM) && isset(DB::$USER)) {
-      $this->hash = md5(DB::$ROOM->scene . DB::$USER->GetUserCount());
+    if (DB::ExistsRoom() && DB::ExistsUser()) {
+      $this->hash = md5(DB::$ROOM->scene . DB::$USER->Count());
     } else {
       $this->hash = null;
     }
-
-    self::$instance = $this;
-  }
-
-  //クラスのロード
-  static function Load($name, $expire) {
-    if (is_null(self::$instance)) new self($name, $expire);
-  }
-
-  //有効判定
-  static function Enable($type) {
-    if (is_null(self::$enable)) { //未設定ならキャッシュする
-      switch ($type) {
-      case 'talk_view':
-	$count  = CacheConfig::TALK_VIEW_COUNT;
-	$enable = CacheConfig::ENABLE_TALK_VIEW && $count <= DB::$USER->GetUserCount();
-	break;
-
-      case 'talk_play':
-	$count  = CacheConfig::TALK_PLAY_COUNT;
-	$enable = CacheConfig::ENABLE_TALK_PLAY && $count <= DB::$USER->GetUserCount();
-	break;
-
-      case 'talk_heaven':
-	$count  = CacheConfig::TALK_HEAVEN_COUNT;
-	$enable = CacheConfig::ENABLE_TALK_HEAVEN && $count <= DB::$USER->GetUserCount();
-	break;
-
-      case 'old_log':
-	$enable = CacheConfig::ENABLE_OLD_LOG;
-	break;
-
-      case 'old_log_list':
-	$enable = CacheConfig::ENABLE_OLD_LOG_LIST;
-	break;
-
-      default:
-	$enable = false;
-	break;
-      }
-      self::$enable = CacheConfig::ENABLE && $enable;
-    }
-
-    return self::$enable;
-  }
-
-  //インスタンス取得
-  static function Get() {
-    return self::$instance;
   }
 
   //保存名取得
-  static function GetName($hash = false) {
-    return $hash ? md5(self::Get()->name) : self::Get()->name;
+  public function GetName($hash = false) {
+    return $hash ? md5($this->name) : $this->name;
   }
 
   //汎用検索情報取得
-  static function GetKey() {
-    return array(self::Get()->room_no, self::GetName(true));
-  }
-
-  //保存情報取得
-  static function GetData($serialize = false) {
-    $data = DocumentCacheDB::Get();
-    if (self::IsExpire($data)) return null;
-
-    self::Get()->updated = true;
-    self::Get()->next    = $data['expire'];
-    if (CacheConfig::DEBUG_MODE) self::OutputTime($data['expire']);
-    $content = gzinflate($data['content']);
-
-    return $serialize ? unserialize($content) : $content;
-  }
-
-  //会話情報取得
-  static function GetTalk($force = false, $heaven = false) {
-    if (! $force) {
-      $filter = self::GetData(true);
-      if (isset($filter) && $filter instanceOf TalkBuilder) return $filter;
-    }
-
-    return $heaven ? Talk::GetHeaven() : Talk::Get();
-  }
-
-  //保存処理
-  static function Save($object, $serialize = false, $force = false) {
-    if (! $force && self::Get()->updated) return;
-
-    $content = gzdeflate($serialize ? serialize($object) : $object);
-    if (DocumentCacheDB::Exists()) { //存在するならロックする
-      DB::Transaction();
-      $data = DocumentCacheDB::Lock();
-      if (! $force && ! self::IsExpire($data)) {
-	self::Get()->next = $data['expire'];
-	return DB::Rollback();
-      }
-      DocumentCacheDB::Update($content);
-      return DB::Commit();
-    }
-    else {
-      return DocumentCacheDB::Insert($content);
-    }
-  }
-
-  //キャッシュ情報出力
-  static function Output($type) {
-    $format = '<div class="talk-cache">次回キャッシュ更新時刻：%s (%s)</div>';
-    switch ($type) {
-    case 'talk_view':
-      $str = 'シーン変更でリセットされます';
-      break;
-
-    case 'talk_play':
-    case 'talk_heaven':
-      $str = 'シーン変更・発言更新でリセットされます';
-      break;
-
-    default:
-      $str = '';
-      break;
-    }
-    printf($format, Time::GetDateTime(self::Get()->next), $str);
-  }
-
-  //時刻出力
-  static function OutputTime($time, $name = 'Next Update') {
-    Text::p($name, Time::GetDateTime($time));
-  }
-
-  //有効期限切れ判定
-  private static function IsExpire($data) {
-    if (is_null($data) || Time::Get() > $data['expire']) return true;
-    return isset(self::Get()->hash) && isset($data['hash']) && self::Get()->hash != $data['hash'];
-  }
-}
-
-//-- DB アクセス (DocumentCache 拡張) --//
-class DocumentCacheDB {
-  //取得
-  static function Get() {
-    $query = 'SELECT content, expire, hash FROM document_cache WHERE room_no = ? AND name = ?';
-    DB::Prepare($query, DocumentCache::GetKey());
-    return DB::FetchAssoc(true);
-  }
-
-  //存在判定
-  static function Exists() {
-    $query = 'SELECT expire FROM document_cache WHERE room_no = ? AND name = ?';
-    DB::Prepare($query, DocumentCache::GetKey());
-    return DB::Exists();
-  }
-
-  //排他更新用ロック
-  static function Lock() {
-    $query = 'SELECT expire, hash FROM document_cache WHERE room_no = ? AND name = ? FOR UPDATE';
-    DB::Prepare($query, DocumentCache::GetKey());
-    return DB::FetchAssoc(true);
-  }
-
-  //新規作成
-  static function Insert($content) {
-    $query = <<<EOF
-INSERT INTO document_cache (room_no, name, content, expire, hash) VALUES (?, ?, ?, ?, ?)
-ON DUPLICATE KEY UPDATE content = ?, expire = ?, hash = ?
-EOF;
-    $filter = DocumentCache::Get();
-    $now    = Time::Get();
-    $expire = $now + $filter->expire;
-    $filter->next = $expire;
-    if (CacheConfig::DEBUG_MODE) self::OutputTime($now, $expire, 'Insert');
-    $list = array($filter->room_no, $filter->GetName(true), $content, $expire, $filter->hash,
-		  $content, $expire, $filter->hash);
-
-    DB::Prepare($query, $list);
-    return DB::Execute();
-  }
-
-  //更新
-  static function Update($content) {
-    $query = <<<EOF
-Update document_cache Set content = ?, expire = ?, hash = ? WHERE room_no = ? AND name = ?
-EOF;
-    $filter = DocumentCache::Get();
-    $now    = Time::Get();
-    $expire = $now + $filter->expire;
-    $filter->next = $expire;
-    if (CacheConfig::DEBUG_MODE) self::OutputTime($now, $expire, 'Updated');
-    $list = array($content, $expire, $filter->hash, $filter->room_no, $filter->GetName(true));
-
-    DB::Prepare($query, $list);
-    return DB::Execute();
-  }
-
-  //消去
-  static function Clear() {
-    $query = 'DELETE FROM document_cache WHERE expire < ?';
-    DB::Prepare($query, array(Time::Get() - CacheConfig::EXCEED));
-    return DB::Execute() && DB::Optimize('document_cache');
-  }
-
-  //時刻出力 (デバッグ用)
-  private static function OutputTime($now, $expire, $name) {
-    DocumentCache::OutputTime($now, $name);
-    DocumentCache::OutputTime($expire);
+  public function GetKey() {
+    return array($this->room_no, $this->GetName(true));
   }
 }

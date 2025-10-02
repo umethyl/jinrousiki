@@ -4,7 +4,7 @@
   ○仕様
   ・配役：人狼 → 白狼
 */
-class Option_boss_wolf extends CheckRoomOptionItem {
+class Option_boss_wolf extends OptionCheckbox {
   public function GetCaption() {
     return '白狼登場';
   }
@@ -17,5 +17,9 @@ class Option_boss_wolf extends CheckRoomOptionItem {
     if ($count >= CastConfig::${$this->name}) {
       OptionManager::Replace($list, 'wolf', $this->name);
     }
+  }
+
+  public function GetWishRole() {
+    return array($this->name);
   }
 }

@@ -3,19 +3,37 @@
   ◆水鬼 (north_ogre)
   ○仕様
   ・勝利：生存 + 自分と同列の上側にいる人の全滅 + 村人陣営勝利
+  ・人攫い成功率低下：1/2
+  ・人狼襲撃無効確率：40%
+  ・暗殺反射確率：40%
 */
-RoleManager::LoadFile('ogre');
+RoleLoader::LoadFile('ogre');
 class Role_north_ogre extends Role_ogre {
-  public $resist_rate  = 40;
-  public $reduce_rate  =  2;
-  public $reflect_rate = 40;
+  protected function GetOgreWolfEatResistRate() {
+    return 40;
+  }
 
-  public function Win($winner) {
-    if ($winner != 'human' || $this->IsDead()) return false;
-    $id = $this->GetID();
-    foreach (DB::$USER->rows as $user) {
-      if ($user->id >= $id) return true;
-      if ($user->id % 5 == $id % 5 && $user->IsLive()) return false;
+  public function GetReflectAssassinRate() {
+    return 40;
+  }
+
+  protected function GetOgreReduceDenominator() {
+    return 2;
+  }
+
+  protected function IsOgreLoseCamp($winner) {
+    return $winner != WinCamp::HUMAN;
+  }
+
+  protected function IgnoreOgreLoseAllDead() {
+    return true;
+  }
+
+  protected function OgreWin() {
+    foreach (Position::GetNorth($this->GetID()) as $id) {
+      if (DB::$USER->ById($id)->IsLive()) {
+	return false;
+      }
     }
     return true;
   }

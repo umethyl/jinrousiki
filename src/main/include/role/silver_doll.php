@@ -4,9 +4,9 @@
   ○仕様
   ・仲間表示：なし
 */
-RoleManager::LoadFile('doll');
+RoleLoader::LoadFile('doll');
 class Role_silver_doll extends Role_doll {
-  protected function OutputPartner() {
-    return;
+  protected function IgnorePartner() {
+    return true;
   }
 }

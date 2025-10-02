@@ -4,13 +4,16 @@
   ○仕様
   ・霊能：処刑投票先との陣営比較
 */
-RoleManager::LoadFile('necromancer');
+RoleLoader::LoadFile('necromancer');
 class Role_embalm_necromancer extends Role_necromancer {
-  public $result = 'EMBALM_NECROMANCER_RESULT';
+  public $result = RoleAbility::EMBALM_NECROMANCER;
 
   public function Necromancer(User $user, $flag) {
-    if ($flag) return 'stolen';
-    $camp = $this->GetVoteUser($user->uname)->GetCamp(true);
-    return 'embalm_' . ($user->GetCamp(true) == $camp ? 'agony' : 'reposeful');
+    if ($flag) {
+      return 'stolen';
+    } else {
+      $camp = $this->GetVoteUser($user->uname)->GetWinCamp();
+      return Text::AddFooter('embalm', $user->IsWinCamp($camp) ? 'agony' : 'reposeful');
+    }
   }
 }

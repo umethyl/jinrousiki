@@ -23,7 +23,7 @@ class Role_blinder extends Role {
 
   //追加スキップ判定
   public function AddIgnoreTalk() {
-    false;
+    return false;
   }
 
   //囁きフィルタ

@@ -4,39 +4,26 @@
   ○仕様
 */
 class Role_jammer_mad extends Role {
-  public $action = 'JAMMER_MAD_DO';
-  public $submit = 'jammer_do';
+  public $action = VoteAction::JAMMER;
 
   public function OutputAction() {
-    RoleHTML::OutputVote('wolf-eat', $this->submit, $this->action);
+    RoleHTML::OutputVote(VoteCSS::WOLF, RoleAbilityMessage::JAMMER, $this->action);
   }
 
-  //妨害対象セット
+  //妨害対象セット (呪返し > 妨害無効 > 成立判定)
   final public function SetJammer(User $user) {
-    if ($this->IsJammerSuccess($user)) $this->AddStack($user->id, 'jammer');
+    if (RoleUser::IsCursed($user) || $this->InStack($user->id, 'voodoo')) {
+      RoleUser::GuardCurse($this->GetActor()); //厄払い判定
+      return false;
+    } elseif (RoleUser::GuardCurse($user, false)) {
+      return false;
+    } elseif ($this->CallParent('IsSetJammer')) {
+      $this->AddStack($user->id, 'jammer');
+    }
   }
 
   //妨害対象セット成立判定
-  public function IsJammerSuccess(User $user) {
-    $filter_list = RoleManager::LoadFilter('guard_curse'); //厄払い・妨害無効フィルタ
-    if ($user->IsCursed() || in_array($user->id, $this->GetStack('voodoo'))) { //呪返し判定
-      $actor = $this->GetActor();
-      foreach ($filter_list as $filter) { //厄払い判定
-	if ($filter->IsGuard($actor->id)) return false;
-      }
-      DB::$USER->Kill($actor->id, 'CURSED');
-      return false;
-    }
-
-    foreach ($filter_list as $filter) { //妨害無効判定
-      if ($filter->IsGuard($user->id)) return false;
-    }
-
-    return $this->CallParent('IsAddJammer');
-  }
-
-  //追加妨害成立判定
-  public function IsAddJammer() {
+  protected function IsSetJammer() {
     return true;
   }
 }

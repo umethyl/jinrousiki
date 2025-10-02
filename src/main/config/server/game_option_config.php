@@ -2,213 +2,232 @@
 //-- ゲームオプション設定 --//
 class GameOptionConfig {
   //-- 基本設定 --//
-  static $wish_role_enable  = true; //役割希望制
-  static $default_wish_role = false;
+  public static $wish_role_enable  = true; //役割希望制
+  public static $default_wish_role = false;
 
-  static $real_time_enable  = true; //リアルタイム制 (初期設定は TimeConfig::DEFAULT_DAY/NIGHT 参照)
-  static $default_real_time = true;
+  public static $real_time_enable  = true; //リアルタイム制 (初期設定は TimeConfig::DEFAULT_DAY/NIGHT 参照)
+  public static $default_real_time = true;
 
-  static $open_vote_enable  = true; //投票した票数を公表する
-  static $default_open_vote = false;
+  public static $open_vote_enable  = true; //投票した票数を公表する
+  public static $default_open_vote = false;
 
-  static $settle_enable  = true; //決着村
-  static $default_settle = false;
+  public static $settle_enable  = true; //決着村
+  public static $default_settle = false;
 
-  static $seal_message_enable  = true; //天啓封印
-  static $default_seal_message = false;
+  public static $seal_message_enable  = true; //天啓封印
+  public static $default_seal_message = false;
 
-  static $open_day_enable  = true; //オープニングあり
-  static $default_open_day = false;
+  public static $open_day_enable  = true; //オープニングあり
+  public static $default_open_day = false;
 
-  static $necessary_name_enable  = true; //ユーザ名必須
-  static $default_necessary_name = false;
+  public static $necessary_name_enable  = true; //ユーザ名必須
+  public static $default_necessary_name = false;
 
-  static $necessary_trip_enable  = true; //トリップ必須
-  static $default_necessary_trip = false;
+  public static $necessary_trip_enable  = true; //トリップ必須
+  public static $default_necessary_trip = false;
+
+  public static $close_room_enable  = true; //募集停止
+  public static $default_close_room = false;
 
   //-- 身代わり君設定 --//
-  static $dummy_boy_enable = true; //初日の夜は身代わり君
+  public static $dummy_boy_enable = true; //初日の夜は身代わり君
   //身代わり君のデフォルト ['':身代わり君無し / 'on':身代わり君有り / 'gm_login': GM 有り ]
-  static $default_dummy_boy = 'on';
+  public static $default_dummy_boy = 'on';
 
-  static $gm_login_enable = true; //GM 有り
+  public static $gm_login_enable = true; //GM 有り
 
-  static $gerd_enable  = true; //ゲルト君モード
-  static $default_gerd = false;
+  public static $gm_logout_enable = true; //GM ログアウト (GM → 身代わり君有り)
+
+  public static $gerd_enable  = true; //ゲルト君モード
+  public static $default_gerd = false;
 
   //-- 会話設定 --//
-  static $wait_morning_enable  = true; //早朝待機制 (待機時間設定は TimeConfig::WAIT_MORNING 参照)
-  static $default_wait_morning = false;
+  public static $wait_morning_enable  = true; //早朝待機制 (待機時間設定は TimeConfig::WAIT_MORNING 参照)
+  public static $default_wait_morning = false;
 
-  static $limit_talk_enable  = true; //発言数制限制 (初期設定は GameConfig::LIMIT_TALK_COUNT 参照)
-  static $default_limit_talk = false;
+  public static $limit_last_words_enable  = true; //遺言制限
+  public static $default_limit_last_words = false;
 
-  static $secret_talk_enable  = true; //秘密会話あり
-  static $default_secret_talk = false;
+  public static $limit_talk_enable  = true; //発言数制限制 (初期設定は GameConfig::LIMIT_TALK_COUNT 参照)
+  public static $default_limit_talk = false;
 
-  static $no_silence_enable  = true; //沈黙禁止
-  static $default_no_silence = false;
+  public static $secret_talk_enable  = true; //秘密会話あり
+  public static $default_secret_talk = false;
+
+  public static $no_silence_enable  = true; //沈黙禁止
+  public static $default_no_silence = false;
 
   //-- 霊界公開設定 --//
-  static $not_open_cast_enable  = true; //霊界で配役を公開しない
-  static $auto_open_cast_enable = true; //霊界で配役を自動で公開する
+  public static $not_open_cast_enable  = true; //霊界で配役を公開しない
+  public static $auto_open_cast_enable = true; //霊界で配役を自動で公開する
 
   //霊界オフモードのデフォルト ['':無し / 'auto_open_cast':自動オフ / 'not_open_cast': 完全オフ ]
-  static $default_not_open_cast = 'auto_open_cast';
+  public static $default_not_open_cast = 'auto_open_cast';
 
   //-- 追加役職設定 --//
   //必要人数は CastConfig の同名オプション参照 (例： $poison_enable => CastConfig::$poison)
-  static $poison_enable  = true; //埋毒者
-  static $default_poison = true;
+  public static $poison_enable  = true; //埋毒者
+  public static $default_poison = true;
 
-  static $assassin_enable  = true; //暗殺者
-  static $default_assassin = false;
+  public static $assassin_enable  = true; //暗殺者
+  public static $default_assassin = false;
 
-  static $wolf_enable  = true; //人狼追加
-  static $default_wolf = false;
+  public static $wolf_enable  = true; //人狼追加
+  public static $default_wolf = false;
 
-  static $boss_wolf_enable  = true; //白狼
-  static $default_boss_wolf = false;
+  public static $boss_wolf_enable  = true; //白狼
+  public static $default_boss_wolf = false;
 
-  static $poison_wolf_enable  = true; //毒狼
-  static $default_poison_wolf = false;
+  public static $poison_wolf_enable  = true; //毒狼
+  public static $default_poison_wolf = false;
 
-  static $tongue_wolf_enable  = true; //舌禍狼
-  static $default_tongue_wolf = false;
+  public static $tongue_wolf_enable  = true; //舌禍狼
+  public static $default_tongue_wolf = false;
 
-  static $possessed_wolf_enable  = true; //憑狼
-  static $default_possessed_wolf = false;
+  public static $possessed_wolf_enable  = true; //憑狼
+  public static $default_possessed_wolf = false;
 
-  static $sirius_wolf_enable  = true; //天狼
-  static $default_sirius_wolf = false;
+  public static $sirius_wolf_enable  = true; //天狼
+  public static $default_sirius_wolf = false;
 
-  static $mad_enable  = true; //狂人追加
-  static $default_mad = false;
+  public static $mad_enable  = true; //狂人追加
+  public static $default_mad = false;
 
-  static $fox_enable  = true; //妖狐追加
-  static $default_fox = false;
+  public static $fox_enable  = true; //妖狐追加
+  public static $default_fox = false;
 
-  static $no_fox_enable  = true; //妖狐なし
-  static $default_no_fox = false;
+  public static $no_fox_enable  = true; //妖狐なし
+  public static $default_no_fox = false;
 
-  static $child_fox_enable  = true; //子狐
-  static $default_child_fox = false;
+  public static $child_fox_enable  = true; //子狐
+  public static $default_child_fox = false;
 
-  static $depraver_enable  = true; //背徳者
-  static $default_depraver = false;
+  public static $depraver_enable  = true; //背徳者
+  public static $default_depraver = false;
 
-  static $cupid_enable  = true; //キューピッド
-  static $default_cupid = false;
+  public static $cupid_enable  = true; //キューピッド
+  public static $default_cupid = false;
 
-  static $medium_enable  = true; //巫女
-  static $default_medium = false;
+  public static $medium_enable  = true; //巫女
+  public static $default_medium = false;
 
-  static $mania_enable  = true; //神話マニア
-  static $default_mania = false;
+  public static $mania_enable  = true; //神話マニア
+  public static $default_mania = false;
 
-  static $decide_enable  = true; //決定者
-  static $default_decide = false;
+  public static $decide_enable  = true; //決定者
+  public static $default_decide = false;
 
-  static $authority_enable  = true; //権力者
-  static $default_authority = false;
+  public static $authority_enable  = true; //権力者
+  public static $default_authority = false;
 
   //-- 特殊村設定 --//
-  static $detective_enable  = true; //探偵村
-  static $default_detective = false;
+  public static $detective_enable  = true; //探偵村
+  public static $default_detective = false;
 
-  static $liar_enable  = true; //狼少年村
-  static $default_liar = false;
+  public static $liar_enable  = true; //狼少年村
+  public static $default_liar = false;
 
-  static $gentleman_enable  = true; //紳士・淑女村
-  static $default_gentleman = false;
+  public static $gentleman_enable  = true; //紳士・淑女村
+  public static $default_gentleman = false;
 
-  static $passion_enable  = true; //恋色迷彩村
-  static $default_passion = false;
+  public static $passion_enable  = true; //恋色迷彩村
+  public static $default_passion = false;
 
-  static $deep_sleep_enable  = true; //静寂村
-  static $default_deep_sleep = false;
+  public static $deep_sleep_enable  = true; //静寂村
+  public static $default_deep_sleep = false;
 
-  static $blinder_enable  = true; //宵闇村
-  static $default_blinder = false;
+  public static $blinder_enable  = true; //宵闇村
+  public static $default_blinder = false;
 
-  static $mind_open_enable  = true; //白夜村
-  static $default_mind_open = false;
+  public static $mind_open_enable  = true; //白夜村
+  public static $default_mind_open = false;
 
-  static $critical_enable  = true; //急所村
-  static $default_critical = false;
+  public static $critical_enable  = true; //急所村
+  public static $default_critical = false;
 
-  static $sudden_death_enable  = true; //虚弱体質村
-  static $default_sudden_death = false;
+  public static $notice_critical_enable  = true; //急所通知
+  public static $default_notice_critical = false;
 
-  static $perverseness_enable  = true; //天邪鬼村
-  static $default_perverseness = false;
+  public static $sudden_death_enable  = true; //虚弱体質村
+  public static $default_sudden_death = false;
 
-  static $joker_enable  = true; //ババ抜き村
-  static $default_joker = false;
+  public static $perverseness_enable  = true; //天邪鬼村
+  public static $default_perverseness = false;
 
-  static $death_note_enable  = true; //デスノート村
-  static $default_death_note = false;
+  public static $joker_enable  = true; //ババ抜き村
+  public static $default_joker = false;
 
-  static $weather_enable  = true; //天候あり
-  static $default_weather = false;
+  public static $death_note_enable  = true; //デスノート村
+  public static $default_death_note = false;
 
-  static $full_weather_enable  = true; //天変地異
-  static $default_full_weather = false;
+  public static $weather_enable  = true; //天候あり
+  public static $default_weather = false;
 
-  static $festival_enable  = true; //お祭り村
-  static $default_festival = false;
+  public static $full_weather_enable  = true; //天変地異
+  public static $default_full_weather = false;
 
-  static $replace_human_enable      = true; //村人置換村 (管理人カスタムモード)
-  static $full_mad_enable           = true; //狂人村
-  static $full_cupid_enable         = true; //キューピッド村
-  static $full_quiz_enable          = true; //出題者村
-  static $full_vampire_enable       = true; //吸血鬼村
-  static $full_chiroptera_enable    = true; //蝙蝠村
-  static $full_chiroptera_patron    = true; //後援者村
-  static $full_mania_enable         = true; //神話マニア村
-  static $full_unknown_mania_enable = true; //鵺村
+  public static $festival_enable  = true; //お祭り村
+  public static $default_festival = false;
+
+  public static $replace_human_enable      = true; //村人置換村 (管理人カスタムモード)
+  public static $full_mad_enable           = true; //狂人村
+  public static $full_cupid_enable         = true; //キューピッド村
+  public static $full_quiz_enable          = true; //出題者村
+  public static $full_vampire_enable       = true; //吸血鬼村
+  public static $full_chiroptera_enable    = true; //蝙蝠村
+  public static $full_chiroptera_patron    = true; //後援者村
+  public static $full_mania_enable         = true; //神話マニア村
+  public static $full_unknown_mania_enable = true; //鵺村
   //村人置換モードの内訳
-  static $replace_human_selector_list = array(
+  public static $replace_human_selector_list = array(
     '' => 'なし', 'replace_human', 'full_mad', 'full_cupid', 'full_quiz', 'full_vampire',
-    'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania');
+    'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania'
+  );
 
-  static $change_common_enable        = true; //共有者置換村 (管理人カスタムモード)
-  static $change_hermit_common_enable = true; //隠者村
+  public static $change_common_enable        = true; //共有者置換村 (管理人カスタムモード)
+  public static $change_hermit_common_enable = true; //隠者村
   //共有者置換モードの内訳
-  static $change_common_selector_list = array('' => 'なし', 'change_common', 'change_hermit_common');
+  public static $change_common_selector_list = array(
+    '' => 'なし', 'change_common', 'change_hermit_common'
+  );
 
-  static $change_mad_enable          = true; //狂人置換村 (管理人カスタムモード)
-  static $change_fanatic_mad_enable  = true; //狂信者村
-  static $change_whisper_mad_enable  = true; //囁き狂人村
-  static $change_immolate_mad_enable = true; //殉教者村
+  public static $change_mad_enable          = true; //狂人置換村 (管理人カスタムモード)
+  public static $change_fanatic_mad_enable  = true; //狂信者村
+  public static $change_whisper_mad_enable  = true; //囁き狂人村
+  public static $change_immolate_mad_enable = true; //殉教者村
   //狂人置換モードの内訳
-  static $change_mad_selector_list = array('' => 'なし', 'change_mad', 'change_fanatic_mad',
-    'change_whisper_mad', 'change_immolate_mad');
+  public static $change_mad_selector_list = array(
+    '' => 'なし', 'change_mad', 'change_fanatic_mad', 'change_whisper_mad', 'change_immolate_mad'
+  );
 
-  static $change_cupid_enable          = true; //キューピッド置換村 (管理人カスタムモード)
-  static $change_mind_cupid_enable     = true; //女神村
-  static $change_triangle_cupid_enable = true; //小悪魔村
-  static $change_angel_enable          = true; //天使村
+  public static $change_cupid_enable          = true; //キューピッド置換村 (管理人カスタムモード)
+  public static $change_mind_cupid_enable     = true; //女神村
+  public static $change_triangle_cupid_enable = true; //小悪魔村
+  public static $change_angel_enable          = true; //天使村
   //キューピッド置換モードの内訳
-  static $change_cupid_selector_list = array('' => 'なし', 'change_cupid', 'change_mind_cupid',
-    'change_triangle_cupid', 'change_angel', 'change_exchange_angel');
+  public static $change_cupid_selector_list = array(
+    '' => 'なし', 'change_cupid', 'change_mind_cupid', 'change_triangle_cupid', 'change_angel',
+    'change_exchange_angel'
+  );
 
   //-- 特殊配役モード --//
-  static $chaos_enable       = true; //闇鍋モード
-  static $chaosfull_enable   = true; //真・闇鍋モード
-  static $chaos_hyper_enable = true; //超・闇鍋モード
-  static $chaos_verso_enable = true; //裏・闇鍋モード
-  static $duel               = true; //決闘村
-  static $gray_random_enable = true; //グレラン村
-  static $step_enable        = true; //足音村
-  static $quiz_enable        = true; //クイズ村
+  public static $chaos_enable       = true; //闇鍋モード
+  public static $chaosfull_enable   = true; //真・闇鍋モード
+  public static $chaos_hyper_enable = true; //超・闇鍋モード
+  public static $chaos_verso_enable = true; //裏・闇鍋モード
+  public static $duel               = true; //決闘村
+  public static $gray_random_enable = true; //グレラン村
+  public static $step_enable        = true; //足音村
+  public static $quiz_enable        = true; //クイズ村
   //特殊配役モードの内訳
-  static $special_role_list = array('' => 'なし', 'chaos', 'chaosfull', 'chaos_hyper',
-    'chaos_verso', 'duel', 'gray_random', 'step', 'quiz');
+  public static $special_role_list = array(
+    '' => 'なし', 'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'duel', 'gray_random',
+    'step', 'quiz'
+  );
 
   //-- 闇鍋モード専用設定 --//
-  static $topping_enable = true; //固定配役追加モード
-  static $topping_list = array(
+  public static $topping_enable = true; //固定配役追加モード
+  public static $topping_list = array(
     ''  => 'なし',
     'a' => 'A：人形村',
     'b' => 'B：出題村',
@@ -230,10 +249,11 @@ class GameOptionConfig {
     'r' => 'R：妖精村',
     's' => 'S：霊能村',
     't' => 'T：天狗村',
-    'u' => 'U：背信村');
+    'u' => 'U：背信村'
+  );
 
-  static $boost_rate_enable = true; //出現率変動モード
-  static $boost_rate_list = array(
+  public static $boost_rate_enable = true; //出現率変動モード
+  public static $boost_rate_list = array(
     ''  => 'なし',
     'a' => 'A：新顔村',
     'b' => 'B：平等村',
@@ -247,26 +267,27 @@ class GameOptionConfig {
     'j' => 'J：封呪村',
     'k' => 'K：封夢村',
     'l' => 'L：結束村',
-    'm' => 'M：天道村');
+    'm' => 'M：天道村'
+  );
 
   //配役通知設定
-  static $chaos_open_cast_enable      = true; //配役内訳を表示する
-  static $chaos_open_cast_camp_enable = true; //陣営通知
-  static $chaos_open_cast_role_enable = true; //役職通知
+  public static $chaos_open_cast_enable      = true; //配役内訳を表示する
+  public static $chaos_open_cast_camp_enable = true; //陣営通知
+  public static $chaos_open_cast_role_enable = true; //役職通知
   //通知モードのデフォルト ['':無し / 'camp':陣営 / 'role':役職 / 'full':完全]
-  static $default_chaos_open_cast = 'camp'; //陣営通知
+  public static $default_chaos_open_cast = 'camp'; //陣営通知
 
   //サブ役職制限
-  static $sub_role_limit_enable             = true; //サブ役職制限
-  static $sub_role_limit_easy_enable        = true; //サブ役職制限：EASYモード
-  static $sub_role_limit_normal_enable      = true; //サブ役職制限：NORMALモード
-  static $sub_role_limit_hard_enable        = true; //サブ役職制限：HARDモード
-  static $sub_role_limit_no_sub_role_enable = true; //サブ役職をつけない
+  public static $sub_role_limit_enable             = true; //サブ役職制限
+  public static $sub_role_limit_easy_enable        = true; //サブ役職制限：EASYモード
+  public static $sub_role_limit_normal_enable      = true; //サブ役職制限：NORMALモード
+  public static $sub_role_limit_hard_enable        = true; //サブ役職制限：HARDモード
+  public static $sub_role_limit_no_sub_role_enable = true; //サブ役職をつけない
   //サブ役職制限のデフォルト
   //['':制限無し / 'no_sub':サブ役職をつけない / 'easy':EASYモード / 'normal':NORMALモード / 'hard':HARDモード]
-  static $default_sub_role_limit = 'no_sub_role'; //つけない
+  public static $default_sub_role_limit = 'no_sub_role'; //つけない
 
   //その他
-  static $secret_sub_role_enable  = true; //サブ役職を本人に通知しない
-  static $default_secret_sub_role = false;
+  public static $secret_sub_role_enable  = true; //サブ役職を本人に通知しない
+  public static $default_secret_sub_role = false;
 }

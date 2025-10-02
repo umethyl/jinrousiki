@@ -4,9 +4,9 @@
   ○仕様
   ・追加役職：受援者の役職表示
 */
-RoleManager::LoadFile('patron');
+RoleLoader::LoadFile('patron');
 class Role_soul_patron extends Role_patron {
-  public $result = 'PATRON_RESULT';
+  public $result = RoleAbility::PATRON;
 
   protected function IgnoreResult() {
     return ! DB::$ROOM->IsDate(2);

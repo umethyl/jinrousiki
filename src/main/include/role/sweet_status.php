@@ -2,32 +2,30 @@
 /*
   ◆悲恋 (sweet_status)
   ○仕様
+  ・役職表示：2 日目限定
+  ・仲間表示：対象者 (恋人表示 / 1 日目限定 / 委託あり)
 */
 class Role_sweet_status extends Role {
+  public $mix_in = array('lovers');
+
   protected function IgnoreImage() {
     return ! DB::$ROOM->IsDate(2);
   }
 
-  protected function OutputPartner() {
-    if ($this->IgnoreOutputLovers()) return;
-
-    $target = $this->GetActor()->partner_list;
-    $stack  = array();
-    foreach (DB::$USER->rows as $user) {
-      if ($this->IsActor($user)) continue;
-      if ($this->IsLovers($user, $target)) {
-	$stack[] = $user->GetName(); //憑依追跡
-      }
-    }
-    RoleHTML::OutputPartner($stack, 'partner_header', 'lovers_footer');
+  protected function GetPartner() {
+    return $this->GetLoversPartner();
   }
 
-  private function IgnoreOutputLovers() {
+  protected function IgnoreGetLoversPartner() {
     return $this->GetActor()->IsRole('lovers', 'fake_lovers');
   }
 
-  private function IsLovers(User $user, array $target) {
+  protected function IsLoversPartner(User $user) {
     return $this->GetActor()->IsPartner('dummy_chiroptera', $user->id) ||
-      (DB::$ROOM->IsDate(1) && $user->IsPartner($this->role, $target));
+      (DB::$ROOM->IsDate(1) && $user->IsPartner($this->role, $this->GetStack()));
+  }
+
+  protected function OutputPartnerByType(array $list, $type) {
+    RoleHTML::OutputPartner($list, $type, 'lovers_footer');
   }
 }

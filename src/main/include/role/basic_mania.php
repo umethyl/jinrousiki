@@ -2,13 +2,15 @@
 /*
   ◆求道者 (basic_mania)
   ○仕様
-  ・コピー：基本種
+  ・コピー役職：基本種
 */
-RoleManager::LoadFile('mania');
+RoleLoader::LoadFile('mania');
 class Role_basic_mania extends Role_mania {
-  public $copied = 'copied_basic';
-
-  protected function GetManiaRole(User $user) {
+  protected function GetCopyRole(User $user) {
     return $user->DistinguishRoleGroup();
+  }
+
+  protected function GetCopiedRole() {
+    return 'copied_basic';
   }
 }

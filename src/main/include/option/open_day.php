@@ -2,8 +2,8 @@
 /*
   ◆オープニングあり (open_day)
 */
-class Option_open_day extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_open_day extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return 'オープニングあり';

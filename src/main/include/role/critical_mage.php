@@ -4,10 +4,10 @@
   ○仕様
   ・占い：痛恨付与
 */
-RoleManager::LoadFile('mage');
+RoleLoader::LoadFile('mage');
 class Role_critical_mage extends Role_mage {
   protected function MageAction(User $user) {
-    if ($user->IsLive(true) && ! $user->IsAvoid()) {
+    if ($user->IsLive(true) && ! RoleUser::IsAvoid($user)) {
       $user->AddRole('critical_luck');
     }
   }

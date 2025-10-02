@@ -5,7 +5,7 @@
   ・役職表示：暗殺者
   ・暗殺反射：確率
 */
-RoleManager::LoadFile('assassin');
+RoleLoader::LoadFile('assassin');
 class Role_eclipse_assassin extends Role_assassin {
   public $display_role = 'assassin';
 

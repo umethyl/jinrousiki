@@ -4,7 +4,7 @@
   ○仕様
   ・配役：妖狐 → 子狐
 */
-class Option_child_fox extends CheckRoomOptionItem {
+class Option_child_fox extends OptionCheckbox {
   public function GetCaption() {
     return '子狐登場';
   }
@@ -18,5 +18,9 @@ class Option_child_fox extends CheckRoomOptionItem {
     if ($count >= CastConfig::${$this->name}) {
       OptionManager::Replace($list, 'fox', $this->name);
     }
+  }
+
+  public function GetWishRole() {
+    return array($this->name);
   }
 }

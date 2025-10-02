@@ -4,17 +4,20 @@
   ○仕様
   ・ショック死：再投票
 */
-RoleManager::LoadFile('medium');
+RoleLoader::LoadFile('medium');
 class Role_eclipse_medium extends Role_medium {
   public $mix_in = array('chicken');
   public $display_role = 'medium';
-  public $sudden_death = 'SEALED';
 
-  public function IgnoreSuddenDeath() {
-    return ! $this->IsRealActor() || $this->GetActor()->IsAvoidLovers(true);
+  protected function IgnoreSuddenDeath() {
+    return ! $this->IsRealActor() || RoleUser::IsAvoidLovers($this->GetActor(), true);
   }
 
-  public function IsSuddenDeath() {
+  protected function IsSuddenDeath() {
     return ! $this->IsVoteKill();
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'SEALED';
   }
 }

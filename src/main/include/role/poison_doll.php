@@ -4,11 +4,11 @@
   ○仕様
   ・毒：人形以外
 */
-RoleManager::LoadFile('doll');
+RoleLoader::LoadFile('doll');
 class Role_poison_doll extends Role_doll {
   public $mix_in = array('poison');
 
-  public function IsPoisonTarget(User $user) {
+  protected function IsPoisonTarget(User $user) {
     return ! $this->IsDoll($user);
   }
 }

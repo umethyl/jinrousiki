@@ -4,8 +4,8 @@
   ○仕様
   ・配役：全員に爆睡者
 */
-class Option_deep_sleep extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_deep_sleep extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return '静寂村';

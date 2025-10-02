@@ -6,7 +6,9 @@
 */
 class Role_lost_ability extends Role {
   protected function GetImage() {
-    if ($this->GetActor()->IsRole('awake_wizard')) $this->display_role = 'ability_awake_wizard';
+    if ($this->GetActor()->IsRole('awake_wizard')) {
+      $this->display_role = 'ability_awake_wizard';
+    }
     return parent::GetImage();
   }
 }

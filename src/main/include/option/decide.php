@@ -4,7 +4,7 @@
   ○仕様
   ・配役：誰か一人に決定者
 */
-class Option_decide extends CheckRoomOptionItem {
+class Option_decide extends OptionCheckbox {
   public function GetCaption() {
     return '決定者登場';
   }
@@ -14,7 +14,7 @@ class Option_decide extends CheckRoomOptionItem {
   }
 
   public function Cast() {
-    if (Cast::Stack()->Get('user_count') >= CastConfig::${$this->name}) {
+    if (Cast::Stack()->Get(Cast::COUNT) >= CastConfig::${$this->name}) {
       return $this->CastOnce();
     }
   }

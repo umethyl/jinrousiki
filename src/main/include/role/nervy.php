@@ -4,11 +4,13 @@
   ○仕様
   ・ショック死：同一陣営に投票
 */
-RoleManager::LoadFile('chicken');
+RoleLoader::LoadFile('chicken');
 class Role_nervy extends Role_chicken {
-  public $sudden_death = 'NERVY';
+  protected function IsSuddenDeath() {
+    return $this->GetActor()->IsWinCamp($this->GetVoteUser()->GetWinCamp());
+  }
 
-  public function IsSuddenDeath() {
-    return $this->GetActor()->GetCamp(true) == $this->GetVoteUser()->GetCamp(true);
+  protected function GetSuddenDeathType() {
+    return 'NERVY';
   }
 }

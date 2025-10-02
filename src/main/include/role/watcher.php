@@ -4,13 +4,13 @@
   ○仕様
   ・投票数：0
 */
-RoleManager::LoadFile('authority');
+RoleLoader::LoadFile('authority');
 class Role_watcher extends Role_authority {
-  public function GetVoteDoCount() {
+  protected function GetVoteDoCount() {
     return 0;
   }
 
-  public function IsUpdateFilterVoteDo() {
+  protected function IsUpdateFilterVoteDo() {
     return true;
   }
 }

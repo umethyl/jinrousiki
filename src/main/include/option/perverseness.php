@@ -4,7 +4,7 @@
   ○仕様
   ・配役：全員に天邪鬼
 */
-class Option_perverseness extends CheckRoomOptionItem {
+class Option_perverseness extends OptionCheckbox {
   public function GetCaption() {
     return '天邪鬼村';
   }

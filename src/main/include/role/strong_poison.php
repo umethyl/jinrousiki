@@ -4,11 +4,11 @@
   ○仕様
   ・毒：人外カウント
 */
-RoleManager::LoadFile('poison');
+RoleLoader::LoadFile('poison');
 class Role_strong_poison extends Role_poison {
   public $display_role = 'poison';
 
-  public function IsPoisonTarget(User $user) {
-    return $user->IsInhuman();
+  protected function IsPoisonTarget(User $user) {
+    return RoleUser::IsInhuman($user);
   }
 }

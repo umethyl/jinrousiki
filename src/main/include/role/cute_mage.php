@@ -4,7 +4,7 @@
   ○仕様
   ・役職表示：占い師
 */
-RoleManager::LoadFile('mage');
+RoleLoader::LoadFile('mage');
 class Role_cute_mage extends Role_mage {
   public $mix_in = array('suspect');
   public $display_role = 'mage';

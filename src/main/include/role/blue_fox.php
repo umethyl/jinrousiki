@@ -4,9 +4,9 @@
   ○仕様
   ・人狼襲撃カウンター：はぐれ者
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_blue_fox extends Role_fox {
   public function FoxEatCounter(User $user) {
-    if (! $user->IsLonely()) $user->AddRole('mind_lonely');
+    if (! RoleUser::IsLonely($user)) $user->AddRole('mind_lonely');
   }
 }

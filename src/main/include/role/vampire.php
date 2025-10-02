@@ -6,53 +6,63 @@
   ・仲間表示：感染者・洗脳者
 */
 class Role_vampire extends Role {
-  public $action = 'VAMPIRE_DO';
-  public $action_date_type = 'after';
+  public $action      = VoteAction::VAMPIRE;
+  public $action_date = RoleActionDate::AFTER;
 
-  protected function OutputPartner() {
+  protected function IgnorePartner() {
     /* 1日目の時点で感染者・洗脳者が発生する特殊イベントを実装したら対応すること */
-    if (DB::$ROOM->date < 2) return;
-    $id = $this->GetID();
-    $partner = 'infected';
-    $role    = 'psycho_infected';
-    $partner_list = array();
-    $role_list    = array();
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsPartner($partner, $id)) $partner_list[] = $user->handle_name;
-      if ($user->IsRole($role)) $role_list[] = $user->handle_name;
+    return DB::$ROOM->date < 2;
+  }
+
+  protected function GetPartner() {
+    $id        = $this->GetID();
+    $main      = 'infected';
+    $sub       = 'psycho_infected';
+    $main_list = array();
+    $sub_list  = array();
+    foreach (DB::$USER->Get() as $user) {
+      if ($user->IsPartner($main, $id)) {
+	$main_list[] = $user->handle_name;
+      }
+      if ($user->IsRole($sub)) {
+	$sub_list[]  = $user->handle_name;
+      }
     }
-    RoleHTML::OutputPartner($partner_list, $partner . '_list');
-    RoleHTML::OutputPartner($role_list, $role . '_list');
+    return array($main . '_list' => $main_list,  $sub . '_list' => $sub_list);
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote('vampire-do', 'vampire_do', $this->action);
+    RoleHTML::OutputVote(VoteCSS::VAMPIRE, RoleAbilityMessage::VAMPIRE, $this->action);
   }
 
   //吸血対象セット
   final public function SetInfect(User $user) {
     $actor = $this->GetActor();
     $this->SetStack($actor, 'voter');
-    foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
-      if ($filter->DelayTrap($actor, $user->id)) return;
-    }
-    foreach (array_keys($this->GetStack('escaper'), $actor->id) as $id) { //自己逃亡判定
+
+    if (RoleUser::DelayTrap($actor, $user->id)) return; //罠判定
+
+    //追加吸血判定
+    foreach ($this->GetStackKey(RoleVoteTarget::ESCAPER, $actor->id) as $id) { //自己逃亡判定
       $this->SetInfectTarget($id);
     }
-    foreach (array_keys($this->GetStack('escaper'), $user->id) as $id) { //逃亡巻き添え判定
+    foreach ($this->GetStackKey(RoleVoteTarget::ESCAPER, $user->id)  as $id) { //逃亡巻き添え判定
       $this->SetInfectTarget($id);
     }
-    if (RoleManager::GetClass('guard')->Guard($user)) return; //護衛判定
-    if ($user->IsDead(true) || $user->IsMainGroup('escaper')) return; //スキップ判定
+
+    //無効判定 (護衛 → 死亡 → 逃亡)
+    if (RoleUser::Guard($user) || $user->IsDead(true) || RoleUser::IsEscape($user)) {
+      return;
+    }
 
     //吸血リスト登録
-    if ($user->IsMainGroup('vampire')) {
-      RoleManager::LoadMain($user)->InfectVampire($actor); //吸血鬼襲撃
-    }
-    elseif ($user->IsDelayMania() && $user->IsCamp('vampire')) {
-      if (! $user->IsAvoid()) $this->AddSuccess($user->id, 'vampire_kill'); //時間差コピー能力者
-    }
-    else {
+    if ($user->IsMainGroup(CampGroup::VAMPIRE)) { //吸血鬼襲撃
+      RoleLoader::LoadMain($user)->InfectVampire($actor);
+    } elseif (RoleUser::IsDelayCopy($user) && $user->IsCamp(Camp::VAMPIRE)) { //時間差コピー能力者
+      if (! RoleUser::IsAvoid($user)) {
+	$this->AddSuccess($user->id, RoleVoteSuccess::VAMPIRE_KILL);
+      }
+    } else {
       $this->SetInfectTarget($user->id);
     }
   }
@@ -66,19 +76,19 @@ class Role_vampire extends Role {
 
   //対吸血処理
   protected function InfectVampire(User $user) {
-    if (! $this->GetActor()->IsAvoid()) {
-      $this->AddSuccess($this->GetID(), 'vampire_kill');
+    if (! RoleUser::IsAvoid($this->GetActor())) {
+      $this->AddSuccess($this->GetID(), RoleVoteSuccess::VAMPIRE_KILL);
     }
   }
 
   //吸血死＆吸血処理
   final public function VampireKill() {
-    foreach ($this->GetStack('vampire_kill') as $id => $flag) { //吸血死処理
-      DB::$USER->Kill($id, 'VAMPIRE_KILLED');
+    foreach ($this->GetStack(RoleVoteSuccess::VAMPIRE_KILL) as $id => $flag) { //吸血死処理
+      DB::$USER->Kill($id, DeadReason::VAMPIRE_KILLED);
     }
 
     foreach ($this->GetStack('vampire') as $id => $stack) {
-      $filter = RoleManager::LoadMain(DB::$USER->ByID($id));
+      $filter = RoleLoader::LoadMain(DB::$USER->ByID($id));
       foreach ($stack as $target_id) {
 	$filter->Infect(DB::$USER->ByID($target_id));
       }
@@ -86,11 +96,59 @@ class Role_vampire extends Role {
   }
 
   //吸血処理
-  protected function Infect(User $user) {
-    $user->AddRole($this->GetActor()->GetID('infected'));
+  final protected function Infect(User $user) {
+    if ($this->IsInfect($user)) {
+      $user->AddRole($this->GetActor()->GetID('infected'));
+    } else {
+      $this->InfectFailedAction($user);
+    }
     $this->InfectAction($user);
   }
 
+  //吸血実行判定
+  protected function IsInfect(User $user) {
+    return true;
+  }
+
+  //吸血失敗追加処理
+  protected function InfectFailedAction(User $user) {}
+
   //吸血追加処理
   protected function InfectAction(User $user) {}
+
+  //勝敗判定
+  final public function CheckWin() {
+    /* 情報収集 */
+    $live_list     = array(); //生存者の ID リスト
+    $infected_list = array(); //吸血鬼 => 感染者リスト
+    foreach (DB::$USER->SearchLive(true) as $id => $uname) {
+      $user = DB::$USER->ByID($id);
+      $user->Reparse();
+      if (! $user->IsRole('psycho_infected')) {
+	$live_list[] = $user->id;
+      }
+
+      if ($user->IsRole('infected')) {
+	foreach ($user->GetPartner('infected') as $id) {
+	  $infected_list[$id][] = $user->id;
+	}
+      }
+    }
+    //Text::p($live_list,     "◆{$this->role} [live]");
+    //Text::p($infected_list, "◆{$this->role} [infected]");
+
+    /* 判定 */
+    if (count($live_list) == 1) { //単独生存
+      return DB::$USER->ByID(array_shift($live_list))->IsMainGroup(CampGroup::VAMPIRE);
+    }
+
+    foreach ($infected_list as $id => $stack) { //支配判定
+      $diff_list = array_diff($live_list, $stack);
+      //Text::p($diff_list, "◆{$this->role} [diff/{$id}]");
+      if (count($diff_list) == 1 && in_array($id, $diff_list)) {
+	return true;
+      }
+    }
+    return false;
+  }
 }

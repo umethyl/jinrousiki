@@ -1,0 +1,64 @@
+<?php
+//-- ログイン処理クラス --//
+class Login {
+  //実行 (手動 > 自動(セッション) > 観戦ページジャンプ)
+  public static function Execute() {
+    self::Load();
+    if (RQ::Get()->login_manually) {
+      if (self::LoginManually()) {
+	self::Output(LoginMessage::MANUALLY_TITLE, LoginMessage::MANUALLY_BODY, 'game_frame');
+      } else {
+	$body = Text::Concat(LoginMessage::FAILED_BODY, LoginMessage::FAILED_CAUTION);
+	self::Output(LoginMessage::FAILED_TITLE, $body);
+      }
+    } elseif (Session::Certify()) {
+      self::Output(LoginMessage::AUTO_TITLE, LoginMessage::AUTO_BODY, 'game_frame');
+    } else {
+      self::Output(Message::VIEW_TITLE, Message::VIEW_BODY, 'game_view');
+    }
+  }
+
+  //データロード
+  private static function Load() {
+    Loader::LoadRequest('login', true);
+    DB::Connect();
+  }
+
+  //手動ログイン
+  /*
+    セッションを失った場合、ユーザ名とパスワードでログインする
+    返り値：bool (ログイン成否)
+  */
+  private static function LoginManually() {
+    extract(RQ::ToArray()); //引数を展開
+    if (GameConfig::TRIP && $trip != '') {
+      $trip = Text::Trip('#' . $trip); //トリップ変換
+      $uname .= $trip;
+    } else {
+      $trip = ''; //ブラックリストチェック用にトリップを初期化
+    }
+
+    //空判定 > ブラックリスト判定
+    if ($uname == '' || $password == '') {
+      return false;
+    } elseif (! ServerConfig::DEBUG_MODE && Security::IsLoginBlackList($trip)) {
+      return false;
+    }
+
+    $crypt = Text::Crypt($password);
+    //$crypt = $password; //デバッグ用
+
+    return LoginDB::Certify($uname, $crypt) && LoginDB::Update($uname, $crypt); //認証＆再登録処理
+  }
+
+  //結果出力
+  private static function Output($title, $body, $jump = null) {
+    if (is_null($jump)) {
+      $url  = '';
+    } else {
+      $url  = URL::GetRoom($jump, RQ::Get()->room_no);
+      $body = Text::Concat($body, URL::GetJump($url));
+    }
+    HTML::OutputResult($title, $body, $url);
+  }
+}

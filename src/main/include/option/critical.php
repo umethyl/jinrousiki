@@ -4,7 +4,7 @@
   ○仕様
   ・配役：全員に会心・痛恨
 */
-class Option_critical extends CheckRoomOptionItem {
+class Option_critical extends OptionCheckbox {
   public function GetCaption() {
     return '急所村';
   }

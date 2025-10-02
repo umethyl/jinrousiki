@@ -1,11 +1,5 @@
 <?php
 require_once('init.php');
-Loader::LoadFile('info_functions');
-HTML::OutputFrameHeader('[情報一覧]');
-echo <<< EOF
-<frameset cols="180, *" border="1" frameborder="1" framespacing="1" bordercolor="#C0C0C0">
-<frame name="menu" src="menu.php">
-<frame name="body" src="history">
-
-EOF;
+HTML::OutputFrameHeader(Text::QuoteBracket(InfoMessage::TITLE_TOP));
+InfoHTML::OutputFrame('script_info');
 HTML::OutputFrameFooter();

@@ -2,19 +2,23 @@
 /*
   ◆サブ役職制限 (セレクタ)
 */
-class Option_sub_role_limit extends SelectorRoomOptionItem {
-  public $type = 'group';
+class Option_sub_role_limit extends OptionSelector {
+  public $type = OptionFormType::GROUP;
 
-  public function __construct() {
-    parent::__construct();
+  protected function LoadFormList() {
     $stack = array('no_sub_role' => 'no_sub_role');
     foreach (array('easy', 'normal', 'hard') as $name) {
       $stack[$name] = sprintf('%s_%s', $this->name, $name);
     }
     foreach ($stack as $name => $class) {
-      $filter = OptionManager::GetClass($class);
-      if (isset($filter) && $filter->enable) $this->form_list[$class] = $name;
+      $filter = OptionLoader::Load($class);
+      if (isset($filter) && $filter->enable) {
+	$this->form_list[$class] = $name;
+      }
     }
+  }
+
+  protected function LoadValue() {
     if (OptionManager::IsChange()) $this->SetFormValue('key');
   }
 
@@ -33,16 +37,21 @@ class Option_sub_role_limit extends SelectorRoomOptionItem {
   }
 
   public function GetItem() {
-    $stack = array('no_sub_role' => OptionManager::GetClass('no_sub_role'),
-		   'easy'        => OptionManager::GetClass('sub_role_limit_easy'),
-		   'normal'      => OptionManager::GetClass('sub_role_limit_normal'),
-		   'hard'        => OptionManager::GetClass('sub_role_limit_hard'),
-		   ''            => OptionManager::GetClass('sub_role_limit_none'));
+    $stack = array(
+      'no_sub_role' => OptionLoader::Load('no_sub_role'),
+      'easy'        => OptionLoader::Load('sub_role_limit_easy'),
+      'normal'      => OptionLoader::Load('sub_role_limit_normal'),
+      'hard'        => OptionLoader::Load('sub_role_limit_hard'),
+      ''            => OptionLoader::Load('sub_role_limit_none')
+    );
     foreach ($stack as $key => $item) {
       $item->form_name  = $this->form_name;
       $item->form_value = $key;
     }
-    if (isset($stack[$this->value])) $stack[$this->value]->value = true;
+    if (isset($stack[$this->value])) {
+      $stack[$this->value]->value = true;
+    }
+
     return $stack;
   }
 

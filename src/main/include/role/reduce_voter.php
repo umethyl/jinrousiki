@@ -4,9 +4,9 @@
   ○仕様
   ・投票数：-1
 */
-RoleManager::LoadFile('authority');
+RoleLoader::LoadFile('authority');
 class Role_reduce_voter extends Role_authority {
-  public function GetVoteDoCount() {
+  protected function GetVoteDoCount() {
     return -1;
   }
 }

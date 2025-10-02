@@ -4,7 +4,7 @@
   ○仕様
   ・配役：妖狐 → 村人
 */
-class Option_no_fox extends CheckRoomOptionItem {
+class Option_no_fox extends OptionCheckbox {
   public function GetCaption() {
     return '妖狐なし';
   }

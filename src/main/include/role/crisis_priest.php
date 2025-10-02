@@ -5,7 +5,7 @@
   ・役職表示：村人
   ・司祭：人外勝利前日情報 (2日目以降)
 */
-RoleManager::LoadFile('priest');
+RoleLoader::LoadFile('priest');
 class Role_crisis_priest extends Role_priest {
   public $display_role = 'human';
 
@@ -17,8 +17,10 @@ class Role_crisis_priest extends Role_priest {
     return false;
   }
 
-  public function Priest() {
+  protected function PriestAction() {
     $data = $this->GetStack('priest');
-    if (isset($data->crisis)) DB::$ROOM->ResultAbility($this->GetResult(), $data->crisis);
+    if (isset($data->crisis)) {
+      DB::$ROOM->ResultAbility($this->GetPriestResultType(), $data->crisis);
+    }
   }
 }

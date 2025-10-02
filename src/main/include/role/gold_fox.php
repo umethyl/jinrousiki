@@ -3,6 +3,6 @@
   ◆金狐 (gold_fox)
   ○仕様
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_gold_fox extends Role_fox {
 }

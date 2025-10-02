@@ -2,29 +2,33 @@
 /*
   ◆策士 (trap_common)
   ○仕様
-  ・処刑得票：罠死 (非村人陣営の人全てからの得票)
+  ・処刑得票カウンター：罠死 (非村人陣営の人全てからの得票)
 */
-RoleManager::LoadFile('common');
+RoleLoader::LoadFile('common');
 class Role_trap_common extends Role_common {
-  public $vote_day_type = 'stack';
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::ADD;
+  }
 
-  public function VotedReaction() {
-    if (! is_array($stack = $this->GetStack())) return;
-    if (count($stack) < 1) return;
+  public function VotePollReaction() {
+    $stack = $this->GetStack();
+    if (! is_array($stack) || count($stack) < 1) return;
 
     $target_list = array();
     //非村人陣営の ID と仮想ユーザ名を収集
-    foreach (array_keys($this->GetStack('vote_target')) as $uname) {
+    foreach ($this->GetStackKey('vote_target') as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if (! $user->IsCamp('human', true)) {
+      if (! $user->IsWinCamp(Camp::HUMAN)) {
 	$target_list[$user->id] = $user->GetVirtual()->uname;
       }
     }
-    //Text::p($target_list, '! Human');
+    //Text::p($target_list, "◆InHuman [{$this->role}]");
 
     foreach (array_keys($stack) as $uname) { //策士の得票リストと照合
       if ($this->GetVotedUname($uname) == array_values($target_list)) {
-	foreach (array_keys($target_list) as $id) DB::$USER->Kill($id, 'TRAPPED');
+	foreach (array_keys($target_list) as $id) {
+	  DB::$USER->Kill($id, DeadReason::TRAPPED);
+	}
       }
     }
   }

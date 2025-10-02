@@ -12,8 +12,8 @@ RQ::Set('prefix', ''); //各ページの先頭につける文字列 (テスト /
 RQ::Set('index_no', 8); //インデックスページの開始番号
 RQ::Set('min_room_no', 351); //インデックス化する村の開始番号
 RQ::Set('max_room_no', 383); //インデックス化する村の終了番号
-RQ::Set('add_role',       true);
-RQ::Set('heaven_talk',    true);
+RQ::Set(RequestDataLogRoom::ROLE,   true);
+RQ::Set(RequestDataLogRoom::HEAVEN, true);
 RQ::Set('generate_index', true);
 
 //JinrouAdmin::DeleteLog(RQ::Get()->min_room_no, RQ::Get()->max_room_no); //部屋削除

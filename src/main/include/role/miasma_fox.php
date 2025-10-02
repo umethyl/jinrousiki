@@ -5,7 +5,7 @@
   ・処刑：熱病 (妖狐カウント以外)
   ・人狼襲撃：熱病
 */
-RoleManager::LoadFile('child_fox');
+RoleLoader::LoadFile('child_fox');
 class Role_miasma_fox extends Role_child_fox {
   public $mix_in = null;
   public $action = null;
@@ -15,9 +15,14 @@ class Role_miasma_fox extends Role_child_fox {
     $stack = array();
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if (! $user->IsAvoid() && ! $user->IsFox()) $stack[] = $user->id;
+      if (! RoleUser::IsFoxCount($user) && ! RoleUser::IsAvoid($user)) {
+	$stack[] = $user->id;
+      }
     }
-    if (count($stack) > 0) DB::$USER->ByID(Lottery::Get($stack))->AddDoom(1, 'febris');
+
+    if (count($stack) > 0) {
+      DB::$USER->ByID(Lottery::Get($stack))->AddDoom(1, 'febris');
+    }
   }
 
   public function WolfEatCounter(User $user) {

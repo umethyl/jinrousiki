@@ -15,6 +15,9 @@
 .login-link span { /* 住民登録 */
   font-weight: bold;
 }
+.login-link .closing {
+  color: #CC0000;
+}
 .login form {
   margin-bottom: 0;
 }

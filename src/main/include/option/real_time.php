@@ -2,9 +2,9 @@
 /*
   ◆リアルタイム制 (real_time)
 */
-class Option_real_time extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
-  public $type  = 'realtime';
+class Option_real_time extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
+  public $type  = OptionFormType::REALTIME;
 
   public function LoadPost() {
     RQ::Get()->ParsePostOn($this->name);
@@ -36,7 +36,7 @@ class Option_real_time extends CheckRoomOptionItem {
   public function GenerateImage() {
     list($day, $night) = $this->GetStack();
     $str = sprintf('[%d：%d]', $day, $night);
-    return Image::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
+    return ImageManager::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
   }
 
   public function GenerateRoomCaption() {

@@ -4,7 +4,7 @@
   ○仕様
   ・配役：狂人 → 殉教者
 */
-OptionManager::Load('change_mad');
+OptionLoader::LoadFile('change_mad');
 class Option_change_immolate_mad extends Option_change_mad {
   public function GetCaption() {
     return '殉教者村';

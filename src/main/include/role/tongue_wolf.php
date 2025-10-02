@@ -2,11 +2,12 @@
 /*
   ◆舌禍狼 (tongue_wolf)
   ○仕様
+  ・能力結果：襲撃
   ・襲撃：役職鑑定
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_tongue_wolf extends Role_wolf {
-  public $result = 'TONGUE_WOLF_RESULT';
+  public $result = RoleAbility::TONGUE_WOLF;
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 2;

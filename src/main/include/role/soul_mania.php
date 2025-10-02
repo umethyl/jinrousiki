@@ -2,77 +2,93 @@
 /*
   ◆覚醒者 (soul_mania)
   ○仕様
-  ・コピー：特殊
+  ・能力結果：所属陣営 (天狗陣営コピー時)
+  ・コピー：時間差覚醒
   ・変化：上位種
 */
-RoleManager::LoadFile('mania');
+RoleLoader::LoadFile('mania');
 class Role_soul_mania extends Role_mania {
-  public $copied = 'copied_soul';
-  public $delay_copy = true;
-  public $copy_list = array(
-    'human'		=> 'executor',
-    'mage'		=> 'soul_mage',
-    'necromancer'	=> 'soul_necromancer',
-    'medium'		=> 'revive_medium',
-    'priest'		=> 'high_priest',
-    'guard'		=> 'poison_guard',
-    'common'		=> 'ghost_common',
-    'poison'		=> 'strong_poison',
-    'poison_cat'	=> 'revive_cat',
-    'pharmacist'	=> 'alchemy_pharmacist',
-    'assassin'		=> 'soul_assassin',
-    'mind_scanner'	=> 'clairvoyance_scanner',
-    'jealousy'		=> 'miasma_jealousy',
-    'brownie'		=> 'barrier_brownie',
-    'wizard'		=> 'soul_wizard',
-    'doll'		=> 'serve_doll_master',
-    'escaper'		=> 'divine_escaper',
-    'wolf'		=> 'sirius_wolf',
-    'mad'		=> 'whisper_mad',
-    'fox'		=> 'cursed_fox',
-    'child_fox'		=> 'jammer_fox',
-    'depraver'		=> 'sacrifice_depraver',
-    'cupid'		=> 'minstrel_cupid',
-    'angel'		=> 'sacrifice_angel',
-    'quiz'		=> 'quiz',
-    'vampire'		=> 'soul_vampire',
-    'chiroptera'	=> 'boss_chiroptera',
-    'fairy'		=> 'ice_fairy',
-    'ogre'		=> 'sacrifice_ogre',
-    'yaksa'		=> 'dowser_yaksa',
-    'duelist'		=> 'critical_duelist',
-    'avenger'		=> 'revive_avenger',
-    'patron'		=> 'sacrifice_patron',
-    'tengu'		=> 'soul_tengu');
-
   protected function IgnoreResult() {
     return ! DB::$ROOM->IsDate(2);
   }
 
   protected function OutputAddResult() {
-    if ($this->GetActor()->IsCamp('tengu', true)) { //天狗陣営コピー時は所属陣営を通知する
-      $this->OutputAbilityResult('TENGU_CAMP_RESULT');
+    if ($this->GetActor()->IsWinCamp(Camp::TENGU)) { //天狗陣営コピー時は所属陣営を通知する
+      RoleHTML::OutputResult(RoleAbility::TENGU_CAMP);
     }
   }
 
-  protected function GetManiaRole(User $user) {
+  protected function GetCopyRole(User $user) {
     return $user->DistinguishRoleGroup();
   }
 
-  //覚醒コピー
-  public function DelayCopy(User $user) {
+  protected function CopyAction(User $user, $role) {
     $actor = $this->GetActor();
+    $actor->AddMainRole($user->id);
+    DB::$ROOM->ResultAbility($this->result, $role, $user->handle_name, $actor->id);
+  }
+
+  protected function GetCopiedRole() {
+    return 'copied_soul';
+  }
+
+  //覚醒コピー
+  final public function DelayCopy(User $user) {
     if ($user->IsRoleGroup('mania', 'copied')) {
       $role = 'human';
-    } elseif ($user->IsRole('changed_disguise')) {
-      $role = $this->copy_list['wolf'];
-    } elseif ($user->IsRole('changed_therian')) {
-      $role = $this->copy_list['mad'];
     } else {
-      $role = $this->copy_list[$user->DistinguishRoleGroup()];
+      $stack = $this->GetDelayCopyList();
+      if ($user->IsRole('changed_disguise')) {
+	$role = $stack[CampGroup::WOLF];
+      } elseif ($user->IsRole('changed_therian')) {
+	$role = $stack[CampGroup::MAD];
+      } else {
+	$role = $stack[$user->DistinguishRoleGroup()];
+      }
     }
-    $actor->ReplaceRole($this->role, $role);
-    $actor->AddRole($this->copied);
+    $actor = $this->GetActor();
+    $actor->ReplaceRole($user->GetID($this->role), $role);
+    $actor->AddRole($this->GetCopiedRole());
     DB::$ROOM->ResultAbility($this->result, $role, $actor->handle_name, $actor->id);
+  }
+
+  //覚醒コピー変換リスト取得
+  protected function GetDelayCopyList() {
+    return array(
+      CampGroup::HUMAN		=> 'executor',
+      CampGroup::MAGE		=> 'soul_mage',
+      CampGroup::NECROMANCER	=> 'soul_necromancer',
+      CampGroup::MEDIUM		=> 'revive_medium',
+      CampGroup::PRIEST		=> 'high_priest',
+      CampGroup::GUARD		=> 'poison_guard',
+      CampGroup::COMMON		=> 'ghost_common',
+      CampGroup::POISON		=> 'strong_poison',
+      CampGroup::POISON_CAT	=> 'revive_cat',
+      CampGroup::PHARMACIST	=> 'alchemy_pharmacist',
+      CampGroup::ASSASSIN	=> 'soul_assassin',
+      CampGroup::MIND_SCANNER	=> 'clairvoyance_scanner',
+      CampGroup::JEALOUSY	=> 'miasma_jealousy',
+      CampGroup::BROWNIE	=> 'barrier_brownie',
+      CampGroup::WIZARD		=> 'soul_wizard',
+      CampGroup::DOLL		=> 'serve_doll_master',
+      CampGroup::ESCAPER	=> 'divine_escaper',
+      CampGroup::WOLF		=> 'sirius_wolf',
+      CampGroup::MAD		=> 'whisper_mad',
+      CampGroup::FOX		=> 'cursed_fox',
+      CampGroup::CHILD_FOX	=> 'jammer_fox',
+      CampGroup::DEPRAVER	=> 'sacrifice_depraver',
+      CampGroup::CUPID		=> 'minstrel_cupid',
+      CampGroup::ANGEL		=> 'sacrifice_angel',
+      CampGroup::QUIZ		=> 'quiz',
+      CampGroup::VAMPIRE	=> 'soul_vampire',
+      CampGroup::CHIROPTERA	=> 'boss_chiroptera',
+      CampGroup::FAIRY		=> 'ice_fairy',
+      CampGroup::OGRE		=> 'sacrifice_ogre',
+      CampGroup::YAKSA		=> 'dowser_yaksa',
+      CampGroup::DUELIST	=> 'critical_duelist',
+      CampGroup::AVENGER	=> 'revive_avenger',
+      CampGroup::PATRON		=> 'sacrifice_patron',
+      CampGroup::TENGU		=> 'soul_tengu'
+    );
   }
 }

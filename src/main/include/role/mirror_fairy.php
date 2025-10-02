@@ -5,19 +5,26 @@
   ・悪戯：決選投票
   ・処刑：特殊イベント (決選投票)
 */
-RoleManager::LoadFile('fairy');
+RoleLoader::LoadFile('fairy');
 class Role_mirror_fairy extends Role_fairy {
-  public $action = 'CUPID_DO';
-  public $action_date_type = 'first';
-  public $submit = 'fairy_do';
-  public $event_day = 'vote_duel';
+  public $action      = VoteAction::CUPID;
+  public $action_date = RoleActionDate::FIRST;
+  public $submit      = VoteAction::FAIRY;
 
-  public function IsVoteCheckbox(User $user, $live) {
-    return $live && ! $user->IsDummyBoy();
+  public function VoteKillCounter(array $list) {
+    DB::$ROOM->SystemMessage($this->GetID(), EventType::VOTE_DUEL, 1);
   }
 
-  protected function GetVoteCheckboxHeader() {
-    return RoleHTML::GetVoteCheckboxHeader('checkbox');
+  protected function IgnoreVoteCheckboxSelf() {
+    return false;
+  }
+
+  protected function IgnoreVoteCheckboxDummyBoy() {
+    return true;
+  }
+
+  protected function GetVoteCheckboxType() {
+    return OptionFormType::CHECKBOX;
   }
 
   public function SetVoteNightUserList(array $list) {
@@ -25,9 +32,8 @@ class Role_mirror_fairy extends Role_fairy {
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      //例外判定
-      if ($user->IsDead())     return VoteRoleMessage::TARGET_DEAD;
-      if ($user->IsDummyBoy()) return VoteRoleMessage::TARGET_DUMMY_BOY;
+      $str  = $this->IgnoreVoteNight($user, $user->IsLive()); //例外判定
+      if (! is_null($str)) return $str;
       $stack[$id] = $user->handle_name;
     }
     $this->SetStack($stack, 'target_list');
@@ -36,26 +42,27 @@ class Role_mirror_fairy extends Role_fairy {
 
   public function VoteNightAction() {
     $stack = $this->GetStack('target_list');
-    $this->GetActor()->AddMainRole(implode('-', array_keys($stack)));
-    $this->SetStack(implode(' ', array_keys($stack)), 'target_no');
-    $this->SetStack(implode(' ', $stack), 'target_handle');
-    $this->SetStack('FAIRY_DO', 'message'); //Talk の action は FAIRY_DO
+    $this->GetActor()->AddMainRole(ArrayFilter::ConcatKey($stack, '-'));
+    $this->SetStack(ArrayFilter::ConcatKey($stack), RequestDataVote::TARGET);
+    $this->SetStack(ArrayFilter::Concat($stack), 'target_handle');
+    $this->SetStack(VoteAction::FAIRY, 'message'); //Talk の action は FAIRY
   }
 
-  public function VoteKillCounter(array $list) {
-    DB::$ROOM->SystemMessage($this->GetID(), 'VOTE_DUEL', 1);
-  }
-
-  public function SetEvent(UserData $USERS) {
+  public function SetEvent() {
     $stack = array(); //決選投票対象者の ID リスト
     foreach ($this->GetActor()->GetPartner($this->role, true) as $key => $value) { //生存確認
-      if ($USERS->IsVirtualLive($key))   $stack[] = $key;
-      if ($USERS->IsVirtualLive($value)) $stack[] = $value;
+      if (DB::$USER->IsVirtualLive($key)) {
+	$stack[] = $key;
+      }
+      if (DB::$USER->IsVirtualLive($value)) {
+	$stack[] = $value;
+      }
     }
 
     if (count($stack) > 1) {
-      DB::$ROOM->Stack()->Set($this->event_day, $stack);
-      DB::$ROOM->Stack()->Get('event')->On($this->event_day);
+      $event = 'vote_duel';
+      DB::$ROOM->Stack()->Set($event, $stack);
+      DB::$ROOM->Stack()->Get('event')->On($event);
     }
   }
 }

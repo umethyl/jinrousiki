@@ -4,7 +4,9 @@
   ○仕様
   ・悪戯：発言妨害 (冬ですよー)
 */
-RoleManager::LoadFile('fairy');
+RoleLoader::LoadFile('fairy');
 class Role_winter_fairy extends Role_fairy {
-  public $bad_status = RoleTalkMessage::WINTER_FAIRY;
+  protected function GetBadStatus() {
+    return RoleTalkMessage::WINTER_FAIRY;
+  }
 }

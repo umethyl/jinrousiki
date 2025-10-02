@@ -6,11 +6,13 @@
 */
 class Role_prince extends Role {
   //処刑キャンセル
-  public function VoteCancel(User $user) {
-    if (! $user->IsActive() || $user->IsCamp('lovers', true)) return;
+  public function VoteKillCancel() {
+    $user = $this->GetActor();
+    if (! $user->IsActive() || $user->IsWinCamp(Camp::LOVERS)) return;
+
     $user->UpdateLive(UserLive::LIVE);
-    $user->revive_flag = true;
+    $user->Flag()->On(UserMode::REVIVE);
     $user->LostAbility();
-    DB::$ROOM->ResultDead($user->handle_name, 'VOTE_CANCELLED');
+    DB::$ROOM->ResultDead($user->handle_name, DeadReason::VOTE_CANCELLED);
   }
 }

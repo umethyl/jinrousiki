@@ -3,6 +3,6 @@
   ◆黒狐 (black_fox)
   ○仕様
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_black_fox extends Role_fox {
 }

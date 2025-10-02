@@ -5,15 +5,19 @@
   ・追加役職：受託者
   ・人狼襲撃：受託者に襲撃者を通知
 */
-RoleManager::LoadFile('mind_scanner');
+RoleLoader::LoadFile('mind_scanner');
 class Role_presage_scanner extends Role_mind_scanner {
-  public $mind_role = 'mind_presage';
+  protected function GetMindRole() {
+    return 'mind_presage';
+  }
 
   public function WolfEatCounter(User $voter) {
     $actor = $this->GetActor();
-    foreach (DB::$USER->GetRoleUser($this->mind_role) as $user) {
-      if ($user->IsPartner($this->mind_role, $actor->id)) {
-	DB::$ROOM->ResultAbility('PRESAGE_RESULT', $voter->GetName(), $actor->GetName(), $user->id);
+    $role  = $this->GetMindRole();
+    foreach (DB::$USER->GetRoleUser($role) as $user) {
+      if ($user->IsPartner($role, $actor->id)) {
+	$result = RoleAbility::PRESAGE;
+	DB::$ROOM->ResultAbility($result, $voter->GetName(), $actor->GetName(), $user->id);
 	break;
       }
     }

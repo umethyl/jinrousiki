@@ -6,9 +6,9 @@
   ・護衛処理：目隠し
   ・狩り：なし
 */
-RoleManager::LoadFile('guard');
+RoleLoader::LoadFile('guard');
 class Role_blind_guard extends Role_guard {
-  public function IgnoreGuard() {
+  public function IgnoreGuard(User $user) {
     return null;
   }
 

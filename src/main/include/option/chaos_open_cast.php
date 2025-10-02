@@ -2,16 +2,20 @@
 /*
   ◆配役を通知する (セレクタ)
 */
-class Option_chaos_open_cast extends SelectorRoomOptionItem {
-  public $type = 'group';
+class Option_chaos_open_cast extends OptionSelector {
+  public $type = OptionFormType::GROUP;
 
-  public function __construct() {
-    parent::__construct();
+  protected function LoadFormList() {
     foreach (array('camp', 'role', 'full') as $name) {
       $class  = sprintf('%s_%s', $this->name, $name);
-      $filter = OptionManager::GetClass($class);
-      if (isset($filter) && $filter->enable) $this->form_list[$class] = $name;
+      $filter = OptionLoader::Load($class);
+      if (isset($filter) && $filter->enable) {
+	$this->form_list[$class] = $name;
+      }
     }
+  }
+
+  protected function LoadValue() {
     if (OptionManager::IsChange()) $this->SetFormValue('key');
   }
 
@@ -30,15 +34,20 @@ class Option_chaos_open_cast extends SelectorRoomOptionItem {
   }
 
   public function GetItem() {
-    $stack = array(''     => OptionManager::GetClass('chaos_open_cast_none'),
-		   'camp' => OptionManager::GetClass('chaos_open_cast_camp'),
-		   'role' => OptionManager::GetClass('chaos_open_cast_role'),
-		   'full' => OptionManager::GetClass('chaos_open_cast_full'));
+    $stack = array(
+      ''     => OptionLoader::Load('chaos_open_cast_none'),
+      'camp' => OptionLoader::Load('chaos_open_cast_camp'),
+      'role' => OptionLoader::Load('chaos_open_cast_role'),
+      'full' => OptionLoader::Load('chaos_open_cast_full')
+    );
     foreach ($stack as $key => $item) {
       $item->form_name  = $this->form_name;
       $item->form_value = $key;
     }
-    if (isset($stack[$this->value])) $stack[$this->value]->value = true;
+    if (isset($stack[$this->value])) {
+      $stack[$this->value]->value = true;
+    }
+
     return $stack;
   }
 

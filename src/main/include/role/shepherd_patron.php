@@ -2,14 +2,16 @@
 /*
   ◆羊飼い (shepherd_patron)
   ○仕様
-  ・追加役職：羊
   ・投票人数：人口の 1 / 6
+  ・追加役職：羊
 */
-RoleManager::LoadFile('patron');
+RoleLoader::LoadFile('patron');
 class Role_shepherd_patron extends Role_patron {
-  public $patron_role = 'mind_sheep';
-
   protected function GetVoteNightNeedCount() {
-    return max(1, floor(DB::$USER->GetUserCount() / 6));
+    return max(1, floor(DB::$USER->Count() / 6));
+  }
+
+  protected function AddDuelistRole(User $user) {
+    $this->AddPatronRole($user, 'mind_sheep');
   }
 }

@@ -9,8 +9,13 @@ class Role_brownie extends Role {
     $stack = array();
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if (! $user->IsAvoid()) $stack[] = $user->id;
+      if (! RoleUser::IsAvoid($user)) {
+	$stack[] = $user->id;
+      }
     }
-    if (count($stack) > 0) DB::$USER->ByID(Lottery::Get($stack))->AddDoom(1, 'febris');
+
+    if (count($stack) > 0) {
+      DB::$USER->ByID(Lottery::Get($stack))->AddDoom(1, 'febris');
+    }
   }
 }

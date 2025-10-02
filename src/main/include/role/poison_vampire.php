@@ -4,11 +4,11 @@
   ○仕様
   ・毒：自分の感染者 or 洗脳者
 */
-RoleManager::LoadFile('vampire');
+RoleLoader::LoadFile('vampire');
 class Role_poison_vampire extends Role_vampire {
   public $mix_in = array('poison');
 
-  public function IsPoisonTarget(User $user) {
+  protected function IsPoisonTarget(User $user) {
     return $user->IsRole('psycho_infected') || $user->IsPartner('infected', $this->GetID());
   }
 }

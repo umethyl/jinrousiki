@@ -4,14 +4,15 @@
   ○仕様
   ・処刑得票：告白付加 (恋人・一定確率)
 */
-RoleManager::LoadFile('jealousy');
+RoleLoader::LoadFile('jealousy');
 class Role_divorce_jealousy extends Role_jealousy {
   public function VoteKillReaction() {
-    foreach (array_keys($this->GetStack()) as $uname) {
+    foreach ($this->GetStackKey() as $uname) {
       if ($this->IsVoted($uname)) continue;
+
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
 	$user = DB::$USER->ByRealUname($voted_uname);
-	if ($user->IsLive(true) && $user->IsLovers() && Lottery::Percent(40)) {
+	if ($user->IsLiveRole('lovers', true) && Lottery::Percent(40)) {
 	  $user->AddRole('confession');
 	}
       }

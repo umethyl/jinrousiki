@@ -5,9 +5,9 @@
   ・結果表示：共感者
   ・共感者判定：無効
 */
-RoleManager::LoadFile('angel');
+RoleLoader::LoadFile('angel');
 class Role_ark_angel extends Role_angel {
-  public $result = 'SYMPATHY_RESULT';
+  public $result = RoleAbility::SYMPATHY;
 
   protected function IgnoreResult() {
     return ! DB::$ROOM->IsDate(2);

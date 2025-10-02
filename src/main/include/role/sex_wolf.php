@@ -2,12 +2,13 @@
 /*
   ◆雛狼 (sex_wolf)
   ○仕様
+  ・能力結果：襲撃
   ・襲撃：性別鑑定
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_sex_wolf extends Role_wolf {
   public $mix_in = array('sex_mage');
-  public $result = 'SEX_WOLF_RESULT';
+  public $result = RoleAbility::SEX_WOLF;
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 2;

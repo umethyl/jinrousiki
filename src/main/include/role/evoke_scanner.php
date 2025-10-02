@@ -4,15 +4,17 @@
   ○仕様
   ・追加役職：口寄せ
 */
-RoleManager::LoadFile('mind_scanner');
+RoleLoader::LoadFile('mind_scanner');
 class Role_evoke_scanner extends Role_mind_scanner {
-  public $mind_role = 'mind_evoke';
-
   protected function IsAddVote() {
     return ! DB::$ROOM->IsOpenCast();
   }
 
-  protected function IgnoreVoteFilter() {
-    return DB::$ROOM->IsOpenCast() ? VoteRoleMessage::OPEN_CAST : null;
+  protected function GetMindRole() {
+    return 'mind_evoke';
+  }
+
+  protected function GetIgnoreAddVoteMessage() {
+    return VoteRoleMessage::OPEN_CAST;
   }
 }

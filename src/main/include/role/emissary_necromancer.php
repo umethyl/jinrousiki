@@ -4,15 +4,17 @@
   ○仕様
   ・霊能：処刑者の投票先と同陣営の人数
 */
-RoleManager::LoadFile('necromancer');
+RoleLoader::LoadFile('necromancer');
 class Role_emissary_necromancer extends Role_necromancer {
-  public $result = 'EMISSARY_NECROMANCER_RESULT';
+  public $result = RoleAbility::EMISSARY_NECROMANCER;
 
   public function Necromancer(User $user, $flag){
+    $camp  = $user->GetWinCamp();
     $count = 0;
-    $camp  = $user->GetCamp(true);
     foreach ($this->GetVotedUname($user->uname) as $uname) {
-      if (DB::$USER->ByRealUname($uname)->IsCamp($camp, true)) $count++;
+      if (DB::$USER->ByRealUname($uname)->IsWinCamp($camp)) {
+	$count++;
+      }
     }
     return $count;
   }

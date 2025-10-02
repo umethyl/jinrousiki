@@ -3,16 +3,33 @@
   ◆星熊童子 (power_ogre)
   ○仕様
   ・勝利：生存 + 人口を三分の一以下にする
+  ・人攫い成功率低下：7/10
+  ・人狼襲撃無効確率：40%
+  ・暗殺反射確率：40%
 */
-RoleManager::LoadFile('ogre');
+RoleLoader::LoadFile('ogre');
 class Role_power_ogre extends Role_ogre {
-  public $resist_rate  = 40;
-  public $reduce_base  =  7;
-  public $reduce_rate  = 10;
-  public $reflect_rate = 40;
+  protected function GetOgreWolfEatResistRate() {
+    return 40;
+  }
 
-  public function Win($winner) {
-    return $this->IsLive() &&
-      count(DB::$USER->GetLivingUsers()) <= ceil(DB::$USER->GetUserCount() / 3);
+  public function GetReflectAssassinRate() {
+    return 40;
+  }
+
+  protected function GetOgreReduceNumerator() {
+    return 7;
+  }
+
+  protected function GetOgreReduceDenominator() {
+    return 10;
+  }
+
+  protected function IgnoreOgreLoseAllDead() {
+    return true;
+  }
+
+  protected function OgreWin() {
+    return DB::$USER->CountLive() <= ceil(DB::$USER->Count() / 3);
   }
 }

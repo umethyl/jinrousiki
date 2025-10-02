@@ -3,6 +3,6 @@
   ◆淑女 (lady)
   ○仕様
 */
-RoleManager::LoadFile('gentleman');
+RoleLoader::LoadFile('gentleman');
 class Role_lady extends Role_gentleman {
 }

@@ -3,42 +3,36 @@
   ◆道化師 (pierrot_wizard)
   ○仕様
   ・魔法：魂の占い師・ひよこ鑑定士・暗殺(特殊)・草妖精・星妖精・花妖精・氷妖精・妖精(特殊)
+  ・天候：霧雨(魂の占い師), 木枯らし(ひよこ鑑定士)
   ・暗殺：死の宣告 (2-10日後)
   ・悪戯：死亡欄妨害 (特殊)
 */
-RoleManager::LoadFile('wizard');
+RoleLoader::LoadFile('wizard');
 class Role_pierrot_wizard extends Role_wizard {
-  public $mix_in = array('mage');
-  public $wizard_list = array(
-    'soul_mage' => 'MAGE_DO', 1 => 'ASSASSIN_DO', 2 => 'FAIRY_DO', 'grass_fairy' => 'FAIRY_DO',
-    'star_fairy' => 'FAIRY_DO', 'flower_fairy' => 'FAIRY_DO', 'ice_fairy' => 'FAIRY_DO',
-    'sex_mage' => 'MAGE_DO');
-  public $result_list = array('MAGE_RESULT');
-  public $result_type = 'PIERROT';
+  public $mix_in = array('doom_assassin', 'flower_fairy');
 
-  public function SetAssassin(User $user) {
-    $actor = $this->GetActor();
-    foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
-      if ($filter->DelayTrap($actor, $user->id)) return;
-    }
-    foreach (RoleManager::LoadFilter('guard_assassin') as $filter) { //対暗殺護衛判定
-      if ($filter->GuardAssassin($user->id)) return;
-    }
-    if ($user->IsMainGroup('escaper')) return; //逃亡者は無効
-
-    if ($user->IsReflectAssassin()) { //反射判定
-      $this->AddSuccess($actor->id, 'assassin');
-      return;
-    }
-    $this->Assassin($user);
+  protected function GetWizardResultList() {
+    return array(RoleAbility::MAGE);
   }
 
-  public function Assassin(User $user) {
-    if ($user->IsLive(true)) $user->AddDoom(Lottery::GetRange(2, 10), 'death_warrant');
+  protected function GetWizardList() {
+    return array(
+      'soul_mage'	=> VoteAction::MAGE,
+      1			=> VoteAction::ASSASSIN,
+      2			=> VoteAction::FAIRY,
+      'grass_fairy'	=> VoteAction::FAIRY,
+      'star_fairy'	=> VoteAction::FAIRY,
+      'flower_fairy'	=> VoteAction::FAIRY,
+      'ice_fairy'	=> VoteAction::FAIRY,
+      'sex_mage'	=> VoteAction::MAGE
+    );
   }
 
-  public function Mage(User $user) {
-    if ($this->IsJammer($user) || $this->IsCursed($user)) return false;
-    DB::$ROOM->ResultDead($user->GetName(), $this->result_type, Lottery::GetRange('A', 'Z'));
+  protected function GetDoomAssassinDate() {
+    return Lottery::GetRange(2, 10);
+  }
+
+  protected function GetFairyActionResult() {
+    return 'PIERROT';
   }
 }

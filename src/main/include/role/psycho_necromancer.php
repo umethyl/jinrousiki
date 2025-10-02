@@ -4,19 +4,33 @@
   ○仕様
   ・霊能：前世 (順番依存有り)
 */
-RoleManager::LoadFile('necromancer');
+RoleLoader::LoadFile('necromancer');
 class Role_psycho_necromancer extends Role_necromancer {
-  public $result = 'PSYCHO_NECROMANCER_RESULT';
+  public $mix_in = array('psycho_mage');
+  public $result = RoleAbility::PSYCHO_NECROMANCER;
 
   public function Necromancer(User $user, $flag) {
-    if ($flag) return 'stolen';
-    $str = 'psycho_necromancer_';
-    if ($user->IsRoleGroup('copied'))        return $str . 'mania';
-    if ($user->IsRole('changed_therian'))    return $str . 'mad';
-    if ($user->IsRole('changed_vindictive')) return $str . 'child_fox';
-    if ($user->IsMainGroup('depraver'))      return $str . 'fox';
-    if ($user->IsMainGroup('mad'))           return $str . 'wolf';
-    if ($user->IsLiar())                     return $str . 'mad';
-    return $str . 'human';
+    if ($flag) {
+      return 'stolen';
+    } elseif ($user->IsRoleGroup('copied')) {
+      $result = 'mania';
+    } elseif ($user->IsRole('changed_therian')) {
+      $result = 'mad';
+    } elseif ($user->IsRole('changed_vindictive')) {
+      $result = 'child_fox';
+    } elseif ($user->IsMainGroup(CampGroup::UNKNOWN_MANIA)) {
+      $result = 'mania';
+    } elseif ($user->IsMainGroup(CampGroup::DEPRAVER)) {
+      $result = 'fox';
+    } elseif ($user->IsMainGroup(CampGroup::MAD)) {
+      $result = 'wolf';
+    } elseif ($user->IsMainCamp(Camp::LOVERS)) {
+      $result = 'lovers';
+    } elseif ($this->IsLiar($user)) {
+      $result = 'mad';
+    } else {
+      $result = 'human';
+    }
+    return Text::AddFooter($this->role, $result);
   }
 }

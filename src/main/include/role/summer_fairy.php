@@ -4,7 +4,9 @@
   ○仕様
   ・悪戯：発言妨害 (夏ですよー)
 */
-RoleManager::LoadFile('fairy');
+RoleLoader::LoadFile('fairy');
 class Role_summer_fairy extends Role_fairy {
-  public $bad_status = RoleTalkMessage::SUMMER_FAIRY;
+  protected function GetBadStatus() {
+    return RoleTalkMessage::SUMMER_FAIRY;
+  }
 }

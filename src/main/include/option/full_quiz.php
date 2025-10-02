@@ -4,7 +4,7 @@
   ○仕様
   ・配役：村人 → 出題者
 */
-OptionManager::Load('replace_human');
+OptionLoader::LoadFile('replace_human');
 class Option_full_quiz extends Option_replace_human {
   public function GetCaption() {
     return '出題者村';

@@ -19,6 +19,7 @@ class ServerConfig {
   /* パスワード */
   const PASSWORD = 'xxxxxxxx';	//管理者用パスワード
   const SALT     = 'xxxx';	//パスワード暗号化用 salt
+  const GAME_HASH = 'xxxx';	//ゲーム内セキュリティ対策用ハッシュ
 
   //村作成パスワード (null 以外を設定しておくと村作成画面にパスワード入力欄が表示されます)
   const ROOM_PASSWORD = null;

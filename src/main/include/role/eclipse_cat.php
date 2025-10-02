@@ -5,9 +5,15 @@
   ・役職表示：仙狸
   ・蘇生率：40% / 誤爆率：20%
 */
-RoleManager::LoadFile('poison_cat');
+RoleLoader::LoadFile('poison_cat');
 class Role_eclipse_cat extends Role_poison_cat {
   public $display_role  = 'revive_cat';
-  public $revive_rate   = 40;
-  public $missfire_rate = 20;
+
+  protected function GetReviveRate() {
+    return 40;
+  }
+
+  protected function GetMissfireRate($revive) {
+    return 20;
+  }
 }

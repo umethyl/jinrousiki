@@ -2,12 +2,14 @@
 /*
   ◆村人置換村 (セレクタ)
 */
-class Option_replace_human_selector extends SelectorRoomOptionItem {
+class Option_replace_human_selector extends OptionSelector {
   public $on_change = ' onChange="change_replace_human()"';
 
-  public function  __construct() {
-    parent::__construct();
+  protected function LoadFormList() {
     $this->form_list = GameOptionConfig::${$this->source};
+  }
+
+  protected function LoadValue() {
     if (OptionManager::IsChange()) $this->SetFormValue('int');
   }
 

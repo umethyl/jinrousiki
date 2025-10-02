@@ -4,7 +4,7 @@
   ○仕様
   ・発言公開：恋人 (2日目以降)
 */
-RoleManager::LoadFile('cupid');
+RoleLoader::LoadFile('cupid');
 class Role_minstrel_cupid extends Role_cupid {
   public function IsMindRead() {
     return DB::$ROOM->date > 1 && $this->GetTalkFlag('lovers');

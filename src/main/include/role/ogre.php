@@ -3,98 +3,199 @@
   ◆鬼 (ogre)
   ○仕様
   ・勝利：生存 + 人狼系の生存
+  ・人攫い成功率低下：1/5
   ・人狼襲撃：確率無効
+  ・人狼襲撃無効確率：30%
+  ・暗殺反射確率：30%
 */
 class Role_ogre extends Role {
-  public $action     = 'OGRE_DO';
-  public $not_action = 'OGRE_NOT_DO';
-  public $action_date_type = 'after';
-  public $resist_rate  = 30;
-  public $reduce_base  =  1;
-  public $reduce_rate  =  5;
-  public $reflect_rate = 30;
+  public $action      = VoteAction::OGRE;
+  public $not_action  = VoteAction::NOT_OGRE;
+  public $action_date = RoleActionDate::AFTER;
 
   public function OutputAction() {
-    RoleHTML::OutputVote('ogre-do', 'ogre_do', $this->action, $this->not_action);
+    $str = RoleAbilityMessage::OGRE;
+    RoleHTML::OutputVote(VoteCSS::OGRE, $str, $this->action, $this->not_action);
   }
 
-  protected function SetVoteNightFilter() {
-    if (DB::$ROOM->IsEvent('force_assassin_do')) $this->SetStack(null, 'not_action');
+  protected function IgnoreNotAction() {
+    return DB::$ROOM->IsEvent('force_assassin_do');
   }
 
-  protected function ExistsActionFilter(array $list) {
-    if (DB::$ROOM->IsEvent('force_assassin_do')) unset($list[$this->not_action]);
-    return $list;
+  final public function WolfEatResist() {
+    $event = $this->GetOgreEvent();
+    $rate  = is_null($event) ? $this->GetOgreWolfEatResistRate() : $event;
+    //Text::p($rate, '◆Resist Rate [ogre]');
+    return Lottery::Percent($rate);
   }
 
-  public function Win($winner) {
-    if ($this->IsDead()) return false;
-    if ($winner == 'wolf') return true;
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive() && $user->IsMainGroup('wolf')) return true;
+  //鬼陣営天候情報取得 (朧月 > 叢雲)
+  final protected function GetOgreEvent() {
+    if (DB::$ROOM->IsEvent('full_ogre')) {
+      return 100;
+    } elseif (DB::$ROOM->IsEvent('seal_ogre')) {
+      return   0;
+    } else {
+      return null;
     }
-    return false;
+  }
+
+  //鬼陣営人狼襲撃無効確率取得
+  protected function GetOgreWolfEatResistRate() {
+    return 30;
+  }
+
+  //暗殺反射確率取得
+  public function GetReflectAssassinRate() {
+    return 30;
   }
 
   //人攫い情報セット
-  public function SetAssassin(User $user) {
-    foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
-      if ($filter->DelayTrap($this->GetActor(), $user->id)) return;
-    }
-    foreach (RoleManager::LoadFilter('guard_assassin') as $filter) { //対暗殺護衛判定
-      if ($filter->GuardAssassin($user->id)) return;
-    }
-    if ($user->IsDead(true) || $user->IsMainGroup('escaper')) return; //無効判定
-    if ($user->IsReflectAssassin()) { //反射判定
-      $this->AddSuccess($this->GetID(), 'ogre');
-      return;
-    }
-    if ($this->IgnoreAssassin($user)) return; //個別無効判定
-
-    //人攫い成功判定
-    $count = (int)$this->GetActor()->GetMainRoleTarget();
-    $event = $this->GetEvent();
-    if (is_null($event)) {
-      $rate = ceil(100 * pow($this->reduce_base / $this->reduce_rate, $count));
+  //罠 > 対暗殺護衛 > 死亡 > 逃亡 > 反射 > 個別無効 > 人攫い成功判定 > 通常 → 更新判定
+  final public function SetOgreAssassin(User $user) {
+    if (RoleUser::DelayTrap($this->GetActor(), $user->id)) {
+      return false;
+    } elseif (RoleUser::GuardAssassin($user)) {
+      return false;
+    } elseif ($user->IsDead(true)) {
+      return false;
+    } elseif (RoleUser::IsEscape($user)) {
+      return false;
+    } elseif (RoleUser::IsReflectAssassin($user)) {
+      $this->AddSuccess($this->GetID(), RoleVoteSuccess::OGRE);
+      return false;
+    } elseif ($this->IgnoreOgreAssassin($user)) {
+      return false;
     } else {
-      $rate = $event;
+      $count = (int)$this->GetActor()->GetMainRoleTarget();
+      $event = $this->GetOgreEvent();
+      if (is_null($event)) {
+	$reduce_rate = $this->GetOgreReduceNumerator() / $this->GetOgreReduceDenominator();
+	$rate = ceil(100 * pow($reduce_rate, $count));
+      } else {
+	$rate = $event;
+      }
+      //Text::p($rate, '◆AssassinRate [ogre]');
+      if (! Lottery::Percent($rate)) return false; //成功判定
     }
-    //Text::p($rate, '◆Assassin Rate [ogre]');
-    if (! Lottery::Percent($rate)) return; //成功判定
-    $this->Assassin($user);
 
-    if (DB::$ROOM->IsEvent('full_ogre')) return; //成功回数更新処理 (朧月ならスキップ)
-    $role = $this->role;
-    if ($count > 0) $role .= sprintf('[%d]', $count);
-    $this->GetActor()->ReplaceRole($role, sprintf('%s[%d]', $this->role, $count + 1));
+    $this->OgreAssassin($user);
+    if (! DB::$ROOM->IsEvent('full_ogre')) { //成功回数更新処理 (朧月ならスキップ)
+      $role = $this->role;
+      if ($count > 0) {
+	$role .= sprintf('[%d]', $count);
+      }
+      $this->GetActor()->ReplaceRole($role, sprintf('%s[%d]', $this->role, $count + 1));
+    }
+    return true;
   }
 
   //人攫い失敗判定
-  protected function IgnoreAssassin(User $user) {
+  protected function IgnoreOgreAssassin(User $user) {
     return false;
   }
 
-  //天候情報取得
-  final protected function GetEvent() {
-    return DB::$ROOM->IsEvent('full_ogre') ? 100 : (DB::$ROOM->IsEvent('seal_ogre') ? 0 : null);
+  //人攫い成功率低下 (分子)
+  protected function GetOgreReduceNumerator() {
+    return 1;
+  }
+
+  //人攫い成功率低下 (分母)
+  protected function GetOgreReduceDenominator() {
+    return 5;
   }
 
   //人攫い
-  protected function Assassin(User $user) {
-    $this->AddSuccess($user->id, 'ogre');
+  protected function OgreAssassin(User $user) {
+    $this->AddSuccess($user->id, RoleVoteSuccess::OGRE);
   }
 
-  //人攫い死
-  final public function AssassinKill() {
+  //人攫い死亡処理
+  final public function OgreAssassinKill() {
     foreach ($this->GetStack() as $id => $flag) {
-      DB::$USER->Kill($id, 'OGRE_KILLED');
+      DB::$USER->Kill($id, DeadReason::OGRE_KILLED);
     }
   }
 
-  //人狼襲撃耐性判定
-  final public function WolfEatResist() {
-    $rate = is_null($event = $this->GetEvent()) ? $this->resist_rate : $event;
-    //Text::p($rate, '◆Resist Rate [ogre]');
-    return Lottery::Percent($rate);
+  public function Win($winner) {
+    //勝利確定陣営 > 敗北確定陣営 > 生存 > 敗北確定生存者 > 敗北確定全滅者 > 個別
+    if ($this->IsOgreWinCamp($winner)) {
+      return true;
+    } elseif ($this->IsOgreLoseCamp($winner)) {
+      return false;
+    } elseif ($this->IsOgreLoseLive()) {
+      return false;
+    } elseif ($this->IsOgreLoseSurvive()) {
+      return false;
+    } elseif ($this->IsOgreLoseAllDead()) {
+      return false;
+    } else {
+      return $this->OgreWin();
+    }
+  }
+
+  //鬼陣営勝敗判定 (勝利確定陣営)
+  /* 鬼は人狼陣営勝利で実質勝利確定となるが、基本種であることも加味してここでは判定を入れない */
+  protected function IsOgreWinCamp($winner) {
+    return false;
+  }
+
+  //鬼陣営勝敗判定 (敗北確定陣営)
+  protected function IsOgreLoseCamp($winner) {
+    return false;
+  }
+
+  //鬼陣営勝敗判定 (生存)
+  protected function IsOgreLoseLive() {
+    return $this->IsActorDead();
+  }
+
+  //鬼陣営勝敗判定 (敗北確定生存者)
+  final protected function IsOgreLoseSurvive() {
+    if ($this->IgnoreOgreLoseSurvive()) return false;
+
+    foreach (DB::$USER->Get() as $user) {
+      if ($user->IsLive() && $this->RequireOgreWinDead($user)) {
+	return true;
+      }
+    }
+    return false;
+  }
+
+  //鬼陣営勝敗判定スキップ (敗北確定生存者)
+  protected function IgnoreOgreLoseSurvive() {
+    return true;
+  }
+
+  //鬼陣営勝敗判定対象者 (敗北確定生存者)
+  protected function RequireOgreWinDead(User $user) {
+    return false;
+  }
+
+  //鬼陣営勝敗判定 (敗北確定全滅者)
+  final protected function IsOgreLoseAllDead() {
+    if ($this->IgnoreOgreLoseAllDead()) return false;
+
+    foreach (DB::$USER->Get() as $user) {
+      if ($user->IsLive() && $this->RequireOgreWinSurvive($user)) {
+	return false;
+      }
+    }
+    return true;
+  }
+
+  //鬼陣営勝敗判定スキップ (敗北確定全滅者)
+  protected function IgnoreOgreLoseAllDead() {
+    return false;
+  }
+
+  //鬼陣営勝敗判定対象者 (敗北確定全滅者)
+  protected function RequireOgreWinSurvive(User $user) {
+    return $user->IsMainGroup(CampGroup::WOLF);
+  }
+
+  //鬼陣営勝敗判定 (鬼陣営個別)
+  protected function OgreWin() {
+    return true;
   }
 }

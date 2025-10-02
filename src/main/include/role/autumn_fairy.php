@@ -4,7 +4,9 @@
   ○仕様
   ・悪戯：発言妨害 (秋ですよー)
 */
-RoleManager::LoadFile('fairy');
+RoleLoader::LoadFile('fairy');
 class Role_autumn_fairy extends Role_fairy {
-  public $bad_status = RoleTalkMessage::AUTUMN_FAIRY;
+  protected function GetBadStatus() {
+    return RoleTalkMessage::AUTUMN_FAIRY;
+  }
 }

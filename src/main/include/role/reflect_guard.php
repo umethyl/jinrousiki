@@ -2,11 +2,11 @@
 /*
   ◆侍 (reflect_guard)
   ○仕様
-  ・狩り：通常 + 鬼陣営
+  ・狩り：+ 鬼陣営
 */
-RoleManager::LoadFile('guard');
+RoleLoader::LoadFile('guard');
 class Role_reflect_guard extends Role_guard {
   protected function IsAddHunt(User $user) {
-    return $user->IsOgre();
+    return $user->IsMainCamp(Camp::OGRE);
   }
 }

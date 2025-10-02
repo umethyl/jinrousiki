@@ -3,7 +3,7 @@
   ◆賢狼 (wise_wolf)
   ○仕様
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_wise_wolf extends Role_wolf {
   public $mix_in = array('common');
 }

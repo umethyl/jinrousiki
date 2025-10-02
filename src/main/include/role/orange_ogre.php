@@ -4,13 +4,21 @@
   ○仕様
   ・勝利：生存 + 人狼陣営全滅
 */
-RoleManager::LoadFile('ogre');
+RoleLoader::LoadFile('ogre');
 class Role_orange_ogre extends Role_ogre {
-  public function Win($winner) {
-    if ($winner == 'wolf' || $this->IsDead()) return false;
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive() && $user->IsCamp('wolf', true)) return false;
-    }
+  protected function IsOgreLoseCamp($winner) {
+    return $winner == WinCamp::WOLF;
+  }
+
+  protected function IgnoreOgreLoseSurvive() {
+    return false;
+  }
+
+  protected function RequireOgreWinDead(User $user) {
+    return $user->IsWinCamp(Camp::WOLF);
+  }
+
+  protected function IgnoreOgreLoseAllDead() {
     return true;
   }
 }

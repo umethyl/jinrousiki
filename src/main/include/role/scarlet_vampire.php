@@ -4,15 +4,15 @@
   ○仕様
   ・人狼襲撃：確率蘇生
 */
-RoleManager::LoadFile('vampire');
+RoleLoader::LoadFile('vampire');
 class Role_scarlet_vampire extends Role_vampire {
   public $mix_in = array('revive_pharmacist');
 
-  public function IsResurrect() {
+  protected function IsResurrect() {
     return Lottery::Percent(DB::$ROOM->IsEvent('full_revive') ? 100 : 40);
   }
 
-  public function IsResurrectLost() {
+  protected function IsResurrectLost() {
     return false;
   }
 }

@@ -2,7 +2,7 @@
 /*
   ◆共有者置換村 (セレクタ)
 */
-OptionManager::Load('replace_human_selector');
+OptionLoader::LoadFile('replace_human_selector');
 class Option_change_common_selector extends Option_replace_human_selector {
   public function GetCaption() {
     return '共有者置換村';

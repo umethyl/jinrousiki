@@ -2,22 +2,23 @@
 /*
   ◆霊界で配役を公開しない (セレクタ)
 */
-class Option_not_open_cast_selector extends SelectorRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
-  public $type = 'group';
+class Option_not_open_cast_selector extends OptionSelector {
+  public $group = OptionGroup::GAME;
+  public $type  = OptionFormType::GROUP;
   public $form_list = array('not_open_cast', 'auto_open_cast');
 
-  public function __construct() {
-    parent::__construct();
+  protected function LoadValue() {
     $this->value = GameOptionConfig::$default_not_open_cast;
     if (OptionManager::IsChange()) $this->SetFormValue('value');
   }
 
   public function GetItem() {
-    $stack = array('' => OptionManager::GetClass('not_close_cast'));
+    $stack = array('' => OptionLoader::Load('not_close_cast'));
     foreach ($this->form_list as $option) {
-      $item = OptionManager::GetClass($option);
-      if ($item->enable) $stack[$option] = $item;
+      $item = OptionLoader::Load($option);
+      if ($item->enable) {
+	$stack[$option] = $item;
+      }
     }
 
     foreach ($stack as $form_value => $item) {
@@ -26,7 +27,7 @@ class Option_not_open_cast_selector extends SelectorRoomOptionItem {
       $item->form_value = $form_value;
     }
 
-    if (array_key_exists($this->value, $stack)) { //チェック位置判定
+    if (isset($stack[$this->value])) { //チェック位置判定
       $stack[$this->value]->value = true;
     } else {
       $stack['']->value = true;

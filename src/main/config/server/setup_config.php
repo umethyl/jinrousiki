@@ -2,7 +2,7 @@
 //-- 初期セットアップ設定 --//
 class SetupConfig {
   //身代わり君アイコン
-  static $dummy_boy_icon = array(
+  public static $dummy_boy_icon = array(
     'name'   => '身代わり君用',
     'file'   => '../img/dummy_boy_user_icon.jpg', //IconConfig->path からの相対パス
     'color'  => '#000000',
@@ -10,7 +10,7 @@ class SetupConfig {
     'height' => 45);
 
   //ユーザアイコンの初期設定
-  static $default_icon = array(
+  public static $default_icon = array(
      1 => array('name'   => '明灰',
 		'file'   => '001.gif',
 		'color'  => '#DDDDDD',

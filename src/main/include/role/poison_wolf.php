@@ -4,11 +4,11 @@
   ○仕様
   ・毒：人狼系以外
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_poison_wolf extends Role_wolf {
   public $mix_in = array('poison');
 
-  public function IsPoisonTarget(User $user) {
-    return ! $user->IsWolf();
+  protected function IsPoisonTarget(User $user) {
+    return ! $user->IsMainGroup(CampGroup::WOLF);
   }
 }

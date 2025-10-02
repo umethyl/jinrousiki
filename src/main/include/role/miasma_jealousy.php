@@ -4,11 +4,15 @@
   ○仕様
   ・処刑投票：熱病 (恋人 + 確率)
 */
-RoleManager::LoadFile('jealousy');
+RoleLoader::LoadFile('jealousy');
 class Role_miasma_jealousy extends Role_jealousy {
   public $mix_in = array('critical_mad');
 
-  public function SetVoteAction(User $user) {
-    if ($user->IsLovers() && ! $user->IsAvoid() && Lottery::Bool()) $user->AddDoom(1, 'febris');
+  protected function IsVoteKillActionTarget(User $user) {
+    return $user->IsRole('lovers') && Lottery::Percent(70);
+  }
+
+  protected function SetVoteKillAction(User $user) {
+    $user->AddDoom(1, 'febris');
   }
 }

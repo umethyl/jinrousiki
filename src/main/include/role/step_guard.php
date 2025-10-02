@@ -4,25 +4,25 @@
   ○仕様
   ・護衛失敗：制限なし
 */
-RoleManager::LoadFile('guard');
+RoleLoader::LoadFile('guard');
 class Role_step_guard extends Role_guard {
   public $mix_in = array('step_mage');
-  public $action = 'STEP_GUARD_DO';
-  public $submit = 'guard_do';
+  public $action = VoteAction::STEP_GUARD;
+  public $submit = VoteAction::GUARD;
 
-  public function IsVoteCheckbox(User $user, $live) {
-    return ! $this->IsActor($user);
+  protected function IsVoteCheckboxLive($live) {
+    return true;
   }
 
-  protected function GetVoteCheckboxHeader() {
-    return RoleHTML::GetVoteCheckboxHeader('checkbox');
+  protected function GetVoteCheckboxType() {
+    return OptionFormType::CHECKBOX;
   }
 
   public function CheckVoteNightTarget(array $list) {
     return $this->CheckStepVoteNightTarget($list);
   }
 
-  public function IgnoreGuard() {
+  public function IgnoreGuard(User $user) {
     return null;
   }
 }

@@ -1,9 +1,9 @@
 <?php
 /*
-  ◆早朝待機制 (secret_talk)
+  ◆秘密会話あり (secret_talk)
 */
-class Option_secret_talk extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_secret_talk extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return '秘密会話あり';

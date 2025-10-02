@@ -2,9 +2,10 @@
 /*
   ◆天人 (revive_priest)
   ○仕様
+  ・能力結果：なし
   ・司祭：蘇生
 */
-RoleManager::LoadFile('priest');
+RoleLoader::LoadFile('priest');
 class Role_revive_priest extends Role_priest {
   protected function IgnoreResult() {
     return true;
@@ -19,16 +20,24 @@ class Role_revive_priest extends Role_priest {
     return true;
   }
 
-  public function Priest() {
-    if (! $this->IsPriestReturn()) return;
+  protected function IgnorePriest() {
+    //蘇生判定 (人外勝利前日 / 5日目 / 村の人口が半分 / 生存人狼が1人
+    $data = $this->GetStack('priest');
+    if (DB::$ROOM->IsDate(4) || isset($data->crisis) || $data->count['wolf'] == 1 ||
+	DB::$USER->Count() >= $data->count['total'] * 2) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
+  protected function PriestAction() {
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
       if ($user->IsDummyBoy() || ! $user->IsActive()) continue;
 
-      if ($user->IsLovers(true) || (DB::$ROOM->date > 3 && $user->IsLive(true))) {
+      if (RoleUser::IsContainLovers($user) || (DB::$ROOM->date > 3 && $user->IsLive(true))) {
 	$user->LostAbility();
-      }
-      elseif ($user->IsDead(true)) {
+      } elseif ($user->IsDead(true)) {
 	$user->Revive();
 	$user->LostAbility();
       }
@@ -39,18 +48,11 @@ class Role_revive_priest extends Role_priest {
   public function PriestReturn() {
     $user = $this->GetActor();
     if ($user->IsDummyBoy()) return;
-    if ($user->IsLovers(true)) {
-      $user->LostAbility();
-    }
-    elseif ($user->IsLive(true)) {
-      DB::$USER->Kill($user->id, 'PRIEST_RETURNED');
-    }
-  }
 
-  //蘇生判定
-  private function IsPriestReturn() {
-    $data = $this->GetStack('priest');
-    return DB::$ROOM->IsDate(4) || isset($data->crisis) || $data->count['wolf'] == 1 ||
-      DB::$USER->GetUserCount() >= $data->count['total'] * 2;
+    if (RoleUser::IsContainLovers($user)) {
+      $user->LostAbility();
+    } elseif ($user->IsLive(true)) {
+      DB::$USER->Kill($user->id, DeadReason::PRIEST_RETURNED);
+    }
   }
 }

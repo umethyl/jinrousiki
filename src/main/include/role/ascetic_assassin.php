@@ -2,22 +2,23 @@
 /*
   ◆修験者 (ascetic_assassin)
   ○仕様
+  ・能力結果：九字
   ・人狼襲撃：無効 (確率)
 */
-RoleManager::LoadFile('assassin');
+RoleLoader::LoadFile('assassin');
 class Role_ascetic_assassin extends Role_assassin {
   protected function OutputAddResult() {
-    RoleHTML::OutputAbilityResult('ability_ascetic_' . $this->GetAsceticCount(), null);
+    RoleHTML::OutputAbilityResult('ability_ascetic_' . $this->CountAscetic(), null);
   }
 
   public function WolfEatResist() {
-    return Lottery::Percent(floor($this->GetAsceticCount() / 3) * 10);
+    return Lottery::Percent(floor($this->CountAscetic() / 3) * 10);
   }
 
-  //周囲の生存者判定
-  private function GetAsceticCount() {
+  //周囲の生存人数取得
+  private function CountAscetic() {
     $count = 1;
-    foreach ($this->GetActor()->GetAround() as $id) {
+    foreach (Position::GetAround($this->GetActor()) as $id) {
       if (! DB::$USER->IsVirtualLive($id)) $count++;
     }
     return $count;

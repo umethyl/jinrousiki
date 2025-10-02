@@ -4,7 +4,7 @@
   ○仕様
   ・配役：共有者 → CastConfig::$replace_role_list
 */
-OptionManager::Load('replace_human');
+OptionLoader::LoadFile('replace_human');
 class Option_change_common extends Option_replace_human {
   public function GetCaption() {
     return '共有者置換村';

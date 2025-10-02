@@ -2,15 +2,13 @@
 /*
   ◆初日の夜は身代わり君 (セレクタ)
 */
-class Option_dummy_boy_selector extends SelectorRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
-  public $type  = 'group';
-  public $form_list = array('dummy_boy' => 'on', 'gm_login' => 'gm_login');
+class Option_dummy_boy_selector extends OptionSelector {
+  public $group = OptionGroup::GAME;
+  public $type  = OptionFormType::GROUP;
+  public $form_list = array('dummy_boy' => Switcher::ON, 'gm_login' => 'gm_login');
 
-  public function __construct() {
-    parent::__construct();
+  protected function LoadValue() {
     $this->value = GameOptionConfig::$default_dummy_boy;
-    if (OptionManager::IsChange()) $this->enable = false;
   }
 
   public function LoadPost() {
@@ -20,26 +18,46 @@ class Option_dummy_boy_selector extends SelectorRoomOptionItem {
     $post = RQ::Get()->{$this->name};
     foreach ($this->form_list as $option => $form_value) {
       if ($post == $form_value) {
-	RQ::Set($option, true);
-	array_push(RoomOption::${$this->group}, $option);
+	OptionLoader::Load($option)->LoadPost();
 	break;
       }
     }
   }
 
   public function GetItem() {
-    $stack = array('' => new Option_no_dummy_boy());
+    $stack = array();
+
+    //-- 身代わり君なし --//
+    $item = OptionLoader::Load('no_dummy_boy');
+    if ($item->enable) {
+      $this->UpdateForm($item, '');
+      $stack[''] = $item;
+    }
+
+    //-- 身代わり君有り --//
     foreach ($this->form_list as $option => $form_value) {
-      $item = OptionManager::GetClass($option);
-      if ($item->enable) $stack[$form_value] = $item;
+      $item = OptionLoader::Load($option);
+      if ($item->enable) {
+	$stack[$form_value] = $item;
+      }
     }
 
     foreach ($stack as $form_value => $item) {
-      $item->form_name  = $this->form_name;
-      $item->form_value = $form_value;
+      $this->UpdateForm($item, $form_value);
     }
 
-    if (array_key_exists($this->value, $stack)) { //チェック位置判定
+    //-- 身代わり君変更 --//
+    $option = 'gm_logout';
+    $item   = OptionLoader::Load($option);
+    if ($item->enable) {
+      $this->UpdateForm($item, $option);
+      $stack[$option] = $item;
+    }
+
+    //-- チェック位置判定 --//
+    if (OptionManager::IsChange() && DB::$ROOM->IsOption('gm_login')) {
+      $stack['gm_login']->value = true;
+    } elseif (isset($stack[$this->value])) {
       $stack[$this->value]->value = true;
     } else {
       $stack['']->value = true;
@@ -55,16 +73,9 @@ class Option_dummy_boy_selector extends SelectorRoomOptionItem {
   public function GetExplain() {
     return '配役は<a href="info/rule.php">ルール</a>を確認して下さい';
   }
-}
 
-/*
-  ◆身代わり君なし
-*/
-class Option_no_dummy_boy extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
-  public $type  = 'radio';
-
-  public function GetCaption() {
-    return '身代わり君なし';
+  private function UpdateForm(Option $item, $form_value) {
+    $item->form_name  = $this->form_name;
+    $item->form_value = $form_value;
   }
 }

@@ -2,19 +2,19 @@
 /*
   ◆ブン屋 (reporter)
   ○仕様
-  ・尾行：襲撃情報取得
+  ・能力結果：尾行(襲撃情報取得)
 */
 class Role_reporter extends Role {
-  public $action = 'REPORTER_DO';
-  public $result = 'REPORTER_SUCCESS';
-  public $action_date_type = 'after';
+  public $action      = VoteAction::REPORTER;
+  public $result      = RoleAbility::REPORTER;
+  public $action_date = RoleActionDate::AFTER;
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3;
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote('guard-do', 'reporter_do', $this->action);
+    RoleHTML::OutputVote(VoteCSS::GUARD, RoleAbilityMessage::REPORTER, $this->action);
   }
 
   //尾行
@@ -24,9 +24,8 @@ class Role_reporter extends Role {
       if (! $user->wolf_eat) return; //人狼襲撃が失敗していたらスキップ
       $result = $this->GetWolfVoter()->GetName();
       DB::$ROOM->ResultAbility($this->result, $result, $target->GetName(), $this->GetID());
-    }
-    elseif ($user->IsLiveRoleGroup('wolf', 'fox')) { //尾行対象が人狼か妖狐なら死亡する
-      DB::$USER->Kill($this->GetID(), 'REPORTER_DUTY');
+    } elseif ($user->IsLiveRoleGroup('wolf', 'fox')) { //尾行対象が人狼か妖狐なら死亡する
+      DB::$USER->Kill($this->GetID(), DeadReason::REPORTER_DUTY);
     }
   }
 }

@@ -3,19 +3,35 @@
   ◆夜行鬼 (wise_ogre)
   ○仕様
   ・勝利：生存 + 共有者系・人狼系・妖狐系全滅
+  ・人攫い成功率低下：1/2
+  ・人狼襲撃無効確率：40%
+  ・暗殺反射確率：40%
 */
-RoleManager::LoadFile('ogre');
+RoleLoader::LoadFile('ogre');
 class Role_wise_ogre extends Role_ogre {
   public $mix_in = array('common');
-  public $resist_rate  = 40;
-  public $reduce_rate  =  2;
-  public $reflect_rate = 40;
 
-  public function Win($winner) {
-    if ($this->IsDead()) return false;
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive() && $user->IsMainGroup('common', 'wolf', 'fox')) return false;
-    }
+  protected function GetOgreWolfEatResistRate() {
+    return 40;
+  }
+
+  public function GetReflectAssassinRate() {
+    return 40;
+  }
+
+  protected function GetOgreReduceDenominator() {
+    return 2;
+  }
+
+  protected function IgnoreOgreLoseSurvive() {
+    return false;
+  }
+
+  protected function RequireOgreWinDead(User $user) {
+    return $user->IsMainGroup(CampGroup::COMMON, CampGroup::WOLF, CampGroup::FOX);
+  }
+
+  protected function IgnoreOgreLoseAllDead() {
     return true;
   }
 }

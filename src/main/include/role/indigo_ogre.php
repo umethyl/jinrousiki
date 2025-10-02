@@ -4,13 +4,21 @@
   ○仕様
   ・勝利：生存 + 妖狐陣営全滅
 */
-RoleManager::LoadFile('ogre');
+RoleLoader::LoadFile('ogre');
 class Role_indigo_ogre extends Role_ogre {
-  public function Win($winner) {
-    if ($winner == 'fox' || $this->IsDead()) return false;
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive() && $user->IsCamp('fox', true)) return false;
-    }
+  protected function IsOgreLoseCamp($winner) {
+    return $winner == WinCamp::FOX;
+  }
+
+  protected function IgnoreOgreLoseSurvive() {
+    return false;
+  }
+
+  protected function RequireOgreWinDead(User $user) {
+    return $user->IsWinCamp(Camp::FOX);
+  }
+
+  protected function IgnoreOgreLoseAllDead() {
     return true;
   }
 }

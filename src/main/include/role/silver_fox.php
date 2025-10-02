@@ -4,7 +4,9 @@
   ○仕様
   ・仲間表示：なし
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_silver_fox extends Role_fox {
-  protected function OutputPartner() { return; }
+  protected function IgnorePartner() {
+    return true;
+  }
 }

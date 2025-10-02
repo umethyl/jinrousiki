@@ -4,7 +4,9 @@
   ○仕様
   ・悪戯：迷彩 (光学迷彩)
 */
-RoleManager::LoadFile('light_fairy');
+RoleLoader::LoadFile('light_fairy');
 class Role_sun_fairy extends Role_light_fairy {
-  public $bad_status = 'invisible';
+  protected function GetBadStatus() {
+    return 'invisible';
+  }
 }

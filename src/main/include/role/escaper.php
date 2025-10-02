@@ -7,34 +7,31 @@
   ・勝利：生存
 */
 class Role_escaper extends Role {
-  public $action = 'ESCAPE_DO';
-  public $action_date_type = 'after';
+  public $action      = VoteAction::ESCAPE;
+  public $action_date = RoleActionDate::AFTER;
 
   public function OutputAction() {
-    RoleHTML::OutputVote('escape-do', 'escape_do', $this->action);
+    RoleHTML::OutputVote(VoteCSS::ESCAPE, RoleAbilityMessage::ESCAPER, $this->action);
   }
 
-  //逃亡
+  //逃亡 (罠死 > 逃亡失敗 > 逃亡処理)
   final public function Escape(User $user) {
-    $actor = $this->GetActor();
-    if (in_array($user->id, $this->GetStack('trap'))) { //罠死判定
-      DB::$USER->Kill($actor->id, 'TRAPPED');
-    }
-    elseif ($this->EscapeFailed($user)) { //逃亡失敗判定
-      DB::$USER->Kill($actor->id, 'ESCAPER_DEAD');
-    }
-    else {
-      if (in_array($user->id, $this->GetStack('snow_trap'))) { //凍傷判定
-	$this->AddStack($actor->id, 'frostbite');
+    if ($this->InStack($user->id, RoleVoteTarget::TRAP)) {
+      DB::$USER->Kill($this->GetID(), DeadReason::TRAPPED);
+    } elseif (! DB::$ROOM->IsEvent('full_escape') && $this->EscapeFailed($user)) {
+      DB::$USER->Kill($this->GetID(), DeadReason::ESCAPER_DEAD);
+    } else {
+      if ($this->InStack($user->id, RoleVoteTarget::SNOW_TRAP)) { //凍傷判定
+	$this->AddStack($this->GetID(), RoleVoteSuccess::FROSTBITE);
       }
       $this->EscapeAction($user); //逃亡処理
-      $this->AddStack($user->id, 'escaper'); //逃亡先をセット
+      $this->AddStack($user->id, RoleVoteTarget::ESCAPER); //逃亡先をセット
     }
   }
 
   //逃亡失敗判定
   protected function EscapeFailed(User $user) {
-    return $user->IsWolf();
+    return $user->IsMainGroup(CampGroup::WOLF);
   }
 
   //逃亡処理
@@ -42,6 +39,6 @@ class Role_escaper extends Role {
 
   public function Win($winner) {
     $this->SetStack('escaper', 'class');
-    return $this->IsLive();
+    return $this->IsActorLive();
   }
 }

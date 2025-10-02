@@ -4,7 +4,7 @@
   ○仕様
   ・配役：人狼 → 毒狼 / 村人 → 薬師
 */
-class Option_poison_wolf extends CheckRoomOptionItem {
+class Option_poison_wolf extends OptionCheckbox {
   public function GetCaption() {
     return '毒狼登場';
   }
@@ -16,10 +16,13 @@ class Option_poison_wolf extends CheckRoomOptionItem {
 
   public function SetRole(array &$list, $count) {
     if ($count >= CastConfig::${$this->name} &&
-	isset($list['wolf'])  && $list['wolf']  > 0 &&
-	isset($list['human']) && $list['human'] > 0) {
+	ArrayFilter::GetInt($list, 'wolf') > 0 && ArrayFilter::GetInt($list, 'human') > 0) {
       OptionManager::Replace($list, 'wolf', $this->name);
       OptionManager::Replace($list, 'human', 'pharmacist');
     }
+  }
+
+  public function GetWishRole() {
+    return array($this->name, 'pharmacist');
   }
 }

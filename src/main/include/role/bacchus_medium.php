@@ -4,14 +4,27 @@
   ○仕様
   ・処刑投票：ショック死 (鬼陣営)
 */
-RoleManager::LoadFile('medium');
+RoleLoader::LoadFile('medium');
 class Role_bacchus_medium extends Role_medium {
-  public $mix_in = array('critical_mad');
-  public $vote_day_type = 'init';
-  public $sudden_death  = 'DRUNK';
+  public $mix_in = array('critical_mad', 'chicken');
 
-  public function SetVoteAction(User $user) {
-    if ($user->IsAvoidLovers(true)) return;
-    if ($user->IsOgre()) $this->SuddenDeathKill($user->id);
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
+
+  protected function IgnoreVoteKillAction(User $user) {
+    return RoleUser::IsAvoidLovers($user, true);
+  }
+
+  protected function IsVoteKillActionTarget(User $user) {
+    return $user->IsMainCamp(Camp::OGRE);
+  }
+
+  protected function SetVoteKillAction(User $user) {
+    $this->SuddenDeathKill($user->id);
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'DRUNK';
   }
 }

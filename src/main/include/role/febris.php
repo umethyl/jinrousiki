@@ -3,12 +3,11 @@
   ◆熱病 (febris)
   ○仕様
   ・表示：当日限定
+  ・能力結果：発動宣告
   ・ショック死：発動当日
 */
-RoleManager::LoadFile('chicken');
+RoleLoader::LoadFile('chicken');
 class Role_febris extends Role_chicken {
-  public $sudden_death = 'FEBRIS';
-
   protected function IgnoreAbility() {
     return ! $this->IsDoom();
   }
@@ -18,9 +17,10 @@ class Role_febris extends Role_chicken {
   }
 
   protected function OutputAddResult() {
-    $header = $this->role . '_header';
+    $header = $this->GetImage() . '_header';
+    $date   = $this->GetDoomDate();
     $footer = $this->GetResultFooter();
-    RoleHTML::OutputAbilityResult($header, $this->GetDoomDate(), $footer);
+    RoleHTML::OutputAbilityResult($header, $date, $footer);
   }
 
   //ショック死発動日取得
@@ -33,7 +33,21 @@ class Role_febris extends Role_chicken {
     return 'sudden_death_footer';
   }
 
-  public function IsSuddenDeath() {
+  protected function IgnoreSuddenDeath() {
+    $user = $this->GetActor()->GetReal();
+    return $user->IsRoleGroup('fortitude') || $this->IgnoreSuddenDeathFebris();
+  }
+
+  //熱病追加ショック死判定対象外判定
+  protected function IgnoreSuddenDeathFebris() {
+    return false;
+  }
+
+  protected function IsSuddenDeath() {
     return $this->IsDoom();
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'FEBRIS';
   }
 }

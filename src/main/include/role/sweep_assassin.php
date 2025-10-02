@@ -4,14 +4,9 @@
   ○仕様
   ・投票：キャンセル投票不可
 */
-RoleManager::LoadFile('assassin');
+RoleLoader::LoadFile('assassin');
 class Role_sweep_assassin extends Role_assassin {
-  protected function SetVoteNightFilter() {
-    $this->SetStack(null, 'not_action');
-  }
-
-  protected function ExistsActionFilter(array $list) {
-    unset($list[$this->not_action]);
-    return $list;
+  protected function IgnoreNotAction() {
+    return true;
   }
 }

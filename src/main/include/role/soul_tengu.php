@@ -2,16 +2,18 @@
 /*
   ◆大天狗 (soul_tengu)
   ○仕様
+  ・能力結果：神通力追加
   ・神通力：役職取得
+  ・神通力対象：全て
 */
-RoleManager::LoadFile('tengu');
+RoleLoader::LoadFile('tengu');
 class Role_soul_tengu extends Role_tengu {
   protected function IgnoreResult() {
     return false;
   }
 
   protected function OutputAddResult() {
-    $this->OutputAbilityResult('TENGU_RESULT');
+    RoleHTML::OutputResult(RoleAbility::TENGU);
   }
 
   protected function IgnoreTenguTarget(User $user) {
@@ -19,6 +21,6 @@ class Role_soul_tengu extends Role_tengu {
   }
 
   protected function TenguKill(User $user) {
-    $this->SaveMageResult($user, $user->main_role, 'TENGU_RESULT');
+    $this->SaveMageResult($user, $user->main_role, RoleAbility::TENGU);
   }
 }

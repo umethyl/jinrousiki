@@ -2,7 +2,7 @@
 /*
   ◆狂人置換村 (セレクタ)
 */
-OptionManager::Load('replace_human_selector');
+OptionLoader::LoadFile('replace_human_selector');
 class Option_change_mad_selector extends Option_replace_human_selector {
   public function GetCaption() {
     return '狂人置換村';

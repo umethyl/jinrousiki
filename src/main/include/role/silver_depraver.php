@@ -4,7 +4,9 @@
   ○仕様
   ・仲間表示：なし
 */
-RoleManager::LoadFile('depraver');
+RoleLoader::LoadFile('depraver');
 class Role_silver_depraver extends Role_depraver {
-  protected function OutputPartner() { return; }
+  protected function IgnorePartner() {
+    return true;
+  }
 }

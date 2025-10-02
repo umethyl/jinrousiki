@@ -4,7 +4,9 @@
   ○仕様
   ・悪戯：死亡欄妨害 (星座)
 */
-RoleManager::LoadFile('flower_fairy');
+RoleLoader::LoadFile('flower_fairy');
 class Role_star_fairy extends Role_flower_fairy {
-  public $result = 'CONSTELLATION';
+  protected function GetFairyActionResult() {
+    return 'CONSTELLATION';
+  }
 }

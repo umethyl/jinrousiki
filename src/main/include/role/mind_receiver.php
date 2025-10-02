@@ -2,22 +2,18 @@
 /*
   ◆受信者 (mind_receiver)
   ○仕様
-  ・表示：2 日目以降
-  ・仲間表示：受信先
-  ・発言透過：受信先
+  ・仲間表示：対象者
+  ・発言透過：対象者
 */
-class Role_mind_receiver extends Role {
-  protected function IgnoreAbility() {
-    return DB::$ROOM->date < 2;
-  }
-
-  protected function OutputPartner() {
+RoleLoader::LoadFile('mind_read');
+class Role_mind_receiver extends Role_mind_read {
+  protected function GetPartner() {
     $stack = array();
     foreach ($this->GetActor()->GetPartner($this->role, true) as $id) {
       $stack[$id] = DB::$USER->ByID($id)->handle_name;
     }
     ksort($stack);
-    RoleHTML::OutputPartner($stack, 'mind_scanner_target');
+    return array('mind_scanner_target' => $stack);
   }
 
   public function IsMindReadActive(User $user) {

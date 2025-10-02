@@ -12,7 +12,7 @@ class CastConfig {
   */
 
   //基本配役テーブル
-  static $role_list = array(
+  public static $role_list = array(
      4 => array('human' =>  1, 'wolf' => 1, 'mage' => 1, 'mad' => 1),
      5 => array('wolf'  =>  1, 'mage' => 2, 'mad'  => 2),
      6 => array('human' =>  1, 'wolf' => 1, 'mage' => 1, 'poison' => 1, 'fox' => 1, 'cupid' => 1),
@@ -63,7 +63,7 @@ class CastConfig {
 			    );
 
   //お祭り村専用配役テーブル
-  static $festival_role_list = array(
+  public static $festival_role_list = array(
      8 => array('human' => 2, 'mage' => 1, 'necromancer' => 1, 'wolf' => 1, 'mad' => 1, 'whisper_mad' => 1, 'fox' => 1),
      9 => array('human' => 3, 'guard' => 3, 'wolf' => 2, 'chiroptera' => 1),
     10 => array('human' => 2, 'mage' => 1, 'necromancer' => 1, 'guard' => 1, 'escaper' => 1, 'wolf' => 2, 'mad' => 1, 'fox' => 1),
@@ -82,36 +82,36 @@ class CastConfig {
 				     );
 
   //決闘村配役テーブル (実際は InitializeDuel() で初期化する)
-  static $duel_fix_list  = array(); //固定配役
-  static $duel_rate_list = array('assassin' => 11, 'wolf' => 4, 'trap_mad' => 5); //配役比率
+  public static $duel_fix_list  = array(); //固定配役
+  public static $duel_rate_list = array('assassin' => 11, 'wolf' => 4, 'trap_mad' => 5); //配役比率
 
   /* 役職出現人数 */
   //各役職の出現に必要な人数を設定する
-  static $poison         = 20; //埋毒者		[村人2 → 埋毒者1、人狼1]
-  static $assassin       = 22; //暗殺者		[村人2 → 暗殺者1、人狼1]
-  static $wolf           = 20; //人狼追加	[村人1 → 人狼1]
-  static $boss_wolf      = 18; //白狼		[人狼1 → 白狼1]
-  static $poison_wolf    = 20; //毒狼 (+ 薬師)	[人狼1 → 毒狼1、村人1 → 薬師1]
-  static $tongue_wolf    =  8; //舌禍狼		[人狼1 → 舌禍狼1]
-  static $possessed_wolf =  8; //憑狼		[人狼1 → 憑狼1]
-  static $sirius_wolf    =  8; //天狼		[人狼1 → 天狼1]
-  static $mad            = 10; //狂人追加	[村人1 → 狂人1]
-  static $fox            =  8; //妖狐追加	[村人1 → 妖狐1]
-  static $no_fox         = 15; //妖狐なし	[妖狐1 → 村人1]
-  static $child_fox      =  8; //子狐		[妖狐1 → 子狐1]
-  static $depraver       =  8; //背徳者		[村人1 → 背徳者1]
-  static $cupid          = 16; //キューピッド	[村人1 → キューピッド1]
-  static $medium         = 20; //巫女 (+ 女神)	[村人2 → 巫女1、女神1]
-  static $mania          = 16; //神話マニア	[村人1 → 神話マニア1]
-  static $decide         = 16; //決定者 [兼任]
-  static $authority      = 16; //権力者 [兼任]
+  public static $poison         = 20; //埋毒者		[村人2 → 埋毒者1、人狼1]
+  public static $assassin       = 22; //暗殺者		[村人2 → 暗殺者1、人狼1]
+  public static $wolf           = 20; //人狼追加	[村人1 → 人狼1]
+  public static $boss_wolf      = 18; //白狼		[人狼1 → 白狼1]
+  public static $poison_wolf    = 20; //毒狼 (+ 薬師)	[人狼1 → 毒狼1、村人1 → 薬師1]
+  public static $tongue_wolf    =  8; //舌禍狼		[人狼1 → 舌禍狼1]
+  public static $possessed_wolf =  8; //憑狼		[人狼1 → 憑狼1]
+  public static $sirius_wolf    =  8; //天狼		[人狼1 → 天狼1]
+  public static $mad            = 10; //狂人追加	[村人1 → 狂人1]
+  public static $fox            =  8; //妖狐追加	[村人1 → 妖狐1]
+  public static $no_fox         = 15; //妖狐なし	[妖狐1 → 村人1]
+  public static $child_fox      =  8; //子狐		[妖狐1 → 子狐1]
+  public static $depraver       =  8; //背徳者		[村人1 → 背徳者1]
+  public static $cupid          = 16; //キューピッド	[村人1 → キューピッド1]
+  public static $medium         = 20; //巫女 (+ 女神)	[村人2 → 巫女1、女神1]
+  public static $mania          = 16; //神話マニア	[村人1 → 神話マニア1]
+  public static $decide         = 16; //決定者 [兼任]
+  public static $authority      = 16; //権力者 [兼任]
 
   /* その他 */
   //身代わり君がならない役職グループのリスト (人狼・妖狐は常時対象外なので設定不要)
-  static $disable_dummy_boy_role_list = array('poison');
+  public static $disable_dummy_boy_role_list = array('poison');
 
   //役職置換モード (オプション名 => 置換先役職)
-  static $replace_role_list = array(
+  public static $replace_role_list = array(
     'replace_human' => 'escaper',
     'change_common' => 'leader_common',
     'change_mad'    => 'jammer_mad',
@@ -119,7 +119,7 @@ class CastConfig {
 
   /* 関数 */
   //決闘村の配役初期化処理
-  static function InitializeDuel($user_count) {
+  public static function InitializeDuel($user_count) {
     //-- 霊界自動公開オプションによる配役設定分岐 --//
     if (DB::$ROOM->IsOption('not_open_cast')) { //非公開
       //-- 埋毒決闘 --//
@@ -157,7 +157,7 @@ class CastConfig {
   }
 
   //決闘村の配役最終処理
-  static function FinalizeDuel($user_count, &$role_list) {
+  public static function FinalizeDuel($user_count, &$role_list) {
     if (DB::$ROOM->IsOption('not_open_cast')) { //非公開
     }
     elseif (DB::$ROOM->IsOption('auto_open_cast')) { //自動公開

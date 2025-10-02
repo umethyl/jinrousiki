@@ -7,6 +7,6 @@ class IconConfig {
   const VIEW   = 100;	//一画面に表示するアイコンの数
   const PAGE   = 10;	//一画面に表示するページ数の数
 
-  static public $dead = 'grave.jpg';	//死者
-  static public $wolf = 'wolf.gif';	//狼
+  public static $dead = 'grave.jpg';	//死者
+  public static $wolf = 'wolf.gif';	//狼
 }

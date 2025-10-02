@@ -5,12 +5,13 @@
   ・処刑：特殊イベント (目隠し)
   ・人狼襲撃：特殊イベント (公開者)
 */
-RoleManager::LoadFile('history_brownie');
+RoleLoader::LoadFile('history_brownie');
 class Role_sun_brownie extends Role_history_brownie {
-  public $event_day   = 'blinder';
-  public $event_night = 'mind_open';
-
   public function VoteKillCounter(array $list) {
-    DB::$ROOM->SystemMessage($this->event_day, 'EVENT', 1);
+    DB::$ROOM->SystemMessage('blinder', EventType::EVENT, 1);
+  }
+
+  protected function GetWolfEatCounterEvent() {
+    return 'mind_open';
   }
 }

@@ -1,9 +1,11 @@
 <?php
 //-- システムユーザクラス --//
 class GM {
-  const ID        = 1; //ユーザ ID
-  const SYSTEM    = 'system'; //システムユーザ
-  const DUMMY_BOY = 'dummy_boy'; //身代わり君
+  const ID        = 1;			//ユーザ ID
+  const SYSTEM    = 'system';		//システムユーザ
+  const DUMMY_BOY = 'dummy_boy';	//身代わり君
+  const PROFILE   = 'ゲームマスター';	//プロフィール (初期処理用)
+  const ROLE      = 'GM';		//役職 (初期処理用)
 }
 
 //-- 汎用スタッククラス --//
@@ -23,8 +25,12 @@ class Stack {
   //取得 (配列)
   public function GetKey($name, $key) {
     $stack = $this->GetArray($name);
-    if (is_null($stack)) return null;
-    return isset($stack[$key]) ? $stack[$key] : null;
+    return is_null($stack) ? null : ArrayFilter::Get($stack, $key);
+  }
+
+  //取得 (array_keys() ベース)
+  public function GetKeyList($name, $key = null) {
+    return ArrayFilter::GetKeyList($this->GetArray($name, true), $key);
   }
 
   //セット
@@ -52,15 +58,13 @@ class Stack {
   //存在判定 (配列)
   public function ExistsKey($name, $key) {
     //Text::p($name, "◆Stack/Exists[{$key}]");
-    $stack = $this->GetArray($name);
-    return is_array($stack) && array_key_exists($key, $stack);
+    return ArrayFilter::Exists($this->Get($name), $key);
   }
 
   //存在判定 (in_array() ラッパー)
-  public function ExistsArray($name, $value) {
-    //Text::p($name, "◆Stack/ExistsArray[{$value}]");
-    $stack = $this->GetArray($name);
-    return is_array($stack) && in_array($value, $stack);
+  public function IsInclude($name, $value) {
+    //Text::p($name, "◆Stack/IsInclude[{$value}]");
+    return ArrayFilter::IsInclude($this->Get($name), $value);
   }
 
   //未設定判定
@@ -121,9 +125,8 @@ class Stack {
   }
 
   //取得 (配列固定)
-  private function GetArray($name) {
-    $stack = $this->Get($name);
-    return is_array($stack) ? $stack : null;
+  private function GetArray($name, $fill = false) {
+    return ArrayFilter::Cast($this->Get($name), $fill);
   }
 }
 
@@ -150,95 +153,45 @@ class FlagStack extends Stack {
   }
 }
 
-//-- 「福引」クラス --//
-class Lottery {
-  static public $display = false;
+//-- マネージャ基底クラス --//
+abstract class StackManager {
+  private $stack;
+  private $flag;
 
-  //乱数取得
-  static function Rand($max) {
-    return mt_rand(1, $max);
-  }
-
-  //確率判定
-  static function Rate($base, $rate) {
-    $rand = self::Rand($base);
-    if (self::$display) Text::p(sprintf('%d <= %d', $rand, $rate), '◆Rate');
-    return $rand <= $rate;
-  }
-
-  //パーセント判定
-  static function Percent($rate) {
-    return self::Rate(100, $rate);
-  }
-
-  //bool 判定
-  static function Bool() {
-    return self::Percent(50);
-  }
-
-  //配列からランダムに一つ取り出す
-  static function Get(array $list) {
-    return count($list) > 0 ? $list[self::Rand(count($list)) - 1] : null;
-  }
-
-  //一定範囲からランダムに取り出す
-  static function GetRange($from, $to) {
-    return self::Get(range($from, $to));
-  }
-
-  //パーセント値取得
-  static function GetPercent() {
-    return self::Rand(100);
-  }
-
-  //シャッフルした配列を返す
-  static function GetList(array $list) {
-    shuffle($list);
-    return $list;
-  }
-
-  //闇鍋モードの配役リスト取得
-  static function GetChaos(array $list, array $filter) {
-    foreach ($filter as $role => $rate) { //出現率補正
-      if (isset($list[$role])) $list[$role] = round($list[$role] * $rate);
+  //-- スタック関連 --//
+  //スタック取得
+  final public function Stack() {
+    if (is_null($this->stack)) {
+      $this->stack = new Stack();
     }
-    return $list;
+    //if (get_class($this) == 'Room') Text::p($this->stack);
+    return $this->stack;
   }
 
-  //「比」の配列から一つ引く
-  static function Draw(array $list) {
-    return self::Get(self::Generate($list));
-  }
-
-  //「比」の配列から「福引き」を作成する
-  static function Generate(array $list) {
-    $stack = array();
-    foreach ($list as $role => $rate) {
-      for (; $rate > 0; $rate--) $stack[] = $role;
+  //フラグスタック取得
+  final public function Flag() {
+    if (is_null($this->flag)) {
+      $this->flag = new FlagStack();
     }
-    return $stack;
+    //if (get_class($this) == 'Room') Text::p($this->flag);
+    return $this->flag;
   }
 
-  //「福引き」を一定回数行ってリストに追加する
-  static function Add(array &$list, array $random_list, $count) {
-    for (; $count > 0; $count--) {
-      $role = self::Get($random_list);
-      isset($list[$role]) ? $list[$role]++ : $list[$role] = 1;
+  //フラグセット
+  final public function SetFlag() {
+    foreach (func_get_args() as $mode) {
+      $this->Flag()->On($mode);
     }
   }
 
-  //「比」から「確率」に変換する (テスト用)
-  static function ToProbability(array $list) {
-    $stack = array();
-    $total = array_sum($list);
-    foreach ($list as $role => $rate) {
-      $stack[$role] = sprintf('%01.2f', $rate / $total * 100);
-    }
-    Text::p($stack);
+  //ON 判定
+  final public function IsOn($mode) {
+    //if (get_class($this) == 'User') Text::p($this->Flag());
+    return $this->Flag()->Get($mode);
   }
 
-  //確率表示設定 (デバッグ用)
-  static function d($flag = true) {
-    self::$display = $flag;
+  //OFF 判定
+  final public function IsOff($mode) {
+    return ! $this->IsOn($mode);
   }
 }

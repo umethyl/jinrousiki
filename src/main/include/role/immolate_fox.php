@@ -5,15 +5,15 @@
   ・人狼襲撃カウンター：能力発現
   ・勝利：能力発現所持
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_immolate_fox extends Role_fox {
-  public $ability = 'muster_ability';
+  public $mix_in = array('immolate_mad');
 
   public function FoxEatCounter(User $user) {
-    $this->GetActor()->AddRole($this->ability);
+    $this->AddMusterRole();
   }
 
   public function Win($winner) {
-    return $this->GetActor()->IsRole($this->ability);
+    return $this->IsMusterRole();
   }
 }

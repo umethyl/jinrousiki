@@ -4,11 +4,13 @@
   ○仕様
   ・ショック死：自分の投票先に他の人が投票していない
 */
-RoleManager::LoadFile('chicken');
+RoleLoader::LoadFile('chicken');
 class Role_flattery extends Role_chicken {
-  public $sudden_death = 'FLATTERY';
+  protected function IsSuddenDeath() {
+    return $this->CountVoteTarget() < 2;
+  }
 
-  public function IsSuddenDeath() {
-    return $this->GetVoteTargetCount() < 2;
+  protected function GetSuddenDeathType() {
+    return 'FLATTERY';
   }
 }

@@ -5,14 +5,24 @@
   ・毒対象選出 (襲撃)：本人固定
   ・毒死：回避 (一回限定)
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_resist_wolf extends Role_wolf {
+  //処刑毒死耐性
+  public function ResistVoteKillPoison() {
+    return $this->IgnorePoisonDead();
+  }
+
   public function GetPoisonEatTarget() {
     return $this->GetWolfVoter();
   }
 
-  public function PoisonDead() {
+  protected function IgnorePoisonDead() {
     $actor = $this->GetActor();
-    $actor->IsActive() ? $actor->LostAbility() : parent::PoisonDead();
+    if ($actor->IsActive()) {
+      $actor->LostAbility();
+      return true;
+    } else {
+      return false;
+    }
   }
 }

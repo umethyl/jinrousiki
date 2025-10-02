@@ -2,8 +2,8 @@
 /*
   ◆お祭り村 (festival)
 */
-class Option_festival extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_festival extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return 'お祭り村';

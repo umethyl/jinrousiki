@@ -4,11 +4,11 @@
   ○仕様
   ・身代わり：自分の感染者
 */
-RoleManager::LoadFile('vampire');
+RoleLoader::LoadFile('vampire');
 class Role_sacrifice_vampire extends Role_vampire {
   public $mix_in = array('protected');
 
-  public function IsSacrifice(User $user) {
+  protected function IsSacrifice(User $user) {
     return $user->IsPartner('infected', $this->GetID());
   }
 }

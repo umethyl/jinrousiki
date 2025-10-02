@@ -2,20 +2,24 @@
 /*
   ◆恋妖精 (sweet_fairy)
   ○仕様
-  ・悪戯：悲恋 (sweet_status)
+  ・悪戯：サブ役職付加 (悲恋)
 */
-RoleManager::LoadFile('fairy');
+RoleLoader::LoadFile('fairy');
 class Role_sweet_fairy extends Role_fairy {
-  public $action = 'CUPID_DO';
-  public $action_date_type = 'first';
-  public $submit = 'fairy_do';
+  public $action      = VoteAction::CUPID;
+  public $action_date = RoleActionDate::FIRST;
+  public $submit      = VoteAction::FAIRY;
 
-  public function IsVoteCheckbox(User $user, $live) {
-    return $live && ! $user->IsDummyBoy();
+  protected function IgnoreVoteCheckboxSelf() {
+    return false;
   }
 
-  protected function GetVoteCheckboxHeader() {
-    return RoleHTML::GetVoteCheckboxHeader('checkbox');
+  protected function IgnoreVoteCheckboxDummyBoy() {
+    return true;
+  }
+
+  protected function GetVoteCheckboxType() {
+    return OptionFormType::CHECKBOX;
   }
 
   public function SetVoteNightUserList(array $list) {
@@ -23,9 +27,8 @@ class Role_sweet_fairy extends Role_fairy {
     sort($list);
     foreach ($list as $id) {
       $user = DB::$USER->ByID($id);
-      //例外判定
-      if ($user->IsDead())     return VoteRoleMessage::TARGET_DEAD;
-      if ($user->IsDummyBoy()) return VoteRoleMessage::TARGET_DUMMY_BOY;
+      $str  = $this->IgnoreVoteNight($user, $user->IsLive()); //例外判定
+      if (! is_null($str)) return $str;
       $stack[$id] = $user;
     }
     $this->SetStack($stack, 'target_list');
@@ -39,8 +42,8 @@ class Role_sweet_fairy extends Role_fairy {
       $stack[] = $user->handle_name;
       $user->AddRole($this->GetActor()->GetID('sweet_status'));
     }
-    $this->SetStack(implode(' ', array_keys($list)), 'target_no');
-    $this->SetStack(implode(' ', $stack), 'target_handle');
-    $this->SetStack('FAIRY_DO', 'message'); //Talk の action は FAIRY_DO
+    $this->SetStack(ArrayFilter::ConcatKey($list), RequestDataVote::TARGET);
+    $this->SetStack(ArrayFilter::Concat($stack), 'target_handle');
+    $this->SetStack(VoteAction::FAIRY, 'message'); //Talk の action は FAIRY
   }
 }

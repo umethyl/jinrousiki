@@ -6,11 +6,8 @@
 */
 class Role_grassy extends Role {
   public function ConvertSay() {
-    $say    = $this->GetStack('say');
     $result = '';
-    $count  = mb_strlen($say);
-    for ($i = 0; $i < $count; $i++) {
-      $str = mb_substr($say, $i, 1);
+    foreach (Text::Split($this->GetStack('say')) as $str) {
       $result .= ($str == Text::LF ? $str : $str . 'w '); //改行判定
     }
     $this->SetStack($result, 'say');

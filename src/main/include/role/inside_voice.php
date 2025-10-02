@@ -4,10 +4,9 @@
   ○仕様
   ・声量変換：昼「小声」 / 夜「大声」固定
 */
-RoleManager::LoadFile('strong_voice');
+RoleLoader::LoadFile('strong_voice');
 class Role_inside_voice extends Role_strong_voice {
   public function FilterVoice(&$voice, &$str) {
-    $stack = $this->voice_list;
-    $voice = DB::$ROOM->IsNight() ? array_pop($stack) : array_shift($stack);
+    $voice = ArrayFilter::Pick($this->voice_list, DB::$ROOM->IsNight());
   }
 }

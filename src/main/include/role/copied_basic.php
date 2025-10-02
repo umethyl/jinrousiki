@@ -3,6 +3,6 @@
   ◆元求道者 (copied_basic)
   ○仕様
 */
-RoleManager::LoadFile('copied');
+RoleLoader::LoadFile('copied');
 class Role_copied_basic extends Role_copied {
 }

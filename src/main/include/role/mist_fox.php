@@ -3,6 +3,6 @@
   ◆霧狐 (mist_fox)
   ○仕様
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_mist_fox extends Role_fox {
 }

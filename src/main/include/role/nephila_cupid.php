@@ -2,16 +2,22 @@
 /*
   ◆絡新婦 (nephila_cupid)
   ○仕様
+  ・自分撃ち：固定
   ・投票人数：3人
   ・追加役職：愛人 (両方) + 受信者 (自分)
 */
-RoleManager::LoadFile('cupid');
+RoleLoader::LoadFile('cupid');
 class Role_nephila_cupid extends Role_cupid {
-  public $self_shoot  = true;
-  public $shoot_count = 3;
-
-  protected function IsCupidTarget(User $user, $id) {
+  protected function IsCupidPartner(User $user, $id) {
     return $user->IsPartner('fake_lovers', $id);
+  }
+
+  protected function FixSelfShoot() {
+    return true;
+  }
+
+  protected function GetVoteNightNeedCount() {
+    return 3;
   }
 
   protected function IsLoversTarget(User $user) {
@@ -19,7 +25,9 @@ class Role_nephila_cupid extends Role_cupid {
     if (is_null($target_id)) { //恋人抽選処理
       $stack = array();
       foreach ($this->GetStack('target_list') as $target) {
-	if (! $this->IsActor($target)) $stack[] = $target->id;
+	if (! $this->IsActor($target)) {
+	  $stack[] = $target->id;
+	}
       }
       $target_id = Lottery::Get($stack);
       $this->SetStack($target_id);
@@ -29,8 +37,9 @@ class Role_nephila_cupid extends Role_cupid {
 
   protected function AddCupidRole(User $user) {
     if (! $this->IsActor($user)) {
-      $user->AddRole($this->GetActor()->GetID('fake_lovers'));
-      $this->GetActor()->AddRole($user->GetID('mind_receiver'));
+      $actor = $this->GetActor();
+      $user->AddRole($actor->GetID('fake_lovers'));
+      $actor->AddRole($user->GetID('mind_receiver'));
     }
   }
 }

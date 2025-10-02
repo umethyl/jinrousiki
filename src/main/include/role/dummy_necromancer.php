@@ -4,10 +4,10 @@
   ○仕様
   ・霊能：村人・人狼反転
 */
-RoleManager::LoadFile('necromancer');
+RoleLoader::LoadFile('necromancer');
 class Role_dummy_necromancer extends Role_necromancer {
   public $display_role = 'necromancer';
-  public $result = 'DUMMY_NECROMANCER_RESULT';
+  public $result = RoleAbility::DUMMY_NECROMANCER;
 
   public function Necromancer(User $user, $flag) {
     return DB::$ROOM->IsEvent('no_dream') ? null : $this->DistinguishNecromancer($user, true);

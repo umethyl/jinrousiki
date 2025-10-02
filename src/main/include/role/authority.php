@@ -4,34 +4,46 @@
   ○仕様
   ・投票数：+1
   ・得票数補正：-2 (権力者と同じ人に投票)
+  ・処刑投票情報収集：自分と対象者
 */
 class Role_authority extends Role {
-  public $vote_day_type = 'both';
-
   //投票数補正処理
-  public function FilterVoteDo() {
+  final public function FilterVoteDo() {
     if ($this->CallParent('IgnoreFilterVoteDo')) return false;
 
     $count = $this->CallParent('GetVoteDoCount');
     if (! $this->CallParent('IsUpdateFilterVoteDo')) {
       $count += $this->GetStack('vote_number');
     }
+    $this->CallParent('NoticeFilterVoteDo');
     //Text::p($count, "◆VoteCount [$this->role]");
     $this->SetStack($count, 'vote_number');
   }
 
   //投票数補正無効判定
-  public function IgnoreFilterVoteDo() {
+  protected function IgnoreFilterVoteDo() {
     return false;
   }
 
   //投票数補正値取得
-  public function GetVoteDoCount() {
+  protected function GetVoteDoCount() {
     return 1;
   }
 
   //投票数上書き判定
-  public function IsUpdateFilterVoteDo() {
+  protected function IsUpdateFilterVoteDo() {
     return false;
+  }
+
+  //投票数補正通知
+  protected function NoticeFilterVoteDo() {}
+
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::ETC;
+  }
+
+  protected function SetStackVoteKillEtc($name) {
+    $this->SetStack($this->GetUname());
+    $this->SetStack($uname, $this->role . '_uname');
   }
 }

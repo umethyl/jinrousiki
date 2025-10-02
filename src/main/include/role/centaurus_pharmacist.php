@@ -4,15 +4,16 @@
   ○仕様
   ・処刑投票：毒死 (毒能力者限定)
 */
-RoleManager::LoadFile('pharmacist');
+RoleLoader::LoadFile('pharmacist');
 class Role_centaurus_pharmacist extends Role_pharmacist {
   public $result = null;
 
-  public function VoteAction() {
+  public function VoteKillAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
+
       if ($this->DistinguishPoison(DB::$USER->ByRealUname($target_uname)) != 'nothing') {
-	DB::$USER->Kill(DB::$USER->UnameToNumber($uname), 'POISON_DEAD');
+	DB::$USER->Kill(DB::$USER->UnameToNumber($uname), DeadReason::POISON_DEAD);
       }
     }
   }

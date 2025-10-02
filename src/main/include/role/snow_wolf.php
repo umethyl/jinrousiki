@@ -4,19 +4,21 @@
   ○仕様
   ・処刑得票：凍傷 (子狐系限定)
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_snow_wolf extends Role_wolf {
-  public $vote_day_type = 'init';
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
 
   public function VoteKillReaction() {
-    foreach (array_keys($this->GetStack()) as $uname) {
+    foreach ($this->GetStackKey() as $uname) {
       if ($this->IsVoted($uname)) continue;
 
       $user = DB::$USER->ByRealUname($uname);
-      if ($user->IsAvoidLovers(true)) continue;
+      if (RoleUser::IsAvoidLovers($user, true)) continue;
 
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
-	if (DB::$USER->ByRealUname($voted_uname)->IsChildFox()) {
+	if (DB::$USER->ByRealUname($voted_uname)->IsMainGroup(CampGroup::CHILD_FOX)) {
 	  $user->AddDoom(1, 'frostbite');
 	  break;
 	}

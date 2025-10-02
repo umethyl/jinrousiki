@@ -3,6 +3,6 @@
   ◆倫敦人形 (phantom_doll)
   ○仕様
 */
-RoleManager::LoadFile('doll');
+RoleLoader::LoadFile('doll');
 class Role_phantom_doll extends Role_doll {
 }

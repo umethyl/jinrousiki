@@ -5,16 +5,23 @@
   ・追加役職：共鳴者 (両方)
   ・処刑投票：恋耳鳴
 */
-RoleManager::LoadFile('cupid');
+RoleLoader::LoadFile('cupid');
 class Role_sweet_cupid extends Role_cupid {
   public $mix_in = array('critical_mad');
-  public $vote_day_type = 'init';
+
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
+
+  protected function IgnoreVoteKillAction(User $user) {
+    return false;
+  }
+
+  protected function GetVoteKillActionRole() {
+    return 'sweet_ringing';
+  }
 
   protected function AddCupidRole(User $user) {
     $user->AddRole($this->GetActor()->GetID('mind_friend'));
-  }
-
-  public function SetVoteAction(User $user) {
-    $user->AddRole('sweet_ringing');
   }
 }

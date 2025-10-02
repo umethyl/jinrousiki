@@ -4,19 +4,21 @@
   ○仕様
   ・処刑得票：凍傷 (投票者：狂人系限定)
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_snow_fox extends Role_fox {
-  public $vote_day_type = 'init';
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
 
   public function VoteKillReaction() {
-    foreach (array_keys($this->GetStack()) as $uname) {
+    foreach ($this->GetStackKey() as $uname) {
       if ($this->IsVoted($uname)) continue;
 
       $user = DB::$USER->ByRealUname($uname);
-      if ($user->IsAvoidLovers(true)) continue;
+      if (RoleUser::IsAvoidLovers($user, true)) continue;
 
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
-	if (DB::$USER->ByRealUname($voted_uname)->IsMainGroup('mad')) {
+	if (DB::$USER->ByRealUname($voted_uname)->IsMainGroup(CampGroup::MAD)) {
 	  $user->AddDoom(1, 'frostbite');
 	  break;
 	}

@@ -2,21 +2,21 @@
 /*
   ◆狡狼 (trap_wolf)
   ○仕様
+  ・能力結果：発動発現
   ・罠：罠死 (自動自己設置型)
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_trap_wolf extends Role_wolf {
-  public $ability = 'ability_trap_wolf';
-
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3;
   }
 
   protected function OutputAddResult() {
-    RoleHTML::OutputAbilityResult($this->ability, null);
+    RoleHTML::OutputAbilityResult('ability_trap_wolf', null);
   }
 
-  final public function SetTrap() {
-    $this->AddStack($this->GetID(), 'trap');
+  //罠設置 (自動自己設置型 / 無効判定は呼び出し側で対応)
+  final public function SetAutoTrap() {
+    $this->AddStack($this->GetID(), RoleVoteTarget::TRAP);
   }
 }

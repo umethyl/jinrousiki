@@ -4,7 +4,9 @@
   ○仕様
   ・投票人数：3人
 */
-RoleManager::LoadFile('valkyrja_duelist');
+RoleLoader::LoadFile('valkyrja_duelist');
 class Role_triangle_duelist extends Role_valkyrja_duelist {
-  public $shoot_count = 3;
+  protected function GetVoteNightNeedCount() {
+    return 3;
+  }
 }

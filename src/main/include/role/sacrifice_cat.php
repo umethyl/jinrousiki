@@ -5,12 +5,17 @@
   ・蘇生率：100% / 誤爆無し
   ・蘇生後：死亡
 */
-RoleManager::LoadFile('poison_cat');
+RoleLoader::LoadFile('poison_cat');
 class Role_sacrifice_cat extends Role_poison_cat {
-  public $revive_rate   = 100;
-  public $missfire_rate =   0;
+  protected function GetReviveRate() {
+    return 100;
+  }
 
-  public function ReviveAction() {
-    DB::$USER->Kill($this->GetID(), 'SACRIFICE');
+  protected function GetMissfireRate($revive) {
+    return 0;
+  }
+
+  protected function ReviveAction() {
+    DB::$USER->Kill($this->GetID(), DeadReason::SACRIFICE);
   }
 }

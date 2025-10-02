@@ -4,7 +4,7 @@
   ○仕様
   ・変換リスト：テンプレートキーワード判定 (発動率はサーバ設定)
 */
-RoleManager::LoadFile('passion');
+RoleLoader::LoadFile('passion');
 class Role_liar extends Role_passion {
   public $convert_say_list = array(
     '村人' => '人狼', '人狼' => '村人',

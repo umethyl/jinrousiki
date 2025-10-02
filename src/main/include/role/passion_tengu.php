@@ -4,7 +4,7 @@
   ○仕様
   ・神通力：恋色迷彩
 */
-RoleManager::LoadFile('tengu');
+RoleLoader::LoadFile('tengu');
 class Role_passion_tengu extends Role_tengu {
   protected function TenguKill(User $user) {
     $user->AddRole('passion');

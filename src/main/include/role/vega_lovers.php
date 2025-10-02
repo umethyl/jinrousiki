@@ -10,17 +10,20 @@
 */
 class Role_vega_lovers extends Role {
   public $mix_in = array('decide', 'watcher', 'upper_luck');
-  public $vote_day_type = 'target';
 
   protected function IgnoreAbility() {
     return DB::$ROOM->date < 2;
   }
 
-  public function GetVotePollCount() {
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::TARGET;
+  }
+
+  protected function GetVotePollCount() {
     return 0;
   }
 
-  public function IsUpdateFilterVotePoll() {
+  protected function IsUpdateFilterVotePoll() {
     return true;
   }
 

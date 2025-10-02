@@ -5,13 +5,13 @@
   ・表示：当日限定
   ・投票数：+1 (当日限定)
 */
-RoleManager::LoadFile('authority');
+RoleLoader::LoadFile('authority');
 class Role_day_voter extends Role_authority {
   protected function IgnoreAbility() {
     return ! $this->IsDoom();
   }
 
-  public function IgnoreFilterVoteDo() {
+  protected function IgnoreFilterVoteDo() {
     return $this->IgnoreAbility();
   }
 }

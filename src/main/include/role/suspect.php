@@ -12,7 +12,7 @@ class Role_suspect extends Role {
     if (! DB::$ROOM->IsDay() || DB::$ROOM->IsEvent('no_cute')) return false; //スキップ判定
 
     $rate = GameConfig::CUTE_WOLF_RATE * (DB::$ROOM->IsEvent('boost_cute') ? 5 : 1);
-    //Text::p($rate, $this->role);
+    //Text::p($rate, "◆Rate [{$this->role}]");
     if (! Lottery::Percent($rate)) return false;
 
     if (RoleTalkMessage::CUTE_WOLF != '') {

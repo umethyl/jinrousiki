@@ -4,7 +4,7 @@
   ○仕様
   ・変換リスト：草消去
 */
-RoleManager::LoadFile('passion');
+RoleLoader::LoadFile('passion');
 class Role_mower extends Role_passion {
   public $convert_say_list = array('w' => '', 'ｗ' => '', 'W' => '', 'Ｗ' => '');
 }

@@ -2,37 +2,39 @@
 /*
   ◆寿羊狐 (critical_fox)
   ○仕様
-  ・仲間表示：子狐系
+  ・仲間表示：子狐枠
   ・処刑投票：痛恨 (妖狐系)
   ・勝利：妖狐系全滅
 */
-RoleManager::LoadFile('child_fox');
+RoleLoader::LoadFile('child_fox');
 class Role_critical_fox extends Role_child_fox {
   public $mix_in = array('critical_mad');
   public $action = null;
   public $result = null;
-  public $vote_day_type = 'init';
 
-  protected function OutputPartner() {
-    $stack = array();
-    foreach (DB::$USER->rows as $user) {
-      if ($this->IsActor($user) || $user->IsFox(true)) continue;
-      if ($user->IsChildFox() || $user->IsRoleGroup('scarlet')) {
-	$stack[] = $user->handle_name;
-      }
-    }
-    RoleHTML::OutputPartner($stack, 'child_fox_partner');
+  protected function FilterPartner(array $list) {
+    unset($list['fox_partner']);
+    return $list;
   }
 
-  public function SetVoteAction(User $user) {
-    if (! $user->IsAvoid() && $user->IsFoxCount() && ! $user->IsChildFox()) {
-      $user->AddRole('critical_luck');
-    }
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
+
+  public function IsVoteKillActionTarget(User $user) {
+    return $this->IsFoxGroup($user);
+  }
+
+  //妖狐系判定
+  private function IsFoxGroup(User $user) {
+    return $user->IsMainGroup(CampGroup::FOX);
   }
 
   public function Win($winner) {
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive() && $user->IsFoxCount() && ! $user->IsChildFox()) return false;
+    foreach (DB::$USER->Get() as $user) {
+      if ($user->IsLive() && $this->IsFoxGroup($user)) {
+	return false;
+      }
     }
     return true;
   }

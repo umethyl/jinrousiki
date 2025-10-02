@@ -5,19 +5,24 @@
 */
 class Role_step_mad extends Role {
   public $mix_in = array('step_mage');
-  public $action     = 'STEP_DO';
-  public $not_action = 'STEP_NOT_DO';
+  public $action     = VoteAction::STEP;
+  public $not_action = VoteAction::NOT_STEP;
 
   public function OutputAction() {
-    RoleHTML::OutputVote('step-do', 'step_do', $this->action, $this->not_action);
+    $str = RoleAbilityMessage::STEP;
+    RoleHTML::OutputVote(VoteCSS::STEP, $str, $this->action, $this->not_action);
   }
 
-  public function IsVoteCheckbox(User $user, $live) {
+  protected function IsVoteCheckboxLive($live) {
     return true;
   }
 
-  protected function GetVoteCheckboxHeader() {
-    return RoleHTML::GetVoteCheckboxHeader('checkbox');
+  protected function IgnoreVoteCheckboxSelf() {
+    return false;
+  }
+
+  protected function GetVoteCheckboxType() {
+    return OptionFormType::CHECKBOX;
   }
 
   public function CheckVoteNightTarget(array $list) {
@@ -28,16 +33,16 @@ class Role_step_mad extends Role {
     sort($list);
 
     $id     = array_shift($list);
-    $max    = DB::$USER->GetUserCount();
+    $max    = DB::$USER->Count();
     $vector = null;
     $count  = 0;
     $root_list = array($id);
     while (count($list) > 0) {
-      $chain = $this->GetChain($id, $max);
+      $chain = Position::GetChain($id, $max);
       $point = array_intersect($chain, $list);
       if (count($point) != 1) return VoteRoleMessage::UNCHAINED_ROUTE;
 
-      $new_vector = array_shift(array_keys($point));
+      $new_vector = ArrayFilter::PickKey($point);
       if ($new_vector != $vector) {
 	if ($count++ > 0) return VoteRoleMessage::INVALID_ROUTE;
 	$vector = $new_vector;
@@ -45,7 +50,7 @@ class Role_step_mad extends Role {
 
       $id = array_shift($point);
       $root_list[] = $id;
-      unset($list[array_search($id, $list)]);
+      ArrayFilter::Delete($list, $id);
     }
 
     $target_stack = array();
@@ -55,19 +60,23 @@ class Role_step_mad extends Role {
       $handle_stack[] = DB::$USER->ByID($id)->handle_name;
     }
 
-    $this->SetStack(implode(' ', $target_stack), 'target_no');
-    $this->SetStack(implode(' ', $handle_stack), 'target_handle');
+    $this->SetStack(ArrayFilter::Concat($target_stack), RequestDataVote::TARGET);
+    $this->SetStack(ArrayFilter::Concat($handle_stack), 'target_handle');
     return null;
   }
 
   //足音処理
   public function Step(array $list) {
+    if ($this->IgnoreStep()) return false;
+
     $stack = array();
     foreach ($list as $id) {
-      if (DB::$USER->IsVirtualLive($id)) $stack[] = $id;
+      if (DB::$USER->IsVirtualLive($id)) {
+	$stack[] = $id;
+      }
     }
     if (count($stack) < 1) return true;
     sort($stack);
-    return DB::$ROOM->ResultDead(implode(' ', $stack), 'STEP');
+    return DB::$ROOM->ResultDead(ArrayFilter::Concat($stack), DeadReason::STEP);
   }
 }

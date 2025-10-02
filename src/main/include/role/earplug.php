@@ -8,7 +8,7 @@
   ○問題点
   ・観戦モードにすると普通に見えてしまう
 */
-RoleManager::LoadFile('strong_voice');
+RoleLoader::LoadFile('strong_voice');
 class Role_earplug extends Role_strong_voice {
   public $mix_in = array('blinder');
 
@@ -18,7 +18,7 @@ class Role_earplug extends Role_strong_voice {
 
   public function AddIgnoreTalk() {
     return ! DB::$ROOM->IsPlaying() ||
-      (DB::$ROOM->IsOn('log') && DB::$ROOM->IsEvent($this->role) && ! DB::$ROOM->IsDay());
+      (DB::$ROOM->IsOn(RoomMode::LOG) && DB::$ROOM->IsEvent($this->role) && ! DB::$ROOM->IsDay());
   }
 
   public function FilterWhisper(&$voice, &$str) {

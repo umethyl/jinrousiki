@@ -5,15 +5,21 @@
   ・表示：発動日以内
   ・ショック死：発動当日
 */
-RoleManager::LoadFile('febris');
+RoleLoader::LoadFile('febris');
 class Role_death_warrant extends Role_febris {
-  public $sudden_death = 'WARRANT';
-
   protected function IgnoreAbility() {
     return $this->GetDoomDate() < DB::$ROOM->date;
   }
 
   protected function GetDoomDate() {
     return $this->GetActor()->GetDoomDate($this->role);
+  }
+
+  protected function IgnoreSuddenDeath() {
+    return $this->GetActor()->GetReal()->IsRoleGroup('fortitude');
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'WARRANT';
   }
 }

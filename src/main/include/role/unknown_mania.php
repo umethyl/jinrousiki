@@ -4,23 +4,35 @@
   ○仕様
   ・追加役職：なし
 */
-RoleManager::LoadFile('mania');
+RoleLoader::LoadFile('mania');
 class Role_unknown_mania extends Role_mania {
-  public $camp_copy = true;
-
-  protected function GetRole(User $user) {
-    return $this->GetManiaRole($this->GetActor());
+  protected function IgnoreVoteCheckboxDummyBoy() {
+    return true;
   }
 
-  protected function GetManiaRole(User $user) {
+  protected function GetCopyResultRole(User $user) {
+    return $this->GetCopyRole($this->GetActor());
+  }
+
+  protected function GetCopyRole(User $user) {
     return null;
   }
 
+  protected function CopyAddAction(User $user, $role) {
+    $user->AddRole(Text::AddFooter($this->GetCopiedRole(), $role, ' '));
+    $this->CopySelfAction($user);
+  }
+
   protected function CopyAction(User $user, $role) {
-    $user->AddRole($this->GetCopiedRole() . (is_null($role) ? '' : ' ' . $role));
+    $actor = $this->GetActor();
+    $actor->AddMainRole($user->id);
+    $actor->AddRole($this->GetCopiedRole());
   }
 
   protected function GetCopiedRole() {
     return $this->GetActor()->GetID('mind_friend');
   }
+
+  //特殊コピー処理 (本人用)
+  protected function CopySelfAction(User $user) {}
 }

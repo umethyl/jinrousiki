@@ -5,15 +5,17 @@
   ・毒能力鑑定/毒対象変化
   ・毒対象制限：村人陣営以外
 */
-RoleManager::LoadFile('pharmacist');
+RoleLoader::LoadFile('pharmacist');
 class Role_alchemy_pharmacist extends Role_pharmacist {
   public $mix_in = array('poison');
 
   protected function SetDetoxFlag($uname) {
-    if (! $this->GetActor()->detox) $this->GetActor()->{$this->role} = true;
+    if (! $this->GetActor()->detox) {
+      $this->GetActor()->{$this->role} = true;
+    }
   }
 
-  public function IsPoisonTarget(User $user) {
-    return ! $user->IsCamp('human');
+  protected function IsPoisonTarget(User $user) {
+    return ! $user->IsCamp(Camp::HUMAN);
   }
 }

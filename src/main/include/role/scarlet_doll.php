@@ -3,6 +3,6 @@
   ◆和蘭人形 (scarlet_doll)
   ○仕様
 */
-RoleManager::LoadFile('doll');
+RoleLoader::LoadFile('doll');
 class Role_scarlet_doll extends Role_doll {
 }

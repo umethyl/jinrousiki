@@ -2,14 +2,18 @@
 /*
   ◆舟幽霊 (follow_mad)
   ○仕様
-  ・道連れ：投票先がショック死していたら誰か一人をさらにショック死させる
+  ・処刑道連れ：投票先がショック死していたら誰か一人をさらにショック死させる
 */
 class Role_follow_mad extends Role {
-  public $vote_day_type = 'stack';
-  public $sudden_death  = 'FOLLOWED';
+  public $mix_in = array('chicken');
 
-  public function Followed(array $list) {
-    if (! is_array($stack = $this->GetStack())) return;
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::ADD;
+  }
+
+  public function VoteKillFollowed() {
+    $stack = $this->GetStack();
+    if (! is_array($stack)) return;
 
     $count = 0; //能力発動カウント
     $follow_stack = array(); //有効投票先リスト
@@ -19,15 +23,15 @@ class Role_follow_mad extends Role {
       $target = DB::$USER->ByRealUname($target_uname);
       if ($this->IsVoted($target->uname)) continue;
 
-      $target->suicide_flag ? $count++ : $follow_stack[$uname] = $target->id;
+      $target->IsOn(UserMode::SUICIDE) ? $count++ : $follow_stack[$uname] = $target->id;
     }
     //Text::p($follow_stack, "◆Count [{$this->role}]: {$count}" );
     if ($count < 1) return false;
 
     $target_stack = array(); //対象者リスト
-    foreach ($list as $uname) { //情報収集
+    foreach (RoleManager::Stack()->Get('user_list') as $uname) { //情報収集
       $user = DB::$USER->ByRealUname($uname);
-      if ($user->IsLive(true) && ! $user->IsAvoid(true)) {
+      if ($user->IsLive(true) && ! RoleUser::IsAvoid($user, true)) {
 	$target_stack[] = $user->id;
       }
     }
@@ -46,5 +50,9 @@ class Role_follow_mad extends Role {
       }
       $follow_stack = $stack;
     }
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'FOLLOWED';
   }
 }

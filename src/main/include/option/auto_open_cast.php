@@ -2,7 +2,7 @@
 /*
   ◆霊界自動公開 (auto_open_cast)
 */
-OptionManager::Load('not_close_cast');
+OptionLoader::LoadFile('not_close_cast');
 class Option_auto_open_cast extends Option_not_close_cast {
   public function GetCaption() {
     return '自動で霊界の配役を公開する';

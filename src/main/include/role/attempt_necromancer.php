@@ -4,21 +4,27 @@
   ○仕様
   ・霊能：死を免れた人
 */
-RoleManager::LoadFile('necromancer');
+RoleLoader::LoadFile('necromancer');
 class Role_attempt_necromancer extends Role_necromancer {
-  public $result = 'ATTEMPT_NECROMANCER_RESULT';
+  public $result = RoleAbility::ATTEMPT_NECROMANCER;
 
   //霊能 (夜発動型)
   public function NecromancerNight() {
     $stack = array();
 
+    //-- 人狼襲撃 --//
     $user = RoleManager::Stack()->Get('wolf_target');
-    if ($user->IsLive(true)) $stack[$user->id] = true; //人狼襲撃
+    if ($user->IsLive(true)) {
+      $stack[$user->id] = true;
+    }
 
-    $data = RoleManager::Stack()->Get('vote_data');
-    foreach (array('ASSASSIN_DO', 'OGRE_DO') as $action) { //暗殺・人攫い
-      foreach ($data[$action] as $id) {
-	if (DB::$USER->ByID($id)->IsLive(true)) $stack[$id] = true;
+    //-- 暗殺・人攫い --//
+    $vote_data = RoleManager::GetVoteData();
+    foreach (array(VoteAction::ASSASSIN, VoteAction::OGRE) as $action) {
+      foreach ($vote_data[$action] as $id) {
+	if (DB::$USER->ByID($id)->IsLive(true)) {
+	  $stack[$id] = true;
+	}
       }
     }
 

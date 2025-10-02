@@ -3,49 +3,58 @@
 class WinnerMessage {
   /* 村 */
   //村人勝利
-  static public $human = '[村人勝利] 村人たちは人狼の血を根絶することに成功しました';
+  public static $human = '[村人勝利] 村人たちは人狼の血を根絶することに成功しました';
 
   //人狼・狂人勝利
-  static public $wolf = '[人狼・狂人勝利] 最後の一人を食い殺すと人狼達は次の獲物を求めて村を後にした';
+  public static $wolf = '[人狼・狂人勝利] 最後の一人を食い殺すと人狼達は次の獲物を求めて村を後にした';
 
   //妖狐勝利 (村人勝利版)
-  static public $fox1 = '[妖狐勝利] 人狼がいなくなった今、我の敵などもういない';
+  public static $fox1 = '[妖狐勝利] 人狼がいなくなった今、我の敵などもういない';
 
   //妖狐勝利 (人狼勝利版)
-  static public $fox2 = '[妖狐勝利] マヌケな人狼どもを騙すことなど容易いことだ';
+  public static $fox2 = '[妖狐勝利] マヌケな人狼どもを騙すことなど容易いことだ';
 
   //恋人・キューピッド勝利
-  static public $lovers = '[恋人・キューピッド勝利] 愛の前には何者も無力だったのでした';
+  public static $lovers = '[恋人・キューピッド勝利] 愛の前には何者も無力だったのでした';
 
   //出題者勝利
-  static public $quiz = '[出題者勝利] 真の解答者にはまだ遠い……修行あるのみ';
+  public static $quiz = '[出題者勝利] 真の解答者にはまだ遠い……修行あるのみ';
 
   //出題者死亡
-  static public $quiz_dead = '[引き分け] 何という事だ！このままでは決着が付かないぞ！';
+  public static $quiz_dead = '[引き分け] 何という事だ！このままでは決着が付かないぞ！';
 
   //吸血鬼勝利
-  static public $vampire = '[吸血鬼勝利] 夜の支配者に抗える存在など、ありはしない';
+  public static $vampire = '[吸血鬼勝利] 夜の支配者に抗える存在など、ありはしない';
 
   //引き分け
-  static public $draw = '[引き分け] 引き分けとなりました';
+  public static $draw = '[引き分け] 引き分けとなりました';
 
   //全滅
-  static public $vanish = '[引き分け] そして誰も居なくなった……';
+  public static $vanish = '[引き分け] そして誰も居なくなった……';
 
   //途中廃村
-  static public $unfinished = '[引き分け] 霧が濃くなって何も見えなくなりました……';
+  public static $unfinished = '[引き分け] 霧が濃くなって何も見えなくなりました……';
 
   //廃村
-  static public $none = '過疎が進行して人がいなくなりました';
+  public static $none = '過疎が進行して人がいなくなりました';
 
   /* 本人 */
-  static public $self_win  = 'あなたは勝利しました';
-  static public $self_lose = 'あなたは敗北しました';
-  static public $self_draw = '引き分けとなりました';
+  public static $self_win  = 'あなたは勝利しました';
+  public static $self_lose = 'あなたは敗北しました';
+  public static $self_draw = '引き分けとなりました';
 
   /* 個人 */
-  static public $personal_win  = '勝利';
-  static public $personal_lose = '敗北';
-  static public $personal_draw = '引分';
-  static public $personal_none = '不明';
+  public static $personal_win  = '勝利';
+  public static $personal_lose = '敗北';
+  public static $personal_draw = '引分';
+  public static $personal_none = '不明';
+
+  /* 画像 */
+  public static $image_human   = '村人勝利';
+  public static $image_wolf    = '人狼勝利';
+  public static $image_fox     = '妖狐勝利';
+  public static $image_lovers  = '恋人勝利';
+  public static $image_quiz    = '出題者勝利';
+  public static $image_vampire = '吸血鬼勝利';
+  public static $image_draw    = '引き分け';
 }

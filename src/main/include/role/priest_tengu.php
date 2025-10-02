@@ -2,8 +2,9 @@
 /*
   ◆鼻高天狗 (priest_tengu)
   ○仕様
+  ・司祭：村人陣営 + 人狼陣営 (偶数日 / 4日目以降)
 */
-RoleManager::LoadFile('tengu');
+RoleLoader::LoadFile('tengu');
 class Role_priest_tengu extends Role_tengu {
   public $mix_in = array('mage', 'chicken', 'priest');
 
@@ -15,7 +16,7 @@ class Role_priest_tengu extends Role_tengu {
     $this->OutputPriestResult();
   }
 
-  public function GetPriestType() {
+  protected function GetPriestType() {
     return 'tengu';
   }
 }

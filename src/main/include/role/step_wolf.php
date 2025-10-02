@@ -3,30 +3,32 @@
   ◆響狼 (step_wolf)
   ○仕様
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_step_wolf extends Role_wolf {
   public $mix_in = array('step_mage');
-  public $action     = 'STEP_WOLF_EAT';
-  public $add_action = 'SILENT_WOLF_EAT';
-  public $submit     = 'wolf_eat';
+  public $action     = VoteAction::STEP_WOLF;
+  public $add_action = VoteAction::SILENT_WOLF;
+  public $submit     = VoteAction::WOLF;
 
-  protected function SetVoteNightFilter() {
-    if (DB::$ROOM->IsEvent('no_step') || $this->IsDummyBoy() || ! $this->GetActor()->IsActive()) {
-      $this->SetStack(null, 'add_action');
-    }
+  protected function IgnoreAddAction() {
+    return DB::$ROOM->IsEvent('no_step') || $this->IsFixDummyBoy() || ! $this->IsActorActive();
   }
 
-  public function IsVoteCheckbox(User $user, $live) {
-    return ! $this->IsActor($user);
+  protected function IsVoteCheckboxLive($live) {
+    return true;
   }
 
-  protected function GetVoteCheckboxHeader() {
-    return RoleHTML::GetVoteCheckboxHeader('checkbox');
+  protected function IsVoteCheckboxFilter(User $user) {
+    return true;
+  }
+
+  protected function GetVoteCheckboxType() {
+    return OptionFormType::CHECKBOX;
   }
 
   public function CheckVoteNightTarget(array $list) {
     $root_list = array();
-    if ($this->IsDummyBoy()) { //身代わり君襲撃モード
+    if ($this->IsFixDummyBoy()) { //身代わり君襲撃固定モード
       $id = array_shift($list);
       if (! DB::$USER->ByID($id)->IsDummyBoy()) { //身代わり君判定
 	if (DB::$ROOM->IsQuiz()) {
@@ -38,16 +40,16 @@ class Role_step_wolf extends Role_wolf {
       if (count($list) > 0) return VoteRoleMessage::UNCHAINED_ROUTE;
       $root_list[] = $id;
     } else {
-      $id     = $this->GetActor()->id;
-      $max    = DB::$USER->GetUserCount();
+      $id     = $this->GetID();
+      $max    = DB::$USER->Count();
       $vector = null;
       $count  = 0;
       do {
-	$chain = $this->GetChain($id, $max);
+	$chain = Position::GetChain($id, $max);
 	$point = array_intersect($chain, $list);
 	if (count($point) != 1) return VoteRoleMessage::UNCHAINED_ROUTE;
 
-	$new_vector = array_shift(array_keys($point));
+	$new_vector = ArrayFilter::PickKey($point);
 	if ($new_vector != $vector) {
 	  if ($count++ > 1) return VoteRoleMessage::INVALID_VECTOR;
 	  $vector = $new_vector;
@@ -55,14 +57,14 @@ class Role_step_wolf extends Role_wolf {
 
 	$id = array_shift($point);
 	$root_list[] = $id;
-	unset($list[array_search($id, $list)]);
+	ArrayFilter::Delete($list, $id);
       } while (count($list) > 0);
     }
     if (count($root_list) < 1) return VoteRoleMessage::UNCHAINED_SELF;
 
     $target = DB::$USER->ByID($id);
     $live   = DB::$USER->IsVirtualLive($target->id); //生死判定は仮想を使う
-    $str    = parent::IgnoreVoteNight($target, $live);
+    $str    = $this->IgnoreVoteNight($target, $live);
     if (! is_null($str)) return $str;
 
     $target_stack = array();
@@ -73,8 +75,12 @@ class Role_step_wolf extends Role_wolf {
       $handle_stack[] = DB::$USER->ByID($id)->handle_name;
     }
 
-    $this->SetStack(implode(' ', $target_stack), 'target_no');
-    $this->SetStack(implode(' ', $handle_stack), 'target_handle');
+    $this->SetStack(ArrayFilter::Concat($target_stack), RequestDataVote::TARGET);
+    $this->SetStack(ArrayFilter::Concat($handle_stack), 'target_handle');
     return null;
+  }
+
+  protected function IgnoreVoteNightLive($live) {
+    return ! $live;
   }
 }

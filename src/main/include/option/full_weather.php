@@ -2,8 +2,8 @@
 /*
   ◆天変地異 (full_weather)
 */
-class Option_full_weather extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_full_weather extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return '天変地異';

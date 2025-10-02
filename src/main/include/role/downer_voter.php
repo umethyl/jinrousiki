@@ -4,13 +4,13 @@
   ○仕様
   ・投票数：-1 (5日目以降)
 */
-RoleManager::LoadFile('authority');
+RoleLoader::LoadFile('authority');
 class Role_downer_voter extends Role_authority {
-  public function IgnoreFilterVoteDo() {
+  protected function IgnoreFilterVoteDo() {
     return DB::$ROOM->date < 5;
   }
 
-  public function GetVoteDoCount() {
+  protected function GetVoteDoCount() {
     return -1;
   }
 }

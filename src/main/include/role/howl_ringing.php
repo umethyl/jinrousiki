@@ -6,7 +6,7 @@
 class Role_howl_ringing extends Role {
   public $mix_in = array('wolf');
 
-  public function Whisper(TalkBuilder $builder, $voice) {
-    return $builder->flag->{$this->role} && $this->Howl($builder, $voice);
+  public function Whisper(TalkBuilder $builder, TalkParser $talk) {
+    return $builder->flag->{$this->role} && $this->Howl($builder, $talk);
   }
 }

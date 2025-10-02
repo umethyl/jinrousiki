@@ -4,14 +4,16 @@
   ○仕様
   ・モードリスト：GameOptionCofing::$special_role_list
 */
-class Option_special_role extends SelectorRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_special_role extends OptionSelector {
+  public $group = OptionGroup::GAME;
   public $on_change  = ' onChange="change_special_role()"';
   public $javascript = "change_option_display('chaos', 'none');";
 
-  public function __construct() {
-    parent::__construct();
+  protected function LoadFormList() {
     $this->form_list = GameOptionConfig::${$this->source};
+  }
+
+  protected function LoadValue() {
     if (OptionManager::IsChange()) $this->SetFormValue('int');
   }
 

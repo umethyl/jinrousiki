@@ -3,28 +3,44 @@
   ◆榊鬼 (poison_ogre)
   ○仕様
   ・勝利：出題者陣営勝利 or 生存
+  ・人攫い成功率低下：1/3
   ・人攫い無効：出題者
   ・人攫い：解答者付加
   ・毒：人外カウント or 鬼陣営
 */
-RoleManager::LoadFile('ogre');
+RoleLoader::LoadFile('ogre');
 class Role_poison_ogre extends Role_ogre {
   public $mix_in = array('poison');
-  public $reduce_rate = 3;
 
-  public function Win($winner) {
-    return $winner == 'quiz' || $this->IsLive();
+  protected function IsPoisonTarget(User $user) {
+    return RoleUser::IsInhuman($user) || $user->IsMainCamp(Camp::OGRE);
   }
 
-  protected function IgnoreAssassin(User $user) {
+  protected function IgnoreOgreAssassin(User $user) {
     return $user->IsRole('quiz');
   }
 
-  protected function Assassin(User $user) {
+  protected function GetOgreReduceDenominator() {
+    return 3;
+  }
+
+  protected function OgreAssassin(User $user) {
     $user->AddRole('panelist');
   }
 
-  public function IsPoisonTarget(User $user) {
-    return $user->IsInhuman() || $user->IsOgre();
+  protected function IsOgreWinCamp($winner) {
+    return $winner == Camp::QUIZ;
+  }
+
+  protected function IsOgreLoseLive() {
+    return false;
+  }
+
+  protected function IgnoreOgreLoseAllDead() {
+    return true;
+  }
+
+  protected function OgreWin() {
+    return $this->IsActorLive();
   }
 }

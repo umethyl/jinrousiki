@@ -4,7 +4,9 @@
   ○仕様
   ・投票人数：3人
 */
-RoleManager::LoadFile('cupid');
+RoleLoader::LoadFile('cupid');
 class Role_triangle_cupid extends Role_cupid {
-  public $shoot_count = 3;
+  protected function GetVoteNightNeedCount() {
+    return 3;
+  }
 }

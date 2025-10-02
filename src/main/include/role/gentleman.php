@@ -8,7 +8,7 @@ class Role_gentleman extends Role {
   public function ConvertSay() {
     if (! Lottery::Percent(GameConfig::GENTLEMAN_RATE)) return false; //スキップ判定
 
-    $stack = DB::$USER->GetLivingUsers(); //生存者のユーザ ID を取得
+    $stack = DB::$USER->SearchLive(); //生存者のユーザ ID を取得
     unset($stack[$this->GetID()]); //自分を削除
     $target = DB::$USER->ByVirtual(Lottery::Get(array_keys($stack)))->handle_name;
     $this->SetStack(sprintf(RoleTalkMessage::${$this->role}, $target), 'say');

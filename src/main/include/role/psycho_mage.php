@@ -5,32 +5,36 @@
   ・占い：精神鑑定
   ・呪い：無効
 */
-RoleManager::LoadFile('mage');
+RoleLoader::LoadFile('mage');
 class Role_psycho_mage extends Role_mage {
-  public $mage_failed = 'mage_failed';
-
-  public function IgnoreCursed() { return true; }
-
-  protected function GetMageResult(User $user) {
-    return $user->DistinguishLiar();
+  protected function GetMageFailed() {
+    return 'mage_failed';
   }
 
-  //精神判定
+  public function IgnoreCursed() {
+    return true;
+  }
+
+  protected function GetMageResult(User $user) {
+    return $this->DistinguishLiar($user);
+  }
+
+  //精神判定 (鬼陣営 > 恋人陣営 > 狂人系 > 背徳者系 > 夢能力者・不審者・無意識)
   final public function DistinguishLiar(User $user) {
-    //陣営判定
-    if ($user->IsMainCamp('ogre')) return 'ogre';
-
-    //系列判定
-    if ($user->IsMainGroup('mad')) { //狂人系
+    if ($user->IsMainCamp(Camp::OGRE) || $user->IsMainCamp(Camp::LOVERS)) {
+      return $user->DistinguishCamp();
+    } elseif ($user->IsMainGroup(CampGroup::MAD)) {
       return $this->GetLiarResult(! $user->IsRole('swindle_mad'));
+    } elseif ($user->IsMainGroup(CampGroup::DEPRAVER) || $user->IsRoleGroup('dummy')) {
+      return $this->GetLiarResult(true);
+    } else {
+      return $this->GetLiarResult($user->IsRole('suspect', 'unconscious'));
     }
-    if ($user->IsMainGroup('depraver')) return $this->GetLiarResult(true); //背徳者系
+  }
 
-    //能力判定
-    if ($user->IsRoleGroup('dummy')) return $this->GetLiarResult(true);
-
-    //個別判定
-    return $this->GetLiarResult($user->IsRole('suspect', 'unconscious'));
+  //嘘つき判定
+  final public function IsLiar(User $user) {
+    return $this->DistinguishLiar($user) == 'psycho_mage_liar';
   }
 
   //精神判定結果取得

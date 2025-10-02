@@ -4,16 +4,20 @@
   ○仕様
   ・悪戯：死亡欄妨害 (花)
 */
-RoleManager::LoadFile('fairy');
+RoleLoader::LoadFile('fairy');
 class Role_flower_fairy extends Role_fairy {
-  public $result = 'FLOWERED';
-
   protected function FairyAction(User $user) {
-    DB::$ROOM->ResultDead($user->GetName(), $this->result, Lottery::GetRange('A', 'Z'));
+    $result = $this->CallParent('GetFairyActionResult');
+    DB::$ROOM->ResultDead($user->GetName(), $result, Lottery::GetRange('A', 'Z'));
+  }
+
+  //死亡欄妨害種別取得
+  protected function GetFairyActionResult() {
+    return 'FLOWERED';
   }
 
   //悪戯 (天候)
   public function FairyEvent() {
-    $this->FairyAction(DB::$USER->ByID(Lottery::Get(array_keys(DB::$USER->GetLivingUsers()))));
+    $this->FairyAction(DB::$USER->ByID(Lottery::Get(array_keys(DB::$USER->SearchLive()))));
   }
 }

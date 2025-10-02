@@ -1,9 +1,11 @@
 <?php
 /*
   ◆巫女 (medium)
+  ○仕様
+  ・能力結果：突然死
 */
 class Role_medium extends Role {
-  public $result = 'MEDIUM_RESULT';
+  public $result = RoleAbility::MEDIUM;
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 2;
@@ -12,8 +14,8 @@ class Role_medium extends Role {
   //判定結果登録 (システムメッセージ)
   final public function InsertResult() {
     $flag = false; //巫女の出現判定
-    foreach (DB::$USER->role as $role => $list) {
-      if (RoleData::IsMain($role) && RoleData::IsGroup($role, $this->role)) {
+    foreach (DB::$USER->GetRole() as $role => $list) {
+      if (RoleDataManager::IsMain($role) && RoleDataManager::IsGroup($role, $this->role)) {
 	$flag = true;
 	break;
       }
@@ -21,8 +23,8 @@ class Role_medium extends Role {
     if (! $flag) return;
 
     $stack = array(); //突然死者を収集
-    foreach (DB::$USER->rows as $user) {
-      if ($user->suicide_flag) {
+    foreach (DB::$USER->Get() as $user) {
+      if ($user->IsOn(UserMode::SUICIDE)) {
 	$virtual = $user->GetVirtual();
 	$stack[$virtual->id] = $user->GetCamp(); //本体の所属陣営を記録;
       }

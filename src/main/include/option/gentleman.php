@@ -4,7 +4,7 @@
   ○仕様
   ・配役：性別に応じた紳士・淑女 / 全員
 */
-class Option_gentleman extends CheckRoomOptionItem {
+class Option_gentleman extends OptionCheckbox {
   public function GetCaption() {
     return '紳士・淑女村';
   }
@@ -14,8 +14,8 @@ class Option_gentleman extends CheckRoomOptionItem {
   }
 
   protected function GetCastAllRole($id) {
-    $stack = Cast::Stack()->Get('fix_uname');
-    return DB::$USER->ByUname($stack[$id])->IsMale() ? 'gentleman' : 'lady';
+    $stack = Cast::Stack()->Get(Cast::UNAME);
+    return Sex::IsMale(DB::$USER->ByUname($stack[$id])) ? 'gentleman' : 'lady';
   }
 
   protected function GetResultCastList() {

@@ -4,8 +4,8 @@
   ○仕様
   ・配役：誰か一人にジョーカー
 */
-class Option_joker extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_joker extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return 'ババ抜き村';

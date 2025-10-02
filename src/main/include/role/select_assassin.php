@@ -4,9 +4,11 @@
   ○仕様
   ・暗殺：オシラ遊び付加
 */
-RoleManager::LoadFile('assassin');
+RoleLoader::LoadFile('assassin');
 class Role_select_assassin extends Role_assassin {
-  protected function SetAssassinTarget(User $user) { return; }
+  protected function IsAssassinKill() {
+    return false;
+  }
 
   protected function AssassinAction(User $user) {
     $user->AddDoom(1, 'death_selected');

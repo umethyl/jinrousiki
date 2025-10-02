@@ -6,13 +6,17 @@
   ・人狼襲撃：死の宣告
 */
 class Role_cursed_brownie extends Role {
-  public $vote_day_type = 'init';
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
 
   public function VoteKillReaction() {
-    foreach (array_keys($this->GetStack()) as $uname) {
+    foreach ($this->GetStackKey() as $uname) {
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
 	$user = DB::$USER->ByRealUname($voted_uname);
-	if ($user->IsLive(true) && ! $user->IsAvoid() && Lottery::Percent(30)) $user->AddDoom(2);
+	if ($user->IsLive(true) && ! RoleUser::IsAvoid($user) && Lottery::Percent(30)) {
+	  $user->AddDoom(2);
+	}
       }
     }
   }

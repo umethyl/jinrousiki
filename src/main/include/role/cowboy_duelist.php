@@ -5,15 +5,17 @@
   ・投票数：-1
   ・得票数補正：+5 (宿敵に投票 & 相互投票ではない)
   ・処刑投票：退治 (宿敵限定 / 投票状況依存)
+  ・自分撃ち：固定
 */
-RoleManager::LoadFile('valkyrja_duelist');
+RoleLoader::LoadFile('valkyrja_duelist');
 class Role_cowboy_duelist extends Role_valkyrja_duelist {
-  public $mix_in = array('reduce_voter');
-  public $self_shoot = true;
-  public $vote_day_type = 'init';
-  public $sudden_death  = 'DUEL';
+  public $mix_in = array('chicken', 'reduce_voter');
 
-  public function VoteCorrect() {
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
+
+  public function VoteKillCorrect() {
     //データ取得
     $count_list   = $this->GetStack('vote_count');
     $message_list = $this->GetStack('vote_message');
@@ -21,8 +23,13 @@ class Role_cowboy_duelist extends Role_valkyrja_duelist {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($uname == $this->GetVoteTargetUname($target_uname)) continue; //相互投票判定
 
+      $actor = DB::$USER->ByUname($uname);
+      if ($actor->IsRole('vega_lovers') && ! DB::$ROOM->IsEvent('no_authority')) {
+	continue; //織姫は補正をかけない
+      }
+
       $target = DB::$USER->ByRealUname($target_uname);
-      if ($target->IsPartner($this->partner_role, DB::$USER->ByUname($uname)->id)) { //宿敵判定
+      if ($target->IsPartner($this->GetPartnerRole(), $actor->id)) { //宿敵判定
 	$count_list[$uname] += 5;
 	$message_list[$uname]['poll'] += 5;
       }
@@ -33,7 +40,7 @@ class Role_cowboy_duelist extends Role_valkyrja_duelist {
     $this->SetStack($message_list, 'vote_message');
   }
 
-  public function VoteAction() {
+  public function VoteKillAction() {
     $stack = array(); //ショック死対象者リスト
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
@@ -43,7 +50,7 @@ class Role_cowboy_duelist extends Role_valkyrja_duelist {
 	if ($this->IsVoted($voted_uname)) continue;
 
 	$target = DB::$USER->ByRealUname($voted_uname);
-	if ($target->IsPartner($this->partner_role, $user->id)) {
+	if ($target->IsPartner($this->GetPartnerRole(), $user->id)) {
 	  $id = $voted_uname == $this->GetVoteTargetUname($uname) ? $target->id : $user->id;
 	  $stack[$id] = true;
 	}
@@ -51,5 +58,13 @@ class Role_cowboy_duelist extends Role_valkyrja_duelist {
     }
 
     foreach ($stack as $id => $flag) $this->SuddenDeathKill($id); //ショック死処理
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'DUEL';
+  }
+
+  protected function FixSelfShoot() {
+    return true;
   }
 }

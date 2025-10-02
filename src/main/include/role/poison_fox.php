@@ -5,12 +5,15 @@
   ・人狼襲撃耐性：無し
   ・毒：妖狐カウント以外
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_poison_fox extends Role_fox {
   public $mix_in = array('poison');
-  public $resist_wolf = false;
 
-  public function IsPoisonTarget(User $user) {
-    return ! $user->IsFox();
+  protected function IsPoisonTarget(User $user) {
+    return ! RoleUser::IsFoxCount($user);
+  }
+
+  public function IsResistWolf() {
+    return false;
   }
 }

@@ -7,8 +7,11 @@
 */
 class Role_saint extends Role {
   public $mix_in = array('decide');
-  public $display_role  = 'human';
-  public $vote_day_type = 'target';
+  public $display_role = 'human';
+
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::TARGET;
+  }
 
   public function DecideVoteKill() {
     if ($this->IsVoteKill()) return;
@@ -20,7 +23,7 @@ class Role_saint extends Role {
       if ($user->IsRole('saint')) {
 	$self[] = $uname;
       }
-      if (! $user->IsCamp('human', true)) {
+      if (! $user->IsWinCamp(Camp::HUMAN)) {
 	$target[] = $uname;
       }
     }
@@ -28,8 +31,7 @@ class Role_saint extends Role {
     if (count($self) > 0 && count($target) < 2) { //対象を一人に固定できる時のみ有効
       if (count($target) == 1) {
 	$this->SetVoteKill(array_shift($target));
-      }
-      elseif (count($self) == 1) {
+      } elseif (count($self) == 1) {
 	$this->SetVoteKill(array_shift($self));
       }
     }

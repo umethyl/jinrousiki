@@ -8,6 +8,6 @@ class Role_silent extends Role {
   public function ConvertSay() {
     $str = $this->GetStack('say');
     $len = GameConfig::SILENT_LENGTH;
-    if (mb_strlen($str) > $len) $this->SetStack(mb_substr($str, 0, $len) . '……', 'say');
+    if (Text::Count($str) > $len) $this->SetStack(Text::Shrink($str, $len) . '……', 'say');
   }
 }

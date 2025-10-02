@@ -40,53 +40,62 @@ class MessageImageBuilder {
     'sex_male'		=> array('R' =>   0, 'G' =>   0, 'B' => 255),
     'wisp'		=> array('R' => 170, 'G' => 102, 'B' => 255),
     'step'		=> array('R' => 102, 'G' => 153, 'B' =>  51)
-			  );
+  );
 
-  function __construct($list, $font) {
-    $font = IMAGE_FONT_PATH . $font;
-    $size = ($trans = $list == 'WishRoleList') ? 12 : 11;
+  public function __construct($list, $font) {
+    $font  = IMAGE_FONT_PATH . $font;
+    $trans = $list == 'WishRoleList';
+    $size  = $trans ? 12 : 11;
     $this->generator = new MessageImageGenerator($font, $size, 3, 3, $trans);
-    $this->list = new $list();
+    $this->list      = new $list();
   }
 
-  function LoadDelimiter($delimiter, $colors) {
-    if (! is_array($colors)) $colors = $this->color_list[$colors];
+  public function LoadDelimiter($delimiter, $colors) {
+    if (! is_array($colors)) {
+      $colors = $this->color_list[$colors];
+    }
     return new Delimiter($delimiter, $colors['R'], $colors['G'], $colors['B']);
   }
 
-  function AddDelimiter(array $list) {
+  public function AddDelimiter(array $list) {
     foreach ($list['delimiter'] as $delimiter => $colors) {
       $this->generator->AddDelimiter($this->LoadDelimiter($delimiter, $colors));
     }
   }
 
-  function SetDelimiter(array $list) {
-    if (isset($list['type'])) $this->SetDelimiter($this->list->{$list['type']});
-    if (is_null($list['delimiter'])) $list['delimiter'] = array();
+  public function SetDelimiter(array $list) {
+    if (isset($list['type'])) {
+      $this->SetDelimiter($this->list->{$list['type']});
+    }
+    if (! isset($list['delimiter'])) {
+      $list['delimiter'] = array();
+    }
     $this->AddDelimiter($list);
   }
 
-  function Generate($name, $calib = array()) {
+  public function Generate($name, $calib = array()) {
     $this->SetDelimiter($this->list->$name);
     return $this->generator->GetImage($this->list->{$name}['message'], $calib);
   }
 
-  function Output($name, $calib = array()) {
+  public function Output($name, $calib = array()) {
     header('Content-Type: image/gif');
     imagegif($this->Generate($name, $calib));
   }
 
-  function Save($name) {
+  public function Save($name) {
     $image = $this->Generate($name);
     imagegif($image, "./test/{$name}.gif"); //出力先ディレクトリのパーミッションに注意
     imagedestroy($image);
     echo $name . '<br>';
   }
 
-  function Test($name) { $this->Generate($name); }
+  public function Test($name) {
+    $this->Generate($name);
+  }
 
   //まとめて画像ファイル生成
-  function OutputAll() {
+  public function OutputAll() {
     foreach ($this->list as $name => $list) {
       $image = $this->Generate($name);
       imagegif($image, "./test/{$name}.gif"); //出力先ディレクトリのパーミッションに注意

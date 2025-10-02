@@ -4,18 +4,38 @@
   ○仕様
   ・処刑投票：封印 (限定能力所持者 & 人外)
 */
-RoleManager::LoadFile('medium');
+RoleLoader::LoadFile('medium');
 class Role_seal_medium extends Role_medium {
-  public $mix_in = array('critical_mad');
-  public $vote_day_type = 'init';
-  public $sudden_death  = 'SEALED';
-  public $seal_list = array(
-    'phantom_wolf', 'resist_wolf', 'revive_wolf', 'step_wolf', 'tongue_wolf', 'trap_mad',
-    'possessed_mad', 'revive_mad', 'phantom_fox', 'spell_fox', 'emerald_fox', 'revive_fox',
-    'possessed_fox', 'trap_fox', 'revive_cupid', 'revive_avenger');
+  public $mix_in = array('critical_mad', 'chicken');
 
-  public function SetVoteAction(User $user) {
-    if ($user->IsAvoidLovers(true) || ! $user->IsRole($this->seal_list)) return;
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
+
+  protected function IgnoreVoteKillAction(User $user) {
+    return RoleUser::IsAvoidLovers($user, true);
+  }
+
+  protected function IsVoteKillActionTarget(User $user) {
+    return $user->IsRole($this->GetSealList());
+  }
+
+  //封印対象役職取得
+  private function GetSealList() {
+    return array(
+      'phantom_wolf', 'resist_wolf', 'revive_wolf', 'step_wolf', 'tongue_wolf',
+      'trap_mad', 'possessed_mad', 'revive_mad',
+      'phantom_fox', 'spell_fox', 'emerald_fox', 'revive_fox', 'possessed_fox', 'trap_fox',
+      'revive_cupid',
+      'revive_avenger'
+    );
+  }
+
+  protected function SetVoteKillAction(User $user) {
     $user->IsActive() ? $user->LostAbility() : $this->SuddenDeathKill($user->id);
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'SEALED';
   }
 }

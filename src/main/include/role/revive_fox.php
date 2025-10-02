@@ -2,31 +2,32 @@
 /*
   ◆仙狐 (revive_fox)
   ○仕様
+  ・能力結果：蘇生追加 (天啓封印あり)
   ・蘇生率：100% / 誤爆有り
   ・蘇生後：能力喪失
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_revive_fox extends Role_fox {
   public $mix_in = array('vote' => 'poison_cat');
 
+  protected function IsReviveVote() {
+    return $this->IsActorActive();
+  }
+
   protected function OutputAddResult() {
     if (DB::$ROOM->date < 3 || DB::$ROOM->IsOption('seal_message')) return;
-    $this->OutputAbilityResult('POISON_CAT_RESULT');
+    RoleHTML::OutputResult(RoleAbility::REVIVE);
   }
 
-  public function IsReviveVote() {
-    return $this->GetActor()->IsActive();
+  protected function GetIgnoreReviveVoteMessage() {
+    return VoteRoleMessage::LOST_ABILITY;
   }
 
-  public function IgnoreReviveVoteFilter() {
-    return $this->IsReviveVote() ? null : VoteRoleMessage::LOST_ABILITY;
-  }
-
-  public function GetReviveRate() {
+  protected function GetReviveRate() {
     return 100;
   }
 
-  public function ReviveAction() {
+  protected function ReviveAction() {
     $this->GetActor()->LostAbility();
   }
 }

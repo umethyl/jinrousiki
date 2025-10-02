@@ -4,11 +4,13 @@
   ○仕様
   ・勝利：狂人系全滅
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_emperor_wolf extends Role_wolf {
   public function Win($winner) {
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive() && $user->IsMainGroup('mad')) return false;
+    foreach (DB::$USER->Get() as $user) {
+      if ($user->IsLive() && $user->IsMainGroup(CampGroup::MAD)) {
+	return false;
+      }
     }
     return true;
   }

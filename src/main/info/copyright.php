@@ -1,6 +1,4 @@
 <?php
 require_once('init.php');
-Loader::LoadFile('copyright_config');
-InfoHTML::OutputHeader('謝辞・素材', 0, 'copyright');
-InfoHTML::OutputCopyright();
-HTML::OutputFooter();
+Loader::LoadFile('copyright_info_class');
+CopyrightInfo::Execute();

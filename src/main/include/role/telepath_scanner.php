@@ -4,7 +4,9 @@
   ○仕様
   ・発言公開：妖狐
 */
-RoleManager::LoadFile('whisper_scanner');
+RoleLoader::LoadFile('whisper_scanner');
 class Role_telepath_scanner extends Role_whisper_scanner {
-  public $mind_read_target = 'fox';
+  protected function GetMindReadTargetRole() {
+    return 'fox';
+  }
 }

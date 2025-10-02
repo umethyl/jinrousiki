@@ -2,8 +2,8 @@
 /*
   ◆天候あり (weather)
 */
-class Option_weather extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_weather extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return '天候あり';

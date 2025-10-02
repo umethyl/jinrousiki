@@ -4,8 +4,10 @@
   ○仕様
   ・配役：全員に小心者系のどれか
 */
-class Option_sudden_death extends CheckRoomOptionItem {
-  public $disable_list = array('febris', 'frostbite', 'death_warrant', 'panelist');
+class Option_sudden_death extends OptionCheckbox {
+  public $disable_list = array(
+    'febris', 'chill_febris', 'frostbite', 'death_warrant', 'panelist', 'infatuated', 'thorn_cross'
+  );
 
   public function GetCaption() {
     return '虚弱体質村';
@@ -36,6 +38,6 @@ class Option_sudden_death extends CheckRoomOptionItem {
 
   //配役対象小心者系リスト取得
   private function GetSuddenDeathList() {
-    return array_diff(RoleData::$sub_role_group_list['sudden-death'], $this->disable_list);
+    return array_diff(RoleGroupSubData::$list['sudden-death'], $this->disable_list);
   }
 }

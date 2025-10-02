@@ -4,9 +4,9 @@
   ○仕様
   ・囁き：非表示
 */
-RoleManager::LoadFile('common');
+RoleLoader::LoadFile('common');
 class Role_hermit_common extends Role_common {
-  public function Whisper(TalkBuilder $builder, $voice) {
+  public function Whisper(TalkBuilder $builder, TalkParser $talk) {
     return false;
   }
 }

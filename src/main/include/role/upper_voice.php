@@ -4,7 +4,7 @@
   ○仕様
   ・声量変換：上方シフト
 */
-RoleManager::LoadFile('strong_voice');
+RoleLoader::LoadFile('strong_voice');
 class Role_upper_voice extends Role_strong_voice {
   public function FilterVoice(&$voice, &$str) {
     $this->ShiftVoice($voice, $str);

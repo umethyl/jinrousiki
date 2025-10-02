@@ -5,9 +5,7 @@ class TopPageConfig {
   const DISABLE_SHARED_SERVER = true; //関連サーバ <表示を [true:無効 / false:有効] にする>
 
   //表示する他のサーバのリスト (トップページ用)
-  static public $server_list = array(
-  //-- 設定例 --//
-/*
+  public static $server_list = array(
     'cirno' => array('name' => '真・チルノ鯖',
 		      'url' => 'http://jinrousiki.sourceforge.jp/cirno/',
 		      'encode' => 'UTF-8',
@@ -21,6 +19,5 @@ class TopPageConfig {
 		   'separator' => '',
 		   'footer' => '',
 		   'disable' => false)
-*/
 					 );
 }

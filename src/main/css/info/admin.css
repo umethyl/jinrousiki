@@ -4,7 +4,7 @@ body {
   background-image: url("../../img/bg/develop_history.png");
 }
 li {
-  filter: alpha(opacity=80, enabled=80);
+  filter: Alpha(opacity=80);
   -moz-opacity: 0.8;
   opacity: 0.8;
   background-color: #FCFCF6;

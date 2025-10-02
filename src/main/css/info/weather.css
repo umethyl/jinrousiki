@@ -4,19 +4,19 @@ body {
   background-image: url("../../img/bg/weather.png");
 }
 tr, th, td {
-  filter: alpha(opacity=80, enabled=80);
+  filter: Alpha(opacity=80);
   -moz-opacity: 0.8;
   opacity: 0.8;
   background-color: #FCFCF6;
 }
 li {
-  filter: alpha(opacity=70, enabled=70);
+  filter: Alpha(opacity=70);
   -moz-opacity: 0.7;
   opacity: 0.7;
   background-color: #FCFCF6;
 }
 p a {
-  filter: alpha(opacity=90, enabled=90);
+  filter: Alpha(opacity=90);
   -moz-opacity: 0.9;
   opacity: 0.9;
   background-color: #FCFCF6;

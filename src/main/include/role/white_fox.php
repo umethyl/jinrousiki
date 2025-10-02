@@ -4,7 +4,9 @@
   ○仕様
   ・人狼襲撃耐性：無し
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_white_fox extends Role_fox {
-  public $resist_wolf = false;
+  public function IsResistWolf() {
+    return false;
+  }
 }

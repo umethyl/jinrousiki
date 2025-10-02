@@ -4,7 +4,7 @@
   ○仕様
   ・配役：村人 → CastConfig::$replace_role_list
 */
-class Option_replace_human extends CheckRoomOptionItem {
+class Option_replace_human extends OptionCheckbox {
   public function GetCaption() {
     return '村人置換村';
   }

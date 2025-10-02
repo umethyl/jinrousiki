@@ -6,11 +6,11 @@
   ・狩り：なし
   ・投票数：+1
 */
-RoleManager::LoadFile('guard');
+RoleLoader::LoadFile('guard');
 class Role_elder_guard extends Role_guard {
   public $mix_in = array('authority');
 
-  public function IgnoreGuard() {
+  public function IgnoreGuard(User $user) {
     return Lottery::Percent(30) ? true : null;
   }
 

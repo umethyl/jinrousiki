@@ -2,11 +2,11 @@
 /*
   ◆反逆者 (rebel)
   ○仕様
-  ・得票数補正：-1 (権力者と同じ人に投票)
+  ・投票数補正：-1 (権力者と同じ人に投票)
 */
-RoleManager::LoadFile('authority');
+RoleLoader::LoadFile('authority');
 class Role_rebel extends Role_authority {
-  public function VoteCorrect() {
+  public function VoteKillCorrect() {
     if (DB::$ROOM->IsEvent('no_authority')) return; //蜃気楼ならスキップ
 
     //データ取得

@@ -4,11 +4,13 @@
   ○仕様
   ・ショック死：無得票
 */
-RoleManager::LoadFile('chicken');
+RoleLoader::LoadFile('chicken');
 class Role_rabbit extends Role_chicken {
-  public $sudden_death = 'RABBIT';
+  protected function IsSuddenDeath() {
+    return $this->CountVoted() == 0;
+  }
 
-  public function IsSuddenDeath() {
-    return $this->GetVotedCount() == 0;
+  protected function GetSuddenDeathType() {
+    return 'RABBIT';
   }
 }

@@ -3,27 +3,37 @@
   ◆夜叉 (yaksa)
   ○仕様
   ・勝利：生存 + 人狼系全滅
+  ・人狼襲撃無効確率：20%
+  ・暗殺反射確率：20%
   ・人攫い無効：人狼系以外
 */
-RoleManager::LoadFile('ogre');
+RoleLoader::LoadFile('ogre');
 class Role_yaksa extends Role_ogre {
-  public $resist_rate  = 20;
-  public $reflect_rate = 20;
+  protected function GetOgreWolfEatResistRate() {
+    return 20;
+  }
 
-  public function Win($winner) {
-    if ($this->IsDead() || $this->IgnoreWin($winner)) return false;
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive() && ! $this->IgnoreAssassin($user)) return false;
-    }
+  public function GetReflectAssassinRate() {
+    return 20;
+  }
+
+  protected function IgnoreOgreAssassin(User $user) {
+    return ! $this->RequireOgreWinDead($user);
+  }
+
+  protected function IsOgreLoseCamp($winner) {
+    return $winner == WinCamp::WOLF;
+  }
+
+  protected function IgnoreOgreLoseSurvive() {
+    return false;
+  }
+
+  protected function RequireOgreWinDead(User $user) {
+    return $user->IsMainGroup(CampGroup::WOLF);
+  }
+
+  protected function IgnoreOgreLoseAllDead() {
     return true;
-  }
-
-  //勝利無効判定
-  protected function IgnoreWin($winner) {
-    return $winner == 'wolf';
-  }
-
-  protected function IgnoreAssassin(User $user) {
-    return ! $user->IsWolf();
   }
 }

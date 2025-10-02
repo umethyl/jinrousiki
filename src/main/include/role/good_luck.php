@@ -4,9 +4,11 @@
   ○仕様
   ・処刑者決定：除外 (自分)
 */
-RoleManager::LoadFile('decide');
+RoleLoader::LoadFile('decide');
 class Role_good_luck extends Role_decide {
-  public $vote_day_type = 'self';
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::ACTOR;
+  }
 
   public function DecideVoteKill() {
     if ($this->IsVoteKill()) return;
@@ -16,7 +18,8 @@ class Role_good_luck extends Role_decide {
     if ($key === false) return;
 
     unset($stack[$key]);
-    //候補が一人になった場合は処刑者決定
-    if (count($stack) == 1) $this->SetVoteKill(array_shift($stack));
+    if (count($stack) == 1) { //候補が一人になった場合は処刑者決定
+      $this->SetVoteKill(array_shift($stack));
+    }
   }
 }

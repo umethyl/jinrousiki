@@ -2,17 +2,17 @@
 /*
   ◆執筆者 (scripter)
   ○仕様
-  ・投票数：+1 (5日目以降)
+  ・能力結果：発動発現
+  ・投票数：+1 (5 日目以降)
 */
 class Role_scripter extends Role {
   public $mix_in = array('upper_voter');
-  public $ability = 'ability_scripter';
 
   protected function IgnoreResult() {
     return $this->IgnoreFilterVoteDo();
   }
 
   protected function OutputAddResult() {
-    RoleHTML::OutputAbilityResult($this->ability, null);
+    RoleHTML::OutputAbilityResult('ability_scripter', null);
   }
 }

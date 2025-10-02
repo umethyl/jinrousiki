@@ -4,18 +4,22 @@
   ○仕様
   ・暗殺：熱病付加
 */
-RoleManager::LoadFile('assassin');
+RoleLoader::LoadFile('assassin');
 class Role_step_assassin extends Role_assassin {
   public $mix_in = array('step_mad');
-  public $action = 'STEP_ASSASSIN_DO';
-  public $submit = 'assassin_do';
+  public $action = VoteAction::STEP_ASSASSIN;
+  public $submit = VoteAction::ASSASSIN;
 
-  public function IsVoteCheckbox(User $user, $live) {
+  protected function IsVoteCheckboxLive($live) {
     return true;
   }
 
-  protected function GetVoteCheckboxHeader() {
-    return RoleHTML::GetVoteCheckboxHeader('checkbox');
+  protected function IgnoreVoteCheckboxSelf() {
+    return false;
+  }
+
+  protected function GetVoteCheckboxType() {
+    return OptionFormType::CHECKBOX;
   }
 
   public function CheckVoteNightTarget(array $list) {
@@ -34,8 +38,8 @@ class Role_step_assassin extends Role_assassin {
     }
   }
 
-  protected function SetAssassinTarget(User $user) {
-    return;
+  protected function IsAssassinKill() {
+    return false;
   }
 
   protected function AssassinAction(User $user) {

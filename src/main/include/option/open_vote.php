@@ -2,8 +2,8 @@
 /*
   ◆投票した票数を公表する (open_vote)
 */
-class Option_open_vote extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_open_vote extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return '投票した票数を公表する';

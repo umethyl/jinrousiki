@@ -10,25 +10,26 @@
 */
 class Role_challenge_lovers extends Role {
   public $mix_in = array('chicken');
-  public $sudden_death = 'CHALLENGE';
 
   protected function IgnoreAbility() {
     return DB::$ROOM->date < 2;
   }
 
-  public function IgnoreSuddenDeath() {
+  protected function IgnoreSuddenDeath() {
     return DB::$ROOM->date < 5;
   }
 
-  public function IsSuddenDeath() {
-    if (! is_array($cupid_list = $this->GetStack())){ //QP のデータをセット
+  protected function IsSuddenDeath() {
+    $role = 'lovers';
+    $cupid_list = $this->GetStack(); //QP データ
+    if (! is_array($cupid_list)) { //未設定なら登録
       $cupid_list = array();
-      foreach (array_keys($this->GetStack('vote_target')) as $uname) {
+      foreach ($this->GetStackKey('vote_target') as $uname) {
 	$user = DB::$USER->ByRealUname($uname);
-	if ($user->IsLovers()) {
-	  foreach ($user->GetPartner('lovers') as $id) {
-	    $cupid_list[$id][] = $user->id;
-	  }
+	if (! $user->IsRole($role)) continue;
+
+	foreach ($user->GetPartner($role) as $id) {
+	  $cupid_list[$id][] = $user->id;
 	}
       }
       //Text::p($cupid_list, '◆QP');
@@ -36,11 +37,13 @@ class Role_challenge_lovers extends Role {
     }
     $target = $this->GetStack('vote_target');
     $stack  = array_keys($target, $target[$this->GetUname()]);
-    //Text::p($stack, $this->GetUname());
+    //Text::p($stack, "◆VoteTarget/{$this->GetUname()} [{$this->role}]");
 
     $id = $this->GetID();
-    foreach ($this->GetActor()->GetPartner('lovers') as $cupid_id) {
-      if (! array_key_exists($cupid_id, $cupid_list)) return false;
+    foreach ($this->GetActor()->GetPartner($role) as $cupid_id) {
+      //難題持ちで自分のキューピッドが見つからない場合は抜けておく
+      if (! isset($cupid_list[$cupid_id])) return false;
+
       foreach ($cupid_list[$cupid_id] as $lovers_id) {
 	if ($lovers_id != $id && in_array(DB::$USER->ByID($lovers_id)->uname, $stack)) {
 	  return false;
@@ -50,7 +53,11 @@ class Role_challenge_lovers extends Role {
     return true;
   }
 
+  protected function GetSuddenDeathType() {
+    return 'CHALLENGE';
+  }
+
   public function WolfEatResist() {
-    return $this->GetActor()->IsChallengeLovers();
+    return RoleUser::IsChallengeLovers($this->GetActor());
   }
 }

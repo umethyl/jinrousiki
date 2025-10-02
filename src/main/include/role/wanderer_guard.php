@@ -2,23 +2,26 @@
 /*
   ◆一寸法師 (wanderer_guard)
   ○仕様
+  ・能力結果：護衛貫通追加
   ・人狼襲撃失敗カウンター：護衛貫通
 */
-RoleManager::LoadFile('guard');
+RoleLoader::LoadFile('guard');
 class Role_wanderer_guard extends Role_guard {
   protected function OutputGuardAddResult() {
-    $this->OutputAbilityResult('GUARD_PENETRATION');
+    RoleHTML::OutputResult(RoleAbility::PENETRATION);
   }
 
   public function WolfEatFailedCounter() {
-    $result    = 'GUARD_PENETRATION';
-    $vote_data = RoleManager::Stack()->Get('vote_data');
+    $result    = RoleAbility::PENETRATION;
+    $vote_data = RoleManager::GetVoteData();
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
       if ($user->IsDead(true) || ! isset($vote_data[$this->action][$user->id])) continue;
+
       $target = DB::$USER->ByID($vote_data[$this->action][$user->id]);
       $target->AddRole('penetration');
-      if (DB::$ROOM->IsOption('seal_message')) continue;
-      DB::$ROOM->ResultAbility($result, 'penetration', $target->GetName(), $user->GetID());
+      if (! DB::$ROOM->IsOption('seal_message')) {
+	DB::$ROOM->ResultAbility($result, 'penetration', $target->GetName(), $user->GetID());
+      }
     }
   }
 }

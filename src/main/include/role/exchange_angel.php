@@ -5,7 +5,7 @@
   ・共感者判定：特殊 (集計後)
   ・恋人抽選：交換憑依
 */
-RoleManager::LoadFile('angel');
+RoleLoader::LoadFile('angel');
 class Role_exchange_angel extends Role_angel {
   protected function IsSympathy(User $a, User $b) {
     return false;
@@ -19,13 +19,15 @@ class Role_exchange_angel extends Role_angel {
     $exchange_list = array();
 
     //魂移使が打った恋人の情報を収集 (Reparse() 対策で GetRoleUser() は使わない)
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsDummyBoy() || ! $user->IsLovers()) continue;
+    foreach (DB::$USER->Get() as $user) {
+      if ($user->IsDummyBoy() || ! $user->IsRole('lovers')) continue;
       foreach ($user->GetPartner('lovers') as $cupid_id) {
 	if (DB::$USER->ByID($cupid_id)->IsRole($this->role)) {
 	  $angel_list[$cupid_id][]  = $user->id;
 	  $lovers_list[$user->id][] = $cupid_id;
-	  if ($user->IsPossessedGroup()) $fix_list[$cupid_id] = true; //憑依能力者なら対象外
+	  if (RoleUser::IsPossessed($user)) {
+	    $fix_list[$cupid_id] = true; //憑依能力者なら対象外
+	  }
 	}
       }
     }
@@ -33,12 +35,12 @@ class Role_exchange_angel extends Role_angel {
     //Text::p($lovers_list, '◆lovers: 1st');
 
     foreach ($angel_list as $id => $lovers_stack) { //抽選処理
-      if (array_key_exists($id, $fix_list)) continue;
+      if (isset($fix_list[$id])) continue;
       $duplicate_stack = array();
       //Text::p($fix_list, '◆fix_angel:'. $id);
       foreach ($lovers_stack as $lovers_id) {
 	foreach ($lovers_list[$lovers_id] as $cupid_id) {
-	  if (! array_key_exists($cupid_id, $fix_list)) $duplicate_stack[$cupid_id] = true;
+	  if (! isset($fix_list[$cupid_id])) $duplicate_stack[$cupid_id] = true;
 	}
       }
       //Text::p($duplicate_stack, '◆duplicate:' . $id);
@@ -48,8 +50,7 @@ class Role_exchange_angel extends Role_angel {
 	foreach ($duplicate_list as $duplicate_id) {
 	  $fix_list[$duplicate_id] = true;
 	}
-      }
-      else {
+      } else {
 	$exchange_list[] = $id;
       }
       $fix_list[$id] = true;

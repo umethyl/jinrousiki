@@ -4,7 +4,7 @@
   ○仕様
   ・配役：狂人 → CastConfig::$replace_role_list
 */
-OptionManager::Load('replace_human');
+OptionLoader::LoadFile('replace_human');
 class Option_change_mad extends Option_replace_human {
   public function GetCaption() {
     return '狂人置換村';

@@ -6,14 +6,27 @@
   ・勝利：能力発現所持
 */
 class Role_immolate_mad extends Role {
-  public $ability = 'muster_ability';
-
   public function WolfEatReaction() {
-    $this->GetActor()->AddRole($this->ability);
+    $this->AddMusterRole();
     return false;
   }
 
+  //能力発現処理
+  final protected function AddMusterRole() {
+    $this->GetActor()->AddRole($this->GetMusterRole());
+  }
+
+  //発現役職取得
+  final protected function GetMusterRole() {
+    return 'muster_ability';
+  }
+
   public function Win($winner) {
-    return $this->GetActor()->IsRole($this->ability);
+    return $this->IsMusterRole();
+  }
+
+  //能力発現判定
+  final protected function IsMusterRole() {
+    return $this->GetActor()->IsRole($this->GetMusterRole());
   }
 }

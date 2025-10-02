@@ -4,31 +4,27 @@
   ○仕様
   ・足音：コピー先縦軸
 */
-RoleManager::LoadFile('unknown_mania');
+RoleLoader::LoadFile('unknown_mania');
 class Role_lute_mania extends Role_unknown_mania {
+  public $mix_in = array('step_mage');
+
   //足音処理
   public function Step() {
-    $list  = RoleManager::Stack()->Get('vote_data');
-    $id    = $list['MANIA_DO'][$this->GetID()];
+    if ($this->IgnoreStep()) return false;
+
+    $list  = RoleManager::GetVoteData();
+    $id    = $list[$this->action][$this->GetID()];
     $stack = array();
     foreach ($this->LotteryChainStep($this->GetChainStep($id), $id) as $target_id) {
-      if (DB::$USER->IsVirtualLive($target_id)) $stack[] = $target_id;
+      if (DB::$USER->IsVirtualLive($target_id)) {
+	$stack[] = $target_id;
+      }
     }
-    return DB::$ROOM->ResultDead(implode(' ', $stack), 'STEP');
-  }
-
-  //足音範囲取得
-  protected function GetChainStep($id) {
-    $stack = array();
-    $count = DB::$USER->GetUserCount();
-    for ($i = $id % 5; $i <= $count; $i += 5) {
-      if ($i > 0) $stack[] = $i;
-    }
-    return $stack;
+    return DB::$ROOM->ResultDead(ArrayFilter::Concat($stack), DeadReason::STEP);
   }
 
   //足音範囲抽選処理
-  protected function LotteryChainStep(array $list, $id) {
+  final protected function LotteryChainStep(array $list, $id) {
     $length = Lottery::GetRange(1, count($list));
     //Text::p($list,   '◆ChainStep [base]');
     //Text::p($length, '◆ChainStep [length]');
@@ -38,10 +34,17 @@ class Role_lute_mania extends Role_unknown_mania {
     for ($i = 0; $i < $max; $i++) {
       if ($i + $length > $max) break;
       $slice = array_slice($list, $i, $length);
-      if (in_array($id, $slice)) $stack[] = $slice;
+      if (in_array($id, $slice)) {
+	$stack[] = $slice;
+      }
     }
     //Text::p($stack, '◆ChainStep [slice]');
 
     return Lottery::Get($stack);
+  }
+
+  //足音範囲取得
+  protected function GetChainStep($id) {
+    return Position::GetVertical($id);
   }
 }

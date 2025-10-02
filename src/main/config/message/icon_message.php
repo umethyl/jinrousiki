@@ -22,7 +22,6 @@ class IconMessage {
   const SEARCH_EXPLAIN = 'アイコンをクリックすると編集できます (要パスワード)';
 
   /* カテゴリ表示欄 */
-  const ALL     = '全て';
   const NOTHING = 'データ無し';
   const SPACE   = '空欄';
 
@@ -41,4 +40,6 @@ class IconMessage {
   const INVALID_COLOR = '色指定が正しくありません。';
   const COLOR_EXPLAIN = '指定は (例：#6699CC) のように RGB 16進数指定で行ってください。';
   const INPUT_COLOR   = '送信された色指定 → <span class="color">%s</span>';
+  const NOT_EXISTS    = '無効なアイコン番号です：%s';
+  const USING         = '募集中・プレイ中の村で使用されているアイコンは編集できません';
 }

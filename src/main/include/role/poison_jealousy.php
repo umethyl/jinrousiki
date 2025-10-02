@@ -8,7 +8,7 @@ class Role_poison_jealousy extends Role {
   public $mix_in = array('poison');
   public $display_role = 'poison';
 
-  public function IsPoisonTarget(User $user) {
-    return $user->IsLovers();
+  protected function IsPoisonTarget(User $user) {
+    return $user->IsRole('lovers');
   }
 }

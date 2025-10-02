@@ -4,11 +4,11 @@
   ○仕様
   ・毒：人外カウント or 自分の仇敵
 */
-RoleManager::LoadFile('avenger');
+RoleLoader::LoadFile('avenger');
 class Role_poison_avenger extends Role_avenger {
   public $mix_in = array('poison');
 
-  public function IsPoisonTarget(User $user) {
-    return $user->IsInhuman() || $user->IsPartner('enemy', $this->GetID());
+  protected function IsPoisonTarget(User $user) {
+    return RoleUser::IsInhuman($user) || $user->IsPartner($this->GetPartnerRole(), $this->GetID());
   }
 }

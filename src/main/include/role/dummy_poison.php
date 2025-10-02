@@ -4,7 +4,7 @@
   ○仕様
   ・毒：昼限定 / 獏・妖精系
 */
-RoleManager::LoadFile('poison');
+RoleLoader::LoadFile('poison');
 class Role_dummy_poison extends Role_poison {
   public $display_role = 'poison';
 
@@ -12,7 +12,7 @@ class Role_dummy_poison extends Role_poison {
     return DB::$ROOM->IsDay();
   }
 
-  public function IsPoisonTarget(User $user) {
-    return $user->IsRole('dream_eater_mad') || $user->IsMainGroup('fairy');
+  protected function IsPoisonTarget(User $user) {
+    return RoleUser::IsDreamTarget($user);
   }
 }

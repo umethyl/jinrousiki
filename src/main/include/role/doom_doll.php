@@ -4,14 +4,19 @@
   ○仕様
   ・処刑：死の宣告 (人形以外)
 */
-RoleManager::LoadFile('doll');
+RoleLoader::LoadFile('doll');
 class Role_doom_doll extends Role_doll {
   public function VoteKillCounter(array $list) {
     $stack = array();
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if (! $user->IsAvoid() && ! $this->IsDoll($user)) $stack[] = $user->id;
+      if (! $this->IsDoll($user) && ! RoleUser::IsAvoid($user)) {
+	$stack[] = $user->id;
+      }
     }
-    if (count($stack) > 0) DB::$USER->ByID(Lottery::Get($stack))->AddDoom(2);
+
+    if (count($stack) > 0) {
+      DB::$USER->ByID(Lottery::Get($stack))->AddDoom(2);
+    }
   }
 }

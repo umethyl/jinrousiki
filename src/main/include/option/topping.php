@@ -2,10 +2,12 @@
 /*
   ◆固定配役追加モード (topping)
 */
-class Option_topping extends SelectorRoomOptionItem {
-  public function  __construct() {
-    parent::__construct();
+class Option_topping extends OptionSelector {
+  protected function LoadFormList() {
     $this->form_list = GameOptionConfig::${$this->source};
+  }
+
+  protected function LoadValue() {
     if (OptionManager::IsChange() && DB::$ROOM->IsOption($this->name)) {
       $this->value = DB::$ROOM->option_role->list[$this->name][0];
     }
@@ -16,7 +18,7 @@ class Option_topping extends SelectorRoomOptionItem {
     if (is_null(RQ::Get()->{$this->name})) return false;
 
     $post = RQ::Get()->{$this->name};
-    $flag = ! empty($post) && array_key_exists($post, $this->form_list);
+    $flag = ! empty($post) && isset($this->form_list[$post]);
     if ($flag) array_push(RoomOption::${$this->group}, sprintf('%s:%s', $this->name, $post));
     RQ::Set($this->name, $flag);
   }
@@ -39,7 +41,7 @@ class Option_topping extends SelectorRoomOptionItem {
 
   public function GenerateImage() {
     $str = $this->GetRoomImageFooter();
-    return Image::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
+    return ImageManager::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
   }
 
   public function GenerateRoomCaption() {
@@ -52,7 +54,7 @@ class Option_topping extends SelectorRoomOptionItem {
 
   //村用個別オプション取得
   protected function GetRoomType() {
-    return array_shift($this->GetStack());
+    return ArrayFilter::Pick($this->GetStack());
   }
 
   //村用キャプション追加メッセージ取得
@@ -63,6 +65,26 @@ class Option_topping extends SelectorRoomOptionItem {
 
   //村用画像追加メッセージ取得
   protected function GetRoomImageFooter() {
-    return sprintf('[%s]', strtoupper($this->GetRoomType()));
+    return Text::QuoteBracket(strtoupper($this->GetRoomType()));
+  }
+
+  //闇鍋固定枠追加
+  public function FilterChaosFixRole(array &$list) {
+    $stack = DB::$ROOM->GetOptionList($this->name);
+    if (count($stack) < 1) return;
+
+    //Text::p($stack, '◆topping');
+    if (ArrayFilter::IsArray($stack, 'fix')) { //固定枠
+      foreach ($stack['fix'] as $role => $count) {
+	ArrayFilter::Add($list, $role, $count);
+      }
+    }
+
+    if (ArrayFilter::IsArray($stack, 'random')) { //ランダム枠
+      foreach ($stack['random'] as $key => $rate) {
+	Lottery::Add($list, Lottery::Generate($rate), $stack['count'][$key]);
+      }
+    }
+    //Text::p($list, sprintf('◆topping(%d)', array_sum($list)));
   }
 }

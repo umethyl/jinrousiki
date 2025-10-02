@@ -5,11 +5,11 @@
   ・声量変換：「大声」固定 (ゲームプレイ中・生存時 / 呼び出し側で対応)
 */
 class Role_strong_voice extends Role {
-  public $voice_list = array('weak', 'normal', 'strong');
+  public $voice_list = array(TalkVoice::WEAK, TalkVoice::NORMAL, TalkVoice::STRONG);
 
   //声量変換
   public function FilterVoice(&$voice, &$str) {
-    $voice = array_shift(explode('_', $this->role));
+    $voice = Text::Cut($this->role, '_', null, false);
   }
 
   //声量シフト
@@ -20,8 +20,7 @@ class Role_strong_voice extends Role {
 	$str = RoleTalkMessage::HOWLING;
 	return;
       }
-    }
-    else {
+    } else {
       if (--$key < 0) {
 	$str = RoleTalkMessage::COMMON_TALK;
 	return;

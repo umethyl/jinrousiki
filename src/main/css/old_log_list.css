@@ -10,7 +10,7 @@ div {
   text-align: center;
 }
 table {
-  filter: alpha(opacity=80, enabled=80);
+  filter: Alpha(opacity=80);
   -moz-opacity: 0.8;
   opacity: 0.8;
   margin-left:  auto;

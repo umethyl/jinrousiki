@@ -2,18 +2,22 @@
 /*
   ◆薬師 (pharmacist)
   ○仕様
+  ・能力結果：毒鑑定/解毒
   ・毒能力鑑定/解毒
 */
 class Role_pharmacist extends Role {
-  public $result = 'PHARMACIST_RESULT';
-  public $vote_day_type = 'init';
+  public $result = RoleAbility::PHARMACIST;
 
   protected function IgnoreResult() {
     return DB::$ROOM->date < 3;
   }
 
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
+
   //毒能力情報セット
-  public function SetDetox() {
+  final public function SetDetox() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
       $str = $this->DistinguishPoison(DB::$USER->ByRealUname($target_uname));
@@ -23,16 +27,18 @@ class Role_pharmacist extends Role {
 
   //毒能力鑑定
   final protected function DistinguishPoison(User $user) {
-    //非毒能力者・夢毒者
-    if (! $user->IsRoleGroup('poison') || $user->IsRole('dummy_poison')) return 'nothing';
-    if ($user->IsRole('strong_poison')) return 'strong'; //強毒者
-    if ($user->IsRole('incubate_poison')) {
-      return DB::$ROOM->date > 4 ? 'strong' : 'nothing'; //潜毒者
+    //非毒能力者・夢毒者 > 強毒者 > 特殊 (騎士・誘毒者・連毒者・毒橋姫) > 通常
+    if (! $user->IsRoleGroup('poison') || $user->IsRole('dummy_poison')) {
+      return 'nothing';
+    } elseif ($user->IsRole('strong_poison')) {
+      return 'strong';
+    } elseif ($user->IsRole('incubate_poison')) {
+      return DB::$ROOM->date > 4 ? 'strong' : 'nothing';
+    } elseif ($user->IsRole('poison_guard', 'guide_poison', 'chain_poison', 'poison_jealousy')) {
+      return 'limited';
+    } else {
+      return 'poison';
     }
-    if ($user->IsRole('poison_guard', 'guide_poison', 'chain_poison', 'poison_jealousy')) {
-      return 'limited'; //騎士・誘毒者・連毒者・毒橋姫
-    }
-    return 'poison';
   }
 
   //解毒

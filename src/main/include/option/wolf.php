@@ -4,7 +4,7 @@
   ○仕様
   ・配役：村人 → 人狼
 */
-class Option_wolf extends CheckRoomOptionItem {
+class Option_wolf extends OptionCheckbox {
   public function GetCaption() {
     return '人狼追加';
   }
@@ -17,5 +17,9 @@ class Option_wolf extends CheckRoomOptionItem {
     if ($count >= CastConfig::${$this->name}) {
       OptionManager::Replace($list, 'human', $this->name);
     }
+  }
+
+  public function GetWishRole() {
+    return array($this->name);
   }
 }

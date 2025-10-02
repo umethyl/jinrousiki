@@ -4,7 +4,7 @@
   ○仕様
   ・配役：キューピッド → 小悪魔
 */
-OptionManager::Load('change_cupid');
+OptionLoader::LoadFile('change_cupid');
 class Option_change_triangle_cupid extends Option_change_cupid {
   public function GetCaption() {
     return '小悪魔村';

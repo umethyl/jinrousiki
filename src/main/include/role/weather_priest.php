@@ -4,7 +4,7 @@
   ○仕様
   ・司祭：天候発動 (2日目以降)
 */
-RoleManager::LoadFile('priest');
+RoleLoader::LoadFile('priest');
 class Role_weather_priest extends Role_priest {
   protected function IgnoreResult() {
     return DB::$ROOM->date < 2;
@@ -15,19 +15,23 @@ class Role_weather_priest extends Role_priest {
     return ! DB::$USER->IsLiveRole($this->role);
   }
 
-  public function Priest() {
-    $data = $this->GetStack('priest');
-
-    //スキップ判定 (天変地異なら常時発動)
-    if (! DB::$ROOM->IsOption('full_weather') && DB::$ROOM->date % 3 == 0 &&
-	$data->count['total'] - $data->count['human_side'] <= $data->count['wolf'] * 2) {
+  protected function IgnorePriest() {
+    //天変地異なら常時発動 > 3の倍数限定 > 生存者 - 村人陣営(恋人・愛人を含む) > 人狼系 × 2
+    if (DB::$ROOM->IsOption('full_weather')) {
       return false;
+    } elseif (DB::$ROOM->date % 3 != 0) {
+      return true;
+    } else {
+      $data = $this->GetStack('priest');
+      return $data->count['total'] - $data->count['human_side'] <= $data->count['wolf'] * 2;
     }
+  }
 
+  protected function PriestAction() {
     $list = $this->GetWeatherList(); //天候発動リスト
     //試行テスト
     //$stack = array(); for ($i = 0; $i < 20; $i++) @$stack[Lottery::Draw($list)]++;
-    //ksort($stack); Text::p($stack);
+    //ksort($stack); Text::p($stack, "◆{$this->role}");
 
     if (DB::$ROOM->IsOption('full_weather') && DB::$ROOM->IsDate(1)) { //天変地異対応
       DB::$ROOM->EntryWeather(Lottery::Draw($list), 1);
@@ -45,17 +49,17 @@ class Role_weather_priest extends Role_priest {
     $list = GameConfig::$weather_list;
     //Text::p($list, '◆WeatherList');
 
-    $list = $this->CalibrationCamp($list);
+    $list = $this->CalibrationWeatherListCamp($list);
     //Text::p($list, '◆Calibration/Camp');
 
-    $list = $this->CalibrationRole($list);
+    $list = $this->CalibrationWeatherListRole($list);
     //Text::p($list, '◆Calibration/Role');
 
     return $list;
   }
 
-  //陣営・投票余暇補正
-  private function CalibrationCamp(array $list) {
+  //天候発動リスト：陣営・投票余暇補正
+  private function CalibrationWeatherListCamp(array $list) {
     $data = $this->GetStack('priest');
 
     //投票余暇取得
@@ -76,8 +80,7 @@ class Role_weather_priest extends Role_priest {
       foreach (array(6, 7, 9, 16, 22, 32, 34, 46) as $id) {
 	$list[$id] = ceil($list[$id] * 0.8);
       }
-    }
-    elseif ($vote_margin < 1) { //村人陣営劣勢
+    } elseif ($vote_margin < 1) { //村人陣営劣勢
       foreach (array(6, 7, 8, 9, 32, 34, 42, 46) as $id) {
 	$list[$id] = ceil($list[$id] * 1.2);
       }
@@ -89,13 +92,56 @@ class Role_weather_priest extends Role_priest {
     return $list;
   }
 
-  //生存役職補正
-  private function CalibrationRole(array $list) {
-    $calib_off_list = array(
+  //天候発動リスト：生存役職補正
+  private function CalibrationWeatherListRole(array $list) {
+    $off_list   = $this->GetCalibrationWeatherOffList();
+    $role_list  = $this->GetCalibrationWeatherRoleList();
+    $group_list = $this->GetCalibrationWeatherGroupList();
+
+    foreach (DB::$USER->GetRole() as $role => $stack) {
+      if (isset($off_list[$role])) {
+	foreach ($off_list[$role] as $id) {
+	  $list[$id] = 0;
+	}
+      }
+
+      $calib_id = null;
+      if (isset($role_list[$role])) {
+	$calib_id = $role_list[$role];
+      } else {
+	foreach ($group_list as $group => $id) {
+	  if (Text::Search($role, $group)) {
+	    $calib_id = $id;
+	    break;
+	  }
+	}
+      }
+      //Text::p($role, "◆WeatherCalib [{$calib_id}]");
+
+      if (isset($calib_id)) {
+	$count = 0;
+	foreach ($stack as $id) {
+	  if (DB::$USER->ByID($id)->IsLive(true)) {
+	    $count++;
+	  }
+	}
+	$list[$calib_id] = ceil($list[$calib_id] * (1 + $count * 0.1));
+      }
+    }
+
+    return $list;
+  }
+
+  //天候発動補正リスト取得：発動抑制
+  private function GetCalibrationWeatherOffList() {
+    return array(
       'detective_common' => array(5, 15, 41)
     );
+  }
 
-    $calib_role_list = array(
+  //天候発動補正リスト取得：個別役職
+  private function GetCalibrationWeatherRoleList() {
+    return array(
       'human'              => 24,
       'suspect'            => 42,
       'critical_mage'      =>  4,
@@ -116,44 +162,16 @@ class Role_weather_priest extends Role_priest {
       'critical_fox'       =>  4,
       'critical_avenger'   =>  4
     );
+  }
 
-    $calib_group_list = array(
+  //天候発動補正リスト取得：役職グループ
+  private function GetCalibrationWeatherGroupList() {
+    return array(
       'cute'     => 42,
       'jeasouly' => 27,
       'depraver' =>  3,
       'vampire'  => 40,
       'fairy'    => 29
     );
-
-    foreach (DB::$USER->role as $role => $stack) {
-      $calib_id = null;
-      if (array_key_exists($role, $calib_off_list)) {
-	foreach ($calib_off_list[$role] as $calib_off_id) {
-	  $list[$calib_off_id] = 0;
-	}
-      }
-
-      if (array_key_exists($role, $calib_role_list)) {
-	$calib_id = $calib_role_list[$role];
-      }
-
-      foreach ($calib_group_list as $group => $id) {
-	if (strpos($role, $group) !== false) {
-	  $calib_id = $id;
-	  break;
-	}
-      }
-      //Text::p($role, "◆WeatherCalib [{$calib_id}]");
-
-      if (isset($calib_id)) {
-	$count = 0;
-	foreach ($stack as $id) {
-	  if (DB::$USER->ByID($id)->IsLive(true)) $count++;
-	}
-	$list[$calib_id] = ceil($list[$calib_id] * (1 + $count * 0.1));
-      }
-    }
-
-    return $list;
   }
 }

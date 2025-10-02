@@ -4,7 +4,7 @@
   ○仕様
   ・配役配布：誰か一人に権力者
 */
-class Option_authority extends CheckRoomOptionItem {
+class Option_authority extends OptionCheckbox {
   public function GetCaption() {
     return '権力者登場';
   }
@@ -14,7 +14,7 @@ class Option_authority extends CheckRoomOptionItem {
   }
 
   public function Cast() {
-    if (Cast::Stack()->Get('user_count') >= CastConfig::${$this->name}) {
+    if (Cast::Stack()->Get(Cast::COUNT) >= CastConfig::${$this->name}) {
       return $this->CastOnce();
     }
   }

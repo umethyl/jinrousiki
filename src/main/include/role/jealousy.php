@@ -2,14 +2,17 @@
 /*
   ◆橋姫 (jealousy)
   ○仕様
-  ・処刑得票：ショック死 (同一キューピッド恋人限定)
+  ・処刑得票カウンター：ショック死 (同一キューピッド恋人限定)
 */
 class Role_jealousy extends Role {
-  public $vote_day_type = 'init';
-  public $sudden_death  = 'JEALOUSY';
+  public $mix_in = array('chicken');
 
-  public function VotedReaction() {
-    foreach (array_keys($this->GetStack()) as $uname) {
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
+
+  public function VotePollReaction() {
+    foreach ($this->GetStackKey() as $uname) {
       if ($this->IsVoted($uname)) continue;
 
       $cupid_list = array(); //橋姫に投票したユーザのキューピッドの ID => 恋人の ID
@@ -27,5 +30,9 @@ class Role_jealousy extends Role {
 	}
       }
     }
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'JEALOUSY';
   }
 }

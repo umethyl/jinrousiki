@@ -2,6 +2,8 @@
 /*
   ◆交換日記 (letter_exchange)
   ○仕様
+  ・表示：1 日目, 所持日限定
+  ・役職表示：当時所持の有無で入れ替え
 */
 class Role_letter_exchange extends Role {
   protected function IgnoreAbility() {
@@ -12,21 +14,22 @@ class Role_letter_exchange extends Role {
     return $this->IsDoom() ? $this->role . '_today' : $this->role;
   }
 
+  //遺言更新
   public function UpdateLastWords() {
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
       if ($user->IsDead(true) || ! $user->IsDoomRole($this->role)) continue;
-      $target = $this->GetPartner($user);
+      $target = $this->GetTargetLoversPartner($user);
       $this->SaveLastWords($target, $user->id);
-      if (! $target->IsLastWordsLimited()) {
+      if (! RoleUser::LimitedLastWords($target)) {
 	$target->AddDoom(1, $this->role);
-	DB::$ROOM->ResultDead($target->handle_name, 'LETTER_EXCHANGE_MOVED');
+	DB::$ROOM->ResultDead($target->handle_name, DeadReason::LETTER_EXCHANGE_MOVED);
       }
     }
   }
 
   //恋人取得
-  private function GetPartner(User $target) {
-    $id = array_shift($target->GetPartner('lovers', true)); //キューピッドのID
+  private function GetTargetLoversPartner(User $target) {
+    $id = ArrayFilter::Pick($target->GetPartner('lovers', true)); //キューピッドのID
     foreach (DB::$USER->GetRoleUser('lovers') as $user) {
       if (! $user->IsSame($target) && $user->IsPartner('lovers', $id)) return $user;
     }

@@ -7,7 +7,7 @@
 class Role_poison_chiroptera extends Role {
   public $mix_in = array('poison');
 
-  public function IsPoisonTarget(User $user) {
-    return $user->IsInhuman() || $user->IsMainCamp('chiroptera');
+  protected function IsPoisonTarget(User $user) {
+    return RoleUser::IsInhuman($user) || $user->IsMainCamp(Camp::CHIROPTERA);
   }
 }

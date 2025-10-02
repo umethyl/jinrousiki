@@ -3,17 +3,17 @@
   ◆審神者 (step_mage)
   ○仕様
 */
-RoleManager::LoadFile('mage');
+RoleLoader::LoadFile('mage');
 class Role_step_mage extends Role_mage {
-  public $action = 'STEP_MAGE_DO';
-  public $submit = 'mage_do';
+  public $action = VoteAction::STEP_MAGE;
+  public $submit = VoteAction::MAGE;
 
-  public function IsVoteCheckbox(User $user, $live) {
-    return ! $this->IsActor($user);
+  protected function IsVoteCheckboxLive($live) {
+    return true;
   }
 
-  protected function GetVoteCheckboxHeader() {
-    return RoleHTML::GetVoteCheckboxHeader('checkbox');
+  protected function GetVoteCheckboxType() {
+    return OptionFormType::CHECKBOX;
   }
 
   public function CheckVoteNightTarget(array $list) {
@@ -22,17 +22,17 @@ class Role_step_mage extends Role_mage {
 
   //投票対象チェック (足音用)
   public function CheckStepVoteNightTarget(array $list) {
-    $id     = $this->GetActor()->id;
-    $max    = DB::$USER->GetUserCount();
+    $id     = $this->GetID();
+    $max    = DB::$USER->Count();
     $vector = null;
     $count  = 0;
     $stack  = array();
     do {
-      $chain = $this->GetChain($id, $max);
+      $chain = Position::GetChain($id, $max);
       $point = array_intersect($chain, $list);
       if (count($point) != 1) return VoteRoleMessage::UNCHAINED_ROUTE;
 
-      $new_vector = array_shift(array_keys($point));
+      $new_vector = ArrayFilter::PickKey($point);
       if ($new_vector != $vector) {
 	if ($count++ > 1) return VoteRoleMessage::INVALID_VECTOR;
 	$vector = $new_vector;
@@ -40,7 +40,7 @@ class Role_step_mage extends Role_mage {
 
       $id = array_shift($point);
       $stack[] = $id;
-      unset($list[array_search($id, $list)]);
+      ArrayFilter::Delete($list, $id);
     } while (count($list) > 0);
     if (count($stack) < 1) return VoteRoleMessage::UNCHAINED_SELF;
 
@@ -58,30 +58,29 @@ class Role_step_mage extends Role_mage {
       $handle_stack[] = DB::$USER->ByID($id)->handle_name;
     }
 
-    $this->SetStack(implode(' ', $target_stack), 'target_no');
-    $this->SetStack(implode(' ', $handle_stack), 'target_handle');
+    $this->SetStack(ArrayFilter::Concat($target_stack), RequestDataVote::TARGET);
+    $this->SetStack(ArrayFilter::Concat($handle_stack), 'target_handle');
     return null;
-  }
-
-  //隣り合っている ID を取得
-  final public function GetChain($id, $max) {
-    $stack = array();
-    if ($id - 5 >= 1)    $stack['N'] = $id - 5;
-    if ($id + 5 <= $max) $stack['S'] = $id + 5;
-    if ((($id - 1) % 5) != 0 && $id > 1)    $stack ['W'] = $id - 1;
-    if ((($id + 1) % 5) != 1 && $id < $max) $stack ['E'] = $id + 1;
-    return $stack;
   }
 
   //足音処理
   public function Step(array $list) {
+    if ($this->IgnoreStep()) return false;
+
     array_pop($list); //最後尾は対象者なので除く
     $stack = array();
     foreach ($list as $id) {
-      if (DB::$USER->IsVirtualLive($id)) $stack[] = $id;
+      if (DB::$USER->IsVirtualLive($id)) {
+	$stack[] = $id;
+      }
     }
     if (count($stack) < 1) return true;
     sort($stack);
-    return DB::$ROOM->ResultDead(implode(' ', $stack), 'STEP');
+    return DB::$ROOM->ResultDead(ArrayFilter::Concat($stack), DeadReason::STEP);
+  }
+
+  //足音無効判定
+  final protected function IgnoreStep() {
+    return $this->GetActor()->IsRole('levitation');
   }
 }

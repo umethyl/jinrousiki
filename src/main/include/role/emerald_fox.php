@@ -4,26 +4,36 @@
   ○仕様
   ・占い：共鳴者付加
 */
-RoleManager::LoadFile('fox');
+RoleLoader::LoadFile('fox');
 class Role_emerald_fox extends Role_fox {
   public $mix_in = array('mage');
-  public $action = 'MAGE_DO';
+  public $action = VoteAction::MAGE;
 
-  public function OutputAction() {
-    if ($this->GetActor()->IsActive()) RoleHTML::OutputVote('mage-do', 'mage_do', $this->action);
+  protected function IsAddVote() {
+    return $this->IsActorActive();
   }
 
-  protected function IgnoreVoteFilter() {
-    return $this->GetActor()->IsActive() ? null : VoteRoleMessage::LOST_ABILITY;
+  public function OutputAction() {
+    RoleHTML::OutputVote(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
+  }
+
+  protected function GetIgnoreAddVoteMessage() {
+    return VoteRoleMessage::LOST_ABILITY;
   }
 
   protected function IgnoreFinishVote() {
-    return ! $this->GetActor()->IsActive();
+    return ! $this->IsAddVote();
   }
 
-  public function Mage(User $user) {
-    if ($this->IsJammer($user) || $this->IsCursed($user)) return false;
-    if (! $user->IsFox() || ! ($user->IsChildFox() || $user->IsLonely())) return false;
+  public function MageFailed(User $user) {
+    return false;
+  }
+
+  public function MageSuccess(User $user) {
+    if (! RoleUser::IsFoxCount($user) ||
+	! ($user->IsMainGroup(CampGroup::CHILD_FOX) || RoleUser::IsLonely($user))) {
+      return false;
+    }
 
     $role = $this->GetActor()->GetID('mind_friend');
     $this->GetActor()->LostAbility();

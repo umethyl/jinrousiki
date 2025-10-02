@@ -4,15 +4,18 @@
   ○仕様
  ・処刑投票：囁き狂人変化 (人狼陣営限定)
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_disguise_wolf extends Role_wolf {
-  public $vote_day_type = 'init';
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
 
-  public function VoteAction() {
+  public function VoteKillAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($uname)) continue;
       $target = DB::$USER->ByRealUname($target_uname);
-      if ($target->IsDead(true) || ! $target->IsWolf()) continue;
+      if ($target->IsDead(true) || ! $target->IsMainGroup(CampGroup::WOLF)) continue;
+
       $user = DB::$USER->ByUname($uname);
       if ($user->IsLive(true)) {
 	$user->ReplaceRole($user->main_role, 'whisper_mad');

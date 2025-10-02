@@ -34,6 +34,10 @@ table.input, .explain {
 .explain span {
   color: #CC00FF;
 }
+.closing {
+  font-size: 12pt;
+  color: #FF0000;
+}
 input, textarea {
   background-color: #EECCAA;
   color: #774400;

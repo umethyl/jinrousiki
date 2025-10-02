@@ -4,7 +4,7 @@
   ○仕様
   ・解毒/ショック死抑制
 */
-RoleManager::LoadFile('pharmacist');
+RoleLoader::LoadFile('pharmacist');
 class Role_cure_pharmacist extends Role_pharmacist {
   protected function SetDetoxFlag($uname) {
     $this->GetActor()->detox = true;

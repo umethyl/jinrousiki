@@ -6,22 +6,18 @@
 */
 class Role_side_reverse extends Role {
   public function ConvertSay() {
-    $say    = $this->GetStack('say');
     $result = '';
     $line   = array();
-    $count  = mb_strlen($say);
-    for ($i = 0; $i < $count; $i++) {
-      $str = mb_substr($say, $i, 1);
+    foreach (Text::Split($this->GetStack('say')) as $str) {
       if ($str == Text::LF) {
-	if (count($line) > 0) $result .= implode('', array_reverse($line));
+	if (count($line) > 0) $result .= ArrayFilter::ConcatReverse($line, '');
 	$result .= $str;
 	$line = array();
-      }
-      else {
+      } else {
 	$line[] = $str;
       }
     }
-    if (count($line) > 0) $result .= implode('', array_reverse($line));
+    if (count($line) > 0) $result .= ArrayFilter::ConcatReverse($line, '');
     $this->SetStack($result, 'say');
   }
 }

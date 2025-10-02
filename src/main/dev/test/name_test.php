@@ -1,4 +1,4 @@
 <?php
 require_once('init.php');
-Loader::LoadFile('test_class');
-NameTest::Output();
+Loader::LoadFile('name_test_class');
+NameTest::Execute();

@@ -5,23 +5,26 @@
   ・共感者判定：別陣営
   ・ショック死：恋人からの得票
 */
-RoleManager::LoadFile('angel');
+RoleLoader::LoadFile('angel');
 class Role_cursed_angel extends Role_angel {
   public $mix_in = array('chicken');
-  public $sudden_death = 'SEALED';
 
-  protected function IsSympathy(User $a, User $b) {
-    return $a->GetCamp() != $b->GetCamp();
+  protected function IgnoreSuddenDeath() {
+    return ! $this->IsRealActor() || RoleUser::IsAvoidLovers($this->GetActor(), true);
   }
 
-  public function IgnoreSuddenDeath() {
-    return ! $this->IsRealActor() || $this->GetActor()->IsAvoidLovers(true);
-  }
-
-  public function IsSuddenDeath() {
+  protected function IsSuddenDeath() {
     foreach ($this->GetVotedUname() as $uname) {
-      if (DB::$USER->ByRealUname($uname)->IsLovers()) return true;
+      if (DB::$USER->ByRealUname($uname)->IsRole('lovers')) return true;
     }
     return false;
+  }
+
+  protected function GetSuddenDeathType() {
+    return 'SEALED';
+  }
+
+  protected function IsSympathy(User $a, User $b) {
+    return $a->GetMainCamp(true) != $b->GetMainCamp(true); //神話マニア陣営を区別する
   }
 }

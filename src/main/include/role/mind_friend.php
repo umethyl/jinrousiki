@@ -2,17 +2,13 @@
 /*
   ◆共鳴者 (mind_friend)
   ○仕様
-  ・表示：2 日目以降
-  ・仲間表示：共鳴先
-  ・発言公開：共鳴先
+  ・仲間表示：対象者
+  ・発言公開：対象者
 */
-class Role_mind_friend extends Role {
-  protected function IgnoreAbility() {
-    return DB::$ROOM->date < 2;
-  }
-
-  protected function OutputPartner() {
-    $target = $this->GetActor()->partner_list;
+RoleLoader::LoadFile('mind_read');
+class Role_mind_friend extends Role_mind_read {
+  protected function GetPartner() {
+    $target = $this->GetActor()->GetPartnerList();
     $stack  = array();
     foreach (DB::$USER->GetRoleUser($this->role) as $user) {
       if ($this->IsActor($user)) continue;
@@ -21,11 +17,11 @@ class Role_mind_friend extends Role {
       }
     }
     ksort($stack);
-    RoleHTML::OutputPartner($stack, $this->role . '_list');
+    return array($this->role . '_list' => $stack);
   }
 
   public function IsMindRead() {
     return $this->GetTalkFlag('mind_read') &&
-      $this->GetActor()->IsPartner($this->role, $this->GetViewer()->partner_list);
+      $this->GetActor()->IsPartner($this->role, $this->GetViewer()->GetPartnerList());
   }
 }

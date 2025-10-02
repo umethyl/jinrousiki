@@ -2,8 +2,8 @@
 /*
   ◆サブ役職を表示しない (secret_sub_role)
 */
-class Option_secret_sub_role extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_secret_sub_role extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return 'サブ役職を表示しない';

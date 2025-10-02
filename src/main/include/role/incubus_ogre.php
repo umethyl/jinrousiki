@@ -3,18 +3,33 @@
   ◆般若 (incubus_ogre)
   ○仕様
   ・勝利：生存 + 女性全滅
+  ・人攫い成功率低下：1/2
+  ・人狼襲撃無効確率：40%
+  ・暗殺反射確率：40%
 */
-RoleManager::LoadFile('ogre');
+RoleLoader::LoadFile('ogre');
 class Role_incubus_ogre extends Role_ogre {
-  public $resist_rate  = 40;
-  public $reduce_rate  =  2;
-  public $reflect_rate = 40;
+  protected function GetOgreWolfEatResistRate() {
+    return 40;
+  }
 
-  public function Win($winner) {
-    if ($this->IsDead()) return false;
-    foreach (DB::$USER->rows as $user) {
-      if (! $this->IsActor($user) && $user->IsLive() && $user->IsFemale()) return false;
-    }
+  public function GetReflectAssassinRate() {
+    return 40;
+  }
+
+  protected function GetOgreReduceDenominator() {
+    return 2;
+  }
+
+  protected function IgnoreOgreLoseSurvive() {
+    return false;
+  }
+
+  protected function RequireOgreWinDead(User $user) {
+    return ! $this->IsActor($user) && Sex::IsFemale($user);
+  }
+
+  protected function IgnoreOgreLoseAllDead() {
     return true;
   }
 }

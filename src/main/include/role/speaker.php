@@ -8,7 +8,7 @@
   ○問題点
   ・観戦モードにすると普通に見えてしまう
 */
-RoleManager::LoadFile('strong_voice');
+RoleLoader::LoadFile('strong_voice');
 class Role_speaker extends Role_strong_voice {
   public $mix_in = array('blinder');
 

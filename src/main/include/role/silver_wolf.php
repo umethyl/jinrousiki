@@ -4,15 +4,15 @@
   ○仕様
   ・仲間表示：なし
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_silver_wolf extends Role_wolf {
-  public function Whisper(TalkBuilder $builder, $voice) {
-    return $this->WolfWhisper($builder, $voice);
+  public function Whisper(TalkBuilder $builder, TalkParser $talk) {
+    return $this->WolfWhisper($builder, $talk);
   }
 
   //囁き (遠吠え変換)
-  final public function WolfWhisper(TalkBuilder $builder, $voice) {
-    return DB::$ROOM->date > 1 && $this->Howl($builder, $voice);
+  final public function WolfWhisper(TalkBuilder $builder, TalkParser $talk) {
+    return DB::$ROOM->date > 1 && $this->Howl($builder, $talk);
   }
 
   protected function IsWolfPartner($id) {

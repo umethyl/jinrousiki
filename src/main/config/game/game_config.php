@@ -15,22 +15,23 @@ class GameConfig {
   const LIMIT_SAY        = 20000;	//村の発言
   const LIMIT_SAY_LINE   =    50;	//村の発言 (行数)
   const LIMIT_TALK_COUNT =    20;	//発言数制限制 (初期値)
-  const LIMIT_LAST_WORDS = false; //遺言変更制限 (true：有効 / false：無効)
   const RANDOM_MESSAGE   = false; //ランダムメッセージの挿入 (する：true / しない：false)
 
   const QUOTE_TALK   = false; //発言を「」で括る
   const REPLACE_TALK = false; //発言置換モード：発言内容の一部を強制置換する
-  static $replace_talk_list = array(); //発言置換モードの変換リスト
-  //static $replace_talk_list = array('◆' => '◇'); //流石ツール対応例
+  public static $replace_talk_list = array(); //発言置換モードの変換リスト
+  //public static $replace_talk_list = array('◆' => '◇'); //流石ツール対応例
 
   /* 表示設定 */
   //「異議」あり
   const OBJECTION = 5; //使用可能回数
-  const OBJECTION_IMAGE = 'img/objection.gif'; //画像パス
+  const OBJECTION_IMAGE = 'img/objection/'; //画像パス
 
   //自動更新
   const AUTO_RELOAD = true; //game_view.php で自動更新を有効にする / しない (サーバ負荷に注意)
-  static $auto_reload_list = array(15, 30, 45, 60, 90, 120); //自動更新モードの更新間隔 (秒) のリスト
+
+  //自動更新モードの更新間隔 (秒) のリスト
+  public static $auto_reload_list = array(15, 30, 45, 60, 90, 120);
 
   //非同期更新
   const ASYNC = false; //非同期更新を有効にする / しない
@@ -53,10 +54,12 @@ class GameConfig {
   const LIAR_RATE        = 95; //狼少年の発動率 (%)
   const INVISIBLE_RATE   = 15; //光学迷彩の発言が空白に入れ替わる割合 (%)
   const SILENT_LENGTH    = 25; //無口が発言できる最大文字数
+
   //役者の変換テーブル
-  static $actor_replace_list = array('です' => 'みょん');
+  public static $actor_replace_list = array('です' => 'みょん');
+
   //恋色迷彩の変換テーブル
-  static $passion_replace_list = array(
+  public static $passion_replace_list = array(
     '村人' => '好き', '好き' => '村人',
     '人狼' => '嫌い', '嫌い' => '人狼',
     'むらびと' => 'すき', 'すき' => 'むらびと',
@@ -69,25 +72,28 @@ class GameConfig {
     '●' => 'ねたましい', 'ねたましい' => '●',
     'CO' => 'プロポーズ', 'ＣＯ' => 'プロポーズ', 'プロポーズ' => 'CO',
     'グレラン' => '告白', '告白'  => 'グレラン',
-    'ローラー' => 'ハーレム', 'ハーレム'  => 'ローラー');
+    'ローラー' => 'ハーレム', 'ハーレム'  => 'ローラー'
+  );
 
   /* その他 */
   const POWER_GM = false; //強権 GM モード (ON：true / OFF：false)
 
   //天候の出現比設定 (番号と天候の対応は WeatherData::$list 参照)
-  static $weather_list = array(
+  public static $weather_list = array(
      0 => 10,   1 => 15,   2 => 20,   3 => 20,   4 => 15,
      5 =>  5,   6 => 10,   7 => 20,   8 => 20,   9 => 10,
     10 => 10,  11 => 20,  12 =>  5,  13 => 10,  14 => 20,
     15 =>  5,  16 => 20,  17 =>  5,  18 => 15,  19 => 15,
-    20 => 15,  21 => 15,  22 => 20,  23 => 20,  24 => 15,
+    20 => 15,  21 => 15,  22 => 15,  23 => 15,  24 => 15,
     25 => 20,  26 => 20,  27 => 15,  28 => 20,  29 => 10,
-    30 => 20,  31 => 20,  32 => 20,  33 => 15,  34 => 20,
+    30 => 15,  31 => 15,  32 => 15,  33 => 15,  34 => 20,
     35 =>  5,  36 => 20,  37 => 20,  38 => 20,  39 => 20,
-    40 => 20,  41 =>  5,  42 => 15,  43 => 20,  44 => 10,
+    40 => 20,  41 =>  5,  42 => 15,  43 => 15,  44 => 10,
     45 => 20,  46 => 15,  47 => 15,  48 => 15,  49 => 15,
-    50 => 20,  51 => 20,  52 => 10,  53 => 10,  54 => 10,
+    50 => 15,  51 => 20,  52 => 10,  53 => 10,  54 => 10,
     55 => 15,  56 => 15,  57 => 10,  58 => 10,  59 => 10,
     60 => 10,  61 =>  5,  62 => 10,  63 =>  5,  64 =>  5,
-    65 => 15,  66 => 15,  67 => 15,  68 => 10,  69 => 10);
+    65 => 15,  66 => 15,  67 => 15,  68 => 10,  69 => 10,
+    70 =>  5,  71 => 15,  72 => 15
+  );
 }

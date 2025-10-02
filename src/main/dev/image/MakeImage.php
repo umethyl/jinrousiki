@@ -11,10 +11,14 @@ $font = 'azuki.ttf';
 
 //$role = 'poison'; //128
 //$role = 'role_tengu';
-//$role = 'prediction_weather_flower_fairy';
-$role = 'eye_scanner';
+//$role = 'prediction_weather_no_escape';
 
-$calib_list = array();
+$role = 'collector_ogre';
+
+$calib_list = array(0,0,0,0);
+//$calib_list = array(0.5,0,0,0); //wolf, vampire
+//$calib_list = array(0.3,0,0,0); //duelist
+$calib_list = array(0.7,0,0.7); //collector_ogre
 
 $test_mode   = false;
 $save_mode   = false;
@@ -22,24 +26,27 @@ $all_mode    = false;
 $sample_mode = false;
 
 $wish_role = false;
+
 if ($wish_role) {
   require_once('config/wish_role_list.php');
   $builder = new MessageImageBuilder('WishRoleList', $font);
 } else {
   require_once('config/role_message_list.php');
+  require_once('config/result_list.php');
+  require_once('config/ability_list.php');
+  require_once('config/weather_list.php');
   $builder = new MessageImageBuilder('RoleMessageList', $font);
+  #$builder = new MessageImageBuilder('ResultList', $font);
+  #$builder = new MessageImageBuilder('WeatherList', $font);
 }
 
 if ($test_mode) {
   $builder->Test($role);
-}
-elseif ($save_mode) {
+} elseif ($save_mode) {
   $builder->Save($role);
-}
-elseif ($all_mode) {
+} elseif ($all_mode) {
   $builder->OutputAll();
-}
-else {
+} else {
   $builder->Output($role, $calib_list);
 }
 

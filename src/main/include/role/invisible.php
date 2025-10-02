@@ -10,18 +10,15 @@ class Role_invisible extends Role {
     $say    = $this->GetStack('say');
     $result = '';
     $regex  = "/[\t\r\n\s]/";
-    $count  = mb_strlen($say);
+    $count  = Text::Count($say);
     $stack  = Lottery::GetList(range(0, $count));
     $target_stack = array_slice($stack, 0, ceil($count * GameConfig::INVISIBLE_RATE / 100));
-    for ($i = 0; $i < $count; $i++) {
-      $str = mb_substr($say, $i, 1);
+    foreach (Text::Split($say) as $key => $str) {
       if (preg_match($regex, $str)) {
 	$result .= $str;
-      }
-      elseif (in_array($i, $target_stack)) {
-	$result .= (strlen($str) == 2 ? Message::SPACER : '&nbsp;');
-      }
-      else {
+      } elseif (in_array($key, $target_stack)) {
+	$result .= (strlen($str) == 2 ? Message::SPACER : ' ');
+      } else {
 	$result .= $str;
       }
     }

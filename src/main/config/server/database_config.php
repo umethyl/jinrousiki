@@ -17,5 +17,5 @@ class DatabaseConfig {
     例) $name_list = array('log_a', 'log_b');
         old_log.php?db_no=2 => log_b のデータベースのログを表示
   */
-  static $name_list = array();
+  public static $name_list = array();
 }

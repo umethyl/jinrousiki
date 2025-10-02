@@ -3,16 +3,27 @@
   ◆牛頭鬼 (cow_ogre)
   ○仕様
   ・勝利：生存 + 暗殺者系全滅 + 村人陣営の勝利
+  ・暗殺反射確率：45%
 */
-RoleManager::LoadFile('ogre');
+RoleLoader::LoadFile('ogre');
 class Role_cow_ogre extends Role_ogre {
-  public $reflect_rate = 45;
+  public function GetReflectAssassinRate() {
+    return 45;
+  }
 
-  public function Win($winner) {
-    if ($winner != 'human' || $this->IsDead()) return false;
-    foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive() && $user->IsMainGroup('assassin')) return false;
-    }
+  protected function IsOgreLoseCamp($winner) {
+    return $winner != WinCamp::HUMAN;
+  }
+
+  protected function IgnoreOgreLoseSurvive() {
+    return false;
+  }
+
+  protected function RequireOgreWinDead(User $user) {
+    return $user->IsMainGroup(CampGroup::ASSASSIN);
+  }
+
+  protected function IgnoreOgreLoseAllDead() {
     return true;
   }
 }

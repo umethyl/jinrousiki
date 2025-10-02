@@ -3,8 +3,11 @@
   ◆狂骨 (critical_avenger)
   ○仕様
 */
-RoleManager::LoadFile('avenger');
+RoleLoader::LoadFile('avenger');
 class Role_critical_avenger extends Role_avenger {
   public $mix_in = array('critical_mad');
-  public $vote_day_type = 'init';
+
+  protected function GetStackVoteKillType() {
+    return RoleStackVoteKill::INIT;
+  }
 }

@@ -14,7 +14,7 @@ class TwitterConfig {
 
   //-- 関数 --//
   //メッセージのセット
-  static function GenerateMessage($id, $name, $comment) {
+  public static function GenerateMessage($id, $name, $comment) {
     $format = "【%s】%d番地に%s村\n～%s～ が建ちました";
     return sprintf($format, self::SERVER, $id, $name, $comment);
   }

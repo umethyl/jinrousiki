@@ -2,8 +2,8 @@
 /*
   ◆天啓封印 (seal_message)
 */
-class Option_seal_message extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
+class Option_seal_message extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
 
   public function GetCaption() {
     return '天啓封印';

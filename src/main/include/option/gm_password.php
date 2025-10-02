@@ -2,11 +2,10 @@
 /*
   ◆GM ログインパスワード (gm_password)
 */
-class Option_gm_password extends TextRoomOptionItem {
-  public $type = 'password';
+class Option_gm_password extends OptionText {
+  public $type = OptionFormType::PASSWORD;
 
-  public function __construct() {
-    parent::__construct();
+  protected function FilterEnable() {
     if (OptionManager::IsChange()) {
       $this->enable = false;
     } else {

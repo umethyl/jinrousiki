@@ -2,16 +2,12 @@
 /*
   ◆はぐれ者 (mind_lonely)
   ○仕様
-  ・表示：2 日目以降
 */
-class Role_mind_lonely extends Role {
+RoleLoader::LoadFile('mind_read');
+class Role_mind_lonely extends Role_mind_read {
   public $mix_in = array('silver_wolf');
 
-  protected function IgnoreAbility() {
-    return DB::$ROOM->date < 2;
-  }
-
-  public function Whisper(TalkBuilder $builder, $voice) {
-    return $this->GetActor()->IsWolf() && $this->WolfWhisper($builder, $voice);
+  public function Whisper(TalkBuilder $builder, TalkParser $talk) {
+    return $this->GetActor()->IsMainGroup(CampGroup::WOLF) && $this->WolfWhisper($builder, $talk);
   }
 }

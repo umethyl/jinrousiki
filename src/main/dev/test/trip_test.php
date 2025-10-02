@@ -1,4 +1,4 @@
 <?php
 require_once('init.php');
-Loader::LoadFile('test_class');
-TripTest::Output();
+Loader::LoadFile('trip_test_class');
+TripTest::Execute();

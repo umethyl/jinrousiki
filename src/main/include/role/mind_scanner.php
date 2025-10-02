@@ -3,39 +3,45 @@
   ◆さとり (mind_scanner)
   ○仕様
   ・追加役職：サトラレ
+  ・仲間表示：対象者 (憑依追跡なし)
   ・投票結果：なし
-  ・投票：1日目のみ
+  ・投票：1 日目のみ
 */
 class Role_mind_scanner extends Role {
-  public $action = 'MIND_SCANNER_DO';
-  public $action_date_type = 'first';
-  public $mind_role = 'mind_read';
+  public $action      = VoteAction::SCAN;
+  public $action_date = RoleActionDate::FIRST;
 
-  protected function OutputPartner() {
-    if (DB::$ROOM->date < 2 || is_null($this->mind_role)) return;
-    $id = $this->GetID();
+  protected function IgnorePartner() {
+    return DB::$ROOM->date < 2 || is_null($this->GetMindRole());
+  }
+
+  //透視対象役職取得
+  protected function GetMindRole() {
+    return 'mind_read';
+  }
+
+  protected function GetPartner() {
+    $id    = $this->GetID();
+    $role  = $this->GetMindRole();
     $stack = array();
-    foreach (DB::$USER->GetRoleUser($this->mind_role) as $user) {
-      if ($user->IsPartner($this->mind_role, $id)) $stack[] = $user->handle_name;
+    foreach (DB::$USER->GetRoleUser($role) as $user) {
+      if ($user->IsPartner($role, $id)) {
+	$stack[] = $user->handle_name; //憑依追跡なし
+      }
     }
-    RoleHTML::OutputPartner($stack, 'mind_scanner_target');
+    return array('mind_scanner_target' => $stack);
   }
 
   public function OutputAction() {
-    RoleHTML::OutputVote('mind-scanner-do', 'mind_scanner_do', $this->action);
+    RoleHTML::OutputVote(VoteCSS::SCAN, RoleAbilityMessage::SCAN, $this->action);
   }
 
-  public function IsVoteCheckbox(User $user, $live) {
-    return parent::IsVoteCheckbox($user, $live) && ! $user->IsDummyBoy();
-  }
-
-  public function IgnoreVoteNight(User $user, $live) {
-    if (! is_null($str = parent::IgnoreVoteNight($user, $live))) return $str;
-    return $user->IsDummyBoy() ? VoteRoleMessage::TARGET_DUMMY_BOY : null;
+  protected function IgnoreVoteCheckboxDummyBoy() {
+    return true;
   }
 
   //透視
   public function MindScan(User $user) {
-    $user->AddRole($this->GetActor()->GetID($this->mind_role));
+    $user->AddRole($this->GetActor()->GetID($this->GetMindRole()));
   }
 }

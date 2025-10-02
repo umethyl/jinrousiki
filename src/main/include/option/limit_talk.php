@@ -2,9 +2,9 @@
 /*
   ◆発言数制限制 (limit_talk)
 */
-class Option_limit_talk extends CheckRoomOptionItem {
-  public $group = RoomOption::GAME_OPTION;
-  public $type  = 'limit_talk';
+class Option_limit_talk extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
+  public $type  = OptionFormType::LIMIT_TALK;
 
   public function LoadPost() {
     RQ::Get()->ParsePostOn($this->name);
@@ -32,8 +32,8 @@ class Option_limit_talk extends CheckRoomOptionItem {
   }
 
   public function GenerateImage() {
-    $str = sprintf('[%d]', array_shift($this->GetStack()));
-    return Image::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
+    $str = sprintf('[%d]', ArrayFilter::Pick($this->GetStack()));
+    return ImageManager::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
   }
 
   public function GenerateRoomCaption() {
@@ -46,6 +46,6 @@ class Option_limit_talk extends CheckRoomOptionItem {
 
   //村用キャプション追加メッセージ取得
   private function GetRoomCaptionFooter() {
-    return sprintf(' (%d回)', array_shift($this->GetStack()));
+    return sprintf(' (%d回)', ArrayFilter::Pick($this->GetStack()));
   }
 }

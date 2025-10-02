@@ -4,7 +4,9 @@
   ○仕様
   ・司祭：サブ役職
 */
-RoleManager::LoadFile('priest');
+RoleLoader::LoadFile('priest');
 class Role_dowser_priest extends Role_priest {
-  public $priest_type = 'sub_role';
+  protected function GetPriestType() {
+    return 'sub_role';
+  }
 }

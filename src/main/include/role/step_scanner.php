@@ -6,19 +6,30 @@
   ・投票結果：なし
   ・投票：2日目以降
 */
-RoleManager::LoadFile('mind_scanner');
+RoleLoader::LoadFile('mind_scanner');
 class Role_step_scanner extends Role_mind_scanner {
   public $mix_in = array('step_mad', 'step_mage');
-  public $action = 'STEP_SCANNER_DO';
-  public $action_date_type = 'after';
-  public $mind_role = null;
+  public $action      = VoteAction::STEP_SCAN;
+  public $action_date = RoleActionDate::AFTER;
 
-  public function IsVoteCheckbox(User $user, $live) {
+  protected function GetMindRole() {
+    return null;
+  }
+
+  protected function IsVoteCheckboxLive($live) {
     return true;
   }
 
-  protected function GetVoteCheckboxHeader() {
-    return RoleHTML::GetVoteCheckboxHeader('checkbox');
+  protected function IgnoreVoteCheckboxSelf() {
+    return false;
+  }
+
+  protected function IgnoreVoteCheckboxDummyBoy() {
+    return false;
+  }
+
+  protected function GetVoteCheckboxType() {
+    return OptionFormType::CHECKBOX;
   }
 
   public function CheckVoteNightTarget(array $list) {
@@ -27,12 +38,14 @@ class Role_step_scanner extends Role_mind_scanner {
 
   //範囲透視
   public function StepScan(array $list) {
+    if ($this->IgnoreStep()) return false;
+
     //周辺ID取得
     //Text::p($list, '◆Target [Vote]');
-    $max   = DB::$USER->GetUserCount();
+    $max   = DB::$USER->Count();
     $stack = array();
     foreach ($list as $id) {
-      $stack = array_merge($stack, array_values($this->GetChain($id, $max)));
+      ArrayFilter::Merge($stack, array_values(Position::GetChain($id, $max)));
     }
 
     $around_list = array();
@@ -52,7 +65,7 @@ class Role_step_scanner extends Role_mind_scanner {
     foreach ($around_list as $id) {
       $user = DB::$USER->ByID($id);
       if ($user->IsDead(true)) continue;
-      if ($user->IsCommon(true) || $user->IsWolf(true) || $user->IsFox(true) ||
+      if (RoleUser::IsCommon($user) || RoleUser::IsWolf($user) || RoleUser::IsFox($user) ||
 	  $user->IsRole('mind_friend')) {
 	$step_flag = true;
 	break;

@@ -4,7 +4,7 @@
   ○仕様
   ・配役：村人 → キューピッド
 */
-class Option_cupid extends CheckRoomOptionItem {
+class Option_cupid extends OptionCheckbox {
   public function GetCaption() {
     return 'キューピッド登場';
   }
@@ -18,5 +18,9 @@ class Option_cupid extends CheckRoomOptionItem {
     if ($count >= CastConfig::${$this->name} && ! DB::$ROOM->IsOption('full_' . $this->name)) {
       OptionManager::Replace($list, 'human', $this->name);
     }
+  }
+
+  public function GetWishRole() {
+    return array($this->name);
   }
 }

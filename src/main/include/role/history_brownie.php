@@ -5,9 +5,12 @@
   ・人狼襲撃：特殊イベント (夜スキップ)
 */
 class Role_history_brownie extends Role {
-  public $event_night = 'skip_night';
-
   public function WolfEatCounter(User $user) {
-    $this->AddStack($this->event_night, 'event');
+    $this->AddStack($this->GetWolfEatCounterEvent(), 'event');
+  }
+
+  //人狼襲撃トリガーイベント取得
+  protected function GetWolfEatCounterEvent() {
+    return 'skip_night';
   }
 }

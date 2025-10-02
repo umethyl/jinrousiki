@@ -6,13 +6,20 @@
   ・投票：なし
   ・発言公開：共有者
 */
-RoleManager::LoadFile('mind_scanner');
+RoleLoader::LoadFile('mind_scanner');
 class Role_whisper_scanner extends Role_mind_scanner {
-  public $action    = null;
-  public $mind_role = null;
-  public $mind_read_target = 'common';
+  public $action = null;
+
+  protected function GetMindRole() {
+    return null;
+  }
 
   public function IsMindRead() {
-    return DB::$ROOM->date > 1 && $this->GetTalkFlag($this->mind_read_target);
+    return DB::$ROOM->date > 1 && $this->GetTalkFlag($this->GetMindReadTargetRole());
+  }
+
+  //発言公開対象役職取得
+  protected function GetMindReadTargetRole() {
+    return 'common';
   }
 }

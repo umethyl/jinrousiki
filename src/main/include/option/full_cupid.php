@@ -4,7 +4,7 @@
   ○仕様
   ・配役：村人 → キューピッド
 */
-OptionManager::Load('replace_human');
+OptionLoader::LoadFile('replace_human');
 class Option_full_cupid extends Option_replace_human {
   public function GetCaption() {
     return 'キューピッド村';

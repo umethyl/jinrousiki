@@ -4,35 +4,54 @@
   ○仕様
   ・ショック死抑制
   ・人狼襲撃：蘇生
+  ・復活無効：生存 or 恋人
 */
-RoleManager::LoadFile('pharmacist');
+RoleLoader::LoadFile('pharmacist');
 class Role_revive_pharmacist extends Role_pharmacist {
   //復活処理
   final public function Resurrect() {
-    if (! $this->IsResurrectTarget() || ! $this->CallParent('IsResurrect')) return false;
+    //無効判定 (身代わり君 > 人狼襲撃失敗 > 覚醒天狼襲撃 > 無効判定 > 能力判定)
+    $user = $this->GetActor();
+    if ($user->IsDummyBoy()) {
+      return false;
+    } elseif (! $user->wolf_killed) {
+      return false;
+    } elseif (RoleUser::IsSiriusWolf($this->GetWolfVoter())) {
+      return false;
+    } elseif ($this->CallParent('IgnoreResurrect')) {
+      return false;
+    } elseif (! $this->CallParent('IsResurrect')) {
+      return false;
+    }
 
-    $this->GetActor()->Revive();
-    if ($this->CallParent('IsResurrectLost')) $this->GetActor()->LostAbility();
+    $this->CallParent('ResurrectRevive');
+    if ($this->CallParent('IsResurrectLost')) {
+      $this->GetActor()->LostAbility();
+    }
     $this->CallParent('ResurrectAction');
   }
 
-  //復活判定
-  public function IsResurrect() {
-    return $this->GetActor()->IsActive();
+  //復活無効判定
+  protected function IgnoreResurrect() {
+    $user = $this->GetActor();
+    return $user->IsLive(true) || $user->IsRole('lovers');
+  }
+
+  //復活能力判定
+  protected function IsResurrect() {
+    return $this->IsActorActive();
+  }
+
+  //復活処理
+  protected function ResurrectRevive() {
+    $this->GetActor()->Revive();
   }
 
   //復活能力喪失判定
-  public function IsResurrectLost() {
+  protected function IsResurrectLost() {
     return true;
   }
 
   //復活後処理
-  public function ResurrectAction() {}
-
-  //復活対象者判定
-  private function IsResurrectTarget() {
-    $user = $this->GetActor();
-    return $user->wolf_killed && $user->IsDead(true) && ! $user->IsDummyBoy() &&
-      ! $user->IsLovers() && ! $this->GetWolfVoter()->IsSiriusWolf();
-  }
+  protected function ResurrectAction() {}
 }

@@ -29,6 +29,7 @@ class Message {
 
   /* 区切り文字 */
   const COLON = '：';
+  const RANGE = '～';
 
   /* ユーザ情報 */
   const SYMBOL = '◆';
@@ -60,6 +61,10 @@ class Message {
   const MALE   = '男性';
   const FEMALE = '女性';
 
+  /* フォーム */
+  const FORM_ALL     = '全て';
+  const FORM_EXECUTE = ' 実 行 ';
+
   /* ログ */
   const LOG_NORMAL         = '正';
   const LOG_REVERSE        = '逆';
@@ -74,5 +79,5 @@ class Message {
 
   /* ランダムメッセージ挿入 */
   //GameConfig::RANDOM_MESSAGE を true にすると、この配列の中身がランダムに表示される
-  static public $random_message_list = array();
+  public static $random_message_list = array();
 }

@@ -3,7 +3,7 @@
   ◆萌狼 (cute_wolf)
   ○仕様
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_cute_wolf extends Role_wolf {
   public $mix_in = array('suspect');
 }

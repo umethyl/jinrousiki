@@ -2,7 +2,7 @@
 /*
   ◆霊界で配役を公開しない (not_open_cast)
 */
-OptionManager::Load('not_close_cast');
+OptionLoader::LoadFile('not_close_cast');
 class Option_not_open_cast extends Option_not_close_cast {
   public function GetCaption() {
     return '霊界で配役を公開しない';

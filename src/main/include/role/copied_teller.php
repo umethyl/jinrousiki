@@ -2,9 +2,11 @@
 /*
   ◆元夢語部 (copied_teller)
   ○仕様
-  ・結果表示：4日目
+  ・能力結果：コピー結果 (4 日目)
 */
-RoleManager::LoadFile('copied');
+RoleLoader::LoadFile('copied');
 class Role_copied_teller extends Role_copied {
-  public $display_date = 4;
+  protected function GetResultDate() {
+    return 4;
+  }
 }

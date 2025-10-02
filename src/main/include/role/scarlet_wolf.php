@@ -3,6 +3,6 @@
   ◆紅狼 (scarlet_wolf)
   ○仕様
 */
-RoleManager::LoadFile('wolf');
+RoleLoader::LoadFile('wolf');
 class Role_scarlet_wolf extends Role_wolf {
 }

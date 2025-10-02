@@ -4,7 +4,7 @@
   ○仕様
   ・配役：キューピッド → CastConfig::$replace_role_list
 */
-OptionManager::Load('replace_human');
+OptionLoader::LoadFile('replace_human');
 class Option_change_cupid extends Option_replace_human {
   public function GetCaption() {
     return 'キューピッド置換村';

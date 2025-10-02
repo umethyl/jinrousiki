@@ -5,37 +5,40 @@
   ・仲間表示：共有者系
 */
 class Role_common extends Role {
-  protected function OutputPartner() {
+  protected function GetPartner() {
     $stack = array();
-    foreach (DB::$USER->rows as $user) {
+    foreach (DB::$USER->Get() as $user) {
       if ($this->IsActor($user)) continue;
-      if ($this->IsCommonPartner($user)) $stack[] = $user->handle_name;
+      if ($this->IsCommonPartner($user)) {
+	$stack[] = $user->handle_name;
+      }
     }
-    RoleHTML::OutputPartner($stack, 'common_partner');
+    return array('common_partner' => $stack);
   }
 
   //仲間判定
   protected function IsCommonPartner(User $user) {
-    return $user->IsCommon(true);
+    return RoleUser::IsCommon($user);
   }
 
   //囁き
-  public function Whisper(TalkBuilder $builder, $voice) {
-    return $this->CommonWhisper($builder, $voice);
+  public function Whisper(TalkBuilder $builder, TalkParser $talk) {
+    return $this->CommonWhisper($builder, $talk);
   }
 
   //囁き (共有囁き変換)
-  final public function CommonWhisper(TalkBuilder $builder, $voice) {
+  final public function CommonWhisper(TalkBuilder $builder, TalkParser $talk) {
     if (! $builder->flag->common_whisper) return false; //スキップ判定
 
     $stack = array(
       'str'        => RoleTalkMessage::COMMON_TALK,
       'symbol'     => '',
       'user_info'  => RoleTalkMessage::COMMON,
-      'voice'      => $voice,
+      'voice'      => $talk->font_type,
       'user_class' => 'talk-common',
-      'say_class'  => 'say-common'
+      'say_class'  => 'say-common',
+      'talk_id'    => $builder->GetTalkID($talk)
     );
-    return $builder->AddRaw($stack);
+    return $builder->Register($stack);
   }
 }
