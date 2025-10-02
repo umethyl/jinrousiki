@@ -1,0 +1,12 @@
+@charset "utf-8";
+@import url(info.css);
+@import url(../role_table.css);
+body {
+  background-image: url("../../img/bg/cast.png");
+}
+th, td {
+  filter: Alpha(opacity=70);
+  -moz-opacity: 0.7;
+  opacity: 0.7;
+  background-color: #FCFCF6;
+}
