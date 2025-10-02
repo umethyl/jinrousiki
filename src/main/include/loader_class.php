@@ -251,8 +251,8 @@ final class LoaderData {
     'user_class'		=> [
 	'user_data_class', 'user_db_class', 'role_data_manager_class', 'game_functions'],
     'option_class'		=> [ //常時ロード (依存)
-	'option_message', 'option_data_class', 'option_filter_data_class', 'option_html_class',
-	'event_class'],
+	'game_option_config', 'option_message', 'option_data_class', 'option_filter_data_class',
+	'option_html_class', 'event_class'],
     'room_option_class'		=> [
 	'room_config', 'time_config', 'game_config', 'game_option_config'],
     'option_form_class'		=> ['option_form_html_class', 'room_option_class'],
@@ -327,7 +327,7 @@ final class LoaderData {
     //controller/info
     'script_info_class'		=> [
 	'script_info_message', 'cache_config', 'dead_message', 'talk_message', 'user_icon_class',
-	'room_option_class', 'role_data_manager_class'],
+	'room_option_class', 'role_data_manager_class', 'cast_class'],
     'rule_info_class'		=> 'rule_info_message',
     'cast_info_class'		=> [
 	'cast_info_message', 'cast_config', 'role_data_manager_class'],

@@ -13,11 +13,11 @@ class Option_medium extends OptionCheckbox {
     return '突然死した人の所属陣営が分かります [村人2→巫女1・女神1]';
   }
 
-  public function SetRole(array &$list, $count) {
+  public function FilterCastAddRole(array &$list, $count) {
     $role = 'human';
     if ($count >= CastConfig::${$this->name} && ArrayFilter::GetInt($list, $role) > 1) {
-      OptionManager::Replace($list, $role, $this->name);
-      OptionManager::Replace($list, $role, 'mind_cupid');
+      OptionManager::CastRoleReplace($list, $role, $this->name);
+      OptionManager::CastRoleReplace($list, $role, 'mind_cupid');
       OptionManager::StoreDummyBoyCastLimit([$this->name, 'mind_cupid']);
     }
   }

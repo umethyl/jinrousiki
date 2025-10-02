@@ -37,61 +37,6 @@ class OptionManager {
     return null;
   }
 
-  //特殊普通村の配役処理
-  public static function SetRole(array &$list, $count) {
-    foreach (OptionFilterData::$add_role as $option) {
-      if (DB::$ROOM->IsOption($option) && OptionLoader::LoadFile($option)) {
-	OptionLoader::Load($option)->SetRole($list, $count);
-      }
-    }
-  }
-
-  //ユーザ配役処理
-  public static function Cast() {
-    $stack = Cast::Stack()->Get(Cast::DELETE);
-    foreach (OptionFilterData::$add_sub_role as $option) {
-      if (DB::$ROOM->IsOption($option) && OptionLoader::LoadFile($option)) {
-	ArrayFilter::AddMerge($stack, OptionLoader::Load($option)->Cast());
-      }
-    }
-    Cast::Stack()->Set(Cast::DELETE, $stack);
-  }
-
-  //役職置換処理
-  public static function Replace(array &$list, $base, $target) {
-    if (ArrayFilter::GetInt($list, $base) < 1) {
-      return false;
-    }
-    ArrayFilter::Replace($list, $base, $target);
-    return true;
-  }
-
-  //闇鍋固定枠追加
-  public static function FilterChaosFixRole(array &$list) {
-    foreach (OptionFilterData::$chaos_fix_role as $option) {
-      if (DB::$ROOM->IsOption($option)) {
-	OptionLoader::Load($option)->FilterChaosFixRole($list);
-      }
-    }
-  }
-
-  //ゲルト君モード有効判定
-  public static function EnableGerd($role = 'human') {
-    $option = 'gerd';
-    return DB::$ROOM->IsOption($option) && OptionLoader::Load($option)->EnableGerd($role);
-  }
-
-  //身代わり君配役制限役職登録
-  public static function StoreDummyBoyCastLimit(array $role_list, $force = false) {
-    $option = 'dummy_boy_cast_limit';
-    if (true === $force || DB::$ROOM->IsOption($option)) {
-      foreach ($role_list as $role) {
-	Cast::Stack()->Register(Cast::DUMMY, $role);
-      }
-      //Cast::Stack()->p(Cast::DUMMY, '◆Store');
-    }
-  }
-
   //オプション名生成
   public static function GenerateCaption($name) {
     return OptionLoader::LoadFile($name) ? OptionLoader::Load($name)->GetName() : '';
@@ -105,6 +50,115 @@ class OptionManager {
   //オプション説明出力
   public static function OutputExplain($name) {
     echo OptionLoader::LoadFile($name) ? OptionLoader::Load($name)->GetExplain() : '';
+  }
+
+  //-- Cast --//
+  //配役 (闇鍋固定枠追加)
+  public static function FilterCastChaosFixRole(array &$list) {
+    foreach (OptionFilterData::$cast_chaos_fix_role as $option) {
+      if (DB::$ROOM->IsOption($option)) {
+	OptionLoader::Load($option)->FilterCastChaosFixRole($list);
+      }
+    }
+  }
+
+  //配役 (普通村追加役職)
+  public static function FilterCastAddRole(array &$list, $count) {
+    foreach (OptionFilterData::$cast_add_role as $option) {
+      if (DB::$ROOM->IsOption($option) && OptionLoader::LoadFile($option)) {
+	OptionLoader::Load($option)->FilterCastAddRole($list, $count);
+      }
+    }
+  }
+
+  //配役 (役職置換)
+  public static function CastRoleReplace(array &$list, $base, $target) {
+    if (ArrayFilter::GetInt($list, $base) < 1) {
+      return false;
+    }
+    ArrayFilter::Replace($list, $base, $target);
+    return true;
+  }
+
+  //身代わり君配役制限役職登録
+  public static function StoreDummyBoyCastLimit(array $role_list) {
+    $option = 'dummy_boy_cast_limit';
+    if (false === DB::$ROOM->IsOption($option)) {
+      return false;
+    }
+
+    foreach ($role_list as $role) {
+      Cast::Stack()->Register(Cast::DUMMY, $role);
+    }
+    //Cast::Stack()->p(Cast::DUMMY, '◆Store');
+  }
+
+  //ゲルト君モード有効判定
+  public static function EnableGerd($role = 'human') {
+    $option = 'gerd';
+    return DB::$ROOM->IsOption($option) && OptionLoader::Load($option)->EnableGerd($role);
+  }
+
+  //ユーザーサブ役職配役処理
+  public static function CastUserSubRole() {
+    $stack = Cast::Stack()->Get(Cast::DELETE);
+    foreach (OptionFilterData::$cast_user_sub_role as $option) {
+      if (DB::$ROOM->IsOption($option) && OptionLoader::LoadFile($option)) {
+	ArrayFilter::AddMerge($stack, OptionLoader::Load($option)->CastUserSubRole());
+      }
+    }
+    Cast::Stack()->Set(Cast::DELETE, $stack);
+  }
+
+  //配役一覧出力用フィルター取得
+  public static function GetCastMessageFilter() {
+    //闇鍋モード判定
+    if (DB::$ROOM->IsOptionGroup('chaos')) {
+      foreach (OptionFilterData::$cast_message as $option) {
+	if (DB::$ROOM->IsOption($option)) {
+	  return OptionLoader::Load($option);
+	}
+      }
+
+      //通知オプションが存在しない場合は通知なし
+      return OptionLoader::Load('chaos_open_cast_none');
+    } else {
+      //通常村は完全公開
+      return OptionLoader::Load('chaos_open_cast_full');
+    }
+  }
+
+  //-- Room --//
+  //霊界公開判定
+  public static function IsRoomOpenCast() {
+    //便宜上常時公開設定もオプションクラスは実装しているが、システム上はオプション未設定になる
+    foreach (OptionFilterData::$room_open_cast as $option) {
+      if (DB::$ROOM->IsOption($option)) {
+	return OptionLoader::Load($option)->IsRoomOpenCast();
+      }
+    }
+    return true;
+  }
+
+  //ゲーム開始時シーン取得
+  public static function GetRoomGameStartScene() {
+    foreach (OptionFilterData::$room_game_start_scene as $option) {
+      if (DB::$ROOM->IsOption($option)) {
+	return OptionLoader::Load($option)->GetRoomGameStartScene();
+      }
+    }
+    return RoomScene::NIGHT;
+  }
+
+  //-- User --//
+  //発言回数初期化実施判定
+  public static function IsInitializeTalkCount() {
+    foreach (OptionFilterData::$initialize_talk_count as $option) {
+      if (DB::$ROOM->IsOption($option)) {
+	return true;
+      }
+    }
+    return false;
   }
 }
 
@@ -269,13 +323,36 @@ abstract class Option {
     return OptionHTML::GenerateRoomCaption($image, $url, $caption, $explain);
   }
 
-  //配役処理
-  public function Cast() {
-    return $this->CastAll();
+  //ユーザーサブ役職配役処理
+  public function CastUserSubRole() {
+    return $this->CastUserSubRoleAll();
   }
 
-  //配役処理 (一人限定)
-  final protected function CastOnce($str = '') {
+  //ユーザーサブ役職配役 (全員)
+  final protected function CastUserSubRoleAll() {
+    $list = Cast::Stack()->Get(Cast::CAST);
+    foreach (array_keys($list) as $id) {
+      if ($this->IgnoreCastUserSubRoleAll($id)) {
+	continue;
+      }
+      $list[$id] .= ' ' . $this->GetCastUserSubRoleAllRole($id);
+    }
+    Cast::Stack()->Set(Cast::CAST, $list);
+    return $this->GetResultCastUserSubRoleList();
+  }
+
+  //配役スキップ判定 (ユーザーサブ役職配役/全員)
+  protected function IgnoreCastUserSubRoleAll($id) {
+    return false;
+  }
+
+  //役職取得 (ユーザーサブ役職配役/全員)
+  protected function GetCastUserSubRoleAllRole($id) {
+    return $this->name;
+  }
+
+  //ユーザーサブ役職配役 (一人限定)
+  final protected function CastUserSubRoleOnce($str = '') {
     $rand = Cast::Stack()->Get(Cast::RAND);
     $list = Cast::Stack()->Get(Cast::CAST);
 
@@ -283,34 +360,11 @@ abstract class Option {
 
     Cast::Stack()->Set(Cast::RAND, $rand);
     Cast::Stack()->Set(Cast::CAST, $list);
-    return $this->GetResultCastList();
+    return $this->GetResultCastUserSubRoleList();
   }
 
-  //配役処理 (全員)
-  final protected function CastAll() {
-    $list = Cast::Stack()->Get(Cast::CAST);
-    foreach (array_keys($list) as $id) {
-      if ($this->IgnoreCastAll($id)) {
-	continue;
-      }
-      $list[$id] .= ' ' . $this->GetCastAllRole($id);
-    }
-    Cast::Stack()->Set(Cast::CAST, $list);
-    return $this->GetResultCastList();
-  }
-
-  //配役スキップ判定
-  protected function IgnoreCastAll($id) {
-    return false;
-  }
-
-  //役職取得
-  protected function GetCastAllRole($id) {
-    return $this->name;
-  }
-
-  //配役済み役職リスト取得
-  protected function GetResultCastList() {
+  //配役済みユーザーサブ役職リスト取得
+  protected function GetResultCastUserSubRoleList() {
     return [$this->name];
   }
 }
@@ -414,6 +468,52 @@ abstract class OptionLimitedCheckbox extends OptionCheckbox {
   //村用キャプション追加メッセージフォーマット取得
   protected function GetRoomCaptionFooterFormat() {
     return '%s';
+  }
+}
+
+//-- チェックボックス型(特殊配役型) --//
+abstract class OptionCastCheckbox extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
+
+  //配役有効判定
+  public function EnableCast($user_count) {
+    return true;
+  }
+
+  //配役取得
+  public function GetCastRole($user_count) {
+    return $this->FilterCast($user_count, $this->GetFilterCastRoleList());
+  }
+
+  //配役フィルタリングリスト取得
+  protected function GetFilterCastRoleList() {
+    return [];
+  }
+
+  //配役フィルタリング処理
+  final protected function FilterCast($count, array $filter) {
+    $stack = [];
+    foreach (CastConfig::$role_list[$count] as $key => $value) {
+      $role = 'human';
+      foreach ($filter as $set_role => $target_role) {
+	if (Text::Search($key, $target_role)) {
+	  $role = is_int($set_role) ? $target_role : $set_role;
+	  break;
+	}
+      }
+      ArrayFilter::Add($stack, $role, $value);
+    }
+    return $this->ReplaceFilterCast($stack);
+  }
+
+  //配役フィルタリング置換処理
+  protected function ReplaceFilterCast(array $role_list) {
+    return $role_list;
+  }
+
+  //村人置換有効判定
+  public function EnableReplaceRole() {
+    return true;
   }
 }
 

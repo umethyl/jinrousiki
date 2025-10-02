@@ -17,7 +17,7 @@ class Option_sudden_death extends OptionCheckbox {
     return '全員に投票でショック死するサブ役職のどれかがつきます';
   }
 
-  protected function GetCastAllRole($id) {
+  protected function GetCastUserSubRoleAllRole($id) {
     if (Cast::Stack()->IsEmpty($this->name)) { //未セットなら初期化
       $stack = $this->GetSuddenDeathList();
       Cast::Stack()->Set($this->name, $stack);
@@ -32,7 +32,7 @@ class Option_sudden_death extends OptionCheckbox {
     return $role;
   }
 
-  protected function GetResultCastList() {
+  protected function GetResultCastUserSubRoleList() {
     return $this->GetSuddenDeathList();
   }
 

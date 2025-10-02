@@ -14,9 +14,9 @@ class Option_child_fox extends OptionCheckbox {
       Text::BR . '　　　[妖狐1→子狐1]';
   }
 
-  public function SetRole(array &$list, $count) {
+  public function FilterCastAddRole(array &$list, $count) {
     if ($count >= CastConfig::${$this->name}) {
-      OptionManager::Replace($list, 'fox', $this->name);
+      OptionManager::CastRoleReplace($list, 'fox', $this->name);
     }
   }
 

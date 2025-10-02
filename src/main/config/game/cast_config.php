@@ -106,8 +106,8 @@ class CastConfig {
   public static $authority      = 16; //権力者 [兼任]
 
   /* その他 */
-  //身代わり君がならない役職グループのリスト (人狼・妖狐は常時対象外なので設定不要)
-  public static $disable_dummy_boy_role_list = ['poison'];
+  //身代わり君の配役対象外となる役職グループのリスト (人狼・妖狐は常時対象外なので設定不要)
+  public static $disable_cast_dummy_boy_role_list = ['poison'];
 
   //役職置換モード (オプション名 => 置換先役職)
   public static $replace_role_list = [

@@ -13,9 +13,9 @@ class Option_authority extends OptionCheckbox {
     return '投票の票数が二票になります [兼任]';
   }
 
-  public function Cast() {
+  public function CastUserSubRole() {
     if (Cast::Stack()->Get(Cast::COUNT) >= CastConfig::${$this->name}) {
-      return $this->CastOnce();
+      return $this->CastUserSubRoleOnce();
     }
   }
 }

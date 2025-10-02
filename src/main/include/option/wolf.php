@@ -13,9 +13,9 @@ class Option_wolf extends OptionCheckbox {
     return '人狼をもう一人追加します [村人1→人狼1]';
   }
 
-  public function SetRole(array &$list, $count) {
+  public function FilterCastAddRole(array &$list, $count) {
     if ($count >= CastConfig::${$this->name}) {
-      OptionManager::Replace($list, 'human', $this->name);
+      OptionManager::CastRoleReplace($list, 'human', $this->name);
       OptionManager::StoreDummyBoyCastLimit([$this->name]);
     }
   }

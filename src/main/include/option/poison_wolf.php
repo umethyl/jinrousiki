@@ -14,11 +14,11 @@ class Option_poison_wolf extends OptionCheckbox {
       '　　　[人狼1→毒狼1 / 村人1→薬師1]';
   }
 
-  public function SetRole(array &$list, $count) {
+  public function FilterCastAddRole(array &$list, $count) {
     if ($count >= CastConfig::${$this->name} &&
 	ArrayFilter::GetInt($list, 'wolf') > 0 && ArrayFilter::GetInt($list, 'human') > 0) {
-      OptionManager::Replace($list, 'wolf', $this->name);
-      OptionManager::Replace($list, 'human', 'pharmacist');
+      OptionManager::CastRoleReplace($list, 'wolf', $this->name);
+      OptionManager::CastRoleReplace($list, 'human', 'pharmacist');
       OptionManager::StoreDummyBoyCastLimit(['pharmacist']);
     }
   }

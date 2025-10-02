@@ -11,10 +11,10 @@ final class ScriptInfoInfoController extends JinrouController {
     HTML::OutputFooter();
   }
 
-  //身代わり君がなれない役職のリスト出力
+  //身代わり君の配役対象外となる役職グループのリスト出力
   public static function OutputDisableDummyBoyRole() {
     $stack = [];
-    foreach (array_merge(['wolf', 'fox'], CastConfig::$disable_dummy_boy_role_list) as $role) {
+    foreach (Cast::GetDisableCastDummyBoyRoleBaseList() as $role) {
       $stack[] = RoleDataManager::GetName($role);
     }
     echo ArrayFilter::Concat($stack, ScriptInfoMessage::DOT);

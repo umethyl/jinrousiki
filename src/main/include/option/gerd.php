@@ -11,16 +11,14 @@ class Option_gerd extends OptionCheckbox {
     return '役職が村人固定になります (村人が出現している場合のみ有効)';
   }
 
-  //闇鍋固定枠追加
-  public function FilterChaosFixRole(array &$list) {
+  public function FilterCastChaosFixRole(array &$list) {
     if ($this->EnableGerd()) {
-      ArrayFilter::Initialize($list, 'human', 1);
+      ArrayFilter::Add($list, $this->GetTargetRole());
     }
   }
 
-  //身代わり君固定配役取得
-  public function GetDummyBoyFixRole(array $list) {
-    $role = 'human';
+  public function GetCastDummyBoyFixRole(array $list) {
+    $role = $this->GetTargetRole();
     if ($this->EnableGerd() && in_array($role, $list)) {
       return $role;
     } else {
@@ -34,7 +32,12 @@ class Option_gerd extends OptionCheckbox {
     if (DB::$ROOM->IsOption($option)) {
       return false === OptionLoader::Load($option)->DisableGerd();
     } else {
-      return 'human' === $role;
+      return $this->GetTargetRole() === $role;
     }
+  }
+
+  //対象役職取得
+  private function GetTargetRole() {
+    return 'human';
   }
 }

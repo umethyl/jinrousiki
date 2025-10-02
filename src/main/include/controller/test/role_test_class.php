@@ -58,16 +58,29 @@ final class RoleTestController extends JinrouController {
       Text::d();
     }
 
+    $id = 'open_cast';
+    $stack = ['chaos_open_cast_camp', 'chaos_open_cast_role', 'chaos_open_cast_full'];
+    RQ::Get()->ParsePostData($id);
+    $checked_key = in_array(RQ::Get()->$id, $stack) ? RQ::Get()->$id : 'chaos_open_cast_full';
+    foreach ($stack as $key => $option) {
+      $label   = $id . '_' . $option;
+      $checked = HTML::GenerateChecked($checked_key == $option);
+      DevHTML::OutputRadio($label, $id, $option, $checked, RoleTestMessage::$$option);
+    }
+    Text::d();
+
     $stack = [
       'gerd', 'disable_gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf',
       'tongue_wolf', 'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox',
-      'depraver', 'cupid', 'medium', 'mania', 'detective', 'festival', 'chaos_open_cast_camp',
-      'chaos_open_cast_role', 'limit_off'
+      'depraver', 'cupid', 'medium', 'mania', 'detective', 'festival', 'limit_off'
     ];
+
     $count = 0;
     foreach ($stack as $option) {
       Text::OutputFold(++$count, Text::BR, 14);
-      DevHTML::OutputCheckbox('option_' . $option, $option, RoleTestMessage::$$option);
+      RQ::Get()->ParsePostData($option);
+      $checked = Switcher::IsOn(RQ::Get()->$option);
+      DevHTML::OutputCheckbox('option_' . $option, $option, RoleTestMessage::$$option, $checked);
     }
     HTML::OutputFormFooter();
   }
@@ -127,6 +140,15 @@ final class RoleTestController extends JinrouController {
       }
     }
 
+    //陣営通知オプション
+    switch (RQ::Get()->open_cast) {
+    case 'chaos_open_cast_camp':
+    case 'chaos_open_cast_role':
+    case 'chaos_open_cast_full':
+      $stack->option_role[] = RQ::Get()->open_cast;
+      break;
+    }
+
     //普通村向けオプション
     $option_stack = [
       'gerd', 'disable_gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf',
@@ -144,14 +166,6 @@ final class RoleTestController extends JinrouController {
       RQ::Get()->ParsePostOn($option);
       if (RQ::Get()->$option) {
 	$stack->game_option[] = $option;
-      }
-    }
-
-    //陣営通知オプション
-    foreach (['chaos_open_cast_camp', 'chaos_open_cast_role'] as $option) {
-      RQ::Get()->ParsePostOn($option);
-      if (RQ::Get()->$option) {
-	$stack->option_role[] = $option;
       }
     }
 

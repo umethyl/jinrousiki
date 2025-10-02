@@ -1167,10 +1167,11 @@ class UserLoader {
   }
 
   //ゲーム開始処理
-  public function GameStart($init_talk) {
+  public function GameStart() {
+    $flag = OptionManager::IsInitializeTalkCount();
     foreach ($this->rows as $user) {
       $user->UpdatePlayer();
-      if ($init_talk) {
+      if (true === $flag) {
 	$user->InitializeTalkCount();
       }
     }

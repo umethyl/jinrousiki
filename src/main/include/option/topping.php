@@ -67,9 +67,9 @@ class Option_topping extends OptionSelector {
     return Text::QuoteBracket(strtoupper($this->GetRoomType()));
   }
 
-  //闇鍋固定枠追加
-  public function FilterChaosFixRole(array &$list) {
-    $stack = DB::$ROOM->GetOptionList($this->name);
+  //配役 (闇鍋固定枠追加)
+  public function FilterCastChaosFixRole(array &$list) {
+    $stack = DB::$ROOM->GetChaosOptionList($this->name);
     if (count($stack) < 1) {
       return;
     }

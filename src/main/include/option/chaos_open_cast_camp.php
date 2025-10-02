@@ -2,8 +2,8 @@
 /*
   ◆陣営通知 (chaos_open_cast_camp)
 */
-OptionLoader::LoadFile('chaos_open_cast_none');
-class Option_chaos_open_cast_camp extends Option_chaos_open_cast_none {
+OptionLoader::LoadFile('chaos_open_cast_full');
+class Option_chaos_open_cast_camp extends Option_chaos_open_cast_full {
   public function GetName() {
     return '陣営通知';
   }
@@ -16,12 +16,11 @@ class Option_chaos_open_cast_camp extends Option_chaos_open_cast_none {
     return '陣営通知 (陣営ごとの合計を通知)';
   }
 
-  //-- 役職通知 --//
   public function GetCastMessageMainHeader() {
     return VoteMessage::CAMP_HEADER;
   }
 
-  public function GetCastMessageMainType() {
+  public function GetCastMessageMainFooter() {
     return VoteMessage::CAMP_FOOTER;
   }
 
@@ -35,20 +34,11 @@ class Option_chaos_open_cast_camp extends Option_chaos_open_cast_none {
     return $stack;
   }
 
-  public function GetCastMessageSubType() {
-    return VoteMessage::GROUP_FOOTER;
+  public function GetCastMessageSubFooter() {
+    return $this->GetCastMessageSubFooterGroup();
   }
 
   public function GetCastMessageSubRoleList(array $role_count_list) {
-    $stack = [];
-    foreach ($role_count_list as $role => $count) {
-      if (! RoleDataManager::IsSub($role)) continue;
-      foreach (RoleGroupSubData::$list as $list) {
-	if (in_array($role, $list)) {
-	  ArrayFilter::Add($stack, $list[0], $count);
-	}
-      }
-    }
-    return $stack;
+    return $this->GetCastMessageSubRoleGroupList($role_count_list);
   }
 }

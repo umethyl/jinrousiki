@@ -88,11 +88,13 @@ class DevRoom {
 
     $user_count = RQ::Get()->user_count;
     $try_count  = RQ::Get()->try_count;
-    $str = '%0' . strlen($try_count) . 'd回目: ';
+    $format     = '%0' . strlen($try_count) . 'd回目: ';
     for ($i = 1; $i <= $try_count; $i++) {
-      printf($str, $i);
+      printf($format, $i);
       $role_list = Cast::Get($user_count);
-      if ($role_list == '') break;
+      if ($role_list == '') {
+	break;
+      }
       Text::p(Cast::GenerateMessage(array_count_values($role_list), true));
     }
   }

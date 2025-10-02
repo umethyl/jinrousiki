@@ -13,7 +13,7 @@ class Option_dummy_boy_cast_limit extends OptionCheckbox {
     return '身代わり君が追加役職設定された役職を引きにくくなります';
   }
 
-  //配役リストを参照して配役制限リストの初期調整を行う
+  //配役リストを参照して配役制限リストの調整を行う
   public function UpdateDummyBoyCastLimit(array $stack) {
     $role_count_list = array_count_values(Cast::Stack()->Get(Cast::ROLE));
     $limit_list = [];

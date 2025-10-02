@@ -13,11 +13,11 @@ class Option_poison extends OptionCheckbox {
     return '処刑されたり狼に食べられた場合、道連れにします [村人2→埋毒1・人狼1]';
   }
 
-  public function SetRole(array &$list, $count) {
+  public function FilterCastAddRole(array &$list, $count) {
     $role = 'human';
     if ($count >= CastConfig::${$this->name} && ArrayFilter::GetInt($list, $role) > 1) {
-      OptionManager::Replace($list, $role, $this->name);
-      OptionManager::Replace($list, $role, 'wolf');
+      OptionManager::CastRoleReplace($list, $role, $this->name);
+      OptionManager::CastRoleReplace($list, $role, 'wolf');
       OptionManager::StoreDummyBoyCastLimit([$this->name]);
     }
   }

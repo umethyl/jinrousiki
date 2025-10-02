@@ -13,9 +13,9 @@ class Option_decide extends OptionCheckbox {
     return '投票が同数の時、決定者の投票先が優先されます [兼任]';
   }
 
-  public function Cast() {
+  public function CastUserSubRole() {
     if (Cast::Stack()->Get(Cast::COUNT) >= CastConfig::${$this->name}) {
-      return $this->CastOnce();
+      return $this->CastUserSubRoleOnce();
     }
   }
 }

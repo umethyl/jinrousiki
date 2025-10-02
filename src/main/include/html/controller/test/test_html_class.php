@@ -39,9 +39,10 @@ class DevHTML {
   }
 
   //チェックボックス型フォーム出力
-  public static function OutputCheckbox($id, $name, $label) {
+  public static function OutputCheckbox($id, $name, $label, $checked = false) {
     Text::Printf(self::GetInputForm(),
-      OptionFormType::CHECKBOX, $id, $name, Switcher::ON, HTML::GenerateChecked(false), $id, $label
+      OptionFormType::CHECKBOX, $id, $name, Switcher::ON,
+      HTML::GenerateChecked($checked), $id, $label
     );
   }
 

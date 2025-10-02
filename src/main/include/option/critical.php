@@ -13,11 +13,11 @@ class Option_critical extends OptionCheckbox {
     return '全員に「会心」「痛恨」がつきます。';
   }
 
-  protected function GetCastAllRole($id) {
+  protected function GetCastUserSubRoleAllRole($id) {
     return 'critical_voter critical_luck';
   }
 
-  protected function GetResultCastList() {
+  protected function GetResultCastUserSubRoleList() {
     return ['critical_voter', 'critical_luck'];
   }
 }

@@ -14,10 +14,10 @@ class Option_cupid extends OptionCheckbox {
       Text::BR . '　　　[村人1→キューピッド1]';
   }
 
-  public function SetRole(array &$list, $count) {
+  public function FilterCastAddRole(array &$list, $count) {
     $option = 'full_' . $this->name;
     if ($count >= CastConfig::${$this->name} && false === DB::$ROOM->IsOption($option)) {
-      OptionManager::Replace($list, 'human', $this->name);
+      OptionManager::CastRoleReplace($list, 'human', $this->name);
       OptionManager::StoreDummyBoyCastLimit([$this->name]);
     }
   }

@@ -15,11 +15,11 @@ class Option_joker extends OptionCheckbox {
     return '誰か一人に「ジョーカー」がつきます';
   }
 
-  public function Cast() {
-    return $this->CastOnce('[2]');
+  public function CastUserSubRole() {
+    return $this->CastUserSubRoleOnce('[2]');
   }
 
-  protected function GetResultCastList() {
+  protected function GetResultCastUserSubRoleList() {
     return null;
   }
 }

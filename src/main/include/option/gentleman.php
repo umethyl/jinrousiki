@@ -13,12 +13,12 @@ class Option_gentleman extends OptionCheckbox {
     return '全員に性別に応じた「紳士」「淑女」がつきます';
   }
 
-  protected function GetCastAllRole($id) {
+  protected function GetCastUserSubRoleAllRole($id) {
     $stack = Cast::Stack()->Get(Cast::UNAME);
     return Sex::IsMale(DB::$USER->ByUname($stack[$id])) ? 'gentleman' : 'lady';
   }
 
-  protected function GetResultCastList() {
+  protected function GetResultCastUserSubRoleList() {
     return ['gentleman', 'lady'];
   }
 }

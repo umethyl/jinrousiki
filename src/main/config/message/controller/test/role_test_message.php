@@ -40,5 +40,6 @@ class RoleTestMessage {
   public static $festival		= 'お祭り';
   public static $chaos_open_cast_camp	= '陣営通知';
   public static $chaos_open_cast_role	= '系列通知';
+  public static $chaos_open_cast_full	= '完全通知';
   public static $limit_off		= 'リミッタオフ';
 }

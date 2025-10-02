@@ -12,4 +12,9 @@ class Option_open_day extends OptionCheckbox {
   public function GetExplain() {
     return 'ゲームが1日目「昼」からスタートします';
   }
+
+  //ゲーム開始時シーン取得
+  public function GetRoomGameStartScene() {
+    return RoomScene::DAY;
+  }
 }

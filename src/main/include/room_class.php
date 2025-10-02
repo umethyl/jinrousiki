@@ -68,7 +68,7 @@ final class Room extends StackManager {
   public function ParseOption($join = false) {
     $this->game_option = new OptionParser($this->game_option);
     $this->option_role = new OptionParser($this->option_role);
-    $this->option_list = $join ?
+    $this->option_list = (true === $join) ?
       array_merge(array_keys($this->game_option->list), array_keys($this->option_role->list)) :
       array_keys($this->game_option->list);
 
@@ -79,8 +79,8 @@ final class Room extends StackManager {
     }
   }
 
-  //特殊オプションの配役データ取得
-  public function GetOptionList($option) {
+  //闇鍋モード用オプション配役データ取得
+  public function GetChaosOptionList($option) {
     if ($this->IsOption($option)) {
       return ChaosConfig::${$option . '_list'}[$this->option_role->list[$option][0]];
     } else {
@@ -188,7 +188,7 @@ final class Room extends StackManager {
   //イベント判定
   public function IsEvent($type) {
     $this->InitEvent();
-    return $this->Stack()->Get('event')->Exists($type);
+    return true === $this->Stack()->Get('event')->Get($type);
   }
 
   //天候セット (ログ用)
@@ -261,15 +261,7 @@ final class Room extends StackManager {
   public function IsOpenCast() {
     $data = 'open_cast';
     if ($this->Flag()->IsEmpty($data)) { //未設定ならキャッシュする
-      if ($this->IsOption('not_open_cast')) { //常時非公開
-	$user = DB::$USER->ByID(GM::ID); //身代わり君の蘇生辞退判定
-	$flag = $user->IsDummyBoy() && $user->IsDrop() && DB::$USER->IsOpenCast();
-      } elseif ($this->IsOption('auto_open_cast')) { //自動公開
-	$flag = DB::$USER->IsOpenCast();
-      } else { //常時公開
-	$flag = true;
-      }
-      $this->Flag()->Set($data, $flag);
+      $this->Flag()->Set($data, OptionManager::IsRoomOpenCast());
     }
     return $this->Flag()->Get($data);
   }
@@ -552,19 +544,14 @@ final class Room extends StackManager {
   //ゲーム開始
   public function Start() {
     $this->date++;
-    $this->SetScene($this->IsOption('open_day') ? RoomScene::DAY : RoomScene::NIGHT);
-    DB::$USER->GameStart($this->IsOption('limit_talk') || $this->IsOption('no_silence'));
+    $this->SetScene(OptionManager::GetRoomGameStartScene());
+    DB::$USER->GameStart();
     if (false === $this->IsTest()) {
       RoomDB::Start();
     }
 
-    //闇鍋配役隠蔽判定
-    if ($this->IsOptionGroup('chaos') && false === $this->IsOptionGroup('chaos_open_cast')) {
-      $str = TalkMessage::CHAOS;
-    } else {
-      $str = Cast::GenerateMessage(Cast::Stack()->Get(Cast::SUM));
-    }
-    RoomTalk::StoreSystem($str);
+    //配役一覧登録
+    RoomTalk::StoreSystem(Cast::GenerateMessage(Cast::Stack()->Get(Cast::SUM)));
     if ($this->IsOption('detective')) { //探偵指名
       OptionLoader::Load('detective')->Designate();
     }

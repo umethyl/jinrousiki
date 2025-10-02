@@ -13,9 +13,9 @@ class Option_no_fox extends OptionCheckbox {
     return '妖狐が出現しません [妖狐1→村人1]';
   }
 
-  public function SetRole(array &$list, $count) {
+  public function FilterCastAddRole(array &$list, $count) {
     if ($count >= CastConfig::${$this->name}) {
-      OptionManager::Replace($list, 'fox', 'human');
+      OptionManager::CastRoleReplace($list, 'fox', 'human');
     }
   }
 }

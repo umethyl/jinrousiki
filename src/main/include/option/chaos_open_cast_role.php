@@ -2,8 +2,8 @@
 /*
   ◆役職通知 (chaos_open_cast_role)
 */
-OptionLoader::LoadFile('chaos_open_cast_none');
-class Option_chaos_open_cast_role extends Option_chaos_open_cast_none {
+OptionLoader::LoadFile('chaos_open_cast_full');
+class Option_chaos_open_cast_role extends Option_chaos_open_cast_full {
   public function GetName() {
     return '役職通知';
   }
@@ -16,12 +16,11 @@ class Option_chaos_open_cast_role extends Option_chaos_open_cast_none {
     return '役職通知 (役職の種類別に合計を通知)';
   }
 
-  //-- 役職通知 --//
   public function GetCastMessageMainHeader() {
     return VoteMessage::GROUP_HEADER;
   }
 
-  public function GetCastMessageMainType() {
+  public function GetCastMessageMainFooter() {
     return VoteMessage::GROUP_FOOTER;
   }
 
@@ -35,11 +34,11 @@ class Option_chaos_open_cast_role extends Option_chaos_open_cast_none {
     return $stack;
   }
 
-  public function GetCastMessageSubType() {
-    return OptionLoader::Load('chaos_open_cast_camp')->GetCastMessageSubType();
+  public function GetCastMessageSubFooter() {
+    return $this->GetCastMessageSubFooterGroup();
   }
 
   public function GetCastMessageSubRoleList(array $role_count_list) {
-    return OptionLoader::Load('chaos_open_cast_camp')->GetCastMessageSubRoleList($role_count_list);
+    return $this->GetCastMessageSubRoleGroupList($role_count_list);
   }
 }

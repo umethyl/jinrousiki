@@ -13,7 +13,7 @@ class Option_liar extends OptionCheckbox {
     return 'ランダムで「狼少年」がつきます';
   }
 
-  protected function IgnoreCastAll($id) {
-    return ! Lottery::Percent(70);
+  protected function IgnoreCastUserSubRoleAll($id) {
+    return false === Lottery::Percent(70);
   }
 }

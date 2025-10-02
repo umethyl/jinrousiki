@@ -15,21 +15,22 @@ class Option_detective extends OptionCheckbox {
     return '「探偵」が登場し、初日の夜に全員に公表されます';
   }
 
-  public function SetRole(array &$list, $count) {
+  public function FilterCastChaosFixRole(array &$list) {
+    ArrayFilter::Add($list, $this->GetTargetRole());
+  }
+
+  public function FilterCastAddRole(array &$list, $count) {
     $target_role = $this->GetTargetRole();
     foreach (['mania', 'common', 'human'] as $role) {
-      if (OptionManager::Replace($list, $role, $target_role)) {
-	OptionManager::StoreDummyBoyCastLimit([$target_role], true); //強制登録
+      if (OptionManager::CastRoleReplace($list, $role, $target_role)) {
 	break;
       }
     }
   }
 
-  //闇鍋固定枠追加
-  public function FilterChaosFixRole(array &$list) {
-    $role = $this->GetTargetRole();
-    ArrayFilter::Initialize($list, $role, 1);
-    OptionManager::StoreDummyBoyCastLimit([$role], true); //強制登録
+  //身代わり君配役対象外役職取得
+  public function GetDisableCastDummyBoyRole() {
+    return $this->GetTargetRole();
   }
 
   //指名処理
