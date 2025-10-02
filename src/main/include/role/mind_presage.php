@@ -3,12 +3,10 @@
   ◆受託者 (mind_presage)
   ○仕様
 */
-class Role_mind_presage extends Role{
-  function __construct(){ parent::__construct(); }
+class Role_mind_presage extends Role {
+  protected function IgnoreAbility() { return DB::$ROOM->date < 3; }
 
-  protected function IgnoreAbility(){ global $ROOM; return $ROOM->date < 3; }
+  protected function OutputImage() { return; }
 
-  protected function OutputImage(){ return; }
-
-  protected function OutputResult(){ OutputSelfAbilityResult('PRESAGE_RESULT'); }
+  protected function OutputResult() { $this->OutputAbilityResult('PRESAGE_RESULT'); }
 }

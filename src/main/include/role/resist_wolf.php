@@ -6,12 +6,10 @@
   ・毒死：回避 (一回限定)
 */
 RoleManager::LoadFile('wolf');
-class Role_resist_wolf extends Role_wolf{
-  function __construct(){ parent::__construct(); }
+class Role_resist_wolf extends Role_wolf {
+  function GetPoisonEatTarget() { return $this->GetWolfVoter(); }
 
-  function GetPoisonEatTarget(){ return $this->GetWolfVoter(); }
-
-  function PoisonDead(){
+  function PoisonDead() {
     $this->GetActor()->IsActive() ? $this->GetActor()->LostAbility() : parent::PoisonDead();
   }
 }

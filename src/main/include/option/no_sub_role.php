@@ -1,12 +1,8 @@
 <?php
-class Option_no_sub_role extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-		$this->formtype = 'radio';
-	}
-
-	function LoadMessages() {
-		$this->caption = 'サブ役職をつけない';
-		$this->explain = 'サブ役職をつけない';
-	}
+/*
+  ◆サブ役職をつけない (no_sub_role)
+*/
+OptionManager::Load('sub_role_limit_none');
+class Option_no_sub_role extends Option_sub_role_limit_none {
+  function GetCaption() { return 'サブ役職をつけない'; }
 }

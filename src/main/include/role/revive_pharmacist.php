@@ -6,20 +6,18 @@
   ・人狼襲撃：蘇生
 */
 RoleManager::LoadFile('pharmacist');
-class Role_revive_pharmacist extends Role_pharmacist{
-  function __construct(){ parent::__construct(); }
-
+class Role_revive_pharmacist extends Role_pharmacist {
   //復活処理
-  function Resurrect(){
+  function Resurrect() {
     $user = $this->GetActor();
-    if($this->IsResurrect($user) && $user->IsActive()){
-      $user->Revive();
-      $user->LostAbility();
-    }
+    if (! $this->IsResurrect($user) || ! $user->IsActive()) return false;
+    $user->Revive();
+    $user->LostAbility();
+    return true;
   }
 
   //復活判定
-  function IsResurrect($user){
+  function IsResurrect(User $user) {
     return $user->wolf_killed && $user->IsDead(true) && ! $user->IsDummyBoy() &&
       ! $user->IsLovers() && ! $this->GetWolfVoter()->IsSiriusWolf();
   }

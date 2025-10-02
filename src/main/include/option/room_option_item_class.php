@@ -1,163 +1,130 @@
 <?php
+//-- 村作成オプションの基底クラス --//
 abstract class RoomOptionItem {
   public $name;
-  public $enabled;
-
-  public $collect = 'SetOption';
-
-  /*
-  public $formtype;
-  public $formname;
-  public $formvalue;
-  public $caption;
-  public $explain;
-  */
+  public $class;
+  public $enable;
   public $value;
+  public $type;
+  public $form_name;
+  public $form_value;
 
-  function  __construct($group) {
-    global $GAME_OPT_CONF;
+  function __construct() {
     $this->name = array_pop(explode('Option_', get_class($this)));
-    RoomOption::SetGroup($group, $this);
-    $enable = "{$this->name}_enable";
-    $this->enabled = isset($GAME_OPT_CONF->$enable) ? $GAME_OPT_CONF->$enable : true;
-    $default = "default_{$this->name}";
-    if (isset($GAME_OPT_CONF->$default)) {
-      $this->value = $GAME_OPT_CONF->$default;
+
+    $enable  = sprintf('%s_enable',  $this->name);
+    $default = sprintf('default_%s', $this->name);
+    $this->enable = isset(GameOptionConfig::$$enable) ? GameOptionConfig::$$enable : true;
+    if (OptionManager::$change && $this->type == 'checkbox') {
+      $this->value = DB::$ROOM->IsOption($this->name);
     }
-    $this->formname  = $this->name;
-    $this->formvalue = $this->value;
-  }
-
-  function SetOption(RoomOption $option, $value) {
-    $option->Set($this, $this->name, $value);
-  }
-
-  function CollectPostParam(RoomOption $option) {
-    if (isset($_POST[$this->name]) && isset($this->collect)) {
-      call_user_func_array(array($this, $this->collect), array($option, $_POST[$this->name]));
+    elseif (isset(GameOptionConfig::$$default)) {
+      $this->value = GameOptionConfig::$$default;
     }
+
+    if (! isset($this->form_name))  $this->form_name  = $this->name;
+    if (! isset($this->form_value)) $this->form_value = $this->value;
   }
 
-  abstract function LoadMessages();
+  //オプション名取得
+  function GetName() { return $this->GetCaption(); }
 
-  function CastOnce(&$list, &$rand, $str = ''){
+  //キャプション取得
+  abstract function GetCaption();
+
+  //説明文取得
+  function GetExplain() { return $this->GetCaption(); }
+
+  //フォームデータ取得
+  abstract function LoadPost();
+
+  //配役処理 (一人限定)
+  function CastOnce(array &$list, &$rand, $str = '') {
     $list[array_pop($rand)] .= ' ' . $this->name . $str;
     return array($this->name);
   }
 
-  function CastAll(&$list){
-    foreach(array_keys($list) as $id) $list[$id] .= ' ' . $this->name;
+  //配役処理 (全員)
+  function CastAll(array &$list) {
+    foreach (array_keys($list) as $id) $list[$id] .= ' ' . $this->name;
     return array($this->name);
   }
 }
 
-/**
- * チェックボックス型の標準的な村立てオプション項目を提供します。
- */
+
+//-- チェックボックス型 --//
 abstract class CheckRoomOptionItem extends RoomOptionItem {
-  function  __construct($group) {
-    parent::__construct($group);
-    $this->formtype = 'checkbox';
-    $this->formvalue = 'on';
-  }
+  public $group = RoomOption::ROLE_OPTION;
+  public $type  = 'checkbox';
+  public $form_value = 'on';
 
-  function SetOption(RoomOption $option, $value) {
-    $checked = $value == $this->formvalue && !empty($this->formvalue);
-    $option->Set($this, $this->name, $checked);
-  }
-
-  function SetOptionAsKeyValue(RoomOption $option, $value) {
-    $checked = $value == $this->formvalue && !empty($this->formvalue);
-    if ($checked) {
-      $option->Set($this, $this->name, $this->formvalue);
-    }
-  }
-
-  function SetOptionAsValue(RoomOption $option, $value) {
-    $checked = $value == $this->formvalue && !empty($this->formvalue);
-    $option->Set($this, $this->formvalue, $checked);
+  function LoadPost() {
+    RQ::$get->Parse('IsOn', 'post.' . $this->name);
+    if (RQ::$get->{$this->name}) array_push(RoomOption::${$this->group}, $this->name);
+    return RQ::$get->{$this->name};
   }
 }
 
-/**
- * セレクタ型の村立てオプション項目を提供します。
- */
+//-- セレクタ型 --//
 abstract class SelectorRoomOptionItem extends RoomOptionItem {
-  public $label;
-  public $items;
-  public $items_source;
-  public $conf_name = 'GAME_OPT_CONF';
+  public $group = RoomOption::ROLE_OPTION;
+  public $type  = 'selector';
+  public $label = 'モード名';
+  public $conf_name;
+  public $source;
+  public $item_list;
+  public $form_list = array();
+  public $on_change = '';
 
-  function  __construct($group) {
-    parent::__construct($group);
-    $this->formtype = 'select';
-    $this->items_source = "{$this->name}_items";
+  function __construct() {
+    parent::__construct();
+    $this->source = sprintf('%s_list', $this->name);
   }
 
-  function CollectValue(RoomOption $option, $value) {
-    $items = $this->GetItems();
-    if (isset($items[$value]) && !empty($value)) {
-      $child = $items[$value];
-      if ($child instanceof RoomOptionItem) {
-	$option->Set($this, $child->name, true);
-      }
-      else {
-	$option->Set($this, $value, true);
-      }
+  function LoadPost() {
+    if (! isset($_POST[$this->name]) || empty($_POST[$this->name])) return false;
+    $post = $_POST[$this->name];
+
+    if (in_array($post, $this->form_list)) {
+      RQ::$get->$post = true;
+      array_push(RoomOption::${$this->group}, $post);
     }
   }
 
-  function GetItems() {
-    if (!isset($this->items)) {
-      $this->items = array();
-      $CONF = &$GLOBALS[$this->conf_name];
-      $list = $this->items_source;
-      if (isset($CONF->$list)) {
-	foreach ($CONF->$list as $key => $value) {
+  //個別データ取得
+  function GetItem() {
+    if (! isset($this->item_list)) {
+      $this->item_list = array();
+      $stack = is_array($this->conf_name) ? $this->conf_name : GameOptionConfig::${$this->source};
+      if (isset($stack)) {
+	foreach ($stack as $key => $value) {
 	  if (is_string($key)) {
-	    if ($this->ItemIsAvailable($key)) {
-	      $this->items[$key] = $value;
-	    }
+	    if ($this->IsEnable($key)) $this->item_list[$key] = $value;
 	  }
-	  else if (is_string($value)) {
-	    $item = RoomOption::Get($value);
-	    if (isset($item) && $item->enabled) {
-	      $this->items[$item->name] = $item;
-	    }
+	  elseif (is_string($value)) {
+	    $item = OptionManager::GetClass($value);
+	    if (isset($item) && $item->enable) $this->item_list[$item->name] = $item;
 	  }
 	  else {
-	    $this->items[] = $value;
+	    $this->item_list[] = $value;
 	  }
 	}
       }
     }
-    return $this->items;
+    return $this->item_list;
   }
 
-  function ItemIsAvailable($name) {
-    global $GAME_OPT_CONF;
-    $enable = "{$name}_enable";
-    return isset($GAME_OPT_CONF->$enable) ? $GAME_OPT_CONF->$enable : true;
+  //有効判定
+  private function IsEnable($name) {
+    $enable = sprintf('%s_enable', $name);
+    return isset(GameOptionConfig::$$enable) ? GameOptionConfig::$$enable : true;
   }
 }
 
-/**
- * テキスト型の村立てオプション項目を提供します。
- */
+//-- テキスト入力型 --//
 abstract class TextRoomOptionItem extends RoomOptionItem {
-  public $size;
-  public $footer;
+  public $group = RoomOption::NOT_OPTION;
+  public $type  = 'textbox';
 
-  function  __construct($group) {
-    parent::__construct($group);
-    $this->formtype = 'textbox';
-  }
-
-  function  LoadMessages() {
-    global $ROOM_CONF;
-    $size = "{$this->name}_input";
-    if (isset($ROOM_CONF->$size)) {
-      $this->size = $ROOM_CONF->$size;
-    }
-  }
+  function LoadPost() { RQ::$get->Parse('Escape', 'post.' . $this->name); }
 }

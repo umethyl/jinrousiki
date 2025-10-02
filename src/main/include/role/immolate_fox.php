@@ -6,10 +6,10 @@
   ・勝利：能力発現所持
 */
 RoleManager::LoadFile('fox');
-class Role_immolate_fox extends Role_fox{
-  function __construct(){ parent::__construct(); }
+class Role_immolate_fox extends Role_fox {
+  public $ability = 'muster_ability';
 
-  function FoxEatCounter($user){ $this->GetActor()->AddRole('muster_ability'); }
+  function FoxEatCounter(User $user) { $this->GetActor()->AddRole($this->ability); }
 
-  function Win($winner){ return $this->GetActor()->IsRole('muster_ability'); }
+  function Win($winner) { return $this->GetActor()->IsRole($this->ability); }
 }

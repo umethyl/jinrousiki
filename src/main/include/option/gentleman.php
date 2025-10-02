@@ -5,21 +5,14 @@
   ・配役：性別に応じた紳士・淑女 / 全員
 */
 class Option_gentleman extends CheckRoomOptionItem {
-  function __construct(){
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
+  function GetCaption() { return '紳士・淑女村'; }
 
-	function  LoadMessages() {
-		$this->caption = '紳士・淑女村';
-		$this->explain = '全員に性別に応じた「紳士」「淑女」がつきます';
-	}
+  function GetExplain() { return '全員に性別に応じた「紳士」「淑女」がつきます'; }
 
-  function Cast(&$list, &$rand){
-    global $ROLES, $USERS;
-
+  function Cast(array &$list, &$rand) {
     $stack = array('male' => 'gentleman', 'female' => 'lady');
-    foreach(array_keys($list) as $id){
-      $list[$id] .= ' ' . $stack[$USERS->ByUname($ROLES->stack->uname_list[$id])->sex];
+    foreach (array_keys($list) as $id) {
+      $list[$id] .= ' ' . $stack[DB::$USER->ByUname(RoleManager::$get->uname_list[$id])->sex];
     }
     return array('gentleman', 'lady');
   }

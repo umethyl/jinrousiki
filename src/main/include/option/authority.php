@@ -2,19 +2,16 @@
 /*
   ◆権力者登場 (authority)
   ○仕様
+  ・配役配布：誰か一人に権力者
 */
 class Option_authority extends CheckRoomOptionItem {
-  function __construct(){
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
+  function GetCaption() { return '権力者登場'; }
 
-	function  LoadMessages() {
-		$this->caption = '権力者登場';
-		$this->explain = '投票の票数が二票になります [兼任]';
-	}
+  function GetExplain() { return '投票の票数が二票になります [兼任]'; }
 
-  function Cast(&$list, &$rand){
-    global $CAST_CONF, $ROLES;
-    if($ROLES->stack->user_count >= $CAST_CONF->{$this->name}) return $this->CastOnce($list, $rand);
+  function Cast(array &$list, &$rand) {
+    if (RoleManager::$get->user_count >= CastConfig::${$this->name}) {
+      return $this->CastOnce($list, $rand);
+    }
   }
 }

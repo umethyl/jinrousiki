@@ -7,7 +7,6 @@
 */
 class Role_history_brownie extends Role {
   public $event_night = 'skip_night';
-  function __construct(){ parent::__construct(); }
 
-  function WolfEatCounter($user){ $this->AddStack($this->event_night, 'event'); }
+  function WolfEatCounter(User $user) { $this->AddStack($this->event_night, 'event'); }
 }

@@ -6,15 +6,10 @@
   ・狩り：通常 + 妖狐陣営
 */
 RoleManager::LoadFile('guard');
-class Role_hunter_guard extends Role_guard{
-  function __construct(){ parent::__construct(); }
-
-  function GuardAction(){
-    global $USERS;
-    if ($this->GetVoter()->IsSame($this->GetWolfVoter()->uname)) {
-      $USERS->Kill($this->GetActor()->user_no, 'WOLF_KILLED');
-    }
+class Role_hunter_guard extends Role_guard {
+  function GuardAction(User $user, $flag) {
+    if (! $flag) DB::$USER->Kill($this->GetID(), 'WOLF_KILLED');
   }
 
-  protected function IsHunt($user){ return parent::IsHunt($user) || $user->IsFox(); }
+  protected function IsHunt(User $user) { return parent::IsHunt($user) || $user->IsFox(); }
 }

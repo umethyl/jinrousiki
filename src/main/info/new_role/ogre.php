@@ -1,8 +1,8 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-OutputRolePageHeader('鬼陣営');
+Loader::LoadFile('info_functions');
+InfoHTML::OutputRoleHeader('鬼陣営');
 ?>
 <p>
 <a href="#rule">基本ルール</a>
@@ -316,6 +316,7 @@ OutputRolePageHeader('鬼陣営');
 <a href="#cursed_yaksa">滝夜叉姫</a>
 <a href="#succubus_yaksa">荼枳尼天</a>
 <a href="#hariti_yaksa">鬼子母神</a>
+<a href="#vajra_yaksa">金剛夜叉</a>
 <a href="#power_yaksa">阿修羅</a>
 <a href="#dowser_yaksa">毘沙門天</a>
 </p>
@@ -407,6 +408,23 @@ OutputRolePageHeader('鬼陣営');
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="#yaksa">夜叉</a>の対子狐・恋人陣営バージョンです。「きしもじん」と読みます。
+比較的見つけにくい・表に出ても放置されやすい能力者がターゲットなので
+成功率低下を抑えて人攫いの機会を多めにしてあります。
+</pre>
+
+<h3 id="vajra_yaksa">金剛夜叉 (占い結果：鬼 / 霊能結果：鬼) [Ver. 2.1.0 α6～]</h3>
+<h4>[耐性] 人狼襲撃：無効 (20%) / 暗殺：反射 (20%)</h4>
+<h4>[人攫い能力] タイプ：暗殺 (制限有り) / 成功率低下：1/3</h4>
+<pre>
+夜叉系の一種で、勝利条件は
+「自分自身の生存 + <a href="ability.php#revive">蘇生能力者</a>の全滅 + 村人陣営以外の勝利」。
+人攫いの対象が<a href="ability.php#revive">蘇生能力者</a>以外だった場合は無条件で失敗する。
+<a href="ability.php#revive">蘇生</a>に失敗した人が分かる (<a href="human.php#attempt_necromancer">蟲姫</a>と同じ)。
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#yaksa">夜叉</a>の対蘇生バージョンです。
+蘇生失敗メッセージにより、蘇生能力者の存在を察知することができます。
 </pre>
 
 <h3 id="power_yaksa">阿修羅 (占い結果：鬼 / 霊能結果：鬼) [Ver. 1.5.0 β9～]</h3>
@@ -451,4 +469,5 @@ OutputRolePageHeader('鬼陣営');
 多数のサブ役職を付加する特殊<a href="lovers.php">キューピッド</a>、毎日サブ役職を付加していく
 <a href="vampire.php">吸血鬼陣営</a>・<a href="chiroptera.php#fairy_group">妖精系</a>が主な障害となります。
 </pre>
-</body></html>
+</body>
+</html>

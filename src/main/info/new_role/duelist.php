@@ -1,8 +1,8 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-OutputRolePageHeader('決闘者陣営');
+Loader::LoadFile('info_functions');
+InfoHTML::OutputRoleHeader('決闘者陣営');
 ?>
 <p>
 <a href="#rule">基本ルール</a>
@@ -337,4 +337,5 @@ OutputRolePageHeader('決闘者陣営');
 <a href="mania.php#wirepuller_mania">黒衣</a>・<a href="#critical_duelist">剣闘士</a>の逆アプローチです。「人形神」と書いて「ひんながみ」と読みます。
 能力上、対象者が露出しやすいので難易度は高めです。
 </pre>
-</body></html>
+</body>
+</html>

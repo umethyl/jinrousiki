@@ -1,65 +1,62 @@
 <?php
 //-- ゲーム設定 --//
-class GameConfig extends GameConfigBase {
-  //-- 住人登録 --//
-  //入村制限 (同じ村に同じ IP で複数登録) (true：許可しない / false：許可する)
-  public $entry_one_ip_address = true;
-
-  //トリップ対応 (true：変換する / false： "#" が含まれていたらエラーを返す)
-  public $trip = true;
-  public $trip_2ch = true; //2ch 互換 (12桁対応) モード (true：有効 / false：無効)
+class GameConfig {
+  /* 住人登録 */
+  const LIMIT_IP = true; //入村制限 (同じ村に同じ IP で複数登録) (true：許可しない / false：許可する)
+  const TRIP     = true; //トリップ対応 (true：変換する / false： "#" が含まれていたらエラーを返す)
+  const TRIP_2ch = true; //2ch 互換 (12桁対応) モード (true：有効 / false：無効)
 
   //文字数制限
-  public $entry_uname_limit = 50; //ユーザ名と村人の名前
-  public $entry_profile_limit = 300; //プロフィール
-  public $say_limit = 20000; //村の発言
-  public $say_line_limit = 50; //村の発言 (行数)
+  const LIMIT_UNAME   =  50;	//ユーザ名と村人の名前
+  const LIMIT_PROFILE = 300;	//プロフィール
 
-  //-- 表示設定 --//
-  public $quote_words = false; //発言を「」で括る
-  public $replace_talk = false; //発言置換モード：発言内容の一部を強制置換する
-  public $replace_talk_list = array(); //発言置換モードの変換リスト
-  //public $replace_talk_list = array('◆' => '◇'); //流石ツール対応例
-  public $display_talk_limit = 500; //ゲーム開始前後の発言表示数の限界値
+  /* 発言設定 */
+  const LIMIT_TALK       =   500;	//ゲーム開始前後の発言表示数
+  const LIMIT_SAY        = 20000;	//村の発言
+  const LIMIT_SAY_LINE   =    50;	//村の発言 (行数)
+  const LIMIT_LAST_WORDS = false; //遺言変更制限 (true：有効 / false：無効)
+  const RANDOM_MESSAGE   = false; //ランダムメッセージの挿入 (する：true / しない：false)
 
-  //-- 投票 --//
-  public $self_kick = true; //自分への KICK (true：有効 / false：無効)
-  public $kick = 3; //KICK 処理を実施するのに必要な投票数
-  public $draw = 4; //引き分け処理を実施する再投票回数 (「再投票」なので実際の投票回数は +1 される)
+  const QUOTE_TALK   = false; //発言を「」で括る
+  const REPLACE_TALK = false; //発言置換モード：発言内容の一部を強制置換する
+  static $replace_talk_list = array(); //発言置換モードの変換リスト
+  //static $replace_talk_list = array('◆' => '◇'); //流石ツール対応例
 
-  //-- 遺言 --//
-  public $limit_last_words = false; //遺言変更制限 (true：有効 / false：無効)
+  /* 表示設定 */
+  //「異議」あり
+  const OBJECTION = 5; //使用可能回数
+  const OBJECTION_IMAGE = 'img/objection.gif'; //画像パス
 
-  //-- 役職の能力設定 --//
+  //自動更新
+  const AUTO_RELOAD = true; //game_view.php で自動更新を有効にする / しない (サーバ負荷に注意)
+  static $auto_reload_list = array(15, 30, 45, 60, 90, 120); //自動更新モードの更新間隔 (秒) のリスト
+
+  /* 投票 */
+  const SELF_KICK = true; //自分への KICK (true：有効 / false：無効)
+  const KICK = 3; //KICK 処理を実施するのに必要な投票数
+  const DRAW = 4; //引き分け処理を実施する再投票回数 (「再投票」なので実際の投票回数は +1 される)
+
+  /* 役職の能力設定 */
   //毒能力者を処刑した際に巻き込まれる対象 (true:投票者ランダム / false:完全ランダム)
-  public $poison_only_voter = false;
+  const POISON_ONLY_VOTER = false;
 
   //狼が毒能力者を襲撃した際に巻き込まれる対象 (true:投票者固定 / false:ランダム)
-  public $poison_only_eater = true;
+  const POISON_ONLY_EATER = true;
 
-  public $cupid_self_shoot = 18; //キューピッドが他人撃ち可能となる参加人数
-  public $cute_wolf_rate   =  1; //萌狼の発動率 (%)
-  public $gentleman_rate   = 13; //紳士・淑女の発動率 (%)
-  public $liar_rate        = 95; //狼少年の発動率 (%)
-  public $invisible_rate   = 15; //光学迷彩の発言が空白に入れ替わる割合 (%)
-  public $silent_length    = 25; //無口が発言できる最大文字数
+  const CUPID_SELF_SHOOT = 18; //キューピッドが他人撃ち可能となる参加人数
+  const CUTE_WOLF_RATE   =  1; //萌狼の発動率 (%)
+  const GENTLEMAN_RATE   = 13; //紳士・淑女の発動率 (%)
+  const LIAR_RATE        = 95; //狼少年の発動率 (%)
+  const INVISIBLE_RATE   = 15; //光学迷彩の発言が空白に入れ替わる割合 (%)
+  const SILENT_LENGTH    = 25; //無口が発言できる最大文字数
   //役者の変換テーブル
-  public $actor_replace_list = array('です' => 'みょん');
+  static $actor_replace_list = array('です' => 'みょん');
 
-  //-- 「異議」あり --//
-  public $objection = 5; //使用可能回数
-  public $objection_image = 'img/objection.gif'; //「異議」ありボタンの画像パス
-
-  //-- 自動更新 --//
-  public $auto_reload = true; //game_view.php で自動更新を有効にする / しない (サーバ負荷に注意)
-  public $auto_reload_list = array(15, 30, 45, 60, 90, 120); //自動更新モードの更新間隔 (秒) のリスト
-
-  //-- その他 --//
-  public $power_gm = false; //強権 GM モード (ON：true / OFF：false)
-  public $random_message = false; //ランダムメッセージの挿入 (する：true / しない：false)
+  /* その他 */
+  const POWER_GM = false; //強権 GM モード (ON：true / OFF：false)
 
   //天候の出現比設定 (番号と天候の対応は RoleData->weather_list 参照)
-  public $weather_list = array(
+  static $weather_list = array(
      0 => 10,   1 => 20,   2 => 25,   3 => 20,   4 => 25,
      5 => 10,   6 => 15,   7 => 20,   8 => 20,   9 => 10,
     10 => 10,  11 => 30,  12 => 10,  13 => 20,  14 => 30,

@@ -1,14 +1,10 @@
 <?php
-class Option_change_mad_selector extends SelectorRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-		$this->collect = 'CollectValue';
-		$this->items_source = 'change_mad_items';
-	}
+/*
+  ◆狂人置換村 (セレクタ)
+*/
+OptionManager::Load('replace_human_selector');
+class Option_change_mad_selector extends Option_replace_human_selector {
+  function GetCaption() { return '狂人置換村'; }
 
-	function LoadMessages() {
-		$this->label = 'モード名';
-		$this->caption = '狂人置換村';
-		$this->explain = '「狂人」が全員特定の役職に入れ替わります';
-	}
+  function GetExplain() { return '「狂人」が全員特定の役職に入れ替わります'; }
 }

@@ -1,0 +1,29 @@
+@charset "utf-8";
+form { /* 村の作成フォーム */
+  margin-top: 10px;
+}
+label { /* 村作成のオプション名 */
+  margin-left: 1em;
+  font-weight: bold;
+}
+input, select { /* 設定項目 */
+  background-color: #F0F8FF;
+  border: 1px solid #C0C0C0;
+}
+.text { /* 村の名前, 説明など */
+  border: 1px solid #C0C0C0;
+}
+.explain { /* オプションの説明 */
+  filter: alpha(opacity=70, enabled=70);
+  -moz-opacity: 0.7;
+  opacity: 0.7;
+  background-color: #FFFFFF;
+  font-size: 80%;
+}
+#make { /* 作成ボタン */
+  text-align: right;
+}
+#make input {
+  border: 1px solid #000000;
+  padding: 2px 5px;
+}

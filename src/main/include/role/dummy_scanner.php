@@ -6,15 +6,13 @@
   ・追加役職：なし
 */
 RoleManager::LoadFile('mind_scanner');
-class Role_dummy_scanner extends Role_mind_scanner{
+class Role_dummy_scanner extends Role_mind_scanner {
   public $display_role = 'human';
-  public $action    = NULL;
-  public $mind_role = NULL;
-  function __construct(){ parent::__construct(); }
+  public $action    = null;
+  public $mind_role = null;
 
-  protected function OutputResult(){
-    global $ROLE_IMG, $ROOM;
+  protected function OutputResult() {
     $role = 'mind_read';
-    if($ROOM->date > 1 && ! $this->GetActor()->IsRole($role)) $ROLE_IMG->Output($role);
+    if (DB::$ROOM->date > 1 && ! $this->GetActor()->IsRole($role)) Image::Role()->Output($role);
   }
 }

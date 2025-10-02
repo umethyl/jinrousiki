@@ -1,8 +1,8 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-OutputRolePageHeader('吸血鬼陣営');
+Loader::LoadFile('info_functions');
+InfoHTML::OutputRoleHeader('吸血鬼陣営');
 ?>
 <p>
 <a href="#rule">基本ルール</a>
@@ -79,8 +79,10 @@ OutputRolePageHeader('吸血鬼陣営');
 <h2 id="vampire_group">吸血鬼系</h2>
 <p>
 <a href="#vampire">吸血鬼</a>
+<a href="#poison_vampire">百々爺</a>
 <a href="#incubus_vampire">青髭公</a>
 <a href="#succubus_vampire">飛縁魔</a>
+<a href="#passion_vampire">牡丹灯籠</a>
 <a href="#doom_vampire">冥血鬼</a>
 <a href="#sacrifice_vampire">吸血公</a>
 <a href="#soul_vampire">吸血姫</a>
@@ -96,6 +98,23 @@ OutputRolePageHeader('吸血鬼陣営');
 他国に実在する役職です。
 <a href="#rule">勝利条件</a>の性質上、短期決戦を狙うことで簡単に勝利を阻むことができますが
 対妖狐が疎かになってしまうジレンマが存在します。
+</pre>
+
+<h3 id="poison_vampire">百々爺 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 2.1.0 α7～]</h3>
+<h4>[耐性] 毒：対象外</h4>
+<h4>[毒能力] 処刑：自分の感染者 + 洗脳者 / 襲撃：有り / 薬師判定：有り</h4>
+<pre>
+毒耐性を持ち、自身も毒を持つ特殊な吸血鬼。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#poison">毒能力者</a>・<a href="ability.php#resist_poison">毒耐性能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+一風変わった毒能力を持つ吸血鬼です。
+通常、吸血鬼が感染先を明かすメリットはあまりありませんが、
+露出後に駆け引きをする材料にすることも可能となります。
 </pre>
 
 <h3 id="incubus_vampire">青髭公 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 1.4.0 β18～]</h3>
@@ -134,6 +153,20 @@ OutputRolePageHeader('吸血鬼陣営');
 <pre>
 <a href="#incubus_vampire">青髭公</a>の対女性バージョンです。「ひのえんま」と読みます。
 村の男女構成比次第で難易度が大きく変わることになります。
+</pre>
+
+<h3 id="passion_vampire">牡丹灯籠 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 2.1.0 α7～]</h3>
+<pre>
+吸血先に一定確率 (50%) で<a href="sub_role.php#passion">恋色迷彩</a>もつけてしまう特殊な吸血鬼。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#talk_convert">発言変換能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#doom_vampire">冥血鬼</a>の<a href="sub_role.php#passion">恋色迷彩</a>バージョンです。
+<a href="sub_role.php#infected">感染者</a>が自覚できてしまうので難易度が上がります。
 </pre>
 
 <h3 id="doom_vampire">冥血鬼 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 1.4.0 β19～]</h3>
@@ -220,4 +253,5 @@ OutputRolePageHeader('吸血鬼陣営');
 <a href="chiroptera.php#scarlet_chiroptera">紅蝙蝠</a>の吸血鬼バージョンです。
 潜伏するのが難しいので劣化種扱いとなります。
 </pre>
-</body></html>
+</body>
+</html>

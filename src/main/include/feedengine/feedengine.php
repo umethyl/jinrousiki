@@ -5,18 +5,6 @@ class FeedEngine {
   public $description;
   public $items = array();
 
-  function Initialize($filename){
-    global $INIT_CONF;
-    if (include(JINRO_INC . "/feedengine/$filename")) {
-      $segments = explode('_', substr($filename, 0, -4));
-      foreach($segments as $segment){
-        $class .= ucfirst($segment);
-      }
-      return new $class();
-    }
-    return false;
-  }
-
   function SetChannel($title, $url, $description='') {
     $this->title = $title;
     $this->url = $url;
@@ -25,38 +13,33 @@ class FeedEngine {
 
   function AddItem($title, $url, $description) {
     return $this->items[] = array(
-      'title'=>$title,
-      'url'=>$url,
-      'description'=>$description
+      'title' => $title,
+      'url' => $url,
+      'description' => $description
     );
-  }
-
-  function decode($value) {
-    global $SERVER_CONF;
-    return mb_convert_encoding($value, $SERVER_CONF->encoding, 'auto');
   }
 
   function Import($url) {
     $RDF = simplexml_load_string(file_get_contents($url));
-    $this->title = self::decode((string)$RDF->title);
+    $this->title = self::Decode((string)$RDF->title);
     $this->url = (string)$RDF->link;
-    $this->description = self::decode((string)$RDF->description);
-    foreach($RDF->item as $item) {
+    $this->description = self::Decode((string)$RDF->description);
+    foreach ($RDF->item as $item) {
       $this->ImportItem($item);
     }
   }
 
   function ImportItem($item) {
-    $title = self::decode((string)$item->title);
+    $title = self::Decode((string)$item->title);
     $link = (string)$item->link;
-    $description = self::decode($item->description->asXML());
+    $description = self::Decode($item->description->asXML());
     return $this->AddItem($title, $link, $description);
   }
 
   function Export($filename) {
     $list_items = '';
     $item_contents = '';
-    foreach($this->items as $item) {
+    foreach ($this->items as $item) {
       extract($item, EXTR_PREFIX_ALL, 'item');
       $list_items .= '<rdf:li rdf:resource="'.$item_url.'"/>';
       $item_contents .= <<<XML_RDF
@@ -84,7 +67,10 @@ XML_RDF;
 {$item_contents}
 </rdf:RDF>
 XML_RDF;
-    global $SERVER_CONF;
-    return mb_convert_encoding($document, 'UTF-8', $SERVER_CONF->encoding);
+    return mb_convert_encoding($document, 'UTF-8', ServerConfig::ENCODE);
+  }
+
+  private static function Decode($value) {
+    return mb_convert_encoding($value, ServerConfig::ENCODE, 'auto');
   }
 }

@@ -1,8 +1,8 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-OutputRolePageHeader('妖狐陣営');
+Loader::LoadFile('info_functions');
+InfoHTML::OutputRoleHeader('妖狐陣営');
 ?>
 <p>
 <a href="#partner">仲間表示</a>
@@ -65,12 +65,14 @@ OutputRolePageHeader('妖狐陣営');
 <a href="#mist_fox">霧狐</a>
 <a href="#gold_fox">金狐</a>
 <a href="#phantom_fox">幻狐</a>
+<a href="#purple_fox">紫狐</a>
+<a href="#snow_fox">雪狐</a>
 <a href="#poison_fox">管狐</a>
 <a href="#blue_fox">蒼狐</a>
-<a href="#spell_fox">宙狐</a>
-<a href="#sacrifice_fox">白蔵主</a>
 </p>
 <p>
+<a href="#spell_fox">宙狐</a>
+<a href="#sacrifice_fox">白蔵主</a>
 <a href="#emerald_fox">翠狐</a>
 <a href="#voodoo_fox">九尾</a>
 <a href="#revive_fox">仙狐</a>
@@ -79,10 +81,10 @@ OutputRolePageHeader('妖狐陣営');
 <a href="#trap_fox">狡狐</a>
 <a href="#cursed_fox">天狐</a>
 <a href="#elder_fox">古狐</a>
-<a href="#cute_fox">萌狐</a>
-<a href="#scarlet_fox">紅狐</a>
 </p>
 <p>
+<a href="#cute_fox">萌狐</a>
+<a href="#scarlet_fox">紅狐</a>
 <a href="#silver_fox">銀狐</a>
 <a href="#immolate_fox">野狐禅</a>
 </p>
@@ -91,6 +93,10 @@ OutputRolePageHeader('妖狐陣営');
 <h4>[耐性] 人狼襲撃：無効</h4>
 <pre>
 妖狐陣営の<a href="mania.php#basic_mania">基本種</a>。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="#vindictive_fox">昼狐</a>
 </pre>
 
 <h3 id="white_fox">白狐 (占い結果：村人(呪殺無し) / 霊能結果：妖狐) [Ver. 1.4.0 α17～]</h3>
@@ -169,6 +175,49 @@ OutputRolePageHeader('妖狐陣営');
 <pre>
 <a href="wolf.php#phantom_wolf">幻狼</a>の妖狐バージョンです。
 二回占われると呪殺されてしまうので、どう対応するかがポイントです。
+</pre>
+
+<h3 id="purple_fox">紫狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 2.1.0 β5～]</h3>
+<h4>[耐性] 人狼襲撃：無効</h4>
+<pre>
+処刑投票先が<a href="wolf.php">人狼陣営</a>だった場合は自分に<a href="sub_role.php#death_warrant">死の宣告</a>を付加してしまう妖狐。
+</pre>
+<ol>
+<li><a href="sub_role.php#lovers">恋人</a>は恋人陣営と判定する。</li>
+<li><a href="sub_role.php#death_warrant">死の宣告</a>の発動日は投票した昼から数えて 3 日後の昼。</li>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合は無効。</li>
+<li>対象が死亡していた場合は無効 (例：処刑・毒死)。</li>
+<li>自分が処刑された場合は無効。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#doom">死の宣告能力者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="wolf.php#purple_wolf">紫狼</a>の妖狐バージョンです。
+<a href="wolf.php#mad_group">狂人系</a>や<a href="mania.php#unknown_mania_group">鵺系</a>も含むので対象は意外と広いことに注意してください。
+</pre>
+
+<h3 id="snow_fox">雪狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 2.1.0 β5～]</h3>
+<h4>[耐性] 人狼襲撃：無効</h4>
+<pre>
+自分に処刑投票してきた人が<a href="wolf.php#mad_group">狂人系</a>だった場合は自分に<a href="sub_role.php#frostbite">凍傷</a>を付加してしまう妖狐。
+</pre>
+<ol>
+<li><a href="sub_role.php#frostbite">凍傷</a>の発動日は投票された翌日の昼。</li>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後。</li>
+<li>自分が処刑された場合は無効。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#frostbite">凍傷能力者</a>・<a href="ability.php#vote_reaction">処刑得票能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="wolf.php#snow_wolf">雪狼</a>の妖狐バージョンです。
+妖狐が狂人を見つけてもあまり得をしないのでどちらかというと
+自陣が不利になる存在ですね。
 </pre>
 
 <h3 id="poison_fox">管狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 1.4.0 α17～]</h3>
@@ -304,7 +353,7 @@ OutputRolePageHeader('妖狐陣営');
 </pre>
 
 <h3 id="possessed_fox">憑狐 (占い結果：村人(呪殺) / 霊能結果：妖狐) [Ver. 1.4.0 β9～]</h3>
-<h4>[耐性] 人狼襲撃：無効 / 狩り：有効 / 陰陽師：死亡 / 封印：有効 / 憑依：無効</h4>
+<h4>[耐性] 人狼襲撃：無効 / 狩り：有効 (憑依後無効) / 陰陽師：死亡 / 封印：有効 / 憑依：無効</h4>
 <pre>
 一度だけ、死体に憑依することができる妖狐。
 </pre>
@@ -315,7 +364,13 @@ OutputRolePageHeader('妖狐陣営');
 <li>憑依を実行した時に占い能力者に占われても憑依妨害は受けない。</li>
 <li>憑依中に<a href="human.php#anti_voodoo">厄神</a>に護衛されると憑依状態を解かれて元の体に戻される。</li>
 <li>複数の憑依能力者が同時に同じ人に憑依しようとした場合は全員憑依失敗扱いになる。</li>
+<li>憑依成立後の次の日から<a href="human.php#hunter_guard">猟師</a>以外の狩りを無効化する。</li>
+<li>憑依を解除されても狩り耐性は失わない。</li>
 </ol>
+<h5>Ver. 2.1.0 α7～</h5>
+<pre>
+憑依後に狩り耐性獲得
+</pre>
 <h5>Ver. 1.4.11 / Ver. 1.5.0 β13～</h5>
 <pre>
 憑依無効
@@ -494,12 +549,14 @@ OutputRolePageHeader('妖狐陣営');
 <a href="#monk_fox">蛻庵</a>
 <a href="#miasma_fox">蟲狐</a>
 <a href="#howl_fox">化狐</a>
+<a href="#vindictive_fox">昼狐</a>
 <a href="#critical_fox">寿羊狐</a>
 </p>
 
 <h3 id="child_fox_rule">基本ルール</h3>
 <ol>
   <li>呪殺されない代わりに<a href="wolf.php#wolf_group">人狼</a>に襲撃されると死亡する。</li>
+  <li><a href="ability.php#necromancer">霊能</a>結果は「子狐」。</li>
   <li>夜の投票能力を持っている場合、成功率は 70%。</li>
 </ol>
 
@@ -532,7 +589,7 @@ OutputRolePageHeader('妖狐陣営');
 <pre>
 <a href="human.php#sex_mage">ひよこ鑑定士</a>の子狐バージョンです。
 能力よりも、存在自体が脅威となるタイプですね。
-村や狼が疑心暗鬼になって<a href="human.php#sex_mage">ひよこ鑑定士</a>の排除に動くケースが出てくるでしょう。
+村や狼が疑心暗鬼になって<a href="human.php#sex_mage">ひよこ鑑定士</a>の排除に動くケースが出てくることでしょう。
 </pre>
 
 <h3 id="stargazer_fox">星狐 (占い結果：村人(呪殺無し) / 霊能結果：子狐) [Ver. 1.4.0 β13～]</h3>
@@ -596,7 +653,7 @@ OutputRolePageHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#sudden_death">ショック死発動能力者</a>
+<a href="ability.php#febris">熱病能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -622,6 +679,25 @@ OutputRolePageHeader('妖狐陣営');
 人狼の人数や<a href="wolf.php#silver_wolf">銀狼</a>の存在を誤認する可能性が出てくる事に注意しましょう。
 </pre>
 
+<h3 id="vindictive_fox">昼狐 (占い結果：村人(呪殺無し) / 霊能結果：子狐) [Ver. 2.1.0 α6～]</h3>
+<pre>
+一定日数後 (5日目以降) に<a href="#fox">妖狐</a>に変化する子狐。
+<a href="#fox">妖狐</a>に変化すると<a href="sub_role.php#changed_vindictive">元昼狐</a>がつく。
+</pre>
+<ol>
+  <li>入れ替わるのは 5 日目の朝で、それまでは昼狐のまま。</li>
+  <li>蘇生されるケースがあるので、死亡していても変化処理は行われる。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#disguise">変化能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+おさん狐と呼ばれる伝承がモチーフで、名称は別名「お三門真の昼狐」が出展です。
+変化の前後で耐性が大きく変わるのでそれを計算して立ち回ると効果的です。
+</pre>
+
 <h3 id="critical_fox">寿羊狐 (占い結果：村人(呪殺無し) / 霊能結果：子狐) [Ver. 1.5.0 β16～]</h3>
 <pre>
 妖狐陣営勝利に加えて、<a href="#fox_group">妖狐系</a>の全滅が勝利条件の子狐。
@@ -630,10 +706,11 @@ OutputRolePageHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ogre.php#indigo_ogre">後鬼</a>・<a href="ogre.php#wise_ogre">夜行鬼</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
+<a href="wolf.php#emperor_wolf">帝狼</a>・<a href="ogre.php#indigo_ogre">後鬼</a>・<a href="ogre.php#wise_ogre">夜行鬼</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 妲己の妖狐伝承がモチーフです。寿羊は「じゅよう」と読みます。
 </pre>
-</body></html>
+</body>
+</html>

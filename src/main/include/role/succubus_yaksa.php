@@ -6,17 +6,16 @@
   ・人攫い無効：男性以外
 */
 RoleManager::LoadFile('yaksa');
-class Role_succubus_yaksa extends Role_yaksa{
+class Role_succubus_yaksa extends Role_yaksa {
   public $reduce_rate = 2;
-  function __construct(){ parent::__construct(); }
 
-  function Win($winner){
-    if($this->IsDead()) return false;
-    foreach($this->GetUser() as $user){
-      if(! $this->IsActor($user->uname) && $user->IsLive() && $user->IsMale()) return false;
+  function Win($winner) {
+    if ($this->IsDead()) return false;
+    foreach (DB::$USER->rows as $user) {
+      if (! $this->IsActor($user->uname) && $user->IsLive() && $user->IsMale()) return false;
     }
     return true;
   }
 
-  protected function IgnoreAssassin($user){ return ! $user->IsMale(); }
+  protected function IgnoreAssassin(User $user) { return ! $user->IsMale(); }
 }

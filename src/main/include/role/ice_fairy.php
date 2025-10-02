@@ -6,9 +6,7 @@
 */
 RoleManager::LoadFile('fairy');
 class Role_ice_fairy extends Role_fairy {
-  function __construct(){ parent::__construct(); }
-
-  function FairyAction($user){
+  function FairyAction(User $user) {
     $target = mt_rand(0, 9) < 3 ? $this->GetActor() : $user;
     $target->AddDoom(1, 'frostbite');
   }

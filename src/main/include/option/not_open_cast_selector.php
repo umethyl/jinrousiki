@@ -1,38 +1,37 @@
 <?php
+/*
+  ◆霊界で配役を公開しない (セレクタ)
+*/
 class Option_not_open_cast_selector extends SelectorRoomOptionItem {
-	function  __construct() {
-		global $GAME_OPT_CONF;
-		parent::__construct(RoomOption::GAME_OPTION);
-		$this->formtype = 'group';
-		$this->collect = 'CollectValue';
-		$this->value = $GAME_OPT_CONF->default_not_open_cast;
-	}
+  public $group = RoomOption::GAME_OPTION;
+  public $type = 'group';
+  public $form_list = array('not_open_cast', 'auto_open_cast');
 
-	function LoadMessages() {
-		$this->caption = '霊界で配役を公開しない';
+  function __construct() {
+    parent::__construct();
+    $this->value = GameOptionConfig::$default_not_open_cast;
+    if (OptionManager::$change) {
+      foreach ($this->form_list as $key => $value) {
+	if (DB::$ROOM->IsOption($value)) {
+	  $this->value = $value;
+	  break;
 	}
+      }
+    }
+  }
 
-	function GetItems() {
-		$items = array(
-			'' => new Option_not_close_cast(),
-			'not_open_cast' => RoomOption::Get('not_open_cast'),
-			'auto_open_cast' => RoomOption::Get('auto_open_cast'),
-		);
-		if (isset($items[$this->value])) {
-			$items[$this->value]->value = true;
-		}
-		return $items;
-	}
-}
+  function GetCaption() { return '霊界で配役を公開しない'; }
 
-class Option_not_close_cast extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::GAME_OPTION);
-		$this->formtype = 'radio';
-		$this->collect = null;
-	}
-
-	function LoadMessages() {
-		$this->explain = '常時公開 (蘇生能力は無効です)';
-	}
+  function GetItem() {
+    $stack = array(''               => OptionManager::GetClass('not_close_cast'),
+		   'not_open_cast'  => OptionManager::GetClass('not_open_cast'),
+		   'auto_open_cast' => OptionManager::GetClass('auto_open_cast'));
+    foreach ($stack as $key => $item) {
+      $item->value      = false;
+      $item->form_name  = $this->form_name;
+      $item->form_value = $key;
+    }
+    if (isset($stack[$this->value])) $stack[$this->value]->value = true;
+    return $stack;
+  }
 }

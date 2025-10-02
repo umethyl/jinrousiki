@@ -1,11 +1,10 @@
 <?php
-class Option_full_unknown_mania extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
-
-	function LoadMessages() {
-		$this->caption = '鵺村';
-		$this->explain = '鵺村';
-	}
+/*
+  ◆鵺村 (full_unknown_mania)
+  ○仕様
+  ・配役：村人 → 鵺
+*/
+OptionManager::Load('replace_human');
+class Option_full_unknown_mania extends Option_replace_human {
+  function GetCaption() { return '鵺村'; }
 }

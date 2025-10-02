@@ -1,117 +1,201 @@
 <?php
-/**
- * オプション入力画面を表示するためのツールを提供します。
- * @author enogu
- */
+//-- オプション入力画面表示クラス --//
 class OptionForm {
-  function GenerateRow(RoomOptionItem $item) {
-    if ($item->enabled) {
-      $type = $this->GetType($item);
-      if (!empty($type)) {
-        $item->LoadMessages();
-        echo <<<HTML
-  <tr>
-  <td><label for="{$item->name}">{$item->caption}：</label></td>
-  <td>
-HTML;
-        $this->$type($item);
-        echo <<<HTML
-  </td>
-  </tr>
-HTML;
-      }
+  const SEPARATOR = "  <tr><td colspan=\"2\"><hr></td></tr>\n";
+  const TEXTBOX = '<input type="%s" name="%s" id="%s" size="%d" value="%s">%s';
+  const TEXTBOX_EXPLAIN = ' <span class="explain">%s</span>';
+  const CHECKBOX = '<input type="%s" id="%s" name="%s" value="%s"%s> <span class="explain">%s</span>';
+  const REALTIME = '(%s　昼：<input type="text" name="%s_day" value="%d" size="2" maxlength="2">分 夜：<input type="text" name="%s_night" value="%d" size="2" maxlength="2">分)';
+  const SELECTOR = "  <option value=\"%s\"%s>%s</option>\n";
+
+  private static $order = array(
+    'room_name', 'room_comment', 'max_user',
+    'base' => null,
+    'wish_role', 'real_time', 'wait_morning', 'open_vote', 'settle', 'seal_message', 'open_day',
+    'necessary_name', 'necessary_trip',
+    'dummy_boy' => null,
+    'dummy_boy_selector', 'gm_password', 'gerd',
+    'open_cast' => null,
+    'not_open_cast_selector',
+    'add_role' => null,
+    'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf', 'possessed_wolf',
+    'sirius_wolf', 'fox', 'child_fox', 'cupid', 'medium', 'mania', 'decide', 'authority',
+    'special' => null,
+    'liar', 'gentleman', 'sudden_death', 'perverseness', 'deep_sleep', 'mind_open', 'blinder',
+    'critical', 'joker', 'death_note', 'detective', 'weather', 'festival', 'replace_human_selector',
+    'change_common_selector', 'change_mad_selector', 'change_cupid_selector',
+    'special_cast' => null,
+    'special_role',
+    'chaos' => null,
+    'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit', 'secret_sub_role'
+  );
+
+  private static $javascript = array();
+
+  //出力
+  static function Output() {
+    $class = '';
+    foreach (self::$order as $group => $name) {
+      if (! is_int($group)) $class = sprintf(' class="%s"', $group);
+      is_null($name) ? self::GenerateSeparator($group) : self::Generate($name, $class);
+    }
+    if (count(self::$javascript) > 0) {
+      echo "<script type=\"text/javascript\">\n<!--\n";
+      foreach (self::$javascript as $code) echo $code . "\n";
+      echo "//-->\n</script>\n";
     }
   }
 
-  function GetType(RoomOptionItem $item) {
-    if ($item instanceof Option_real_time) {
-      return 'realtime';
+  //生成 (振り分け処理用)
+  private function Generate($name, $class) {
+    $item = OptionManager::GetClass($name);
+    if (! $item->enable || ! isset($item->type)) return;
+    switch ($item->type) {
+    case 'textbox':
+    case 'password':
+      $str = self::GenerateTextbox($item);
+      break;
+
+    case 'checkbox':
+    case 'radio':
+      $str = self::GenerateCheckbox($item);
+      break;
+
+    case 'realtime':
+      $str = self::GenerateRealtime($item);
+      break;
+
+    case 'selector':
+      $str = self::GenerateSelector($item);
+      break;
+
+    case 'group':
+      $str = self::GenerateGroup($item);
+      break;
     }
-		else {
-			return $item->formtype;
-		}
+    $format = <<<EOF
+   <tr%s>
+    <td class="title"><label for="%s">%s：</label></td>
+    <td>%s</td>
+  </tr>%s
+EOF;
+    printf($format, $class, $item->name, $item->GetCaption(), $str, "\n");
   }
 
-  function HorizontalRule() {
-    echo '<tr><td colspan="2"><hr></td></tr>';
-  }
+  //境界線生成
+  private function GenerateSeparator($group) {
+    print(self::SEPARATOR);
+    if (OptionManager::$change) return;
+    $format = <<<EOF
+   <tr class="%s" id="%s_on">
+    <td class="title"><label onClick="toggle_option_display('%s', true)">%s</label></td>
+    <td onClick="toggle_option_display('%s', true)"><a href="javascript:void(0)">折り畳む</a></td>
+  </tr>%s
+   <tr id="%s_off">
+    <td class="title"><label onClick="toggle_option_display('%s', false)">%s</label></td>
+    <td onClick="toggle_option_display('%s', false)"><a href="javascript:void(0)">展開する</a></td>
+  </tr>%s
+EOF;
+    switch ($group) {
+    case 'base':
+      $name = '基本オプション';
+      self::$javascript[] = sprintf("toggle_option_display('%s', false)", $group);
+      break;
 
-  function textbox(RoomOptionItem $item, $type = 'textbox') {
-    $footer = isset($item->footer) ? $item->footer : '('.$item->explain.')';
-		$footer = LineToBR($footer);
-    $size = isset($item->size) ? 'size="'.$item->size.'"' : '';
-    echo <<<HTML
-<input type="{$type}" id="{$item->name}" name="{$item->formname}" {$size} value="{$item->value}">
-<span class="explain">$footer</span>
-HTML;
-  }
-  function password(RoomOptionItem $item) {
-    $this->textbox($item, 'password');
-  }
+    case 'dummy_boy':
+      $name = '身代わり君設定';
+      self::$javascript[] = sprintf("toggle_option_display('%s', false)", $group);
+      break;
 
-  function checkbox(RoomOptionItem $item, $type = 'checkbox') {
-    $footer = isset($item->footer) ? $item->footer : '('.$item->explain.')';
-		$footer = LineToBR($footer);
-    $checked = $item->value ? ' checked' : '';
-    echo <<<HTML
-<input type="{$type}" id="{$item->name}" name="{$item->formname}" value="{$item->formvalue}"{$checked}>
-<span class="explain">{$footer}</span>
+    case 'open_cast':
+      $name = '霊界公開設定';
+      self::$javascript[] = sprintf("toggle_option_display('%s', true)", $group);
+      break;
 
-HTML;
-  }
-  function radio(RoomOptionItem $item) {
-    $this->checkbox($item, 'radio');
-  }
+    case 'add_role':
+      $name = '追加役職設定';
+      self::$javascript[] = sprintf("toggle_option_display('%s', true)", $group);
+      break;
 
-  function select(RoomOptionItem $item) {
-    $options = '';
-    foreach ($item->GetItems() as $code => $child) {
-      if ($child instanceof RoomOptionItem) {
-				$child->LoadMessages();
-        $label = $child->caption;
-      }
-      else {
-        $label = $child;
-      }
-      if (!is_string($code)) {
-        $code = $label;
-      }
-      $selected = $code == $item->value ? ' selected' : '';
-      $options .= "<option value=\"{$code}\" {$selected}>{$label}</option>\n";
+    case 'special':
+      $name = '特殊設定';
+      self::$javascript[] = sprintf("toggle_option_display('%s', true)", $group);
+      break;
+
+    default:
+      return;
     }
-		$explain = LineToBR($item->explain);
-    echo <<<HTML
-<select id="{$item->name}" name="{$item->formname}">
-<optgroup label="{$item->label}">
-{$options}</optgroup>
+    printf($format, $group, $group, $group, $name, $group, "\n",
+	   $group, $group, $name, $group, "\n");
+  }
+
+  //テキストボックス生成
+  private function GenerateTextbox(TextRoomOptionItem $item) {
+    $size = sprintf('%s_input', $item->name);
+    $str  = $item->GetExplain();
+    if (OptionManager::$change) $value = DB::$ROOM->{array_pop(explode('_', $item->name))};
+    return sprintf(self::TEXTBOX, $item->type, $item->name, $item->name, RoomConfig::$$size,
+		   $value, isset($str) ? sprintf(self::TEXTBOX_EXPLAIN, $str) : '');
+  }
+
+  //チェックボックス生成
+  private function GenerateCheckbox(CheckRoomOptionItem $item) {
+    $footer = isset($item->footer) ? $item->footer : sprintf('(%s)', $item->GetExplain());
+    return sprintf(self::CHECKBOX, $item->type, $item->name, $item->form_name, $item->form_value,
+		   $item->value ? ' checked' : '', Text::ConvertLine($footer));
+  }
+
+  //チェックボックス生成 (リアルタイム制専用)
+  private function GenerateRealtime(Option_real_time $item) {
+    if (OptionManager::$change) {
+      $day   = DB::$ROOM->game_option->list[$item->name][0];
+      $night = DB::$ROOM->game_option->list[$item->name][1];
+    } else {
+      $day   = TimeConfig::DEFAULT_DAY;
+      $night = TimeConfig::DEFAULT_NIGHT;
+    }
+
+    $footer = sprintf(self::REALTIME, Text::ConvertLine($item->GetExplain()),
+		      $item->name,  $day, $item->name, $night);
+    return sprintf(self::CHECKBOX, 'checkbox', $item->name, $item->name, $item->form_value,
+		   $item->value ? ' checked' : '', $footer);
+  }
+
+  //セレクタ生成
+  private function GenerateSelector(SelectorRoomOptionItem $item) {
+    $str = '';
+    foreach ($item->GetItem() as $code => $child) {
+      $label = $child instanceof RoomOptionItem ? $child->GetCaption() : $child;
+      if (! is_string($code)) $code = $label;
+      $str .= sprintf(self::SELECTOR, $code, $code == $item->value ? ' selected' : '', $label);
+    }
+    $explain = Text::ConvertLine($item->GetExplain());
+    $format = <<<EOF
+<select id="%s" name="%s"%s>
+<optgroup label="%s">
+%s</optgroup>
 </select>
-<span class="explain">({$explain})</span>
-HTML;
+<span class="explain">(%s)</span>
+EOF;
+    if (! OptionManager::$change && isset($item->javascript)) self::$javascript[] = $item->javascript;
+    return sprintf($format, $item->name, $item->form_name, $item->on_change, $item->label,
+		   $str, $explain);
   }
 
-  function realtime(Option_real_time $item) {
-    $checked = $item->value ? ' checked' : '';
-		$explain = LineToBR($item->explain);
-    echo <<<HTML
-<input type="checkbox" id="{$item->name}" name="{$item->formname}" value="on"{$checked}>
-<span class='explain'>({$explain}　昼：<input type="text" name="{$item->formname}_day" value="{$item->defaultDayTime}" size="2" maxlength="2">分 夜：<input type="text" name="{$item->formname}_night" value="{$item->defaultNightTime}" size="2" maxlength="2">分)</span>
-</td>
-
-HTML;
-  }
-
-  function group(RoomOptionItem $item) {
-    foreach ($item->GetItems() as $key => $child) {
-      $type = $child->formtype;
-      if (!empty($type)) {
-        $child->LoadMessages();
-				if ($type == 'radio') {
-					$child->formname = $item->formname;
-					$child->formvalue = $key;
-				}
-        $this->$type($child);
-        echo "<br>\n";
+  //グループ生成
+  private function GenerateGroup(RoomOptionItem $item) {
+    $str  = '';
+    foreach ($item->GetItem() as $child) {
+      $type = $child->type;
+      if (! empty($type)) {
+	switch ($type) {
+	case 'radio':
+	  $str .= self::GenerateCheckbox($child);
+	  break;
+	}
+	$str .= "<br>\n";
       }
     }
+    return $str;
   }
 }

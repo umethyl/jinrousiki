@@ -6,10 +6,8 @@
   ・逃亡処理：死の宣告
 */
 RoleManager::LoadFile('escaper');
-class Role_doom_escaper extends Role_escaper{
-  function __construct(){ parent::__construct(); }
+class Role_doom_escaper extends Role_escaper {
+  protected function EscapeFailed(User $user) { return $user->IsRole('death_warrant'); }
 
-  protected function EscapeFailed($user){ return $user->IsRole('death_warrant'); }
-
-  protected function EscapeAction($user){ $user->AddDoom(4); }
+  protected function EscapeAction(User $user) { $user->AddDoom(4); }
 }

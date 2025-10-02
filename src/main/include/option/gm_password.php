@@ -1,14 +1,19 @@
 <?php
+/*
+  ◆GM ログインパスワード (gm_password)
+*/
 class Option_gm_password extends TextRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::NOT_OPTION);
-		$this->formtype = 'password';
-		$this->collect = null;
-	}
+  public $type = 'password';
 
-	function LoadMessages() {
-		parent::LoadMessages();
-		$this->caption = 'GM ログインパスワード';
-		$this->footer = "(仮想 GM モード・クイズ村モード時の GM のパスワードです)\n※ ログインユーザ名は「dummy_boy」です。GM は入村直後に必ず名乗ってください。";
-	}
+  function __construct() {
+    parent::__construct();
+    if (OptionManager::$change) $this->enable = false;
+  }
+
+  function GetCaption() { return 'GM ログインパスワード'; }
+
+  function GetExplain() {
+    return '(仮想 GM モード・クイズ村モード時の GM のパスワードです)<br>' .
+      '※ ログインユーザ名は「dummy_boy」です。GM は入村直後に必ず名乗ってください。';
+  }
 }

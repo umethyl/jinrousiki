@@ -6,12 +6,10 @@
   ・襲撃：死の宣告
 */
 RoleManager::LoadFile('wolf');
-class Role_doom_wolf extends Role_wolf{
-  function __construct(){ parent::__construct(); }
+class Role_doom_wolf extends Role_wolf {
+  function FoxEatAction(User $user) { $user->AddDoom(2); }
 
-  function FoxEatAction($user){ $user->AddDoom(2); }
-
-  function WolfEatAction($user){
+  function WolfEatAction(User $user) {
     $user->AddDoom(2);
     $user->wolf_eat = true; //襲撃は成功扱い
     return true;

@@ -7,25 +7,22 @@
   ・霊能：通常 (50%)
 */
 RoleManager::LoadFile('wizard');
-class Role_mimic_wizard extends Role_wizard{
+class Role_mimic_wizard extends Role_wizard {
   public $mix_in = 'mage';
   public $wizard_list = array('mage' => 'MAGE_DO', 1 => 'MAGE_DO');
   public $result_list = array('MAGE_RESULT', 'MIMIC_WIZARD_RESULT');
-  function __construct(){ parent::__construct(); }
 
-  function Mage($user){
+  function Mage(User $user) {
     $this->IsJammer($user);
     $this->SaveMageResult($user, 'failed', 'MAGE_RESULT');
   }
 
-  function Necromancer($user, $flag){
-    global $ROOM, $USERS;
-
-    if($ROOM->date < 3) return;
-    $failed = ! $ROOM->IsEvent('full_wizard') &&
-      ($ROOM->IsEvent('debilitate_wizard') || mt_rand(0, 1) > 0);
+  function Necromancer(User $user, $flag) {
+    if (DB::$ROOM->date < 3) return;
+    $failed = ! DB::$ROOM->IsEvent('full_wizard') &&
+      (DB::$ROOM->IsEvent('debilitate_wizard') || mt_rand(0, 1) > 0);
     $result = $flag || $failed ? 'stolen' : $user->DistinguishNecromancer();
-    $target = $USERS->GetHandleName($user->uname, true);
-    $ROOM->ResultAbility('MIMIC_WIZARD_RESULT', $result, $target);
+    $target = DB::$USER->GetHandleName($user->uname, true);
+    DB::$ROOM->ResultAbility('MIMIC_WIZARD_RESULT', $result, $target);
   }
 }

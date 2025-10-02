@@ -42,9 +42,9 @@ class TwitterOAuth {
   /**
 * Set API URLS
 */
-  function accessTokenURL() {  return 'https://api.twitter.com/1/oauth/access_token'; }
+  function accessTokenURL()  { return 'https://api.twitter.com/1/oauth/access_token'; }
   function authenticateURL() { return 'https://api.twitter.com/1/oauth/authenticate'; }
-  function authorizeURL() {    return 'https://api.twitter.com/1/oauth/authorize'; }
+  function authorizeURL()    { return 'https://api.twitter.com/1/oauth/authorize'; }
   function requestTokenURL() { return 'https://api.twitter.com/1/oauth/request_token'; }
 
   /**

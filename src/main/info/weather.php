@@ -1,9 +1,8 @@
 <?php
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-$INIT_CONF->LoadClass('GAME_OPT_MESS', 'ROLE_DATA');
-OutputInfoPageHeader('天候システム');
+Loader::LoadFile('role_data_class', 'room_option_class', 'info_functions');
+InfoHTML::OutputHeader('天候システム');
 ?>
 <p>
 <a href="#game_option">関連オプション</a>
@@ -18,7 +17,7 @@ OutputInfoPageHeader('天候システム');
 
 <h2 id="game_option">関連オプション</h2>
 <ul>
-  <li><a href="game_option.php#weather"><?php echo $GAME_OPT_MESS->weather ?></a></li>
+  <li><a href="game_option.php#weather"><?php OptionManager::OutputCaption('weather'); ?></a></li>
 </ul>
 
 <h2 id="summary">一覧</h2>
@@ -38,333 +37,333 @@ Ver. 1.5.0
   <th>初登場</th>
 </tr>
 <tr id="ver150a2">
-  <td><a href="#weather_grassy"><?php echo $ROLE_DATA->weather_list[0]['name'] ?></a></td>
+  <td><a href="#weather_grassy"><?php echo RoleData::$weather_list[0]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[0]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[0]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr>
-  <td><a href="#weather_mower"><?php echo $ROLE_DATA->weather_list[1]['name'] ?></a></td>
+  <td><a href="#weather_mower"><?php echo RoleData::$weather_list[1]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[1]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[1]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr>
-  <td><a href="#weather_blind_vote"><?php echo $ROLE_DATA->weather_list[2]['name'] ?></a></td>
+  <td><a href="#weather_blind_vote"><?php echo RoleData::$weather_list[2]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[2]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[2]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_fox_dead"><?php echo $ROLE_DATA->weather_list[3]['name'] ?></a></td>
+  <td><a href="#weather_no_fox_dead"><?php echo RoleData::$weather_list[3]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[3]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[3]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr>
-  <td><a href="#weather_critical"><?php echo $ROLE_DATA->weather_list[4]['name'] ?></a></td>
+  <td><a href="#weather_critical"><?php echo RoleData::$weather_list[4]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[4]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[4]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr>
-  <td><a href="#weather_blind_talk_day"><?php echo $ROLE_DATA->weather_list[5]['name'] ?></a></td>
+  <td><a href="#weather_blind_talk_day"><?php echo RoleData::$weather_list[5]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[5]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[5]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr>
-  <td><a href="#weather_blind_talk_night"><?php echo $ROLE_DATA->weather_list[6]['name'] ?></a></td>
+  <td><a href="#weather_blind_talk_night"><?php echo RoleData::$weather_list[6]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[6]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[6]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr>
-  <td><a href="#weather_full_moon"><?php echo $ROLE_DATA->weather_list[7]['name'] ?></a></td>
+  <td><a href="#weather_full_moon"><?php echo RoleData::$weather_list[7]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[7]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[7]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr>
-  <td><a href="#weather_new_moon"><?php echo $ROLE_DATA->weather_list[8]['name'] ?></a></td>
+  <td><a href="#weather_new_moon"><?php echo RoleData::$weather_list[8]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[8]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[8]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_contact"><?php echo $ROLE_DATA->weather_list[9]['name'] ?></a></td>
+  <td><a href="#weather_no_contact"><?php echo RoleData::$weather_list[9]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[9]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[9]['caption']; ?></td>
   <td>Ver. 1.5.0 α2</td>
 </tr>
 <tr id="ver150a3">
-  <td><a href="#weather_invisible"><?php echo $ROLE_DATA->weather_list[10]['name'] ?></a></td>
+  <td><a href="#weather_invisible"><?php echo RoleData::$weather_list[10]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[10]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[10]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_rainbow"><?php echo $ROLE_DATA->weather_list[11]['name'] ?></a></td>
+  <td><a href="#weather_rainbow"><?php echo RoleData::$weather_list[11]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[11]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[11]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_side_reverse"><?php echo $ROLE_DATA->weather_list[12]['name'] ?></a></td>
+  <td><a href="#weather_side_reverse"><?php echo RoleData::$weather_list[12]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[12]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[12]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_line_reverse"><?php echo $ROLE_DATA->weather_list[13]['name'] ?></a></td>
+  <td><a href="#weather_line_reverse"><?php echo RoleData::$weather_list[13]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[13]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[13]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_actor"><?php echo $ROLE_DATA->weather_list[14]['name'] ?></a></td>
+  <td><a href="#weather_actor"><?php echo RoleData::$weather_list[14]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[14]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[14]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_critical_luck"><?php echo $ROLE_DATA->weather_list[15]['name'] ?></a></td>
+  <td><a href="#weather_critical_luck"><?php echo RoleData::$weather_list[15]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[15]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[15]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_sudden_death"><?php echo $ROLE_DATA->weather_list[16]['name'] ?></a></td>
+  <td><a href="#weather_no_sudden_death"><?php echo RoleData::$weather_list[16]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[16]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[16]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_thunderbolt"><?php echo $ROLE_DATA->weather_list[17]['name'] ?></a></td>
+  <td><a href="#weather_thunderbolt"><?php echo RoleData::$weather_list[17]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[17]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[17]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_last_words"><?php echo $ROLE_DATA->weather_list[18]['name'] ?></a></td>
+  <td><a href="#weather_no_last_words"><?php echo RoleData::$weather_list[18]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[18]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[18]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_dream"><?php echo $ROLE_DATA->weather_list[19]['name'] ?></a></td>
+  <td><a href="#weather_no_dream"><?php echo RoleData::$weather_list[19]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[19]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[19]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_full_ogre"><?php echo $ROLE_DATA->weather_list[20]['name'] ?></a></td>
+  <td><a href="#weather_full_ogre"><?php echo RoleData::$weather_list[20]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[20]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[20]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_seal_ogre"><?php echo $ROLE_DATA->weather_list[21]['name'] ?></a></td>
+  <td><a href="#weather_seal_ogre"><?php echo RoleData::$weather_list[21]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[21]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[21]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_full_revive"><?php echo $ROLE_DATA->weather_list[22]['name'] ?></a></td>
+  <td><a href="#weather_full_revive"><?php echo RoleData::$weather_list[22]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[22]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[22]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_revive"><?php echo $ROLE_DATA->weather_list[23]['name'] ?></a></td>
+  <td><a href="#weather_no_revive"><?php echo RoleData::$weather_list[23]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[23]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[23]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr>
-  <td><a href="#weather_brownie"><?php echo $ROLE_DATA->weather_list[24]['name'] ?></a></td>
+  <td><a href="#weather_brownie"><?php echo RoleData::$weather_list[24]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[24]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[24]['caption']; ?></td>
   <td>Ver. 1.5.0 α3</td>
 </tr>
 <tr id="ver150a4">
-  <td><a href="#weather_whisper_ringing"><?php echo $ROLE_DATA->weather_list[25]['name'] ?></a></td>
+  <td><a href="#weather_whisper_ringing"><?php echo RoleData::$weather_list[25]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[25]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[25]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_howl_ringing"><?php echo $ROLE_DATA->weather_list[26]['name'] ?></a></td>
+  <td><a href="#weather_howl_ringing"><?php echo RoleData::$weather_list[26]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[26]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[26]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_sweet_ringing"><?php echo $ROLE_DATA->weather_list[27]['name'] ?></a></td>
+  <td><a href="#weather_sweet_ringing"><?php echo RoleData::$weather_list[27]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[27]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[27]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_deep_sleep"><?php echo $ROLE_DATA->weather_list[28]['name'] ?></a></td>
+  <td><a href="#weather_deep_sleep"><?php echo RoleData::$weather_list[28]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[28]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[28]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_silent"><?php echo $ROLE_DATA->weather_list[29]['name'] ?></a></td>
+  <td><a href="#weather_silent"><?php echo RoleData::$weather_list[29]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[29]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[29]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_missfire_revive"><?php echo $ROLE_DATA->weather_list[30]['name'] ?></a></td>
+  <td><a href="#weather_missfire_revive"><?php echo RoleData::$weather_list[30]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[30]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[30]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_hunt"><?php echo $ROLE_DATA->weather_list[31]['name'] ?></a></td>
+  <td><a href="#weather_no_hunt"><?php echo RoleData::$weather_list[31]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[31]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[31]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_full_guard"><?php echo $ROLE_DATA->weather_list[32]['name'] ?></a></td>
+  <td><a href="#weather_full_guard"><?php echo RoleData::$weather_list[32]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[32]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[32]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_frostbite"><?php echo $ROLE_DATA->weather_list[33]['name'] ?></a></td>
+  <td><a href="#weather_frostbite"><?php echo RoleData::$weather_list[33]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[33]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[33]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_alchemy_pharmacist"><?php echo $ROLE_DATA->weather_list[34]['name'] ?></a></td>
+  <td><a href="#weather_alchemy_pharmacist"><?php echo RoleData::$weather_list[34]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[34]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[34]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_hyper_random_voter"><?php echo $ROLE_DATA->weather_list[35]['name'] ?></a></td>
+  <td><a href="#weather_hyper_random_voter"><?php echo RoleData::$weather_list[35]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[35]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[35]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_half_moon"><?php echo $ROLE_DATA->weather_list[36]['name'] ?></a></td>
+  <td><a href="#weather_half_moon"><?php echo RoleData::$weather_list[36]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[36]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[36]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_half_guard"><?php echo $ROLE_DATA->weather_list[37]['name'] ?></a></td>
+  <td><a href="#weather_half_guard"><?php echo RoleData::$weather_list[37]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[37]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[37]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_passion"><?php echo $ROLE_DATA->weather_list[38]['name'] ?></a></td>
+  <td><a href="#weather_passion"><?php echo RoleData::$weather_list[38]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[38]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[38]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_poison"><?php echo $ROLE_DATA->weather_list[39]['name'] ?></a></td>
+  <td><a href="#weather_no_poison"><?php echo RoleData::$weather_list[39]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[39]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[39]['caption']; ?></td>
   <td>Ver. 1.5.0 α4</td>
 </tr>
 <tr id="ver150a8">
-  <td><a href="#weather_psycho_infected"><?php echo $ROLE_DATA->weather_list[40]['name'] ?></a></td>
+  <td><a href="#weather_psycho_infected"><?php echo RoleData::$weather_list[40]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[40]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[40]['caption']; ?></td>
   <td>Ver. 1.5.0 α8</td>
 </tr>
 <tr>
-  <td><a href="#weather_hyper_critical"><?php echo $ROLE_DATA->weather_list[41]['name'] ?></a></td>
+  <td><a href="#weather_hyper_critical"><?php echo RoleData::$weather_list[41]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[41]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[41]['caption']; ?></td>
   <td>Ver. 1.5.0 α8</td>
 </tr>
 <tr>
-  <td><a href="#weather_boost_cute"><?php echo $ROLE_DATA->weather_list[42]['name'] ?></a></td>
+  <td><a href="#weather_boost_cute"><?php echo RoleData::$weather_list[42]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[42]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[42]['caption']; ?></td>
   <td>Ver. 1.5.0 α8</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_authority"><?php echo $ROLE_DATA->weather_list[43]['name'] ?></a></td>
+  <td><a href="#weather_no_authority"><?php echo RoleData::$weather_list[43]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[43]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[43]['caption']; ?></td>
   <td>Ver. 1.5.0 α8</td>
 </tr>
 <tr>
-  <td><a href="#weather_force_assassin_do"><?php echo $ROLE_DATA->weather_list[44]['name'] ?></a></td>
+  <td><a href="#weather_force_assassin_do"><?php echo RoleData::$weather_list[44]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[44]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[44]['caption']; ?></td>
   <td>Ver. 1.5.0 α8</td>
 </tr>
 <tr>
-  <td><a href="#weather_corpse_courier_mad"><?php echo $ROLE_DATA->weather_list[45]['name'] ?></a></td>
+  <td><a href="#weather_corpse_courier_mad"><?php echo RoleData::$weather_list[45]['name']; ?></a></td>
   <td><a href="#type_vote_day">処刑投票妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[45]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[45]['caption']; ?></td>
   <td>Ver. 1.5.0 α8</td>
 </tr>
 <tr>
-  <td><a href="#weather_full_wizard"><?php echo $ROLE_DATA->weather_list[46]['name'] ?></a></td>
+  <td><a href="#weather_full_wizard"><?php echo RoleData::$weather_list[46]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[46]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[46]['caption']; ?></td>
   <td>Ver. 1.5.0 α8</td>
 </tr>
 <tr>
-  <td><a href="#weather_debilitate_wizard"><?php echo $ROLE_DATA->weather_list[47]['name'] ?></a></td>
+  <td><a href="#weather_debilitate_wizard"><?php echo RoleData::$weather_list[47]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[47]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[47]['caption']; ?></td>
   <td>Ver. 1.5.0 α8</td>
 </tr>
 <tr id="ver150a9">
-  <td><a href="#weather_no_trap"><?php echo $ROLE_DATA->weather_list[48]['name'] ?></a></td>
+  <td><a href="#weather_no_trap"><?php echo RoleData::$weather_list[48]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[48]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[48]['caption']; ?></td>
   <td>Ver. 1.5.0 α9</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_sacrifice"><?php echo $ROLE_DATA->weather_list[49]['name'] ?></a></td>
+  <td><a href="#weather_no_sacrifice"><?php echo RoleData::$weather_list[49]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[49]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[49]['caption']; ?></td>
   <td>Ver. 1.5.0 α9</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_reflect_assassin"><?php echo $ROLE_DATA->weather_list[50]['name'] ?></a></td>
+  <td><a href="#weather_no_reflect_assassin"><?php echo RoleData::$weather_list[50]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[50]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[50]['caption']; ?></td>
   <td>Ver. 1.5.0 α9</td>
 </tr>
 <tr>
-  <td><a href="#weather_no_cursed"><?php echo $ROLE_DATA->weather_list[51]['name'] ?></a></td>
+  <td><a href="#weather_no_cursed"><?php echo RoleData::$weather_list[51]['name']; ?></a></td>
   <td><a href="#type_ability">能力強化・封印</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[51]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[51]['caption']; ?></td>
   <td>Ver. 1.5.0 α9</td>
 </tr>
 <tr>
-  <td><a href="#weather_blinder"><?php echo $ROLE_DATA->weather_list[52]['name'] ?></a></td>
+  <td><a href="#weather_blinder"><?php echo RoleData::$weather_list[52]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[52]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[52]['caption']; ?></td>
   <td>Ver. 1.5.0 α9</td>
 </tr>
 <tr>
-  <td><a href="#weather_mind_open"><?php echo $ROLE_DATA->weather_list[53]['name'] ?></a></td>
+  <td><a href="#weather_mind_open"><?php echo RoleData::$weather_list[53]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[53]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[53]['caption']; ?></td>
   <td>Ver. 1.5.0 α9</td>
 </tr>
 <tr>
-  <td><a href="#weather_aurora"><?php echo $ROLE_DATA->weather_list[54]['name'] ?></a></td>
+  <td><a href="#weather_aurora"><?php echo RoleData::$weather_list[54]['name']; ?></a></td>
   <td><a href="#type_talk">会話妨害</a></td>
-  <td><?php echo $ROLE_DATA->weather_list[54]['caption'] ?></td>
+  <td><?php echo RoleData::$weather_list[54]['caption']; ?></td>
   <td>Ver. 1.5.0 α9</td>
 </tr>
 </table>
@@ -867,4 +866,5 @@ Ver. 1.5.0
 <ul>
   <li>全員に<a href="new_role/sub_role.php#no_last_words">筆不精</a>がつきます。</li>
 </ul>
-</body></html>
+</body>
+</html>

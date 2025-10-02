@@ -6,7 +6,17 @@ ul {
   line-height: 150%;
   font-size: 95%;
 }
+ul .submenu {
+  margin-bottom: 0.5em;
+}
+ul .submenu .menu-name a {
+  color: #333333;
+}
+ul .submenu .menu-link {
+  display: none;
+}
 .menu {
+  margin-bottom: 1em;
   padding: 5px 1px;
   background-color: #CCFFCC;
   border: 1px solid #CC3300;

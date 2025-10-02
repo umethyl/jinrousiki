@@ -5,8 +5,6 @@
   ・仲間表示：なし
 */
 RoleManager::LoadFile('doll');
-class Role_silver_doll extends Role_doll{
-  function __construct(){ parent::__construct(); }
-
-  protected function OutputPartner(){ return; }
+class Role_silver_doll extends Role_doll {
+  protected function OutputPartner() { return; }
 }

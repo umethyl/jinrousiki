@@ -42,24 +42,30 @@ class Role_soul_mania extends Role_mania {
     'duelist'		=> 'critical_duelist',
     'avenger'		=> 'revive_avenger',
     'patron'		=> 'sacrifice_patron');
-  function __construct(){ parent::__construct(); }
 
-  protected function OutputResult(){
-    global $ROOM;
-    if ($ROOM->date == 2) OutputSelfAbilityResult($this->result);
+  protected function OutputResult() {
+    if (DB::$ROOM->date == 2) $this->OutputAbilityResult($this->result);
   }
 
-  protected function GetManiaRole($user){ return $user->DistinguishRoleGroup(); }
+  protected function GetManiaRole(User $user) { return $user->DistinguishRoleGroup(); }
 
   //覚醒コピー
-  function DelayCopy($user){
-    global $ROOM;
-
+  function DelayCopy(User $user) {
     $actor = $this->GetActor();
-    $role  = $user->IsRoleGroup('mania', 'copied') ? 'human' :
-      $this->copy_list[$user->IsRole('changed_therian') ? 'mad' : $user->DistinguishRoleGroup()];
+    if ($user->IsRoleGroup('mania', 'copied')) {
+      $role = 'human';
+    }
+    elseif ($user->IsRole('changed_disguise')) {
+      $role = $this->copy_list['wolf'];
+    }
+    elseif ($user->IsRole('changed_therian')) {
+      $role = $this->copy_list['mad'];
+    }
+    else {
+      $role = $this->copy_list[$user->DistinguishRoleGroup()];
+    }
     $actor->ReplaceRole($this->role, $role);
     $actor->AddRole($this->copied);
-    $ROOM->ResultAbility($this->result, $role, $actor->handle_name, $actor->user_no);
+    DB::$ROOM->ResultAbility($this->result, $role, $actor->handle_name, $actor->user_no);
   }
 }

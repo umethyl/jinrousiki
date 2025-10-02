@@ -6,30 +6,23 @@
 */
 RoleManager::LoadFile('unknown_mania');
 class Role_revive_mania extends Role_unknown_mania {
-  function __construct(){ parent::__construct(); }
-
-  function WolfEatCounter($user){
-    global $ROOM, $USERS;
-
-    if ($ROOM->IsOpenCast() || $ROOM->IsEvent('no_revive') ||
+  function WolfEatCounter(User $user) {
+    if (DB::$ROOM->IsOpenCast() || DB::$ROOM->IsEvent('no_revive') ||
 	is_null($id = $this->GetActor()->GetMainRoleTarget())) {
       return;
     }
-    $target = $USERS->ByID($id);
-    if ($target->IsDead(true) && ! $target->IsReviveLimited()) {
-      //憑依対応
-      $real = $USERS->ByReal($target->user_no);
-      if ($target !== $real) {
-	$real->ReturnPossessed('possessed_target');
+    $target = DB::$USER->ByID($id);
+    if ($target->IsLive(true) || $target->IsReviveLimited()) return;
 
-	$target->ReturnPossessed('possessed');
-	$target->Update('live', 'live');
-	$target->revive_flag = true;
-	$ROOM->ResultDead($real->handle_name, 'REVIVE_SUCCESS');
-      }
-      else {
-	$target->Revive();
-      }
+    $real = DB::$USER->ByReal($target->user_no);
+    if ($target !== $real) { //憑依対応
+      $target->ReturnPossessed('possessed');
+      $target->Revive(true);
+      DB::$ROOM->ResultDead($real->handle_name, 'REVIVE_SUCCESS');
+      $real->ReturnPossessed('possessed_target');
+    }
+    else {
+      $target->Revive();
     }
   }
 }

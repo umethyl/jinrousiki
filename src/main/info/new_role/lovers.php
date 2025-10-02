@@ -1,8 +1,8 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-OutputRolePageHeader('恋人陣営');
+Loader::LoadFile('info_functions');
+InfoHTML::OutputRoleHeader('恋人陣営');
 ?>
 <p>
 <a href="#rule">基本ルール</a>
@@ -179,7 +179,7 @@ OutputRolePageHeader('恋人陣営');
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#sudden_death">ショック死発動能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#frostbite">凍傷能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -321,4 +321,5 @@ OutputRolePageHeader('恋人陣営');
 <pre>
 天使系の劣化種として<a href="sub_role.php#celibacy">独身貴族</a>相当の能力を持たせてみました。
 </pre>
-</body></html>
+</body>
+</html>

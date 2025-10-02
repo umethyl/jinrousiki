@@ -8,22 +8,18 @@
 RoleManager::LoadFile('vampire');
 class Role_soul_vampire extends Role_vampire {
   public $result = 'VAMPIRE_RESULT';
-  function __construct(){ parent::__construct(); }
 
-  protected function OutputResult(){
-    global $ROOM;
-    if ($ROOM->date > 2) OutputSelfAbilityResult($this->result);
+  protected function OutputResult() {
+    if (DB::$ROOM->date > 2) $this->OutputAbilityResult($this->result);
   }
 
-  protected function InfectVampire($user){
+  protected function InfectVampire(User $user) {
     $this->AddSuccess($user->user_no, 'vampire_kill');
   }
 
-  function Infect($user){
-    global $ROOM, $USERS;
-
+  function Infect(User $user) {
     parent::Infect($user);
-    $target = $USERS->GetHandleName($user->uname, true);
-    $ROOM->ResultAbility($this->result, $user->main_role, $target, $this->GetActor()->user_no);
+    $target = DB::$USER->GetHandleName($user->uname, true);
+    DB::$ROOM->ResultAbility($this->result, $user->main_role, $target, $this->GetID());
   }
 }

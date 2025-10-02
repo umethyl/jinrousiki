@@ -2,3 +2,6 @@
 @import url(info.css);
 @import url(index_anchor.css);
 @import url(game_list.css);
+body {
+  background-image: url("../../img/bg/shared_room.png");
+}

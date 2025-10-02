@@ -5,14 +5,13 @@
   ・ショック死：再投票
 */
 RoleManager::LoadFile('medium');
-class Role_eclipse_medium extends Role_medium{
+class Role_eclipse_medium extends Role_medium {
   public $mix_in = 'chicken';
   public $display_role = 'medium';
   public $sudden_death = 'SEALED';
-  function __construct(){ parent::__construct(); }
 
-  function SuddenDeath(){
-    if(! $this->IgnoreSuddenDeath() && $this->GetVoteKill() == '' && $this->IsRealActor()){
+  function SuddenDeath() {
+    if (! $this->IgnoreSuddenDeath() && $this->GetVoteKill() == '' && $this->IsRealActor()) {
       $this->SetSuddenDeath($this->sudden_death);
     }
   }

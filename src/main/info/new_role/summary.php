@@ -1,11 +1,9 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-OutputHTMLHeader('新役職情報 - [一覧]', 'new_role');
+HTML::OutputHeader('新役職情報 - [一覧]', 'new_role');
+HTML::OutputBodyHeader();
 ?>
-</head>
-<body>
-
 <h1>新役職情報</h1>
 <ul><li>バージョンアップするたびに仕様が変わる可能性があります</li></ul>
 <p>
@@ -95,6 +93,14 @@ Ver. 1.5.0
 <a href="#ver150b15">β15</a>
 <a href="#ver150b16">β16</a>
 <a href="#ver150b17">β17</a>
+<a href="#ver152">Ver. 1.5.2</a><br>
+Ver. 2.1.0
+<a href="#ver210a2">α2</a>
+<a href="#ver210a3">α3</a>
+<a href="#ver210a4">α4</a>
+<a href="#ver210a5">α5</a>
+<a href="#ver210a6">α6</a>
+<a href="#ver210a7">α7</a>
 </p>
 
 <p>
@@ -135,7 +141,10 @@ Ver. 1.5.0
 <a href="#sub_ver150b6">β6</a>
 <a href="#sub_ver150b7">β7</a>
 <a href="#sub_ver150b11">β11</a>
-<a href="#sub_ver150b14">β14</a>
+<a href="#sub_ver150b14">β14</a><br>
+Ver. 2.1.0
+<a href="#sub_ver210a3">α3</a>
+<a href="#sub_ver210a6">α6</a>
 </p>
 
 <table id="main_role">
@@ -356,7 +365,7 @@ Ver. 1.5.0
   <td><a href="human.php#poison_group">埋毒者系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">時が経つと (5 日目以降) <a href="human.php#strong_poison">強毒者</a>相当の毒を持つ特殊な埋毒者。</td>
+  <td class="ability">一定期間後 (5 日目以降) <a href="human.php#strong_poison">強毒者</a>相当の毒を持つ特殊な埋毒者。</td>
   <td>Ver. 1.4.0 α17</td>
 </tr>
 <tr>
@@ -748,7 +757,7 @@ Ver. 1.5.0
   <td><a href="human.php#human_group">村人系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">処刑投票数が +1 される村人。</td>
+  <td class="ability">処刑投票数が 3% の確率で +100、それ以外は +1 される村人。</td>
   <td>Ver. 1.4.0 β5</td>
 </tr>
 <tr>
@@ -1264,7 +1273,7 @@ Ver. 1.5.0
   <td><a href="human.php#mind_scanner_group">さとり系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">2日目夜以降、<a href="human.php#common_group">共有者系</a>に一方的に声が届く特殊なさとり。</td>
+  <td class="ability">2 日目夜以降、<a href="human.php#common_group">共有者系</a>に一方的に声が届く特殊なさとり。</td>
   <td>Ver. 1.4.0 β11</td>
 </tr>
 <tr>
@@ -1273,7 +1282,7 @@ Ver. 1.5.0
   <td><a href="human.php#mind_scanner_group">さとり系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">2日目夜以降、<a href="wolf.php#talk">人狼系</a>に一方的に声が届く特殊なさとり。</td>
+  <td class="ability">2 日目夜以降、<a href="wolf.php#talk">人狼系</a>に一方的に声が届く特殊なさとり。</td>
   <td>Ver. 1.4.0 β11</td>
 </tr>
 <tr>
@@ -1282,7 +1291,7 @@ Ver. 1.5.0
   <td><a href="human.php#mind_scanner_group">さとり系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">2日目夜以降、<a href="fox.php#talk">妖狐系</a>に一方的に声が届く特殊なさとり。</td>
+  <td class="ability">2 日目夜以降、<a href="fox.php#talk">妖狐系</a>に一方的に声が届く特殊なさとり。</td>
   <td>Ver. 1.4.0 β11</td>
 </tr>
 <tr>
@@ -1683,7 +1692,7 @@ Ver. 1.5.0
   <td><a href="human.php#jealousy_group">橋姫系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">自分に処刑投票してきた恋人に一定確率 (40%) で<a href="sub_role.php#passion">恋色迷彩</a>を付加する特殊な橋姫。
+  <td class="ability">自分に処刑投票してきた恋人に一定確率で<a href="sub_role.php#confession">告白</a>を付加する特殊な橋姫。
   </td>
   <td>Ver. 1.4.0 β19</td>
 </tr>
@@ -1990,7 +1999,7 @@ Ver. 1.5.0
   <td><a href="human.php#human_group">村人系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">時が経つと (5 日目以降) <a href="human.php#elder">長老</a>相当の能力を得る村人。</td>
+  <td class="ability">一定期間後 (5 日目以降) <a href="human.php#elder">長老</a>相当の能力を得る村人。</td>
   <td>Ver. 1.4.0 β22</td>
 </tr>
 <tr id="ver150a1">
@@ -2500,7 +2509,7 @@ Ver. 1.5.0
   <td><a href="wolf.php#wolf_group">人狼系</a></td>
   <td>人狼</td>
   <td>人狼</td>
-  <td class="ability">一度だけ、襲撃に成功した人を噛み殺す代わりに<a href="sub_role.php#black_wisp">天火</a>を付加する人狼。</td>
+  <td class="ability">襲撃が<a href="ability.php#guard">護衛</a>で阻まれたら護衛成功者に<a href="sub_role.php#black_wisp">天火</a>を付加する人狼。</td>
   <td>Ver. 1.5.0 β7</td>
 </tr>
 <tr>
@@ -2753,7 +2762,7 @@ Ver. 1.5.0
   <td><a href="wolf.php#mad_group">狂人系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">人狼に襲撃されて死亡した場合、一度だけ即座に蘇生する特殊な狂人。</td>
+  <td class="ability">人狼に襲撃されて死亡した場合、一度だけ即座に蘇生し、襲撃してきた人狼と<a href="sub_role.php#mind_friend">共鳴者</a>になる特殊な狂人。</td>
   <td>Ver. 1.5.0 β13</td>
 </tr>
 <tr>
@@ -2868,6 +2877,150 @@ Ver. 1.5.0
   <td>人狼</td>
   <td class="ability">人狼陣営勝利に加えて、<a href="wolf.php#mad_group">狂人系</a>の全滅が勝利条件の人狼。</td>
   <td>Ver. 1.5.0 β17</td>
+</tr>
+<tr id="ver152">
+  <td><a href="wolf.php#swindle_mad">因幡兎</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#mad_group">狂人系</a></td>
+  <td>人狼</td>
+  <td>村人</td>
+  <td class="ability">占い結果が人狼、精神鑑定結果が正常と判定される特殊な狂人。</td>
+  <td>Ver. 1.5.2<br>(Ver. 2.1.0 α1)</td>
+</tr>
+<tr id="ver210a2">
+  <td><a href="human.php#eccentricer">傾奇者</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#human_group">村人系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">一定期間 (5 日目以降) になるまで処刑投票数が +1 される村人。</td>
+  <td>Ver. 2.1.0 α2</td>
+</tr>
+<tr id="ver210a3">
+  <td><a href="wolf.php#disguise_wolf">朔狼</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#wolf_group">人狼系</a></td>
+  <td>人狼</td>
+  <td>人狼</td>
+  <td class="ability">処刑投票先が<a href="wolf.php#wolf_group">人狼系</a> (種類は不問) だった場合は<a href="wolf.php#whisper_mad">囁き狂人</a>に変化する人狼。</td>
+  <td>Ver. 2.1.0 α3</td>
+</tr>
+<tr id="ver210a4">
+  <td><a href="wolf.php#decieve_wolf">欺狼</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#wolf_group">人狼系</a></td>
+  <td>人狼</td>
+  <td>人狼</td>
+  <td class="ability">襲撃に成功したら、襲撃した人の名前で自分の遺言を残すことができる人狼。</td>
+  <td>Ver. 2.1.0 α4</td>
+</tr>
+<tr id="ver210a5">
+  <td><a href="wolf.php#snow_wolf">雪狼</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#wolf_group">人狼系</a></td>
+  <td>人狼</td>
+  <td>人狼</td>
+  <td class="ability">自分に処刑投票してきた人が<a href="fox.php#child_fox_group">子狐系</a>だった場合は自分に<a href="sub_role.php#frostbite">凍傷</a>を付加してしまう人狼。</td>
+  <td>Ver. 2.1.0 α5</td>
+</tr>
+<tr>
+  <td><a href="fox.php#snow_fox">雪狐</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#fox_group">妖狐系</a></td>
+  <td>村人<br>(呪殺)</td>
+  <td>村人</td>
+  <td class="ability">自分に処刑投票してきた人が<a href="wolf.php#mad_group">狂人系</a>だった場合は自分に<a href="sub_role.php#frostbite">凍傷</a>を付加してしまう妖狐。</td>
+  <td>Ver. 2.1.0 α5</td>
+</tr>
+<tr>
+  <td><a href="wolf.php#purple_wolf">紫狼</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#wolf_group">人狼系</a></td>
+  <td>人狼</td>
+  <td>人狼</td>
+  <td class="ability">処刑投票先が<a href="fox.php">妖狐陣営</a>だった場合は自分に<a href="sub_role.php#death_warrant">死の宣告</a>を付加してしまう人狼。</td>
+  <td>Ver. 2.1.0 α5</td>
+</tr>
+<tr>
+  <td><a href="fox.php#purple_fox">紫狐</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#fox_group">妖狐系</a></td>
+  <td>村人<br>(呪殺)</td>
+  <td>村人</td>
+  <td class="ability">処刑投票先が<a href="wolf.php">人狼陣営</a>だった場合は自分に<a href="sub_role.php#death_warrant">死の宣告</a>を付加してしまう妖狐。</td>
+  <td>Ver. 2.1.0 α5</td>
+</tr>
+<tr id="ver210a6">
+  <td><a href="human.php#sweep_assassin">掃除屋</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#assassin_group">暗殺者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability"><a href="human.php#assassin_rule">暗殺しない</a>を選べない特殊な暗殺者。</td>
+  <td>Ver. 2.1.0 α6</td>
+</tr>
+<tr>
+  <td><a href="human.php#professional_assassin">仕事人</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#assassin_group">暗殺者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability"><a href="human.php">村人陣営</a>・<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐陣営</a>を暗殺できない特殊な暗殺者。</td>
+  <td>Ver. 2.1.0 α6</td>
+</tr>
+<tr>
+  <td><a href="fox.php#vindictive_fox">昼狐</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#child_fox_group">子狐系</a></td>
+  <td>村人<br>(呪殺無し)</td>
+  <td>子狐</td>
+  <td class="ability">一定日数後 (5日目以降) に<a href="fox.php#fox">妖狐</a>に変化する子狐。</td>
+  <td>Ver. 2.1.0 α6</td>
+</tr>
+<tr>
+  <td><a href="ogre.php#vajra_yaksa">金剛夜叉</a></td>
+  <td><a href="ogre.php">鬼</a></td>
+  <td><a href="ogre.php#yaksa_group">夜叉系</a></td>
+  <td>鬼</td>
+  <td>鬼</td>
+  <td class="ability">夜叉系の一種で、勝利条件は「自分自身の生存 + <a href="ability.php#revive">蘇生能力者</a>の全滅 + 村人陣営以外の勝利」。</td>
+  <td>Ver. 2.1.0 α6</td>
+</tr>
+<tr>
+  <td><a href="human.php#ascetic_assassin">修験者</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#assassin_group">暗殺者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">周囲の人が一定数死亡する毎に一定確率の<a href="ability.php#resist_wolf">人狼襲撃耐性</a>を得る特殊な暗殺者。</td>
+  <td>Ver. 2.1.0 α6</td>
+</tr>
+<tr>
+  <td><a href="wolf.php#ascetic_wolf">印狼</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#wolf_group">人狼系</a></td>
+  <td>人狼</td>
+  <td>人狼</td>
+  <td class="ability">周囲の人が一定数死亡する毎に処刑投票数が +1 される人狼。</td>
+  <td>Ver. 2.1.0 α6</td>
+</tr>
+<tr id="ver210a7">
+  <td><a href="vampire.php#poison_vampire">百々爺</a></td>
+  <td><a href="vampire.php">吸血鬼</a></td>
+  <td><a href="vampire.php#vampire_group">吸血鬼系</a></td>
+  <td>蝙蝠</td>
+  <td>蝙蝠</td>
+  <td class="ability">毒耐性を持ち、自身も毒を持つ特殊な吸血鬼。</td>
+  <td>Ver. 2.1.0 α7</td>
+</tr>
+<tr>
+  <td><a href="vampire.php#passion_vampire">牡丹灯籠</a></td>
+  <td><a href="vampire.php">吸血鬼</a></td>
+  <td><a href="vampire.php#vampire_group">吸血鬼系</a></td>
+  <td>蝙蝠</td>
+  <td>蝙蝠</td>
+  <td class="ability">吸血先に一定確率 (50%) で<a href="sub_role.php#passion">恋色迷彩</a>もつけてしまう特殊な吸血鬼。</td>
+  <td>Ver. 2.1.0 α7</td>
 </tr>
 </table>
 
@@ -3375,7 +3528,7 @@ Ver. 1.5.0
     <td><a href="sub_role.php#changed_therian">元獣人</a></td>
     <td><a href="sub_role.php#other_group">その他</a></td>
     <td>無し</td>
-    <td class="ability">人狼に変化した後の<a href="wolf.php#therian_mad">獣人</a>に付加される。</td>
+    <td class="ability"><a href="wolf.php#wolf">人狼</a>に変化した後の<a href="wolf.php#therian_mad">獣人</a>に付加される。</td>
     <td>Ver. 1.4.0 β15</td>
   </tr>
   <tr id="sub_ver140b16">
@@ -3594,6 +3747,27 @@ Ver. 1.5.0
     <td>有り</td>
     <td class="ability">昼の間だけ、高確率で発言が人狼の遠吠えに入れ替わってしまう。</td>
     <td>Ver. 1.5.0 β14</td>
+  </tr>
+  <tr id="sub_ver210a3">
+    <td><a href="sub_role.php#changed_disguise">元朔狼</a></td>
+    <td><a href="sub_role.php#other_group">その他</a></td>
+    <td>無し</td>
+    <td class="ability"><a href="wolf.php#whisper_mad">囁き狂人</a>に変化した後の<a href="wolf.php#disguise_wolf">朔狼</a>に付加される。</td>
+    <td>Ver. 2.1.0 α3</td>
+  </tr>
+  <tr>
+    <td><a href="sub_role.php#confession">告白</a></td>
+    <td><a href="sub_role.php#liar_group">狼少年系</a></td>
+    <td>無し</td>
+    <td class="ability">昼の間だけ、低確率で発言が自分の<a href="sub_role.php#lovers">恋人</a>の名前に入れ替わってしまう。</td>
+    <td>Ver. 2.1.0 α3</td>
+  </tr>
+  <tr id="sub_ver210a6">
+    <td><a href="sub_role.php#changed_vindictive">元昼狐</a></td>
+    <td><a href="sub_role.php#other_group">その他</a></td>
+    <td>無し</td>
+    <td class="ability"><a href="fox.php#fox">妖狐</a>に変化した後の<a href="fox.php#vindictive_fox">昼狐</a>に付加される。</td>
+    <td>Ver. 2.1.0 α6</td>
   </tr>
 </table>
 

@@ -1,8 +1,8 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-OutputRolePageHeader('出題者陣営');
+Loader::LoadFile('info_functions');
+InfoHTML::OutputRoleHeader('出題者陣営');
 ?>
 <p><a href="#rule">基本ルール</a></p>
 <p>
@@ -46,11 +46,12 @@ OutputRolePageHeader('出題者陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ogre.php#poison_ogre">榊鬼</a>・<a href="sub_role.php#panelist">解答者</a>・<a href="ability.php#decide">処刑者決定能力者</a>
+<a href="ogre.php#poison_ogre">榊鬼</a>・<a href="sub_role.php#panelist">解答者</a>・<a href="ability.php#decide">処刑者決定能力者</a>・<a href="ability.php#resist_poison">毒耐性能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 クイズ村以外では恋人になったほうがまだましという涙目すぎる存在ですが
 闇鍋なので全役職を出します。一回くらいは奇跡的な勝利を見てみたいですね。
 </pre>
-</body></html>
+</body>
+</html>

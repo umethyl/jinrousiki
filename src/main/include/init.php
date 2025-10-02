@@ -2,7 +2,7 @@
 //error_reporting(E_ALL);
 //-- 定数を定義 --//
 /*
-  ServerConfig->site_root を使って CSS や画像等をロードする仕様にすると
+  ServerConfig::SITE_ROOT を使って CSS や画像等をロードする仕様にすると
   ローカルに保存する場合や、ログを別のサーバに移す場合に手間がかかるので
   JINRO_ROOT で相対パスを定義して共通で使用する仕様に変更しました。
   絶対パスが返る dirname() を使ったパスの定義を行わないで下さい。
@@ -20,158 +20,138 @@ define('JINRO_MOD',  JINRO_ROOT . '/module');
   確実に読み込まれているデータを入れる必要はない。
   逆にコード上必須ではないが常にセットで使われるデータを入れると良い。
 */
-class InitializeConfig{
-  public $path; //パス情報格納変数
-  public $loaded; //ロード情報格納変数
+class Loader {
+  const PATH = '%s/%s.php';
+  static $file  = array(); //ロード済みファイル
+  static $class = array(); //ロード済みクラス
 
   //依存ファイル情報 (読み込むデータ => 依存するファイル)
-  public $depend_file = array(
-    'DB_CONF'             => 'database_config', //常時ロードされる
-    'SERVER_CONF'         => 'server_config', //常時ロードされる
-    'ROOM_CONF'           => 'room_config',
-    'GAME_CONF'           => 'game_config',
-    'GAME_OPT_CONF'       => 'game_option_config',
-    'TIME_CONF'           => 'time_config',
-    'ICON_CONF'           => 'icon_config',
-    'ROOM_IMG'            => 'system_class',
-    'ROLE_IMG'            => 'system_class',
-    'SOUND'               => 'sound_config',
-    'CAST_CONF'           => 'cast_config',
-    'USER_ICON'           => 'user_icon_config',
-    'ROOM_OPT'            => array('option/room_option_class', 'option/room_option_item_class'),
-    'MESSAGE'             => 'message',
-    'GAME_OPT_MESS'       => 'message',
-    'WINNER_MESS'         => 'message',
-    'VOTE_MESS'           => 'message',
-    'TWITTER'             => array('twitter_config', 'twitter'),
-    'SCRIPT_INFO'         => 'version',
-    'RQ_ARGS'             => 'request_class',
-    'ROLES'               => 'role_class',
-    'TIME_CALC'           => 'info_functions',
-    'SHARED_CONF'         => array('shared_server_config', 'info_functions'),
-    'COPYRIGHT'           => array('copyright_config', 'info_functions'),
-    'MENU_LINK'           => array('menu_config', 'index_functions'),
-    'SHARED_CONF'         => array('shared_server_config', 'info_functions'),
-    'BBS_CONF'            => 'bbs_config',
-    'PAPARAZZI'           => 'paparazzi_class',
-    'talk_class'          => 'user_class',
-    'game_play_functions' => 'user_class',
-    'game_vote_functions' => 'game_functions',
-    'oldlog_functions'    => 'oldlog_config',
-    'user_class'          => 'game_functions',
-    'database_config'     => 'system_class',
-    'server_config'       => 'system_class', //常時ロードされる
-    'system_class'        => array('functions', 'room_class'), //常時ロードされる
-    'room_class'          => 'option_class',
-    'role_class'          => 'game_format',
-    'paparazzi_class'     => 'paparazzi'
+  static $depend_file = array(
+    'PAPARAZZI'            => 'paparazzi_class',
+    'InfoTime'             => array('room_config', 'time_config', 'game_config', 'cast_config',
+				    'role_data_class', 'image_class', 'info_functions'),
+    'server_config'        => array('system_class', 'functions'), //常時ロードされる
+    'chaos_config'         => 'cast_config',
+    'shared_server_config' => 'info_functions',
+    'copyright_config'     => array('version', 'info_functions'),
+    'database_class'       => 'database_config',
+    'system_class'         => 'room_class', //常時ロードされる
+    'room_class'           => 'option_class',
+    'room_option_class'    => array('room_config', 'time_config', 'game_config',
+				    'game_option_config', 'option_class', 'room_option_item_class'),
+    'option_form_class'    => 'room_option_class',
+    'user_class'           => array('role_data_class', 'game_functions'),
+    'talk_class'           => array('game_config', 'message', 'user_class', 'role_class'),
+    'icon_class'           => 'icon_config',
+    'user_icon_class'      => 'user_icon_config',
+    'sound_class'          => 'sound_config',
+    'cookie_class'         => 'sound_class',
+    'twitter_class'        => array('twitter_config', 'twitter'),
+    'rss_class'            => array('image_class', 'room_option_class', 'feedengine',
+				    'site_summary'),
+    'test_class'           => array('room_config', 'user_class', 'icon_class', 'role_class',
+				    'game_vote_functions', 'test_functions'),
+    'paparazzi_class'      => 'paparazzi',
+    'room_manager_class'   => array('image_class', 'room_option_class'),
+    'login_class'          => 'session_class',
+    'game_view_class'      => array('talk_class', 'icon_class'),
+    'game_play_class'      => array('time_config', 'session_class', 'image_class', 'talk_class',
+				    'icon_class'),
+    'game_vote_class'      => array('session_class', 'room_option_class', 'user_class',
+				    'icon_class', 'role_class', 'game_vote_functions'),
+    'game_log_class'       => array('session_class', 'talk_class'),
+    'old_log_class'        => 'old_log_functions',
+    'user_manager_class'   => array('room_config', 'game_config', 'message', 'session_class',
+				    'room_class', 'user_class', 'icon_functions'),
+    'icon_view_class'      => array('session_class', 'icon_functions'),
+    'icon_edit_class'      => 'icon_functions',
+    'icon_upload_class'    => array('session_class', 'icon_functions'),
+    'setup_class'          => array('setup_config', 'version', 'database_class'),
+    'index_functions'      => array('menu_config', 'bbs_config', 'version', 'option_form_class'),
+    'game_vote_functions'  => array('game_config', 'message', 'game_functions'),
+    'icon_functions'       => array('icon_class', 'user_icon_class'),
+    'old_log_functions'    => array('old_log_config', 'cast_config', 'image_class',
+				    'room_option_class'),
   );
 
   //依存クラス情報 (読み込むデータ => 依存するクラス)
-  public $depend_class = array(
-    'ROOM_OPT'            => array('ROOM_CONF', 'TIME_CONF', 'GAME_OPT_CONF'),
-    'GAME_OPT_CAPT'       => 'GAME_OPT_MESS',
-    'TIME_CALC'           => array('ROOM_CONF', 'GAME_CONF', 'TIME_CONF', 'ROOM_IMG',
-				   'CAST_CONF', 'ROLE_DATA'),
-    'COPYRIGHT'           => 'SCRIPT_INFO',
-    'game_play_functions' => 'ROLE_IMG',
-    'user_class'          => array('GAME_CONF', 'ROLE_DATA', 'MESSAGE'),
-    'icon_functions'      => array('ICON_CONF', 'USER_ICON'),
-    'index_functions'     => array('SCRIPT_INFO', 'BBS_CONF'),
-    'oldlog_functions'    => array('CAST_CONF', 'ROOM_IMG', 'ROOM_OPT', 'GAME_OPT_MESS'),
+  static $depend_class = array(
+    //'talk_class' => 'ROLES',
   );
 
   //クラス名情報 (グローバル変数名 => 読み込むクラス)
-  public $class_list = array(
-    'DB_CONF'       => 'DatabaseConfig',
-    'SERVER_CONF'   => 'ServerConfig',
-    'SHARED_CONF'   => 'SharedServerConfig',
-    'USER_ICON'     => 'UserIconConfig',
-    'MENU_LINK'     => 'MenuLinkBuilder',
-    'BBS_CONF'      => 'BBSConfig',
-    'COPYRIGHT'     => 'CopyrightConfig',
-    'SCRIPT_INFO'   => 'ScriptInfo',
-    'SESSION'       => 'Session',
-    'ROOM_CONF'     => 'RoomConfig',
-    'GAME_CONF'     => 'GameConfig',
-    'ROLE_DATA'     => 'RoleData',
-    'CAST_CONF'     => 'CastConfig',
-    'TIME_CONF'     => 'TimeConfig',
-    'ICON_CONF'     => 'IconConfig',
-    'ROOM_IMG'      => 'RoomImage',
-    'ROLE_IMG'      => 'RoleImage',
-    'SOUND'         => 'SoundConfig',
-    'COOKIE'        => 'CookieDataSet',
-    'MESSAGE'       => 'Message',
-    'ROOM_OPT'      => 'RoomOption',
-    'GAME_OPT_CONF' => 'GameOptionConfig',
-    'GAME_OPT_MESS' => 'GameOptionMessage',
-    'GAME_OPT_CAPT' => 'GameOptionCaptionMessage',
-    'WINNER_MESS'   => 'WinnerMessage',
-    'VOTE_MESS'     => 'VoteMessage',
-    'RQ_ARGS'       => 'RequestBase',
-    'ROLES'         => 'RoleManager',
-    'TIME_CALC'     => 'TimeCalculation',
-    'TWITTER'       => 'TwitterConfig',
-    'PAPARAZZI'     => 'Paparazzi'
+  static $class_list = array(
+    'PAPARAZZI' => 'Paparazzi'
   );
 
-  function __construct(){
-    $this->path = new StdClass();
-    $this->path->root    = JINRO_ROOT;
-    $this->path->config  = JINRO_CONF;
-    $this->path->include = JINRO_INC;
-    $this->path->module  = JINRO_MOD;
-    $this->loaded = new StdClass();
-    $this->loaded->file  = array();
-    $this->loaded->class = array();
-  }
-
-  //依存情報設定
-  protected function SetDepend($type, $name, $depend){
-    if (is_null($this->$type)) return false;
-    $this->{$type}[$name] = $depend;
-    return true;
-  }
-
-  //依存クラス情報設定 ＆ ロード
-  protected function SetClass($name, $class){
-    if (! $this->SetDepend('class_list', $name, $class)) return false;
-    $this->LoadClass($name);
-    return true;
-  }
-
-  //依存解決処理
-  protected function LoadDependence($name){
-    if (array_key_exists($name, $this->depend_file)) $this->LoadFile($this->depend_file[$name]);
-    if (array_key_exists($name, $this->depend_class)) $this->LoadClass($this->depend_class[$name]);
-  }
-
   //ファイルロード
-  function LoadFile($name){
+  static function LoadFile($name) {
     $name_list = func_get_args();
     if (is_array($name_list[0])) $name_list = $name_list[0];
     if (count($name_list) > 1) {
-      foreach ($name_list as $name) $this->LoadFile($name);
-      return;
+      foreach ($name_list as $name) self::LoadFile($name);
+      return true;
     }
 
-    if (is_null($name) || in_array($name, $this->loaded->file)) return false;
-    $this->LoadDependence($name);
+    if (is_null($name) || in_array($name, self::$file)) return false;
+    self::LoadDependence($name);
 
+    require_once(self::GetPath($name));
+    self::$file[] = $name;
+    return true;
+  }
+
+  //クラスロード
+  static function LoadClass($name) {
+    $name_list = func_get_args();
+    if (is_array($name_list[0])) $name_list = $name_list[0];
+    if (count($name_list) > 1) {
+      foreach ($name_list as $name) self::LoadClass($name);
+      return true;
+    }
+
+    if (is_null($name) || in_array($name, self::$class)) return false;
+    self::LoadDependence($name);
+
+    if (is_null($class_name = self::$class_list[$name])) {
+      $class_name = $name;
+      new $class_name();
+    }
+    else {
+      $GLOBALS[$name] = new $class_name();
+    }
+    self::$class[] = $class_name;
+    return true;
+  }
+
+  //リクエストクラスロード
+  static function LoadRequest($class = null, $load = false) {
+    if ($load) self::LoadFile('game_config');
+    self::LoadFile('request_class');
+    return RQ::Load($class);
+  }
+
+  //ファイルロード済み判定
+  static function IsLoaded($file) { return in_array($file, self::$file); }
+
+  //ファイルパス取得
+  private function GetPath($name) {
     switch ($name) {
     case 'copyright_config':
     case 'version':
-      $path = $this->path->config . '/system';
+      $path = JINRO_CONF . '/system';
       break;
 
     case 'game_config':
     case 'cast_config':
+    case 'chaos_config':
     case 'message':
+    case 'vote_message':
+    case 'winner_message':
     case 'time_config':
     case 'icon_config':
     case 'sound_config':
-      $path = $this->path->config . '/game';
+      $path = JINRO_CONF . '/game';
       break;
 
     case 'database_config':
@@ -181,69 +161,67 @@ class InitializeConfig{
     case 'user_icon_config':
     case 'menu_config':
     case 'bbs_config':
-    case 'twitter_config':
+    case 'old_log_config':
     case 'shared_server_config':
-    case 'oldlog_config':
-      $path = $this->path->config . '/server';
+    case 'src_upload_config':
+    case 'twitter_config':
+    case 'setup_config':
+      $path = JINRO_CONF . '/server';
       break;
 
     case 'mb-emulator':
     case 'twitter':
-      $path = $this->path->module . '/' . $name;
+      $path = JINRO_MOD . '/' . $name;
+      break;
+
+    case 'role_class':
+    case 'role_data_class':
+    case 'chatengine':
+    case 'paparazzi':
+    case 'paparazzi_class':
+    case 'test_class':
+    case 'test_functions':
+      $path = JINRO_INC . '/' . @array_shift(explode('_', $name));
       break;
 
     case 'option_class':
-    case 'role_class':
-    case 'chatengine':
+    case 'option_form_class':
+    case 'room_option_class':
+    case 'room_option_item_class':
+      $path = JINRO_INC . '/option';
+      break;
+
+    case 'rss_class':
     case 'feedengine':
-    case 'paparazzi':
-    case 'paparazzi_class':
-      $path = $this->path->include . '/' . @array_shift(explode('_', $name));
+    case 'site_summary':
+      $path = JINRO_INC . '/feedengine';
       break;
 
     default:
-      $path = $this->path->include;
+      $path = JINRO_INC;
       break;
     }
 
-    require_once($path . '/' . $name . '.php');
-    $this->loaded->file[] = $name;
-    return true;
+    return sprintf(self::PATH, $path, $name);
   }
 
-  function LoadClass($name){
-    $name_list = func_get_args();
-    if (is_array($name_list[0])) $name_list = $name_list[0];
-    if (count($name_list) > 1) {
-      foreach($name_list as $name) $this->LoadClass($name);
-      return;
-    }
-
-    if (is_null($name) || in_array($name, $this->loaded->class)) return false;
-    $this->LoadDependence($name);
-
-    if (is_null($class_name = $this->class_list[$name])) return false;
-    $GLOBALS[$name] = new $class_name();
-    $this->loaded->class[] = $name;
-    return true;
+  //依存解決処理
+  private function LoadDependence($name) {
+    if (array_key_exists($name, self::$depend_file))  self::LoadFile(self::$depend_file[$name]);
+    if (array_key_exists($name, self::$depend_class)) self::LoadClass(self::$depend_class[$name]);
   }
-
-  function LoadRequest($class = null){ return $this->SetClass('RQ_ARGS', $class); }
 }
 
 //-- 初期化処理 --//
-$INIT_CONF = new InitializeConfig();
+Loader::LoadFile('database_class', 'server_config');
 
 //mbstring 非対応の場合、エミュレータを使用する
-if (! extension_loaded('mbstring')) $INIT_CONF->LoadFile('mb-emulator');
+if (! extension_loaded('mbstring')) Loader::LoadFile('mb-emulator');
 
-$INIT_CONF->LoadClass('DB_CONF', 'SERVER_CONF');
-if (FindDangerValue($_REQUEST) || FindDangerValue($_SERVER)) die;
+if (Security::CheckValue($_REQUEST) || Security::CheckValue($_SERVER)) die;
 
 //デバッグ用ツールをロード
-$SERVER_CONF->debug_mode ? $INIT_CONF->LoadClass('PAPARAZZI') : $INIT_CONF->LoadFile('paparazzi');
-
-//PrintData($INIT_CONF); //テスト用
+ServerConfig::DEBUG_MODE ? Loader::LoadClass('PAPARAZZI') : Loader::LoadFile('paparazzi');
 
 //-- スクリプト群の文字コード --//
 /*
@@ -255,13 +233,13 @@ $SERVER_CONF->debug_mode ? $INIT_CONF->LoadClass('PAPARAZZI') : $INIT_CONF->Load
 //-- マルチバイト入出力指定 --//
 if (extension_loaded('mbstring')) {
   mb_language('ja');
-  mb_internal_encoding($SERVER_CONF->encode);
+  mb_internal_encoding(ServerConfig::ENCODE);
   mb_http_input('auto');
-  mb_http_output($SERVER_CONF->encode);
+  mb_http_output(ServerConfig::ENCODE);
 }
 
 //-- ヘッダ強制指定 --//
-if ($SERVER_CONF->set_header_encode && ! headers_sent()) { //ヘッダ未送信時にセットする
-  header("Content-type: text/html; charset={$SERVER_CONF->encode}");
+if (ServerConfig::SET_HEADER_ENCODE && ! headers_sent()) { //ヘッダ未送信時にセットする
+  header(sprintf('Content-type: text/html; charset=%s', ServerConfig::ENCODE));
   header('Content-Language: ja');
 }

@@ -1,36 +1,10 @@
 <?php
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-$INIT_CONF->LoadClass('TIME_CALC', 'USER_ICON', 'MESSAGE', 'GAME_OPT_MESS');
-
-//-- 関数定義 --//
-//村の最大人数設定出力
-function OutputMaxUser(){
-  global $ROOM_CONF, $CAST_CONF;
-
-  $str = '[ ' . implode('人・', $ROOM_CONF->max_user_list);
-  $min_user = min(array_keys($CAST_CONF->role_list));
-  $str .= '人 ] のどれかを村に登録できる村人の最大人数として設定することができます。<br>';
-  $str .= "ただしゲームを開始するには最低 [ {$min_user}人 ] の村人が必要です。";
-  echo $str;
-}
-
-//身代わり君がなれない役職のリスト出力
-function OutputDisableDummyBoyRole(){
-  global $ROLE_DATA, $CAST_CONF;
-
-  $stack = array('人狼', '妖狐');
-  foreach ($CAST_CONF->disable_dummy_boy_role_list as $role) {
-    $stack[] = $ROLE_DATA->main_role_list[$role];
-  }
-  echo implode($stack, '・');
-}
-
-//-- 表示 --//
-OutputInfoPageHeader('仕様', 0, 'script_info');
+Loader::LoadFile('message', 'user_icon_class', 'room_option_class');
+Loader::LoadClass('InfoTime');
+InfoHTML::OutputHeader('仕様', 0, 'script_info');
 ?>
-<script type="text/javascript" src="../javascript/output_diff_time.js"></script>
 <img src="../img/script_info_title.jpg" title="スクリプトの仕様" alt="スクリプトの仕様">
 <ul>
   <li><a href="#environment">ゲームに参加するために必要な環境</a></li>
@@ -74,6 +48,8 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
   <li><a href="#difference_night_talk">夜の独り言</a></li>
   <li><a href="#difference_auto_reload">自動リロード</a></li>
   <li><a href="#difference_sound">音でお知らせ</a></li>
+  <li><a href="#difference_icon_view">アイコン表示</a></li>
+  <li><a href="#difference_name_view">ユーザ名表示</a></li>
   <li><a href="#difference_objection">異議ありボタン</a></li>
   <li><a href="#difference_last_words">遺言</a></li>
   <li><a href="#difference_max_user">村の最大人数を制限できます</a></li>
@@ -98,14 +74,14 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 <div>
 このスクリプトではゲームマスターは居ません、村を作成した人は改めて住民登録をしてゲームにご参加ください。<br>
 ゲームを開始するにはプレイヤー全員が「ゲームの開始」に投票する必要があります。<br>
-ゲーム中の仮想時間 (昼12時間、夜6時間) を経過した後に [ <?php echo $TIME_CALC->sudden_death ?> ] 経過すると投票していない人は自動で突然死となります。<br>
+ゲーム中の仮想時間 (昼12時間、夜6時間) を経過した後に [ <?php echo InfoTime::$sudden_death; ?> ] 経過すると投票していない人は自動で突然死となります。<br>
 突然死が発生するとその日の投票がリセットされて再投票となります、注意してください。
 </div>
 
 <h3 id="difference_icon">ユーザの似顔絵などを表すユーザアイコンを自由にアップロードできます</h3>
 <div>
-<a href="../icon_upload.php" target="_top">専用のページ</a>から [ <?php echo $USER_ICON->MaxIconSize() . '、容量 ' . $USER_ICON->MaxFileSize() ?> ] のファイルをアップロードできます。<br>
-登録数の上限は [ <?php echo $USER_ICON->number ?>個 ] です。
+<a href="../icon_upload.php" target="_top">専用のページ</a>から [ <?php printf('%s、容量 %s', UserIcon::GetSizeLimit(), UserIcon::GetFileLimit()); ?> ] のファイルをアップロードできます。<br>
+登録数の上限は [ <?php printf('%d個', UserIconConfig::NUMBER); ?> ] です。
 </div>
 
 <h3 id="difference_message">システムメッセージを画像に</h3>
@@ -118,13 +94,13 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 <div>
 再投票が何度も続くとゲームが進まなくなります。<br>
 この場合、やむを得ず引き分けとすることが必要です。<br>
-[ <?php echo $GAME_CONF->draw ?>回 ] 再投票が続いた場合は自動的に引き分けとなり、ゲームは終了します。
+[ <?php printf('%d回', GameConfig::DRAW); ?> ] 再投票が続いた場合は自動的に引き分けとなり、ゲームは終了します。
 </div>
 
 <h3 id="difference_deadman">死亡者の順序がランダム表示</h3>
 <div>
-人狼に襲われて死亡した場合、妖狐が占われて死亡した場合、埋毒者に道連れにされた場合、表示されるメッセージは「～<?php echo $MESSAGE->deadman ?>」となります。<br>
-また、恋人が後追いした場合、表示されるメッセージは「～<?php echo $MESSAGE->lovers_followed ?>」となります。<br>
+<a href="rule.php#rule_role_wolf">人狼</a>に襲われて死亡した場合、<a href="rule.php#rule_role_fox">妖狐</a>が占われて死亡した場合、<a href="rule.php#rule_role_poison">埋毒者</a>に道連れにされた場合、表示されるメッセージは [ ～<?php echo Message::$deadman; ?> ] となります。<br>
+また、<a href="rule.php#rule_role_lovers">恋人</a>が後追いした場合、表示されるメッセージは [ ～<?php echo Message::$lovers_followed; ?> ] となります。<br>
 表示される順番ですが、どの死に方をした人が上に表示されるということはなく順序がランダムに表示されます。<br>
 注意しなければいけないことはリロードするたびにランダムに順序が変更されるということです。
 </div>
@@ -137,38 +113,38 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 
 <h3 id="difference_ability_result">占い師、霊能者の結果は次の日の朝に出る</h3>
 <div>
-占い師は夜に占いますが、占った直後に結果がわかるのではなく次の日の朝に結果が表示されます。<br>
-霊能者も処刑した日の夜にわかるのではなく、次の日の朝に結果が表示されます。
+<a href="rule.php#rule_role_mage">占い師</a>は夜に占いますが、占った直後に結果がわかるのではなく次の日の朝に結果が表示されます。<br>
+<a href="rule.php#rule_role_necromancer">霊能者</a>も処刑した日の夜にわかるのではなく、次の日の朝に結果が表示されます。
 </div>
 
 <h3 id="difference_ability_cancel">同日の夜に占い師が妖狐を占い、人狼がその占い師を襲った場合は占い無効</h3>
 <div>
-通常占い師が妖狐を占うと占われた妖狐は死んでしまいますが、同日に人狼がその占い師を襲うと占いは失敗となり妖狐は死なずに済みます。<br>
-勝率の低い妖狐のバランスを取るためにこのようになっています。
+通常占い師が<a href="rule.php#rule_role_fox">妖狐</a>を占うと占われた<a href="rule.php#rule_role_fox">妖狐</a>は死んでしまいますが、同日に<a href="rule.php#rule_role_wolf">人狼</a>がその<a href="rule.php#rule_role_mage">占い師</a>を襲うと占いは失敗となり<a href="rule.php#rule_role_fox">妖狐</a>は死なずに済みます。<br>
+勝率の低い<a href="rule.php#rule_role_fox">妖狐</a>のバランスを取るためにこのようになっています。
 </div>
 
 <h3 id="difference_poison_vote">埋毒者を吊った際に巻き添えにする対象を限定可能 [Ver. 1.3.1～ / Ver. 1.4.0 α12～]</h3>
 <div>
-サーバ管理者がゲーム設定を変更する事で埋毒者を吊った際に巻き添えにする対象を限定する事が可能です。<br>
-現在の設定は [ <?php echo ($GAME_CONF->poison_only_voter ? '投票者' : '生存者全員') ?>からランダム ] です。
+サーバ管理者がゲーム設定を変更する事で<a href="rule.php#rule_role_poison">埋毒者</a>を処刑した際に巻き添えにする対象を限定する事が可能です。<br>
+現在の設定は [ <?php printf('%sからランダム', GameConfig::POISON_ONLY_VOTER ? '投票者' : '生存者全員'); ?> ] です。
 </div>
 
 <h3 id="difference_poison_eat">人狼が埋毒者を襲撃した際に巻き添えになる対象を限定可能 [Ver. 1.3.0～]</h3>
 <div>
-サーバ管理者がゲーム設定を変更する事で人狼が埋毒者を襲撃した際に巻き添えになる対象を限定する事が可能です。<br>
-現在の設定は [ <?php echo ($GAME_CONF->poison_only_eater ? '襲撃者固定' : '人狼全員からランダム') ?> ] です。
+サーバ管理者がゲーム設定を変更する事で<a href="rule.php#rule_role_wolf">人狼</a>が<a href="rule.php#rule_role_poison">埋毒者</a>を襲撃した際に巻き添えになる対象を限定する事が可能です。<br>
+現在の設定は [ <?php echo GameConfig::POISON_ONLY_EATER ? '襲撃者固定' : '<a href="rule.php#rule_role_wolf">人狼</a>全員からランダム'; ?> ] です。
 </div>
 
 <h3 id="difference_common_talk">共有者の夜の会話が可能になりました</h3>
 <div>
-共有者に新しい能力が増え、夜中に共有者同士で会話することができます。<br>
+<a href="rule.php#rule_role_common">共有者</a>に新しい能力が増え、夜中に<a href="rule.php#rule_role_common">共有者</a>同士で会話することができます。<br>
 この会話は非リアルタイム制の場合の会話による時間消費には加算されません。
 </div>
 
 <h3 id="difference_night_talk">夜の独り言</h3>
 <div>
-人狼、共有者以外は夜中会話することは出来ませんが、発言すると独り言となり、本人と死亡者(天国モード)からは見ることができます。<br>
-ただし、「<a href="game_option.php#not_open_cast"><?php echo $GAME_OPT_MESS->not_open_cast ?></a>」オプションが設定されている場合は見えません。<br>
+<a href="rule.php#rule_role_wolf">人狼</a>、<a href="rule.php#rule_role_common">共有者</a>以外は夜中会話することは出来ませんが、発言すると独り言となり、本人と死亡者(天国モード)からは見ることができます。<br>
+ただし、「<a href="game_option.php#not_open_cast"><?php OptionManager::OutputCaption('not_open_cast'); ?></a>」オプションが設定されている場合は見えません。<br>
 暇つぶしにでも使ってください。
 </div>
 
@@ -177,9 +153,9 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 
 <h3 id="difference_sound">音でお知らせ</h3>
 <div>
-「音でお知らせ」をOnにすると、「ゲーム開始前で人数が変動した時」「ゲーム開始前で満員になった時」<br>
+「音」を ON にすると、「ゲーム開始前で人数が変動した時」「ゲーム開始前で満員になった時」<br>
 「夜が明けた時」「再投票になった時」「未投票者への告知 (超過時間経過1分毎)」<br>
-「未投票者への警告 (超過時間残り [ <?php echo $TIME_CALC->alert ?> ] より、[ <?php echo $TIME_CALC->alert_distance ?> ] 毎) 」「異議ありの時」に音でお知らせしてくれます。<br>
+「未投票者への警告 (超過時間残り [ <?php echo InfoTime::$alert; ?> ] より、[ <?php echo InfoTime::$alert_distance; ?> ] 毎) 」「異議ありの時」に音でお知らせしてくれます。<br>
 「異議あり」については<a href="#difference_objection">別項目</a>で説明します。
 </div>
 <h4>Ver. 1.4.14～ / Ver. 1.5.0 ～</h4>
@@ -191,25 +167,35 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 「ゲーム開始前で人数が変動した時」「ゲーム開始前で満員になった時」にも音が鳴ります。
 </div>
 
+<h3 id="difference_icon_view">アイコン表示 [Ver. 2.1.0 β1～]</h3>
+<div>
+「アイコン」を ON にすると、発言の横にアイコンが表示されるようになります。
+</div>
+
+<h3 id="difference_name_view">ユーザ名表示 [Ver. 2.1.0 β2～]</h3>
+<div>
+「名前」を ON にすると、発言の横にユーザ情報が表示されるようになります (ゲーム終了後限定)。
+</div>
+
 <h3 id="difference_objection">異議ありボタン</h3>
 <div>
 ゲーム前、ゲーム中の昼に右上に「異議あり」のボタンがあります。<br>
 このボタンを押すと特殊なメッセージと音で皆に知らせることができます。<br>
 ボタンに右にカッコ内で表示されている数字は残り回数です。<br>
-[ <?php echo $GAME_CONF->objection ?> 回 ] 「異議あり」を使用すると二度と使えなくなります。
+[ <?php printf('%d回', GameConfig::OBJECTION); ?> ] 「異議あり」を使用すると二度と使えなくなります。
 </div>
 
 <h3 id="difference_last_words">遺言</h3>
 <div>
-処刑されたり、人狼に襲われたり、占い殺されたりしたときにあらかじめ設定しておいた遺言が次の日の朝に公開されます。<br>
+処刑されたり、<a href="rule.php#rule_role_wolf">人狼</a>に襲われたり、占い殺されたりしたときにあらかじめ設定しておいた遺言が次の日の朝に公開されます。<br>
 これは昼の会議中になんとなく言えなかったことや自分の考えをまとめたものを書いておくことで、もしもの時に効果を発揮します。<br>
 遺言でさらなる情報を得て、推理の材料にしてください。<br>
-設定方法は発言の文字の大きさ(強く発言する・通常どおり発言する・弱く発言する)の欄の一番下に「遺言を残す」という項目があります。<br>
+設定方法は発言の文字の大きさ (強く発言する・通常どおり発言する・弱く発言する) の欄の一番下に「遺言を残す」という項目があります。<br>
 この項目を選択して文章を送信すれば遺言がセットされます。<br>
 「半角スペース一つ」のみを遺言にセットすることで遺言を消去できます。<br>
 死亡後は遺言のセットはできません。<br>
-サーバ管理者が設定することで遺言の設定をゲーム開始前に限定できます。<br>
-現在の設定は [ 遺言制限<?php echo ($GAME_CONF->limit_last_words ? 'あり' : 'なし') ?> ] です。
+サーバ管理者が設定することで遺言の設定をゲーム開始前の限定できます。<br>
+現在の設定は [ <?php printf('遺言制限%s', GameConfig::LIMIT_LAST_WORDS ? 'あり' : 'なし'); ?> ] です。
 </div>
 <h4>Ver. 2.0.0 RC1～</h4>
 <div>
@@ -222,56 +208,54 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 
 <h3 id="difference_max_user">村の最大人数を制限できます</h3>
 <div>
-<?php OutputMaxUser() ?>
+<?php Info::OutputMaxUser(); ?>
 </div>
 
 <h3 id="difference_active_room">同時稼働できる村の数 [Ver. 1.4.0 α19～]</h3>
 <div>
 サーバ負荷の調整のため、同時稼働できる村の数をサーバ管理者が設定できます。<br>
-現在の設定は [ <?php echo $ROOM_CONF->max_active_room ?>村 ] までです。
+現在の設定は [ <?php printf('%d村', RoomConfig::MAX_ACTIVE_ROOM); ?> ] までです。
 </div>
 
 <h3 id="difference_establish_wait">次の村を立てられるまでの待ち時間 [Ver. 1.4.0 β1～]</h3>
 <div>
 打ち合わせミスや、リロードによる多重村立て事故を防ぐため、一つの村が立ってから次の村を立てられるまでの待ち時間をサーバ管理者が設定できます。<br>
-現在の設定は [ <?php echo $TIME_CALC->establish_wait ?> ] です。
+現在の設定は [ <?php echo InfoTime::$establish_wait; ?> ] です。
 </div>
 
 <h3 id="difference_ip">同じ村には同じ IP アドレスで複数登録することはできません</h3>
 <div>
 多重登録を防ぐために同じ村に同じ IP アドレスで複数登録することはできません。<br>
 この機能はスクリプトの設定で有効、無効を設定することができます。<br>
-一つのグローバル IP アドレスでルータを用いて複数の人が参加したい場合は管理人さんに相談してください。<br>
-現在の設定は [ 登録<?php echo ($GAME_CONF->entry_one_ip_address ? "不可" : "可能") ?> ] になっています。
+一つのグローバル IP アドレスでルータを用いて複数の人が参加したい場合はサーバ管理者に相談してください。<br>
+現在の設定は [ <?php printf('登録%s', GameConfig::LIMIT_IP ? '不可' : '可能'); ?> ] になっています。
 </div>
 
 <h3 id="difference_die_room">自動廃村</h3>
 <div>
-ゲームが開始されない場合、最後に発言された時間から [ <?php echo $TIME_CALC->die_room ?> ] 放置されると自動で村は廃墟になります。<br>
-手動で廃村にする方法はありません、連絡用の掲示板やゲーム内の発言で村に登録しないように促してください。
+ゲームが開始されない場合、最後に発言された時間から [ <?php echo InfoTime::$die_room; ?> ] 放置されると自動で村は廃墟になります。<br>
+手動で廃村にする方法はありません。連絡用の掲示板やゲーム内の発言で村に登録しないように促してください。
 </div>
 
 <h3 id="difference_fox">妖狐は15人以上で常に登場</h3>
 <div>
-妖狐が登場しない村が少ないようでしたので、常に登場するようにしました。
+<a href="rule.php#rule_role_fox">妖狐</a>が登場しない村が少ないようでしたので、常に登場するようにしました。
 </div>
 
 <h3 id="difference_dummy_boy">初日の夜は身代わり君</h3>
 <div>
-初日の夜に一度も発言することなく人狼に襲われて、ゲームに参加したとはいえない！と思ったことはありませんか？<br>
-村を作成するときに「<a href="game_option.php#dummy_boy">初日の夜は身代わり君</a>」にチェックを入れると初日の夜、人狼は身代わり君しか襲えないようになります。<br>
+初日の夜に一度も発言することなく<a href="rule.php#rule_role_wolf">人狼</a>に襲われて、ゲームに参加したとは言えない！と思ったことはありませんか？<br>
+村を作成するときに「<a href="game_option.php#dummy_boy">初日の夜は身代わり君</a>」にチェックを入れると初日の夜、<a href="rule.php#rule_role_wolf">人狼</a>は身代わり君しか襲えないようになります。<br>
 身代わり君はプレイヤーが操作するのではなく、初日に襲われる為だけに存在します。<br>
-割り当てられる役割は [ <?php OutputDisableDummyBoyRole() ?> ] 以外のどれかランダムに設定されます。
+割り当てられる役割は [ <?php Info::OutputDisableDummyBoyRole(); ?> ] 以外のどれかランダムに設定されます。
 </div>
 
 <h3 id="difference_real_time">リアルタイム制オプション</h3>
 <div>
-村を作成するときに「<a href="game_option.php#real_time">リアルタイム制</a>」にチェックを入れると、ゲーム中の仮想時間 (昼12時間、夜6時間) が発言により消費されるのではなく固定された実時間で消費されていきます。<br>
+村を作成するときに「<a href="game_option.php#real_time">リアルタイム制</a>」にチェックを入れると、ゲーム中の仮想時間 (昼12時間、夜6時間) が発言により消費されるのではなく、固定された実時間で消費されていきます。<br>
 設定される時間は村を作成する人が決定することができます
-(デフォルト 昼： [ <?php echo $TIME_CONF->default_day ?>分 ]　夜： [ <?php echo $TIME_CONF->default_night ?>分 ])。<br>
-その村に設定された制限時間を知るには、ゲーム一覧のゲームオプションアイコン、リアルタイム制用 <?php echo
-$ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->default_day .
-		    '分　夜： ' . $TIME_CONF->default_night . '分') ?> にマウスポインタを合わせることで表示されます。
+(デフォルト 昼： [ <?php printf('%d分', TimeConfig::DEFAULT_DAY); ?> ]　夜： [ <?php printf('%d分', TimeConfig::DEFAULT_NIGHT); ?> ])。<br>
+その村に設定された制限時間を知るには、ゲーム一覧のゲームオプションアイコン、リアルタイム制 <?php Info::OutputRealTime(); ?> にマウスポインタを合わせることで表示されます。
 </div>
 <h4>Ver. 1.4.0 β4～</h4>
 <div>
@@ -280,19 +264,19 @@ PC の時計をサーバと合わせる必要がなくなりました。
 
 <h3 id="difference_spend_time">非リアルタイム制の会話の時間消費の上限</h3>
 <div>
-半角100文字 (全角50文字) で 昼： [ <?php echo $TIME_CALC->spend_day ?> ] 夜：[ <?php echo $TIME_CALC->spend_night ?> ] ずつ消費されていきますが、どれだけ文字が増えても最大半角400文字 (全角200文字) までの消費時間までしか増えません。<br>
+半角100文字 (全角50文字) で 昼： [ <?php echo InfoTime::$spend_day; ?> ] 夜：[ <?php echo InfoTime::$spend_night; ?> ] ずつ消費されていきますが、どれだけ文字が増えても最大半角400文字 (全角200文字) までの消費時間までしか増えません。<br>
 半角400文字以上で発言しても消費される時間は半角400文字分と同じです。
 </div>
 
 <h3 id="difference_silence">強制沈黙</h3>
 <div>
-非リアルタイム制の場合、誰も発言をせず [ <?php echo $TIME_CALC->silence ?> ] 過ぎた場合には強制的に沈黙となり時間が消費されます。<br>
-消費される時間は 昼： [ <?php echo $TIME_CALC->silence_day ?> ] 夜： [ <?php echo $TIME_CALC->silence_night ?> ]です。
+非リアルタイム制の場合、誰も発言をせず [ <?php echo InfoTime::$silence; ?> ] 過ぎた場合には強制的に沈黙となり時間が消費されます。<br>
+消費される時間は 昼： [ <?php echo InfoTime::$silence_day; ?> ] 夜： [ <?php echo InfoTime::$silence_night; ?> ]です。
 </div>
 
 <h3 id="difference_wait_morning">早朝待機制オプション [Ver. 1.4.0 β17～]</h3>
 <div>
-村を作成するときに「<a href="game_option.php#wait_morning">早朝待機制</a>」にチェックを入れると、夜明け後 [ <?php echo $TIME_CONF->wait_morning ?>秒 ] の間は発言ができません。<br>
+村を作成するときに「<a href="game_option.php#wait_morning">早朝待機制</a>」にチェックを入れると、夜明け後 [ <?php echo TimeConfig::WAIT_MORNING; ?>秒 ] の間は発言ができません。<br>
 これにより、昼の発言開始のタイミングを揃えることができます。
 </div>
 
@@ -300,7 +284,7 @@ PC の時計をサーバと合わせる必要がなくなりました。
 <div>
 村人登録時に、ユーザ名の入力欄にユーザ名に続けて「#任意の文字列」と入力することでトリップ変換されます。<br>
 また、ユーザ名の「#」の右側のトリップ入力専用欄を使用することで「#」の入力の手間を省くことができます。<br>
-現在の設定は [ トリップ使用<?php echo ($GAME_CONF->trip ? '可' : '不可') ?> ] になっています。
+現在の設定は [ <?php printf('トリップ使用%s', GameConfig::TRIP ? '可' : '不可'); ?> ] になっています。
 </div>
 <h4>Ver. 1.5.0 β6～</h4>
 <div>
@@ -310,7 +294,7 @@ PC の時計をサーバと合わせる必要がなくなりました。
 <h3 id="difference_kick">キック投票</h3>
 <div>
 村人登録後に急な用事が入って抜けなければならなくなったり、応答がなくなってしまったなどの理由で開始前に村から去ってもらうためには、KICK 投票をする必要があります。<br>
-現在の設定は [ <?php echo $GAME_CONF->kick ?>票 ] 必要で、[ 自己投票<?php echo ($GAME_CONF->self_kick ? '可' : '不可') ?> ] になっています。
+現在の設定は [ <?php printf('%d票', GameConfig::KICK); ?> ] 必要で、[ <?php printf('自己投票%s', GameConfig::SELF_KICK ? '可' : '不可'); ?> ] になっています。
 </div>
 <h4>Ver. 1.4.0 α21～</h4>
 <div>
@@ -341,7 +325,7 @@ PC の時計をサーバと合わせる必要がなくなりました。
   <li><a href="#faq_bug">バグを見つけたのですが</a></li>
   <li><a href="#faq_feature">ゲームの機能に関して要望があるのですが</a></li>
   <li><a href="#faq_talk">発言したときに時々発言できてないときがある</a></li>
-  <li><a href="#faq_mage_cancel">同じ日の夜に占い師が妖狐を占い、その占い師を人狼が喰い殺した場合どうなるの？</a></li>
+  <li><a href="#faq_mage_cancel">同じ日の夜に占い師が<a href="rule.php#rule_role_fox">妖狐</a>を占い、その占い師を<a href="rule.php#rule_role_wolf">人狼</a>が喰い殺した場合どうなるの？</a></li>
   <li><a href="#faq_kick">Kickされたときのユーザ名や村人名は再度同じ村で使用できるの？</a></li>
   <li><a href="#faq_distribution">このスクリプトを勝手に改造して再配布してもいいの？</a></li>
 </ul>
@@ -349,7 +333,7 @@ PC の時計をサーバと合わせる必要がなくなりました。
 <h3 id="faq_session">セッションエラーと表示されました</h3>
 <div>
 ログインするとセッション情報が Cookie としてブラウザに渡されます。<br>
-そのセッション情報でユーザの判別（ログインの有無、ユーザ名の識別）を行っています。<br>
+そのセッション情報でユーザの判別 (ログインの有無、ユーザ名の識別) を行っています。<br>
 他のブラウザで多重ログインしたりするとセッションが変わってしまい、前ログインしていたセッションは無効になります。<br>
 （1ユーザに1セッション、別のセッションが開始されると前のセッション ID は DB から削除されます）<br>
 また Cookie を許可していない場合はセッション情報を持つことが出来ないためログインを維持できません。<br>
@@ -376,13 +360,13 @@ Mac では一応対策されているつもりです。<br>
 
 <h3 id="faq_dead_icon">死亡者のアイコンにマウスポインタを乗せると画像が異常に大きくなる</h3>
 <div>
-これはアップロードされている画像をリサイズせずにアップロードしているためにこうなります。<br>
-管理人さんにリサイズしなおすようにお願いしてみてください。
+これはアイコン画像をリサイズせずにアップロードしているためにこうなります。<br>
+サーバ管理者にリサイズしなおすようにお願いしてみてください。
 </div>
 
 <h3 id="faq_bug">バグを見つけたのですが</h3>
 <div>
-<a href="http://sourceforge.jp/projects/jinrousiki/" target="_blank">SorceForge</a>のバグ報告か、<a href="http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1240771280/">ウミガメ人狼専用掲示板</a>の式神研究同好会スレッドにできるだけ詳しくバグの起きた状況とその内容を報告してください。<br>
+<a href="http://sourceforge.jp/projects/jinrousiki/" target="_blank">SorceForge</a> のバグ報告か、<a href="http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1240771280/">ウミガメ<a href="rule.php#rule_role_wolf">人狼</a>専用掲示板</a>の式神研究同好会スレッドにできるだけ詳しくバグの起きた状況とその内容を報告してください。<br>
 できれば対戦ログも教えていただければ助かります。
 </div>
 
@@ -395,15 +379,15 @@ Mac では一応対策されているつもりです。<br>
 <h3 id="faq_talk">発言したときに時々発言できてないときがある</h3>
 <div>
 ゲーム中、昼と夜の切り替わり付近でこのような動作をするときがあります。<br>
-これは夜の人狼同士の秘密の会話をしているうちに突然朝になり、うっかり夜に発言するはずだった会話が朝に漏れてしまった、ということが無いようにこのような処理をしています。<br>
+これは夜の<a href="rule.php#rule_role_wolf">人狼</a>同士の秘密の会話をしているうちに突然朝になり、うっかり夜に発言するはずだった会話が朝に漏れてしまった、ということが無いようにこのような処理をしています。<br>
 昼→夜も同様です。<br>
-具体的な処理ですが、最後に読み込んだ状況(昼、夜、ゲーム前)と書き込んだときの状況が一致してなければ発言しないようになっています。
+具体的な処理ですが、最後に読み込んだ状況 (昼、夜、ゲーム前) と書き込んだときの状況が一致してなければ発言しないようになっています。
 </div>
 
 <h3 id="faq_mage_cancel">同じ日の夜に占い師が妖狐を占い、その占い師を人狼が喰い殺した場合どうなるの？</h3>
 <div>
-通常占い師が妖狐を占うと占われた妖狐は死んでしまいますが、同日に人狼がその占い師を襲うと占いは失敗となり妖狐は死なずに済みます。<br>
-勝率の低い妖狐のバランスを取るためにこのようになっています。
+通常占い師が<a href="rule.php#rule_role_fox">妖狐</a>を占うと占われた<a href="rule.php#rule_role_fox">妖狐</a>は死んでしまいますが、同日に<a href="rule.php#rule_role_wolf">人狼</a>がその占い師を襲うと占いは失敗となり<a href="rule.php#rule_role_fox">妖狐</a>は死なずに済みます。<br>
+勝率の低い<a href="rule.php#rule_role_fox">妖狐</a>のバランスを取るためにこのようになっています。
 </div>
 
 <h3 id="faq_kick">Kickされたときのユーザ名や村人名は再度同じ村で使用できるの？</h3>
@@ -413,7 +397,7 @@ Mac では一応対策されているつもりです。<br>
 <div>
 かまいません。<br>
 許可を取る必要もありませんし、報告する義務もありません。<br>
-しかし、植物の背景画像、左上にある文字の入ったタイトル画像は<a href="http://keppen.web.infoseek.co.jp/" target="_blank">天の欠片</a>さんの素材を使用しています。<br>
+しかし、植物の背景画像、左上にある文字の入ったタイトル画像は<a href="http://photozou.jp/photo/list/2066445/5445429" target="_blank">天の欠片</a>さんの素材を使用しています。<br>
 この画像をそのまま使う場合は index.php の天の欠片さんへのリンクを削除しないようにお願いします。<br>
 またこの画像の著作権は天の欠片さんの物なので、自分で撮影したとか自分で作ったとか言わないようにしてください。<br>
 Ver. 1.2.0で追加した画像については、<a href="http://azukifont.mints.ne.jp/" target="_blank">あずきふぉんと</a>さんのフォントを利用させていただいています。<br>
@@ -421,4 +405,5 @@ Ver. 1.2.0で追加した画像については、<a href="http://azukifont.mints
 このシステムには mbstring モジュールに非対応なサーバでも稼動できるように <a href="http://www.matsubarafamily.com/blog/mbemu.php" target="_blank">mbstringエミュレータ</a>が入っています。<br>
 <a href="copyright.php">謝辞・素材</a>の mbstring エミュレータさんへのリンクを削除しないようにお願いします。
 </div>
-</body></html>
+</body>
+</html>

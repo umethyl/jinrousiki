@@ -5,28 +5,35 @@
   ・憑依無効陣営：人狼/恋人
 */
 RoleManager::LoadFile('fox');
-class Role_possessed_fox extends Role_fox{
+class Role_possessed_fox extends Role_fox {
   public $mix_in = 'possessed_mad';
-  function __construct(){ parent::__construct(); }
 
-  protected function OutputResult(){
-    $this->filter->OutputResult();
+  protected function OutputResult() {
+    $this->filter->OutputPossessed();
     parent::OutputResult();
   }
 
-  function OutputAction(){ $this->filter->OutputAction(); }
+  function OutputAction() { $this->filter->OutputAction(); }
 
-  function IsVote(){ return $this->filter->IsVote(); }
+  function IsVote() { return $this->filter->IsVote(); }
 
-  function IsMindReadPossessed($user){ return $this->GetTalkFlag('fox'); }
+  function IsFinishVote(array $list) { return $this->filter->IsFinishVote($list); }
 
-  function SetVoteNight(){ $this->filter->SetVoteNight(); }
+  function IsMindReadPossessed(User $user) { return $this->GetTalkFlag('fox'); }
 
-  function GetVoteIconPath($user, $live){ return $this->filter->GetVoteIconPath($user, $live); }
+  function SetVoteNight() { $this->filter->SetVoteNight(); }
 
-  function IsVoteCheckbox($user, $live){ return $this->filter->IsVoteCheckbox($user, $live); }
+  function GetVoteIconPath(User $user, $live) {
+    return $this->filter->GetVoteIconPath($user, $live);
+  }
 
-  function IgnoreVoteNight($user, $live){ return $this->filter->IgnoreVoteNight($user, $live); }
+  function IsVoteCheckbox(User $user, $live) {
+    return $this->filter->IsVoteCheckbox($user, $live);
+  }
 
-  function IgnorePossessed($camp){ return $camp == 'wolf' || $camp == 'lovers'; }
+  function IgnoreVoteNight(User $user, $live) {
+    return $this->filter->IgnoreVoteNight($user, $live);
+  }
+
+  function IgnorePossessed($camp) { return $camp == 'wolf' || $camp == 'lovers'; }
 }

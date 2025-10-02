@@ -1,11 +1,10 @@
 <?php
-class Option_full_mania extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
-
-	function LoadMessages() {
-		$this->caption = '神話マニア村';
-		$this->explain = '神話マニア村';
-	}
+/*
+  ◆神話マニア村 (full_mania)
+  ○仕様
+  ・配役：村人 → 神話マニア
+*/
+OptionManager::Load('replace_human');
+class Option_full_mania extends Option_replace_human {
+  function GetCaption() { return '神話マニア村'; }
 }

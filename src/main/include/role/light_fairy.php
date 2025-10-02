@@ -7,9 +7,8 @@
 RoleManager::LoadFile('fairy');
 class Role_light_fairy extends Role_fairy {
   public $bad_status = 'mind_open';
-  function __construct(){ parent::__construct(); }
 
-  function FairyAction($user){
+  function FairyAction(User $user) {
     $target = $this->GetWolfTarget();
     if (! $target->wolf_killed || ! $target->IsSame($user->uname)) return false;
     $this->AddStack($this->GetProperty('bad_status'), 'event');

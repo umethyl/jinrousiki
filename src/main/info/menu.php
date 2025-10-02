@@ -1,10 +1,8 @@
 <?php
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
-OutputHTMLHeader('情報一覧 - [メニュー]', 'info/menu');
+HTML::OutputHeader('情報一覧 - [メニュー]', 'info/menu', true);
 ?>
-</head>
-<body>
 <div class="menu">情報一覧</div>
 <ul>
 <li><a target="_top" href="../">← TOP</a></li>
@@ -30,4 +28,5 @@ OutputHTMLHeader('情報一覧 - [メニュー]', 'info/menu');
 <li><a target="_top" href="http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1240771280/l50">開発・バグ報告スレ</a></li>
 <li><a target="_top" href="http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1305122951/l50">新役職提案スレ</a></li>
 </ul>
-</body></html>
+</body>
+</html>

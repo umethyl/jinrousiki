@@ -5,8 +5,6 @@
   ・仲間表示：なし
 */
 RoleManager::LoadFile('fox');
-class Role_silver_fox extends Role_fox{
-  function __construct(){ parent::__construct(); }
-
-  protected function OutputPartner(){ return; }
+class Role_silver_fox extends Role_fox {
+  protected function OutputPartner() { return; }
 }

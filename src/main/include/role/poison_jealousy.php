@@ -5,12 +5,11 @@
   ・毒：恋人
   ・襲撃毒死回避：恋人以外
 */
-class Role_poison_jealousy extends Role{
+class Role_poison_jealousy extends Role {
   public $mix_in = 'poison';
   public $display_role = 'poison';
-  function __construct(){ parent::__construct(); }
 
-  function IsPoisonTarget($user){ return $user->IsLovers(); }
+  function IsPoisonTarget(User $user) { return $user->IsLovers(); }
 
-  function AvoidPoisonEat($user){ return ! $user->IsLovers(); }
+  function AvoidPoisonEat(User $user) { return ! $user->IsLovers(); }
 }

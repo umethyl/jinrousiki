@@ -1,8 +1,8 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-OutputRolePageHeader('神話マニア陣営');
+Loader::LoadFile('info_functions');
+InfoHTML::OutputRoleHeader('神話マニア陣営');
 ?>
 <p>
 <a href="#rule">基本ルール</a>
@@ -312,6 +312,10 @@ CO するべきかどうかは、コピーした役職次第です。
 <pre>
 <a href="#dummy_mania">夢語部</a>
 </pre>
+<h4>関連役職</h4>
+<pre>
+<a href="fox.php#vindictive_fox">昼狐</a>
+</pre>
 <h5>Ver. 1.4.0 β14～</h5>
 <pre>
 変化するまでは霊界は公開されない。
@@ -502,7 +506,7 @@ CO するべきかどうかは、コピーした役職次第です。
 </table>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#dummy">夢能力者</a>
+<a href="fox.php#vindictive_fox">昼狐</a>・<a href="ability.php#dummy">夢能力者</a>
 </pre>
 <h5>Ver. 1.4.0 β14～</h5>
 <pre>
@@ -702,4 +706,5 @@ CO するべきかどうかは、コピーした役職次第です。
 <a href="human.php#presage_scanner">件</a>と<a href="human.php#sacrifice_cat">猫神</a>を合わせたような能力で、<a href="http://jbbs.livedoor.jp/bbs/read.cgi/netgame/2829/1305122951/65" target="_top">新役職考案スレ2(65)</a> が原型です。
 条件次第で<a href="ability.php#possessed">憑依能力者</a>も騙ることができます。
 </pre>
-</body></html>
+</body>
+</html>

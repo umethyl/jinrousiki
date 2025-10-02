@@ -36,8 +36,8 @@ class Paparazzi{
     $output = '<dl>';
     foreach ($this->log as $item){
       extract($item, EXTR_PREFIX_ALL, 'unsafe');
-      $category = EscapeStrings($unsafe_category);
-      $comment  = EscapeStrings($unsafe_comment);
+      $category = Text::Escape($unsafe_category);
+      $comment  = Text::Escape($unsafe_comment);
       $output .= "<dt>($unsafe_time) : $unsafe_memory</dt><dd>$category : $comment</dd>";
     }
     return $output . '</dl>';

@@ -1,11 +1,10 @@
 <?php
-class Option_full_vampire extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
-
-	function LoadMessages() {
-		$this->caption = '吸血鬼村';
-		$this->explain = '吸血鬼村';
-	}
+/*
+  ◆吸血鬼村 (full_vampire)
+  ○仕様
+  ・配役：村人 → 吸血鬼
+*/
+OptionManager::Load('replace_human');
+class Option_full_vampire extends Option_replace_human {
+  function GetCaption() { return '吸血鬼村'; }
 }

@@ -2,16 +2,14 @@
 /*
   ◆宵闇村 (blinder)
   ○仕様
+  ・配役：全員に目隠し
 */
 class Option_blinder extends CheckRoomOptionItem {
-  function __construct(){
-		parent::__construct(RoomOption::GAME_OPTION);
-	}
+  public $group = RoomOption::GAME_OPTION;
 
-	function  LoadMessages() {
-		$this->caption = '宵闇村';
-		$this->explain = '全員に「目隠し」がつきます';
-	}
+  function GetCaption() { return '宵闇村'; }
 
-  function Cast(&$list, &$rand){ return $this->CastAll($list); }
+  function GetExplain() { return '全員に「目隠し」がつきます'; }
+
+  function Cast(&$list, &$rand) { return $this->CastAll($list); }
 }

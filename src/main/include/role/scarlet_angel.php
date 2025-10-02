@@ -6,23 +6,19 @@
   ・共感者判定：常時有効
 */
 RoleManager::LoadFile('angel');
-class Role_scarlet_angel extends Role_angel{
-  function __construct(){ parent::__construct(); }
-
-  protected function OutputPartner(){
-    global $ROOM;
-
+class Role_scarlet_angel extends Role_angel {
+  protected function OutputPartner() {
     parent::OutputPartner();
-    if(! $ROOM->IsNight()) return;
+    if (! DB::$ROOM->IsNight()) return;
     $stack = array();
-    foreach($this->GetUser() as $user){
-      if($this->IsActor($user->uname) || $user->IsWolf()) continue;
-      if($user->IsRole('unconscious') || $user->IsRoleGroup('scarlet')){
+    foreach (DB::$USER->rows as $user) {
+      if ($this->IsActor($user->uname) || $user->IsWolf()) continue;
+      if ($user->IsRole('unconscious') || $user->IsRoleGroup('scarlet')) {
 	$stack[] = $user->handle_name;
       }
     }
-    OutputPartner($stack, 'unconscious_list');
+    RoleHTML::OutputPartner($stack, 'unconscious_list');
   }
 
-  protected function IsSympathy($lovers_a, $lovers_b){ return true; }
+  protected function IsSympathy(User $a, User $b) { return true; }
 }

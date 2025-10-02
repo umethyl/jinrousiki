@@ -1,10 +1,8 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-OutputHTMLHeader('新役職情報 - [メニュー]', 'info/menu');
+HTML::OutputHeader('新役職情報 - [メニュー]', 'info/menu', true);
 ?>
-</head>
-<body>
 <div class="menu">新役職情報</div>
 <ul>
 <li><a target="body" href="summary.php">&lt;早見表&gt;</a></li>

@@ -6,7 +6,5 @@
 */
 RoleManager::LoadFile('unknown_mania');
 class Role_fire_mania extends Role_unknown_mania {
-  function __construct(){ parent::__construct(); }
-
-  protected function GetManiaRole($user){ return 'wisp'; }
+  protected function GetManiaRole(User $user) { return 'wisp'; }
 }

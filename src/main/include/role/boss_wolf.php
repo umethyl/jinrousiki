@@ -4,6 +4,5 @@
   ○仕様
 */
 RoleManager::LoadFile('wolf');
-class Role_boss_wolf extends Role_wolf{
-  function __construct(){ parent::__construct(); }
+class Role_boss_wolf extends Role_wolf {
 }

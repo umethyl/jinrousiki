@@ -1,9 +1,8 @@
 <?php
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-$INIT_CONF->LoadClass('TIME_CALC', 'ROLE_IMG');
-OutputInfoPageHeader('ルール', 0, 'rule');
+Loader::LoadClass('InfoTime');
+InfoHTML::OutputHeader('ルール', 0, 'rule');
 ?>
 <img src="../img/rule_title.jpg" alt="ルール" title="ルールの説明">
 <ul>
@@ -15,8 +14,8 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 
 <h2 id="worning">ゲームに参加する上で重要なこと</h2>
 <div>
-<span class="worning">「ゲームのプレイ内容についてこのゲーム以外の場所で話すのはやめてください。」<br></span>
-これをやってしまうとゲームがおもしろくなくなります。<br>
+<span class="worning">ゲームのプレイ内容についてこのゲーム以外の場所で話すのはやめてください。<br></span>
+これをやってしまうとゲームが面白くなくなります。<br>
 特に自分が死んだからといって役割を公開するようなことは絶対にしないでください。 <br>
 </div>
 
@@ -62,7 +61,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
     （キューピッドはオプション指定時のみ登場します。また、恋人は兼任役職となります）</li>
 </ul>
 
-<?php OutputCastTable(8, 22); ?>
+<?php InfoHTML::OutputCast(8, 22); ?>
 
 <h3 id="rule_role">[役割紹介]</h3>
 <div>　登場する役割について詳しく説明します。</div>
@@ -138,7 +137,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
     人狼から襲われた場合は人狼からランダムに一人道連れにします。<br>
     あなたが恋人で、最愛の人に先立たれた場合は後を追って自殺し、道連れは出ません。<br>
     勝利条件は村人勝利です<br>
-    埋毒者は村作成の時にオプションとして設定され、村の人数 [<?php echo $CAST_CONF->poison; ?>人] 以上で登場します。<br>
+    埋毒者は村作成の時にオプションとして設定され、村の人数 [<?php echo CastConfig::$poison; ?>人] 以上で登場します。<br>
     （埋毒者が登場する場合、村人の代わりとして入ります。その際村人がもう一人減り、人狼が一人増えます）
   </div></td>
 </tr>
@@ -176,7 +175,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
     恋に落ちた二人は能力に変化はありませんが、何をおいてもお互いの生存を最優先に考えるようになります。<br>
     あなた自身の生死は勝利条件に関係しません。時には自らを犠牲にしてでも恋人たちを生き残らせるのです。<br>
     占い、霊能判定では村人判定となります。また、勝利条件判定の際にも村人とカウントされます。<br>
-    キューピッドは村作成の時にオプションとして設定され、村の人数 [<?php echo $CAST_CONF->cupid ?>人] 以上で登場します。
+    キューピッドは村作成の時にオプションとして設定され、村の人数 [ <?php printf('%d人', CastConfig::$cupid); ?> ] 以上で登場します。
   </div></td>
 </tr>
 <tr id="rule_role_decide">
@@ -186,7 +185,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
     処刑投票の票数が同数で分かれた場合、あなたの投票したほうが優先されます。<br>
     しかしあなた自身は自分が決定者であることはわかりません。<br>
     兼任となり、他の役割のオプションとして付きます。<br>
-    決定者は村作成の時にオプションとして設定され、村の人数 [<?php echo $CAST_CONF->decide ?>人] 以上で登場します。
+    決定者は村作成の時にオプションとして設定され、村の人数 [ <?php printf('%d人', CastConfig::$decide); ?> ] 以上で登場します。
   </div></td>
 </tr>
 <tr id="rule_role_authority">
@@ -196,7 +195,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
     他の村からもあなたのうわさが耳に入るほどです。<br>
     その権力を振りかざし、処刑投票であなたの投票は2票分の効果を発揮します。<br>
     兼任となり、他の役割のオプションとして付きます。<br>
-    権力者は村作成の時にオプションとして設定され、村の人数 [<?php echo $CAST_CONF->authority ?>人] 以上で登場します。
+    権力者は村作成の時にオプションとして設定され、村の人数 [ <?php printf('%d人', CastConfig::$authority); ?> ] 以上で登場します。
   </div></td>
 </tr>
 <tr id="rule_role_lovers">
@@ -207,7 +206,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
     もしどちらか一方が死亡した場合、残された方も恋人の後を追って自殺してしまいます。<br>
     あなたたちは何としても生き延び、二人の愛の世界を築き上げるのです。<br>
     兼任となり、他の役割のオプションとして付きます。<br>
-    恋人は村作成の時にオプションとしてキューピッドが登場するように設定され、村の人数 [<?php echo $CAST_CONF->cupid ?>人] 以上で登場します。
+    恋人は村作成の時にオプションとしてキューピッドが登場するように設定され、村の人数 [ <?php printf('%d人', CastConfig::$cupid); ?> ] 以上で登場します。
   </div></td>
 </tr>
 </table>
@@ -255,10 +254,7 @@ OutputInfoPageHeader('ルール', 0, 'rule');
 <div>
 村作成のオプションで「リアルタイム制」をチェック入れていると、実時間で経過していきます。<br>
 時間は部屋を作成した人が設定でき、トップページのゲーム一覧の「リアルタイム制」画像のAltテキストに表示されます。<br>
-(ゲーム一覧のオプションの部分にあるリアルタイム制の画像 <?php echo
-$ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->default_day .
-		    '分　夜： ' . $TIME_CONF->default_night . '分')
-?> にマウスポインタを乗せると表示されます)<br>
+(ゲーム一覧のオプションの部分にあるリアルタイム制の画像 <?php Info::OutputRealTime();?> にマウスポインタを乗せると表示されます)<br>
 ゲーム中は仮想時間と実時間の両方が表示され、仮想時間は12時間、もしくは6時間から徐々に減っていき、<br>
 実時間が0になると同時に仮想時間も0になるように計算されています。<br>
 </div>
@@ -267,11 +263,11 @@ $ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->
 <div>
 村作成のオプションで「リアルタイム制」にチェックを入れない場合はこちらになります。<br>
 非リアルタイム制では発言することで時間が消費されます。<br>
-半角100文字(全角50文字)の発言で、仮想時間が昼: [<?php echo $TIME_CALC->spend_day ?>] 夜: [<?php echo $TIME_CALC->spend_night ?>] ずつ消費されていきます。<br>
+半角100文字(全角50文字)の発言で、仮想時間が昼: [ <?php echo InfoTime::$spend_day; ?> ] 夜: [ <?php echo InfoTime::$spend_night; ?> ] ずつ消費されていきます。<br>
 （夜は人狼の発言だけ仮想時間に加算されていきます）<br>
 たくさんの文字を使って発言するとそれだけ仮想時間の消費量が多くなります。<br>
 しかし、半角400字以上は消費時間は加算されず半角400字の消費量と同じです。<br>
-一定時間( 実時間 [<?php echo $TIME_CALC->silence ?>] )発言が無いと皆沈黙したこととなり、昼： [<?php echo $TIME_CALC->silence_day ?>] 夜： [<?php echo $TIME_CALC->silence_night ?>] が消費されてしまいます。<br>
+一定時間( 実時間 [ <?php echo InfoTime::$silence; ?> ] )発言が無いと皆沈黙したこととなり、昼： [ <?php echo InfoTime::$silence_day; ?> ] 夜： [ <?php echo InfoTime::$silence_night; ?> ] が消費されてしまいます。<br>
 黙っているとどんどん時間が消費されていきます、積極的に発言しましょう。<br>
 </div>
 
@@ -281,7 +277,7 @@ $ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->
 処刑するための投票は毎日、昼に行われます。<br>
 投票は議論中いつでも可能ですが投票をやり直すことはできません、慎重に投票先を決めてください。<br>
 また全員が投票した場合、その時点で残り時間に関係なく即処刑が実行され夜になります。<br>
-昼の仮想時間12時間を使いきり、それでも投票してない人は [<?php echo $TIME_CALC->sudden_death ?>] 以内に投票を完了しないと突然死となり<br>
+昼の仮想時間12時間を使いきり、それでも投票してない人は [ <?php echo InfoTime::$sudden_death; ?> ] 以内に投票を完了しないと突然死となり<br>
 無条件で死亡してしまいます。<br>
 時間がなくなってきたらすみやかに投票してください。
 </div>
@@ -293,8 +289,8 @@ $ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->
 人狼は全員で一人だけターゲットできます。<br>
 占い師、狩人は個人でそれぞれ指定できます。<br>
 キューピッドは１日目のみ、結び付けたい二人を指定してください。<br>
-ただし、村の総人数が [<?php echo $GAME_CONF->cupid_self_shoot ?>人] に満たない場合は、必ず自分と誰かを指定してください。<br>
-夜の仮想時間6時間を使いきり、それでも投票してない人は [<?php echo $TIME_CALC->sudden_death ?>] 以内に投票を完了しないと突然死となり<br>
+ただし、村の総人数が [ <?php printf('%d人', GameConfig::CUPID_SELF_SHOOT); ?> ] に満たない場合は、必ず自分と誰かを指定してください。<br>
+夜の仮想時間6時間を使いきり、それでも投票してない人は [ <?php echo InfoTime::$sudden_death; ?> ] 以内に投票を完了しないと突然死となり<br>
 無条件で死亡します。<br>
 </div>
 
@@ -302,7 +298,7 @@ $ROOM_IMG->Generate('real_time', 'リアルタイム制　昼：' . $TIME_CONF->
 <div>
 昼12時間、夜6時間の制限時間が過ぎると発言できなくなります。<br>
 村の住人達はこれまでの情報を元に投票しなくてはなりません。<br>
-投票せずに [<?php echo $TIME_CALC->sudden_death ?>] 過ぎてしまうと投票されて無い方は突然死となり強制的に死んでしまいます。<br>
+投票せずに [ <?php echo InfoTime::$sudden_death; ?> ] 過ぎてしまうと投票されて無い方は突然死となり強制的に死んでしまいます。<br>
 誰かが突然死になってしまうと投票がリセットされてしまいますので注意してください。<br>
 投票は時間に余裕を持って早めにしましょう。<br>
 また、制限時間が来なくても全員の投票が完了していた場合はその時点で即、次の場面（昼→夜、夜→次の日の朝）になります。<br>
@@ -336,7 +332,7 @@ Ver. 1.5.0 β1 からは、「半角スペース一つ」のみを遺言にセ�
 「↓リスト」は村人リストを発言ログの下に表示するようにします。<br>
 逆に「↑リスト」は村人リストをデフォルトの発言ログの上に表示するようにします。<br>
 右上の「異議あり」ボタンを押すと特殊なメッセージと音で皆の注意を引きます。<br>
-「異議あり」ボタンのカッコの中の数字は残り回数でゲーム開始前から通算で [<?php echo $GAME_CONF->objection ?>回] しか使用できません。<br>
+「異議あり」ボタンのカッコの中の数字は残り回数でゲーム開始前から通算で [ <?php printf('%d回', GameConfig::OBJECTION); ?> ] しか使用できません。<br>
 <br>
 　ゲームが開始されると下のフレームで上から<br>
 　　　「村の名前」<br>
@@ -369,48 +365,48 @@ Ver. 1.5.0 β1 からは、「半角スペース一つ」のみを遺言にセ�
 <table class="role">
 <tr><th>役割</th><th>--　　　　自分の役割(と能力の結果)　　　　--</th></tr>
 
-<tr id="display_role_human"><td>村人</td><?php echo $ROLE_IMG->Generate('human', '村人', true) ?></tr>
+<tr id="display_role_human"><td>村人</td><?php echo Image::Role()->Generate('human', '村人', true); ?></tr>
 <tr id="display_role_mage">
-<td class="mage">占い師</td><td><?php echo $ROLE_IMG->Generate('mage', '占い師') ?>
-<table class="view"><tr><?php echo $ROLE_IMG->Generate('mage_result', '占い結果', true) ?><td>村人一号</td><?php echo $ROLE_IMG->Generate('result_human', '村人', true) ?></tr></table>
-<table class="view"><tr><?php echo $ROLE_IMG->Generate('mage_result', '占い結果', true) ?><td>人狼一号</td><?php echo $ROLE_IMG->Generate('result_wolf', '人狼', true) ?></tr></table>
+<td class="mage">占い師</td><td><?php echo Image::Role()->Generate('mage', '占い師'); ?>
+<table class="view"><tr><?php echo Image::Role()->Generate('mage_result', '占い結果', true); ?><td>村人一号</td><?php echo Image::Role()->Generate('result_human', '村人', true); ?></tr></table>
+<table class="view"><tr><?php echo Image::Role()->Generate('mage_result', '占い結果', true); ?><td>人狼一号</td><?php echo Image::Role()->Generate('result_wolf', '人狼', true); ?></tr></table>
 </td>
 </tr>
 <tr id="display_role_necromancer">
-<td class="necromancer">霊能者</td><td><?php echo $ROLE_IMG->Generate('necromancer', '霊能者') ?>
-<table class="view"><tr><?php echo $ROLE_IMG->Generate('necromancer_result', '霊能結果', true) ?><td>村人一号</td><?php echo $ROLE_IMG->Generate('result_human', '村人', true) ?></tr></table>
-<table class="view"><tr><?php echo $ROLE_IMG->Generate('necromancer_result', '霊能結果', true) ?><td>人狼一号</td><?php echo $ROLE_IMG->Generate('result_wolf', '人狼', true) ?></tr></table>
+<td class="necromancer">霊能者</td><td><?php echo Image::Role()->Generate('necromancer', '霊能者'); ?>
+<table class="view"><tr><?php echo Image::Role()->Generate('necromancer_result', '霊能結果', true); ?><td>村人一号</td><?php echo Image::Role()->Generate('result_human', '村人', true); ?></tr></table>
+<table class="view"><tr><?php echo Image::Role()->Generate('necromancer_result', '霊能結果', true); ?><td>人狼一号</td><?php echo Image::Role()->Generate('result_wolf', '人狼', true); ?></tr></table>
 </td>
 </tr>
 <tr id="display_role_guard">
-<td class="guard">狩人</td><td><?php echo $ROLE_IMG->Generate('guard', '狩人') ?>
-<table class="view"><tr><td>占い師一号</td><?php echo $ROLE_IMG->Generate('guard_success', '護衛成功', true) ?></tr></table></td>
+<td class="guard">狩人</td><td><?php echo Image::Role()->Generate('guard', '狩人'); ?>
+<table class="view"><tr><td>占い師一号</td><?php echo Image::Role()->Generate('guard_success', '護衛成功', true); ?></tr></table></td>
 </tr>
 <tr id="display_role_common">
-<td class="common">共有者</td><td><?php echo $ROLE_IMG->Generate('common', '共有者') ?>
-<table class="view"><tr><?php echo $ROLE_IMG->Generate('common_partner', '共有者の仲間一覧', true) ?><td>　共有者一号さん　</td></tr></table></td>
+<td class="common">共有者</td><td><?php echo Image::Role()->Generate('common', '共有者'); ?>
+<table class="view"><tr><?php echo Image::Role()->Generate('common_partner', '共有者の仲間一覧', true); ?><td>　共有者一号さん　</td></tr></table></td>
 </tr>
-<tr id="display_role_poison"><td class="poison">埋毒者</td><?php echo $ROLE_IMG->Generate('poison', '埋毒者', true) ?></tr>
+<tr id="display_role_poison"><td class="poison">埋毒者</td><?php echo Image::Role()->Generate('poison', '埋毒者', true); ?></tr>
 <tr id="display_role_wolf">
-<td class="wolf">人狼</td><td><?php echo $ROLE_IMG->Generate('wolf', '人狼') ?>
-<table class="view"><tr><?php echo $ROLE_IMG->Generate('wolf_partner', '人狼の仲間一覧', true) ?><td>　人狼一号さん　人狼二号さん　</td></tr></table>
+<td class="wolf">人狼</td><td><?php echo Image::Role()->Generate('wolf', '人狼'); ?>
+<table class="view"><tr><?php echo Image::Role()->Generate('wolf_partner', '人狼の仲間一覧', true); ?><td>　人狼一号さん　人狼二号さん　</td></tr></table>
 </td>
 </tr>
-<tr id="display_role_mad"><td class="wolf">狂人</td><?php echo $ROLE_IMG->Generate('mad', '狂人', true) ?></tr>
+<tr id="display_role_mad"><td class="wolf">狂人</td><?php echo Image::Role()->Generate('mad', '狂人', true); ?></tr>
 <tr id="display_role_fox">
-<td class="fox">妖狐</td><td><?php echo $ROLE_IMG->Generate('fox', '妖狐') ?>
-<table class="view"><tr><?php echo $ROLE_IMG->Generate('fox_targeted', '人狼襲撃', true) ?></tr></table></td>
+<td class="fox">妖狐</td><td><?php echo Image::Role()->Generate('fox', '妖狐'); ?>
+<table class="view"><tr><?php echo Image::Role()->Generate('fox_targeted', '人狼襲撃', true); ?></tr></table></td>
 </tr>
 <tr id="display_role_cupid">
-<td class="lovers">キューピッド</td><td><?php echo $ROLE_IMG->Generate('cupid', 'キューピッド') ?>
-<table class="view"><tr><?php echo $ROLE_IMG->Generate('cupid_pair', '自分の作った恋人一覧', true) ?><td>　恋人一号さん　恋人二号さん　</td></tr></table></td>
+<td class="lovers">キューピッド</td><td><?php echo Image::Role()->Generate('cupid', 'キューピッド'); ?>
+<table class="view"><tr><?php echo Image::Role()->Generate('cupid_pair', '自分の作った恋人一覧', true); ?><td>　恋人一号さん　恋人二号さん　</td></tr></table></td>
 </tr>
 <tr id="display_role_decide"><td>決定者</td><td>--なし--</td></tr>
-<tr id="display_role_authority"><td>権力者</td><?php echo $ROLE_IMG->Generate('authority', '権力者', true) ?></tr>
+<tr id="display_role_authority"><td>権力者</td><?php echo Image::Role()->Generate('authority', '権力者', true); ?></tr>
 <tr id="display_role_lovers">
 <td class="lovers">恋人</td>
-<td><table class="view"><tr><?php echo $ROLE_IMG->Generate('partner_header', '自分の仲間一覧：ヘッダー', true) ?><td>　恋人一号さん　</td>
-<?php echo $ROLE_IMG->Generate('lovers_footer', '自分の恋人一覧：フッター', true) ?></tr></table></td>
+<td><table class="view"><tr><?php echo Image::Role()->Generate('partner_header', '自分の仲間一覧：ヘッダー', true); ?><td>　恋人一号さん　</td>
+<?php echo Image::Role()->Generate('lovers_footer', '自分の恋人一覧：フッター', true); ?></tr></table></td>
 </tr>
 </table>
 <br>
@@ -429,4 +425,5 @@ Ver. 1.5.0 β1 からは、「半角スペース一つ」のみを遺言にセ�
 ただし、狼と共有者は、生存している仲間の遠吠えやささやきを見ることが可能です。<br>
 もちろん見るだけで、狼や共有者の霊話は生存している仲間には聞こえません。<br>
 </div>
-</body></html>
+</body>
+</html>

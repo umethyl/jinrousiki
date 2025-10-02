@@ -7,13 +7,12 @@
   ・身代わり対象者：人形
 */
 RoleManager::LoadFile('doll');
-class Role_doll_master extends Role_doll{
+class Role_doll_master extends Role_doll {
   public $mix_in = 'protected';
-  function __construct(){ parent::__construct(); }
 
-  protected function OutputPartner(){ return; }
+  protected function OutputPartner() { return; }
 
-  function Win($winner){ return true; }
+  function Win($winner) { return true; }
 
-  function IsSacrifice($user){ return Role_doll::IsDoll($user); }
+  function IsSacrifice(User $user) { return Role_doll::IsDoll($user); }
 }

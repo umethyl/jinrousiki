@@ -5,6 +5,7 @@
 @import url(menu.css);
 @import url(header.css);
 @import url(game_list.css);
+@import url(room_form.css);
 body {
   background-color: #FFFFFF;
   background-image: url("../img/bg/top.png");
@@ -21,15 +22,15 @@ noscript { /* JavaScript が無効の場合のワーニング */
   font-size: 15pt;
   font-weight: bold;
 }
-table.main { /* 全体の table */
+#main { /* 全体の table */
   border: 0;
   width: 100%;
   padding: 5px;
 }
-table.main td {
+#main td {
   vertical-align: top;
 }
-.menu  {
+.menu {
   width: 140px;
 }
 .information { /* Information (中身は info/top.php) */
@@ -43,34 +44,7 @@ table.main td {
 .information h2 { font-size: 100%; }
 .information h3 { font-size: 100%; }
 .information h4 { font-size: 100%; }
-form { /* 村の作成フォーム */
-  margin-top: 10px;
-}
-label { /* 村作成のオプション名 */
-  margin-left: 1em;
-  font-weight: bold;
-}
-input, select { /* 設定項目 */
-  background-color: #F0F8FF;
-  border: 1px solid #C0C0C0;
-}
-.text { /* 村の名前, 説明など */
-  border: 1px solid #C0C0C0;
-}
-.explain { /* オプションの説明 */
-  filter: alpha(opacity=70, enabled=70);
-  -moz-opacity: 0.7;
-  opacity: 0.7;
-  background-color: #FFFFFF;
-  font-size: 80%;
-}
-.make { /* 作成ボタン */
-  text-align: right;
-}
-.make input {
-  border: 1px solid #000000;
-}
-.footer { /* フッター (バージョン情報など) */
+#footer { /* フッター (バージョン情報など) */
   margin-bottom: 5px;
   text-align: right;
   font-size: 80%;

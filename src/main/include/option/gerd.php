@@ -1,11 +1,9 @@
 <?php
+/*
+  ◆ゲルト君モード (gerd)
+*/
 class Option_gerd extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
+  function GetCaption() { return 'ゲルト君モード'; }
 
-	function LoadMessages() {
-		$this->caption = 'ゲルト君モード';
-		$this->explain = '役職が村人固定になります [村人が出現している場合のみ有効]';
-	}
+  function GetExplain() { return '役職が村人固定になります [村人が出現している場合のみ有効]'; }
 }

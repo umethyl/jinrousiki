@@ -6,28 +6,27 @@
   ・逃亡処理：なし
   ・勝利：生存
 */
-class Role_escaper extends Role{
+class Role_escaper extends Role {
   public $action = 'ESCAPE_DO';
   public $ignore_message = '初日は逃亡できません';
-  function __construct(){ parent::__construct(); }
 
-  function OutputAction(){ OutputVoteMessage('escape-do', 'escape_do', $this->action); }
+  function OutputAction() {
+    RoleHTML::OutputVote('escape-do', 'escape_do', $this->action);
+  }
 
-  function IsVote(){ global $ROOM; return $ROOM->date > 1; }
+  function IsVote() { return DB::$ROOM->date > 1; }
 
   //逃亡
-  function Escape($user){
-    global $USERS;
-
+  function Escape(User $user) {
     $actor = $this->GetActor();
-    if(in_array($user->uname, $this->GetStack('trap'))){ //罠死判定
-      $USERS->Kill($actor->user_no, 'TRAPPED');
+    if (in_array($user->uname, $this->GetStack('trap'))) { //罠死判定
+      DB::$USER->Kill($actor->user_no, 'TRAPPED');
     }
-    elseif($this->EscapeFailed($user)){ //逃亡失敗判定
-      $USERS->Kill($actor->user_no, 'ESCAPER_DEAD');
+    elseif ($this->EscapeFailed($user)) { //逃亡失敗判定
+      DB::$USER->Kill($actor->user_no, 'ESCAPER_DEAD');
     }
-    else{
-      if(in_array($user->uname, $this->GetStack('snow_trap'))){ //凍傷判定
+    else {
+      if (in_array($user->uname, $this->GetStack('snow_trap'))) { //凍傷判定
 	$this->AddStack($actor->uname, 'frostbite');
       }
       $this->EscapeAction($user); //逃亡処理
@@ -36,12 +35,12 @@ class Role_escaper extends Role{
   }
 
   //逃亡失敗判定
-  protected function EscapeFailed($user){ return $user->IsWolf(); }
+  protected function EscapeFailed(User $user) { return $user->IsWolf(); }
 
   //逃亡処理
-  protected function EscapeAction($user){}
+  protected function EscapeAction(User $user) {}
 
-  function Win($winner){
+  function Win($winner) {
     $this->SetStack('escaper', 'class');
     return $this->IsLive();
   }

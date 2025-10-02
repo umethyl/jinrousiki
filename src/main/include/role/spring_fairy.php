@@ -7,5 +7,4 @@
 RoleManager::LoadFile('fairy');
 class Role_spring_fairy extends Role_fairy {
   public $bad_status = '春ですよー';
-  function __construct(){ parent::__construct(); }
 }

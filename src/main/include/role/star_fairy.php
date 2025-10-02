@@ -7,5 +7,4 @@
 RoleManager::LoadFile('flower_fairy');
 class Role_star_fairy extends Role_flower_fairy {
   public $result = 'CONSTELLATION';
-  function __construct(){ parent::__construct(); }
 }

@@ -3,27 +3,23 @@
   ◆囁き狂人 (whisper_mad)
   ○仕様
 */
-class Role_whisper_mad extends Role{
-  function __construct(){ parent::__construct(); }
-
-  protected function OutputPartner(){
-    global $USERS;
-
+class Role_whisper_mad extends Role {
+  protected function OutputPartner() {
     $wolf = array();
     $mad  = array();
-    foreach($this->GetUser() as $user){
-      if($this->IsActor($user->uname)) continue;
-      if($user->IsRole('possessed_wolf')){
-	$wolf[] = $USERS->GetHandleName($user->uname, true); //憑依先を追跡する
+    foreach (DB::$USER->rows as $user) {
+      if ($this->IsActor($user->uname)) continue;
+      if ($user->IsRole('possessed_wolf')) {
+	$wolf[] = DB::$USER->GetHandleName($user->uname, true); //憑依先を追跡する
       }
-      elseif($user->IsWolf(true)){
+      elseif ($user->IsWolf(true)) {
 	$wolf[] = $user->handle_name;
       }
-      elseif($user->IsRole($this->role)){
+      elseif ($user->IsRole($this->role)) {
 	$mad[] = $user->handle_name;
       }
     }
-    OutputPartner($wolf, 'wolf_partner');
-    OutputPartner($mad, 'mad_partner');
+    RoleHTML::OutputPartner($wolf, 'wolf_partner');
+    RoleHTML::OutputPartner($mad, 'mad_partner');
   }
 }

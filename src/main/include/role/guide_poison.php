@@ -6,10 +6,8 @@
   ・襲撃毒死回避：毒能力者以外
 */
 RoleManager::LoadFile('poison');
-class Role_guide_poison extends Role_poison{
-  function __construct(){ parent::__construct(); }
+class Role_guide_poison extends Role_poison {
+  function IsPoisonTarget(User $user) { return $user->IsRoleGroup('poison'); }
 
-  function IsPoisonTarget($user){ return $user->IsRoleGroup('poison'); }
-
-  function AvoidPoisonEat($user){ return ! $user->IsRoleGroup('poison'); }
+  function AvoidPoisonEat(User $user) { return ! $user->IsRoleGroup('poison'); }
 }

@@ -5,18 +5,17 @@
   ・役職表示：村人
   ・発言変換：完全置換 (人狼遠吠え or サーバ設定)
 */
-class Role_suspect extends Role{
+class Role_suspect extends Role {
   public $display_role = 'human';
-  function __construct(){ parent::__construct(); }
 
-  function ConvertSay(){
-    global $GAME_CONF, $MESSAGE, $ROOM;
+  function ConvertSay() {
+    if (! DB::$ROOM->IsDay()) return false; //スキップ判定
 
-    if(! $ROOM->IsDay()) return false; //スキップ判定
-    $rate = $GAME_CONF->cute_wolf_rate * ($ROOM->IsEvent('boost_cute') ? 5 : 1);
-    //PrintData($rate);
-    if(mt_rand(1, 100) > $rate) return false;
-    $this->SetStack($MESSAGE->cute_wolf != '' ? $MESSAGE->cute_wolf : $MESSAGE->wolf_howl, 'say');
+    $rate = GameConfig::CUTE_WOLF_RATE * (DB::$ROOM->IsEvent('boost_cute') ? 5 : 1);
+    //Text::p($rate, $this->role);
+    if (mt_rand(1, 100) > $rate) return false;
+
+    $this->SetStack(Message::$cute_wolf != '' ? Message::$cute_wolf : Message::$wolf_howl, 'say');
     return true;
   }
 }

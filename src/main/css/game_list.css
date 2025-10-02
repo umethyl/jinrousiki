@@ -13,3 +13,7 @@ legend { /* fieldset のタイトル */
 .game-list div {
   text-align: right;
 }
+.game-list dl dt span {
+  color: #008800;
+  font-weight: bold;
+}

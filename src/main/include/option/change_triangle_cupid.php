@@ -1,11 +1,10 @@
 <?php
-class Option_change_triangle_cupid extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
-
-	function LoadMessages() {
-		$this->caption = '小悪魔村';
-		$this->explain = '小悪魔村';
-	}
+/*
+  ◆小悪魔村 (change_triangle_cupid)
+  ○仕様
+  ・配役：キューピッド → 小悪魔
+*/
+OptionManager::Load('replace_human');
+class Option_change_triangle_cupid extends Option_replace_human {
+  function GetCaption() { return '小悪魔村'; }
 }

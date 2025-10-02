@@ -1,11 +1,10 @@
 <?php
-class Option_full_quiz extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
-
-	function LoadMessages() {
-		$this->caption = '出題者村';
-		$this->explain = '出題者村';
-	}
+/*
+  ◆出題者村 (full_quiz)
+  ○仕様
+  ・配役：村人 → 出題者
+*/
+OptionManager::Load('replace_human');
+class Option_full_quiz extends Option_replace_human {
+  function GetCaption() { return '出題者村'; }
 }

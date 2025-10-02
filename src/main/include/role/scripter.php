@@ -4,12 +4,16 @@
   ○仕様
   ・投票数：+1 (5日目以降)
 */
-class Role_scripter extends Role{
-  function __construct(){ parent::__construct(); }
+class Role_scripter extends Role {
+  public $ability = 'ability_scripter';
 
-  function OutputResult(){ if($this->IsActive()) OutputAbilityResult('ability_scripter', NULL); }
+  function OutputResult() {
+    if ($this->IsActive()) RoleHTML::OutputAbilityResult($this->ability, null);
+  }
 
-  function FilterVoteDo(&$number){ if($this->IsActive()) $number++; }
+  function FilterVoteDo(&$number) {
+    if ($this->IsActive()) $number++;
+  }
 
-  private function IsActive(){ global $ROOM; return $ROOM->date > 4; }
+  private function IsActive() { return DB::$ROOM->date > 4; }
 }

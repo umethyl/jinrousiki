@@ -7,5 +7,4 @@
 RoleManager::LoadFile('light_fairy');
 class Role_moon_fairy extends Role_light_fairy {
   public $bad_status = 'earplug';
-  function __construct(){ parent::__construct(); }
 }

@@ -7,26 +7,25 @@
   ・人狼襲撃耐性：無効 (一回限定)
 */
 RoleManager::LoadFile('wizard');
-class Role_awake_wizard extends Role_wizard{
+class Role_awake_wizard extends Role_wizard {
   public $mix_in = 'mage';
   public $wizard_list = array(
     'mage' => 'MAGE_DO', 'stargazer_mage' => 'MAGE_DO', 'sex_mage' => 'MAGE_DO');
   public $result_list = array('MAGE_RESULT');
-  function __construct(){ parent::__construct(); }
 
-  protected function GetWizard(){
+  protected function GetWizard() {
     return $this->GetActor()->IsActive() ?
-      (mt_rand(1, 10) > 7 ? $this->wizard_list : array('MAGE_DO')) :
+      (mt_rand(0, 9) < 3 ? $this->wizard_list : array(1 => 'MAGE_DO')) :
       array('soul_mage' => 'MAGE_DO');
   }
 
-  function Mage($user){
+  function Mage(User $user) {
     $this->IsJammer($user);
     $this->SaveMageResult($user, 'failed', 'MAGE_RESULT');
   }
 
-  function WolfEatResist(){
-    if(! $this->GetActor()->IsActive()) return false;
+  function WolfEatResist() {
+    if (! $this->GetActor()->IsActive()) return false;
     $this->GetActor()->LostAbility();
     return true;
   }

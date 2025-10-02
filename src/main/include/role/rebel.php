@@ -6,9 +6,7 @@
 */
 RoleManager::LoadFile('authority');
 class Role_rebel extends Role_authority {
-  function __construct(){ parent::__construct(); }
-
-  function Rebel(&$message_list, &$count_list){
+  function Rebel(array &$message_list, array &$count_list) {
     //能力発動判定
     $role   = 'authority';
     $self   = $this->GetStack();

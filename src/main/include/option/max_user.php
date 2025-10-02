@@ -1,17 +1,19 @@
 <?php
+/*
+  ◆最大人数 (max_user)
+*/
 class Option_max_user extends SelectorRoomOptionItem {
-	function  __construct() {
-		global $ROOM_CONF;
-		parent::__construct(RoomOption::NOT_OPTION);
-		$this->collect = null;
-		$this->conf_name = 'ROOM_CONF';
-		$this->items_source = 'max_user_list';
-		$this->value = $ROOM_CONF->default_max_user;
-	}
+  public $group = RoomOption::NOT_OPTION;
 
-	function LoadMessages() {
-		global $ROOM_CONF;
-		$this->caption = '最大人数';
-		$this->explain = '配役は<a href="info/rule.php">ルール</a>を確認して下さい';
-	}
+  function __construct() {
+    parent::__construct();
+    $this->conf_name = RoomConfig::$max_user_list;
+    $this->value     = OptionManager::$change ? DB::$ROOM->max_user : RoomConfig::$default_max_user;
+  }
+
+  function GetCaption() { return '最大人数'; }
+
+  function GetExplain() { return '配役は<a href="info/rule.php">ルール</a>を確認して下さい'; }
+
+  function LoadPost() { RQ::$get->Parse('intval', 'post.' . $this->name); }
 }

@@ -1,8 +1,8 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadFile('info_functions');
-OutputRolePageHeader('サブ役職');
+Loader::LoadFile('info_functions');
+InfoHTML::OutputRoleHeader('サブ役職');
 ?>
 <p><a href="#rule">基本ルール</a></p>
 <p>
@@ -178,7 +178,7 @@ OutputRolePageHeader('サブ役職');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#miasma_jealousy">蛇姫</a>・<a href="human.php#brownie">座敷童子</a>・<a href="wolf.php#miasma_mad">土蜘蛛</a>・<a href="fox.php#miasma_fox">蟲狐</a>
+<a href="ability.php#febris">熱病能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -194,7 +194,7 @@ OutputRolePageHeader('サブ役職');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#harvest_brownie">豊穣神</a>・<a href="human.php#maple_brownie">紅葉神</a>・<a href="wolf.php#snow_trap_mad">雪女</a>・<a href="lovers.php#snow_cupid">寒戸婆</a>・<a href="chiroptera.php#ice_fairy">氷妖精</a>
+<a href="ability.php#frostbite">凍傷能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -249,6 +249,7 @@ OutputRolePageHeader('サブ役職');
 <a href="#gentleman">紳士</a>
 <a href="#lady">淑女</a>
 <a href="#cute_camouflage">魔が言</a>
+<a href="#confession">告白</a>
 </p>
 
 <h3 id="liar">狼少年 [Ver. 1.4.0 α11～]</h3>
@@ -287,7 +288,7 @@ OutputRolePageHeader('サブ役職');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#divorce_jealousy">縁切地蔵</a>
+<a href="human.php#divorce_jealousy">縁切地蔵</a>・<a href="vampire.php#passion_vampire">牡丹灯篭</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -405,6 +406,18 @@ OutputRolePageHeader('サブ役職');
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="wolf.php#cute_wolf">萌狼</a>のサブ役職バージョンです。
+</pre>
+
+<h3 id="confession">告白 [Ver. 2.1.0 α3～]</h3>
+<h4>[役職表示] 表示無し</h4>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+昼の間だけ、低確率 (3%) で発言が自分の<a href="#lovers">恋人</a>の名前に入れ替わってしまう。
+<a href="#lovers">恋人</a>が複数いる場合はランダム。
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="human.php#divorce_jealousy">縁切地蔵</a>の強化用に実装されたサブ役職です。
 </pre>
 
 
@@ -1117,7 +1130,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#emerald_wolf">翠狼</a>・<a href="fox.php#emerald_fox">翠狐</a>・<a href="lovers.php#mind_cupid">女神</a>・<a href="lovers.php#sweet_cupid">弁財天</a>・<a href="mania.php#unknown_mania_group">鵺系</a>
+<a href="wolf.php#emerald_wolf">翠狼</a>・<a href="wolf.php#revive_mad">尸解仙</a>・<a href="fox.php#emerald_fox">翠狐</a>・<a href="lovers.php#mind_cupid">女神</a>・<a href="lovers.php#sweet_cupid">弁財天</a>・<a href="mania.php#unknown_mania_group">鵺系</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1319,7 +1332,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#sweet_status">悲恋</a>
+<a href="#confession">告白</a>・<a href="#sweet_status">悲恋</a>
 </pre>
 
 <h3 id="challenge_lovers">難題 [Ver. 1.4.0 β11～]</h3>
@@ -1345,7 +1358,7 @@ LW が<a href="#strong_voice">大声</a>・<a href="#strong_voice">小声</a>だ
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="human.php#detective_common">探偵</a>・<a href="wolf.php#sirius_wolf">天狼</a>・<a href="lovers.php#moon_cupid">かぐや姫</a>・<a href="ability.php#resist_wolf">人狼襲撃耐性能力者</a>
+<a href="human.php#detective_common">探偵</a>・<a href="wolf.php#sirius_wolf">天狼</a>・<a href="lovers.php#moon_cupid">かぐや姫</a>・<a href="ability.php#resist_wolf">人狼襲撃耐性能力者</a>・<a href="ability.php#resist_poison">毒耐性能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1756,7 +1769,9 @@ B：「恋人陣営の勝利」
 <a href="#protected">庇護者</a>
 <a href="#lost_ability">能力喪失</a>
 <a href="#muster_ability">能力発現</a>
+<a href="#changed_disguise">元朔狼</a>
 <a href="#changed_therian">元獣人</a>
+<a href="#changed_vindictive">元昼狐</a>
 </p>
 
 <h3 id="possessed_target">憑依者 [Ver. 1.4.0 α24～]</h3>
@@ -1858,14 +1873,38 @@ B：「恋人陣営の勝利」
 <a href="wolf.php#immolate_mad">殉教者</a>用に実装されたサブ役職です。
 </pre>
 
+<h3 id="changed_disguise">元朔狼 [Ver. 2.1.0 α3～]</h3>
+<h4>[役職表示] 表示無し</h4>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+<a href="wolf.php#whisper_mad">囁き狂人</a>に変化した後の<a href="wolf.php#disguise_wolf">朔狼</a>に付加される。
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="wolf.php#disguise_wolf">朔狼</a>用に実装されたサブ役職です。
+</pre>
+
 <h3 id="changed_therian">元獣人 [Ver. 1.4.0 β15～]</h3>
 <h4>[役職表示] 表示無し</h4>
 <h4>[配役制限] 役職付加専用</h4>
 <pre>
-人狼に変化した後の<a href="wolf.php#therian_mad">獣人</a>に付加される。
+<a href="wolf.php#wolf">人狼</a>に変化した後の<a href="wolf.php#therian_mad">獣人</a>に付加される。
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="wolf.php#therian_mad">獣人</a>用に実装されたサブ役職です。
 </pre>
-</body></html>
+
+<h3 id="changed_vindictive">元昼狐 [Ver. 2.1.0 α6～]</h3>
+<h4>[役職表示] 表示無し</h4>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+<a href="fox.php#fox">妖狐</a>に変化した後の<a href="fox.php#vindictive_fox">昼狐</a>に付加される。
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="fox.php#vindictive_fox">昼狐</a>用に実装されたサブ役職です。
+</pre>
+
+</body>
+</html>

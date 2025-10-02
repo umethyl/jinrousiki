@@ -43,5 +43,4 @@ class Role_dummy_mania extends Role_soul_mania {
     'duelist'		=> 'cowboy_duelist',
     'avenger'		=> 'cute_avenger',
     'patron'		=> 'critical_patron');
-  function __construct(){ parent::__construct(); }
 }

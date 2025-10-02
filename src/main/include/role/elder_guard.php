@@ -2,17 +2,15 @@
 /*
   ◆老兵 (elder_guard)
   ○仕様
-  ・護衛失敗：30%
+  ・護衛失敗：30% / 制限なし
   ・狩り：なし
   ・投票数：+1
 */
 RoleManager::LoadFile('guard');
-class Role_elder_guard extends Role_guard{
-  function __construct(){ parent::__construct(); }
+class Role_elder_guard extends Role_guard {
+  function GuardFailed() { return mt_rand(0, 9) < 3 ? true : null; }
 
-  function GuardFailed(){ return mt_rand(0, 9) < 3; }
+  protected function IsHunt(User $user) { return false; }
 
-  protected function IsHunt($user){ return false; }
-
-  function FilterVoteDo(&$number){ $number++; }
+  function FilterVoteDo(&$number) { $number++; }
 }

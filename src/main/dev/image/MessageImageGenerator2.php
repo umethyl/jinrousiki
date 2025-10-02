@@ -7,7 +7,7 @@
   Ver. 1.91 色が変化しない不具合を修正
 */
 
-class Delimiter{
+class Delimiter {
   public $c; // デリミタ文字
   public $r; // RGB色指定の赤成分値
   public $g; // RGB色指定の緑成分値
@@ -20,7 +20,7 @@ class Delimiter{
     $g RGB色指定の緑成分値
     $b RGB色指定の青成分値
   */
-  function __construct($c, $r, $g, $b){
+  function __construct($c, $r, $g, $b) {
     $this->c = $c;
     $this->r = $r;
     $this->g = $g;
@@ -28,7 +28,7 @@ class Delimiter{
   }
 }
 
-class MessageImageGenerator{
+class MessageImageGenerator {
   public $font;   // フォントパス
   public $size;   // フォントサイズ
   public $width;  // 半角1文字あたりの幅
@@ -47,7 +47,7 @@ class MessageImageGenerator{
     $y_margin マージン高さ
   */
   function __construct($font = "C:\\WINDOWS\\Fonts\\msgothic.ttc", $size = 12,
-		       $x_margin = 5, $y_margin = 2, $is_trans = false){
+		       $x_margin = 5, $y_margin = 2, $is_trans = false) {
     $this->font = $font;
     $this->size = $size;
     $this->x_margin = $x_margin;
@@ -68,22 +68,22 @@ class MessageImageGenerator{
     新規デリミタを追加する関数
     $nd 新しいデリミタと使用色を定義したDelimiterクラス
   */
-  function AddDelimiter($nd){
-    foreach($this->delimiters as &$d){ // 既に登録されているデリミタかどうか調べる
-      if($d->c == $nd->c){
+  function AddDelimiter(Delimiter $nd) {
+    foreach ($this->delimiters as &$d) { // 既に登録されているデリミタかどうか調べる
+      if ($d->c == $nd->c) {
         $d = $nd; //登録済みのデリミタを上書きする
         return;
       }
     }
-    array_push($this->delimiters, $nd); // 新しいデリミタを追加する
+    $this->delimiters[] = $nd; // 新しいデリミタを追加する
   }
   /*
     登録されているデリミタを削除する関数
     $c デリミタ文字
   */
-  function DeleteDelimiter($c){
-    for($i = 0; $i < count($this->delimiters); $i++){
-      if($this->delimiters[$i]->c == $c){
+  function DeleteDelimiter($c) {
+    for ($i = 0; $i < count($this->delimiters); $i++) {
+      if ($this->delimiters[$i]->c == $c) {
         array_splice($this->delimiters, $i, 1); //登録されているデリミタを削除する
         return;
       }
@@ -94,9 +94,9 @@ class MessageImageGenerator{
     $c デリミタ文字
     返り値 対応するデリミタクラス。登録されていない場合はデフォルトのデリミタクラス
   */
-  function GetDelimiter($c){
-    for($i = 0; $i < count($this->delimiters); $i++){
-      if($this->delimiters[$i]->c == $c){
+  function GetDelimiter($c) {
+    for ($i = 0; $i < count($this->delimiters); $i++) {
+      if ($this->delimiters[$i]->c == $c) {
         return $this->delimiters[$i];
       }
     }
@@ -106,12 +106,12 @@ class MessageImageGenerator{
     登録されているデリミタから分割用の正規表現文字列を作成する関数
     返り値 正規表現文字列
   */
-  function GenerateDelimiterRegEx(){
-    if(count($this->delimiters) == 0) return '';
+  function GenerateDelimiterRegEx() {
+    if (count($this->delimiters) == 0) return '';
     $regex_str = '/[';
-    foreach($this->delimiters as $d){
+    foreach ($this->delimiters as $d) {
       //正規表現で特別な意味を持つ文字をデリミタとして使う場合は、ここで\を挿入する必要あり
-      switch($d->c){
+      switch ($d->c) {
       case '|':
         $regex_str .= '\|';
 	break;
@@ -131,7 +131,7 @@ class MessageImageGenerator{
     文字データの整形処理
     必要なら文字コード変換や正規表現の処理を実行する
   */
-  function GetMessage($str, $regex){
+  function GetMessage($str, $regex) {
     $message = $regex == '' ? $str : preg_replace($regex, '', $str);
     return mb_convert_encoding($message, 'UTF-8', 'auto');
   }
@@ -158,12 +158,12 @@ class MessageImageGenerator{
     $col_char = imagecolorallocate($img, $this->def_col[0], $this->def_col[1], $this->def_col[2]);
     $col_back = imagecolorallocate($img, $this->def_bgc[0], $this->def_bgc[1], $this->def_bgc[2]);
     $color = $col_char; // 文字描画色をデフォルト文字色に設定
-    if($this->is_trans) imagecolortransparent($img, $col_back); // 背景を透明色に設定する場合
+    if ($this->is_trans) imagecolortransparent($img, $col_back); // 背景を透明色に設定する場合
     imagefill($img, 0, 0, $col_back);
 
     // 各行ごとに処理
     $y_disp = $this->y_margin;
-    foreach(preg_split('/\n/', $msg, -1, PREG_SPLIT_NO_EMPTY) as $line){
+    foreach (preg_split('/\n/', $msg, -1, PREG_SPLIT_NO_EMPTY) as $line) {
       //この行でどれだけ消費するか計算
       //echo $line.'<br>';
       $line_len = mb_strlen($line);
@@ -178,7 +178,7 @@ class MessageImageGenerator{
       //echo print_r($array_msg, true) . '<br>';
       $str_total = '';
       $r_str_old = ''; //位置補正用
-      for($i = 0; $i < count($array_msg); $i++){
+      for ($i = 0; $i < count($array_msg); $i++) {
 	$str_len = mb_strlen($array_msg[$i][0]);
 	//echo 'str_r: ' . $str_len . ' -> "' . $array_msg[$i][0] . '"<br>';
 	$str = mb_convert_encoding($array_msg[$i][0], 'UTF-8', 'auto');
@@ -186,24 +186,24 @@ class MessageImageGenerator{
 	$str_total .= $str;
 	$r_str       = imagettfbbox($this->size, 0, $this->font, $str);
 	$r_str_total = imagettfbbox($this->size, 0, $this->font, $str_total);
-	if(is_array($r_str_old) && count($calib) > 0){ //位置補正処理
+	if (is_array($r_str_old) && count($calib) > 0) { //位置補正処理
 	  $diff = $r_str_total[2] - ($r_str[2] + $r_str_old[2]);
-	  if($diff != 0) $r_str[2] += floor($diff * array_shift($calib));
+	  if ($diff != 0) $r_str[2] += floor($diff * array_shift($calib));
 	}
 	$r_str_old = $r_str_total; //補正用の現在値を保存
 	//echo print_r($r_str, true) . '<br>';
 	//echo print_r($r_str_total, true) . '<br>';
 
 	// 文字色の決定
-	if($array_msg[$i][1] > 0){
+	if ($array_msg[$i][1] > 0) {
 	  //echo $str_len . '<br>';
 	  $c_d = $this->GetDelimiter($line[$array_msg[$i][1] - 1]);
-	  if($d_stack[0] == $c_d->c){
+	  if ($d_stack[0] == $c_d->c) {
 	    //既に同じデリミタがスタックにある→現在の色指定を解除
 	    array_shift($d_stack);
 	    $c_d = $this->GetDelimiter($d_stack[0]);
 	  }
-	  else{
+	  else {
 	    //現在のデリミタをスタックに追加
 	    array_unshift($d_stack, $c_d->c);
 	  }
@@ -232,7 +232,7 @@ function drawboldtext($image, $size, $angle, $x_cord, $y_cord, $color, $fontfile
 {
    $_x = array(1, 0, 1, 0, -1, -1, 1, 0, -1);
    $_y = array(0, -1, -1, 0, 0, -1, 1, 1, 1);
-   for($n=0;$n<=8;$n++)
+   for ($n=0;$n<=8;$n++)
    {
      ImageTTFText($image, $size, $angle, $x_cord+$_x[$n], $y_cord+$_y[$n], $color, $fontfile, $text);
    }

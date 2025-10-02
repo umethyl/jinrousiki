@@ -8,16 +8,15 @@
   ・毒：人狼系 + 妖狐陣営 + 鬼陣営
 */
 RoleManager::LoadFile('ogre');
-class Role_poison_ogre extends Role_ogre{
+class Role_poison_ogre extends Role_ogre {
   public $mix_in = 'poison';
   public $reduce_rate = 3;
-  function __construct(){ parent::__construct(); }
 
-  function Win($winner){ return $winner == 'quiz' || $this->IsLive(); }
+  function Win($winner) { return $winner == 'quiz' || $this->IsLive(); }
 
-  protected function IgnoreAssassin($user){ return $user->IsRole('quiz'); }
+  protected function IgnoreAssassin(User $user) { return $user->IsRole('quiz'); }
 
-  protected function Assassin($user){ $user->AddRole('panelist'); }
+  protected function Assassin(User $user) { $user->AddRole('panelist'); }
 
-  function IsPoisonTarget($user){ return $user->IsRoleGroup('wolf', 'fox', 'ogre', 'yaksa'); }
+  function IsPoisonTarget(User $user) { return $user->IsRoleGroup('wolf', 'fox', 'ogre', 'yaksa'); }
 }

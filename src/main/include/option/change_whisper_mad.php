@@ -1,11 +1,10 @@
 <?php
-class Option_change_whisper_mad extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
-
-	function LoadMessages() {
-		$this->caption = '囁き狂人村';
-		$this->explain = '囁き狂人村';
-	}
+/*
+  ◆囁き狂人村 (change_whisper_mad)
+  ○仕様
+  ・配役：狂人 → 囁き狂人
+*/
+OptionManager::Load('replace_human');
+class Option_change_whisper_mad extends Option_replace_human {
+  function GetCaption() { return '囁き狂人村'; }
 }

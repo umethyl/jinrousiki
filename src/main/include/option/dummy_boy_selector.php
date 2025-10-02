@@ -1,37 +1,54 @@
 <?php
+/*
+  ◆初日の夜は身代わり君 (セレクタ)
+*/
 class Option_dummy_boy_selector extends SelectorRoomOptionItem {
-	function  __construct() {
-		global $GAME_OPT_CONF;
-		parent::__construct(RoomOption::GAME_OPTION);
-		$this->formtype = 'group';
-		$this->collect = 'CollectValue';
-		$this->value = $GAME_OPT_CONF->default_dummy_boy;
-	}
+  public $group = RoomOption::GAME_OPTION;
+  public $type  = 'group';
+  public $form_list = array('dummy_boy' => 'on', 'gm_login' => 'gm_login');
 
-	function LoadMessages() {
-		$this->caption = '初日の夜は身代わり君';
-	}
+  function __construct() {
+    parent::__construct();
+    $this->value = GameOptionConfig::$default_dummy_boy;
+    if (OptionManager::$change) $this->enable = false;
+  }
 
-	function  GetItems() {
-		$items = array(
-			'' => new Option_no_dummy_boy(),
-			'on' => RoomOption::Get('dummy_boy'),
-			'gm_login' => RoomOption::Get('gm_login'),
-		);
-		if (isset($items[$this->value])) {
-			$items[$this->value]->value = true;
-		}
-		return $items;
-	}
+  function GetCaption() { return '初日の夜は身代わり君'; }
+
+  function GetExplain() { return '配役は<a href="info/rule.php">ルール</a>を確認して下さい'; }
+
+  function GetItem() {
+    $stack = array(''         => new Option_no_dummy_boy(),
+		   'on'       => OptionManager::GetClass('dummy_boy'),
+		   'gm_login' => OptionManager::GetClass('gm_login'));
+    foreach ($stack as $key => $item) {
+      $item->form_name  = $this->form_name;
+      $item->form_value = $key;
+    }
+    if (isset($stack[$this->value])) $stack[$this->value]->value = true;
+    return $stack;
+  }
+
+  function LoadPost() {
+    if (! isset($_POST[$this->name])) return false;
+    $post = $_POST[$this->name];
+
+    foreach ($this->form_list as $option => $value) {
+      if ($post == $value) {
+	RQ::$get->$option = true;
+	array_push(RoomOption::${$this->group}, $option);
+	break;
+      }
+    }
+  }
 }
 
+/*
+  ◆身代わり君なし
+*/
 class Option_no_dummy_boy extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::GAME_OPTION);
-		$this->formtype = 'radio';
-	}
+  public $group = RoomOption::GAME_OPTION;
+  public $type  = 'radio';
 
-	function LoadMessages() {
-		$this->explain = '身代わり君なし';
-	}
+  function GetCaption() { return '身代わり君なし'; }
 }

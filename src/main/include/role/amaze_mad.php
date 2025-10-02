@@ -7,16 +7,13 @@
 RoleManager::LoadFile('critical_mad');
 class Role_amaze_mad extends Role_critical_mad {
   public $bad_status = 'blind_vote';
-  function __construct(){ parent::__construct(); }
 
-  function VoteAction(){
-    global $ROOM;
-
+  function VoteAction() {
     foreach ($this->GetStack() as $uname => $target_uname) {
       if ($this->IsVoted($target_uname)) {
-	$ROOM->SystemMessage($ROOM->date, 'BLIND_VOTE');
-	$ROOM->SystemMessage($ROOM->date, 'BLIND_VOTE', 1);
-	$ROOM->ResultDead(null, 'BLIND_VOTE');
+	DB::$ROOM->SystemMessage(DB::$ROOM->date, 'BLIND_VOTE');
+	DB::$ROOM->SystemMessage(DB::$ROOM->date, 'BLIND_VOTE', 1);
+	DB::$ROOM->ResultDead(null, 'BLIND_VOTE');
 	return;
       }
     }

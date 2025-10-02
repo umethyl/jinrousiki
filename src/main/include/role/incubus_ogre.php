@@ -5,15 +5,15 @@
   ・勝利：生存 + 女性全滅
 */
 RoleManager::LoadFile('ogre');
-class Role_incubus_ogre extends Role_ogre{
-  public $resist_rate = 40;
-  public $reduce_rate =  2;
-  function __construct(){ parent::__construct(); }
+class Role_incubus_ogre extends Role_ogre {
+  public $resist_rate  = 40;
+  public $reduce_rate  =  2;
+  public $reflect_rate = 40;
 
-  function Win($winner){
-    if($this->IsDead()) return false;
-    foreach($this->GetUser() as $user){
-      if(! $this->IsActor($user->uname) && $user->IsLive() && $user->IsFemale()) return false;
+  function Win($winner) {
+    if ($this->IsDead()) return false;
+    foreach (DB::$USER->rows as $user) {
+      if (! $this->IsActor($user->uname) && $user->IsLive() && $user->IsFemale()) return false;
     }
     return true;
   }

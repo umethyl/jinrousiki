@@ -1,11 +1,10 @@
 <?php
-class Option_full_mad extends CheckRoomOptionItem {
-	function  __construct() {
-		parent::__construct(RoomOption::ROLE_OPTION);
-	}
-
-	function LoadMessages() {
-		$this->caption = '狂人村';
-		$this->explain = '狂人村';
-	}
+/*
+  ◆狂人村 (full_mad)
+  ○仕様
+  ・配役：村人 → 狂人
+*/
+OptionManager::Load('replace_human');
+class Option_full_mad extends Option_replace_human {
+  function GetCaption() { return '狂人村'; }
 }
