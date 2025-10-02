@@ -1,7 +1,7 @@
 <?php
 //-- ルール情報コントローラー --//
 final class RuleInfoController extends JinrouController {
-  protected static function Load() {
+  protected static function LoadSetting() {
     Loader::LoadClass('InfoTime');
   }
 

@@ -70,6 +70,44 @@ class GameHTML {
     return $str . HTML::GenerateLogLink($url, false, Text::BRLF . $header);
   }
 
+  //プレイ中ログリンク一覧ヘッダー生成
+  public static function GenerateGameLogLinkListHeader() {
+    return Text::BRLF . GameMessage::LOG_LINK_VIEW . ' ';
+  }
+
+  //プレイ中ログリンク一覧生成
+  public static function GenerateGameLogLinkList($url) {
+    $str = self::GenerateGameLogLink($url, RoomScene::BEFORE, 0);
+    if (DB::$ROOM->date > 1) {
+      if (DB::$ROOM->IsOption('open_day')) {
+	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, 1);
+      }
+      $str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, 1);
+      for ($i = 2; $i < DB::$ROOM->date; $i++) {
+	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, $i);
+	$str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, $i);
+      }
+      if (DB::$ROOM->IsPlaying() && DB::$ROOM->IsNight()) {
+	//プレイ中の夜は当日の昼も表示する
+	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, DB::$ROOM->date);
+      }
+    }
+    return $str;
+  }
+
+  //プレイ中ログリンク生成
+  public static function GenerateGameLogLink($url, $scene, $date = null) {
+    $caption = self::GetGameLogLinkCaption($scene);
+    if (true === isset($date)) {
+      $url .= URL::GetAddInt(RequestDataGameLog::DATE, $date);
+      $str = $date . Text::Quote($caption);
+    } else {
+      $str = $caption;
+    }
+    $url .= URL::GetAddString(RequestDataGameLog::SCENE, $scene);
+    return Text::Format(self::GetGameLogLink(), $url, $str);
+  }
+
   //プレイヤー一覧生成
   public static function GeneratePlayer($heaven = false) {
     //DB::$ROOM->Stack()->p('event', '◆Event');
@@ -313,9 +351,25 @@ class GameHTML {
     echo self::GenerateLogLink();
   }
 
+  //プレイ中ログリンク一覧ヘッダー出力
+  public static function OutputGameLogLinkListHeader() {
+    echo self::GenerateGameLogLinkListHeader();
+  }
+
+  //プレイ中ログリンク一覧出力
+  public static function OutputGameLogLinkList($url) {
+    echo self::GenerateGameLogLinkList($url);
+  }
+
+  //プレイ中ログリンク出力
+  public static function OutputGameLogLink($url, $scene, $date = null) {
+    echo self::GenerateGameLogLink($url, $scene, $date);
+  }
+
   //タイマー JavaScript コード出力 (リアルタイム用)
   public static function OutputTimer($end_time, $type = null, $flag = false) {
-    $end_date = GameTime::ConvertJavaScriptDate($end_time);
+    $end_date   = GameTime::ConvertJavaScriptDate($end_time);
+    $play_sound = (true === isset($type)) && RQ::Get()->play_sound;
 
     HTML::OutputJavaScript('output_realtime');
     HTML::OutputJavaScriptHeader();
@@ -324,9 +378,10 @@ class GameHTML {
       GameTime::ConvertJavaScriptDate(DB::$ROOM->system_time),
       $end_date,
       $end_date, GameTime::ConvertJavaScriptDate(DB::$ROOM->scene_start_time),
-      Switcher::GetBool(isset($type)),
-      (isset($type) && class_exists('Sound')) ? SoundHTML::Generate($type) : '',
-      Switcher::GetBool($flag), TimeConfig::ALERT_DISTANCE
+      Switcher::GetBool($play_sound),
+      (true === $play_sound) ? SoundHTML::Generate($type) : '',
+      Switcher::GetBool($flag),
+      TimeConfig::ALERT_DISTANCE
     );
     HTML::OutputJavaScriptFooter();
   }
@@ -759,6 +814,31 @@ class GameHTML {
   //ゲームトップタグ
   private static function GetGameTop() {
     return '<a id="game_top"></a>';
+  }
+
+  //プレイ中ログリンクタグ
+  private static function GetGameLogLink() {
+    return '<a target="_blank" href="%s">%s</a>';
+  }
+
+  //プレイ中ログリンク表示名取得
+  private static function GetGameLogLinkCaption($scene) {
+    switch ($scene) {
+    case RoomScene::BEFORE:
+      return GameMessage::GAME_LOG_BEFOREGAME;
+
+    case RoomScene::DAY:
+      return GameMessage::GAME_LOG_DAY;
+
+    case RoomScene::NIGHT:
+      return GameMessage::GAME_LOG_NIGHT;
+
+    case RoomScene::AFTER:
+      return GameMessage::GAME_LOG_AFTERGAME;
+
+    case RoomScene::HEAVEN:
+      return GameMessage::GAME_LOG_HEAVEN;
+    }
   }
 
   //タイマー JavaScript コードタグ

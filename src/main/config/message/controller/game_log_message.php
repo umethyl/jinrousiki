@@ -2,7 +2,6 @@
 //-- GameLog 専用メッセージ --//
 class GameLogMessage {
   /* エラー処理 */
-  const CERTIFY = 'ログ閲覧認証エラー';
   const INPUT   = '入力データエラー';
   const PLAYING = '：まだゲームが終了していません';
   const FUTURE  = '：無効なシーンです';

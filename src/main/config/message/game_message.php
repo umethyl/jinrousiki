@@ -28,6 +28,13 @@ class GameMessage {
   const LOG_LINK_VIEW = '[ログ]';
   const LOG_LINK_ROLE = '[役職表示ログ]';
 
+  /* プレイログリンク */
+  const GAME_LOG_BEFOREGAME = '前';
+  const GAME_LOG_DAY        = '昼';
+  const GAME_LOG_NIGHT      = '夜';
+  const GAME_LOG_AFTERGAME  = '後';
+  const GAME_LOG_HEAVEN     = '霊';
+
   /* タイムテーブル */
   const CLOSING    = '[募集停止中]';
   const TIME_TABLE = '%d 日目<span>(生存者 %d 人)</span>';

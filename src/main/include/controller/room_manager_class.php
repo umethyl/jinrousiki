@@ -1,7 +1,7 @@
 <?php
 //-- 村作成コントローラー --//
 final class RoomManagerController extends JinrouController {
-  protected static function Load() {
+  protected static function Start() {
     if (false === DB::ConnectInHeader()) {
       return false;
     }
@@ -9,7 +9,10 @@ final class RoomManagerController extends JinrouController {
     if (Loader::IsLoadedFile('index_class')) {
       self::Maintenance();
     }
-    RQ::LoadRequest('room_manager');
+  }
+
+  protected static function GetLoadRequest() {
+    return 'room_manager';
   }
 
   protected static function EnableCommand() {

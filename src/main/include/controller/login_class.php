@@ -2,9 +2,12 @@
 //◆文字化け抑制◆//
 //-- ログイン処理コントローラー --//
 final class LoginController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('login');
-    DB::Connect();
+  protected static function GetLoadRequest() {
+    return 'login';
+  }
+
+  protected static function EnableLoadDatabase() {
+    return true;
   }
 
   protected static function EnableCommand() {

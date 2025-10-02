@@ -2,17 +2,53 @@
 //◆文字化け抑制◆//
 //-- GameLog コントローラー --//
 final class GameLogController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('game_log');
-    DB::Connect();
-    Session::Login();
+  protected static function GetLoadRequest() {
+    return 'game_log';
+  }
 
+  protected static function EnableLoadDatabase() {
+    return true;
+  }
+
+  protected static function LoadSession() {
+    Session::Certify();
+  }
+
+  protected static function LoadRoom() {
     DB::LoadRoom();
     DB::$ROOM->SetFlag(RoomMode::LOG);
+  }
+
+  protected static function LoadUser() {
     DB::LoadUser();
+  }
+
+  protected static function LoadSelf() {
     DB::LoadSelf();
-    self::Certify();
-    self::Validate();
+  }
+
+  protected static function LoadExtra() {
+    //シーンチェック
+    switch (RQ::Get()->scene) {
+    case RoomScene::AFTER:
+    case RoomScene::HEAVEN:
+      if (false === DB::$ROOM->IsFinished()) { //霊界・ゲーム終了後はゲーム終了後のみ
+	self::OutputError(GameLogMessage::PLAYING);
+      }
+      break;
+
+    default:
+      if (DB::$ROOM->date < RQ::Get()->date ||
+	  (DB::$ROOM->IsDate(RQ::Get()->date) &&
+	   (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Get()->scene))) { //未来判定
+	self::OutputError(GameLogMessage::FUTURE);
+      }
+      DB::$ROOM->last_date = DB::$ROOM->date;
+      DB::$ROOM->date      = RQ::Get()->date;
+      DB::$ROOM->SetScene(RQ::Get()->scene);
+      DB::$USER->SetEvent(true);
+      break;
+    }
   }
 
   protected static function Output() {
@@ -37,41 +73,6 @@ final class GameLogController extends JinrouController {
       }
     }
     HTML::OutputFooter(true);
-  }
-
-  //認証 (死者 or ゲーム終了後のみ)
-  private static function Certify() {
-    //参加者であればプレイ中でも見えるように調整中 (問題ないと判断できたら関数自体を削除できる想定)
-    return;
-
-    if (DB::$SELF->IsDead() || DB::$ROOM->IsFinished()) {
-      return;
-    }
-    HTML::OutputResult(GameLogMessage::CERTIFY, GameLogMessage::CERTIFY . Message::TOP);
-  }
-
-  //シーンチェック
-  private static function Validate() {
-    switch (RQ::Get()->scene) {
-    case RoomScene::AFTER:
-    case RoomScene::HEAVEN:
-      if (false === DB::$ROOM->IsFinished()) { //霊界・ゲーム終了後はゲーム終了後のみ
-	self::OutputError(GameLogMessage::PLAYING);
-      }
-      break;
-
-    default:
-      if (DB::$ROOM->date < RQ::Get()->date ||
-	  (DB::$ROOM->IsDate(RQ::Get()->date) &&
-	   (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Get()->scene))) { //未来判定
-	self::OutputError(GameLogMessage::FUTURE);
-      }
-      DB::$ROOM->last_date = DB::$ROOM->date;
-      DB::$ROOM->date      = RQ::Get()->date;
-      DB::$ROOM->SetScene(RQ::Get()->scene);
-      DB::$USER->SetEvent(true);
-      break;
-    }
   }
 
   //ヘッダ出力

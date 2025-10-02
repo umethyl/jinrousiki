@@ -1,7 +1,7 @@
 <?php
 //-- トリップテストコントローラー --//
 final class TripTestController extends JinrouController {
-  protected static function Load() {
+  protected static function LoadRequest() {
     DevHTML::LoadRequest();
   }
 

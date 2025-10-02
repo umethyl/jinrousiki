@@ -2,8 +2,8 @@
 //◆文字化け抑制◆//
 //-- TOPページコントローラー --//
 final class JinrouIndexController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('request_index');
+  protected static function GetLoadRequest() {
+    return 'request_index';
   }
 
   protected static function Output() {

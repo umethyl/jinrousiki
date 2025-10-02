@@ -1,9 +1,15 @@
 <?php
 //-- アイコン一覧表示コントローラー --//
 final class IconViewController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('icon_view');
-    DB::Connect();
+  protected static function GetLoadRequest() {
+    return 'icon_view';
+  }
+
+  protected static function EnableLoadDatabase() {
+    return true;
+  }
+
+  protected static function LoadSession() {
     Session::Start();
   }
 

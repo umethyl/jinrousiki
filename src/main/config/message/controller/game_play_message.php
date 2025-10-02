@@ -14,14 +14,6 @@ class GamePlayMessage {
   public static $header_user_manager  = '登録情報変更';
   public static $header_room_manager  = '村オプション変更';
 
-  /* ログリンク */
-  const LOG_NAME       = 'ログ';
-  const LOG_BEFOREGAME = '前';
-  const LOG_DAY        = '昼';
-  const LOG_NIGHT      = '夜';
-  const LOG_AFTERGAME  = '後';
-  const LOG_HEAVEN     = '霊';
-
   /* ゲーム開始前 */
   const BEFOREGAME_CAUTION = 'ゲームを開始するには全員がゲーム開始に投票する必要があります';
   const BEFOREGAME_VOTE   = '(投票した人は村人リストの背景が赤くなります)';

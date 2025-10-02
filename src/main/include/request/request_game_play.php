@@ -85,7 +85,8 @@ class RequestGamePlay extends RequestGame {
     $query = '';
     foreach ($this->GetRawUrlStack($except, $filter) as $name => $value) {
       if ($value != '') {
-	$query .= sprintf('&%s=%s', $name, urlencode($value));
+	$format = ('' === $query) ? '%s=%s' : '&%s=%s';
+	$query .= sprintf($format, $name, urlencode($value));
       }
     }
     return $query;

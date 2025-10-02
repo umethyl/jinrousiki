@@ -2,21 +2,35 @@
 //◆文字化け抑制◆//
 //-- GameVote コントローラー --//
 final class GameVoteController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('game_vote');
-    DB::Connect();
+  protected static function GetLoadRequest() {
+    return 'game_vote';
+  }
+
+  protected static function EnableLoadDatabase() {
+    return true;
+  }
+
+  protected static function LoadSession() {
     Session::Login();
+  }
+
+  protected static function LoadRoom() {
     if (false === DB::Transaction()) { //トランザクション開始
       VoteHTML::OutputResult(VoteMessage::DB_ERROR);
     }
 
-    DB::LoadRoom(true); //村情報 (ロック付き)
+    DB::LoadRoom(true); //ロック付き
     if (DB::$ROOM->IsFinished()) {
       VoteHTML::OutputError(VoteMessage::FINISHED_TITLE, VoteMessage::FINISHED);
     }
     DB::$ROOM->system_time = Time::Get();
+  }
 
-    DB::LoadUser(true); //ユーザ情報 (ロック付き)
+  protected static function LoadUser() {
+    DB::LoadUser(true); //ロック付き
+  }
+
+  protected static function LoadSelf() {
     DB::LoadSelf();
   }
 

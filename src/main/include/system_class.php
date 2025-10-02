@@ -26,7 +26,71 @@ abstract class JinrouController {
   protected static function Start() {}
 
   //データロード
-  protected static function Load() {}
+  final protected static function Load() {
+    static::LoadRequest();
+    static::LoadDB();
+    static::LoadSession();
+    static::LoadSetting();
+    if (true === static::EnableLoadRoom()) {
+      static::LoadRoom();
+      static::LoadUser();
+      static::LoadSelf();
+    }
+    static::LoadExtra();
+  }
+
+  //リクエストロード
+  protected static function LoadRequest() {
+    $request = static::GetLoadRequest();
+    if (null !== $request) {
+      RQ::LoadRequest($request);
+    }
+  }
+
+  //リクエストクラス取得
+  protected static function GetLoadRequest() {
+    return null;
+  }
+
+  //DB情報ロード
+  final protected static function LoadDB() {
+    if (true === static::EnableLoadDatabase()) {
+      DB::Connect(static::GetLoadDatabaseID());
+    }
+  }
+
+  //DB情報ロード有効判定
+  protected static function EnableLoadDatabase() {
+    return false;
+  }
+
+  //DB情報ロードID取得
+  protected static function GetLoadDatabaseID() {
+    return null;
+  }
+
+  //セッションロード
+  protected static function LoadSession() {}
+
+  //設定情報ロード
+  protected static function LoadSetting() {}
+
+  //村情報ロード有効判定
+  protected static function EnableLoadRoom() {
+    return true;
+  }
+
+  //村情報ロード
+  protected static function LoadRoom() {}
+
+  //ユーザ情報ロード
+  protected static function LoadUser() {}
+
+  //本人情報ロード
+  protected static function LoadSelf() {}
+
+  //追加情報ロード
+  protected static function LoadExtra() {}
 
   //コマンド実行有効判定
   protected static function EnableCommand() {

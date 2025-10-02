@@ -2,8 +2,8 @@
 //◆文字化け抑制◆//
 //-- 関連サーバ村情報コントローラー --//
 final class SharedRoomInfoController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('shared_room');
+  protected static function GetLoadRequest() {
+    return 'shared_room';
   }
 
   protected static function Output() {

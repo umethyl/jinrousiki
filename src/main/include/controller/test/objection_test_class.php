@@ -1,7 +1,7 @@
 <?php
 //-- 異議ありテストコントローラー --//
 final class ObjectionTestController extends JinrouController {
-  protected static function Load() {
+  protected static function LoadRequest() {
     DevHTML::LoadRequest();
   }
 

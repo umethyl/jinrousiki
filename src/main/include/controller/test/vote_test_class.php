@@ -1,8 +1,11 @@
 <?php
 //投票テストコントローラー
 final class VoteTestController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('game_view');
+  protected static function GetLoadRequest() {
+    return 'game_view';
+  }
+
+  protected static function LoadSetting() {
     include('data/vote_header.php');
 
     //特殊モード
@@ -31,8 +34,9 @@ final class VoteTestController extends JinrouController {
     //仮想発言
     RQ::Set('say', '');
     include('data/vote_say.php');
+  }
 
-    //データロード
+  protected static function LoadRoom() {
     DevRoom::Load();
     DB::$ROOM->date = VoteTestRoom::DATE;
     DB::$ROOM->SetScene(VoteTestRoom::SCENE);
@@ -40,7 +44,9 @@ final class VoteTestController extends JinrouController {
       DB::$ROOM->system_time = Time::Get(); //現在時刻を取得
     }
     RQ::GetTest()->winner = VoteTestRoom::WINNER;
+  }
 
+  protected static function LoadUser() {
     DevUser::Load();
     DB::$USER->SetEvent(); //天候テスト用
     include('data/vote_self.php');

@@ -2,25 +2,23 @@
 //-- ◆文字化け抑制◆ --//
 //-- 過去ログ表示クラス --//
 final class OldLogController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('old_log');
-    DB::Connect(RQ::Get()->db_no);
+  protected static function GetLoadRequest() {
+    return 'old_log';
   }
 
-  protected static function Output() {
-    if (RQ::Get()->is_room) {
-      self::LoadRoom();
-      self::LoadUser();
-      self::LoadSelf();
-      OldLogHTML::Output();
-    } else {
-      OldLogHTML::OutputList(RQ::Get()->page);
-    }
-    HTML::OutputFooter();
+  protected static function EnableLoadDatabase() {
+    return true;
   }
 
-  //村情報ロード
-  private static function LoadRoom() {
+  protected static function GetLoadDatabaseID() {
+    return RQ::Get()->db_no;
+  }
+
+  protected static function EnableLoadRoom() {
+    return true === RQ::Get()->is_room;
+  }
+
+  protected static function LoadRoom() {
     DB::LoadRoom();
     DB::$ROOM->LoadOption();
     DB::$ROOM->SetFlag(RoomMode::LOG);
@@ -30,8 +28,7 @@ final class OldLogController extends JinrouController {
     DB::$ROOM->last_date = DB::$ROOM->date;
   }
 
-  //ユーザ情報ロード
-  private static function LoadUser() {
+  protected static function LoadUser() {
     DB::LoadUser();
     DB::$USER->SetEvent(true);
     DB::$USER->player = RoomDB::GetPlayer();
@@ -40,11 +37,24 @@ final class OldLogController extends JinrouController {
     }
   }
 
-  //本人情報ロード
-  private static function LoadSelf() {
-    DB::$ROOM->IsOn(RoomMode::SINGLE) ? DB::LoadSelf(RQ::Get()->user_no) : DB::LoadViewer();
+  protected static function LoadSelf() {
+    if (DB::$ROOM->IsOn(RoomMode::SINGLE)) {
+      DB::LoadSelf(RQ::Get()->user_no);
+    } else {
+      DB::LoadViewer();
+    }
+
     if (DB::$ROOM->IsOn(RoomMode::WATCH)) {
       DB::$SELF->live = UserLive::LIVE;
     }
+  }
+
+  protected static function Output() {
+    if (RQ::Get()->is_room) {
+      OldLogHTML::Output();
+    } else {
+      OldLogHTML::OutputList(RQ::Get()->page);
+    }
+    HTML::OutputFooter();
   }
 }

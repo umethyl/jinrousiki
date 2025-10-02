@@ -1,9 +1,15 @@
 <?php
 //足音投票テストコントローラー
 final class StepVoteTestController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('game_view');
+  protected static function GetLoadRequest() {
+    return 'game_view';
+  }
 
+  protected static function EnableLoadDatabase() {
+    return false; //必要なときだけ設定する
+  }
+
+  protected static function LoadSetting() {
     //仮想村
     $stack = ['name' => GameMessage::ROOM_TITLE_FOOTER, 'status' => RoomStatus::PLAYING];
     DevRoom::Initialize($stack);
@@ -15,21 +21,22 @@ final class StepVoteTestController extends JinrouController {
     DevUser::Complement();
 
     //仮想投票データ
-    $set_date = 6;
     RQ::GetTest()->vote = new stdClass();
     RQ::GetTest()->vote->night = [];
 
     //仮想イベント
     include('data/vote_event.php');
+  }
 
-    //データロード
+  protected static function LoadRoom() {
     $set_date = 6;
-    //DB::Connect(); //DB接続 (必要なときだけ設定する)
     DevRoom::Load();
     DB::$ROOM->date = $set_date;
     DB::$ROOM->SetScene(RoomScene::NIGHT);
     RQ::GetTest()->winner = WinCamp::WOLF;
+  }
 
+  protected static function LoadUser() {
     DevUser::Load();
     #DB::$USER->ByID(9)->live = UserLive::LIVE;
     DB::LoadSelf(18);

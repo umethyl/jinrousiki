@@ -48,12 +48,20 @@ class GameViewHTML {
   //リンク出力
   private static function OutputLink() {
     $url = URL::GetRoom('game_view');
+    if (DB::$ROOM->IsFinished()) {
+      $link = GameHTML::GenerateLogLink();
+    } elseif (DB::$ROOM->IsPlaying()) {
+      $header = GameHTML::GenerateGameLogLinkListHeader();
+      $link   = $header . GameHTML::GenerateGameLogLinkList(URL::GetRoom('game_log'));
+    } else {
+      $link = '';
+    }
+
     Text::Printf(self::GetLink(),
       RoomHTML::GenerateTitle(),
       $url, RQ::Get()->ToURL(RequestDataGame::RELOAD, true), GameViewMessage::RELOAD,
       GameConfig::AUTO_RELOAD ? GameHTML::GenerateAutoReloadLink('<a href="' . $url) : '',
-      $url, GameViewMessage::BLANK, GameViewMessage::BACK,
-      DB::$ROOM->IsFinished() ? GameHTML::GenerateLogLink() : ''
+      $url, GameViewMessage::BLANK, GameViewMessage::BACK, $link
     );
   }
 

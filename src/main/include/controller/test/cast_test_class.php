@@ -1,9 +1,11 @@
 <?php
 //-- 村配役テストコントローラー --//
 final class CastTestController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('game_view');
+  protected static function GetLoadRequest() {
+    return 'game_view';
+  }
 
+  protected static function LoadSetting() {
     //仮想村
     DevRoom::Initialize(['name' => GameMessage::ROOM_TITLE_FOOTER]);
     include('data/cast_option.php');
@@ -14,9 +16,13 @@ final class CastTestController extends JinrouController {
 
     //設定調整
     include('data/cast_load.php');
+  }
 
-    //データロード
+  protected static function LoadRoom() {
     DevRoom::Load();
+  }
+
+  protected static function LoadUser() {
     DevUser::Load();
   }
 

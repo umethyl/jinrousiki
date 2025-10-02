@@ -1,9 +1,15 @@
 <?php
 //-- ユーザ登録コントローラー --//
 final class UserManagerController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('user_manager');
-    DB::Connect();
+  protected static function GetLoadRequest() {
+    return 'user_manager';
+  }
+
+  protected static function EnableLoadDatabase() {
+    return true;
+  }
+
+  protected static function LoadSession() {
     Session::Start();
   }
 

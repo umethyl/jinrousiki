@@ -6,18 +6,6 @@ class GamePlayHTML {
     Text::Printf(self::GetReloadButton(), $url, GamePlayMessage::RELOAD);
   }
 
-  //ログリンク出力
-  public static function OutputLogLink($header, $scene, $caption, $date = null) {
-    if (true === isset($date)) {
-      $header .= URL::GetAddInt(RequestDataGameLog::DATE, $date);
-      $str = $date . Text::Quote($caption);
-    } else {
-      $str = $caption;
-    }
-    $header .= URL::GetAddString(RequestDataGameLog::SCENE, $scene);
-    Text::Printf($header . '">%s</a>', $str);
-  }
-
   //ヘッダーリンク出力
   public static function OutputHeaderLink($url, $add_url, $type = null) {
     if (true === is_null($type)) {
@@ -149,11 +137,6 @@ class GamePlayHTML {
   //URLヘッダタグ
   public static function GetURLHeader() {
     return '<a target="_top" href="game_frame.php';
-  }
-
-  //ログリンクヘッダタグ
-  public static function GetLogLinkHeader() {
-    return '<a target="_blank" href="game_log.php%s';
   }
 
   //ログリンクテーブル td タグ

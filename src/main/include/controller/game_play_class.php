@@ -4,13 +4,20 @@
 final class GamePlayController extends JinrouController {
   private static $view;
 
-  protected static function Load() {
-    RQ::LoadRequest('game_play');
-    DB::Connect();
-    Session::LoginGamePlay();
+  protected static function GetLoadRequest() {
+    return 'game_play';
+  }
 
-    //-- 村情報 --//
-    DB::LoadRoom(); //村情報
+  protected static function EnableLoadDatabase() {
+    return true;
+  }
+
+  protected static function LoadSession() {
+    Session::LoginGamePlay();
+  }
+
+  protected static function LoadRoom() {
+    DB::LoadRoom();
     DB::$ROOM->Flag()->Set(RoomMode::DEAD,   RQ::Get()->dead_mode);
     DB::$ROOM->Flag()->Set(RoomMode::HEAVEN, RQ::Get()->heaven_mode);
     DB::$ROOM->system_time  = Time::Get();
@@ -30,11 +37,17 @@ final class GamePlayController extends JinrouController {
     } elseif (DB::$ROOM->IsNight()) {
       self::$view = new GamePlayView_Night();
     }
+  }
 
-    //-- ユーザ情報 --//
+  protected static function LoadUser() {
     DB::LoadUser();
-    DB::LoadSelf();
+  }
 
+  protected static function LoadSelf() {
+    DB::LoadSelf();
+  }
+
+  protected static function LoadExtra() {
     //-- 音声情報 --//
     Objection::Set(); //「異議」ありセット判定
     if (RQ::Get()->play_sound) { //音でお知らせ
@@ -358,33 +371,24 @@ abstract class GamePlayView {
   //ヘッダログリンクフッタ
   protected function OutputHeaderLinkFooter() {}
 
-  //過去ログリンク一覧出力
-  final protected function OutputLogLinkList($skip_header = false) {
-    if (true === $skip_header) { //protected 関数を増やして bool 引数による分岐を最適化した方がよい
-      echo Text::BR;
-    } else {
-      echo GamePlayHTML::GetLogLinkTableTd() . GamePlayMessage::LOG_NAME . ' ';
-    }
-    $this->OutputLogLink(RoomScene::BEFORE, GamePlayMessage::LOG_BEFOREGAME, 0);
-    if (DB::$ROOM->date > 1) {
-      if (DB::$ROOM->IsOption('open_day')) {
-	$this->OutputLogLink(RoomScene::DAY, GamePlayMessage::LOG_DAY, 1);
-      }
-      $this->OutputLogLink(RoomScene::NIGHT, GamePlayMessage::LOG_NIGHT, 1);
-      for ($i = 2; $i < DB::$ROOM->date; $i++) {
-	$this->OutputLogLink(RoomScene::DAY, GamePlayMessage::LOG_DAY, $i);
-	$this->OutputLogLink(RoomScene::NIGHT, GamePlayMessage::LOG_NIGHT, $i);
-      }
-    }
-    $this->OutputLogLinkListFooter();
+  //プレイ中ログリンク一覧出力
+  final protected function OutputGameLogLinkList() {
+    $this->OutputGameLogLinkListHeader();
+    GameHTML::OutputGameLogLinkList($this->GetLogLinkHeader());
+    $this->OutputGameLogLinkListFooter();
   }
 
-  //過去ログリンク一覧フッタ出力
-  protected function OutputLogLinkListFooter() {}
+  //プレイ中ログリンク一覧ヘッダ出力
+  protected function OutputGameLogLinkListHeader() {
+    echo GamePlayHTML::GetLogLinkTableTd() . GameMessage::LOG_LINK_VIEW . ' ';
+  }
 
-  //過去ログリンク出力
-  final protected function OutputLogLink($scene, $caption, $date = null) {
-    GamePlayHTML::OutputLogLink($this->GetLogLinkHeader(), $scene, $caption, $date);
+  //プレイ中ログリンク一覧フッタ出力
+  protected function OutputGameLogLinkListFooter() {}
+
+  //プレイ中ログリンク出力
+  final protected function OutputGameLogLink($scene, $date = null) {
+    GameHTML::OutputGameLogLink($this->GetLogLinkHeader(), $scene, $date);
   }
 
   //ヘッダーリンク出力 (スイッチ型)
@@ -596,7 +600,7 @@ abstract class GamePlayView {
   //過去ログリンクヘッダタグ取得
   private function GetLogLinkHeader() {
     if (false === isset($this->link_header)) {
-      $this->link_header = sprintf(GamePlayHTML::GetLogLinkHeader(), $this->SelectURL([]));
+      $this->link_header = $this->SelectURL([], 'game_log.php');
     }
     return $this->link_header;
   }
@@ -655,8 +659,12 @@ class GamePlayView_Before extends GamePlayView {
 
 //-- GamePlay 出力クラス (昼) --//
 class GamePlayView_Day extends GamePlayView {
+  protected function OutputGameLogLinkListHeader() {
+    GameHTML::OutputGameLogLinkListHeader();
+  }
+
   protected function OutputHeaderLinkFooter() {
-    $this->OutputLogLinkList(true);
+    $this->OutputGameLogLinkList();
   }
 
   protected function OutputSoundScene() {
@@ -672,8 +680,12 @@ class GamePlayView_Day extends GamePlayView {
 
 //-- GamePlay 出力クラス (夜) --//
 class GamePlayView_Night extends GamePlayView {
+  protected function OutputGameLogLinkListHeader() {
+    GameHTML::OutputGameLogLinkListHeader();
+  }
+
   protected function OutputHeaderLinkFooter() {
-    $this->OutputLogLinkList(true);
+    $this->OutputGameLogLinkList();
   }
 
   protected function OutputSoundScene() {
@@ -690,7 +702,7 @@ class GamePlayView_Night extends GamePlayView {
 //-- GamePlay 出力クラス (ゲーム終了後) --//
 class GamePlayView_After extends GamePlayView {
   protected function OutputHeaderLogLink() {
-    $this->OutputLogLinkList();
+    $this->OutputGameLogLinkList();
   }
 
   protected function OutputHeaderLinkHeader() {
@@ -711,17 +723,17 @@ class GamePlayView_After extends GamePlayView {
     GameHTML::OutputLogLink();
   }
 
-  protected function OutputLogLinkListFooter() {
+  protected function OutputGameLogLinkListFooter() {
     if (DB::$ROOM->date > 0) {
-      $this->OutputLogLink(RoomScene::DAY, GamePlayMessage::LOG_DAY, DB::$ROOM->date);
+      $this->OutputGameLogLink(RoomScene::DAY, DB::$ROOM->date);
     }
 
     if (TalkDB::ExistsLastNight()) {
-      $this->OutputLogLink(RoomScene::NIGHT, GamePlayMessage::LOG_NIGHT, DB::$ROOM->date);
+      $this->OutputGameLogLink(RoomScene::NIGHT, DB::$ROOM->date);
     }
 
-    $this->OutputLogLink(RoomScene::AFTER, GamePlayMessage::LOG_AFTERGAME);
-    $this->OutputLogLink(RoomScene::HEAVEN, GamePlayMessage::LOG_HEAVEN);
+    $this->OutputGameLogLink(RoomScene::AFTER);
+    $this->OutputGameLogLink(RoomScene::HEAVEN);
   }
 
   protected function OutputTimeTable() {
@@ -765,13 +777,7 @@ class GamePlayView_Heaven extends GamePlayView {
   }
 
   protected function OutputHeaderLink() {
-    $this->OutputLogLinkList();
-  }
-
-  protected function OutputLogLinkListFooter() {
-    if (DB::$ROOM->date > 1 && DB::$ROOM->IsNight()) {
-      $this->OutputLogLink(RoomScene::DAY, GamePlayMessage::LOG_DAY, DB::$ROOM->date);
-    }
+    return;
   }
 
   protected function IgnoreObjection($left_time) {

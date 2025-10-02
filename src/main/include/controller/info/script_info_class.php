@@ -1,7 +1,7 @@
 <?php
 //-- 特徴と仕様情報コントローラー --//
 final class ScriptInfoInfoController extends JinrouController {
-  protected static function Load() {
+  protected static function LoadSetting() {
     Loader::LoadClass('InfoTime');
   }
 

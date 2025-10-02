@@ -2,11 +2,19 @@
 //◆文字化け抑制◆//
 //-- 観戦画面コントローラー --//
 final class GameViewController extends JinrouController {
-  protected static function Load() {
-    RQ::LoadRequest('game_view');
-    DB::Connect(RQ::Get()->db_no);
+  protected static function GetLoadRequest() {
+    return 'game_view';
+  }
 
-    //村情報ロード
+  protected static function EnableLoadDatabase() {
+    return true;
+  }
+
+  protected static function GetLoadDatabaseID() {
+    return RQ::Get()->db_no;
+  }
+
+  protected static function LoadRoom() {
     DB::LoadRoom();
     DB::$ROOM->SetFlag(RoomMode::VIEW);
     DB::$ROOM->system_time = Time::Get();
@@ -15,9 +23,13 @@ final class GameViewController extends JinrouController {
     if (DB::$ROOM->IsBeforeGame()) {
       RQ::Set('retrieve_type', DB::$ROOM->scene); //投票済み情報
     }
+  }
 
-    //ユーザ情報ロード
+  protected static function LoadUser() {
     DB::LoadUser();
+  }
+
+  protected static function LoadSelf() {
     DB::LoadViewer();
   }
 
