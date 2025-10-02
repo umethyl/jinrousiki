@@ -26,7 +26,7 @@ final class LoginDB {
 
   //共通 Query 取得
   private static function GetQuery() {
-    $query = Query::Init()->Table('user_entry')->Where(['room_no', 'uname', 'password']);
-    return $query->WhereNot('live');
+    return Query::Init()->Table('user_entry')
+      ->Where(['room_no', 'uname', 'password'])->WhereNot('live');
   }
 }

@@ -9,7 +9,7 @@ final class UserDB {
       'user_no AS id', 'uname', 'handle_name', 'sex', 'profile', 'role', 'icon_no',
       'u.session_id', 'color', 'icon_name'
     ];
-    $query = self::GetQuery()->Table($table)->Select($column)->Where(['user_no']);
+    $query  = self::GetQuery()->Table($table)->Select($column)->Where(['user_no']);
 
     DB::Prepare($query->Build(), [RQ::Get()->room_no, $user_no]);
     return DB::FetchClass('User', true);
@@ -41,8 +41,8 @@ final class UserDB {
 
   //重複ユーザ判定
   public static function Duplicate($uname, $handle_name) {
-    $query = self::GetQueryExists()->Where(['live', 'uname', 'handle_name']);
-    $query->WhereOr(['uname', 'handle_name']);
+    $query = self::GetQueryExists()
+      ->Where(['live', 'uname', 'handle_name'])->WhereOr(['uname', 'handle_name']);
 
     DB::Prepare($query->Build(), [RQ::Get()->room_no, UserLive::LIVE, $uname, $handle_name]);
     return DB::Exists();
@@ -83,6 +83,7 @@ final class UserDB {
   public static function Update($set, array $list, $id) {
     $query = sprintf('UPDATE user_entry SET %s WHERE room_no = ? AND user_no = ?', $set);
     array_push($list, DB::$ROOM->id, $id);
+
     DB::Prepare($query, $list);
     return DB::FetchBool();
   }
@@ -105,9 +106,9 @@ final class UserDB {
 
   //GM ログアウト
   public static function LogoutGM() {
-    $query = self::GetQueryUpdate()->Set(['handle_name', 'password'])->SetNull('session_id');
-    $query->Where(['user_no']);
-    $list = [
+    $query = self::GetQueryUpdate()->Set(['handle_name', 'password'])->SetNull('session_id')
+      ->Where(['user_no']);
+    $list  = [
       Message::DUMMY_BOY, Text::Crypt(ServerConfig::PASSWORD), DB::$ROOM->id,
       DB::$USER->GetDummyBoyID()
     ];
@@ -178,8 +179,8 @@ final class UserLoaderDB {
       'profile', 'sex', 'role', 'role_id',
       'objection', 'live', 'last_load_scene', 'icon_filename', 'color'
     ];
-    $query = Query::Init()->Table($table)->Select($column)->Where(['room_no']);
-    $query->Order(['id' => true])->Lock($lock);
+    $query = Query::Init()->Table($table)->Select($column)
+      ->Where(['room_no'])->Order(['id' => true])->Lock($lock);
 
     DB::Prepare($query->Build(), [$room_no]);
     return DB::FetchClass('User');
@@ -188,8 +189,8 @@ final class UserLoaderDB {
   //ユーザデータ取得 (入村処理用)
   public static function LoadEntryUser($room_no) {
     $column = ['room_no', 'user_no AS id', 'uname', 'handle_name', 'live', 'ip_address'];
-    $query  = Query::Init()->Table('user_entry')->Select($column)->Where(['room_no']);
-    $query->Order(['id' => true])->Lock();
+    $query  = Query::Init()->Table('user_entry')->Select($column)
+      ->Where(['room_no'])->Order(['id' => true])->Lock();
 
     DB::Prepare($query->Build(), [$room_no]);
     return DB::FetchClass('User');
@@ -212,8 +213,8 @@ EOF;
       'objection', 'live', 'last_load_scene', 'icon_filename', 'color',
       'v.type AS vote_type'
     ];
-    $query = Query::Init()->Table($table)->Select($column)->Where(['u.room_no']);
-    $query->Order(['id' => true]);
+    $query = Query::Init()->Table($table)->Select($column)
+      ->Where(['u.room_no'])->Order(['id' => true]);
     $list  = [DB::$ROOM->vote_count, VoteAction::GAME_START, DB::$ROOM->id];
 
     DB::Prepare($query->Build(), $list);
@@ -237,8 +238,8 @@ EOF;
       'objection', 'live', 'last_load_scene', 'icon_filename', 'color',
       'v.target_no AS target_no'
     ];
-    $query = Query::Init()->Table($table)->Select($column)->Where(['u.room_no']);
-    $query->Order(['id' => true]);
+    $query = Query::Init()->Table($table)->Select($column)
+      ->Where(['u.room_no'])->Order(['id' => true]);
     $list  = [DB::$ROOM->date, DB::$ROOM->vote_count, VoteAction::VOTE_KILL, DB::$ROOM->id];
 
     DB::Prepare($query->Build(), $list);
@@ -247,8 +248,8 @@ EOF;
 
   //生存陣営カウント
   public static function CountCamp($camp) {
-    $query = Query::Init()->Table('user_entry')->Select(['user_no']);
-    $query->Where(['room_no', 'live'])->WhereUpper('user_no');
+    $query = Query::Init()->Table('user_entry')->Select(['user_no'])
+      ->Where(['room_no', 'live'])->WhereUpper('user_no');
     $list  = [DB::$ROOM->id, UserLive::LIVE, 0];
 
     switch ($camp) {

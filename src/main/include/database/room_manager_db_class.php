@@ -19,8 +19,8 @@ final class RoomManagerDB {
       'room_no AS id', 'name', 'comment', 'game_option', 'option_role', 'max_user', 'status'
     ];
     $list   = self::GetStatus();
-    $query  = self::GetQueryBase()->Select($column)->WhereIn('status', count($list));
-    $query->Order(['room_no' => false]);
+    $query  = self::GetQueryBase()->Select($column)
+      ->WhereIn('status', count($list))->Order(['room_no' => false]);
 
     DB::Prepare($query->Build(), $list);
     return DB::FetchAssoc();
@@ -78,10 +78,10 @@ final class RoomManagerDB {
       $option_role, RoomStatus::WAITING, 0, RoomScene::BEFORE, 1, Security::GetIP()
     ];
 
-    $query = self::GetQueryBase()->Insert()->Into($column);
-    $query->IntoData('scene_start_time', Query::TIME);
-    $query->IntoData('last_update_time', Query::TIME);
-    $query->IntoData('establish_datetime', Query::NOW);
+    $query = self::GetQueryBase()->Insert()->Into($column)
+      ->IntoData('scene_start_time',   Query::TIME)
+      ->IntoData('last_update_time',   Query::TIME)
+      ->IntoData('establish_datetime', Query::NOW);
 
     DB::Prepare($query->Build(), $list);
     return DB::Execute();
@@ -102,9 +102,9 @@ final class RoomManagerDB {
   */
   public static function DieRoom() {
     $status_list = self::GetStatus();
-    $query = self::GetQueryBase()->Update()->Set(['status', 'scene']);
-    $query->WhereIn('status', count($status_list));
-    $query->WhereLower('last_update_time', sprintf('%s - ?', Query::TIME));
+    $query = self::GetQueryBase()->Update()->Set(['status', 'scene'])
+      ->WhereIn('status', count($status_list))
+      ->WhereLower('last_update_time', sprintf('%s - ?', Query::TIME));
     $list  = array_merge(
       [RoomStatus::FINISHED, RoomScene::AFTER], $status_list, [RoomConfig::DIE_ROOM]
     );
@@ -119,12 +119,12 @@ final class RoomManagerDB {
     仕様上、強制排除措置にあたるので敢えてロックは行わない
   */
   public static function ClearSession() {
-    $query = Query::Init()->Table('user_entry AS u INNER JOIN room AS r USING (room_no)');
-    $query->Update()->SetNull('u.session_id');
-    $query->WhereNotNull('u.session_id')->Where(['r.status']);
-    $query->WhereUpper('r.finish_datetime', 'DATE_SUB(NOW(), INTERVAL ? SECOND)');
-    $query->WhereNull('r.finish_datetime');
-    $query->WhereOr(['r.finish_datetime', 'r.finish_datetime']);
+    $query = Query::Init()->Table('user_entry AS u INNER JOIN room AS r USING (room_no)')
+      ->Update()->SetNull('u.session_id')
+      ->WhereNotNull('u.session_id')->Where(['r.status'])
+      ->WhereLower('r.finish_datetime', 'DATE_SUB(NOW(), INTERVAL ? SECOND)')
+      ->WhereNull('r.finish_datetime')
+      ->WhereOr(['r.finish_datetime', 'r.finish_datetime']);
 
     DB::Prepare($query->Build(), [RoomStatus::FINISHED, RoomConfig::KEEP_SESSION]);
     return DB::Execute();

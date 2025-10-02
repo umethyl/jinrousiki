@@ -107,8 +107,8 @@ final class IconDB {
   public static function Using($icon_no) {
     $table = 'user_icon INNER JOIN user_entry USING (icon_no) INNER JOIN room USING (room_no)';
     $list  = [RoomStatus::WAITING, RoomStatus::CLOSING, RoomStatus::PLAYING];
-    $query = self::GetQueryIconNo()->Table($table)->Where(['icon_no']);
-    $query->WhereIn('status', count($list));
+    $query = self::GetQueryIconNo()->Table($table)
+      ->Where(['icon_no'])->WhereIn('status', count($list));
     array_unshift($list, $icon_no);
 
     DB::Prepare($query->Build(), $list);
@@ -117,7 +117,9 @@ final class IconDB {
 
   //登録数上限チェック
   public static function Over() {
-    DB::Prepare(self::GetQuerySelect(['icon_no'])->Build());
+    $query = self::GetQuerySelect(['icon_no']);
+
+    DB::Prepare($query->Build());
     return DB::Count() >= UserIconConfig::NUMBER;
   }
 
@@ -130,6 +132,7 @@ final class IconDB {
   //アイコン削除
   public static function Delete($icon_no, $file) {
     $query = self::GetQueryBase()->Delete()->Where(['icon_no']);
+
     DB::Prepare($query->Build(), [$icon_no]);
     if (false === DB::FetchBool()) { //レコード削除
       return false;
@@ -198,7 +201,9 @@ final class IconDB {
 
   //Prepare 処理
   private static function Prepare($icon_no, array $column) {
-    DB::Prepare(self::GetQuery($column)->Build(), [$icon_no]);
+    $query = self::GetQuery($column);
+
+    DB::Prepare($query->Build(), [$icon_no]);
   }
 
   //Prepare 処理 (Bool 用)

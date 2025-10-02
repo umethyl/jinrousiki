@@ -100,8 +100,8 @@ final class TalkDB {
 
   //発言取得 (直近限定)
   public static function GetRecent() {
-    $query = self::GetQuery()->Select(['uname', 'sentence'])->Where(['scene']);
-    $query->WhereNull('location')->Order(['id' => false])->Limit(5);
+    $query = self::GetQuery()->Select(['uname', 'sentence'])
+      ->Where(['scene'])->WhereNull('location')->Order(['id' => false])->Limit(5);
 
     DB::Prepare($query->Build(), [DB::$ROOM->id, DB::$ROOM->date, DB::$ROOM->scene]);
     return DB::FetchAssoc();
@@ -109,8 +109,8 @@ final class TalkDB {
 
   //発言数取得
   public static function GetUserTalkCount($lock = false) {
-    $query = self::GetQueryUserTalkCount()->Select(['date', 'talk_count']);
-    $query->Where(['user_no'])->Lock($lock);
+    $query = self::GetQueryUserTalkCount()->Select(['date', 'talk_count'])
+      ->Where(['user_no'])->Lock($lock);
 
     DB::Prepare($query->Build(), [DB::$ROOM->id, DB::$SELF->id]);
     return DB::FetchAssoc(true);
@@ -136,10 +136,10 @@ INNER JOIN user_talk_count AS t USING (room_no, user_no)
 LEFT JOIN vote AS v ON u.room_no = v.room_no AND u.user_no = v.user_no
   AND t.date = v.date AND vote_count = ?
 EOF;
-    $query = Query::Init()->Table($table)->Select(['u.user_no']);
-    $query->Where(['u.room_no', 't.date', 'live'])->WhereUpper('talk_count');
-    $query->WhereNull('v.room_no');
-    $list = [DB::$ROOM->vote_count, DB::$ROOM->id, DB::$ROOM->date, UserLive::LIVE, 0];
+    $query = Query::Init()->Table($table)->Select(['u.user_no'])
+      ->Where(['u.room_no', 't.date', 'live'])->WhereUpper('talk_count')
+      ->WhereNull('v.room_no');
+    $list  = [DB::$ROOM->vote_count, DB::$ROOM->id, DB::$ROOM->date, UserLive::LIVE, 0];
 
     DB::Prepare($query->Build(), $list);
     return DB::Count();

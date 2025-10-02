@@ -39,8 +39,8 @@ final class RoomDB {
   public static function UpdateVoteCount($revote = false) {
     if (DB::$ROOM->IsTest()) return true;
 
-    $query = self::GetQueryUpdate()->SetIncrement('vote_count');
-    $query->SetData('overtime_alert', Query::DISABLE);
+    $query = self::GetQueryUpdate()
+      ->SetIncrement('vote_count')->SetData('overtime_alert', Query::DISABLE);
     if (true === $revote) {
       $query->SetIncrement('revote_count');
     } else {
@@ -55,9 +55,9 @@ final class RoomDB {
   public static function UpdateOvertimeAlert($bool = false) {
     if (DB::$ROOM->IsTest()) return true;
 
-    $query = self::GetQueryUpdate();
-    $query->SetData('overtime_alert', $bool ? Query::ENABLE : Query::DISABLE);
-    $query->SetData('last_update_time', Query::TIME);
+    $query = self::GetQueryUpdate()
+      ->SetData('overtime_alert', $bool ? Query::ENABLE : Query::DISABLE)
+      ->SetData('last_update_time', Query::TIME);
 
     self::Prepare($query);
     return DB::FetchBool();
@@ -65,9 +65,11 @@ final class RoomDB {
 
   //シーン変更
   public static function UpdateScene($update_date = false) {
-    $query = self::GetQueryUpdate()->Set(['scene', 'vote_count']);
+    $query = self::GetQueryUpdate()->Set(['scene', 'vote_count'])
+      ->SetData('overtime_alert',   Query::DISABLE)
+      ->SetData('scene_start_time', Query::TIME);
     $list  = [DB::$ROOM->scene, 1];
-    $query->SetData('overtime_alert', Query::DISABLE)->SetData('scene_start_time', Query::TIME);
+
     if (true === $update_date) {
       $query->Set(['date', 'revote_count']);
       array_push($list, DB::$ROOM->date, 0);
@@ -80,9 +82,10 @@ final class RoomDB {
 
   //村開始
   public static function Start() {
-    $query = self::GetQueryUpdate()->Set(['status', 'date', 'scene', 'vote_count']);
-    $query->SetData('overtime_alert', Query::DISABLE)->SetData('scene_start_time', Query::TIME);
-    $query->SetData('start_datetime', Query::NOW);
+    $query = self::GetQueryUpdate()->Set(['status', 'date', 'scene', 'vote_count'])
+      ->SetData('overtime_alert',   Query::DISABLE)
+      ->SetData('scene_start_time', Query::TIME)
+      ->SetData('start_datetime',   Query::NOW);
     $list = [RoomStatus::PLAYING, DB::$ROOM->date, DB::$ROOM->scene, 1, DB::$ROOM->id];
 
     DB::Prepare($query->Build(), $list);
@@ -91,9 +94,9 @@ final class RoomDB {
 
   //村終了
   public static function Finish($winner) {
-    $query = self::GetQueryUpdate()->Set(['status', 'scene', 'winner']);
-    $query->SetData('scene_start_time', Query::TIME);
-    $query->SetData('finish_datetime', Query::NOW);
+    $query = self::GetQueryUpdate()->Set(['status', 'scene', 'winner'])
+      ->SetData('scene_start_time', Query::TIME)
+      ->SetData('finish_datetime',  Query::NOW);
     $list = [RoomStatus::FINISHED, RoomScene::AFTER, $winner, DB::$ROOM->id];
 
     DB::Prepare($query->Build(), $list);
@@ -134,8 +137,8 @@ final class RoomDB {
       return null;
     }
 
-    $query = Query::Init()->Table('vote')->Select($column);
-    $query->Where(['room_no', 'date', 'scene', 'vote_count']);
+    $query = Query::Init()->Table('vote')->Select($column)
+      ->Where(['room_no', 'date', 'scene', 'vote_count']);
     $list  = [DB::$ROOM->id, DB::$ROOM->date, DB::$ROOM->scene, DB::$ROOM->vote_count];
 
     DB::Prepare($query->Build(), $list);
@@ -153,8 +156,8 @@ final class RoomDB {
     if (false === DB::$ROOM->IsDate(1)) { //即処理型は1日目のみ
       return true;
     }
-    $query = Query::Init()->Table('vote')->Update()->SetIncrement('vote_count');
-    $query->Where(['room_no', 'date'])->WhereIn('type', 2);
+    $query = Query::Init()->Table('vote')->Update()->SetIncrement('vote_count')
+      ->Where(['room_no', 'date'])->WhereIn('type', 2);
     $list = [DB::$ROOM->id, DB::$ROOM->date, VoteAction::CUPID, VoteAction::DUELIST];
 
     DB::Prepare($query->Build(), $list);
@@ -242,9 +245,9 @@ final class SystemMessageDB {
 
   //能力発動結果取得
   public static function GetAbility($date, $action, $limit) {
-    $query = self::GetQuery()->Table('result_ability')->Select(['target', 'result']);
-    $query->Where(['type']);
-    $list = [DB::$ROOM->id, $date, $action];
+    $query = self::GetQuery()->Table('result_ability')->Select(['target', 'result'])
+      ->Where(['type']);
+    $list  = [DB::$ROOM->id, $date, $action];
     if (true === $limit) {
       $query->Where(['user_no']);
       $list[] = DB::$SELF->id;
@@ -256,10 +259,10 @@ final class SystemMessageDB {
 
   //処刑結果取得
   public static function GetVote($date) {
-    $query = self::GetQuery()->Table('result_vote_kill');
-    $query->Select(['count', 'handle_name', 'target_name', 'vote', 'poll']);
-    $query->Order(['count' => true, 'id' => true]);
-    $list = [DB::$ROOM->id, $date];
+    $query = self::GetQuery()->Table('result_vote_kill')
+      ->Select(['count', 'handle_name', 'target_name', 'vote', 'poll'])
+      ->Order(['count' => true, 'id' => true]);
+    $list  = [DB::$ROOM->id, $date];
 
     DB::Prepare($query->Build(), $list);
     return DB::FetchAssoc();
@@ -280,9 +283,9 @@ final class SystemMessageDB {
       return RQ::GetTest()->result_dead;
     }
 
-    $query = self::GetQuery()->Table('result_dead');
-    $query->Select(['date', 'type', 'handle_name', 'result'])->Where(['scene']);
-    $list = [DB::$ROOM->id];
+    $query = self::GetQuery()->Table('result_dead')
+      ->Select(['date', 'type', 'handle_name', 'result'])->Where(['scene']);
+    $list  = [DB::$ROOM->id];
     if (true === $shift) {
       array_push($list, DB::$ROOM->date - 1, DB::$ROOM->scene);
     } elseif (DB::$ROOM->IsDay()) {
@@ -347,8 +350,8 @@ final class RoomLoaderDB {
       'name', 'comment', 'date', 'option_role', 'max_user', 'winner',
       'establish_datetime', 'start_datetime', 'finish_datetime'
     ];
-    $user_count_query = Query::Init()->Table('user_entry AS u')->Select(['COUNT(user_no)']);
-    $user_count_query->WhereData('u.room_no', 'r.room_no')->WhereUpper('u.user_no');
+    $user_count_query = Query::Init()->Table('user_entry AS u')->Select(['COUNT(user_no)'])
+      ->WhereData('u.room_no', 'r.room_no')->WhereUpper('u.user_no');
     $column[] = Text::Quote($user_count_query->Build()) . ' AS user_count';
 
     $query = self::GetQuery()->Table('room AS r')->Select($column)->Where(['status']);

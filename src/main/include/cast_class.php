@@ -41,7 +41,7 @@ final class Cast {
   //人数とゲームオプションに応じた役職テーブルを返す
   public static function Get($user_count) {
     //人数に応じた配役リストを取得
-    if (false === isset(CastConfig::$role_list[$user_count])) { //リストの有無をチェック
+    if (false === isset(CastConfig::$role_list[$user_count])) { //配役リスト存在判定
       self::OutputError(sprintf(VoteMessage::NO_CAST_LIST, $user_count));
     }
     $role_list = CastConfig::$role_list[$user_count];
@@ -303,13 +303,14 @@ final class Cast {
   }
 
   //希望役職取得
+  //希望なし > 希望参照確率判定 > 探偵村 + 探偵希望 > 特殊村 > 個別希望
   private static function GetWishRole($uname) {
     $role = DB::$USER->GetWishRole($uname); //希望役職を取得
     if ($role == '' || false === Lottery::Percent(CastConfig::WISH_ROLE_RATE)) {
       return null;
-    }
-
-    if (self::Stack()->Get(self::WISH)) { //特殊村はグループ単位で希望処理を行なう
+    } elseif (DB::$ROOM->IsOption('detective') && $role == 'detective_common') {
+      return $role;
+    } elseif (self::Stack()->Get(self::WISH)) { //特殊村はグループ単位で希望処理を行なう
       $stack = [];
       foreach (self::Stack()->Get(self::ROLE) as $stack_role) {
 	if ($role == RoleDataManager::GetGroup($stack_role)) {

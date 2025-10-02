@@ -47,6 +47,7 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
   <li><a href="#difference_kick">キック投票</a></li>
   <li><a href="#difference_draw">自動引き分け判定</a></li>
   <li><a href="#difference_die_room">自動廃村</a></li>
+  <li><a href="#difference_clear_session">終了後のセッション削除</a></li>
   <li><a href="#difference_message">システムメッセージを画像に</a></li>
   <li><a href="#difference_deadman">死亡者の順序がランダム表示</a></li>
   <li><a href="#difference_auto_reload">自動リロード</a></li>
@@ -108,6 +109,12 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 <div>
 ゲームが開始されない場合、最後に発言された時間から [ <?php InfoTime::Output(RoomConfig::DIE_ROOM); ?> ] 放置されると自動で村は廃墟になります。<br>
 手動で廃村にする方法はありません。連絡用の掲示板やゲーム内の発言で村に登録しないように促してください。
+</div>
+
+<h4 id="difference_clear_session">終了後のセッション削除</h4>
+<div>
+ゲーム終了後、[ <?php InfoTime::Output(RoomConfig::KEEP_SESSION); ?> ] 経過するとセッションが削除され、再入村ができなくなります。<br>
+それ以内であれば過去ログ一覧に再入村のリンクが表示され、別の村にログインするまでは自動で再ログインすることができます。
 </div>
 
 <h4 id="difference_message">システムメッセージを画像に</h4>

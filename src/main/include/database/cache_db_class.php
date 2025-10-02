@@ -21,8 +21,8 @@ final class JinrouCacheDB {
 
   //新規作成
   public static function Insert($content) {
-    $query = self::GetQueryUpdate()->Insert();
-    $query->Into(['room_no', 'name', 'content', 'expire', 'hash'])->Duplicate();
+    $query = self::GetQueryUpdate()->Insert()
+      ->Into(['room_no', 'name', 'content', 'expire', 'hash'])->Duplicate();
 
     $filter = JinrouCacheManager::Load();
     $now    = Time::Get();
@@ -60,6 +60,7 @@ final class JinrouCacheDB {
   //消去
   public static function Clear() {
     $query = self::GetQuery()->Delete()->WhereLower('exipre');
+
     DB::Prepare($query->Build(), [Time::Get() - CacheConfig::EXCEED]);
     return DB::Execute() && DB::Optimize('document_cache');
   }
@@ -76,8 +77,8 @@ final class JinrouCacheDB {
 
   //Prepare 処理
   private static function Prepare(array $column, $lock = false) {
-    $query = self::GetQuery()->Select($column);
-    $query->Where(['room_no', 'name'])->Lock($lock);
+    $query = self::GetQuery()->Select($column)->Where(['room_no', 'name'])->Lock($lock);
+
     DB::Prepare($query->Build(), JinrouCacheManager::Load()->GetKey());
   }
 
