@@ -1,0 +1,21 @@
+<?php
+/*
+  ◆ジョーカー村 (joker)
+  ○仕様
+  ・配役：誰か一人にジョーカー
+*/
+class Option_joker extends CheckRoomOptionItem {
+  public $group = RoomOption::GAME_OPTION;
+
+  public function GetCaption() {
+    return 'ババ抜き村';
+  }
+
+  public function GetExplain() {
+    return '誰か一人に「ジョーカー」がつきます';
+  }
+
+  public function Cast(array &$list, &$rand) {
+    $this->CastOnce($list, $rand, '[2]');
+  }
+}
