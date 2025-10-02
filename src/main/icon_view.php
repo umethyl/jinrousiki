@@ -1,45 +1,9 @@
 <?php
-require_once(dirname(__FILE__) . '/include/functions.php');
-OutputHTMLHeader('¥æ¡¼¥¶¥¢¥¤¥³¥ó°ìÍ÷', 'icon_view')
-?>
-</head>
-<body>
-<a href="index.php">¢«Ìá¤ë</a><br>
-<img class="title" src="img/icon_view_title.jpg"><br>
-<div class="link"><a href="icon_upload.php">¢ª¥¢¥¤¥³¥óÅÐÏ¿</a></div>
-
-<fieldset><legend>¥æ¡¼¥¶¥¢¥¤¥³¥ó°ìÍ÷</legend>
-<table><tr>
-<?php
-$dbHandle = ConnectDatabase(true); //DB ÀÜÂ³
-
-//¥æ¡¼¥¶¥¢¥¤¥³¥ó¤Î¥Æ¡¼¥Ö¥ë¤«¤é°ìÍ÷¤ò¼èÆÀ
-$list = mysql_query("SELECT icon_name, icon_filename, icon_width, icon_height, color
- 		     FROM user_icon WHERE icon_no > 0 ORDER BY icon_no");
-$count = mysql_num_rows($list); //¥¢¥¤¥Æ¥à¤Î¸Ä¿ô¤ò¼èÆÀ
-
-//É½¤Î½ÐÎÏ
-for($i=0; $i < $count; $i++){
-  //5¸Ä¤´¤È¤Ë²þ¹Ô
-  if($i > 0 && ($i % 5) == 0) echo '</tr><tr>'."\n";
-  $array = mysql_fetch_assoc($list);
-  $name     = $array['icon_name'];
-  $filename = $array['icon_filename'];
-  $width    = $array['icon_width'];
-  $height   = $array['icon_height'];
-  $color    = $array['color'];
-  $location = $ICON_CONF -> path . '/' . $filename;
-
-  echo <<< EOF
-<td><img src="$location" width="$width" height="$height" style="border-color:$color;"></td>
-<td class="name">$name<br><font color="$color">¢¡</font>$color</td>
-
-EOF;
-}
-
-DisconnectDatabase($dbHandle);
-?>
-</tr></table>
-</fieldset>
-</body>
-</html>
+require_once('include/init.php');
+$INIT_CONF->LoadFile('icon_functions');
+$INIT_CONF->LoadClass('SESSION');
+$INIT_CONF->LoadRequest('RequestIconView'); //å¼•æ•°ã‚’å–å¾—
+$DB_CONF->Connect(); //DB æŽ¥ç¶š
+OutputIconPageHeader();
+OutputIconList();
+OutputHTMLFooter();

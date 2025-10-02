@@ -1,9 +1,13 @@
+@charset "utf-8";
+@import url(base.css);
 body{
   background-image: url("../img/icon_view_bg.jpg");
   background-repeat: no-repeat;
   background-position: 100% 100%;
   background-attachment: fixed;
   background-color: #FFFFFF;
+  margin : 0;
+  padding : 0;
 }
 .title{
   border: 0;
@@ -11,14 +15,14 @@ body{
 }
 .link{margin-bottom: 5px;}
 fieldset{
-  filter:alpha(opacity=80,enabled=80);
+  filter: alpha(opacity=80,enabled=80);
   border: 1px solid #000000;
-  background-color:#FFFFFF;
+  background-color: #FFFFFF;
 }
 legend{
   margin: 0px 5px;
   font-size: 20px;
-  font-weight:bold;
+  font-weight: bold;
 }
 table{border: 0;}
 table td{
@@ -26,7 +30,16 @@ table td{
   font-size: 15px;
 }
 table img{border: 2px solid;}
-.name{
-  width: 150px;
-  font-family:"ÇlÇr ÉSÉVÉbÉN";
+td.icon_details {
+  padding:4px;
 }
+td.icon_details .icon_wrapper {
+  display:block;
+  float:left;
+}
+td.icon_details ul {
+  list-style:none;
+  float:left;
+  padding:0;
+}
+.name{width: 150px;}

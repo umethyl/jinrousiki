@@ -1,59 +1,43 @@
 <?php
-require_once(dirname(__FILE__) . '/include/game_functions.php');
+require_once('include/init.php');
+$INIT_CONF->LoadFile('user_class', 'talk_class');
+$INIT_CONF->LoadClass('SESSION', 'ROLES');
 
-//¥»¥Ã¥·¥ç¥ó³«»Ï
-session_start();
-$session_id = session_id();
+//-- ãƒ‡ãƒ¼ã‚¿åé›† --//
+$INIT_CONF->LoadRequest('RequestGameLog'); //å¼•æ•°ã‚’å–å¾—
+$DB_CONF->Connect(); //DB æ¥ç¶š
+$SESSION->Certify(); //ã‚»ãƒƒã‚·ãƒ§ãƒ³èªè¨¼
 
-//°ú¿ô¤ò¼èÆÀ
-$room_no       = (int)$_GET['room_no'];
-$log_mode      = $_GET['log_mode'];
-$get_date      = (int)$_GET['date'];
-$get_day_night = $_GET['day_night'];
+$ROOM = new Room($RQ_ARGS); //æ‘æƒ…å ±ã‚’å–å¾—
+$ROOM->log_mode = true;
+$ROOM->single_log_mode = true;
 
-$dbHandle = ConnectDatabase(); //DB ÀÜÂ³
-$uname = CheckSession($session_id); //¥»¥Ã¥·¥ç¥ó ID ¤ò¥Á¥§¥Ã¥¯
+$USERS = new UserDataSet($RQ_ARGS); //ãƒ¦ãƒ¼ã‚¶æƒ…å ±ã‚’å–å¾—
+$SELF = $USERS->BySession(); //è‡ªåˆ†ã®æƒ…å ±ã‚’ãƒ­ãƒ¼ãƒ‰
 
-//ÆüÉÕ¤È¥·¡¼¥ó¤ò¼èÆÀ
-$sql = mysql_query("SELECT date, day_night, room_name, room_comment, game_option, status
-			FROM room WHERE room_no = $room_no");
-$array   = mysql_fetch_assoc($sql);
-$date         = $array['date'];
-$day_night    = $array['day_night'];
-$room_name    = $array['room_name'];
-$room_comment = $array['room_comment'];
-$game_option  = $array['game_option'];
-$status       = $array['status'];
-
-//¼«Ê¬¤Î¥Ï¥ó¥É¥ë¥Í¡¼¥à¡¢Ìò³ä¡¢À¸Â¸¤ò¼èÆÀ
-$sql = mysql_query("SELECT user_no, handle_name, sex, role, live FROM user_entry
-			WHERE room_no = $room_no AND uname = '$uname' AND user_no > 0");
-$array  = mysql_fetch_assoc($sql);
-$user_no     = $array['user_no'];
-$handle_name = $array['handle_name'];
-$sex         = $array['sex'];
-$role        = $array['role'];
-$live        = $array['live'];
-
-if($live != 'dead' && $day_night != 'aftergame'){ //»à¼Ô¤«¥²¡¼¥à½ªÎ»¸å¤À¤±
-  OutputActionResult('¥æ¡¼¥¶Ç§¾Ú¥¨¥é¡¼',
-		     '¥í¥°±ÜÍ÷µö²Ä¥¨¥é¡¼<br>' .
-		     '<a href="index.php" target="_top">¥È¥Ã¥×¥Ú¡¼¥¸</a>' .
-		     '¤«¤é¥í¥°¥¤¥ó¤·¤Ê¤ª¤·¤Æ¤¯¤À¤µ¤¤');
+if(! ($SELF->IsDead() || $ROOM->IsAfterGame())){ //æ­»è€…ã‹ã‚²ãƒ¼ãƒ çµ‚äº†å¾Œã ã‘
+  OutputActionResult('ãƒ­ã‚°é–²è¦§èªè¨¼ã‚¨ãƒ©ãƒ¼',
+		     'ãƒ­ã‚°é–²è¦§èªè¨¼ã‚¨ãƒ©ãƒ¼ï¼š<a href="./" target="_top">ãƒˆãƒƒãƒ—ãƒšãƒ¼ã‚¸</a>' .
+		     'ã‹ã‚‰ãƒ­ã‚°ã‚¤ãƒ³ã—ãªãŠã—ã¦ãã ã•ã„');
+}
+if($ROOM->date < $RQ_ARGS->date ||
+   ($ROOM->date == $RQ_ARGS->date && ($ROOM->IsDay() || $ROOM->day_night == $RQ_ARGS->day_night))){
+  OutputActionResult('å…¥åŠ›ãƒ‡ãƒ¼ã‚¿ã‚¨ãƒ©ãƒ¼', 'å…¥åŠ›ãƒ‡ãƒ¼ã‚¿ã‚¨ãƒ©ãƒ¼ï¼šç„¡åŠ¹ãªæ—¥æ™‚ã§ã™');
 }
 
-$live = 'dead';
-$date = $get_date;
-$day_night = $get_day_night;
+$ROOM->date      = $RQ_ARGS->date;
+$ROOM->day_night = $RQ_ARGS->day_night;
+$USERS->SetEvent(true);
 
-OutputGamePageHeader(); //HTML¥Ø¥Ã¥À
-echo '<table><tr><td width="1000" align="right">¥í¥°±ÜÍ÷ ' . $date . ' ÆüÌÜ (' .
-  ($day_night == 'day' ? 'Ãë' : 'Ìë') . ')</td></tr></table>'."\n";
-//OutputPlayerList();    //¥×¥ì¥¤¥ä¡¼¥ê¥¹¥È
-OutputTalkLog();       //²ñÏÃ¥í¥°
-OutputAbilityAction(); //Ç½ÎÏÈ¯´ø
-OutputDeadMan();       //»àË´¼Ô
-if($day_night == 'night') OutputVoteList(); //ÅêÉ¼·ë²Ì
-OutputHTMLFooter();
-DisconnectDatabase($dbHandle); //DB ÀÜÂ³²ò½ü
-?>
+//-- ãƒ­ã‚°å‡ºåŠ› --//
+OutputGamePageHeader(); //HTMLãƒ˜ãƒƒãƒ€
+
+echo '<table><tr><td width="1000" align="right">ãƒ­ã‚°é–²è¦§ ' . $ROOM->date . ' æ—¥ç›® (' .
+  ($ROOM->IsBeforeGame() ? 'é–‹å§‹å‰' : ($ROOM->IsDay() ? 'æ˜¼' : 'å¤œ')) . ')</td></tr></table>'."\n";
+
+OutputTalkLog();       //ä¼šè©±ãƒ­ã‚°
+OutputAbilityAction(); //èƒ½åŠ›ç™ºæ®
+OutputLastWords();     //éºè¨€
+OutputDeadMan();       //æ­»äº¡è€…
+if($ROOM->IsNight()) OutputVoteList(); //æŠ•ç¥¨çµæœ
+OutputHTMLFooter(); //HTMLãƒ•ãƒƒã‚¿

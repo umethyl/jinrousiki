@@ -1,844 +1,624 @@
 <?php
-require_once(dirname(__FILE__) . '/include/game_functions.php');
+require_once('include/init.php');
+$INIT_CONF->LoadFile('game_play_functions', 'user_class', 'talk_class');
+$INIT_CONF->LoadClass('SESSION', 'ROLES', 'ICON_CONF', 'TIME_CONF', 'ROOM_IMG');
 
-//¥»¥Ã¥·¥ç¥ó³«»Ï
-session_start();
-$session_id = session_id();
+//-- ãƒ‡ãƒ¼ã‚¿åé›† --//
+$INIT_CONF->LoadRequest('RequestGamePlay'); //å¼•æ•°ã‚’å–å¾—
+if($RQ_ARGS->play_sound) $INIT_CONF->LoadClass('SOUND', 'COOKIE'); //éŸ³ã§ãŠçŸ¥ã‚‰ã›
 
-EncodePostData(); //¥İ¥¹¥È¤µ¤ì¤¿Ê¸»úÎó¤òÁ´¤Æ¥¨¥ó¥³¡¼¥É¤¹¤ë
+$DB_CONF->Connect(); //DB æ¥ç¶š
+$SESSION->CertifyGamePlay(); //ã‚»ãƒƒã‚·ãƒ§ãƒ³èªè¨¼
 
-//°ú¿ô¤ò¼èÆÀ
-$room_no     = (int)$_GET['room_no']; //Éô²° No
-$auto_reload = (int)$_GET['auto_reload']; //¥ª¡¼¥È¥ê¥í¡¼¥É¤Î´Ö³Ö
-$dead_mode   = $_GET['dead_mode'];   //»àË´¼Ô¥â¡¼¥É
-$heaven_mode = $_GET['heaven_mode']; //ÎîÏÃ¥â¡¼¥É
-// $view_mode   = $_GET['view_mode'];   //´ÑÀï¥â¡¼¥É
-$list_down  = $_GET['list_down']; //¥×¥ì¥¤¥ä¡¼¥ê¥¹¥È¤ò²¼¤Ë¤¹¤ë
-$play_sound = $_GET['play_sound'];//²»¤Ç¤ªÃÎ¤é¤»
-if($play_sound == 'on'){
-  $cookie_day_night  = $_COOKIE['day_night'];       //ÌëÌÀ¤±¤ò²»¤Ç¤·¤é¤»¤ë¤¿¤á
-  $cookie_vote_times = (int)$_COOKIE['vote_times']; //ºÆÅêÉ¼¤ò²»¤ÇÃÎ¤é¤»¤ë¤¿¤á
-  $cookie_objection  = $_COOKIE['objection'];       //¡Ö°ÛµÄ¤¢¤ê¡×¤ò²»¤ÇÃÎ¤é¤»¤ë¤¿¤á
+$ROOM = new Room($RQ_ARGS); //æ‘æƒ…å ±ã‚’ãƒ­ãƒ¼ãƒ‰
+$ROOM->dead_mode    = $RQ_ARGS->dead_mode; //æ­»äº¡è€…ãƒ¢ãƒ¼ãƒ‰
+$ROOM->heaven_mode  = $RQ_ARGS->heaven_mode; //éœŠè©±ãƒ¢ãƒ¼ãƒ‰
+$ROOM->system_time  = TZTime(); //ç¾åœ¨æ™‚åˆ»ã‚’å–å¾—
+$ROOM->sudden_death = 0; //çªç„¶æ­»å®Ÿè¡Œã¾ã§ã®æ®‹ã‚Šæ™‚é–“
+
+$USERS = new UserDataSet($RQ_ARGS); //ãƒ¦ãƒ¼ã‚¶æƒ…å ±ã‚’ãƒ­ãƒ¼ãƒ‰
+$SELF = $USERS->BySession(); //è‡ªåˆ†ã®æƒ…å ±ã‚’ãƒ­ãƒ¼ãƒ‰
+
+//ã‚·ãƒ¼ãƒ³ã«å¿œã˜ãŸè¿½åŠ ã‚¯ãƒ©ã‚¹ã‚’ãƒ­ãƒ¼ãƒ‰
+if($ROOM->IsBeforeGame()){ //ã‚²ãƒ¼ãƒ ã‚ªãƒ—ã‚·ãƒ§ãƒ³è¡¨ç¤º
+  $INIT_CONF->LoadClass('ROOM_CONF', 'CAST_CONF', 'ROOM_IMG', 'GAME_OPT_MESS');
+  $ROOM->LoadVote();
+}
+elseif($ROOM->IsFinished()){ //å‹æ•—çµæœè¡¨ç¤º
+  $INIT_CONF->LoadClass('VICT_MESS');
+}
+SendCookie($OBJECTION); //å¿…è¦ãªã‚¯ãƒƒã‚­ãƒ¼ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
+
+//-- ç™ºè¨€å‡¦ç† --//
+$say_limit = null;
+if(! $ROOM->dead_mode || $ROOM->heaven_mode){ //ç™ºè¨€ãŒé€ä¿¡ã•ã‚Œã‚‹ã®ã¯ bottom ãƒ•ãƒ¬ãƒ¼ãƒ 
+  $say_limit = ConvertSay($RQ_ARGS->say); //ç™ºè¨€ç½®æ›å‡¦ç†
+
+  if($RQ_ARGS->say == ''){
+    CheckSilence(); //ç™ºè¨€ãŒç©ºãªã‚‰ã‚²ãƒ¼ãƒ åœæ»ã®ãƒã‚§ãƒƒã‚¯(æ²ˆé»™ã€çªç„¶æ­»)
+  }
+  elseif($RQ_ARGS->last_words && ! $SELF->IsDummyBoy()){
+    EntryLastWords($RQ_ARGS->say); //éºè¨€ç™»éŒ² (ç´°ã‹ã„åˆ¤å®šæ¡ä»¶ã¯é–¢æ•°å†…ã§è¡Œã†)
+  }
+  elseif($SELF->IsDead() || $SELF->IsDummyBoy() || $SELF->last_load_day_night == $ROOM->day_night){
+    Say($RQ_ARGS->say); //æ­»ã‚“ã§ã„ã‚‹ or èº«ä»£ã‚ã‚Šå› or ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ãŒä¸€è‡´ã—ã¦ã„ã‚‹ãªã‚‰æ›¸ãè¾¼ã‚€
+  }
+  else{
+    CheckSilence(); //ç™ºè¨€ãŒã§ããªã„çŠ¶æ…‹ãªã‚‰ã‚²ãƒ¼ãƒ åœæ»ãƒã‚§ãƒƒã‚¯
+  }
+
+  if($SELF->last_load_day_night != $ROOM->day_night){ //ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã‚’æ›´æ–°
+    $SELF->Update('last_load_day_night', $ROOM->day_night);
+  }
+}
+elseif($ROOM->dead_mode && $ROOM->IsPlaying() && $SELF->IsDummyBoy()){
+  SetSuddenDeathTime();
 }
 
-$say = $_POST['say']; //È¯¸À
-$font_type = $_POST['font_type']; //¥Õ¥©¥ó¥È¥¿¥¤¥×
-$set_objection = $_POST['set_objection']; //¡Ö°ÛµÄ¡×¤¢¤ê¡¢¤Î¥»¥Ã¥È
-
-$dbHandle = ConnectDatabase(); //DB ÀÜÂ³
-$uname = CheckSession($session_id); //¥»¥Ã¥·¥ç¥ó ID ¤ò¥Á¥§¥Ã¥¯
-
-//ÆüÉÕ¤È¥·¡¼¥ó¤ò¼èÆÀ
-$sql = mysql_query("SELECT date, day_night, room_name, room_comment, game_option FROM room
-			WHERE room_no = $room_no");
-$array = mysql_fetch_assoc($sql);
-$room_name    = $array['room_name'];
-$room_comment = $array['room_comment'];
-$game_option  = $array['game_option'];
-$date         = $array['date'];
-$day_night    = $array['day_night'];
-
-//¼«Ê¬¤Î¥Ï¥ó¥É¥ë¥Í¡¼¥à¡¢Ìò³ä¡¢À¸Â¸¤ò¼èÆÀ
-$sql = mysql_query("SELECT user_no, handle_name, sex, role, live, last_load_day_night FROM user_entry
-			WHERE room_no = $room_no AND uname = '$uname' AND user_no > 0");
-$array = mysql_fetch_assoc($sql);
-$user_no             = $array['user_no'];
-$handle_name         = $array['handle_name'];
-$sex                 = $array['sex'];
-$role                = $array['role'];
-$live                = $array['live'];
-$last_load_day_night = $array['last_load_day_night'];
-
-$system_time = TZTime(); //¸½ºß»ş¹ï¤ò¼èÆÀ
-
-//É¬Í×¤Ê¥¯¥Ã¥­¡¼¤ò¥»¥Ã¥È¤¹¤ë
-$objection_array = array(); //SendCookie();¤Ç³ÊÇ¼¤µ¤ì¤ë¡¦°ÛµÄ¤¢¤ê¤Î¾ğÊó
-$objection_left_count = 0;  //SendCookie();¤Ç³ÊÇ¼¤µ¤ì¤ë¡¦°ÛµÄ¤¢¤ê¤Î»Ä¤ê²ó¿ô
-SendCookie();
-
-//¾¡ÇÔ¤Î¥Á¥§¥Ã¥¯
-$sql = mysql_query("SELECT victory_role FROM room WHERE room_no = $room_no");
-$victory_flag = (mysql_result($sql, 0, 0) != NULL);
-
-//È¯¸À¤ÎÍ­Ìµ¤ò¥Á¥§¥Ã¥¯
-EscapeStrings($say, false); //¥¨¥¹¥±¡¼¥×½èÍı
-if($say != '' && $font_type == 'last_words' && $live == 'live')
-  EntryLastWords($say);  //À¸¤­¤Æ¤¤¤ì¤Ğ°ä¸ÀÅĞÏ¿
-elseif($say != '' && ($last_load_day_night == $day_night ||
-		      $live == 'dead' || $uname == 'dummy_boy'))
-  Say($say); //»à¤ó¤Ç¤¤¤ë¤«¡¢ºÇ¸å¤Ë¥ê¥í¡¼¥É¤·¤¿»ş¤È¥·¡¼¥ó¤¬°ìÃ×¤·¤Æ¤¤¤ë¤«¿ÈÂå¤ï¤ê·¯¤Ê¤é½ñ¤­¹ş¤à
-else
-  CheckSilence(); //¥²¡¼¥àÄäÂÚ¤Î¥Á¥§¥Ã¥¯(ÄÀÌÛ¡¢ÆÍÁ³»à)
-
-//ºÇ¸å¤Ë¥ê¥í¡¼¥É¤·¤¿»ş¤ÎÉô²°¤Î¾õÂÖ¤ò¹¹¿·
-mysql_query("UPDATE user_entry SET last_load_day_night = '$day_night'
-		WHERE room_no = $room_no AND uname = '$uname' AND user_no > 0");
-mysql_query('COMMIT');
-
-OutputGamePageHeader(); //HTML¥Ø¥Ã¥À
-OutputGameHeader(); //Éô²°¤Î¥¿¥¤¥È¥ë¤Ê¤É
-
-if($heaven_mode != 'on'){
-  if($list_down != 'on') OutputPlayerList(); //¥×¥ì¥¤¥ä¡¼¥ê¥¹¥È
-  OutputAbility(); //¼«Ê¬¤ÎÌò³ä¤ÎÀâÌÀ
-  if($day_night == 'day' && $live == 'live') CheckSelfVote(); //ÅêÉ¼ºÑ¤ß¥Á¥§¥Ã¥¯
-  OutputReVoteList(); //ºÆÅêÉ¼¤Î»ş¡¢¥á¥Ã¥»¡¼¥¸¤òÉ½¼¨¤¹¤ë
+//-- ãƒ‡ãƒ¼ã‚¿å‡ºåŠ› --//
+OutputGamePageHeader(); //HTMLãƒ˜ãƒƒãƒ€
+OutputGameHeader(); //éƒ¨å±‹ã®ã‚¿ã‚¤ãƒˆãƒ«ãªã©
+if($say_limit === false) echo '<font color="#FF0000">' . $MESSAGE->say_limit . '</font><br>';
+if(! $ROOM->heaven_mode){
+  if(! $RQ_ARGS->list_down) OutputPlayerList(); //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒªã‚¹ãƒˆ
+  OutputAbility(); //è‡ªåˆ†ã®å½¹å‰²ã®èª¬æ˜
+  if($ROOM->IsDay() && $SELF->IsLive() && $ROOM->date != 1) CheckSelfVoteDay(); //æ˜¼ã®æŠ•ç¥¨æ¸ˆã¿ãƒã‚§ãƒƒã‚¯
+  OutputRevoteList(); //å†æŠ•ç¥¨ã®æ™‚ã€ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã™ã‚‹
 }
 
-//²ñÏÃ¥í¥°¤ò½ĞÎÏ
-if($live == 'dead' && $heaven_mode == 'on')
-  OutputHeavenTalkLog();
-else
-  OutputTalkLog();
+//ä¼šè©±ãƒ­ã‚°ã‚’å‡ºåŠ›
+($SELF->IsDead() && $ROOM->heaven_mode) ? OutputHeavenTalkLog() : OutputTalkLog();
 
-if($heaven_mode != 'on'){
-  if($live == 'dead') OutputAbilityAction(); //Ç½ÎÏÈ¯´ø
-  OutputLastWords(); //°ä¸À
-  OutputDeadMan();   //»àË´¼Ô
-  OutputVoteList();  //ÅêÉ¼·ë²Ì
-  if($dead_mode != 'on') OutputSelfLastWords(); //¼«Ê¬¤Î°ä¸À
-  if($list_down == 'on') OutputPlayerList(); //¥×¥ì¥¤¥ä¡¼¥ê¥¹¥È
+if(! $ROOM->heaven_mode){
+  if($SELF->IsDead()) OutputAbilityAction(); //èƒ½åŠ›ç™ºæ®
+  OutputLastWords(); //éºè¨€
+  OutputDeadMan();   //æ­»äº¡è€…
+  OutputVoteList();  //æŠ•ç¥¨çµæœ
+  if(! $ROOM->dead_mode) OutputSelfLastWords(); //è‡ªåˆ†ã®éºè¨€
+  if($RQ_ARGS->list_down) OutputPlayerList(); //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒªã‚¹ãƒˆ
 }
 OutputHTMLFooter();
 
-DisconnectDatabase($dbHandle); //DB ÀÜÂ³²ò½ü
+//-- é–¢æ•° --//
+//å¿…è¦ãªã‚¯ãƒƒã‚­ãƒ¼ã‚’ã¾ã¨ã‚ã¦ç™»éŒ²(ã¤ã„ã§ã«æœ€æ–°ã®ç•°è­°ã‚ã‚Šã®çŠ¶æ…‹ã‚’å–å¾—ã—ã¦é…åˆ—ã«æ ¼ç´)
+function SendCookie(&$objection_list){
+  global $GAME_CONF, $RQ_ARGS, $ROOM, $USERS, $SELF;
 
-//-- ´Ø¿ô --//
-//É¬Í×¤Ê¥¯¥Ã¥­¡¼¤ò¤Ş¤È¤á¤ÆÅĞÏ¿(¤Ä¤¤¤Ç¤ËºÇ¿·¤Î°ÛµÄ¤¢¤ê¤Î¾õÂÖ¤ò¼èÆÀ¤·¤ÆÇÛÎó¤Ë³ÊÇ¼)
-function SendCookie(){
-  global $GAME_CONF, $system_time, $room_no, $date, $day_night, $user_no, $live, $uname,
-    $set_objection, $objection_array, $objection_left_count;
+  //-- å¤œæ˜ã‘ --
+  //ã‚¯ãƒƒã‚­ãƒ¼ã«æ ¼ç´ (å¤œæ˜ã‘ã«éŸ³ã§ãŠçŸ¥ã‚‰ã›ã§ä½¿ã†ãƒ»æœ‰åŠ¹æœŸé™ä¸€æ™‚é–“)
+  setcookie('day_night', $ROOM->day_night, $ROOM->system_time + 3600);
 
-  //<ÌëÌÀ¤±¤ò²»¤Ç¤ªÃÎ¤é¤»ÍÑ>
-  //¥¯¥Ã¥­¡¼¤Ë³ÊÇ¼¡ÊÌëÌÀ¤±¤Ë²»¤Ç¤ªÃÎ¤é¤»¤Ç»È¤¦¡¦Í­¸ú´ü¸Â°ì»ş´Ö¡Ë
-  setcookie('day_night', $day_night, $system_time + 3600);
-
-  //<¡Ö°ÛµÄ¡×¤¢¤ê¤ò²»¤Ç¤ªÃÎ¤é¤»ÍÑ>
-  //º£¤Ş¤Ç¤Ë¼«Ê¬¤¬¡Ö°ÛµÄ¡×¤¢¤ê¤ò¤·¤¿²ó¿ô¼èÆÀ
-  $sql = mysql_query("SELECT COUNT(message) FROM system_message WHERE room_no = $room_no
-			AND type = 'OBJECTION' AND message = '$user_no'");
-
-  //À¸¤­¤Æ¤¤¤Æ(¥²¡¼¥à½ªÎ»¸å¤Ï»à¼Ô¤Ç¤âOK)¡Ö°ÛµÄ¡×¤¢¤ê¡¢¤Î¥»¥Ã¥ÈÍ×µá¤¬¤¢¤ì¤Ğ¥»¥Ã¥È¤¹¤ë(ºÇÂç²ó¿ô°ÊÆâ¤Î¾ì¹ç)
-  if($live == 'live' && $day_night != 'night' && $set_objection == 'set' &&
-     mysql_result($sql, 0, 0) < $GAME_CONF->objection){
-    InsertSystemMessage($user_no, 'OBJECTION');
-    InsertSystemTalk('OBJECTION', $system_time, '', '', $uname);
-    mysql_query('COMMIT');
+  //-- å†æŠ•ç¥¨ --//
+  //å†æŠ•ç¥¨ã®å›æ•°ã‚’å–å¾—
+  if(($last_vote_times = $ROOM->GetVoteTimes(true)) > 0){ //ã‚¯ãƒƒã‚­ãƒ¼ã«æ ¼ç´ (æœ‰åŠ¹æœŸé™ä¸€æ™‚é–“)
+    setcookie('vote_times', $last_vote_times, $ROOM->system_time + 3600);
+  }
+  else{ //ã‚¯ãƒƒã‚­ãƒ¼ã‹ã‚‰å‰Šé™¤ (æœ‰åŠ¹æœŸé™ä¸€æ™‚é–“)
+    setcookie('vote_times', '', $ROOM->system_time - 3600);
   }
 
-  //¥æ¡¼¥¶Áí¿ô¤ò¼èÆÀ¤·¤Æ¿Í¿ôÊ¬¤Î¡Ö°ÛµÄ¤¢¤ê¡×¤Î¥¯¥Ã¥­¡¼¤ò¹½ÃÛ¤¹¤ë
-  $sql = mysql_query("SELECT COUNT(uname) FROM user_entry WHERE room_no = $room_no AND user_no > 0");
-  // //ÇÛÎó¤ò¥ê¥»¥Ã¥È (0 ÈÖÌÜ¤ËÊÑ¤ÊÃÍ¤¬Æş¤é¤Ê¤¤»ö¤¬Êİ¾Ú¤µ¤ì¤Æ¤¤¤ì¤ĞÉÔÍ×¤«¤Ê¡©)
-  // $objection_array = array();
-  // unset($objection_array[0]);
-  $objection_array = array_fill(1, mysql_result($sql, 0, 0), 0); //index ¤Ï 1 ¤«¤é
-
-  //message:°ÛµÄ¤¢¤ê¤ò¤·¤¿¥æ¡¼¥¶ No ¤È¤½¤Î²ó¿ô¤ò¼èÆÀ
-  $sql = mysql_query("SELECT message, COUNT(message) AS message_count FROM system_message
-			WHERE room_no = $room_no AND type = 'OBJECTION' GROUP BY message");
-  while(($array = mysql_fetch_assoc($sql)) !== false){
-    $this_user_no = (int)$array['message'];
-    $this_count   = (int)$array['message_count'];
-    $objection_array[$this_user_no] = $this_count;
+  //-- å…¥æ‘æƒ…å ± --//
+  if($ROOM->IsBeforeGame()){
+    setcookie('user_count', $USERS->GetUserCount(), $ROOM->system_time + 3600);
   }
 
-  //¥¯¥Ã¥­¡¼¤Ë³ÊÇ¼ (Í­¸ú´ü¸Â°ì»ş´Ö)
-  foreach($objection_array as $value){
-    if($str != '') $str .= ','; //¥«¥ó¥Ş¶èÀÚ¤ê
-    $str .= $value;
-  }
-  setcookie('objection', $str, $system_time + 3600);
+  //-- ã€Œç•°è­°ã€ã‚ã‚Š --//
+  $user_count = $USERS->GetUserCount(true); //KICK ã‚‚å«ã‚ãŸãƒ¦ãƒ¼ã‚¶ç·æ•°ã‚’å–å¾—
+  $objection_list = array_fill(0, $user_count, 0); //é…åˆ—ã‚’ã‚»ãƒƒãƒˆ (index ã¯ 0 ã‹ã‚‰)
 
-  //»Ä¤ê°ÛµÄ¤¢¤ê¤Î²ó¿ô
-  $objection_left_count = $GAME_CONF->objection - $objection_array[$user_no];
+  //ã€Œç•°è­°ã€ã‚ã‚Šã‚’ã—ãŸãƒ¦ãƒ¼ã‚¶ No ã¨ãã®å›æ•°ã‚’å–å¾—
+  $query = 'SELECT message, COUNT(message) AS count FROM system_message' . $ROOM->GetQuery(false) .
+    " AND type = 'OBJECTION' GROUP BY message";
+  foreach(FetchAssoc($query) as $stack){
+    $objection_list[(int)$stack['message'] - 1] = (int)$stack['count'];
+  }
 
-  //<ºÆÅêÉ¼¤ò²»¤Ç¤ªÃÎ¤é¤»ÍÑ>
-  //ºÆÅêÉ¼¤Î²ó¿ô¤ò¼èÆÀ
-  $sql = mysql_query("SELECT message FROM system_message WHERE room_no = $room_no
-			AND date = $date AND type = 'RE_VOTE' ORDER BY message DESC");
-  if(mysql_num_rows($sql) != 0){
-    $last_vote_times = (int)mysql_result($sql, 0, 0); //²¿²óÌÜ¤ÎºÆÅêÉ¼¤Ê¤Î¤«¼èÆÀ
-    setcookie('vote_times', $last_vote_times, $system_time + 3600); //¥¯¥Ã¥­¡¼¤Ë³ÊÇ¼¡ÊÍ­¸ú´ü¸Â°ì»ş´Ö¡Ë
+  //ã€Œç•°è­°ã€ã‚ã‚Šã‚»ãƒƒãƒˆåˆ¤å®š
+  if($RQ_ARGS->set_objection && $objection_list[$SELF->user_no - 1] < $GAME_CONF->objection &&
+     ($ROOM->IsBeforeGame() || ($SELF->IsLive() && $ROOM->IsDay()))){
+    $ROOM->SystemMessage($SELF->user_no, 'OBJECTION');
+    $ROOM->Talk('OBJECTION', $SELF->uname);
+    $objection_list[$SELF->user_no - 1]++; //ä½¿ç”¨å›æ•°ã‚’ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
   }
-  else{
-    setcookie('vote_times', '', $system_time - 3600); //¥¯¥Ã¥­¡¼¤«¤éºï½ü¡ÊÍ­¸ú´ü¸Â°ì»ş´Ö¡Ë
-  }
+  //ã‚¯ãƒƒã‚­ãƒ¼ã«æ ¼ç´ (æœ‰åŠ¹æœŸé™ä¸€æ™‚é–“)
+  setcookie('objection', implode(',', $objection_list), $ROOM->system_time + 3600);
+  $SELF->objection_count = $objection_list[$SELF->user_no - 1]; //æ®‹ã‚Šç•°è­°ã‚ã‚Šã®å›æ•°ã‚’ã‚»ãƒƒãƒˆ
 }
 
-//°ä¸ÀÅĞÏ¿
-function EntryLastWords($say){
-  global $room_no, $day_night, $uname, $live;
+//ç™ºè¨€ç½®æ›å‡¦ç†
+function ConvertSay(&$say){
+  global $GAME_CONF, $MESSAGE, $ROOM, $ROLES, $USERS, $SELF;
 
-  //¥²¡¼¥à¤¬½ªÎ»¤·¤Æ¤¤¤ë¤«¡¢»à¤ó¤Ç¤¤¤¿¤éÅĞÏ¿¤·¤Ê¤¤
-  if($day_night == 'aftergame' || $live != 'live') return false;
-
-  //°ä¸À¤ò»Ä¤¹
-  mysql_query("UPDATE user_entry SET last_words = '$say' WHERE room_no = $room_no
-		AND uname = '$uname' AND user_no > 0");
-  mysql_query('COMMIT'); //°ì±ş¥³¥ß¥Ã¥È
-}
-
-//È¯¸À
-function Say($say){
-  global $room_no, $game_option, $day_night, $uname, $role, $live;
-
-  if(strpos($game_option, 'real_time') !== false){ //¥ê¥¢¥ë¥¿¥¤¥àÀ©
-    GetRealPassTime($left_time);
-    $spend_time = 0; //²ñÏÃ¤Ç»ş´Ö·Ğ²áÀ©¤ÎÊı¤ÏÌµ¸ú¤Ë¤¹¤ë
-  }
-  else{ //²ñÏÃ¤Ç»ş´Ö·Ğ²áÀ©
-    GetTalkPassTime($left_time); //·Ğ²á»ş´Ö¤ÎÏÂ
-    if(strlen($say) <= 100) //·Ğ²á»ş´Ö
-      $spend_time = 1;
-    elseif(strlen($say) <= 200)
-      $spend_time = 2;
-    elseif(strlen($say) <= 300)
-      $spend_time = 3;
-    else
-      $spend_time = 4;
-  }
-
-  if($day_night == 'beforegame' || $day_night == 'aftergame') //¥²¡¼¥à³«»ÏÁ°¸å¤Ï¤½¤Î¤Ş¤ŞÈ¯¸À
-    Write($say, $day_night, 0, true);
-  elseif($uname == 'dummy_boy') //¿ÈÂå¤ï¤ê·¯ (²¾ÁÛ GM ÂĞ±ş)
-    Write($say, $day_night, 0, false); //È¯¸À»ş´Ö¤ò¹¹¿·¤·¤Ê¤¤
-  elseif($live == 'dead') //»àË´¼Ô¤ÎÎîÏÃ
-    Write($say, 'heaven', 0, false); //È¯¸À»ş´Ö¤ò¹¹¿·¤·¤Ê¤¤
-  elseif($live == 'live' && $left_time > 0){ //À¸Â¸¼Ô¤ÇÀ©¸Â»ş´ÖÆâ
-    if($day_night == 'day') //Ãë¤Ï¤½¤Î¤Ş¤ŞÈ¯¸À
-      Write($say, 'day', $spend_time, true);
-    elseif($day_night == 'night'){ //Ìë¤ÏÌò¿¦Ëè¤ËÊ¬¤±¤ë
-      if(strpos($role, 'wolf') !== false) //Ïµ
-	Write($say, 'night wolf', $spend_time, true);
-      elseif(strpos($role, 'common') !== false) //¶¦Í­¼Ô
-	Write($say, 'night common', 0);
-      elseif(strpos($role, 'fox') !== false) //ÍÅ¸Ñ
-	Write($say, 'night fox', 0);
-      else //ÆÈ¤ê¸À
-	Write($say, 'night self_talk', 0);
-    }
-  }
-}
-
-//È¯¸À¤ò DB ¤ËÅĞÏ¿¤¹¤ë
-function Write($say, $location, $spend_time, $update = false){
-  global $system_time, $room_no, $date, $uname, $font_type;
-
-  InsertTalk($room_no, $date, $location, $uname, $system_time, $say, $font_type, $spend_time);
-  if($update) UpdateTime();
-  mysql_query('COMMIT'); //°ì±ş¥³¥ß¥Ã¥È
-}
-
-//¥²¡¼¥àÄäÂÚ¤Î¥Á¥§¥Ã¥¯
-function CheckSilence(){
-  global $TIME_CONF, $MESSAGE, $system_time, $room_no, $date, $game_option, $day_night;
-
-  //¥²¡¼¥àÃæ°Ê³°¤Ï½èÍı¤ò¤·¤Ê¤¤
-  if($day_night != 'day' && $day_night != 'night') return false;
-
-  //¥Æ¡¼¥Ö¥ë¥í¥Ã¥¯
-  if(! mysql_query("LOCK TABLES room WRITE, talk WRITE, vote WRITE,
-			user_entry WRITE, system_message WRITE")){
+  if($say == '') return true; //ãƒªãƒ­ãƒ¼ãƒ‰æ™‚ãªã‚‰å‡¦ç†ã‚¹ã‚­ãƒƒãƒ—
+  //æ–‡å­—æ•°ãƒ»è¡Œæ•°ãƒã‚§ãƒƒã‚¯
+  if(strlen($say) > $GAME_CONF->say_limit ||
+     substr_count($say, "\n") >= $GAME_CONF->say_line_limit){
+    $say = '';
     return false;
   }
 
-  //ºÇ¸å¤ËÈ¯¸À¤µ¤ì¤¿»ş´Ö¤ò¼èÆÀ
-  $sql = mysql_query("SELECT last_updated FROM room WHERE room_no = $room_no");
-  $last_updated_time = mysql_result($sql, 0, 0);
-  $last_update_diff_sec = $system_time - $last_updated_time;
+  if($GAME_CONF->replace_talk) $say = strtr($say, $GAME_CONF->replace_talk_list); //ç™ºè¨€ç½®æ›ãƒ¢ãƒ¼ãƒ‰
 
-  //·Ğ²á»ş´Ö¤ò¼èÆÀ
-  if(strpos($game_option, 'real_time') !== false){ //¥ê¥¢¥ë¥¿¥¤¥àÀ©
-    GetRealPassTime($left_time);
+  //æ­»è€…ãƒ»ã‚²ãƒ¼ãƒ ãƒ—ãƒ¬ã‚¤ä¸­ä»¥å¤–ãªã‚‰ä»¥é™ã¯ã‚¹ã‚­ãƒƒãƒ—
+  if($SELF->IsDead() || ! $ROOM->IsPlaying()) return true;
+  //if($SELF->IsDead()) return false; //ãƒ†ã‚¹ãƒˆç”¨
+
+  //èŒç³»ç½®æ› (æ˜¼é™å®š)
+  if($ROOM->IsDay() && $SELF->IsRole('suspect', 'cute_wolf', 'cute_fox') &&
+     mt_rand(1, 100) <= $GAME_CONF->cute_wolf_rate){
+    $say = $MESSAGE->cute_wolf != '' ? $MESSAGE->cute_wolf : $MESSAGE->wolf_howl;
   }
-  else{ //²ñÏÃ¤Ç»ş´Ö·Ğ²áÀ©
-    $silence_pass_time = GetTalkPassTime($left_time, true);
+
+  $virtual_self = $USERS->ByVirtual($SELF->user_no);
+  $ROLES->actor = $virtual_self;
+  //ç´³å£«ãƒ»æ·‘å¥³ç½®æ›
+  if($virtual_self->IsRole('gentleman', 'lady') &&
+	 mt_rand(1, 100) <= $GAME_CONF->gentleman_rate){
+    $role = $virtual_self->IsRole('gentleman') ? 'gentleman' : 'lady';
+
+    $stack = $USERS->GetLivingUsers(); //ç”Ÿå­˜è€…ã®ãƒ¦ãƒ¼ã‚¶åã‚’å–å¾—
+    unset($stack[array_search($virtual_self->uname, $stack)]); //è‡ªåˆ†ã‚’å‰Šé™¤
+
+    $say = $MESSAGE->{$role . '_header'} . $USERS->GetHandleName(GetRandom($stack), true) .
+      $MESSAGE->{$role . '_footer'};
+  }
+  //ç‹¼å°‘å¹´å¤‰æ›
+  elseif($virtual_self->IsRole('liar') && mt_rand(1, 100) <= $GAME_CONF->liar_rate){
+    $say = strtr($say, $GAME_CONF->liar_replace_list);
   }
 
-  //¥ê¥¢¥ë¥¿¥¤¥àÀ©¤Ç¤Ê¤¯¡¢À©¸Â»ş´ÖÆâ¤ÇÄÀÌÛïçÃÍ¤òÄ¶¤¨¤¿¤Ê¤é¤Ê¤é°ì»ş´Ö¿Ê¤á¤ë(ÄÀÌÛ)
-  if(strpos($game_option, 'real_time') === false && $left_time > 0){
-    if($last_update_diff_sec > $TIME_CONF->silence){
-      $sentence = "¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ " . $silence_pass_time . ' ' . $MESSAGE->silence;
-      InsertTalk($room_no, $date, "$day_night system", 'system', $system_time, $sentence, NULL, $TIME_CONF->silence_pass);
-      UpdateTime();
-    }
-  }
-  elseif($left_time == 0){
-    //·Ù¹ğ¤ò½Ğ¤¹
-    $left_time_str = ConvertTime($TIME_CONF->sudden_death); //ÆÍÁ³»à¤Ş¤Ç¤ÎÀ©¸Â»ş´Ö
-    $sudden_death_announce = "¤¢¤È" . $left_time_str . "¤Ç" . $MESSAGE->sudden_death_announce;
-
-    //´û¤Ë·Ù¹ğ¤ò½Ğ¤·¤Æ¤¤¤ë¤«¥Á¥§¥Ã¥¯
-    $sql = mysql_query("SELECT COUNT(uname) FROM talk WHERE room_no = $room_no
-			AND date = $date AND location = '$day_night system'
-			AND uname = 'system' AND sentence = '$sudden_death_announce'");
-
-    if(mysql_result($sql, 0, 0) == 0){ //·Ù¹ğ¤ò½Ğ¤·¤Æ¤¤¤Ê¤«¤Ã¤¿¤é½Ğ¤¹
-      InsertSystemTalk($sudden_death_announce, ++$system_time); //Á´²ñÏÃ¤Î¸å¤Ë½Ğ¤ë¤è¤¦¤Ë
-      UpdateTime(); //¹¹¿·»ş´Ö¤ò¹¹¿·
-      $last_update_diff_sec = 0;
-    }
-
-    if($DEBUG_MODE){
-      $sudden_death_exec_time = $TIME_CONF->sudden_death - $last_update_diff_sec;
-      echo "ÆÍÁ³»à½èÍı¤Ş¤Ç¤¢¤È $sudden_death_exec_time ÉÃ <br>"; //¥Æ¥¹¥ÈÉ½¼¨ÍÑ
-    }
-
-    //À©¸Â»ş´Ö¤ò²á¤®¤Æ¤¤¤¿¤éÌ¤ÅêÉ¼¤Î¿Í¤òÆÍÁ³»à¤µ¤»¤ë
-    if($last_update_diff_sec > $TIME_CONF->sudden_death){
-      //ÅêÉ¼¤·¤Æ¤¤¤Ê¤¤¿Í¤ò¼èÆÀ¤¹¤ë¤¿¤á¤Î´ğËÜSQLÊ¸
-      //(ÅêÉ¼ºÑ¤ß¤Î¿Í¤òº¸·ë¹ç¤·¤Æ¡¢¡ÖÅêÉ¼ºÑ¤ß=NULL¡¦ÅêÉ¼¤·¤Æ¤¤¤Ê¤¤¡×¤ò¼èÆÀ)
-      $query = "SELECT user_entry.uname, user_entry.handle_name, user_entry.role
-		FROM user_entry left join tmp_sd on user_entry.uname = tmp_sd.uname
-		WHERE user_entry.room_no = $room_no AND user_entry.live = 'live'
-		AND user_entry.user_no > 0 AND tmp_sd.uname is NULL";
-      if($day_night == 'day'){
-	$sql = mysql_query("SELECT message FROM system_message WHERE room_no = $room_no
-				AND date = $date AND type = 'VOTE_TIMES'");
-	$vote_times = mysql_result($sql, 0, 0);
-
-	//ÅêÉ¼ºÑ¤ß¤Î¿Í¤Î¥Æ¥ó¥İ¥é¥ê¥Æ¡¼¥Ö¥ë¤òºîÀ®
-	mysql_query("CREATE TEMPORARY TABLE tmp_sd SELECT uname FROM vote
-			WHERE room_no = $room_no AND date = $date
-			AND situation = 'VOTE_KILL' AND vote_times = $vote_times");
-	//ÅêÉ¼¤·¤Æ¤¤¤Ê¤¤¿Í¤ò¼èÆÀ
-	$sql_novote = mysql_query($query);
+  if($virtual_self->IsRole('bad_status')){ //å¦–ç²¾ã®å‡¦ç†
+    $stack = array('spring_fairy' => 'æ˜¥', 'summer_fairy' => 'å¤',
+		   'autumn_fairy' => 'ç§‹', 'winter_fairy' => 'å†¬');
+    foreach($virtual_self->GetPartner('bad_status') as $id => $date){
+      if($date != $ROOM->date) continue;
+      $user = $USERS->ByID($id);
+      if($user->IsRole('fairy')){
+	$say = $MESSAGE->common_talk . $say;
       }
-      elseif($day_night == 'night'){
-	//ÅêÉ¼ºÑ¤ß¤Î¿Í¤Î¥Æ¥ó¥İ¥é¥ê¥Æ¡¼¥Ö¥ë¤òºîÀ®
-	mysql_query("CREATE TEMPORARY TABLE tmp_sd SELECT uname FROM vote
-			WHERE room_no = $room_no AND date = $date
-			AND (situation = 'WOLF_EAT' or situation = 'MAGE_DO'
-			or situation = 'GUARD_DO' or situation = 'CUPID_DO')");
-
-	//¿ÍÏµ¤ÎÅêÉ¼¤ÎÍ­Ìµ¤ò¥Á¥§¥Ã¥¯¤¹¤ë
-	$wolf_query = "SELECT count(uname) FROM vote WHERE room_no = $room_no AND " .
-	  "date = $date AND situation = 'WOLF_EAT'";
-	$sql = mysql_query($wolf_query);
-	$wolf_novote = mysql_result($sql, 0, 0) == 0;
-
-	//ÅêÉ¼¤·¤Æ¤¤¤Ê¤¤¿Í¤ò¼èÆÀ (Ìò¿¦¤Î¤ß)
-	$query .= " AND (" . ($wolf_novote ? "user_entry.role LIKE 'wolf%' or " : "") .
-	  "user_entry.role LIKE 'mage%' or  user_entry.role LIKE '" .
-	  ($date == 1 ? 'cupid' : 'guard') . "%')";
-	$sql_novote = mysql_query($query);
+      elseif(array_key_exists($user->main_role, $stack)){
+	$say = $stack[$user->main_role] . 'ã§ã™ã‚ˆãƒ¼' . $say;
       }
-
-      //Ì¤ÅêÉ¼¼Ô¤Î¿ô
-      $novote_count = mysql_num_rows($sql_novote);
-
-      //Ì¤ÅêÉ¼¼Ô¤òÁ´°÷ÆÍÁ³»à¤µ¤»¤ë
-      for($i=0; $i < $novote_count; $i++){
-	$array = mysql_fetch_assoc($sql_novote);
-	$this_uname  = $array['uname'];
-	$this_handle = $array['handle_name'];
-	$this_role   = $array['role'];
-
-	DeadUser($this_uname); //ÆÍÁ³»à¼Â¹Ô
-	InsertSystemTalk($this_handle . $MESSAGE->sudden_death, ++$system_time); //¥·¥¹¥Æ¥à¥á¥Ã¥»¡¼¥¸
-
-	//Îø¿Í¤Î¸åÄÉ¤¤½èÍı
-	if(strpos($this_role, 'lovers') !== false) LoversFollowed($this_role, true);
-      }
-      InsertSystemTalk($MESSAGE->vote_reset, ++$system_time); //ÅêÉ¼¥ê¥»¥Ã¥È¥á¥Ã¥»¡¼¥¸
-      InsertSystemTalk($sudden_death_announce, ++$system_time); //ÆÍÁ³»à¹ğÃÎ¥á¥Ã¥»¡¼¥¸
-      UpdateTime(); //À©¸Â»ş´Ö¥ê¥»¥Ã¥È
-
-      //ÅêÉ¼¥ê¥»¥Ã¥È
-      mysql_query("DELETE FROM vote WHERE room_no = $room_no AND situation <> 'CUPID_DO'");
-      CheckVictory(); //¾¡ÇÔ¥Á¥§¥Ã¥¯
     }
   }
-  mysql_query("UNLOCK TABLES"); //¥Æ¡¼¥Ö¥ë¥í¥Ã¥¯²ò½ü
+
+  foreach($ROLES->Load('say') as $filter) $filter->FilterSay($say); //ä»–ã®ã‚µãƒ–å½¹è·ã®å‡¦ç†
+  return true;
 }
 
-//Â¼Ì¾Á°¡¢ÈÖÃÏ¡¢²¿ÆüÌÜ¡¢ÆüË×¤Ş¤Ç¡Á»ş´Ö¤ò½ĞÎÏ(¾¡ÇÔ¤¬¤Ä¤¤¤¿¤éÂ¼¤ÎÌ¾Á°¤ÈÈÖÃÏ¡¢¾¡ÇÔ¤ò½ĞÎÏ)
-function OutputGameHeader(){
-  global $GAME_CONF, $MESSAGE, $SOUND, $system_time, $room_no, $room_name, $room_comment,
-    $game_option, $dead_mode, $heaven_mode, $date, $day_night, $live, $handle_name,
-    $auto_reload, $play_sound, $list_down, $cookie_day_night, $cookie_objection,
-    $objection_array, $objection_left_count;
+//éºè¨€ç™»éŒ²
+function EntryLastWords($say){
+  global $ROOM, $USERS, $SELF;
 
-  $room_message = '<td class="room"><span>' . $room_name . 'Â¼</span>¡¡¡Á' . $room_comment .
-    '¡Á[' . $room_no . 'ÈÖÃÏ]</td>'."\n";
-  $url_room      = '?room_no='     . $room_no;
-  $url_day_night = '&day_night='   . $day_night;
-  $url_reload    = ($auto_reload != '' ? '&auto_reload=' . $auto_reload : '');
-  $url_sound     = ($play_sound  != '' ? '&play_sound='  . $play_sound  : '');
-  $url_list      = ($list_down   != '' ? '&list_down='   . $list_down   : '');
-  $url_dead      = ($dead_mode   != '' ? '&dead_mode='   . $dead_mode   : '');
-  $url_heaven    = ($heaven_mode != '' ? '&heaven_mode=' . $heaven_mode : '');
+  if($ROOM->IsFinished()) return false; //ã‚²ãƒ¼ãƒ çµ‚äº†å¾Œãªã‚‰ã‚¹ã‚­ãƒƒãƒ—
+
+  if($say == ' ') $say = NULL; //ã‚¹ãƒšãƒ¼ã‚¹ã ã‘ãªã‚‰ã€Œæ¶ˆå»ã€
+  if($SELF->IsLive()){ //ç™»éŒ²ã—ãªã„å½¹è·ã‚’ãƒã‚§ãƒƒã‚¯
+    if(! $SELF->IsLastWordsLimited()) $SELF->Update('last_words', $say);
+  }
+  elseif($SELF->IsDead() && $SELF->IsRole('mind_evoke')){ //å£å¯„ã›ã®å‡¦ç†
+    foreach($SELF->GetPartner('mind_evoke') as $id){ //å£å¯„ã›ã—ã¦ã„ã‚‹ã‚¤ã‚¿ã‚³ã™ã¹ã¦ã®éºè¨€ã‚’æ›´æ–°ã™ã‚‹
+      $target = $USERS->ByID($id);
+      if($target->IsLive()) $target->Update('last_words', $say);
+    }
+  }
+}
+
+//ç™ºè¨€
+function Say($say){
+  global $RQ_ARGS, $ROOM, $USERS, $SELF;
+
+  $user = $USERS->ByVirtual($SELF->user_no); //ä»®æƒ³ãƒ¦ãƒ¼ã‚¶ã‚’å–å¾—
+  if($ROOM->IsRealTime()){ //ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶
+    GetRealPassTime($left_time);
+    $spend_time = 0; //ä¼šè©±ã§æ™‚é–“çµŒéåˆ¶ã®æ–¹ã¯ç„¡åŠ¹ã«ã™ã‚‹
+  }
+  else{ //ä¼šè©±ã§æ™‚é–“çµŒéåˆ¶
+    GetTalkPassTime($left_time); //çµŒéæ™‚é–“ã®å’Œ
+    $spend_time = floor(strlen($say) / 100); //çµŒéæ™‚é–“
+    if($spend_time < 1) $spend_time = 1; //æœ€å°ã¯ 1
+    elseif($spend_time > 4) $spend_time = 4; //æœ€å¤§ã¯ 4
+  }
+
+  if(! $ROOM->IsPlaying()){ //ã‚²ãƒ¼ãƒ é–‹å§‹å‰å¾Œã¯ãã®ã¾ã¾ç™ºè¨€
+    Write($say, $ROOM->day_night, 0, true);
+  }
+  //èº«ä»£ã‚ã‚Šå› (ä»®æƒ³ GM å¯¾å¿œ) ã¯éºè¨€ã‚’å°‚ç”¨ã®ã‚·ã‚¹ãƒ†ãƒ ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã«åˆ‡ã‚Šæ›¿ãˆ
+  elseif($SELF->IsDummyBoy() && $RQ_ARGS->last_words){
+    Write($say, "{$ROOM->day_night} dummy_boy", 0); //ç™ºè¨€æ™‚é–“ã‚’æ›´æ–°ã—ãªã„
+  }
+  elseif($SELF->IsDead()){ //æ­»äº¡è€…ã®éœŠè©±
+    Write($say, 'heaven', 0); //ç™ºè¨€æ™‚é–“ã‚’æ›´æ–°ã—ãªã„
+  }
+  elseif($SELF->IsLive() && $left_time > 0){ //ç”Ÿå­˜è€…ã§åˆ¶é™æ™‚é–“å†…
+    if($ROOM->IsDay()){ //æ˜¼ã¯ãã®ã¾ã¾ç™ºè¨€
+      if(! $ROOM->IsEvent('wait_morning')) Write($say, 'day', $spend_time, true);
+    }
+    elseif($ROOM->IsNight()){ //å¤œã¯å½¹è·æ¯ã«åˆ†ã‘ã‚‹
+      $update = $SELF->IsWolf(); //æ™‚é–“çµŒéã™ã‚‹ã®ã¯äººç‹¼ã®ç™ºè¨€ã®ã¿ (æœ¬äººåˆ¤å®š)
+      if(! $update) $spend_time = 0;
+
+      if($user->IsWolf(true)) //äººç‹¼
+	$location = $SELF->IsRole('possessed_mad') ? 'self_talk' : 'wolf'; //çŠ¬ç¥åˆ¤å®š
+      elseif($user->IsRole('whisper_mad')) //å›ãç‹‚äºº
+	$location = 'mad';
+      elseif($user->IsCommon(true)) //å…±æœ‰è€…
+	$location = 'common';
+      elseif($user->IsFox(true)) //å¦–ç‹
+	$location = 'fox';
+      else //ç‹¬ã‚Šè¨€
+	$location = 'self_talk';
+
+      Write($say, 'night ' . $location, $spend_time, $update);
+    }
+  }
+}
+
+//ç™ºè¨€ã‚’ DB ã«ç™»éŒ²ã™ã‚‹
+function Write($say, $location, $spend_time, $update = false){
+  global $RQ_ARGS, $ROOM, $ROLES, $USERS, $SELF;
+
+  //å£°ã®å¤§ãã•ã‚’æ±ºå®š
+  $voice = $RQ_ARGS->font_type;
+  if($ROOM->IsPlaying() && $SELF->IsLive()){
+    $ROLES->actor = $USERS->ByVirtual($SELF->user_no);
+    foreach($ROLES->Load('voice') as $filter) $filter->FilterVoice($voice, $say);
+  }
+
+  $ROOM->Talk($say, $SELF->uname, $location, $voice, $spend_time);
+  if($update) $ROOM->UpdateTime();
+  SendCommit();
+}
+
+//ã‚²ãƒ¼ãƒ åœæ»ã®ãƒã‚§ãƒƒã‚¯
+function CheckSilence(){
+  global $TIME_CONF, $MESSAGE, $ROOM, $USERS;
+
+  if(! $ROOM->IsPlaying() || ! LockTable('game')) return false; //ã‚¹ã‚­ãƒƒãƒ—åˆ¤å®š + ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ­ãƒƒã‚¯
+
+  //æœ€çµ‚ç™ºè¨€æ™‚åˆ»ã‹ã‚‰ã®å·®åˆ†ã‚’å–å¾—
+  $query = $ROOM->GetQueryHeader('room', 'UNIX_TIMESTAMP() - last_updated');
+  $last_updated_pass_time = FetchResult($query);
+
+  //çµŒéæ™‚é–“ã‚’å–å¾—
+  if($ROOM->IsRealTime()) //ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶
+    GetRealPassTime($left_time);
+  else //ä»®æƒ³æ™‚é–“åˆ¶
+    $silence_pass_time = GetTalkPassTime($left_time, true);
+
+  if(! $ROOM->IsRealTime() && $left_time > 0){ //ä»®æƒ³æ™‚é–“åˆ¶ã®æ²ˆé»™åˆ¤å®š
+    if($last_updated_pass_time > $TIME_CONF->silence){
+      $str = 'ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ»ãƒ» ' . $silence_pass_time . ' ' . $MESSAGE->silence;
+      $ROOM->Talk($str, '', '', NULL, $TIME_CONF->silence_pass);
+      $ROOM->UpdateTime();
+    }
+  }
+  elseif($left_time == 0){ //åˆ¶é™æ™‚é–“è¶…éæ™‚ã®å‡¦ç†
+    //ã‚ªãƒ¼ãƒ—ãƒ‹ãƒ³ã‚°ãªã‚‰å³åº§ã«å¤œã«ç§»è¡Œã™ã‚‹
+    if($ROOM->IsOption('open_day') && $ROOM->IsDay() && $ROOM->date == 1){
+      //ã‚·ãƒ¼ãƒ³ã‚’ DB ã‹ã‚‰å†å–å¾—ã—ã¦åˆ‡ã‚Šæ›¿ã‚ã£ã¦ã„ãªã‘ã‚Œã°å‡¦ç†
+      if(FetchResult($ROOM->GetQueryHeader('room', 'day_night')) == 'day'){
+	$ROOM->ChangeNight(); //å¤œã«åˆ‡ã‚Šæ›¿ãˆ
+	$ROOM->UpdateTime(true); //æœ€çµ‚æ›¸ãè¾¼ã¿æ™‚åˆ»ã‚’æ›´æ–°
+      }
+      UnlockTable(); //ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ­ãƒƒã‚¯è§£é™¤
+      return true;
+    }
+
+    //çªç„¶æ­»ç™ºå‹•ã¾ã§ã®æ™‚é–“ã‚’å–å¾—
+    $sudden_death_announce = 'ã‚ã¨' . ConvertTime($TIME_CONF->sudden_death) . 'ã§' .
+      $MESSAGE->sudden_death_announce;
+    if($ROOM->OvertimeAlert($sudden_death_announce)){ //è­¦å‘Šå‡ºåŠ›
+      $ROOM->UpdateTime(); //æ›´æ–°æ™‚é–“ã‚’æ›´æ–°
+      $last_updated_pass_time = 0;
+    }
+    else{ //ä¸€åˆ†åˆ»ã¿ã§è¿½åŠ ã®è­¦å‘Šã‚’å‡ºã™
+      $seconds = $TIME_CONF->sudden_death - $last_updated_pass_time;
+      $quotient = $seconds % 60;
+      $seconds -= $quotient;
+      if($quotient > 0) $seconds += 60;
+      if($seconds > $TIME_CONF->sudden_death) $seconds = $TIME_CONF->sudden_death;
+      if($seconds > 0){
+	$str = 'ã‚ã¨' . ConvertTime($seconds) . 'ã§' . $MESSAGE->sudden_death_announce;
+	$ROOM->OvertimeAlert($str);
+      }
+    }
+    $ROOM->sudden_death = $TIME_CONF->sudden_death - $last_updated_pass_time;
+
+    //åˆ¶é™æ™‚é–“ã‚’éãã¦ã„ãŸã‚‰æœªæŠ•ç¥¨ã®äººã‚’çªç„¶æ­»ã•ã›ã‚‹
+    if($ROOM->sudden_death <= 0){
+      if(abs($ROOM->sudden_death) > $TIME_CONF->server_disconnect){ //ã‚µãƒ¼ãƒãƒ€ã‚¦ãƒ³æ¤œå‡º
+	$ROOM->UpdateTime(); //çªç„¶æ­»ã‚¿ã‚¤ãƒãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆ
+      }
+      else{
+	$ROOM->LoadVote(); //æŠ•ç¥¨æƒ…å ±ã‚’å–å¾—
+	if($ROOM->IsDay()){
+	  //ç”Ÿå­˜è€…ã¨æŠ•ç¥¨æ¸ˆã¿ã®äººã®å·®åˆ†ã‚’å–ã‚‹
+	  $novote_uname_list = array_diff($USERS->GetLivingUsers(), array_keys($ROOM->vote));
+	}
+	elseif($ROOM->IsNight()){
+	  $vote_data = $ROOM->ParseVote(); //æŠ•ç¥¨æƒ…å ±ã‚’ãƒ‘ãƒ¼ã‚¹
+	  //PrintData($vote_data, 'Vote Data');
+
+	  $novote_uname_list = array();
+	  foreach($USERS->rows as $user){ //æœªæŠ•ç¥¨ãƒã‚§ãƒƒã‚¯
+	    if($user->CheckVote($vote_data) === false) $novote_uname_list[] = $user->uname;
+	  }
+	}
+
+	//æœªæŠ•ç¥¨è€…ã‚’å…¨å“¡çªç„¶æ­»ã•ã›ã‚‹
+	foreach($novote_uname_list as $uname){
+	  $USERS->SuddenDeath($USERS->ByUname($uname)->user_no, 'NOVOTED_' . $ROOM->day_night);
+	}
+	LoversFollowed(true);
+	InsertMediumMessage();
+
+	$ROOM->Talk($MESSAGE->vote_reset); //æŠ•ç¥¨ãƒªã‚»ãƒƒãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+	$ROOM->Talk($sudden_death_announce); //çªç„¶æ­»å‘ŠçŸ¥ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+	$ROOM->UpdateTime(); //åˆ¶é™æ™‚é–“ãƒªã‚»ãƒƒãƒˆ
+	$ROOM->DeleteVote(); //æŠ•ç¥¨ãƒªã‚»ãƒƒãƒˆ
+	if(CheckVictory()) $USERS->ResetJoker(); //å‹æ•—ãƒã‚§ãƒƒã‚¯
+      }
+    }
+  }
+  UnlockTable(); //ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ­ãƒƒã‚¯è§£é™¤
+}
+
+//è¶…éæ™‚é–“ã‚»ãƒƒãƒˆ
+function SetSuddenDeathTime(){
+  global $TIME_CONF, $ROOM;
+
+  //æœ€çµ‚ç™ºè¨€æ™‚åˆ»ã‹ã‚‰ã®å·®åˆ†ã‚’å–å¾—
+  $query = $ROOM->GetQueryHeader('room', 'UNIX_TIMESTAMP() - last_updated');
+  $last_updated_pass_time = FetchResult($query);
+
+  //çµŒéæ™‚é–“ã‚’å–å¾—
+  $ROOM->IsRealTime() ? GetRealPassTime($left_time) : GetTalkPassTime($left_time, true);
+  if($left_time == 0) $ROOM->sudden_death = $TIME_CONF->sudden_death - $last_updated_pass_time;
+}
+
+//æ‘åå‰ã€ç•ªåœ°ã€ä½•æ—¥ç›®ã€æ—¥æ²¡ã¾ã§ï½æ™‚é–“ã‚’å‡ºåŠ›(å‹æ•—ãŒã¤ã„ãŸã‚‰æ‘ã®åå‰ã¨ç•ªåœ°ã€å‹æ•—ã‚’å‡ºåŠ›)
+function OutputGameHeader(){
+  global $GAME_CONF, $TIME_CONF, $MESSAGE, $RQ_ARGS, $ROOM, $USERS, $SELF,
+    $COOKIE, $SOUND, $OBJECTION;
+
+  $url_room   = '?room_no=' . $ROOM->id;
+  $url_reload = $RQ_ARGS->auto_reload > 0 ? '&auto_reload=' . $RQ_ARGS->auto_reload : '';
+  $url_sound  = $RQ_ARGS->play_sound ? '&play_sound=on'  : '';
+  $url_list   = $RQ_ARGS->list_down  ? '&list_down=on'   : '';
+  $url_dead   = $ROOM->dead_mode     ? '&dead_mode=on'   : '';
+  $url_heaven = $ROOM->heaven_mode   ? '&heaven_mode=on' : '';
+  $real_time  = $ROOM->IsRealTime();
 
   echo '<table class="game-header"><tr>'."\n";
-  if(($live == 'dead' && $heaven_mode == 'on') || $day_night == 'aftergame'){ //Îî³¦¤È¥í¥°±ÜÍ÷»ş
-    if($live == 'dead' && $heaven_mode == 'on')
-      echo '<td>&lt;&lt;&lt;Í©Îî¤Î´Ö&gt;&gt;&gt;</td>'."\n";
+  if(($SELF->IsDead() && $ROOM->heaven_mode) || $ROOM->IsAfterGame()){ //éœŠç•Œã¨ãƒ­ã‚°é–²è¦§æ™‚
+    if($SELF->IsDead() && $ROOM->heaven_mode)
+      echo '<td>&lt;&lt;&lt;å¹½éœŠã®é–“&gt;&gt;&gt;</td>'."\n";
     else
-      echo $room_message;
+      echo $ROOM->GenerateTitleTag();
 
-    //²áµî¤ÎÆü¤Î¥í¥°¤Ø¤Î¥ê¥ó¥¯À¸À®
-    echo '<td class="view-option">¥í¥°';
-
-    $url_header ='<a href="game_log.php' . $url_room . '&log_mode=on&date=';
+    //éå»ã®æ—¥ã®ãƒ­ã‚°ã¸ã®ãƒªãƒ³ã‚¯ç”Ÿæˆ
+    echo '<td class="view-option">ãƒ­ã‚° ';
+    $url_header ='<a href="game_log.php' . $url_room . '&date=';
     $url_footer = '#game_top" target="_blank">';
     $url_day    = '&day_night=day'   . $url_footer;
     $url_night  = '&day_night=night' . $url_footer;
 
-    echo $url_header . '1' . $url_night . '1(Ìë)</a>'."\n";
-    for($i=2; $i < $date; $i++){
-      echo $url_header . $i . $url_day   . $i . '(Ãë)</a>'."\n";
-      echo $url_header . $i . $url_night . $i . '(Ìë)</a>'."\n";
+    echo $url_header . '0&day_night=beforegame' . $url_footer . '0(é–‹å§‹å‰)</a>'."\n";
+    if($ROOM->IsOption('open_day')) echo $url_header . '1' . $url_day . '1(æ˜¼)</a>'."\n";
+    echo $url_header . '1' . $url_night . '1(å¤œ)</a>'."\n";
+    for($i = 2; $i < $ROOM->date; $i++){
+      echo $url_header . $i . $url_day   . $i . '(æ˜¼)</a>'."\n";
+      echo $url_header . $i . $url_night . $i . '(å¤œ)</a>'."\n";
     }
-    if($day_night == 'night' && $heaven_mode == 'on'){
-      echo $url_header . $date . $url_day . $date . '(Ãë)</a>'."\n";
+    if($ROOM->IsNight() && $ROOM->heaven_mode){
+      echo $url_header . $ROOM->date . $url_day . $ROOM->date . '(æ˜¼)</a>'."\n";
     }
-    elseif($day_night == 'aftergame'){
-      $sql = mysql_query("SELECT COUNT(uname) FROM talk WHERE room_no = $room_no
-				AND date = $date AND location = 'day'");
-      if(mysql_num_rows($sql) > 0)
-	echo $url_header . $date . $url_day . $date . '(Ãë)</a>'."\n";
+    elseif($ROOM->IsAfterGame()){
+      if(FetchResult($ROOM->GetQuery(true, 'talk') . " AND location LIKE 'day%'") > 0){
+	echo $url_header . $ROOM->date . $url_day . $ROOM->date . '(æ˜¼)</a>'."\n";
+      }
     }
 
-    if($heaven_mode == 'on'){
+    if($ROOM->heaven_mode){
       echo '</td>'."\n" . '</tr></table>'."\n";
       return;
     }
   }
   else{
-    echo $room_message;
-    echo '<td class="view-option">'."\n";
-
-    if($live == 'dead' && $dead_mode == 'on'){ //»àË´¼Ô¤Î¾ì¹ç¤Î¡¢¿¿¤óÃæ¤ÎÁ´É½¼¨ÃÏ¾å¥â¡¼¥É
+    echo $ROOM->GenerateTitleTag() . '<td class="view-option">'."\n";
+    if($SELF->IsDead() && $ROOM->dead_mode){ //æ­»äº¡è€…ã®å ´åˆã®ã€çœŸã‚“ä¸­ã®å…¨è¡¨ç¤ºåœ°ä¸Šãƒ¢ãƒ¼ãƒ‰
       $url = 'game_play.php' . $url_room . '&dead_mode=on' . $url_reload .
-	$url_sound . $url_list . '#game_top';
-      echo '<form method="POST" action="' . $url . '" name="reload_middle_frame" target="middle">'."\n";
-      echo '<input type="submit" value="¹¹¿·">'."\n";
-      echo '</form>'."\n";
+	$url_sound . $url_list;
+
+      echo <<<EOF
+<form method="POST" action="{$url}" name="reload_middle_frame" target="middle">
+<input type="submit" value="æ›´æ–°">
+</form>
+
+EOF;
     }
   }
 
-  if($day_night != 'aftergame'){ //¥²¡¼¥à½ªÎ»¸å¤Ï¼«Æ°¹¹¿·¤·¤Ê¤¤
+  if(! $ROOM->IsAfterGame()){ //ã‚²ãƒ¼ãƒ çµ‚äº†å¾Œã¯è‡ªå‹•æ›´æ–°ã—ãªã„
     $url_header = '<a target="_top" href="game_frame.php' . $url_room .
       $url_dead . $url_heaven . $url_list;
     OutputAutoReloadLink($url_header . $url_sound  . '&auto_reload=');
 
     $url = $url_header . $url_reload . '&play_sound=';
-    echo ' [²»¤Ç¤ªÃÎ¤é¤»](' .
-      ($play_sound == 'on' ?  'on ' . $url . 'off">off</a>' : $url . 'on">on</a> off') .
+    echo ' [éŸ³ã§ãŠçŸ¥ã‚‰ã›](' .
+      ($RQ_ARGS->play_sound ?  'on ' . $url . 'off">off</a>' : $url . 'on">on</a> off') .
       ')'."\n";
   }
 
-  //¥×¥ì¥¤¥ä¡¼¥ê¥¹¥È¤ÎÉ½¼¨°ÌÃÖ
+  //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒªã‚¹ãƒˆã®è¡¨ç¤ºä½ç½®
   echo '<a target="_top" href="game_frame.php' . $url_room . $url_dead . $url_heaven .
-    $url_reload . $url_sound  . '&list_down=' . ($list_down == 'on' ? 'off">¢¬' : 'on">¢­') .
-    '¥ê¥¹¥È</a>'."\n";
+    $url_reload . $url_sound  . '&list_down=' . ($RQ_ARGS->list_down ? 'off">â†‘' : 'on">â†“') .
+    'ãƒªã‚¹ãƒˆ</a>'."\n";
+  if($ROOM->IsFinished()) OutputLogLink();
 
-  //ÌëÌÀ¤±¤ò²»¤Ç¤ªÃÎ¤é¤»¤¹¤ë
-  if($play_sound == 'on'){
-    //ÌëÌÀ¤±¤Î¾ì¹ç
-    if($cookie_day_night != $day_night && $day_night == 'day') OutputSound($SOUND->morning);
-
-    //°ÛµÄ¤¢¤ê¡¢¤ò²»¤ÇÃÎ¤é¤»¤ë
-    $cookie_objection_array = explode(',', $cookie_objection); //¥¯¥Ã¥­¡¼¤ÎÃÍ¤òÇÛÎó¤Ë³ÊÇ¼¤¹¤ë
-/*
-    $objection_sex = array();
-    for($i=0; $i < 22; $i++){ //º¹Ê¬¤ò·×»»
-      if($objection_array[$i] > (int)$tmp[$i]){ //º¹Ê¬¤¬¤¢¤ì¤Ğ¤½¤ÎÀ­ÊÌ¤ò³ÎÇ§¡¢¹ç·×¤â¥«¥¦¥ó¥È
-	$num = $i + 1;
-	$sql = mysql_query("SELECT sex FROM user_entry WHERE room_no = $room_no AND user_no = $num");
-	$array = mysql_fetch_assoc($sql); //ÊÖ¤êÃÍ¤ò»²¾È¤·¤Æ¤¤¤Ê¤¤¤Î¤Ç DB ¤ÎÃæ¿È¤Î³ÎÇ§¡©
-
-	if(mysql_result($sql, 0, 0) == 'male') //¤³¤³¤ÇÌÄ¤é¤»¤ĞÎÉ¤¤¤è¤¦¤Ê¡¦¡¦¡¦¡©
-	  array_push($objection_sex, $SOUND->objection_male);
-	else
-	  array_push($objection_sex, $SOUND->objection_female);
-
-	$objection_count++; //¹ç·×
+  if($RQ_ARGS->play_sound && ($ROOM->IsBeforeGame() || $ROOM->IsDay())){ //éŸ³ã§ãŠçŸ¥ã‚‰ã›å‡¦ç†
+    if($ROOM->IsBeforeGame()){ //å…¥æ‘ãƒ»æº€å“¡
+      $user_count = $USERS->GetUserCount();
+      $max_user   = FetchResult($ROOM->GetQueryHeader('room', 'max_user'));
+      if($user_count == $max_user && $COOKIE->user_count != $max_user){
+	$SOUND->Output('full');
+      }
+      elseif($COOKIE->user_count != $user_count){
+	$SOUND->Output('entry');
       }
     }
-
-    for($i=0; $i < $objection_count; $i++){ //º¹Ê¬¤¬¤¢¤ì¤Ğ¤½¤Î²ó¿ô¤À¤±²»¤òÌÄ¤é¤¹
-      OutputSound($objection_sex[$i], true);
+    elseif($COOKIE->day_night != $ROOM->day_night){ //å¤œæ˜ã‘
+      $SOUND->Output('morning');
     }
-*/
-    /*
-    $count = count($objection_array);
-    for($i = 1; $i <= $count; $i++){ //º¹Ê¬¤ò·×»» (index ¤Ï 1 ¤«¤é)
-      //º¹Ê¬¤¬¤¢¤ì¤ĞÀ­ÊÌ¤ò³ÎÇ§¤·¤Æ²»¤òÌÄ¤é¤¹
-      if((int)$objection_array[$i] > (int)$cookie_objection_array[$i]){
-	$sql = mysql_query("SELECT sex FROM user_entry WHERE room_no = $room_no AND user_no = $i");
-	$objection_sound = 'objection_' . (mysql_result($sql, 0, 0) == 'male') ? 'male' : 'female';
-	OutputSound($SOUND->$objection_sound, true);
+
+    //ã€Œç•°è­°ã€ã‚ã‚Š
+    $cookie_objection_list = explode(',', $COOKIE->objection); //ã‚¯ãƒƒã‚­ãƒ¼ã®å€¤ã‚’é…åˆ—ã«æ ¼ç´ã™ã‚‹
+    $count = count($OBJECTION);
+    for($i = 0; $i < $count; $i++){ //å·®åˆ†ã‚’è¨ˆç®— (index ã¯ 0 ã‹ã‚‰)
+      //å·®åˆ†ãŒã‚ã‚Œã°æ€§åˆ¥ã‚’ç¢ºèªã—ã¦éŸ³ã‚’é³´ã‚‰ã™
+      if((int)$OBJECTION[$i] > (int)$cookie_objection_list[$i]){
+	$SOUND->Output('objection_' . $USERS->ByID($i + 1)->sex);
       }
     }
-    */
   }
-  echo '</td></tr>'."\n" . '</table>'."\n";
+  echo '</td></tr>'."\n".'</table>'."\n";
 
-  switch($day_night){
-    case 'beforegame': //³«»ÏÁ°¤ÎÃí°Õ¤ò½ĞÎÏ
-      echo '<div class="caution">'."\n";
-      echo '¥²¡¼¥à¤ò³«»Ï¤¹¤ë¤Ë¤ÏÁ´°÷¤¬¥²¡¼¥à³«»Ï¤ËÅêÉ¼¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Ş¤¹';
-      echo '<span>(ÅêÉ¼¤·¤¿¿Í¤ÏÂ¼¿Í¥ê¥¹¥È¤ÎÇØ·Ê¤¬ÀÖ¤¯¤Ê¤ê¤Ş¤¹)</span>'."\n";
-      echo '</div>'."\n";
-      break;
+  switch($ROOM->day_night){
+  case 'beforegame': //é–‹å§‹å‰ã®æ³¨æ„ã‚’å‡ºåŠ›
+    echo '<div class="caution">'."\n";
+    echo 'ã‚²ãƒ¼ãƒ ã‚’é–‹å§‹ã™ã‚‹ã«ã¯å…¨å“¡ãŒã‚²ãƒ¼ãƒ é–‹å§‹ã«æŠ•ç¥¨ã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™';
+    echo '<span>(æŠ•ç¥¨ã—ãŸäººã¯æ‘äººãƒªã‚¹ãƒˆã®èƒŒæ™¯ãŒèµ¤ããªã‚Šã¾ã™)</span>'."\n";
+    echo '</div>'."\n";
+    break;
 
-    case 'day':
-      $time_message = '¡¡ÆüË×¤Ş¤Ç ';
-      break;
+  case 'day':
+    $time_message = 'æ—¥æ²¡ã¾ã§ ';
+    break;
 
-    case 'night':
-      $time_message = '¡¡ÌëÌÀ¤±¤Ş¤Ç ';
-      break;
+  case 'night':
+    $time_message = 'å¤œæ˜ã‘ã¾ã§ ';
+    break;
 
-    case 'aftergame': //¾¡ÇÔ·ë²Ì¤ò½ĞÎÏ¤·¤Æ½èÍı½ªÎ»
-      OutputVictory();
-      return;
+  case 'aftergame': //å‹æ•—çµæœã‚’å‡ºåŠ›ã—ã¦å‡¦ç†çµ‚äº†
+    OutputVictory();
+    return;
   }
 
-  echo '<table class="time-table"><tr>'."\n";
-  OutputTimeTable(); //·Ğ²áÆü¿ô¤ÈÀ¸Â¸¿Í¿ô¤ò½ĞÎÏ
+  if($ROOM->IsBeforeGame()) OutputGameOption(); //ã‚²ãƒ¼ãƒ ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’èª¬æ˜
 
+  OutputTimeTable(); //çµŒéæ—¥æ•°ã¨ç”Ÿå­˜äººæ•°ã‚’å‡ºåŠ›
   $left_time = 0;
-  //·Ğ²á»ş´Ö¤ò¼èÆÀ
-  if(strpos($game_option, 'real_time') !== false){ //¥ê¥¢¥ë¥¿¥¤¥àÀ©
-    GetRealPassTime($left_time);
-  }
-  else{ //²ñÏÃ¤Ç»ş´Ö·Ğ²áÀ©
-    $left_talk_time = GetTalkPassTime($left_time);
-  }
-
-  if($day_night == 'beforegame'){
-    if(strpos($game_option, 'real_time') !== false){
-      //¼Â»ş´Ö¤ÎÀ©¸Â»ş´Ö¤ò¼èÆÀ
-      sscanf(strstr($game_option, 'time'), 'time:%d:%d', &$day_minutes, &$night_minutes);
-      echo '<td class="real-time">';
-      echo "ÀßÄê»ş´Ö¡§ Ãë <span>{$day_minutes}</span>Ê¬ / Ìë <span>{$night_minutes}</span>Ê¬";
-
-      //³«»ÏÁ°¡¢¥µ¡¼¥Ğ¤È¤Î»ş´Ö¥º¥ì¤òÉ½¼¨
-      $date_str = gmdate('Y, m, j, G, i, s', $system_time);
-      echo '<script type="text/javascript" src="javascript/output_diff_time.js"></script>'."\n";
-      echo ' ¥µ¡¼¥Ğ¤È¥í¡¼¥«¥ëPC¤Î»ş´Ö¥º¥ì(¥é¥°´Ş)¡§ ' . '<span><script type="text/javascript">' .
-	"output_diff_time('$date_str');" . '</script></span>' . 'ÉÃ</td>'."\n";
+  if($ROOM->IsBeforeGame()){
+    echo '<td class="real-time">';
+    if($real_time){ //å®Ÿæ™‚é–“ã®åˆ¶é™æ™‚é–“ã‚’å–å¾—
+      echo "è¨­å®šæ™‚é–“ï¼š æ˜¼ <span>{$ROOM->real_time->day}åˆ†</span> / " .
+	"å¤œ <span>{$ROOM->real_time->night}åˆ†</span>";
     }
+    echo 'ã€€çªç„¶æ­»ï¼š<span>' . ConvertTime($TIME_CONF->sudden_death) . '</span></td>';
   }
-  elseif($day_night == 'day' || $day_night == 'night'){
-    if(strpos($game_option, 'real_time') !== false){ //¥ê¥¢¥ë¥¿¥¤¥àÀ©
+  if($ROOM->IsPlaying()){
+    if($real_time){ //ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶
+      GetRealPassTime($left_time);
       echo '<td class="real-time"><form name="realtime_form">'."\n";
-      echo '<input type="text" name="output_realtime" size="50" readonly>'."\n";
+      echo '<input type="text" name="output_realtime" size="60" readonly>'."\n";
       echo '</form></td>'."\n";
     }
-    elseif($left_talk_time){ //È¯¸À¤Ë¤è¤ë²¾ÁÛ»ş´Ö
-      echo '<td>' . $time_message . $left_talk_time . '</td>'."\n";
+    else{ //ä»®æƒ³æ™‚é–“åˆ¶
+      echo '<td>' . $time_message . GetTalkPassTime($left_time) . '</td>'."\n";
     }
   }
 
-  //°ÛµÄ¤¢¤ê¡¢¤Î¥Ü¥¿¥ó(Ìë¤È»à¼Ô¥â¡¼¥É°Ê³°)
-  if($day_night == 'beforegame' ||
-     ($day_night == 'day' && $dead_mode != 'on' && $heaven_mode != 'on' && $left_time > 0)){
-    $url = 'game_play.php' . $url_room . $url_reload . $url_sound . $url_list . '#game_top';
+  //ç•°è­°ã‚ã‚Šã€ã®ãƒœã‚¿ãƒ³(å¤œã¨æ­»è€…ãƒ¢ãƒ¼ãƒ‰ä»¥å¤–)
+  if($ROOM->IsBeforeGame() ||
+     ($ROOM->IsDay() && ! $ROOM->dead_mode && ! $ROOM->heaven_mode && $left_time > 0)){
+    $url = 'game_play.php' . $url_room . $url_reload . $url_sound . $url_list;
+    $count = $GAME_CONF->objection - $SELF->objection_count;
     echo <<<EOF
-<td class="objection"><form method="POST" action="$url">
-<input type="hidden" name="set_objection" value="set">
+<td class="objection"><form method="POST" action="{$url}">
+<input type="hidden" name="set_objection" value="on">
 <input type="image" name="objimage" src="{$GAME_CONF->objection_image}" border="0">
 </form></td>
-<td>($objection_left_count)</td>
+<td>({$count})</td>
 
 EOF;
   }
   echo '</tr></table>'."\n";
 
-  if(($day_night == 'day' || $day_night == 'night') && $left_time == 0){
-    echo '<div class="system-vote">' . $time_message . $MESSAGE->vote_announce .'</div>'."\n";
+  if(! $ROOM->IsPlaying()) return;
+  if($left_time == 0){
+    echo '<div class="system-vote">' . $time_message . $MESSAGE->vote_announce . '</div>'."\n";
+    if($ROOM->sudden_death > 0){
+      echo $MESSAGE->sudden_death_time . ConvertTime($ROOM->sudden_death) . '<br>'."\n";
+    }
+  }
+  elseif($ROOM->IsEvent('wait_morning')){
+    echo '<div class="system-vote">' . $MESSAGE->wait_morning . '</div>'."\n";
+  }
+
+  if($SELF->IsDead() && $ROOM->IsOption('auto_open_cast') && ! $ROOM->IsOpenCast()){
+    echo '<div class="system-vote">' . $MESSAGE->close_cast . '</div>'."\n";
   }
 }
 
-//Å·¹ñ¤ÎÎîÏÃ¥í¥°½ĞÎÏ
+//å¤©å›½ã®éœŠè©±ãƒ­ã‚°å‡ºåŠ›
 function OutputHeavenTalkLog(){
-  global $room_no, $game_option, $heaven_mode, $date, $day_night;
+  global $ROOM, $USERS;
 
-  //½ĞÎÏ¾ò·ï¤ò¥Á¥§¥Ã¥¯
-  // global $uname, $live, $role;
-  // if($live != 'dead') return false; //¸Æ¤Ó½Ğ¤·Â¦¤Ç¥Á¥§¥Ã¥¯¤¹¤ë¤Î¤Ç¸½ºß¤ÏÉÔÍ×
+  //å‡ºåŠ›æ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯
+  //if($SELF->IsDead()) return false; //å‘¼ã³å‡ºã—å´ã§ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã®ã§ç¾åœ¨ã¯ä¸è¦
 
-  //²ñÏÃ¤Î¥æ¡¼¥¶Ì¾¡¢¥Ï¥ó¥É¥ëÌ¾¡¢È¯¸À¡¢È¯¸À¤Î¥¿¥¤¥×¤ò¼èÆÀ
-  $sql = mysql_query("SELECT user_entry.uname AS talk_uname,
-			user_entry.handle_name AS talk_handle_name,
-			user_entry.live AS talk_live,
-			user_entry.sex AS talk_sex,
-			user_icon.color AS talk_color,
-			talk.sentence AS sentence,
-			talk.font_type AS font_type,
-			talk.location AS location
-			FROM user_entry, talk, user_icon
-			WHERE talk.room_no = $room_no
-			AND talk.location LIKE 'heaven'
-			AND ( (user_entry.room_no = $room_no AND user_entry.uname = talk.uname
-			AND user_entry.icon_no = user_icon.icon_no)
-			OR (user_entry.room_no = 0 AND talk.uname = 'system'
-			AND user_entry.icon_no = user_icon.icon_no) )
-			ORDER BY time DESC");
+  $is_open = $ROOM->IsOpenCast(); //éœŠç•Œå…¬é–‹åˆ¤å®š
+  $builder = new DocumentBuilder();
+  $builder->BeginTalk('talk');
+  foreach($ROOM->LoadTalk(true) as $talk){
+    $user = $USERS->ByUname($talk->uname); //ãƒ¦ãƒ¼ã‚¶ã‚’å–å¾—
 
-  $count = mysql_num_rows($sql);
+    $symbol = '<font color="' . $user->color . '">â—†</font>';
+    $handle_name = $user->handle_name;
+    if($is_open) $handle_name .= '<span>(' . $talk->uname . ')</span>'; //HN è¿½åŠ å‡¦ç†
 
-  echo '<table class="talk">'."\n";
-  for($i=0; $i < $count; $i++){
-    $array = mysql_fetch_assoc($sql);
-    $talk_uname       = $array['talk_uname'];
-    $talk_handle_name = $array['talk_handle_name'];
-    $talk_live        = $array['talk_live'];
-    $talk_sex         = $array['talk_sex'];  //¸½ºßÌ¤»ÈÍÑ
-    $talk_color       = $array['talk_color'];
-    $sentence         = $array['sentence'];
-    $font_type        = $array['font_type'];
-    $location         = $array['location']; //¸½ºßÌ¤»ÈÍÑ
-
-    LineToBR($sentence); //²ş¹Ô¤ò<br>¥¿¥°¤ËÃÖ´¹
-
-    //Îî³¦¤ÇÌò¿¦¤¬¸ø³«¤µ¤ì¤Æ¤¤¤ë¾ì¹ç¤Î¤ß HN ¤òÄÉ²Ã
-    if(strpos($game_option, 'not_open_cast') === false){
-      $talk_handle_name .= '<span>(' . $talk_uname . ')</span>';
-    }
-
-    //²ñÏÃ½ĞÎÏ
-    echo '<tr class="user-talk">'."\n";
-    echo '<td class="user-name"><font color="' . $talk_color . '">¢¡</font>' .
-      $talk_handle_name . '</td>'."\n";
-    echo '<td class="say ' . $font_type . '">' . $sentence . '</td>'."\n";
-    echo '</tr>'."\n";
+    $builder->RawAddTalk($symbol, $handle_name, $talk->sentence, $talk->font_type);
   }
-  echo '</table>'."\n";
+  $builder->EndTalk();
 }
 
-//Ç½ÎÏ¤Î¼ïÎà¤È¤½¤ÎÀâÌÀ¤ò½ĞÎÏ
-function OutputAbility(){
-  global $ROLE_IMG, $MESSAGE, $room_no, $date, $day_night, $uname, $handle_name, $user_no, $role, $live;
+//æ˜¼ã®è‡ªåˆ†ã®æœªæŠ•ç¥¨ãƒã‚§ãƒƒã‚¯
+function CheckSelfVoteDay(){
+  global $MESSAGE, $ROOM, $USERS, $SELF;
 
-  //½ĞÎÏ¾ò·ï¤ò¥Á¥§¥Ã¥¯
-  if($day_night == 'beforegame' || $day_night == 'aftergame') return false;
+  $vote_times = $ROOM->GetVoteTimes(); //æŠ•ç¥¨å›æ•°ã‚’å–å¾—
+  $str = '<div class="self-vote">æŠ•ç¥¨ ' . $vote_times . ' å›ç›®ï¼š';
 
-  if($live == 'dead'){ //»àË´¤·¤¿¤éÇ½ÎÏ¤òÉ½¼¨¤·¤Ê¤¤
-    echo '<span class="ability-dead">' . $MESSAGE->ability_dead . '</span><br>';
-    return;
+  //æŠ•ç¥¨å¯¾è±¡è€…ã‚’å–å¾—
+  $query = 'SELECT target_uname FROM vote' . $ROOM->GetQuery() .
+    " AND situation = 'VOTE_KILL' AND vote_times = {$vote_times} AND uname = '{$SELF->uname}'";
+  $target_uname = FetchResult($query);
+  $str .= ($target_uname === false ? '<font color="#FF0000">ã¾ã æŠ•ç¥¨ã—ã¦ã„ã¾ã›ã‚“</font>' :
+	   $USERS->GetHandleName($target_uname, true) . ' ã•ã‚“ã«æŠ•ç¥¨æ¸ˆã¿') . '</div>'."\n";
+  if($target_uname === false){
+    $str .= '<span class="ability vote-do">' . $MESSAGE->ability_vote . '</span><br>'."\n";
   }
-
-  $yesterday = $date - 1;
-  if(strpos($role, 'human') !== false)
-    echo '<img src="' . $ROLE_IMG->human . '"><br>'."\n";
-  elseif(strpos($role, 'wolf') !== false){
-    echo '<img src="' . $ROLE_IMG->wolf . '"><br>'."\n";
-
-    //Ãç´Ö¤òÉ½¼¨
-    $sql = mysql_query("SELECT handle_name FROM user_entry WHERE room_no = $room_no
-			AND role LIKE 'wolf%' AND uname <> '$uname' AND user_no > 0");
-    $count = mysql_num_rows($sql);
-    if($count > 0){
-      echo '<table class="ability-partner"><tr>'."\n";
-      echo '<td><img src="' . $ROLE_IMG->wolf_partner . '"></td>'."\n";
-      echo '<td>¡¡';
-      for($i=0; $i < $count; $i++) echo mysql_result($sql, $i, 0) . '¤µ¤ó¡¡¡¡';
-      echo '</td>'."\n".'</tr></table>'."\n";
-    }
-
-    if($day_night == 'night'){ //Ìë¤Î³ú¤ßÅêÉ¼
-      $sql = mysql_query("SELECT uname FROM vote WHERE room_no = $room_no AND situation = 'WOLF_EAT'");
-      if(mysql_num_rows($sql) == 0){
-	echo '<span class="ability-wolf-eat">' . $MESSAGE->ability_wolf_eat . '</span><br>'."\n";
-      }
-    }
-  }
-  elseif(strpos($role, 'mage') !== false){
-    echo '<img src="' . $ROLE_IMG->mage . '"><br>'."\n";
-
-    //Àê¤¤·ë²Ì¤òÉ½¼¨
-    $sql = mysql_query("SELECT message FROM system_message WHERE room_no = $room_no
-			AND date = $yesterday AND type = 'MAGE_RESULT'");
-    $count = mysql_num_rows($sql);
-    for($i=0; $i < $count; $i++){
-      list($mage, $target, $target_role) = ParseStrings(mysql_result($sql, $i, 0), 'MAGE_RESULT');
-
-      if($handle_name == $mage){ //¼«Ê¬¤ÎÀê¤¤·ë²Ì¤Î¤ßÉ½¼¨
-	echo '<table class="ability-result"><tr>'."\n";
-	echo '<td><img src="' . $ROLE_IMG->mage_result . '"></td>'."\n";
-	echo '<td>' . $target . '</td>';
-	echo '<td><img src="' .
-	  ($target_role == 'human' ? $ROLE_IMG->result_human : $ROLE_IMG->result_wolf) .
-	  '"></td>'."\n";
-	echo '</tr></table>'."\n";
-      }
-    }
-
-    if($day_night == 'night'){ //Ìë¤ÎÀê¤¤ÅêÉ¼
-      $sql_mage_voted = mysql_query("SELECT uname FROM vote WHERE room_no = $room_no
-					AND uname = '$uname' AND situation = 'MAGE_DO'");
-      if(mysql_num_rows($sql_mage_voted) == 0){
-	echo '<span class="ability-mage-do">' . $MESSAGE->ability_mage_do . '</span><br>'."\n";
-      }
-    }
-  }
-  elseif(strpos($role, 'necromancer') !== false){
-    echo '<img src="' . $ROLE_IMG->necromancer . '"><br>'."\n";
-
-    //ÎîÇ½·ë²Ì¤òÉ½¼¨
-    $sql = mysql_query("SELECT message FROM system_message WHERE room_no = $room_no
-			AND date = $yesterday AND type = 'NECROMANCER_RESULT'");
-    $count = mysql_num_rows($sql);
-    for($i=0; $i < $count; $i++){
-      list($target, $target_role) = ParseStrings(mysql_result($sql, $i, 0));
-      echo '<table class="ability-result"><tr>'."\n";
-      echo '<td><img src="' . $ROLE_IMG->necromancer_result . '"></td>'."\n";
-      echo '<td>' . $target . '</td>';
-      echo '<td><img src="' .
-	($target_role == 'human' ? $ROLE_IMG->result_human : $ROLE_IMG->result_wolf) .
-	'"></td>'."\n";
-      echo '</tr></table>'."\n";
-    }
-  }
-  elseif(strpos($role, 'mad') !== false)
-    echo '<img src="' . $ROLE_IMG->mad . '"><br>'."\n";
-  elseif(strpos($role, 'guard') !== false){
-    echo '<img src="' . $ROLE_IMG->guard . '"><br>'."\n";
-
-    //¸î±Ò·ë²Ì¤òÉ½¼¨
-    $sql = mysql_query("SELECT message FROM system_message WHERE room_no = $room_no
-			AND date = $yesterday and type = 'GUARD_SUCCESS'");
-    $count = mysql_num_rows($sql);
-    for($i=0; $i < $count; $i++){
-      list($guard, $target) = ParseStrings(mysql_result($sql, $i, 0));
-      if($handle_name == $guard){ //¼«Ê¬¤Î¸î±Ò·ë²Ì¤Î¤ß
-	echo '<table class="ability-result"><tr>'."\n";
-	echo '<td>' . $target . '</td>';
-	echo '<td><img src="' . $ROLE_IMG->guard_success . '"></td>'."\n";
-	echo '</tr></table>'."\n";
-      }
-    }
-
-    if($day_night == 'night' && $date != 1){ //Ìë¤Î¸î±ÒÅêÉ¼
-      $sql = mysql_query("SELECT uname FROM vote WHERE room_no = $room_no AND uname = '$uname'
-				AND situation = 'GUARD_DO'");
-      if(mysql_num_rows($sql) == 0){
-	echo '<span class="ability-guard-do">' . $MESSAGE->ability_guard_do . '</span><br>'."\n";
-      }
-    }
-  }
-  elseif(strpos($role, 'common') !== false){
-    echo '<img src="' . $ROLE_IMG->common . '"><br>'."\n";
-
-    //Ãç´Ö¤òÉ½¼¨
-    $sql = mysql_query("SELECT handle_name FROM user_entry WHERE room_no = $room_no
-			AND role LIKE 'common%' AND uname <> '$uname' AND user_no > 0");
-    $count = mysql_num_rows($sql);
-    if($count > 0){
-      echo '<table class="ability-partner"><tr>'."\n";
-      echo '<td><img src="' . $ROLE_IMG->common_partner . '"></td>'."\n";
-      echo '<td>¡¡';
-      for($i=0; $i < $count; $i++) echo mysql_result($sql, $i, 0) . '¤µ¤ó¡¡¡¡';
-      echo '</td>'."\n".'</tr></table>'."\n";
-    }
-  }
-  elseif(strpos($role, 'fox') !== false){
-    echo '<img src="' . $ROLE_IMG->fox . '"><br>'."\n";
-
-    //¸Ñ¤¬ÁÀ¤ï¤ì¤¿¥á¥Ã¥»¡¼¥¸¤òÉ½¼¨
-    $sql = mysql_query("SELECT message FROM system_message WHERE room_no = $room_no
-			AND date = $yesterday AND type = 'FOX_EAT'");
-    $count = mysql_num_rows($sql);
-    for($i=0; $i < $count; $i++){
-      if($handle_name == mysql_result($sql, $i, 0)){ //¼«Ê¬¤¬ÁÀ¤ï¤ì¤¿¾ì¹ç¤Î¤ß
-	echo '<table class="ability-result"><tr>'."\n";
-	echo '<td><img src="' . $ROLE_IMG->fox_target . '"></td>'."\n";
-	echo '</tr></table>'."\n";
-      }
-    }
-  }
-  elseif(strpos($role, 'poison') !== false)
-    echo '<img src="' . $ROLE_IMG->poison . '"><br>'."\n";
-  elseif(strpos($role, 'cupid') !== false){
-    echo '<img src="' . $ROLE_IMG->cupid . '"><br>'."\n";
-
-    //¼«Ê¬¤¬Ìğ¤òÂÇ¤Ã¤¿Îø¿Í (¼«Ê¬¼«¿È´Ş¤à) ¤òÉ½¼¨¤¹¤ë
-    $str_user_no = strval($user_no);
-    $sql = mysql_query("SELECT handle_name FROM user_entry WHERE room_no = $room_no
- 			AND role LIKE '%lovers[$str_user_no]%' AND user_no > 0");
-    $count = mysql_num_rows($sql);
-    if($count > 0){
-      echo '<table class="ability-partner"><tr>'."\n";
-      echo '<td><img src="' . $ROLE_IMG->cupid_pair . '"></td>'."\n";
-      echo '<td>¡¡';
-      for($i=0; $i < $count; $i++) echo mysql_result($sql, $i, 0) . '¤µ¤ó¡¡¡¡';
-      echo '</td>'."\n".'</tr></table>'."\n";
-    }
-
-    if($day_night == 'night' && $date == 1){ //½éÆüÌë¤ÎÅêÉ¼
-      $sql = mysql_query("SELECT uname FROM vote WHERE room_no = $room_no AND uname = '$uname'
-				AND situation = 'CUPID_DO'");
-      if(mysql_num_rows($sql) == 0){
-	echo '<span class="ability-cupid-do">' . $MESSAGE->ability_cupid_do . '</span><br>'."\n";
-      }
-    }
-  }
-
-  //¤³¤³¤«¤é·óÇ¤Ìò¿¦
-  if(strpos($role, 'authority') !== false) echo '<img src="' . $ROLE_IMG->authority . '"><br>'."\n";
-  // if(strpos($role, 'decide') !== false) echo '<img src="' . $ROLE_IMG->human . '"><br>'."\n";
-  if(strpos($role, 'lovers') !== false){
-    //Îø¿Í¤òÉ½¼¨¤¹¤ë
-    $lovers_str = GetLoversConditionString($role);
-    $sql = mysql_query("SELECT handle_name FROM user_entry WHERE room_no = $room_no
- 			AND $lovers_str AND uname <> '$uname' AND user_no > 0");
-    $count = mysql_num_rows($sql);
-    if($count > 0){
-      echo '<table class="ability-partner"><tr>'."\n";
-      echo '<td><img src="' . $ROLE_IMG->lovers_header . '"></td>'."\n";
-      echo '<td>¡¡';
-      for($i=0; $i < $count; $i++) echo mysql_result($sql, $i, 0) . '¤µ¤ó¡¡¡¡';
-      echo '</td>'."\n";
-      echo '<td><img src="' . $ROLE_IMG->lovers_footer . '"></td>'."\n";
-      echo '</tr></table>'."\n";
-    }
-  }
+  echo $str;
 }
 
-//¼«Ê¬¤ÎÌ¤ÅêÉ¼¥Á¥§¥Ã¥¯
-function CheckSelfVote(){
-  global $room_no, $date, $uname;
-
-  //ÅêÉ¼²ó¿ô¤ò¼èÆÀ(ºÆÅêÉ¼¤Ê¤é $vote_times ¤ÏÁı¤¨¤ë)
-  $sql = mysql_query("SELECT message FROM system_message WHERE room_no = $room_no
-			AND type = 'VOTE_TIMES' AND date = $date");
-  $vote_times = (int)mysql_result($sql, 0, 0);
-  echo '<div class="self-vote">ÅêÉ¼ ' . $vote_times . ' ²óÌÜ¡§';
-
-  //ÅêÉ¼ºÑ¤ß¤«¤É¤¦¤«
-  $sql = mysql_query("SELECT COUNT(uname) FROM vote WHERE room_no = $room_no
-			AND uname = '$uname' AND date = $date AND vote_times = $vote_times
-			AND situation = 'VOTE_KILL'");
-  echo (mysql_result($sql, 0, 0) ? 'ÅêÉ¼ºÑ¤ß' : '¤Ş¤ÀÅêÉ¼¤·¤Æ¤¤¤Ş¤»¤ó') . '</div>'."\n";
-}
-
-//¼«Ê¬¤Î°ä¸À¤ò½ĞÎÏ
+//è‡ªåˆ†ã®éºè¨€ã‚’å‡ºåŠ›
 function OutputSelfLastWords(){
-  global $room_no, $day_night, $uname;
+  global $ROOM, $SELF;
 
-  //½ĞÎÏ¾ò·ï¤ò¥Á¥§¥Ã¥¯
-  if($day_night == 'aftergame') return false;
+  if($ROOM->IsAfterGame()) return false; //ã‚²ãƒ¼ãƒ çµ‚äº†å¾Œã¯è¡¨ç¤ºã—ãªã„
 
-  $sql = mysql_query("SELECT last_words FROM user_entry WHERE room_no = $room_no
-			AND uname = '$uname' AND user_no > 0");
-
-  //¤Ş¤ÀÆşÎÏ¤·¤Æ¤Ê¤±¤ì¤ĞÉ½¼¨¤·¤Ê¤¤
-  if(mysql_num_rows($sql) == 0) return false;
-
-  $last_words = mysql_result($sql, 0, 0);
-  LineToBR($last_words);
-  if($last_words == '') return false;
+  $query = 'SELECT last_words FROM user_entry' . $ROOM->GetQuery(false) .
+    " AND uname = '{$SELF->uname}' AND user_no > 0";
+  if(($str = FetchResult($query)) == '') return false;
+  LineToBR($str); //æ”¹è¡Œã‚³ãƒ¼ãƒ‰ã‚’å¤‰æ›
+  if($str == '') return false;
 
   echo <<<EOF
-<table class="lastwords" cellspacing="5"><tr>
-<td class="lastwords-title">¼«Ê¬¤Î°ä¸À</td>
-<td class="lastwords-body">{$last_words}</td>
+<table class="lastwords"><tr>
+<td class="lastwords-title">è‡ªåˆ†ã®éºè¨€</td>
+<td class="lastwords-body">{$str}</td>
 </tr></table>
 
 EOF;
 }
-?>

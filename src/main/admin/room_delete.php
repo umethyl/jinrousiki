@@ -1,37 +1,16 @@
 <?php
-require_once(dirname(__FILE__) . '/../include/functions.php');
+define('JINRO_ROOT', '..');
+require_once(JINRO_ROOT . '/include/init.php');
 
 if(! $DEBUG_MODE){
-  OutputHTMLHeader('Ç§¾Ú¥¨¥é¡¼', 'action', '../css');
-  echo '</head><body>'."\n";
-  echo '¤³¤Î¥¹¥¯¥ê¥×¥È¤Ï»ÈÍÑ¤Ç¤­¤Ê¤¤ÀßÄê¤Ë¤Ê¤Ã¤Æ¤¤¤Ş¤¹¡£'."\n";
-  OutputHTMLFooter(true);
+  OutputActionResult('èªè¨¼ã‚¨ãƒ©ãƒ¼', 'ã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã¯ä½¿ç”¨ã§ããªã„è¨­å®šã«ãªã£ã¦ã„ã¾ã™ã€‚');
 }
 
 extract($_GET, EXTR_PREFIX_ALL, 'unsafe');
-$room_no = (int)$unsafe_room_no;
-if($room_no < 1){
-  OutputHTMLHeader('Éô²°ºï½ü[¥¨¥é¡¼]', 'action', '../css');
-  echo '</head><body>'."\n";
-  echo 'Ìµ¸ú¤ÊÂ¼ÈÖ¹æ¤Ç¤¹¡£'."\n";
-  OutputHTMLFooter(true);
-}
+$room_no = intval($unsafe_room_no);
+if($room_no < 1) OutputActionResult('éƒ¨å±‹å‰Šé™¤[ã‚¨ãƒ©ãƒ¼]', 'ç„¡åŠ¹ãªæ‘ç•ªå·ã§ã™ã€‚');
 
-$connection = ConnectDatabase(); //DB ÀÜÂ³
-mysql_query(sprintf("DELETE FROM talk WHERE room_no=%d", $room_no));
-mysql_query(sprintf("DELETE FROM system_message WHERE room_no=%d", $room_no));
-mysql_query(sprintf("DELETE FROM vote WHERE room_no=%d", $room_no));
-mysql_query(sprintf("DELETE FROM user_entry WHERE room_no=%d", $room_no));
-mysql_query(sprintf("DELETE FROM room WHERE room_no=%d", $room_no));
-DisconnectDatabase($connection); //DB ÀÜÂ³²ò½ü
-
-OutputHTMLHeader('Éô²°ºï½ü', 'action', '../css');
-echo <<< EOF
-<meta http-equiv="Refresh" content="1;URL='../index.php'">
-</head><body>
-$room_no ÈÖÃÏ¤òºï½ü¤·¤Ş¤·¤¿¡£¥È¥Ã¥×¥Ú¡¼¥¸¤ËÌá¤ê¤Ş¤¹¡£<br>
-ÀÚ¤êÂØ¤ï¤é¤Ê¤¤¤Ê¤é <a href="../index.php">¤³¤³</a> ¡£
-</body></html>
-
-EOF
-?>
+$DB_CONF->Connect(); //DB æ¥ç¶š
+DeleteRoom($room_no);
+OptimizeTable();
+OutputActionResult('éƒ¨å±‹å‰Šé™¤', $room_no . ' ç•ªåœ°ã‚’å‰Šé™¤ã—ã¾ã—ãŸã€‚ãƒˆãƒƒãƒ—ãƒšãƒ¼ã‚¸ã«æˆ»ã‚Šã¾ã™ã€‚', '../');

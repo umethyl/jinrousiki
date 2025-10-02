@@ -1,175 +1,52 @@
-<?php require_once('include/setting.php'); ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN">
-<html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<link rel="stylesheet" href="css/index.css">
-<title>Æò¤Ï¿ÍÏµ¤Ê¤ê¤ä¡©<?php echo $server_comment; ?></title>
-</head>
-<body>
-<?php if($back_page != '') echo "<a href=\"$back_page\">¢«Ìá¤ë</a>"; ?>
-<a href="index.php"><img src="img/top_title.jpg"></a>
-<div class="comment"><?php echo $server_comment; ?></div>
-<noscript>¡ã¡ã JavaScript¤òÍ­¸ú¤Ë¤·¤Æ¤¯¤À¤µ¤¤ ¡ä¡ä</noscript>
-<table class="main">
-  <tr><td>
-    <div class="menu">¥á¥Ë¥å¡¼</div>
-    <ul>
-      <li><a href="script_info.php">ÆÃÄ§¤È»ÅÍÍ</a></li>
-      <li><a href="rule.php">¥²¡¼¥à¤Î¥ë¡¼¥ë</a></li>
-      <li><a href="old_log.php">¥í¥°±ÜÍ÷</a></li>
-      <li>¡ú¡ù¡ú¡ù¡ú¡ù¡ú</li>
-      <li><a href="icon_view.php">¥¢¥¤¥³¥ó°ìÍ÷</a></li>
-      <li><a href="icon_upload.php">¥¢¥¤¥³¥óÅÐÏ¿</a></li>
-      <li>¡ú¡ù¡ú¡ù¡ú¡ù¡ú</li>
-      <li><a href="src/">³«È¯ÈÇ¥½¡¼¥¹¥À¥¦¥ó¥í¡¼¥É</a></li>
-      <li><a href="src/diff.txt">¹¹¿·ÍúÎò (¥Æ¥­¥¹¥È¥Õ¥¡¥¤¥ë)</a></li>
-    </ul>
+<?php
+require_once('include/init.php');
+$INIT_CONF->LoadClass('SCRIPT_INFO', 'MENU_LINK', 'BBS_CONF');
+OutputHTMLHeader($SERVER_CONF->title . $SERVER_CONF->comment, 'index');
+echo "</head>\n<body>\n";
+if($SERVER_CONF->back_page != ''){
+  echo '<a href="' . $SERVER_CONF->back_page . '">â†æˆ»ã‚‹</a><br>'."\n";
+}
+?>
+<a href="./"><img src="img/top_title.jpg"></a>
+<div class="comment"><?php echo $SERVER_CONF->comment ?></div>
+<noscript>&lt;&lt; JavaScriptã‚’æœ‰åŠ¹ã«ã—ã¦ãã ã•ã„ &gt;&gt;</noscript>
+<table class="main"><tr>
+<td>
+  <div class="menu">ãƒ¡ãƒ‹ãƒ¥ãƒ¼</div>
+  <ul>
+    <li><a href="info/script_info.php">ç‰¹å¾´ã¨ä»•æ§˜</a></li>
+    <li><a href="info/rule.php">ã‚²ãƒ¼ãƒ ã®ãƒ«ãƒ¼ãƒ«</a></li>
+    <li><a href="info/chaos.php">é—‡é‹ãƒ¢ãƒ¼ãƒ‰</a></li>
+    <li><a href="info/new_role/">æ–°å½¹è·æƒ…å ±</a></li>
+    <li><a href="info/shared_room.php">é–¢é€£ã‚µãƒ¼ãƒæ‘æƒ…å ±</a></li>
+    <li><a href="info/">ãã®ä»–ã®æƒ…å ±ä¸€è¦§</a></li>
+    <li>â˜…â˜†â˜…â˜†â˜…â˜†â˜…</li>
+    <li><a href="old_log.php">ãƒ­ã‚°é–²è¦§</a><!-- (<a href="log/">HTMLåŒ–ãƒ­ã‚°</a>) --></li>
+    <li>â˜…â˜†â˜…â˜†â˜…â˜†â˜…</li>
+    <li><a href="icon_view.php">ã‚¢ã‚¤ã‚³ãƒ³ä¸€è¦§</a></li>
+    <li><a href="icon_upload.php">ã‚¢ã‚¤ã‚³ãƒ³ç™»éŒ²</a></li>
+<!--
+    <li>â˜…â˜†â˜…â˜†â˜…â˜†â˜…</li>
+    <li><a href="src/">ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰</a></li>
+-->
+  </ul>
+  <?php $MENU_LINK->Output() ?>
+</td>
+<td>
+  <fieldset>
+    <legend>Information <a href="info/history/top.php">ï½žéŽåŽ»ã®informationã¯ã“ã¡ã‚‰ï½ž</a></legend>
+    <div class="information"><?php include_once 'info/top.php' ?></div>
+  </fieldset>
+  <fieldset>
+    <legend>ã‚²ãƒ¼ãƒ ä¸€è¦§</legend>
+    <div class="game-list"><?php include_once 'room_manager.php' ?></div>
+  </fieldset>
+  <?php $BBS_CONF->Output() ?>
+  <fieldset>
+    <legend>æ‘ã®ä½œæˆ</legend><?php OutputCreateRoomPage() ?>
+  </fieldset>
+</td>
+</tr></table>
 
-    <div class="menu">¸òÎ®ÍÑ¥µ¥¤¥È</div>
-    <ul>
-      <li><a href="http://www12.atpages.jp/cirno/">¥Á¥ë¥Î»ª¡÷¼°¿À¸¦</a></li>
-    </ul>
-
-    <div class="menu">³°Éô¥ê¥ó¥¯</div>
-    <ul>
-      <li><a href="http://sourceforge.jp/projects/jinrousiki/">¿ÍÏµ¼° (ÇÛÉÛ¸µ)</a></li>
-    </ul>
-  </td>
-
-  <td>
-    <fieldset>
-      <legend>Information <a href="info/index.php">¡Á²áµî¤Îinformation¤Ï¤³¤Á¤é¡Á</a></legend>
-      <div class="information"><?php include 'info/top.php'; ?></div>
-    </fieldset>
-
-    <fieldset>
-      <legend>¥²¡¼¥à°ìÍ÷</legend>
-      <div class="game-list"><?php include 'room_manager.php'; ?></div>
-    </fieldset>
-
-    <form method="POST" action="room_manager.php">
-    <input type="hidden" name="command" value="CREATE_ROOM">
-    <fieldset>
-      <legend>Â¼¤ÎºîÀ®</legend>
-      <table>
-        <tr>
-          <td><label>Â¼¤ÎÌ¾Á°¡§</label></td>
-          <td><input type="text" name="room_name" size="45"> Â¼</td>
-        </tr>
-
-        <tr>
-          <td><label>Â¼¤Ë¤Ä¤¤¤Æ¤ÎÀâÌÀ¡§</label></td>
-          <td><input type="text" name="room_comment" size="50"></td>
-        </tr>
-
-       <tr>
-         <td><label>ºÇÂç¿Í¿ô¡§</label></td>
-         <td>
-           <select name="max_user">
-             <optgroup label="ºÇÂç¿Í¿ô">
-               <option>8</option>
-               <option>16</option>
-               <option selected>22</option>
-             </optgroup>
-           </select>
-         </td>
-       </tr>
-
-       <tr>
-         <td><label for="wish_role">Ìò³ä´õË¾À©¡§</label></td>
-         <td class="explain">
-           <input id="wish_role" type="checkbox" name="game_option_wish_role" value="wish_role">
-           (´õË¾¤ÎÌò³ä¤ò»ØÄê¤Ç¤­¤Þ¤¹¤¬¡¢¤Ê¤ì¤ë¤«¤Ï±¿¤Ç¤¹)
-         </td>
-       </tr>
-
-       <tr>
-         <td><label for="real_time">¥ê¥¢¥ë¥¿¥¤¥àÀ©¡§</label></td>
-         <td class="explain">
-           <input id="real_time" type="checkbox" name="game_option_real_time" value="real_time" checked>
-           (À©¸Â»þ´Ö¤¬¼Â»þ´Ö¤Ç¾ÃÈñ¤µ¤ì¤Þ¤¹¡¡Ãë¡§
-           <input type="text" name="game_option_real_time_day" value="<?php echo $TIME_CONF->default_day; ?>" size="2" maxlength="2">Ê¬ Ìë¡§
-           <input type="text" name="game_option_real_time_night" value="<?php echo $TIME_CONF->default_night; ?>" size="2" maxlength="2">Ê¬)
-         </td>
-       </tr>
-
-       <tr>
-         <td><label for="dummy_boy">½éÆü¤ÎÌë¤Ï¿ÈÂå¤ï¤ê·¯¡§</label></td>
-         <td class="explain">
-           <input id="dummy_boy" type="checkbox" name="game_option_dummy_boy" value="dummy_boy" checked>
-           (½éÆü¤ÎÌë¡¢¿ÈÂå¤ï¤ê·¯¤¬Ïµ¤Ë¿©¤Ù¤é¤ì¤Þ¤¹)
-         </td>
-       </tr>
-
-       <tr>
-         <td><label for="open_vote">ÅêÉ¼¤·¤¿É¼¿ô¤ò¸øÉ½¤¹¤ë¡§</label></td>
-         <td class="explain">
-           <input id="open_vote" type="checkbox" name="game_option_open_vote" value="open_vote" checked>
-          (¸¢ÎÏ¼Ô¤¬ÅêÉ¼¤Ç¥Ð¥ì¤Þ¤¹)
-         </td>
-       </tr>
-
-       <tr>
-         <td><label for="not_open_cast">Îî³¦¤ÇÇÛÌò¤ò¸ø³«¤·¤Ê¤¤¡§</label></td>
-         <td class="explain">
-           <input id="not_open_cast" type="checkbox" name="game_option_not_open_cast" value="not_open_cast">
-          (Îî³¦¤Ç¤âÃ¯¤¬¤É¤ÎÌò¿¦¤Ê¤Î¤«¤¬¸ø³«¤µ¤ì¤Þ¤»¤ó)
-         </td>
-       </tr>
-
-       <tr>
-         <td><label for="role_decide">16¿Í°Ê¾å¤Ç·èÄê¼ÔÅÐ¾ì¡§</label></td>
-         <td class="explain">
-           <input id="role_decide" type="checkbox" name="option_role_decide" value="decide" checked>
-           (ÅêÉ¼¤¬Æ±¿ô¤Î»þ¡¢·èÄê¼Ô¤ÎÅêÉ¼Àè¤¬Í¥Àè¤µ¤ì¤Þ¤¹¡¦·óÇ¤)
-         </td>
-       </tr>
-
-       <tr>
-         <td><label for="role_authority">16¿Í°Ê¾å¤Ç¸¢ÎÏ¼ÔÅÐ¾ì¡§</label></td>
-         <td class="explain">
-           <input id="role_authority" type="checkbox" name="option_role_authority" value="authority" checked>
-           (ÅêÉ¼¤ÎÉ¼¿ô¤¬£²É¼¤Ë¤Ê¤ê¤Þ¤¹¡¦·óÇ¤)
-         </td>
-       </tr>
-
-       <tr>
-         <td><label for="role_poison">20¿Í°Ê¾å¤ÇËäÆÇ¼ÔÅÐ¾ì¡§</label></td>
-         <td class="explain">
-           <input id="role_poison" type="checkbox" name="option_role_poison" value="poison" checked>
-           (½è·º¤µ¤ì¤¿¤êÏµ¤Ë¿©¤Ù¤é¤ì¤¿¾ì¹ç¡¢Æ»Ï¢¤ì¤Ë¤·¤Þ¤¹¡¦Â¼¿ÍÆó¿Í¢ªËäÆÇ1 Ïµ1)
-         </td>
-       </tr>
-
-       <tr>
-          <td><label for="role_cupid">14¿Í¤â¤·¤¯¤Ï16¿Í°Ê¾å¤Ç<br>¡¡¥­¥å¡¼¥Ô¥Ã¥ÉÅÐ¾ì¡§</label></td>
-          <td class="explain">
-            <input id="role_cupid" type="checkbox" name="option_role_cupid" value="cupid">
-            (½éÆüÌë¤ËÁª¤ó¤ÀÁê¼ê¤òÎø¿Í¤Ë¤·¤Þ¤¹¡£Îø¿Í¤È¤Ê¤Ã¤¿Æó¿Í¤Ï¾¡Íø¾ò·ï¤¬ÊÑ²½¤·¤Þ¤¹)
-          </td>
-       </tr>
-
-       <tr>
-	 <td class="make" colspan="2">
-	   <label for="room_password">Â¼ºîÀ®¥Ñ¥¹¥ï¡¼¥É</label>
-	   <input type="password" id="room_password" name="room_password" size="20">¡¡
-           <input type="submit" value=" ºîÀ® ">
-	 </td>
-       </tr>
-       </table>
-    </fieldset>
-    </form>
-  </td></tr>
-</table>
-
-<div class="footer">
-[PHP4 + MYSQL¥¹¥¯¥ê¥×¥È¡¡<a href="http://p45.aaacafe.ne.jp/~netfilms/" target="_blank">ÇÛÉÛ¥Û¡¼¥à¥Ú¡¼¥¸</a>]
-[¥·¥¹¥Æ¥à¡¡<a href="http://sourceforge.jp/projects/mbemulator/" target="_blank">mbstring¥¨¥ß¥å¥ì¡¼¥¿</a>]<br>
-[¼Ì¿¿ÁÇºà¡¡<a href="http://keppen.web.infoseek.co.jp/" target="_blank">Å·¤Î·çÊÒ</a>]
-[¥Õ¥©¥ó¥ÈÁÇºà¡¡<a href="http://azukifont.mints.ne.jp/" target="_blank">¤¢¤º¤­¥Õ¥©¥ó¥È</a>]<br>
-<?php echo 'PHP Ver. ' . PHP_VERSION . ', ' . $script_version . ', LastUpdate: ' . $script_lastupdate; ?>
-</div>
-</body>
-</html>
+<div class="footer"><?php $SCRIPT_INFO->Output() ?></div>
+</body></html>

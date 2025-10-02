@@ -1,23 +1,32 @@
 <?php
-require_once(dirname(__FILE__) . '/functions.php');
+class TimeCalculation{
+  var $spend_day;      //éãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶ã®ç™ºè¨€ã§æ¶ˆè²»ã•ã‚Œã‚‹æ™‚é–“ (æ˜¼)
+  var $spend_night;    //éãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶ã®ç™ºè¨€ã§æ¶ˆè²»ã•ã‚Œã‚‹æ™‚é–“ (å¤œ)
+  var $silence_day;    //éãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶ã®æ²ˆé»™ã§çµŒéã™ã‚‹æ™‚é–“ (æ˜¼)
+  var $silence_night;  //éãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶ã®æ²ˆé»™ã§çµŒéã™ã‚‹æ™‚é–“ (å¤œ)
+  var $silence;        //éãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶ã®æ²ˆé»™ã«ãªã‚‹ã¾ã§ã®æ™‚é–“
+  var $alert;          //è­¦å‘ŠéŸ³é–‹å§‹
+  var $alert_distance; //è­¦å‘ŠéŸ³ã®é–“éš”
+  var $sudden_death;   //åˆ¶é™æ™‚é–“ã‚’æ¶ˆè²»å¾Œã«çªç„¶æ­»ã™ã‚‹ã¾ã§ã®æ™‚é–“
+  var $die_room;       //è‡ªå‹•å»ƒæ‘ã«ãªã‚‹ã¾ã§ã®æ™‚é–“
+  var $establish_wait; //æ¬¡ã®æ‘ã‚’ç«‹ã¦ã‚‰ã‚Œã‚‹ã¾ã§ã®å¾…ã¡æ™‚é–“
 
-//Èó¥ê¥¢¥ë¥¿¥¤¥àÀ©¤ÎÈ¯¸À¤Ç¾ÃÈñ¤µ¤ì¤ë»ş´Ö¡¡Ãë
-$day_seconds = floor(12 * 60 * 60 / $TIME_CONF->day);
-$spend_day = ConvertTime($day_seconds);
+  function TimeCalculation(){ $this->__construct(); }
+  function __construct(){
+    global $ROOM_CONF, $TIME_CONF;
 
-//Èó¥ê¥¢¥ë¥¿¥¤¥àÀ©¤ÎÈ¯¸À¤Ç¾ÃÈñ¤µ¤ì¤ë»ş´Ö¡¡Ìë
-$night_seconds = floor(6 * 60 * 60 / $TIME_CONF->night);
-$spend_night = ConvertTime($night_seconds);
+    $day_seconds   = floor(12 * 60 * 60 / $TIME_CONF->day);
+    $night_seconds = floor( 6 * 60 * 60 / $TIME_CONF->night);
 
-//Èó¥ê¥¢¥ë¥¿¥¤¥àÀ©¤ÎÄÀÌÛ¤Ç·Ğ²á¤¹¤ë»ş´Ö¡¡Ãë
-$silence_day = ConvertTime($day_seconds * $TIME_CONF->silence_pass);
-
-//Èó¥ê¥¢¥ë¥¿¥¤¥àÀ©¤ÎÄÀÌÛ¤Ç·Ğ²á¤¹¤ë»ş´Ö¡¡Ìë
-$silence_night = ConvertTime($night_seconds * $TIME_CONF->silence_pass);
-
-//Èó¥ê¥¢¥ë¥¿¥¤¥àÀ©¤ÎÄÀÌÛ¤Ë¤Ê¤ë¤Ş¤Ç¤Î»ş´Ö
-$silence = ConvertTime($TIME_CONF->silence);
-
-//À©¸Â»ş´Ö¤ò¾ÃÈñ¸å¤ËÆÍÁ³»à¤¹¤ë¤Ş¤Ç¤Î»ş´Ö
-$sudden_death = ConvertTime($TIME_CONF->sudden_death);
-?>
+    $this->spend_day      = ConvertTime($day_seconds);
+    $this->spend_night    = ConvertTime($night_seconds);
+    $this->silence_day    = ConvertTime($TIME_CONF->silence_pass * $day_seconds);
+    $this->silence_night  = ConvertTime($TIME_CONF->silence_pass * $night_seconds);
+    $this->silence        = ConvertTime($TIME_CONF->silence);
+    $this->sudden_death   = ConvertTime($TIME_CONF->sudden_death);
+    $this->alert          = ConvertTime($TIME_CONF->alert);
+    $this->alert_distance = ConvertTime($TIME_CONF->alert_distance);
+    $this->die_room       = ConvertTime($ROOM_CONF->die_room);
+    $this->establish_wait = ConvertTime($ROOM_CONF->establish_wait);
+  }
+}

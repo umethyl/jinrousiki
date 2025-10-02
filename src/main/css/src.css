@@ -1,3 +1,5 @@
+@charset "utf-8";
+@import url(base.css);
 body{
   background-image: url("../img/icon_upload_bg.jpg");
   background-repeat: no-repeat;
@@ -28,19 +30,19 @@ label{font-weight: bold;}
   border: 1px solid;
   vertical-align: middle;
 }
-#download .link{white-space:nowrap;}
+#download .link{white-space: nowrap;}
 #download .type{
   text-align: center;
-  white-space:nowrap;
+  white-space: nowrap;
 }
 #download .size{
   text-align: right;
-  white-space:nowrap;
+  white-space: nowrap;
 }
 #download .explain{vertical-align: top;}
 #download .name{
   text-align: center;
-  white-space:nowrap;
+  white-space: nowrap;
 }
-#download .date{white-space:nowrap;}
+#download .date{white-space: nowrap;}
 span{color: #FF0000;}

@@ -1,30 +1,30 @@
-ƒŠƒŠ[ƒXƒpƒbƒP[ƒWì¬ƒ`ƒFƒbƒNƒŠƒXƒg for Ver. 1.3.0
+ãƒªãƒªãƒ¼ã‚¹ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ä½œæˆãƒã‚§ãƒƒã‚¯ãƒªã‚¹ãƒˆ for Ver. 1.3.0
 
-‘S‘Ì
-Epaparazzi.phpApaparazzi/Asrc/‚ðíœ
-Eimg/dummy_boy.jpg, img/grave.jpg‚ðíœ
+å…¨ä½“
+ãƒ»paparazzi.phpã€paparazzi/ã€src/ã‚’å‰Šé™¤
+ãƒ»img/dummy_boy.jpg, img/grave.jpgã‚’å‰Šé™¤
 
 include/setting.php
-Epaparazzi.phpƒCƒ“ƒNƒ‹[ƒh•¶‚ðíœ
-EƒT[ƒoƒRƒƒ“ƒg‚ðC³
+ãƒ»paparazzi.phpã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰æ–‡ã‚’å‰Šé™¤
+ãƒ»ã‚µãƒ¼ãƒã‚³ãƒ¡ãƒ³ãƒˆã‚’ä¿®æ­£
 
 inclulde/message_class.php
-E“Œ•ûF‚Ì‹­‚¢ƒƒbƒZ[ƒW‚ðíœ‚µAŒ³‚ÌƒƒbƒZ[ƒW‚É–ß‚·
+ãƒ»æ±æ–¹è‰²ã®å¼·ã„ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‰Šé™¤ã—ã€å…ƒã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã«æˆ»ã™
 
 admin/setup.php
-EDummyBoyIcon->path‚ðdummy_boy.jpg ¨ dummy_boy.gif‚É•ÏX
+ãƒ»DummyBoyIcon->pathã‚’dummy_boy.jpg â†’ dummy_boy.gifã«å¤‰æ›´
 
 inclulde/config.php
-EIconConfig->dead ‚ð dummy_boy.jpg ¨ dummy_boy.gif‚É•ÏX
+ãƒ»IconConfig->dead ã‚’ dummy_boy.jpg â†’ dummy_boy.gifã«å¤‰æ›´
 
 inclulde/version.php
-Eƒo[ƒWƒ‡ƒ“î•ñ‚ð•ÒW
+ãƒ»ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±ã‚’ç·¨é›†
 
 info/top.php
-EInformation•¶–ÊC³
+ãƒ»Informationæ–‡é¢ä¿®æ­£
 
 index.php
-Epaparazzi.php‚Ö‚ÌƒŠƒ“ƒNƒRƒƒ“ƒg‚ðíœ
-Esrc/‚Ö‚ÌƒŠƒ“ƒNíœ
-E‚»‚Ì‘¼ŠO•”ƒŠƒ“ƒN‚ðíœ
-E”z•zƒz[ƒ€ƒy[ƒW‚ÌƒŠƒ“ƒN‚ðSourceforge‚É
+ãƒ»paparazzi.phpã¸ã®ãƒªãƒ³ã‚¯ã‚³ãƒ¡ãƒ³ãƒˆã‚’å‰Šé™¤
+ãƒ»src/ã¸ã®ãƒªãƒ³ã‚¯å‰Šé™¤
+ãƒ»ãã®ä»–å¤–éƒ¨ãƒªãƒ³ã‚¯ã‚’å‰Šé™¤
+ãƒ»é…å¸ƒãƒ›ãƒ¼ãƒ ãƒšãƒ¼ã‚¸ã®ãƒªãƒ³ã‚¯ã‚’Sourceforgeã«

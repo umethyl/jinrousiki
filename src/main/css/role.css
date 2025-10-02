@@ -1,13 +1,36 @@
-.human{      color: #000000;} /* ���l */
-.wolf{       color: #FF0000;} /* �l�T */
-.mage{       color: #9933FF;} /* �肢�t */
-.necromancer{color: #006699;} /* ��\�� */
-.mad{        color: #FF0000;} /* ���l */
-.guard{      color: #3399FF;} /* ��l */
-.common{     color: #CC6633;} /* ���L�� */
-.fox{        color: #CC0099;} /* �d�� */
-.poison{     color: #009966;} /* ���Ŏ� */
-.cupid{      color: #FF66CC;} /* �L���[�s�b�h */
-.authority{  color: #666633;} /* ���͎� */
-.decide{     color: #999999;} /* ����� */
-.lovers{     color: #FF66CC;} /* ���l */
+.human{       color: #606060;} /* 村人 */
+.mage{        color: #9933FF;} /* 占い師 */
+.necromancer{ color: #006699;} /* 霊能者 */
+.medium{      color: #99CC00;} /* 巫女 */
+.priest{      color: #4D4DCC;} /* 司祭 */
+.guard{       color: #3399FF;} /* 狩人 */
+.common{      color: #CC6633;} /* 共有者 */
+.poison{      color: #009966;} /* 埋毒者 */
+.cat{         color: #009966;} /* 猫又 */
+.pharmacist{  color: #009966;} /* 薬師 */
+.assassin{    color: #904040;} /* 暗殺者 */
+.mind{        color: #A0A000;} /* さとり */
+.jealousy{    color: #00CC00;} /* 橋姫 */
+.brownie{     color: #90C0A0;} /* 座敷童子 */
+.doll{        color: #6060FF;} /* 上海人形 */
+.escaper{     color: #606090;} /* 逃亡者 */
+.wolf{        color: #FF0000;} /* 人狼 */
+.mad{         color: #FF0000;} /* 狂人 */
+.fox{         color: #CC0099;} /* 妖狐 */
+.cupid{       color: #FF66CC;} /* キューピッド */
+.angel{       color: #FF66CC;} /* 天使 */
+.quiz{        color: #9999CC;} /* 出題者 */
+.vampire{     color: #D000D0;} /* 吸血鬼 */
+.chiroptera{  color: #888888;} /* 蝙蝠 */
+.fairy{       color: #888888;} /* 妖精 */
+.ogre{        color: #E09000;} /* 鬼 */
+.yaksa{       color: #E09000;} /* 夜叉 */
+.mania{       color: #C0A060;} /* 神話マニア */
+.lovers{      color: #FF66CC;} /* 恋人 */
+.authority{   color: #666633;} /* 権力者 */
+.decide{      color: #999999;} /* 決定者 */
+.luck{        color: #66CC99;} /* 得票数変化形 */
+.voice{       color: #FF9900;} /* 声変化系 */
+.seal{        color: #DD2222;} /* 封印系 */
+.convert{     color: #660099;} /* 発言変換系 */
+.sudden-death{color: #33CCFF;} /* ショック死系 */

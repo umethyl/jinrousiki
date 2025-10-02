@@ -1,33 +1,31 @@
 function output_realtime(){
-  var i, seconds, time, value;
+  var seconds, time, value;
+  var left_seconds = Math.floor((end_date - new Date()) / 1000);
 
-  var i = start_time.split(",");
-  var base = new Date(i[0], i[1] - 1, i[2], i[3], i[4], i[5]);
-
-  i = end_time.split(",");
-  var end  = new Date(i[0], i[1] - 1, i[2], i[3], i[4], i[5]);
-  var diff = Math.floor(end - base) / 1000;
-  var left = end - new Date();
-
-  if(left > 0){
-    var left_time = new Date(0, 0, 0, 0, 0, Math.floor(left / 1000));
-    seconds = Math.floor(12 * 60 * 60 / diff * left / 1000);
+  if(left_seconds > 0){
+    var left_time = new Date(0, 0, 0, 0, 0, left_seconds);
+    seconds = Math.floor(12 * 60 * 60 * left_seconds / diff_seconds);
     time = new Date(0, 0, 0, 0, 0, seconds);
-    value = realtime_message;
-    if(time.getHours()   > 0){value += time.getHours()   + "»þ´Ö";}
-    if(time.getMinutes() > 0){value += time.getMinutes() + "Ê¬";}
-    value += "(¼Â»þ´Ö ";
-    if(left_time.getMinutes() > 0){value += left_time.getMinutes() + "Ê¬";}
-    if(left_time.getSeconds() > 0){value += left_time.getSeconds() + "ÉÃ";}
+    value = sentence;
+    if(time.getHours()   > 0){value += time.getHours()   + "æ™‚é–“";}
+    if(time.getMinutes() > 0){value += time.getMinutes() + "åˆ†";}
+    value += "(å®Ÿæ™‚é–“ ";
+    if(left_time.getHours()   > 0){value += left_time.getHours()   + "æ™‚é–“";}
+    if(left_time.getMinutes() > 0){value += left_time.getMinutes() + "åˆ†";}
+    if(left_time.getSeconds() > 0){value += left_time.getSeconds() + "ç§’";}
     value += ")";
   }
   else{
-    seconds = Math.abs(Math.floor(left/1000));
-    time = new Date(0, 0, 0, 0, 0, seconds);
-    value = "Ä¶²á»þ´Ö ";
-    if(time.getHours()   > 0){value += time.getHours()   + "»þ´Ö";}
-    if(time.getMinutes() > 0){value += time.getMinutes() + "Ê¬";}
-    if(time.getSeconds() > 0){value += time.getSeconds() + "ÉÃ";}
+    time = new Date(0, 0, 0, 0, 0, Math.abs(left_seconds));
+    value = "è¶…éŽæ™‚é–“ ";
+    if(time.getHours()   > 0){value += time.getHours()   + "æ™‚é–“";}
+    if(time.getMinutes() > 0){value += time.getMinutes() + "åˆ†";}
+    if(time.getSeconds() > 0){value += time.getSeconds() + "ç§’";}
+    if(sound_flag){
+      if((countdown_flag & time.getSeconds() % alert_distance == 0) || time.getSeconds() == 0){
+	document.getElementById('vote_alert').innerHTML= sound_file;
+      }
+    }
   }
   document.realtime_form.output_realtime.value = value;
   tid = setTimeout("output_realtime()", 1000);

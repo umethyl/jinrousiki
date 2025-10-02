@@ -1,0 +1,10 @@
+@import url(role.css);
+.member{
+  border: 1px solid;
+  margin: 20px 20px;
+  border-collapse:collapse;
+  text-align: right;
+  padding: 3px;
+}
+.member th{border: 1px solid;}
+.member td{border: 1px solid;}
