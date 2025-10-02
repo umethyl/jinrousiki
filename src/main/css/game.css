@@ -1,54 +1,72 @@
+@charset "utf-8";
+@import url(base.css);
 @import url(role.css);
 /* game_view.php & OutputGameHeader() */
-.room{text-decoration:underline;} /* ‘º‚Ìƒ^ƒCƒgƒ‹ */
+body{ /* AA ç”¨ */
+  font-family: "ï¼­ï¼³ ï¼°ã‚´ã‚·ãƒƒã‚¯", "ï¼­ï¼³ï¼°ã‚´ã‚·ãƒƒã‚¯", "MSPã‚´ã‚·ãƒƒã‚¯", "MS Pã‚´ã‚·ãƒƒã‚¯";
+}
+.room{text-decoration:underline;} /* æ‘ã®ã‚¿ã‚¤ãƒˆãƒ« */
 .room span{
   font-size: 15pt;
   font-weight: bold;
 }
+.game-option{ /* ã‚²ãƒ¼ãƒ ã‚ªãƒ—ã‚·ãƒ§ãƒ³ */
+  padding: 3px;
+  vertical-align: top;
+}
+.game-option img{ /* ã‚²ãƒ¼ãƒ ã‚ªãƒ—ã‚·ãƒ§ãƒ³ */
+  vertical-align: top;
+}
 .time-table{
-  margin-left: 3px;
   width: 100%;
   border: 0;
   border-collapse: collapse;
   vertical-align: top;
 }
 .time-table td{
-  border: 1px dotted #CCCCCC; /* •\¦ƒeƒXƒg—p */
-  vertical-align: top;
+  padding-left: 5px;
+  border: 1px dotted #CCCCCC;
+  vertical-align: middle;
   text-align: left;
 }
 .time-table span{
   margin-left: 1em;
   font-size: 80%;
 }
-.real-time{ /* ƒŠƒAƒ‹ƒ^ƒCƒ€‚ÌŠÔ•\¦ */
+.real-time{ /* ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ ã®æ™‚é–“è¡¨ç¤º */
   padding-top: 5px;
-  vertical-align: top;
+  vertical-align: middle;
 }
 .real-time span{font-weight: bold;}
-.real-time input{ /* JavaScript ‚Ì•\¦‘‹ */
+.real-time input{ /* JavaScript ã®è¡¨ç¤ºçª“ */
   border: 0px solid;
+  vertical-align: middle;
   font-size:11pt;
 }
-.system-vote{ /* “Š•[‚ğ‘£‚·ƒƒbƒZ[ƒW */
+.system-vote{ /* æŠ•ç¥¨ã‚’ä¿ƒã™ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ */
+  padding: 7px;
   background-color: #CC3300;
   color: #FFFAFA;
+  font-weight: bold;
 }
 /* OutputPlayerList() */
-.player{ /* ƒvƒŒƒCƒ„[ƒŠƒXƒg‘S‘Ì‚Ì div */
-  width: 700px;
+.player{ /* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒªã‚¹ãƒˆå…¨ä½“ã® div */
+  width: 750px;
   font-size: 10pt;
 }
 .player table{
   border: 1px dotted #000000;
-  boder-collapse: collapse;
+  border-spacing: 5px;
 }
-.player table td{vertical-align: top;}
-.player table img{border: 2px solid;} /* ˜g‚ÌF‚ÍƒAƒCƒRƒ“–ˆ */
-.player table td span{font-weight: bold;} /* –ğE–¼ */
-.already-vote{background-color: #FFDDFF;} /* ƒQ[ƒ€ŠJn“Š•[Ï‚İ */
+.player table td{
+  vertical-align: top;
+  font-size: 10pt;
+}
+.player table img{border: 2px solid;} /* æ ã®è‰²ã¯ã‚¢ã‚¤ã‚³ãƒ³æ¯ */
+.player table td span{font-weight: bold;} /* å½¹è·å */
+.already-vote{background-color: #FFDDFF;} /* ã‚²ãƒ¼ãƒ é–‹å§‹æŠ•ç¥¨æ¸ˆã¿ */
 /* OutputVictory() */
-.victory{ /* Ÿ”sŒ‹‰Ê‘S‘Ì‚Ì table */
+.victory{ /* å‹æ•—çµæœå…¨ä½“ã® table */
   margin: 5px 0px;
   width: 100%;
   font-size: 120%;
@@ -60,75 +78,102 @@
   text-align: center;
   vertical-align: middle;
 }
-.victory-human{ /* ‘ºlŸ—˜ */
+.victory-human{ /* æ‘äººå‹åˆ© */
   background-color: #FFFF99;
   color: #000000;
 }
-.victory-wolf{ /* l˜TE‹¶lŸ—˜ */
+.victory-doll{ /* ä¸Šæµ·äººå½¢å‹åˆ© */
+  background-color: #6060FF;
+  color: #FFFAFA;
+}
+.victory-escaper{ /* é€ƒäº¡è€…å‹åˆ© */
+  background-color: #606090;
+  color: #FFFAFA;
+}
+.victory-wolf{ /* äººç‹¼å‹åˆ© */
   background-color: #CC0000;
   color: #FFFAFA;
 }
-.victory-fox{ /* —dŒÏŸ—˜ */
+.victory-fox{ /* å¦–ç‹å‹åˆ© */
   background-color: #993399;
   color: #FFFAFA;
 }
-.victory-lovers{ /* —ölEƒLƒ…[ƒsƒbƒhŸ—˜ */
+.victory-lovers{ /* æ‹äººå‹åˆ© */
   background-color: #FFFAFA;
-  color: #FF69B4; /* hotpink */
+  color: #FF69B4;
 }
-.victory-draw{ /* ˆø‚«•ª‚¯ */
+.victory-quiz{ /* å‡ºé¡Œè€…å‹åˆ© */
+  background-color: #9999CC;
+  color: #FFFF99;
+}
+.victory-vampire{ /* å¸è¡€é¬¼å‹åˆ© */
+  background-color: #D000D0;
+  color: #FFFAFA;
+}
+.victory-chiroptera{ /* è™è å‹åˆ© */
+  background-color: #888888;
+  color: #FFFAFA;
+}
+.victory-ogre{ /* é¬¼å‹åˆ© */
+  background-color: #E09000;
+  color: #FFFAFA;
+}
+.victory-draw{ /* å¼•ãåˆ†ã‘ */
   background-color: #CCEECC;
   color: #000000;
 }
-.victory-lose{ /* ”s–k */
+.victory-lose{ /* æ•—åŒ— */
   background-color: #000000;
   color: #FFFAFA;
 }
-.victory-none{ /* ”p‘º */
+.victory-none{ /* å»ƒæ‘ */
   background-color: #AAAAAA;
   color: #FFFAFA;
 }
 /* OutputRevoteList() */
-.revote{ /* Ä“Š•[ƒƒbƒZ[ƒW */
-  margin: 0px 3em;
+.revote{ /* å†æŠ•ç¥¨ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ */
+  padding: 0px 3em;
   background-color: #FF0000;
   color: #FFFAFA; /* snow */
   font-size: 14pt;
   font-weight: bold;
 }
 /* OutoutTalkLog() & OutputHeavenTalkLog() */
-.talk{ /* ”­Œ¾‘S‘Ì‚Ì table */
+.talk{ /* ç™ºè¨€å…¨ä½“ã® table */
   border: 0;
   border-collapse: collapse;
   width: 100%
-  font-family: "‚l‚r ‚oƒSƒVƒbƒN";
 }
-.normal{font-size:12pt;} /* ’Êí‚Ì”­Œ¾ */
-.strong{  /* ‘åº */
+.normal{font-size:12pt;} /* é€šå¸¸ã®ç™ºè¨€ */
+.strong{  /* å¤§å£° */
   font-size: 20pt;
   font-weight: bold;
 }
-.weak{ /* ¬º */
+.weak{ /* å°å£° */
+  /* color: #1E90FF; */ /* é’æ–‡å­— */
   font-size: 8pt;
   font-weight: lighter;
 }
-.user-talk{ /* ƒvƒŒƒCƒ„[‚Ì”­Œ¾ */
+.add-role{font-size: 8pt;} /* å½¹è·è¡¨ç¤ºã‚ªãƒ—ã‚·ãƒ§ãƒ³ç”¨ */
+.user-talk{ /* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç™ºè¨€ */
   text-align: left;
   vertical-align: middle;
 }
 .user-talk td{
   border-bottom: 1px dashed #C0C0C0;
 }
-.user-name{width: 200px;} /* ƒvƒŒƒCƒ„[–¼ */
-.user-name span{font-size: 80%;} /* `‚Ì“Æ‚èŒ¾‚È‚Ç */
-.say{ /* ”­Œ¾‚Ì’†g */
+.user-name{width: 200px;} /* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å */
+.user-name span{font-size: 8pt;} /* ï½ã®ç‹¬ã‚Šè¨€ãªã© */
+.say{ /* ç™ºè¨€ã®ä¸­èº« */
   margin-left: 1px;
   width: 1000px;
+  /* è‰å¯¾ç­–ï¼šãƒ–ãƒ©ã‚¦ã‚¶ä¾å­˜ãŒã‚ã‚‹ã®ã§ã²ã¨ã¾ãšä¸ä½¿ç”¨
+  word-wrap: break-word;
+  word-break:break-all;
+  */
 }
 /* OutputTalkLog() */
-.system-message{ /* ƒVƒXƒeƒ€ƒƒbƒZ[ƒW */
-  text-align: left;
-}
+.system-message{text-align: left;} /* ã‚·ã‚¹ãƒ†ãƒ ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ */
 .system-message td{
   border-top: 1px dashed #C0C0C0;
   width: 1000px;
@@ -136,31 +181,47 @@
   color: #FFFAFA;
   font-weight: bold;
 }
-.objection-male{  background-color: #336699;} /* ˆÙ‹c‚ ‚è(’j) */
-.objection-female{background-color: #FF0099;} /* ˆÙ‹c‚ ‚è(—) */
-.game-start{      background-color: #999900;} /* ƒQ[ƒ€ŠJn“Š•[(Œ»İ‚Íg‚Á‚Ä‚È‚¢–Í—l) */
-.kick{            background-color: #AAAA33;} /* ƒLƒbƒN“Š•[ */
-.vote{            background-color: #999900;} /* ˆŒY“Š•[ */
-.wolf-eat{        background-color: #CC3300;} /* ˜T‚ÌPŒ‚ */
-.mage-do{         background-color: #990099;} /* è‚¢t */
-.guard-do{        background-color: #0099FF;} /* ël */
-.cupid-do{        background-color: #FF66CC;} /* ƒLƒ…[ƒsƒbƒh */
-.system-user{ /* ƒVƒXƒeƒ€ƒ†[ƒU[‚Ì”­Œ¾ */
+.objection-male{  background-color: #336699;} /* ç•°è­°ã‚ã‚Š(ç”·) */
+.objection-female{background-color: #FF0099;} /* ç•°è­°ã‚ã‚Š(å¥³) */
+.game-start{      background-color: #999900;} /* ã‚²ãƒ¼ãƒ é–‹å§‹æŠ•ç¥¨ (ç¾åœ¨ã¯ä¸ä½¿ç”¨) */
+.kick-do{         background-color: #AAAA33;} /* ã‚­ãƒƒã‚¯æŠ•ç¥¨ */
+.vote-do{         background-color: #999900;} /* å‡¦åˆ‘æŠ•ç¥¨ */
+.mage-do{         background-color: #990099;} /* å ã„å¸« */
+.guard-do{        background-color: #0099FF;} /* ç‹©äºº */
+.revive-do{       background-color: #009966;} /* çŒ«åˆ */
+.assassin-do{     background-color: #904040;} /* æš—æ®ºè€… */
+.mind-scanner-do{ background-color: #A0A000;} /* ã•ã¨ã‚Š */
+.escape-do{       background-color: #606090;} /* é€ƒäº¡è€… */
+.wolf-eat{        background-color: #CC3300;} /* äººç‹¼ */
+.cupid-do{        background-color: #FF66CC;} /* ã‚­ãƒ¥ãƒ¼ãƒ”ãƒƒãƒ‰ */
+.vampire-do{      background-color: #D000D0;} /* å¸è¡€é¬¼ */
+.fairy-do{        background-color: #888888;} /* å¦–ç²¾ */
+.ogre-do{         background-color: #E09000;} /* é¬¼ */
+.mania-do{        background-color: #C0A060;} /* ç¥è©±ãƒãƒ‹ã‚¢ */
+.system-user{ /* ã‚·ã‚¹ãƒ†ãƒ ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ç™ºè¨€ */
   width: 1000px;
   padding-left: 6em;
   background-color: #EFEFEF;
   color: #000000;
   font-weight: bold;
 }
-.talk-common{font-size: 8pt;} /* ‹¤—LÒ‚Ì–¼‘O (‹¤—LÒˆÈŠO—p) */
-.say-common{ font-size: 6pt;} /* ‹¤—LÒ‚Ì”­Œ¾ (‹¤—LÒˆÈŠO—p) */
-.night-self-talk{color: #FFFAFA;} /* –é‚Ì“Æ‚èŒ¾ */
-.night-wolf{     color: #FFCCFF;} /* ˜T‚Ì‰“–i‚¦ */
-.night-common{   color: #CCFFCC;} /* ‹¤—LÒ‚Ì‰ï˜b */
-.night-fox{      color: #FAFA66;} /* ŒÏ‚Ì”O˜b */
+.dummy-boy{ /* èº«ä»£ã‚ã‚Šå›ã®ç™ºè¨€ */
+  width: 1000px;
+  /* padding-left: 6em; */
+  background-color: #F0F8FF;
+  color: #000000;
+  font-weight: bold;
+}
+.talk-common{font-size: 8pt;} /* å…±æœ‰è€…ã®åå‰ (å…±æœ‰è€…ä»¥å¤–ç”¨) */
+.say-common{ font-size: 6pt;} /* å…±æœ‰è€…ã®ç™ºè¨€ (å…±æœ‰è€…ä»¥å¤–ç”¨) */
+.night-self-talk{color: #FFFAFA;} /* å¤œã®ç‹¬ã‚Šè¨€ */
+.night-wolf{     color: #FFCCFF;} /* ç‹¼ã®é å ãˆ */
+.night-common{   color: #CCFFCC;} /* å…±æœ‰è€…ã®ä¼šè©± */
+.night-fox{      color: #FAFA66;} /* ç‹ã®å¿µè©± */
 /* OutputLastWords() & OutputSelfLastWords() */
-.lastwords{ /* ˆâŒ¾‘S‘Ì‚Ì table */
+.lastwords{ /* éºè¨€å…¨ä½“ã® table */
   border: 0;
+  border-spacing: 5px;
   width: 100%;
   background-color: #DDEEFF;
 }
@@ -168,28 +229,28 @@
   border-top: 1px dashed #C0C0C0;
   color: #000000;
 }
-.lastwords-title{ /* –¼‘O */
+.lastwords-title{ /* åå‰ */
   width: 140px;
   vertical-align: middle;
   text-align: left;
 }
-.lastwords-title span{ /*`u‚³‚ñ‚ÌˆâŒ¾v*/
+.lastwords-title span{ /*ï½ã€Œã•ã‚“ã®éºè¨€ã€*/
   margin-right: 1px;
   font-size: 80%;
 }
-.lastwords-body{ /* –{•¶ */
+.lastwords-body{ /* æœ¬æ–‡ */
   width: 1000px;
   vertical-align: top;
 }
 /* OutputLastWords() */
-.system-lastwords{ /* ˆâŒ¾‚ÌƒVƒXƒeƒ€ƒƒbƒZ[ƒW‚Ì table */
+.system-lastwords{ /* éºè¨€ã®ã‚·ã‚¹ãƒ†ãƒ ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã® table */
   border: 0;
   border-collapse: collapse;
   width: 100%;
   background-color: #CCDDFF;
   color: #000000;
 }
-.system-lastwords td{ /* ƒCƒ“ƒfƒ“ƒg‚Í‘¼‚ÌƒVƒXƒeƒ€ƒƒbƒZ[ƒW‚Æ‡‚í‚¹‚é */
+.system-lastwords td{ /* ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã¯ä»–ã®ã‚·ã‚¹ãƒ†ãƒ ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¨åˆã‚ã›ã‚‹ */
   padding-left: 6em;
   text-align: left;
   font-weight: bold;
@@ -210,12 +271,13 @@
   text-align: left;
   vertical-align: middle;
 }
-.dead-type-vote{
-  height: 35px;
-  color: #666600;
-}
+.dead-type-vote{        color: #666600;}
+.dead-type-revive{      color: #009966;}
+.dead-type-lovers{      color: #FF66CC;}
+.dead-type-fairy{       color: #888888;}
+.dead-type-sudden-death{color: #33CCFF;}
 /* OutputVoteListDay() */
-.vote-list{ /* “Š•[Œ‹‰Ê‚Ì table */
+.vote-list{ /* æŠ•ç¥¨çµæœã® table */
   border: 2px solid;
   border-collapse: collapse;
   font-size:12pt;
@@ -224,8 +286,8 @@
   border: 1px solid;
   padding: 5px;
 }
-.vote-times{text-align: center;} /* “Š•[‰ñ” */
-.vote-name{ /* ƒ†[ƒU–¼ */
+.vote-times{text-align: center;} /* æŠ•ç¥¨å›æ•° */
+.vote-name{ /* ãƒ¦ãƒ¼ã‚¶å */
   text-align: left;
   font-weight: bold;
 }
@@ -235,31 +297,32 @@
   border-collapse: collapse;
   width: 100%;
 }
-.view-option{ /* •\¦ƒIƒvƒVƒ‡ƒ“‚ÌƒŠƒ“ƒN */
+.view-option{ /* è¡¨ç¤ºã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®ãƒªãƒ³ã‚¯ */
   border: 0;
   text-align: right;
   font-size: 80%;
 }
-.caution{ /* ƒQ[ƒ€ŠJn‘O‚Ì’ˆÓ */
-  margin: 3px 0;
-  width: 100%;
-  padding: 5px 0;
+.caution{ /* ã‚²ãƒ¼ãƒ é–‹å§‹å‰ã®æ³¨æ„ */
+  padding: 7px 0;
   background-color: #009900;
   color: #FFFAFA;
   text-align: center;
   font-weight: bold;
 }
 .caution span{font-size: 80%;}
-.objection{text-align: right;}/* uˆÙ‹c‚ ‚èvƒ{ƒ^ƒ“ */
+.objection{ /* ã€Œç•°è­°ã‚ã‚Šã€ãƒœã‚¿ãƒ³ */
+  vertical-align: middle;
+  text-align: right;
+}
 /* OutputAbility() */
-.ability-dead{ /* €‚ñ‚Å‚¢‚éê‡ */
-  margin: 0 3em;
-  background-color:#CC0000;
+.ability{ /* å…±é€šãƒ‡ã‚¶ã‚¤ãƒ³ */
+  padding: 0 3em;
   color: #FFFAFA;
   font-size: 14pt;
   font-weight: bold;
 }
-.ability-partner{ /* ’‡ŠÔ‚Ì•\¦ */
+.ability-dead{background-color:#CC0000;} /* æ­»ã‚“ã§ã„ã‚‹å ´åˆ */
+.ability-partner{ /* ä»²é–“ã®è¡¨ç¤º */
   border: 1px solid;
   border-collapse: collapse;
 }
@@ -267,7 +330,7 @@
   border: 1px solid;
   vertical-align: middle;
 }
-.ability-result{ /* ”\—Í‚ÌŒ‹‰Ê•\¦ */
+.ability-result{ /* èƒ½åŠ›ã®çµæœè¡¨ç¤º */
   border: 1px solid #000000;
   border-collapse: collapse;
 }
@@ -275,35 +338,5 @@
   border: 0px solid #000000;
   vertical-align: middle;
 }
-.ability-wolf-eat{ /* l˜T‚Ì“Š•[ */
-  padding: 0 3em;
-  background-color: #CC0000;
-  color: #FFFAFA;
-  font-size: 14pt;
-  font-weight:bold;
-}
-.ability-mage-do{ /* è‚¢t‚Ì“Š•[ */
-  padding: 0 3em;
-  background-color: #990099;
-  color: #FFFAFA;
-  font-size: 14pt;
-  font-weight:bold;
-}
-.ability-guard-do{ /* ël‚Ì“Š•[ */
-  padding: 0 3em;
-  background-color: #0099FF;
-  color: #FFFAFA;
-  font-size: 14pt;
-  font-weight:bold;
-}
-.ability-cupid-do{ /* ël‚Ì“Š•[ */
-  padding: 0 3em;
-  background-color: #FF66CC;
-  color: #FFFAFA;
-  font-size: 14pt;
-  font-weight:bold;
-}
 /* CheckSelfVote() */
-.self-vote{
-  margin: 5px 0;
-}
+.self-vote{margin: 5px 0;}

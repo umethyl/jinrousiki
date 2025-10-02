@@ -1,80 +1,73 @@
 <?php
-require_once(dirname(__FILE__) . '/../include/functions.php');
+define('JINRO_ROOT', '..');
+require_once(JINRO_ROOT  . '/include/init.php');
 if(FindDangerValue($_FILES)) die;
 
-EncodePostData();
+$INIT_CONF->LoadRequest('RequestSrcUpload'); //å¼•æ•°ã‚’ã‚»ãƒƒãƒˆ
+$config = new SourceUploadConfig(); //è¨­å®šã‚’ãƒ­ãƒ¼ãƒ‰
 
-//ÊÑ¿ô¤ò¥»¥Ã¥È
-$post = array('name'     => $_POST['name'],
-	      'caption'  => $_POST['caption'],
-	      'user'     => $_POST['user'],
-	      'password' => $_POST['password']);
-$label = array('name'     => '¥Õ¥¡¥¤¥ëÌ¾',
-	       'caption'  => '¥Õ¥¡¥¤¥ë¤ÎÀâÌÀ',
-	       'user'     => 'ºîÀ®¼ÔÌ¾',
-	       'password' => '¥Ñ¥¹¥ï¡¼¥É');
-$size = array('name'     => 20,
-	      'caption'  => 80,
-	      'user'     => 20,
-	      'password' => 20);
-
-//°ú¿ô¤Î¥¨¥é¡¼¥Á¥§¥Ã¥¯
-foreach($post as $key => $value){
-  //Ì¤ÆşÎÏ¥Á¥§¥Ã¥¯
-  if($value == '') OutputUploadResult('<span>' . $label[$key] . '</span> ¤¬Ì¤ÆşÎÏ¤Ç¤¹¡£');
-
-  //Ê¸»úÎóÄ¹¥Á¥§¥Ã¥¯
-  if(strlen($value) > $size[$key]){
-    OutputUploadResult('<span>' . $label[$key] . '</span> ¤Ï ' .
-		       '<span>' . $size[$key] . '</span> Ê¸»ú°Ê²¼¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£');
-  }
-
-  //¥¨¥¹¥±¡¼¥×½èÍı
-  EscapeStrings($value);
+if($config->disable){
+  OutputActionResult('ãƒ•ã‚¡ã‚¤ãƒ«ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰', 'ç¾åœ¨ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã¯åœæ­¢ã—ã¦ã„ã¾ã™');
 }
 
-//¥Ñ¥¹¥ï¡¼¥É¤Î¥Á¥§¥Ã¥¯
-if($post['password'] != $src_upload_password) OutputUploadResult('¥Ñ¥¹¥ï¡¼¥ÉÇ§¾Ú¥¨¥é¡¼¡£');
+//å¼•æ•°ã®ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯
+foreach($RQ_ARGS as $key => $value){
+  $label = $config->form_list[$key]['label'];
+  $size  = $config->form_list[$key]['size'];
 
-//¥Õ¥¡¥¤¥ë¤Î¼ïÎà¤Î¥Á¥§¥Ã¥¯
+  //æœªå…¥åŠ›ãƒã‚§ãƒƒã‚¯
+  if($value == '') OutputUploadResult('<span>' . $label . '</span> ãŒæœªå…¥åŠ›ã§ã™ã€‚');
+
+  //æ–‡å­—åˆ—é•·ãƒã‚§ãƒƒã‚¯
+  if(strlen($value) > $size){
+    OutputUploadResult('<span>' . $label . '</span> ã¯ ' .
+		       '<span>' . $size . '</span> æ–‡å­—ä»¥ä¸‹ã«ã—ã¦ãã ã•ã„ã€‚');
+  }
+}
+
+//ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã®ãƒã‚§ãƒƒã‚¯
+if($RQ_ARGS->password != $config->password) OutputUploadResult('ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰èªè¨¼ã‚¨ãƒ©ãƒ¼ã€‚');
+
+//ãƒ•ã‚¡ã‚¤ãƒ«ã®ç¨®é¡ã®ãƒã‚§ãƒƒã‚¯
+//PrintData($_FILES['file']);
 $file_name = strtolower(trim($_FILES['file']['name']));
 $file_type = $_FILES['file']['type'];
 if(! (preg_match('/application\/(octet-stream|zip|lzh|lha|x-zip-compressed)/i', $file_type) &&
       preg_match('/^.*\.(zip|lzh)$/', $file_name))){
+  PrintData($_FILES['file']);
   OutputUploadResult('<span>' . $file_name . '</span> : <span>' . $file_type . '</span><br>'."\n".
-		     'zip/lzh °Ê³°¤Î¥Õ¥¡¥¤¥ë¤Ï¥¢¥Ã¥×¥í¡¼¥É¤Ç¤­¤Ş¤»¤ó¡£');
+		     'zip/lzh ä»¥å¤–ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã§ãã¾ã›ã‚“ã€‚');
 }
 
-//¥Õ¥¡¥¤¥ë¥µ¥¤¥º¤Î¥Á¥§¥Ã¥¯
+//ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã®ãƒã‚§ãƒƒã‚¯
 $file_size = $_FILES['file']['size'];
-if($file_size == 0 || $file_size > 10 * 1024 * 1024){ //setting.php ¤ÇÀßÄê¤Ç¤­¤ë¤è¤¦¤Ë¤¹¤ë
-  OutputUploadResult('¥Õ¥¡¥¤¥ë¥µ¥¤¥º¤Ï <span>10 Mbyte</span> ¤Ş¤Ç¡£');
+if($file_size == 0 || $file_size > $config->max_size){
+  OutputUploadResult('ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã¯ <span>' . $config->max_size . 'byte</span> ã¾ã§ã€‚');
 }
 
-
-//¥Õ¥¡¥¤¥ëÈÖ¹æ¤Î¼èÆÀ
+//ãƒ•ã‚¡ã‚¤ãƒ«ç•ªå·ã®å–å¾—
 $number = (int)file_get_contents('file/number.txt');
-if(! ($io = fopen('file/number.txt', 'wb+'))){ //¥Õ¥¡¥¤¥ë¥ª¡¼¥×¥ó
-  OutputUploadResult('¥Õ¥¡¥¤¥ë¤Î IO ¥¨¥é¡¼¤Ç¤¹¡£<br>' .
-		     '»ş´Ö¤ò¤ª¤¤¤Æ¤«¤é¥¢¥Ã¥×¥í¡¼¥É¤·¤Ê¤ª¤·¤Æ¤¯¤À¤µ¤¤¡£');
+if(! ($io = fopen('file/number.txt', 'wb+'))){ //ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
+  OutputUploadResult('ãƒ•ã‚¡ã‚¤ãƒ«ã® IO ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚<br>' .
+		     'æ™‚é–“ã‚’ãŠã„ã¦ã‹ã‚‰ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã—ãªãŠã—ã¦ãã ã•ã„ã€‚');
 }
-stream_set_write_buffer($io, 0); //¥Ğ¥Ã¥Õ¥¡¤ò 0 ¤Ë»ØÄê (ÇÓÂ¾À©¸æ¤ÎÊİ¾Ú)
+stream_set_write_buffer($io, 0); //ãƒãƒƒãƒ•ã‚¡ã‚’ 0 ã«æŒ‡å®š (æ’ä»–åˆ¶å¾¡ã®ä¿è¨¼)
 
-if(! flock($io, LOCK_EX)){ //¥Õ¥¡¥¤¥ë¤Î¥í¥Ã¥¯
+if(! flock($io, LOCK_EX)){ //ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒƒã‚¯
   fclose($io);
-  OutputUploadResult('¥Õ¥¡¥¤¥ë¤Î¥í¥Ã¥¯¥¨¥é¡¼¤Ç¤¹¡£<br>' .
-		     '»ş´Ö¤ò¤ª¤¤¤Æ¤«¤é¥¢¥Ã¥×¥í¡¼¥É¤·¤Ê¤ª¤·¤Æ¤¯¤À¤µ¤¤¡£');
+  OutputUploadResult('ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒƒã‚¯ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚<br>' .
+		     'æ™‚é–“ã‚’ãŠã„ã¦ã‹ã‚‰ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã—ãªãŠã—ã¦ãã ã•ã„ã€‚');
 }
-rewind($io); //¥Õ¥¡¥¤¥ë¥İ¥¤¥ó¥¿¤òÀèÆ¬¤Ë°ÜÆ°
-fwrite($io, $number + 1); //¥¤¥ó¥¯¥ê¥á¥ó¥È¤·¤Æ½ñ¤­¹ş¤ß
+rewind($io); //ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚’å…ˆé ­ã«ç§»å‹•
+fwrite($io, $number + 1); //ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã—ã¦æ›¸ãè¾¼ã¿
 
-flock($io, LOCK_UN); //¥í¥Ã¥¯²ò½ü
-fclose($io); //¥Õ¥¡¥¤¥ë¤Î¥¯¥í¡¼¥º
+flock($io, LOCK_UN); //ãƒ­ãƒƒã‚¯è§£é™¤
+fclose($io); //ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¯ãƒ­ãƒ¼ã‚º
 
-//HTML¥½¡¼¥¹¤ò½ĞÎÏ
-$number = sprintf("%04d", $number); //·åÂ·¤¨
-$ext    = substr($file_name, -3); //³ÈÄ¥»Ò
-$time   = gmdate('Y/m/d (D) H:i:s', TZTime()); //Æü»ş
+//HTMLã‚½ãƒ¼ã‚¹ã‚’å‡ºåŠ›
+$number = sprintf("%04d", $number); //æ¡æƒãˆ
+$ext    = substr($file_name, -3); //æ‹¡å¼µå­
+$time   = TZDate('Y/m/d (D) H:i:s', TZTime()); //æ—¥æ™‚
 if($file_size > 1024 * 1024) // Mbyte
   $file_size = sprintf('%.2f', $file_size / (1024 * 1024)) . ' Mbyte';
 elseif($file_size > 1024) // Kbyte
@@ -83,47 +76,46 @@ else
   $file_size = sprintf('%.2f', $file_size) . ' byte';
 
 $html = <<<EOF
-<td class="link"><a href="file/{$number}.{$ext}">{$post['name']}</a></td>
+<td class="link"><a href="file/{$number}.{$ext}">{$RQ_ARGS->name}</a></td>
 <td class="type">$ext</td>
 <td class="size">$file_size</td>
-<td class="explain">{$post['caption']}</td>
-<td class="name">{$post['user']}</td>
+<td class="explain">{$RQ_ARGS->caption}</td>
+<td class="name">{$RQ_ARGS->user}</td>
 <td class="date">$time</td>
 
 EOF;
 
-if(! ($io = fopen('html/' . $number . '.html', 'wb+'))){ //¥Õ¥¡¥¤¥ë¥ª¡¼¥×¥ó
-  OutputUploadResult('¥Õ¥¡¥¤¥ë¤Î IO ¥¨¥é¡¼¤Ç¤¹¡£<br>' .
-		     '»ş´Ö¤ò¤ª¤¤¤Æ¤«¤é¥¢¥Ã¥×¥í¡¼¥É¤·¤Ê¤ª¤·¤Æ¤¯¤À¤µ¤¤¡£');
+if(! ($io = fopen('html/' . $number . '.html', 'wb+'))){ //ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
+  OutputUploadResult('ãƒ•ã‚¡ã‚¤ãƒ«ã® IO ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚<br>' .
+		     'æ™‚é–“ã‚’ãŠã„ã¦ã‹ã‚‰ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã—ãªãŠã—ã¦ãã ã•ã„ã€‚');
 }
-stream_set_write_buffer($io, 0); //¥Ğ¥Ã¥Õ¥¡¤ò 0 ¤Ë»ØÄê (ÇÓÂ¾À©¸æ¤ÎÊİ¾Ú)
+stream_set_write_buffer($io, 0); //ãƒãƒƒãƒ•ã‚¡ã‚’ 0 ã«æŒ‡å®š (æ’ä»–åˆ¶å¾¡ã®ä¿è¨¼)
 
-if(! flock($io, LOCK_EX)){ //¥Õ¥¡¥¤¥ë¤Î¥í¥Ã¥¯
+if(! flock($io, LOCK_EX)){ //ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒƒã‚¯
   fclose($io);
-  OutputUploadResult('¥Õ¥¡¥¤¥ë¤Î¥í¥Ã¥¯¥¨¥é¡¼¤Ç¤¹¡£<br>' .
-		     '»ş´Ö¤ò¤ª¤¤¤Æ¤«¤é¥¢¥Ã¥×¥í¡¼¥É¤·¤Ê¤ª¤·¤Æ¤¯¤À¤µ¤¤¡£');
+  OutputUploadResult('ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒƒã‚¯ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚<br>' .
+		     'æ™‚é–“ã‚’ãŠã„ã¦ã‹ã‚‰ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã—ãªãŠã—ã¦ãã ã•ã„ã€‚');
 }
-rewind($io); //¥Õ¥¡¥¤¥ë¥İ¥¤¥ó¥¿¤òÀèÆ¬¤Ë°ÜÆ°
-fwrite($io, $html); //½ñ¤­¹ş¤ß
+rewind($io); //ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚’å…ˆé ­ã«ç§»å‹•
+fwrite($io, $html); //æ›¸ãè¾¼ã¿
 
-flock($io, LOCK_UN); //¥í¥Ã¥¯²ò½ü
-fclose($io); //¥Õ¥¡¥¤¥ë¤Î¥¯¥í¡¼¥º
+flock($io, LOCK_UN); //ãƒ­ãƒƒã‚¯è§£é™¤
+fclose($io); //ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¯ãƒ­ãƒ¼ã‚º
 
-//¥Õ¥¡¥¤¥ë¤Î¥³¥Ô¡¼
+//ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚³ãƒ”ãƒ¼
 if(move_uploaded_file($_FILES['file']['tmp_name'], 'file/' . $number . '.' . $ext)){
-  OutputUploadResult('¥Õ¥¡¥¤¥ë¤Î¥¢¥Ã¥×¥í¡¼¥É¤ËÀ®¸ù¤·¤Ş¤·¤¿¡£');
+  OutputUploadResult('ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã«æˆåŠŸã—ã¾ã—ãŸã€‚');
 }
 else{
-  OutputUploadResult('¥Õ¥¡¥¤¥ë¤Î¥³¥Ô¡¼¼ºÇÔ¡£<br>' .
-		     '»ş´Ö¤ò¤ª¤¤¤Æ¤«¤é¥¢¥Ã¥×¥í¡¼¥É¤·¤Ê¤ª¤·¤Æ¤¯¤À¤µ¤¤¡£');
+  OutputUploadResult('ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚³ãƒ”ãƒ¼å¤±æ•—ã€‚<br>' .
+		     'æ™‚é–“ã‚’ãŠã„ã¦ã‹ã‚‰ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã—ãªãŠã—ã¦ãã ã•ã„ã€‚');
 }
 
-// ´Ø¿ô //
-//·ë²Ì½ĞÎÏ
+// é–¢æ•° //
+//çµæœå‡ºåŠ›
 function OutputUploadResult($body){
-  OutputHTMLHeader('¥Õ¥¡¥¤¥ë¥¢¥Ã¥×¥í¡¼¥É½èÍı', 'src', '../css');
+  OutputHTMLHeader('ãƒ•ã‚¡ã‚¤ãƒ«ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å‡¦ç†', 'src');
   echo '</head><body>'."\n" . $body . '<br><br>'."\n" .
-    '<a href="index.php">¢«Ìá¤ë</a>'."\n";
+    '<a href="./">â†æˆ»ã‚‹</a>'."\n";
   OutputHTMLFooter(true);
 }
-?>

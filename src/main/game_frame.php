@@ -1,35 +1,27 @@
-<?php require_once('include/setting.php'); ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
-<html lang="ja"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
-<title>Æò¤Ï¿ÍÏµ¤Ê¤ê¤ä¡©[¥×¥ì¥¤]</title>
-</head>
 <?php
-$option = 'frameborder="1" framespacing="1" bordercolor="#C0C0C0"';
-$header = '?room_no=' . (int)$_GET['room_no'] . '&auto_reload=' . (int)$_GET['auto_reload'];
-if ($_GET['play_sound'] == 'on') $header .= '&play_sound=on';
-if ($_GET['list_down'] == 'on')  $header .= '&list_down=on';
+require_once('include/init.php');
+OutputFrameHTMLHeader($SERVER_CONF->title . '[ãƒ—ãƒ¬ã‚¤]');
+$option = ' border="1" frameborder="1" framespacing="1" bordercolor="#C0C0C0"';
+$header = '?room_no=' . @(int)$_GET['room_no'] . '&auto_reload=' . @(int)$_GET['auto_reload'];
+if(@$_GET['play_sound'] == 'on') $header .= '&play_sound=on';
+if(@$_GET['list_down']  == 'on') $header .= '&list_down=on';
 
-if($_GET['dead_mode'] == 'on'){
+if(@$_GET['dead_mode'] == 'on'){
   $url = $header . '&dead_mode=on';
   echo <<< EOF
-<frameset rows="100, *, 20%" border="2" $option>
-<frame name="up" src="game_up.php{$url}&heaven_mode=on#game_top">
-<frame name="middle" src="game_play.php${url}#game_top">
-<frame name="bottom" src="game_play.php${header}&heaven_mode=on#game_top">
+<frameset rows="100, *, 20%"{$option}>
+<frame name="up" src="game_up.php{$url}&heaven_mode=on">
+<frame name="middle" src="game_play.php${url}">
+<frame name="bottom" src="game_play.php${header}&heaven_mode=on">
 
 EOF;
 }
 else{
   echo <<< EOF
-<frameset rows="100, *" border="1" $option>
-<frame name="up" src="game_up.php{$header}#game_top">
-<frame name="bottom" src="game_play.php${header}#game_top">
+<frameset rows="100, *"{$option}>
+<frame name="up" src="game_up.php{$header}">
+<frame name="bottom" src="game_play.php${header}">
 
 EOF;
 }
-?>
-<noframes><body>
-¥Õ¥ì¡¼¥àÈóÂÐ±þ¤Î¥Ö¥é¥¦¥¶¤ÎÊý¤ÏÍøÍÑ¤Ç¤­¤Þ¤»¤ó¡£
-</body></noframes>
-</frameset></html>
+OutputFrameHTMLFooter();

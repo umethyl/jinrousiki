@@ -1,328 +1,295 @@
 <?php
-require_once(dirname(__FILE__) . '/include/functions.php');
+require_once('include/init.php');
+$INIT_CONF->LoadFile('room_class', 'user_class', 'icon_functions');
+$INIT_CONF->LoadClass('SESSION', 'ROOM_CONF', 'GAME_CONF', 'MESSAGE');
+$INIT_CONF->LoadRequest('RequestUserManager'); //å¼•æ•°ã‚’å–å¾—
+$DB_CONF->Connect(); //DB æ¥ç¶š
+$RQ_ARGS->entry ? EntryUser() : OutputEntryUserPage();
+$DB_CONF->Disconnect(); //DB æ¥ç¶šè§£é™¤
 
-EncodePostData();//¥İ¥¹¥È¤µ¤ì¤¿Ê¸»úÎó¤ò¥¨¥ó¥³¡¼¥É¤¹¤ë
+//-- é–¢æ•° --//
+//ãƒ¦ãƒ¼ã‚¶ã‚’ç™»éŒ²ã™ã‚‹
+function EntryUser(){
+  global $DEBUG_MODE, $GAME_CONF, $MESSAGE, $RQ_ARGS, $SESSION;
 
-if($_GET['room_no'] == ''){
-  OutputActionResult('Â¼¿ÍÅĞÏ¿ [Â¼ÈÖ¹æ¥¨¥é¡¼]',
-		     '¥¨¥é¡¼¡§Â¼¤ÎÈÖ¹æ¤¬Àµ¾ï¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó¡£<br>'."\n" .
-		     '<a href="index.php">¢«Ìá¤ë</a>');
-}
+  extract($RQ_ARGS->ToArray()); //å¼•æ•°ã‚’å–å¾—
 
-$dbHandle = ConnectDatabase(); //DB ÀÜÂ³
+  //è¨˜å…¥æ¼ã‚Œãƒã‚§ãƒƒã‚¯
+  $title = 'æ‘äººç™»éŒ² [å…¥åŠ›ã‚¨ãƒ©ãƒ¼]';
+  $sentence = 'ãŒç©ºã§ã™ (ç©ºç™½ã¨æ”¹è¡Œã‚³ãƒ¼ãƒ‰ã¯è‡ªå‹•ã§å‰Šé™¤ã•ã‚Œã¾ã™)';
+  if($uname == '')       OutputActionResult($title, 'ãƒ¦ãƒ¼ã‚¶å'     . $sentence);
+  if($handle_name == '') OutputActionResult($title, 'æ‘äººã®åå‰'   . $sentence);
+  if($password == '')    OutputActionResult($title, 'ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰'   . $sentence);
+  if($profile == '')     OutputActionResult($title, 'ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«' . $sentence);
+  if(empty($sex))        OutputActionResult($title, 'æ€§åˆ¥ãŒå…¥åŠ›ã•ã‚Œã¦ã„ã¾ã›ã‚“');
+  if(empty($icon_no))    OutputActionResult($title, 'ã‚¢ã‚¤ã‚³ãƒ³ç•ªå·ãŒå…¥åŠ›ã•ã‚Œã¦ã„ã¾ã›ã‚“');
 
-if($_POST['command'] == 'entry'){
-  // if($GAME_CONF->trip) require_once(dirname(__FILE__) . '/include/convert_trip.php');
-  EntryUser((int)$_GET['room_no'], $_POST['uname'], $_POST['handle_name'], (int)$_POST['icon_no'],
-	     $_POST['profile'], $_POST['password'], $_POST['sex'], $_POST['role']);
-}
-else{
-  OutputEntryUserPage((int)$_GET['room_no']);
-}
-
-DisconnectDatabase($dbHandle); //DB ÀÜÂ³²ò½ü
-
-// ´Ø¿ô //
-//¥æ¡¼¥¶¤òÅĞÏ¿¤¹¤ë
-function EntryUser($room_no, $uname, $handle_name, $icon_no, $profile, $password, $sex, $role){
-  global $GAME_CONF, $MESSAGE;
-
-  //¥È¥ê¥Ã¥×¡õ¥¨¥¹¥±¡¼¥×½èÍı
-  ConvertTrip($uname);
-  ConvertTrip($handle_name);
-  EscapeStrings($profile, false);
-  EscapeStrings($password);
-
-  //µ­ÆşÏ³¤ì¥Á¥§¥Ã¥¯
-  if($uname == '' || $handle_name == '' || $icon_no == '' || $profile == '' ||
-     $password == '' || $sex == '' || $role == ''){
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [ÆşÎÏ¥¨¥é¡¼]',
-		       'µ­ÆşÏ³¤ì¤¬¤¢¤ê¤Ş¤¹¡£<br>'."\n" .
-		       'Á´ÉôÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£');
+  //æ–‡å­—æ•°åˆ¶é™ãƒã‚§ãƒƒã‚¯
+  if(strlen($uname) > $GAME_CONF->entry_uname_limit){
+    OutputActionResult($title, 'ãƒ¦ãƒ¼ã‚¶åã¯' . $GAME_CONF->entry_uname_limit . 'æ–‡å­—ã¾ã§');
+  }
+  if(strlen($handle_name) > $GAME_CONF->entry_uname_limit){
+    OutputActionResult($title, 'æ‘äººã®åå‰ã¯' . $GAME_CONF->entry_uname_limit . 'æ–‡å­—ã¾ã§');
+  }
+  if(strlen($profile) > $GAME_CONF->entry_profile_limit){
+    OutputActionResult($title, 'ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã¯' . $GAME_CONF->entry_profile_limit . 'æ–‡å­—ã¾ã§');
   }
 
-  //¥·¥¹¥Æ¥à¥æ¡¼¥¶¥Á¥§¥Ã¥¯
-  if($uname == 'dummy_boy' || $uname == 'system' ||
-     $handle_name == '¿ÈÂå¤ï¤ê·¯' || $handle_name == '¥·¥¹¥Æ¥à'){
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [ÆşÎÏ¥¨¥é¡¼]',
-		       '²¼µ­¤ÎÌ¾Á°¤ÏÅĞÏ¿¤Ç¤­¤Ş¤»¤ó¡£<br>'."\n" .
-		       '¥æ¡¼¥¶Ì¾¡§dummy_boy or system<br>'."\n" .
-		       'Â¼¿Í¤ÎÌ¾Á°¡§¿ÈÂå¤ï¤ê·¯ or ¥·¥¹¥Æ¥à');
+  //ä¾‹å¤–ãƒã‚§ãƒƒã‚¯
+  if($uname == 'dummy_boy' || $uname == 'system'){
+    OutputActionResult($title, 'ãƒ¦ãƒ¼ã‚¶åã€Œ' . $uname . 'ã€ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“');
+  }
+  if($handle_name == 'èº«ä»£ã‚ã‚Šå›' || $handle_name == 'ã‚·ã‚¹ãƒ†ãƒ '){
+    OutputActionResult($title, 'æ‘äººåã€Œ' . $handle_name . 'ã€ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“');
+  }
+  if($sex != 'male' && $sex != 'female') OutputActionResult($title, 'ç„¡åŠ¹ãªæ€§åˆ¥ã§ã™');
+
+  $query = 'SELECT COUNT(icon_no) FROM user_icon WHERE icon_no = ' . $icon_no;
+  if($icon_no < 1 || FetchResult($query) < 1) OutputActionResult($title, 'ç„¡åŠ¹ãªã‚¢ã‚¤ã‚³ãƒ³ç•ªå·ã§ã™');
+
+  //ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ãƒ­ãƒƒã‚¯
+  if(! LockTable()){
+    OutputActionResult('æ‘äººç™»éŒ² [ã‚µãƒ¼ãƒã‚¨ãƒ©ãƒ¼]',
+		       'ã‚µãƒ¼ãƒãŒæ··é›‘ã—ã¦ã„ã¾ã™ã€‚<br>'."\n".'å†åº¦ç™»éŒ²ã—ã¦ãã ã•ã„');
   }
 
-  //¹àÌÜÈï¤ê¥Á¥§¥Ã¥¯
-  $query = "SELECT COUNT(uname) FROM user_entry WHERE room_no = $room_no";
+  //é …ç›®è¢«ã‚Šãƒã‚§ãƒƒã‚¯
+  //æ¯”è¼ƒæ¼”ç®—å­ã¯å¤§æ–‡å­—ãƒ»å°æ–‡å­—ã‚’åŒºåˆ¥ã—ãªã„ã®ã§ã‚¯ã‚¨ãƒªã§ç›´ã«åˆ¤å®šã™ã‚‹
+  $query = "SELECT COUNT(uname) FROM user_entry WHERE room_no = {$room_no} AND ";
 
-  //¥æ¡¼¥¶Ì¾¡¢Â¼¿ÍÌ¾
-  $sql = mysql_query("$query AND (uname = '$uname' OR handle_name = '$handle_name') AND user_no > 0");
-  if(mysql_result($sql, 0, 0) != 0){
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [½ÅÊ£ÅĞÏ¿¥¨¥é¡¼]',
-		       '¥æ¡¼¥¶Ì¾¡¢¤Ş¤¿¤ÏÂ¼¿ÍÌ¾¤¬´û¤ËÅĞÏ¿¤·¤Æ¤¢¤ê¤Ş¤¹¡£<br>'."\n" .
-		       'ÊÌ¤ÎÌ¾Á°¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£');
+  //ã‚­ãƒƒã‚¯ã•ã‚ŒãŸäººã¨åŒã˜ãƒ¦ãƒ¼ã‚¶å
+  if(FetchResult($query . "uname = '{$uname}' AND live = 'kick'") > 0){
+    OutputActionResult('æ‘äººç™»éŒ² [ã‚­ãƒƒã‚¯ã•ã‚ŒãŸãƒ¦ãƒ¼ã‚¶]',
+		       'ã‚­ãƒƒã‚¯ã•ã‚ŒãŸäººã¨åŒã˜ãƒ¦ãƒ¼ã‚¶åã¯ä½¿ç”¨ã§ãã¾ã›ã‚“ã€‚ (æ‘äººåã¯å¯)<br>'."\n" .
+		       'åˆ¥ã®åå‰ã«ã—ã¦ãã ã•ã„ã€‚', '', true);
   }
 
-  //¥­¥Ã¥¯¤µ¤ì¤¿¿Í¤ÈÆ±¤¸¥æ¡¼¥¶Ì¾
-  $sql = mysql_query("$query AND uname = '$uname' AND user_no = -1");
-  if(mysql_result($sql, 0, 0) != 0){
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [¥­¥Ã¥¯¤µ¤ì¤¿¥æ¡¼¥¶]',
-		       '¥­¥Ã¥¯¤µ¤ì¤¿¿Í¤ÈÆ±¤¸¥æ¡¼¥¶Ì¾¤Ï»ÈÍÑ¤Ç¤­¤Ş¤»¤ó¡£ (Â¼¿ÍÌ¾¤Ï²Ä)<br>'."\n" .
-		       'ÊÌ¤ÎÌ¾Á°¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£');
+  //ãƒ¦ãƒ¼ã‚¶åã€æ‘äººå
+  $query .= "live = 'live' AND ";
+  if(FetchResult($query . "(uname = '{$uname}' OR handle_name = '{$handle_name}')") > 0){
+    OutputActionResult('æ‘äººç™»éŒ² [é‡è¤‡ç™»éŒ²ã‚¨ãƒ©ãƒ¼]',
+		       'ãƒ¦ãƒ¼ã‚¶åã€ã¾ãŸã¯æ‘äººåãŒæ—¢ã«ç™»éŒ²ã—ã¦ã‚ã‚Šã¾ã™ã€‚<br>'."\n" .
+		       'åˆ¥ã®åå‰ã«ã—ã¦ãã ã•ã„ã€‚', '', true);
   }
+  //OutputActionResult('ãƒˆãƒªãƒƒãƒ—ãƒ†ã‚¹ãƒˆ', $uname . '<br>' . $handle_name);
 
-  //IP¥¢¥É¥ì¥¹¥Á¥§¥Ã¥¯
-  if($GAME_CONF->entry_one_ip_address){
-    $ip_address = $_SERVER['REMOTE_ADDR']; //¥æ¡¼¥¶¤ÎIP¥¢¥É¥ì¥¹¤ò¼èÆÀ
-    $sql = mysql_query("$query AND ip_address = '$ip_address' AND user_no > 0");
-    if(mysql_result($sql, 0, 0) != 0){
-      OutputActionResult('Â¼¿ÍÅĞÏ¿ [Â¿½ÅÅĞÏ¿¥¨¥é¡¼]', 'Â¿½ÅÅĞÏ¿¤Ï¤Ç¤­¤Ş¤»¤ó¡£');
+  //IPã‚¢ãƒ‰ãƒ¬ã‚¹ãƒã‚§ãƒƒã‚¯
+  $ip_address = $_SERVER['REMOTE_ADDR']; //ãƒ¦ãƒ¼ã‚¶ã®IPã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—
+  if(! $DEBUG_MODE){
+    if(CheckBlackList()){
+      OutputActionResult('æ‘äººç™»éŒ² [å…¥æ‘åˆ¶é™]', 'å…¥æ‘åˆ¶é™ãƒ›ã‚¹ãƒˆã§ã™ã€‚', '', true);
+    }
+    elseif($GAME_CONF->entry_one_ip_address &&
+	   FetchResult("{$query} ip_address = '{$ip_address}'") > 0){
+      OutputActionResult('æ‘äººç™»éŒ² [å¤šé‡ç™»éŒ²ã‚¨ãƒ©ãƒ¼]', 'å¤šé‡ç™»éŒ²ã¯ã§ãã¾ã›ã‚“ã€‚', '', true);
     }
   }
 
-  //¥Æ¡¼¥Ö¥ë¤ò¥í¥Ã¥¯
-  if(! mysql_query('LOCK TABLES room WRITE, user_entry WRITE, talk WRITE, admin_manage READ')){
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [¥µ¡¼¥Ğ¥¨¥é¡¼]',
-		       '¥µ¡¼¥Ğ¤¬º®»¨¤·¤Æ¤¤¤Ş¤¹¡£<br>'."\n" .
-		       'ºÆÅÙÅĞÏ¿¤·¤Æ¤¯¤À¤µ¤¤');
+  //DBã‹ã‚‰æœ€å¤§äººæ•°ã‚’å–å¾—
+  $ROOM = RoomDataSet::LoadEntryUser($room_no);
+
+  $request = new RequestBase();
+  $request->room_no = $room_no;
+  $request->entry_user = true;
+  $USERS = new UserDataSet($request);
+  //PrintData($USERS); //ãƒ†ã‚¹ãƒˆç”¨
+
+  $ROOM = RoomDataSet::LoadEntryUser($room_no); //DBã‹ã‚‰æœ€å¤§äººæ•°ã‚’å–å¾—
+  $user_no = count($USERS->names) + 1; //KICK ã•ã‚ŒãŸä½äººã‚‚å«ã‚ãŸæ–°ã—ã„ç•ªå·ã‚’æŒ¯ã‚‹
+  $user_count = $USERS->GetUserCount(); //ç¾åœ¨ã® KICK ã•ã‚Œã¦ã„ãªã„ä½äººã®æ•°ã‚’å–å¾—
+
+  //å®šå“¡ã‚ªãƒ¼ãƒãƒ¼ã—ã¦ã„ã‚‹ã¨ã
+  if($user_count >= $ROOM->max_user){
+    OutputActionResult('æ‘äººç™»éŒ² [å…¥æ‘ä¸å¯]', 'æ‘ãŒæº€å“¡ã§ã™ã€‚', '', true);
+  }
+  if(! $ROOM->IsBeforeGame() || $ROOM->status != 'waiting'){
+    OutputActionResult('æ‘äººç™»éŒ² [å…¥æ‘ä¸å¯]', 'ã™ã§ã«ã‚²ãƒ¼ãƒ ãŒé–‹å§‹ã•ã‚Œã¦ã„ã¾ã™', '', true);
   }
 
-  //¥¯¥Ã¥­¡¼¤Îºï½ü
-  $system_time = TZTime(); //¸½ºß»ş¹ï¤ò¼èÆÀ
-  $cookie_time = $system_time - 3600;
+  //ã‚¯ãƒƒã‚­ãƒ¼ã®å‰Šé™¤
+  $ROOM->system_time = TZTime(); //ç¾åœ¨æ™‚åˆ»ã‚’å–å¾—
+  $cookie_time = $ROOM->system_time - 3600;
   setcookie('day_night',  '', $cookie_time);
   setcookie('vote_times', '', $cookie_time);
   setcookie('objection',  '', $cookie_time);
 
-  //DB¤«¤é¥æ¡¼¥¶No¤ò¹ß½ç¤Ë¼èÆÀ
-  $sql = mysql_query("SELECT user_no FROM user_entry WHERE room_no = $room_no
-			AND user_no > 0 ORDER BY user_no DESC");
-  $array = mysql_fetch_assoc($sql);
-  $user_no = (int)$array['user_no'] + 1; //ºÇ¤âÂç¤­¤¤ No + 1
-
-  //DB¤«¤éºÇÂç¿Í¿ô¤ò¼èÆÀ
-  $sql = mysql_query("SELECT day_night, status, max_user FROM room WHERE room_no = $room_no");
-  $array  = mysql_fetch_assoc($sql);
-  $day_night = $array['day_night'];
-  $status    = $array['status'];
-  $max_user  = $array['max_user'];
-
-  //Äê°÷¥ª¡¼¥Ğ¡¼¤·¤Æ¤¤¤ë¤È¤­
-  if($user_no > $max_user || $day_night != 'beforegame' || $status != 'waiting'){
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [ÆşÂ¼ÉÔ²Ä]',
-		       'Â¼¤¬´û¤ËËş°÷¤«¡¢¥²¡¼¥à¤¬³«»Ï¤µ¤ì¤Æ¤¤¤Ş¤¹¡£', '', true);
-  }
-
-  //¥»¥Ã¥·¥ç¥ó³«»Ï
-  session_start();
-  $session_id = '';
-
-  do{ //DB ¤ËÅĞÏ¿¤µ¤ì¤Æ¤¤¤ë¥»¥Ã¥·¥ç¥ó ID ¤ÈÈï¤é¤Ê¤¤¤è¤¦¤Ë¤¹¤ë
-    session_regenerate_id();
-    $session_id = session_id();
-    $sql = mysql_query("SELECT COUNT(room_no) FROM user_entry, admin_manage
-			WHERE user_entry.session_id = '$session_id'
-			OR admin_manage.session_id = '$session_id'");
-  }while(mysql_result($sql, 0, 0) != 0);
-
-  //DB ¤Ë¥æ¡¼¥¶¥Ç¡¼¥¿ÅĞÏ¿
-  $entry = mysql_query("INSERT INTO user_entry(room_no, user_no, uname, handle_name,
-			icon_no, profile, sex, password, role, live, session_id,
-			last_words, ip_address, last_load_day_night)
-			VALUES($room_no, $user_no, '$uname', '$handle_name', $icon_no,
-			'$profile', '$sex', '$password', '$role', 'live',
-			'$session_id', '', '$ip_address', 'beforegame')");
-
-  //ÆşÂ¼¥á¥Ã¥»¡¼¥¸
-  InsertTalk($room_no, 0, 'beforegame system', 'system', $system_time,
-	     $handle_name . ' ' . $MESSAGE->entry_user, NULL, 0);
-
-  mysql_query('COMMIT'); //°ì±ş¥³¥ß¥Ã¥È
-  //ÅĞÏ¿¤¬À®¸ù¤·¤Æ¤¤¤Æ¡¢º£²ó¤Î¥æ¡¼¥¶¤¬ºÇ¸å¤Î¥æ¡¼¥¶¤Ê¤éÊç½¸¤ò½ªÎ»¤¹¤ë
-  // if($entry && ($user_no == $max_user))
-  //   mysql_query("update room set status = 'playing' where room_no = $room_no");
-
-  if($entry){
-    $url = "game_frame.php?room_no=$room_no";
-    OutputActionResult('Â¼¿ÍÅĞÏ¿',
-		       $user_no . ' ÈÖÌÜ¤ÎÂ¼¿ÍÅĞÏ¿´°Î»¡¢Â¼¤Î´ó¤ê¹ç¤¤¥Ú¡¼¥¸¤ËÈô¤Ó¤Ş¤¹¡£<br>'."\n" .
-		       'ÀÚ¤êÂØ¤ï¤é¤Ê¤¤¤Ê¤é <a href="' . $url. '">¤³¤³</a> ¡£',
+  //DB ã«ãƒ¦ãƒ¼ã‚¶ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²
+  if(InsertUser($room_no, $uname, $handle_name, $password, $user_no, $icon_no, $profile,
+		$sex, $role, $SESSION->Get(true))){
+    $ROOM->Talk($handle_name . ' ' . $MESSAGE->entry_user); //å…¥æ‘ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+    $url = 'game_frame.php?room_no=' . $room_no;
+    $user_count++;
+    OutputActionResult('æ‘äººç™»éŒ²',
+		       $user_count . ' ç•ªç›®ã®æ‘äººç™»éŒ²å®Œäº†ã€æ‘ã®å¯„ã‚Šåˆã„ãƒšãƒ¼ã‚¸ã«é£›ã³ã¾ã™ã€‚<br>'."\n" .
+		       'åˆ‡ã‚Šæ›¿ã‚ã‚‰ãªã„ãªã‚‰ <a href="' . $url. '">ã“ã“</a> ã€‚',
 		       $url, true);
   }
   else{
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [¥Ç¡¼¥¿¥Ù¡¼¥¹¥µ¡¼¥Ğ¥¨¥é¡¼]',
-		       '¥Ç¡¼¥¿¥Ù¡¼¥¹¥µ¡¼¥Ğ¤¬º®»¨¤·¤Æ¤¤¤Ş¤¹¡£<br>'."\n" .
-		       '»ş´Ö¤òÃÖ¤¤¤ÆºÆÅÙÅĞÏ¿¤·¤Æ¤¯¤À¤µ¤¤¡£', '', true);
+    OutputActionResult('æ‘äººç™»éŒ² [ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚µãƒ¼ãƒã‚¨ãƒ©ãƒ¼]',
+		       'ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚µãƒ¼ãƒãŒæ··é›‘ã—ã¦ã„ã¾ã™ã€‚<br>'."\n" .
+		       'æ™‚é–“ã‚’ç½®ã„ã¦å†åº¦ç™»éŒ²ã—ã¦ãã ã•ã„ã€‚', '', true);
   }
-  mysql_query('UNLOCK TABLES'); //¥í¥Ã¥¯²ò½ü
+  UnlockTable(); //ãƒ­ãƒƒã‚¯è§£é™¤
 }
 
-//¥È¥ê¥Ã¥×ÊÑ´¹½èÍı
-function ConvertTrip(&$str){
-  global $GAME_CONF;
+//ãƒ¦ãƒ¼ã‚¶ç™»éŒ²ç”»é¢è¡¨ç¤º
+function OutputEntryUserPage(){
+  global $SERVER_CONF, $GAME_CONF, $ICON_CONF, $ROLE_DATA, $RQ_ARGS;
 
-  if($GAME_CONF->trip){ //¤Ş¤À¼ÂÁõ¤µ¤ì¤Æ¤¤¤Ş¤»¤ó
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [ÆşÎÏ¥¨¥é¡¼]',
-                       '¥È¥ê¥Ã¥×ÊÑ´¹½èÍı¤Ï¼ÂÁõ¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£<br>'."\n" .
-                       '´ÉÍı¼Ô¤ËÌä¤¤¹ç¤ï¤»¤Æ¤¯¤À¤µ¤¤¡£');
-    // if(strrpos($str, '¡ô') !== false){
-    //   OutputActionResult('Â¼¿ÍÅĞÏ¿ [ÆşÎÏ¥¨¥é¡¼]',
-    // 			 'Á´³Ñ "¡ô" ¤òÍÑ¤¤¤¿¥È¥ê¥Ã¥×¤Ë¤ÏÌ¤ÂĞ±ş¤Ç¤¹¡£<br>'."\n" .
-    // 			 'È¾³Ñ "#" ¤ò»ÈÍÑ¤·¤Æ²¼¤µ¤¤¡£');
-    // }
-    // $str = filterKey2Trip($str, 'cp51932'); //Ê¸»ú¥³¡¼¥É¤Ï convert_trip.php »²¾È
+  extract($RQ_ARGS->ToArray()); //å¼•æ•°ã‚’å–å¾—
+  $ROOM = RoomDataSet::LoadEntryUserPage($room_no);
+  $sentence = $room_no . ' ç•ªåœ°ã®æ‘ã¯';
+  if(is_null($ROOM->id))  OutputActionResult('æ‘äººç™»éŒ² [æ‘ç•ªå·ã‚¨ãƒ©ãƒ¼]', $sentence . 'å­˜åœ¨ã—ã¾ã›ã‚“');
+  if($ROOM->IsFinished()) OutputActionResult('æ‘äººç™»éŒ² [å…¥æ‘ä¸å¯]',  $sentence . 'çµ‚äº†ã—ã¾ã—ãŸ');
+  if($ROOM->status != 'waiting'){
+    OutputActionResult('æ‘äººç™»éŒ² [å…¥æ‘ä¸å¯]', $sentence . 'ã™ã§ã«ã‚²ãƒ¼ãƒ ãŒé–‹å§‹ã•ã‚Œã¦ã„ã¾ã™ã€‚');
   }
-  else{
-    if(strrpos($str, '#') !== false || strrpos($str, '¡ô') !== false){
-      OutputActionResult('Â¼¿ÍÅĞÏ¿ [ÆşÎÏ¥¨¥é¡¼]',
-			 '¥È¥ê¥Ã¥×¤Ï»ÈÍÑÉÔ²Ä¤Ç¤¹¡£<br>'."\n" .
-			 '"#" ¤ÎÊ¸»ú¤â»ÈÍÑÉÔ²Ä¤Ç¤¹¡£');
-    }
+  $ROOM->ParseOption(true);
+  $trip = '(ãƒˆãƒªãƒƒãƒ—ä½¿ç”¨' . ($GAME_CONF->trip ? 'å¯èƒ½' : 'ä¸å¯') . ')';
+
+  OutputHTMLHeader($SERVER_CONF->title .'[æ‘äººç™»éŒ²]', 'entry_user');
+  $male_checked   = '';
+  $female_checked = '';
+  switch($RQ_ARGS->sex){
+  case 'male':
+    $male_checked   = ' checked=""';
+    break;
+
+  case 'female':
+    $female_checked = ' checked=""';
+    break;
   }
-  EscapeStrings($str);
-}
-
-//¥æ¡¼¥¶ÅĞÏ¿²èÌÌÉ½¼¨
-function OutputEntryUserPage($room_no){
-  global $ICON_CONF;
-  $sql = mysql_query("select room_name, room_comment, status, game_option, option_role
-			from room where room_no = $room_no");
-  if(mysql_num_rows($sql) == 0){
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [Â¼ÈÖ¹æ¥¨¥é¡¼]', "No.$room_no ÈÖÃÏ¤ÎÂ¼¤ÏÂ¸ºß¤·¤Ş¤»¤ó¡£");
-  }
-
-  $array = mysql_fetch_assoc($sql);
-  $room_name    = $array['room_name'];
-  $room_comment = $array['room_comment'];
-  $status       = $array['status'];
-  $game_option  = $array['game_option'];
-  $option_role  = $array['option_role'];
-  if($status != 'waiting'){
-    OutputActionResult('Â¼¿ÍÅĞÏ¿ [ÆşÂ¼ÉÔ²Ä]', 'Â¼¤¬´û¤ËËş°÷¤«¡¢¥²¡¼¥à¤¬³«»Ï¤µ¤ì¤Æ¤¤¤Ş¤¹¡£');
-  }
-
-  //¥æ¡¼¥¶¥¢¥¤¥³¥ó°ìÍ÷
-  $sql_icon = mysql_query("select icon_no, icon_name, icon_filename, icon_width, icon_height, color
-				from user_icon where icon_no > 0 order by icon_no");
-  $count  = mysql_num_rows($sql_icon); //¥¢¥¤¥Æ¥à¤Î¸Ä¿ô¤ò¼èÆÀ
-  $trip_str = '(¥È¥ê¥Ã¥×»ÈÍÑ' . ($GAME_CONF->trip ? '²ÄÇ½' : 'ÉÔ²Ä') . ')';
-
-  OutputHTMLHeader('Æò¤Ï¿ÍÏµ¤Ê¤ê¤ä¡©[Â¼¿ÍÅĞÏ¿]', 'entry_user');
-  echo <<<HEADER
+  echo <<<EOF
+<script type="text/javascript" src="javascript/submit_icon_search.js"></script>
 </head>
 <body>
-<a href="index.php">¢«Ìá¤ë</a><br>
-<form method="POST" action="user_manager.php?room_no=$room_no">
-<input type="hidden" name="command" value="entry">
+<a href="./">â†æˆ»ã‚‹</a><br>
+<form method="POST" action="user_manager.php?room_no={$ROOM->id}">
 <div align="center">
 <table class="main">
-<tr><td><img src="img/user_regist_title.gif"></td></tr>
-<tr><td class="title">$room_name Â¼<img src="img/user_regist_top.gif"></td></tr>
-<tr><td class="number">¡Á{$room_comment}¡Á [{$room_no} ÈÖÃÏ]</td></tr>
+<tr><td><img src="img/entry_user/title.gif" alt="ç”³è«‹æ›¸"></td></tr>
+<tr><td class="title">{$ROOM->name} æ‘<img src="img/entry_user/top.gif" alt="ã¸ã®ä½æ°‘ç™»éŒ²ã‚’ç”³è«‹ã—ã¾ã™"></td></tr>
+<tr><td class="number">ï½{$ROOM->comment}ï½ [{$ROOM->id} ç•ªåœ°]</td></tr>
 <tr><td>
 <table class="input">
 <tr>
-<td class="img"><img src="img/user_regist_uname.gif"></td>
-<td><input type="text" name="uname" size="30" maxlength="30"></td>
-<td class="explain">ÉáÃÊ¤ÏÉ½¼¨¤µ¤ì¤º¡¢Â¾¤Î¥æ¡¼¥¶Ì¾¤¬¤ï¤«¤ë¤Î¤Ï<br>»àË´¤·¤¿¤È¤­¤È¥²¡¼¥à½ªÎ»¸å¤Î¤ß¤Ç¤¹{$trip_str}</td>
+<td class="img"><img src="img/entry_user/uname.gif" alt="ãƒ¦ãƒ¼ã‚¶å"></td>
+<td><input type="text" name="uname" size="30" maxlength="30" value="{$RQ_ARGS->uname}"></td>
+<td class="explain">æ™®æ®µã¯è¡¨ç¤ºã•ã‚Œãšã€ä»–ã®ãƒ¦ãƒ¼ã‚¶åãŒã‚ã‹ã‚‹ã®ã¯<br>æ­»äº¡ã—ãŸã¨ãã¨ã‚²ãƒ¼ãƒ çµ‚äº†å¾Œã®ã¿ã§ã™{$trip}</td>
 </tr>
 <tr>
-<td class="img"><img src="img/user_regist_handle_name.gif"></td>
-<td><input type="text" name="handle_name" size="30" maxlength="30"></td>
-<td class="explain">Â¼¤ÇÉ½¼¨¤µ¤ì¤ëÌ¾Á°¤Ç¤¹</td>
+<td class="img"><img src="img/entry_user/handle_name.gif" alt="æ‘äººã®åå‰"></td>
+<td><input type="text" name="handle_name" size="30" maxlength="30" value="{$RQ_ARGS->handle_name}"></td>
+<td class="explain">æ‘ã§è¡¨ç¤ºã•ã‚Œã‚‹åå‰ã§ã™</td>
 </tr>
 <tr>
-<td class="img"><img src="img/user_regist_password.gif"></td>
+<td class="img"><img src="img/entry_user/password.gif" alt="ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰"></td>
 <td><input type="password" name="password" size="30" maxlength="30"></td>
-<td class="explain">¥»¥Ã¥·¥ç¥ó¤¬ÀÚ¤ì¤¿¾ì¹ç¤Ë¥í¥°¥¤¥ó»ş¤Ë»È¤¤¤Ş¤¹<br> (°Å¹æ²½¤µ¤ì¤Æ¤¤¤Ê¤¤¤Î¤ÇÍ×Ãí°Õ)</td>
+<td class="explain">ã‚»ãƒƒã‚·ãƒ§ãƒ³ãŒåˆ‡ã‚ŒãŸå ´åˆã®ãƒ­ã‚°ã‚¤ãƒ³æ™‚ã«ä½¿ã„ã¾ã™<br> (æš—å·åŒ–ã•ã‚Œã¦ã„ãªã„ã®ã§è¦æ³¨æ„)</td>
 </tr>
 <tr>
-<td class="img"><img src="img/user_regist_sex.gif"></td>
+<td class="img"><img src="img/entry_user/sex.gif" alt="æ€§åˆ¥"></td>
 <td class="img">
-<label for="male"><img src="img/user_regist_sex_male.gif"><input type="radio" id="male" name="sex" value="male"></label>
-<label for="female"><img src="img/user_regist_sex_female.gif"><input type="radio" id="female" name="sex" value="female"></label>
+<label for="male"><img src="img/entry_user/sex_male.gif" alt="ç”·æ€§"><input type="radio" id="male" name="sex" value="male"{$male_checked}></label>
+<label for="female"><img src="img/entry_user/sex_female.gif" alt="å¥³æ€§"><input type="radio" id="female" name="sex" value="female"{$female_checked}></label>
 </td>
-<td class="explain">ÆÃ¤Ë°ÕÌ£¤ÏÌµ¤¤¤«¤â¡Ä¡Ä</td>
+<td class="explain">ç‰¹ã«æ„å‘³ã¯ç„¡ã„ã‹ã‚‚â€¦â€¦</td>
 </tr>
 <tr>
-<td class="img"><img src="img/user_regist_profile.gif"></td>
+<td class="img"><img src="img/entry_user/profile.gif" alt="ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«"></td>
 <td colspan="2">
-<textarea name="profile" cols="30" rows="2"></textarea>
+<textarea name="profile" cols="30" rows="2">{$RQ_ARGS->profile}</textarea>
 <input type="hidden" name="role" value="none">
 </td>
 </tr>
 
-HEADER;
+EOF;
 
-  if(strpos($game_option, 'wish_role') !== false){
-    echo <<<IMAGE
+  if($ROOM->IsOption('wish_role')){
+    echo <<<EOF
 <tr>
-<td class="role"><img src="img/user_regist_role.gif"></td>
-<td>
-<label for="none"><img src="img/user_regist_role_none.gif"><input type="radio" id="none" name="role" value="none"></label>
-<label for="human"><img src="img/user_regist_role_human.gif"><input type="radio" id="human" name="role" value="human"></label><br>
-<label for="wolf"><img src="img/user_regist_role_wolf.gif"><input type="radio" id="wolf" name="role" value="wolf"></label>
-<label for="mage"><img src="img/user_regist_role_mage.gif"><input type="radio" id="mange" name="role" value="mage"></label><br>
-<label for="necromancer"><img src="img/user_regist_role_necromancer.gif"><input type="radio" id="necromancer" name="role" value="necromancer"></label>
-<label for="mad"><img src="img/user_regist_role_mad.gif"><input type="radio" id="mand" name="role" value="mad"></label><br>
-<label for="guard"><img src="img/user_regist_role_guard.gif"><input type="radio" id="guard" name="role" value="guard"></label>
-<label for="common"><img src="img/user_regist_role_common.gif"><input type="radio" id="common" name="role" value="common"></label><br>
-<label for="fox"><img src="img/user_regist_role_fox.gif"><input type="radio" id="fox" name="role" value="fox"></label>
+<td class="role"><img src="img/entry_user/role.gif" alt="å½¹å‰²å¸Œæœ›"></td>
+<td colspan="2">
 
-IMAGE;
-    if(strpos($option_role, 'poison') !== false){
-      echo '<label for="poison"><img src="img/user_regist_role_poison.gif">' .
-	'<input type="radio" id="poison" name="role" value="poison"></label><br>';
+EOF;
+
+    $wish_role_list = array('none');
+    if($ROOM->IsChaosWish()){
+      array_push($wish_role_list, 'human', 'mage', 'necromancer', 'medium', 'priest', 'guard',
+		 'common', 'poison', 'poison_cat', 'pharmacist', 'assassin', 'mind_scanner',
+		 'jealousy', 'brownie', 'doll', 'escaper', 'wolf', 'mad', 'fox', 'child_fox',
+		 'cupid', 'angel', 'quiz', 'vampire', 'chiroptera', 'fairy', 'ogre', 'yaksa',
+		 'mania', 'unknown_mania');
     }
-    elseif(strpos($option_role, 'cupid') !== false){
-      ;
+    elseif($ROOM->IsOption('gray_random')){
+      array_push($wish_role_list, 'human', 'wolf', 'mad', 'fox');
     }
     else{
-      echo '<br>';
+      array_push($wish_role_list,  'human', 'wolf');
+      if($ROOM->IsQuiz()){
+	array_push($wish_role_list, 'mad', 'common', 'fox');
+      }
+      else{
+	array_push($wish_role_list, 'mage', 'necromancer', 'mad', 'guard', 'common');
+	if($ROOM->IsOption('detective')) $wish_role_list[] = 'detective_common';
+	$wish_role_list[] = 'fox';
+      }
+      if($ROOM->IsOption('poison')) $wish_role_list[] = 'poison';
+      if($ROOM->IsOption('assassin')) $wish_role_list[] = 'assassin';
+      if($ROOM->IsOption('boss_wolf')) $wish_role_list[] = 'boss_wolf';
+      if($ROOM->IsOption('poison_wolf')){
+	array_push($wish_role_list, 'poison_wolf', 'pharmacist');
+      }
+      if($ROOM->IsOption('possessed_wolf')) $wish_role_list[] = 'possessed_wolf';
+      if($ROOM->IsOption('sirius_wolf')) $wish_role_list[] = 'sirius_wolf';
+      if($ROOM->IsOption('cupid')) $wish_role_list[] = 'cupid';
+      if($ROOM->IsOption('medium')) array_push($wish_role_list, 'medium', 'mind_cupid');
+      if($ROOM->IsOptionGroup('mania') && ! in_array('mania', $wish_role_list)){
+	$wish_role_list[] = 'mania';
+      }
     }
-    if(strpos($option_role, 'cupid') !== false){
-      echo '<label for="cupid"><img src="img/user_regist_role_cupid.gif">' .
-	'<input type="radio" id="cupid" name="role" value="cupid"></label><br>';
+
+    echo "<table>\n<tr>";
+    $count = 0;
+    foreach($wish_role_list as $role){
+      if($count > 0 && $count % 4 == 0) echo "</tr>\n<tr>"; //4å€‹ã”ã¨ã«æ”¹è¡Œ
+      $count++;
+      $alt = 'â†' . ($role == 'none' ? 'ç„¡ã—' : $ROLE_DATA->main_role_list[$role]);
+      $checked = $RQ_ARGS->role == $role ? ' checked' : '';
+      echo <<<EOF
+<td><label for="{$role}"><input type="radio" id="{$role}" name="role" value="{$role}"{$checked}><img src="img/entry_user/role_{$role}.gif" alt="{$alt}"></label></td>
+EOF;
     }
-    echo '</td><td></td>';
+    echo "</tr>\n</table>\n</td>";
   }
   else{
     echo '<input type="hidden" name="role" value="none">';
   }
 
-  echo <<<BODY
-  </tr>
-  <tr>
-    <td class="submit" colspan="3"><input type="submit" value="Â¼¿ÍÅĞÏ¿¿½ÀÁ"></td>
-  </tr>
+  echo <<<EOF
+</tr>
+<tr>
+<td class="submit" colspan="3">
+<span class="explain">
+ãƒ¦ãƒ¼ã‚¶åã€æ‘äººã®åå‰ã€ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã®å‰å¾Œã®ç©ºç™½ãŠã‚ˆã³æ”¹è¡Œã‚³ãƒ¼ãƒ‰ã¯è‡ªå‹•ã§å‰Šé™¤ã•ã‚Œã¾ã™
+</span>
+<input type="submit" id="entry" name="entry" value="æ‘äººç™»éŒ²ç”³è«‹"></td>
+</tr>
 </table>
 </td></tr>
 
 <tr><td>
-<fieldset><legend><img src="img/user_regist_icon.gif"></legend>
+<fieldset><legend><img src="img/entry_user/icon.gif" alt="ã‚¢ã‚¤ã‚³ãƒ³"></legend>
 <table class="icon">
-<tr>
+<tr><td colspan="5">
+<input id="fix_number" type="radio" name="icon_no"><label for="fix_number">æ‰‹å…¥åŠ›</label>
+<input type="text" name="icon_no" size="10px">(åŠè§’è‹±æ•°ã§å…¥åŠ›ã—ã¦ãã ã•ã„)
+</td></tr>
+<tr><td colspan="5">
 
-BODY;
-
-  //É½¤Î½ĞÎÏ
-  for($i=0; $i < $count; $i++){
-    if($i > 0 && ($i % 5) == 0) echo '</tr><tr>'; //5¸Ä¤´¤È¤Ë²ş¹Ô
-    $array = mysql_fetch_assoc($sql_icon);
-    $icon_no       = $array['icon_no'];
-    $icon_name     = $array['icon_name'];
-    $icon_filename = $array['icon_filename'];
-    $icon_width    = $array['icon_width'];
-    $icon_height   = $array['icon_height'];
-    $color         = $array['color'];
-    $icon_location = $ICON_CONF->path . '/' . $icon_filename;
-
-    echo <<<ICON
-<td><label for="$icon_no"><img src="$icon_location" width="$icon_width" height="$icon_height" style="border-color:$color;">
-$icon_name<br><font color="$color">¢¡</font><input type="radio" id="$icon_no" name="icon_no" value="$icon_no"></label></td>
-
-ICON;
-  }
-
-  echo <<<FOOTER
+EOF;
+  OutputIconList('user_manager');
+  echo <<<EOF
 </tr></table>
 </fieldset>
 </td></tr>
@@ -330,6 +297,5 @@ ICON;
 </table></div></form>
 </body></html>
 
-FOOTER;
+EOF;
 }
-?>

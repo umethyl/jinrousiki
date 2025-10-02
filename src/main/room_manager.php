@@ -1,240 +1,825 @@
 <?php
-require_once(dirname(__FILE__) . '/include/functions.php');
+require_once('include/init.php');
+//$INIT_CONF->LoadFile('feedengine'); //RSSæ©Ÿèƒ½ã¯ãƒ†ã‚¹ãƒˆä¸­
+$INIT_CONF->LoadClass('ROOM_CONF', 'CAST_CONF', 'TIME_CONF', 'USER_ICON', 'ROOM_IMG',
+		      'MESSAGE', 'GAME_OPT_CAPT');
 
-if(! $dbHandle = ConnectDatabase(true, false)) return false; //DB ÀÜÂ³
-
-MaintenanceRoom();
+if(! $DB_CONF->Connect(true, false)) return false; //DB æ¥ç¶š
+if (in_array('version', $INIT_CONF->loaded->file)) MaintenanceRoom();
 EncodePostData();
-
-if($_POST['command'] == 'CREATE_ROOM'){
-  //¥ê¥Õ¥¡¥é¥Á¥§¥Ã¥¯
-  if(strncmp(@$_SERVER['HTTP_REFERER'], $site_root, strlen($site_root)) != 0)
-    OutputActionResult('Â¼ºîÀ® [ÆşÎÏ¥¨¥é¡¼]', 'Ìµ¸ú¤Ê¥¢¥¯¥»¥¹¤Ç¤¹¡£');
-  //Â¼ºîÀ®¥Ñ¥¹¥ï¡¼¥É¥Á¥§¥Ã¥¯
-  elseif($ROOM_CONF->room_password != '' && $_POST['room_password'] != $ROOM_CONF->room_password)
-    OutputActionResult('Â¼ºîÀ® [À©¸Â»ö¹à]', 'Â¼ºîÀ®¥Ñ¥¹¥ï¡¼¥É¤¬Àµ¤·¤¯¤¢¤ê¤Ş¤»¤ó¡£');
-  //»ØÄê¤µ¤ì¤¿¿Í¿ô¤ÎÇÛÌò¤¬¤¢¤ë¤«¥Á¥§¥Ã¥¯
-  elseif (!in_array($_POST['max_user'], $ROOM_CONF->max_user_list))
-     OutputActionResult('Â¼ºîÀ® [ÆşÎÏ¥¨¥é¡¼]', 'Ìµ¸ú¤ÊºÇÂç¿Í¿ô¤Ç¤¹¡£');
-  else
-    CreateRoom($_POST['room_name'], $_POST['room_comment'], $_POST['max_user']);
-}
-else{
+if(array_key_exists('command', $_POST) && $_POST['command'] == 'CREATE_ROOM')
+  CreateRoom();
+else
   OutputRoomList();
-}
+$DB_CONF->Disconnect(); //DB æ¥ç¶šè§£é™¤
 
-DisconnectDatabase($dbHandle); //DB ÀÜÂ³²ò½ü
-
-//-- ´Ø¿ô --//
-//Â¼¤Î¥á¥ó¥Æ¥Ê¥ó¥¹½èÍı
+//-- é–¢æ•° --//
+//æ‘ã®ãƒ¡ãƒ³ãƒ†ãƒŠãƒ³ã‚¹å‡¦ç†
 function MaintenanceRoom(){
   global $ROOM_CONF;
 
-  //°ìÄê»ş´Ö¹¹¿·¤ÎÌµ¤¤Â¼¤ÏÇÑÂ¼¤Ë¤¹¤ë
-  $list  = mysql_query("SELECT room_no, last_updated FROM room WHERE status <> 'finished'");
-  $query = "UPDATE room SET status = 'finished', day_night = 'aftergame' WHERE room_no = ";
-  MaintenanceRoomAction($list, $query, $ROOM_CONF->die_room);
+  if($SERVER_CONF->disable_maintenance) return; //ã‚¹ã‚­ãƒƒãƒ—åˆ¤å®š
 
-  //½ªÎ»¤·¤¿Éô²°¤Î¥»¥Ã¥·¥ç¥óID¤Î¥Ç¡¼¥¿¤ò¥¯¥ê¥¢¤¹¤ë
-  $list = mysql_query("SELECT room.room_no, last_updated from room, user_entry
-			WHERE room.room_no = user_entry.room_no
-			AND !(user_entry.session_id is NULL) GROUP BY room_no");
-  $query = "UPDATE user_entry SET session_id = NULL WHERE room_no = ";
-  MaintenanceRoomAction($list, $query, $ROOM_CONF->clear_session_id);
+  //ä¸€å®šæ™‚é–“æ›´æ–°ã®ç„¡ã„æ‘ã¯å»ƒæ‘ã«ã™ã‚‹
+  $query = "UPDATE room SET status = 'finished', day_night = 'aftergame' " .
+    "WHERE status <> 'finished' AND last_updated < UNIX_TIMESTAMP() - " . $ROOM_CONF->die_room;
+  /*
+  //RSSæ›´æ–°(å»ƒæ‘ãŒ0ã®æ™‚ã‚‚å¿…è¦ãªã„å‡¦ç†ãªã®ã§falseã«é™å®šã—ã¦ã„ãªã„)
+  if(SendQuery($query)) OutputSiteSummary();
+  */
+  SendQuery($query);
+
+  //çµ‚äº†ã—ãŸéƒ¨å±‹ã®ã‚»ãƒƒã‚·ãƒ§ãƒ³IDã®ãƒ‡ãƒ¼ã‚¿ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
+  $query = <<<EOF
+UPDATE room, user_entry SET user_entry.session_id = NULL
+WHERE room.room_no = user_entry.room_no
+AND room.status = 'finished' AND !(user_entry.session_id IS NULL)
+AND (room.finish_time IS NULL OR
+     room.finish_time < DATE_SUB(NOW(), INTERVAL {$ROOM_CONF->clear_session_id} SECOND))
+EOF;
+  SendQuery($query, true);
 }
 
-//Â¼¤Î¥á¥ó¥Æ¥Ê¥ó¥¹½èÍı (¼ÂÂÎ)
-function MaintenanceRoomAction($list, $query, $base_time){
-  $count = mysql_num_rows($list);
-  $time  = TZTime();
+//æ‘(room)ã®ä½œæˆ
+function CreateRoom(){
+  global $DEBUG_MODE, $SERVER_CONF, $ROOM_CONF, $USER_ICON, $MESSAGE;
 
-  for($i=0; $i < $count; $i++){
-    $array = mysql_fetch_assoc($list);
-    $room_no      = $array['room_no'];
-    $last_updated = $array['last_updated'];
-    $diff_time    = $time - $last_updated;
-    if($diff_time > $base_time) mysql_query($query . $room_no);
+  if($SERVER_CONF->disable_establish) OutputActionResult('æ‘ä½œæˆ [åˆ¶é™äº‹é …]', 'æ‘ä½œæˆã¯ã§ãã¾ã›ã‚“');
+  if(CheckReferer('', array('127.0.0.1', '192.168.'))){ //ãƒªãƒ•ã‚¡ãƒ©ãƒã‚§ãƒƒã‚¯
+    OutputActionResult('æ‘ä½œæˆ [å…¥åŠ›ã‚¨ãƒ©ãƒ¼]', 'ç„¡åŠ¹ãªã‚¢ã‚¯ã‚»ã‚¹ã§ã™ã€‚');
   }
-}
 
-//Â¼(room)¤ÎºîÀ®
-function CreateRoom($room_name, $room_comment, $max_user){
-  global $MESSAGE, $system_password;
-
-  //ÆşÎÏ¥Ç¡¼¥¿¤Î¥¨¥é¡¼¥Á¥§¥Ã¥¯
-  if($room_name == '' || $room_comment == '' || ! ctype_digit($max_user)){
+  //å…¥åŠ›ãƒ‡ãƒ¼ã‚¿ã®ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯
+  $room_name    = $_POST['room_name'];
+  $room_comment = $_POST['room_comment'];
+  EscapeStrings($room_name);
+  EscapeStrings($room_comment);
+  if($room_name == '' || $room_comment == ''){ //æœªå…¥åŠ›ãƒã‚§ãƒƒã‚¯
     OutputRoomAction('empty');
     return false;
   }
 
-  if($_POST['game_option_real_time'] == 'real_time'){
-    $day   = $_POST['game_option_real_time_day'];
-    $night = $_POST['game_option_real_time_night'];
+  //æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯
+  if(strlen($room_name)    > $ROOM_CONF->room_name ||
+     strlen($room_comment) > $ROOM_CONF->room_comment ||
+     preg_match($ROOM_CONF->ng_word, $room_name) ||
+     preg_match($ROOM_CONF->ng_word, $room_comment)){
+    OutputRoomAction('comment');
+    return false;
+  }
 
-    //À©¸Â»ş´Ö¤¬0¤«¤é99°ÊÆâ¤Î¿ô»ú¤«¥Á¥§¥Ã¥¯
+  //æŒ‡å®šã•ã‚ŒãŸäººæ•°ã®é…å½¹ãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
+  $max_user = (int)$_POST['max_user'];
+  if(! in_array($max_user, $ROOM_CONF->max_user_list)){
+    OutputActionResult('æ‘ä½œæˆ [å…¥åŠ›ã‚¨ãƒ©ãƒ¼]', 'ç„¡åŠ¹ãªæœ€å¤§äººæ•°ã§ã™ã€‚');
+  }
+
+  $query = "FROM room WHERE status <> 'finished'"; //ãƒã‚§ãƒƒã‚¯ç”¨ã®å…±é€šã‚¯ã‚¨ãƒª
+  $ip_address = $_SERVER['REMOTE_ADDR']; //æ‘ç«‹ã¦ã‚’è¡Œã£ãŸãƒ¦ãƒ¼ã‚¶ã® IP ã‚’å–å¾—
+
+  //ãƒ‡ãƒãƒƒã‚°ãƒ¢ãƒ¼ãƒ‰æ™‚ã¯æ‘ç«‹ã¦åˆ¶é™ã‚’ã—ãªã„
+  if(! $DEBUG_MODE){
+    if(isset($SERVER_CONF->room_password) &&
+       $SERVER_CONF->room_password != $_POST['room_password']){ //ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒã‚§ãƒƒã‚¯
+      OutputRoomAction('room_password');
+      return false;
+    }
+
+    if(CheckBlackList()){ //ãƒ–ãƒ©ãƒƒã‚¯ãƒªã‚¹ãƒˆãƒã‚§ãƒƒã‚¯
+      OutputRoomAction('black_list');
+      return false;
+    }
+
+    //åŒã˜ãƒ¦ãƒ¼ã‚¶ãŒç«‹ã¦ãŸæ‘ãŒçµ‚äº†ã—ã¦ã„ãªã‘ã‚Œã°æ–°ã—ã„æ‘ã‚’ä½œã‚‰ãªã„
+    if(FetchResult("SELECT COUNT(room_no) {$query} AND establisher_ip = '{$ip_address}'") > 0){
+      OutputRoomAction('over_establish');
+      return false;
+    }
+
+    //æœ€å¤§ä¸¦åˆ—æ‘æ•°ã‚’è¶…ãˆã¦ã„ã‚‹ã‚ˆã†ã§ã‚ã‚Œã°æ–°ã—ã„æ‘ã‚’ä½œã‚‰ãªã„
+    if(FetchResult('SELECT COUNT(room_no)' . $query) >= $ROOM_CONF->max_active_room){
+      OutputRoomAction('full');
+      return false;
+    }
+
+    //é€£ç¶šæ‘ç«‹ã¦åˆ¶é™ãƒã‚§ãƒƒã‚¯
+    $time_stamp = FetchResult("SELECT establish_time {$query} ORDER BY room_no DESC");
+    if(isset($time_stamp) &&
+       TZTime() - ConvertTimeStamp($time_stamp, false) <= $ROOM_CONF->establish_wait){
+      OutputRoomAction('establish_wait');
+      return false;
+    }
+  }
+
+  //ã‚²ãƒ¼ãƒ ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’ã‚»ãƒƒãƒˆ
+  $perverseness = $ROOM_CONF->perverseness && $_POST['perverseness']  == 'on';
+  $full_mania   = $ROOM_CONF->full_mania   && $_POST['replace_human'] == 'full_mania';
+  $full_cupid   = $ROOM_CONF->full_cupid   && $_POST['replace_human'] == 'full_cupid';
+  $chaos        = $ROOM_CONF->chaos        && $_POST['special_role']  == 'chaos';
+  $chaosfull    = $ROOM_CONF->chaosfull    && $_POST['special_role']  == 'chaosfull';
+  $chaos_hyper  = $ROOM_CONF->chaos_hyper  && $_POST['special_role']  == 'chaos_hyper';
+  $quiz         = $ROOM_CONF->quiz         && $_POST['special_role']  == 'quiz';
+  $special_role =
+    ($ROOM_CONF->duel         && $_POST['special_role']  == 'duel') ||
+    ($ROOM_CONF->gray_random  && $_POST['special_role']  == 'gray_random');
+  $game_option_list = array();
+  $option_role_list = array();
+  $check_game_option_list = array('wish_role', 'open_vote', 'open_day', 'not_open_cast');
+  $check_option_role_list = array();
+  if($quiz){ //ã‚¯ã‚¤ã‚ºæ‘
+    $game_option_list[] = 'quiz';
+
+    //GM ãƒ­ã‚°ã‚¤ãƒ³ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’ãƒã‚§ãƒƒã‚¯
+    $gm_password = $_POST['gm_password'];
+    EscapeStrings($gm_password);
+    if($gm_password == ''){
+      OutputRoomAction('no_password');
+      return false;
+    }
+    $game_option_list[]    = 'dummy_boy';
+    $dummy_boy_handle_name = 'GM';
+    $dummy_boy_password    = $gm_password;
+  }
+  else{
+    //èº«ä»£ã‚ã‚Šå›é–¢é€£ã®ãƒã‚§ãƒƒã‚¯
+    if($ROOM_CONF->dummy_boy && $_POST['dummy_boy'] == 'on'){
+      $game_option_list[]       = 'dummy_boy';
+      $dummy_boy_handle_name    = 'èº«ä»£ã‚ã‚Šå›';
+      $dummy_boy_password       = $SERVER_CONF->system_password;
+      $check_option_role_list[] = 'gerd';
+    }
+    elseif($ROOM_CONF->dummy_boy && $_POST['dummy_boy'] == 'gm_login'){
+      //GM ãƒ­ã‚°ã‚¤ãƒ³ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’ãƒã‚§ãƒƒã‚¯
+      $gm_password = $_POST['gm_password'];
+      if($gm_password == ''){
+	OutputRoomAction('no_password');
+	return false;
+      }
+      EscapeStrings($gm_password);
+      array_push($game_option_list, 'dummy_boy', 'gm_login');
+      $dummy_boy_handle_name    = 'GM';
+      $dummy_boy_password       = $gm_password;
+      $check_option_role_list[] = 'gerd';
+    }
+
+    if($chaos || $chaosfull || $chaos_hyper){ //é—‡é‹ãƒ¢ãƒ¼ãƒ‰
+      $game_option_list[] = $chaos ? 'chaos' : ($chaosfull ? 'chaosfull' : 'chaos_hyper');
+      $check_game_option_list[] = 'secret_sub_role';
+      array_push($check_option_role_list, 'topping', 'chaos_open_cast', 'chaos_open_cast_camp',
+		 'chaos_open_cast_role');
+      if($perverseness){ //å¤©é‚ªé¬¼æ‘ã®èª¿æ•´
+	$option_role_list[] = 'sub_role_limit';
+	$check_option_role_list[] = 'perverseness';
+      }
+      else{
+	$check_option_role_list[] = 'sub_role_limit';
+      }
+    }
+    elseif($special_role){ //ç‰¹æ®Šé…å½¹ãƒ¢ãƒ¼ãƒ‰
+      $option_role_list[] = $_POST['special_role'];
+    }
+    else{ //é€šå¸¸æ‘
+      array_push($check_option_role_list, 'poison', 'assassin', 'boss_wolf', 'poison_wolf',
+		 'possessed_wolf', 'sirius_wolf');
+      if(! $full_cupid) $check_option_role_list[] = 'cupid';
+      $check_option_role_list[] = 'medium';
+      if(! $full_mania) $check_option_role_list[] = 'mania';
+      if(! $perverseness) array_push($check_option_role_list, 'decide', 'authority');
+    }
+    array_push($check_game_option_list, 'deep_sleep', 'mind_open', 'blinder', 'joker', 'festival');
+    array_push($check_option_role_list, 'liar', 'gentleman',
+	       $perverseness ? 'perverseness' : 'sudden_death', 'critical');
+    if(! $special_role) $check_option_role_list[] = 'detective';
+  }
+  $check_option_role_list[] = 'replace_human';
+
+  //PrintData($_POST, 'Post');
+  //PrintData($check_game_option_list, 'CheckGameOption');
+  foreach($check_game_option_list as $option){
+    if(! $ROOM_CONF->$option) continue;
+    if($option == 'not_open_cast'){
+      switch($_POST[$option]){
+      case 'full':
+	$option = 'not_open_cast';
+	break;
+
+      case 'auto':
+	$option = 'auto_open_cast';
+	break;
+
+      default:
+	continue 2;
+      }
+    }
+    elseif($_POST[$option] != 'on') continue;
+    $game_option_list[] = $option;
+  }
+  //PrintData($game_option_list);
+
+  //PrintData($check_option_role_list, 'CheckOptionRole');
+  foreach($check_option_role_list as $option){
+    if(! $ROOM_CONF->$option) continue;
+
+    switch($option){
+    case 'replace_human':
+      switch($target = $_POST[$option]){
+      case 'full_mania':
+      case 'full_chiroptera':
+      case 'full_cupid':
+      case 'replace_human':
+	if($ROOM_CONF->$target){
+	  $option = $target;
+	  break 2;
+	}
+      }
+      continue 2;
+
+    case 'topping':
+      $target = $_POST[$option];
+      if(array_search($target, $ROOM_CONF->{$option . '_list'}) === false) continue 2;
+      $option .= ':' . $target;
+      break;
+
+    case 'chaos_open_cast':
+      switch($target = $_POST[$option]){
+      case 'full':
+	break 2;
+
+      case 'camp':
+      case 'role':
+	$option .= '_' . $target;
+	break 2;
+      }
+      continue 2;
+
+    case 'sub_role_limit':
+      switch($target = $_POST[$option]){
+      case 'no_sub_role':
+      case 'sub_role_limit_easy':
+      case 'sub_role_limit_normal':
+	if($ROOM_CONF->$target){
+	  $option = $target;
+	  break 2;
+	}
+      }
+      continue 2;
+
+    default:
+      if($_POST[$option] != 'on') continue 2;
+    }
+    $option_role_list[] = $option;
+  }
+
+  if($ROOM_CONF->real_time && $_POST['real_time'] == 'on'){
+    $day   = $_POST['real_time_day'];
+    $night = $_POST['real_time_night'];
+
+    //åˆ¶é™æ™‚é–“ãŒ0ã‹ã‚‰99ä»¥å†…ã®æ•°å­—ã‹ãƒã‚§ãƒƒã‚¯
     if($day   != '' && ! preg_match('/[^0-9]/', $day)   && $day   > 0 && $day   < 99 &&
        $night != '' && ! preg_match('/[^0-9]/', $night) && $night > 0 && $night < 99){
-      $real_time_set_str = 'real_time:' . $day . ':' . $night;
+      $game_option_list[] = 'real_time:' . $day . ':' . $night;
     }
     else{
       OutputRoomAction('time');
       return false;
     }
+
+    if($ROOM_CONF->wait_morning && $_POST['wait_morning'] == 'on'){
+      $game_option_list[] = 'wait_morning:';
+    }
   }
 
-  $option_role = $_POST['option_role_decide'] . ' ' . $_POST['option_role_authority'] .
-    ' ' . $_POST['option_role_poison'] . ' ' . $_POST['option_role_cupid'];
+  //PrintData($game_option_list, 'GameOption');
+  //PrintData($option_role_list, 'OptionRole');
+  //OutputHTMLFooter(true);
 
-  $game_option = $_POST['game_option_wish_role'] . ' ' . $_POST['game_option_dummy_boy'] .
-    ' ' . $_POST['game_option_open_vote'] . ' ' . $_POST['game_option_not_open_cast'] .
-    ' ' . $real_time_set_str;
-
-  if(! mysql_query('LOCK TABLES room WRITE, user_entry WRITE, vote WRITE, talk WRITE')){
+  //ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ãƒ­ãƒƒã‚¯
+  if(! LockTable()){
     OutputRoomAction('busy');
     return false;
   }
 
-  $result = mysql_query('SELECT room_no FROM room ORDER BY room_no DESC'); //¹ß½ç¤Ë¥ë¡¼¥àNo¤ò¼èÆÀ
-  $room_no_array = mysql_fetch_assoc($result); //°ì¹ÔÌÜ(ºÇ¤âÂç¤­¤ÊNo)¤ò¼èÆÀ
-  $room_no = $room_no_array['room_no'] + 1;
+  //é™é †ã«ãƒ«ãƒ¼ãƒ  No ã‚’å–å¾—ã—ã¦æœ€ã‚‚å¤§ããª No ã‚’å–å¾—
+  $room_no = FetchResult('SELECT room_no FROM room ORDER BY room_no DESC') + 1;
 
-  //¥¨¥¹¥±¡¼¥×½èÍı
-  EscapeStrings($room_name);
-  EscapeStrings($room_comment);
+  //ç™»éŒ²
+  $game_option = implode(' ', $game_option_list);
+  $option_role = implode(' ', $option_role_list);
+  $status = false;
 
-  //ÅĞÏ¿
-  $time = TZTime();
-  $entry = mysql_query("INSERT INTO room(room_no, room_name, room_comment, game_option,
-			option_role, max_user, status, date, day_night, last_updated)
-			VALUES($room_no, '$room_name', '$room_comment', '$game_option',
-			'$option_role', $max_user, 'waiting', 0, 'beforegame', '$time')");
+  do{
+    if(! $SERVER_CONF->dry_run_mode){
+      //æ‘ä½œæˆ
+      $time = TZTime();
+      $items = 'room_no, room_name, room_comment, establisher_ip, establish_time, ' .
+	'game_option, option_role, max_user, status, date, day_night, last_updated';
+      $values = "{$room_no}, '{$room_name}', '{$room_comment}', '{$ip_address}', NOW(), " .
+	"'{$game_option}', '{$option_role}', {$max_user}, 'waiting', 0, 'beforegame', '{$time}'";
+      if(! InsertDatabase('room', $items, $values)) break;
 
-  //¿ÈÂå¤ï¤ê·¯¤òÆşÂ¼¤µ¤»¤ë
-  if(strpos($game_option, 'dummy_boy') !== false){
-    mysql_query("INSERT INTO user_entry(room_no, user_no, uname, handle_name, icon_no,
-		   profile, sex, password, live, last_words, ip_address)
-		   VALUES($room_no, 1, 'dummy_boy', '¿ÈÂå¤ï¤ê·¯', 0, '{$MESSAGE->dummy_boy_comment}',
-		   'male', '$system_password', 'live', '{$MESSAGE->dummy_boy_last_words}', '')");
-  }
+      //èº«ä»£ã‚ã‚Šå›ã‚’å…¥æ‘ã•ã›ã‚‹
+      if(strpos($game_option, 'dummy_boy') !== false &&
+	 FetchResult('SELECT COUNT(uname) FROM user_entry WHERE room_no = ' . $room_no) == 0){
+	if(! InsertUser($room_no, 'dummy_boy', $dummy_boy_handle_name, $dummy_boy_password,
+			1, in_array('gerd', $option_role_list) ? $USER_ICON->gerd : 0)) break;
+      }
 
-  if($entry && mysql_query('COMMIT')){ //°ì±ş¥³¥ß¥Ã¥È
+      if($SERVER_CONF->secret_room){ //æ‘æƒ…å ±éè¡¨ç¤ºãƒ¢ãƒ¼ãƒ‰ã®å‡¦ç†
+	OutputRoomAction('success', $room_name);
+	return true;
+      }
+    }
+
+    //Twitter æŠ•ç¨¿å‡¦ç†
+    $twitter = new TwitterConfig();
+    $twitter->Send($room_no, $room_name, $room_comment);
+    //OutputSiteSummary(); //RSSæ›´æ–° //ãƒ†ã‚¹ãƒˆä¸­
+
     OutputRoomAction('success', $room_name);
-  }
-  else{
-    OutputRoomAction('busy');
-  }
-  mysql_query('UNLOCK TABLES');
+    $status = true;
+  }while(false);
+  if(! $status) OutputRoomAction('busy');
+  return true;
 }
 
-//·ë²Ì½ĞÎÏ (CreateRoom() ÍÑ)
+//çµæœå‡ºåŠ› (CreateRoom() ç”¨)
 function OutputRoomAction($type, $room_name = ''){
+  global $SERVER_CONF;
+
   switch($type){
-    case 'empty':
-      OutputActionResultHeader('Â¼ºîÀ® [ÆşÎÏ¥¨¥é¡¼]');
-      echo '¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£<br>';
-      echo '°Ê²¼¤Î¹àÌÜ¤òºÆÅÙ¤´³ÎÇ§¤¯¤À¤µ¤¤¡£<br>';
-      echo '<ul><li>Â¼¤ÎÌ¾Á°¤¬µ­Æş¤µ¤ì¤Æ¤¤¤Ê¤¤¡£</li>';
-      echo '<li>Â¼¤ÎÀâÌÀ¤¬µ­Æş¤µ¤ì¤Æ¤¤¤Ê¤¤¡£</li>';
-      echo '<li>ºÇÂç¿Í¿ô¤¬¿ô»ú¤Ç¤Ï¤Ê¤¤¡¢¤Ş¤¿¤Ï°Û¾ï¤ÊÊ¸»úÎó¡£</li></ul>';
-      break;
+  case 'empty':
+    OutputActionResultHeader('æ‘ä½œæˆ [å…¥åŠ›ã‚¨ãƒ©ãƒ¼]');
+    echo 'ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚<br>';
+    echo 'ä»¥ä¸‹ã®é …ç›®ã‚’å†åº¦ã”ç¢ºèªãã ã•ã„ã€‚<br>';
+    echo '<ul><li>æ‘ã®åå‰ãŒè¨˜å…¥ã•ã‚Œã¦ã„ãªã„ã€‚</li>';
+    echo '<li>æ‘ã®èª¬æ˜ãŒè¨˜å…¥ã•ã‚Œã¦ã„ãªã„ã€‚</li></ul>';
+    break;
 
-    case 'time':
-      OutputActionResultHeader('Â¼ºîÀ® [ÆşÎÏ¥¨¥é¡¼]');
-      echo '¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£<br>';
-      echo '°Ê²¼¤Î¹àÌÜ¤òºÆÅÙ¤´³ÎÇ§¤¯¤À¤µ¤¤¡£<br>';
-      echo '<ul><li>¥ê¥¢¥ë¥¿¥¤¥àÀ©¤ÎÃë¡¢Ìë¤Î»ş´Ö¤òµ­Æş¤·¤Æ¤¤¤Ê¤¤¡£</li>';
-      echo '<li>¥ê¥¢¥ë¥¿¥¤¥àÀ©¤ÎÃë¡¢Ìë¤Î»ş´Ö¤òÁ´³Ñ¤ÇÆşÎÏ¤·¤Æ¤¤¤ë</li>';
-      echo '<li>¥ê¥¢¥ë¥¿¥¤¥àÀ©¤ÎÃë¡¢Ìë¤Î»ş´Ö¤¬0°Ê²¼¡¢¤Ş¤¿¤Ï99°Ê¾å¤Ç¤¢¤ë</li>';
-      echo '<li>¥ê¥¢¥ë¥¿¥¤¥àÀ©¤ÎÃë¡¢Ìë¤Î»ş´Ö¤¬¿ô»ú¤Ç¤Ï¤Ê¤¤¡¢¤Ş¤¿¤Ï°Û¾ï¤ÊÊ¸»úÎó</li></ul>';
-      break;
+  case 'no_password':
+    OutputActionResultHeader('æ‘ä½œæˆ [å…¥åŠ›ã‚¨ãƒ©ãƒ¼]');
+    echo 'æœ‰åŠ¹ãª GM ãƒ­ã‚°ã‚¤ãƒ³ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚<br>';
+    break;
 
-    case 'success':
-      OutputActionResultHeader('Â¼ºîÀ®', 'index.php');
-      echo "$room_name Â¼¤òºîÀ®¤·¤Ş¤·¤¿¡£¥È¥Ã¥×¥Ú¡¼¥¸¤ËÈô¤Ó¤Ş¤¹¡£";
-      echo 'ÀÚ¤êÂØ¤ï¤é¤Ê¤¤¤Ê¤é <a href="index.php">¤³¤³</a> ¡£';
-      break;
+  case 'comment':
+    OutputActionResultHeader('æ‘ä½œæˆ [å…¥åŠ›ã‚¨ãƒ©ãƒ¼]');
+    echo 'ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚<br>';
+    echo 'ä»¥ä¸‹ã®é …ç›®ã‚’å†åº¦ã”ç¢ºèªãã ã•ã„ã€‚<br>';
+    echo '<ul><li>æ‘ã®åå‰ãƒ»æ‘ã®èª¬æ˜ã®æ–‡å­—æ•°ãŒé•·ã™ãã‚‹</li>';
+    echo '<li>æ‘ã®åå‰ãƒ»æ‘ã®èª¬æ˜ã«å…¥åŠ›ç¦æ­¢æ–‡å­—åˆ—ãŒå«ã¾ã‚Œã¦ã„ã‚‹ã€‚</li></ul>';
+    break;
 
-    case 'busy':
-      OutputActionResultHeader('Â¼ºîÀ® [¥Ç¡¼¥¿¥Ù¡¼¥¹¥¨¥é¡¼]');
-      echo '¥Ç¡¼¥¿¥Ù¡¼¥¹¥µ¡¼¥Ğ¤¬º®»¨¤·¤Æ¤¤¤Ş¤¹¡£<br>'."\n";
-      echo '»ş´Ö¤òÃÖ¤¤¤ÆºÆÅÙÅĞÏ¿¤·¤Æ¤¯¤À¤µ¤¤¡£';
-      break;
+  case 'time':
+    OutputActionResultHeader('æ‘ä½œæˆ [å…¥åŠ›ã‚¨ãƒ©ãƒ¼]');
+    echo 'ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚<br>';
+    echo 'ä»¥ä¸‹ã®é …ç›®ã‚’å†åº¦ã”ç¢ºèªãã ã•ã„ã€‚<br>';
+    echo '<ul><li>ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶ã®æ˜¼ã€å¤œã®æ™‚é–“ã‚’è¨˜å…¥ã—ã¦ã„ãªã„ã€‚</li>';
+    echo '<li>ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶ã®æ˜¼ã€å¤œã®æ™‚é–“ã‚’å…¨è§’ã§å…¥åŠ›ã—ã¦ã„ã‚‹</li>';
+    echo '<li>ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶ã®æ˜¼ã€å¤œã®æ™‚é–“ãŒ0ä»¥ä¸‹ã€ã¾ãŸã¯99ä»¥ä¸Šã§ã‚ã‚‹</li>';
+    echo '<li>ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ åˆ¶ã®æ˜¼ã€å¤œã®æ™‚é–“ãŒæ•°å­—ã§ã¯ãªã„ã€ã¾ãŸã¯ç•°å¸¸ãªæ–‡å­—åˆ—</li></ul>';
+    break;
+
+  case 'success':
+    OutputActionResultHeader('æ‘ä½œæˆ', $SERVER_CONF->site_root);
+    echo $room_name . ' æ‘ã‚’ä½œæˆã—ã¾ã—ãŸã€‚ãƒˆãƒƒãƒ—ãƒšãƒ¼ã‚¸ã«é£›ã³ã¾ã™ã€‚';
+    echo 'åˆ‡ã‚Šæ›¿ã‚ã‚‰ãªã„ãªã‚‰ <a href="' . $SERVER_CONF->site_root . '">ã“ã“</a> ã€‚';
+    break;
+
+  case 'busy':
+    OutputActionResultHeader('æ‘ä½œæˆ [ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚¨ãƒ©ãƒ¼]');
+    echo 'ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚µãƒ¼ãƒãŒæ··é›‘ã—ã¦ã„ã¾ã™ã€‚<br>'."\n";
+    echo 'æ™‚é–“ã‚’ç½®ã„ã¦å†åº¦ç™»éŒ²ã—ã¦ãã ã•ã„ã€‚';
+    break;
+
+  case 'black_list':
+    OutputActionResultHeader('æ‘ä½œæˆ [åˆ¶é™äº‹é …]');
+    echo 'æ‘ç«‹ã¦åˆ¶é™ãƒ›ã‚¹ãƒˆã§ã™ã€‚';
+    break;
+
+  case 'full':
+    OutputActionResultHeader('æ‘ä½œæˆ [åˆ¶é™äº‹é …]');
+    echo 'ç¾åœ¨ãƒ—ãƒ¬ã‚¤ä¸­ã®æ‘ã®æ•°ãŒã“ã®ã‚µãƒ¼ãƒã§è¨­å®šã•ã‚Œã¦ã„ã‚‹æœ€å¤§å€¤ã‚’è¶…ãˆã¦ã„ã¾ã™ã€‚<br>'."\n";
+    echo 'ã©ã“ã‹ã®æ‘ã§æ±ºç€ãŒã¤ãã®ã‚’å¾…ã£ã¦ã‹ã‚‰å†åº¦ç™»éŒ²ã—ã¦ãã ã•ã„ã€‚';
+    break;
+
+  case 'over_establish':
+    OutputActionResultHeader('æ‘ä½œæˆ [åˆ¶é™äº‹é …]');
+    echo 'ã‚ãªãŸãŒç«‹ã¦ãŸæ‘ãŒç¾åœ¨ç¨¼åƒä¸­ã§ã™ã€‚<br>'."\n";
+    echo 'ç«‹ã¦ãŸæ‘ã§æ±ºç€ãŒã¤ãã®ã‚’å¾…ã£ã¦ã‹ã‚‰å†åº¦ç™»éŒ²ã—ã¦ãã ã•ã„ã€‚';
+    break;
+
+  case 'establish_wait':
+    OutputActionResultHeader('æ‘ä½œæˆ [åˆ¶é™äº‹é …]');
+    echo 'ã‚µãƒ¼ãƒã§è¨­å®šã•ã‚Œã¦ã„ã‚‹æ‘ç«‹ã¦æ™‚é–“é–“éš”ã‚’çµŒéã—ã¦ã„ã¾ã›ã‚“ã€‚<br>'."\n";
+    echo 'ã—ã°ã‚‰ãæ™‚é–“ã‚’é–‹ã‘ã¦ã‹ã‚‰å†åº¦ç™»éŒ²ã—ã¦ãã ã•ã„ã€‚';
+    break;
+
+  case 'room_password':
+    OutputActionResultHeader('æ‘ä½œæˆ [åˆ¶é™äº‹é …]');
+    echo 'æ‘ä½œæˆãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“ã€‚<br>';
+    break;
   }
-  OutputHTMLFooter(); //¥Õ¥Ã¥¿½ĞÎÏ
+  OutputHTMLFooter(); //ãƒ•ãƒƒã‚¿å‡ºåŠ›
 }
 
-//Â¼(room)¤Îwaiting¤Èplaying¤Î¥ê¥¹¥È¤ò½ĞÎÏ¤¹¤ë
+//æ‘(room)ã®waitingã¨playingã®ãƒªã‚¹ãƒˆã‚’å‡ºåŠ›ã™ã‚‹
 function OutputRoomList(){
-  global $DEBUG_MODE, $ROOM_IMG;
+  global $DEBUG_MODE, $SERVER_CONF, $ROOM_IMG;
 
-  //¥ë¡¼¥àNo¡¢¥ë¡¼¥àÌ¾¡¢¥³¥á¥ó¥È¡¢ºÇÂç¿Í¿ô¡¢¾õÂÖ¤ò¼èÆÀ
-  $sql = mysql_query("SELECT room_no, room_name, room_comment, game_option, option_role, max_user,
-			status FROM room WHERE status <> 'finished' ORDER BY room_no DESC ");
-  if($sql == NULL) return false;
+  if($SERVER_CONF->secret_room) return; //ã‚·ãƒ¼ã‚¯ãƒ¬ãƒƒãƒˆãƒ†ã‚¹ãƒˆãƒ¢ãƒ¼ãƒ‰
 
-  while($array = mysql_fetch_assoc($sql)){
-    $room_no      = $array['room_no'];
-    $room_name    = $array['room_name'];
-    $room_comment = $array['room_comment'];
-    $game_option  = $array['game_option'];
-    $option_role  = $array['option_role'];
-    $max_user     = $array['max_user'];
-    $status       = $array['status'];
-
-    switch($status){
-      case 'waiting':
-	$status_img = $ROOM_IMG->waiting;
-	break;
-
-      case 'playing':
-	$status_img = $ROOM_IMG->playing;
-	break;
+  /* RSSæ©Ÿèƒ½ã¯ãƒ†ã‚¹ãƒˆä¸­
+  if(! $DEBUG_MODE){
+    $filename = JINRO_ROOT.'/rss/rooms.rss';
+    if(file_exists($filename)){
+      $rss = FeedEngine::Initialize('site_summary.php');
+      $rss->Import($filename);
     }
-
-    $option_img_str = ''; //¥²¡¼¥à¥ª¥×¥·¥ç¥ó¤Î²èÁü
-    if(strpos($game_option, 'wish_role') !== false)
-      AddImgTag($option_img_str, $ROOM_IMG->wish_role, 'Ìò³ä´õË¾À©');
-    if(strpos($game_option, 'real_time') !== false){
-      //¼Â»ş´Ö¤ÎÀ©¸Â»ş´Ö¤ò¼èÆÀ
-      $real_time_str = strstr($game_option, 'real_time');
-      sscanf($real_time_str, "real_time:%d:%d", $day, $night);
-      AddImgTag($option_img_str, $ROOM_IMG->real_time,
-		"¥ê¥¢¥ë¥¿¥¤¥àÀ©¡¡Ãë¡§ $day Ê¬¡¡Ìë¡§ $night Ê¬");
+    else{
+      $rss = OutputSiteSummary();
     }
-    if(strpos($game_option, 'dummy_boy') !== false)
-      AddImgTag($option_img_str, $ROOM_IMG->dummy_boy, '½éÆü¤ÎÌë¤Ï¿ÈÂå¤ï¤ê·¯');
-    if(strpos($game_option, 'open_vote') !== false)
-      AddImgTag($option_img_str, $ROOM_IMG->open_vote, 'ÅêÉ¼¤·¤¿É¼¿ô¤ò¸øÉ½¤¹¤ë');
-    if(strpos($game_option, 'not_open_cast') !== false)
-      AddImgTag($option_img_str, $ROOM_IMG->not_open_cast, 'Îî³¦¤ÇÇÛÌò¤ò¸ø³«¤·¤Ê¤¤');
-    if(strpos($option_role, 'decide') !== false)
-      AddImgTag($option_img_str, $ROOM_IMG->decide, '16¿Í°Ê¾å¤Ç·èÄê¼ÔÅĞ¾ì');
-    if(strpos($option_role, 'authority') !== false)
-      AddImgTag($option_img_str, $ROOM_IMG->authority, '16¿Í°Ê¾å¤Ç¸¢ÎÏ¼ÔÅĞ¾ì');
-    if(strpos($option_role, 'poison') !== false)
-      AddImgTag($option_img_str, $ROOM_IMG->poison, '20¿Í°Ê¾å¤ÇËäÆÇ¼ÔÅĞ¾ì');
-    if(strpos($option_role, 'cupid') !== false)
-      AddImgTag($option_img_str, $ROOM_IMG->cupid, '¥­¥å¡¼¥Ô¥Ã¥ÉÅĞ¾ì');
+    foreach($rss->items as $item){
+      extract($item, EXTR_PREFIX_ALL, 'room');
+      echo $room_description;
+    }
+  }
+  */
 
-    $max_user_img = $ROOM_IMG -> max_user_list[$max_user]; //ºÇÂç¿Í¿ô
+  //éƒ¨å±‹æƒ…å ±ã‚’å–å¾—
+  $delete_header = '<a href="admin/room_delete.php?room_no=';
+  $delete_footer = '">[å‰Šé™¤ (ç·Šæ€¥ç”¨)]</a>'."\n";
+  $query = "SELECT room_no, room_name, room_comment, game_option, option_role, max_user, status " .
+    "FROM room WHERE status <> 'finished' ORDER BY room_no DESC";
+  $list = FetchAssoc($query);
+  foreach($list as $array){
+    extract($array);
+    $delete     = $DEBUG_MODE ? $delete_header . $room_no . $delete_footer : '';
+    $status_img = $ROOM_IMG->Generate($status, $status == 'waiting' ? 'å‹Ÿé›†ä¸­' : 'ãƒ—ãƒ¬ã‚¤ä¸­');
+    $option_img = GenerateGameOptionImage($game_option, $option_role) .
+      GenerateMaxUserImage($max_user);
 
     echo <<<EOF
-<a href="login.php?room_no=$room_no">
-<img src="$status_img"><span>[{$room_no}ÈÖÃÏ]</span>{$room_name}Â¼<br>
-<div>¢·{$room_comment}¢· {$option_img_str}<img src="$max_user_img"></div>
+{$delete}<a href="login.php?room_no={$room_no}">
+{$status_img}<span>[{$room_no}ç•ªåœ°]</span>{$room_name}æ‘<br>
+<div>ï½{$room_comment}ï½ {$option_img}</div>
 </a><br>
 
 EOF;
-
-    if($DEBUG_MODE){
-      echo '<a href="admin/room_delete.php?room_no=' . $room_no . '">' . $room_no .
-	' ÈÖÃÏ¤òºï½ü (¶ÛµŞÍÑ)</a><br>'."\n";
-    }
   }
 }
 
-//¥ª¥×¥·¥ç¥ó²èÁü¥¿¥°ÄÉ²Ã (OutputRoomList() ÍÑ)
-function AddImgTag(&$tag, $src, $title){
-  $tag .= "<img class=\"option\" src=\"$src\" title=\"$title\" alt=\"$title\">";
+//éƒ¨å±‹ä½œæˆç”»é¢ã‚’å‡ºåŠ›
+function OutputCreateRoomPage(){
+  global $SERVER_CONF, $ROOM_CONF, $GAME_OPT_MESS, $GAME_OPT_CAPT;
+
+  if($SERVER_CONF->disable_establish){
+    echo 'æ‘ä½œæˆã¯ã§ãã¾ã›ã‚“';
+    return;
+  }
+
+  echo <<<EOF
+<form method="POST" action="room_manager.php">
+<input type="hidden" name="command" value="CREATE_ROOM">
+<table>
+
+EOF;
+
+  OutputRoomOption(array('room_name', 'room_comment', 'max_user'), '', false);
+  OutputRoomOption(array('wish_role', 'real_time', 'wait_morning', 'open_vote', 'open_day'));
+  OutputRoomOptionDummyBoy();
+  OutputRoomOptionOpenCast();
+
+  $stack = array('poison', 'assassin', 'boss_wolf', 'poison_wolf', 'possessed_wolf',
+		 'sirius_wolf', 'cupid', 'medium', 'mania', 'decide', 'authority');
+  OutputRoomOption($stack, 'role');
+
+  $stack = array('liar', 'gentleman', 'sudden_death', 'perverseness', 'deep_sleep', 'mind_open',
+		 'blinder', 'critical', 'joker', 'detective', 'festival',  'replace_human');
+  OutputRoomOption($stack, 'role');
+
+  OutputRoomOption(array('special_role'));
+  OutputRoomOptionChaos();
+
+  $password = is_null($SERVER_CONF->room_password) ? '' :
+    'æ‘ä½œæˆãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ï¼š<input type="password" name="room_password" size="20">ã€€';
+  echo <<<EOF
+<tr><td colspan="2"><hr></td></tr>
+<tr><td class="make" colspan="2">{$password}<input type="submit" value=" ä½œæˆ "></td></tr>
+</table>
+</form>
+
+EOF;
 }
-?>
+
+//æ‘ä½œæˆãƒ•ã‚©ãƒ¼ãƒ ç”Ÿæˆ (ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹å‹)
+function GenerateRoomOption($option, $label = ''){
+  global $ROOM_CONF, $TIME_CONF, $CAST_CONF, $GAME_OPT_MESS, $GAME_OPT_CAPT;
+
+  if(property_exists($ROOM_CONF, $option) && $ROOM_CONF->$option === false) return NULL;
+
+  $default = 'default_' . $option;
+  $checked = property_exists($ROOM_CONF, $default) && $ROOM_CONF->$default ? ' checked' : '';
+  if($label != '') $label .= '_';
+  $label .= $option;
+
+  $sentence = $GAME_OPT_MESS->$option;
+  if(property_exists($CAST_CONF, $option) && is_int($limit = $CAST_CONF->$option)){
+    $sentence .= ' ('  . $limit . 'äººï½)';
+  }
+
+  $caption = property_exists($GAME_OPT_CAPT, $option) ? $GAME_OPT_CAPT->$option : '';
+  switch($option){
+  case 'room_name':
+  case 'room_comment':
+  case 'gm_password':
+    return GenerateTextForm($option);
+
+  case 'max_user':
+  case 'replace_human':
+  case 'special_role':
+  case 'topping':
+    return GenerateSelector($option);
+
+  case 'real_time':
+    $caption .= <<<EOF
+ã€€æ˜¼ï¼š
+<input type="text" name="real_time_day" value="{$TIME_CONF->default_day}" size="2" maxlength="2">åˆ† å¤œï¼š
+<input type="text" name="real_time_night" value="{$TIME_CONF->default_night}" size="2" maxlength="2">åˆ†
+EOF;
+    break;
+  }
+
+  return <<<EOF
+<tr>
+<td><label for="{$label}">{$sentence}ï¼š</label></td>
+<td class="explain">
+<input id="{$label}" type="checkbox" name="{$option}" value="on"{$checked}>
+({$caption})
+</td>
+</tr>
+
+EOF;
+}
+
+//æ‘ä½œæˆãƒ•ã‚©ãƒ¼ãƒ ç”Ÿæˆ (ãƒ†ã‚­ã‚¹ãƒˆå‹)
+function GenerateTextForm($option){
+  global $ROOM_CONF, $GAME_OPT_MESS, $GAME_OPT_CAPT;
+
+  $footer = '';
+  switch($option){
+  case 'room_name':
+    $footer = ' æ‘';
+    break;
+
+  case 'gm_password':
+    $footer = '<span class="explain">' . $GAME_OPT_CAPT->gm_password . '</span>';
+    break;
+  }
+  return <<<EOF
+<tr>
+<td><label>{$GAME_OPT_MESS->$option}ï¼š</label></td>
+<td><input type="text" name="{$option}" size="{$ROOM_CONF->{$option . '_input'}}">{$footer}</td>
+</tr>
+
+EOF;
+}
+
+//æ‘ä½œæˆãƒ•ã‚©ãƒ¼ãƒ ç”Ÿæˆ (ã‚»ãƒ¬ã‚¯ã‚¿å‹)
+function GenerateSelector($option){
+  global $ROOM_CONF, $GAME_OPT_MESS, $GAME_OPT_CAPT;
+
+  switch($option){
+  case 'max_user':
+    $label = 'æœ€å¤§äººæ•°';
+    $str = '';
+    foreach($ROOM_CONF->{$option . '_list'} as $number){
+      $str .= '<option value="' . $number . '"' .
+	($number == $ROOM_CONF->default_max_user ? ' selected' : '') . '>' .
+	$number . '</option>'."\n";
+    }
+    break;
+
+  case 'replace_human':
+  case 'special_role':
+    $label = 'ãƒ¢ãƒ¼ãƒ‰å';
+    $str = '<option value="" selected>ãªã—</option>';
+    foreach($ROOM_CONF->{$option . '_list'} as $role){
+      if($ROOM_CONF->$role){
+	$str .= '<option value="' . $role . '">' . $GAME_OPT_MESS->$role . '</option>'."\n";
+      }
+    }
+    break;
+
+  case 'topping':
+    $label = 'ã‚¿ã‚¤ãƒ—å';
+    $str = '<option value="" selected>ãªã—</option>';
+    foreach($ROOM_CONF->{$option . '_list'} as $mode){
+      $role = 'topping_' . $mode;
+      if($GAME_OPT_MESS->$role){
+	$str .= '<option value="' . $mode . '">' . $GAME_OPT_MESS->$role . '</option>'."\n";
+      }
+    }
+    break;
+  }
+
+  return <<<EOF
+<tr>
+<td><label>{$GAME_OPT_MESS->$option}ï¼š</label></td>
+<td>
+<select name="{$option}">
+<optgroup label="{$label}">
+{$str}</optgroup>
+</select>
+<span class="explain">({$GAME_OPT_CAPT->$option})</span></td>
+</tr>
+
+EOF;
+}
+
+//æ‘ä½œæˆãƒ•ã‚©ãƒ¼ãƒ å‡ºåŠ› (æ¨™æº–)
+function OutputRoomOption($option_list, $label = '', $border = true){
+  $stack = array();
+  foreach($option_list as $option) $stack[] = GenerateRoomOption($option, $label);
+  if(count($stack) < 1) return NULL;
+  if($border) array_unshift($stack, '<tr><td colspan="2"><hr></td></tr>');
+  echo implode('', $stack);
+}
+
+//æ‘ä½œæˆãƒ•ã‚©ãƒ¼ãƒ å‡ºåŠ› (èº«ä»£ã‚ã‚Šå›ç”¨)
+function OutputRoomOptionDummyBoy(){
+  global $ROOM_CONF, $GAME_OPT_MESS, $GAME_OPT_CAPT;
+
+  if(! $ROOM_CONF->dummy_boy) return NULL;
+
+  $checked_dummy_boy = '';
+  $checked_gm_login  = '';
+  $checked_nothing   = '';
+  if($ROOM_CONF->default_dummy_boy)
+    $checked_dummy_boy = ' checked';
+  elseif($ROOM_CONF->default_gm_login)
+    $checked_gm_login = ' checked';
+  else
+    $checked_nothing = ' checked';
+
+  echo <<<EOF
+<tr><td colspan="2"><hr></td></tr>
+<tr>
+<td><label>{$GAME_OPT_MESS->dummy_boy}ï¼š</label></td>
+<td class="explain">
+<input type="radio" name="dummy_boy" value=""{$checked_nothing}>
+{$GAME_OPT_CAPT->no_dummy_boy}<br>
+<input type="radio" name="dummy_boy" value="on"{$checked_dummy_boy}>
+{$GAME_OPT_CAPT->dummy_boy}<br>
+<input type="radio" name="dummy_boy" value="gm_login"{$checked_gm_login}>
+{$GAME_OPT_MESS->gm_login} ({$GAME_OPT_CAPT->gm_login})
+</td>
+</tr>
+
+EOF;
+
+  OutputRoomOption(array('gm_password', 'gerd'), '', false);
+}
+
+//æ‘ä½œæˆãƒ•ã‚©ãƒ¼ãƒ å‡ºåŠ› (éœŠç•Œé…å½¹ç”¨)
+function OutputRoomOptionOpenCast(){
+  global $ROOM_CONF, $GAME_OPT_MESS, $GAME_OPT_CAPT;
+
+  if(! $ROOM_CONF->not_open_cast) return NULL;
+
+  $checked_close = '';
+  $checked_auto  = '';
+  $checked_open  = '';
+  switch($ROOM_CONF->default_not_open_cast){
+  case 'full':
+    $checked_close = ' checked';
+    break;
+
+  case 'auto':
+    if($ROOM_CONF->auto_open_cast){
+      $checked_auto = ' checked';
+      break;
+    }
+
+  default:
+    $checked_open = ' checked';
+    break;
+  }
+
+  echo <<<EOF
+<tr><td colspan="2"><hr></td></tr>
+<tr>
+<td><label>{$GAME_OPT_MESS->not_open_cast}ï¼š</label></td>
+<td class="explain">
+<input type="radio" name="not_open_cast" value=""{$checked_open}>
+{$GAME_OPT_CAPT->no_close_cast}<br>
+
+<input type="radio" name="not_open_cast" value="full"{$checked_close}>
+{$GAME_OPT_CAPT->not_open_cast}<br>
+
+EOF;
+
+  if($ROOM_CONF->auto_open_cast){
+    echo <<<EOF
+<input type="radio" name="not_open_cast" value="auto"{$checked_auto}>
+{$GAME_OPT_CAPT->auto_open_cast}
+</td>
+
+EOF;
+  }
+}
+
+//æ‘ä½œæˆãƒ•ã‚©ãƒ¼ãƒ å‡ºåŠ› (é—‡é‹ãƒ¢ãƒ¼ãƒ‰ç”¨)
+function OutputRoomOptionChaos(){
+  global $ROOM_CONF, $GAME_OPT_MESS, $GAME_OPT_CAPT;
+
+  if(! $ROOM_CONF->chaos) return NULL;
+
+  OutputRoomOption(array('topping'));
+  if($ROOM_CONF->chaos_open_cast){
+    $checked_chaos_open_cast_full = '';
+    $checked_chaos_open_cast_camp = '';
+    $checked_chaos_open_cast_role = '';
+    $checked_chaos_open_cast_none = '';
+    switch($ROOM_CONF->default_chaos_open_cast){
+    case 'full':
+      $checked_chaos_open_cast_full = ' checked';
+      break;
+
+    case 'camp':
+      $checked_chaos_open_cast_camp = ' checked';
+      break;
+
+    case 'role':
+      $checked_chaos_open_cast_role = ' checked';
+      break;
+
+    default:
+      $checked_chaos_open_cast_none = ' checked';
+      break;
+    }
+
+    echo <<<EOF
+<tr>
+<td><label>{$GAME_OPT_MESS->chaos_open_cast}ï¼š</label></td>
+<td class="explain">
+<input type="radio" name="chaos_open_cast" value=""{$checked_chaos_open_cast_none}>
+{$GAME_OPT_CAPT->chaos_not_open_cast}<br>
+
+<input type="radio" name="chaos_open_cast" value="camp"{$checked_chaos_open_cast_camp}>
+{$GAME_OPT_CAPT->chaos_open_cast_camp}<br>
+
+<input type="radio" name="chaos_open_cast" value="role"{$checked_chaos_open_cast_role}>
+{$GAME_OPT_CAPT->chaos_open_cast_role}<br>
+
+<input type="radio" name="chaos_open_cast" value="full"{$checked_chaos_open_cast_full}>
+{$GAME_OPT_CAPT->chaos_open_cast_full}
+</td>
+</tr>
+
+EOF;
+  }
+
+  if($ROOM_CONF->sub_role_limit){
+    $checked_no_sub_role           = '';
+    $checked_sub_role_limit_easy   = '';
+    $checked_sub_role_limit_normal = '';
+    $checked_sub_role_limit_none   = '';
+    switch($ROOM_CONF->default_sub_role_limit){
+    case 'no':
+      $checked_no_sub_role = ' checked';
+      break;
+
+    case 'easy':
+      $checked_sub_role_limit_easy = ' checked';
+      break;
+
+    case 'normal':
+      $checked_sub_role_limit_normal = ' checked';
+      break;
+
+    default:
+      $checked_sub_role_limit_none = ' checked';
+      break;
+    }
+
+    echo <<<EOF
+<tr>
+<td><label>{$GAME_OPT_MESS->sub_role_limit}ï¼š</label></td>
+<td class="explain">
+<input type="radio" name="sub_role_limit" value="no_sub_role"{$checked_no_sub_role}>
+{$GAME_OPT_CAPT->no_sub_role}<br>
+
+<input type="radio" name="sub_role_limit" value="sub_role_limit_easy"{$checked_sub_role_limit_easy}>
+{$GAME_OPT_CAPT->sub_role_limit_easy}<br>
+
+<input type="radio" name="sub_role_limit" value="sub_role_limit_normal"{$checked_sub_role_limit_normal}>
+{$GAME_OPT_CAPT->sub_role_limit_normal}<br>
+
+<input type="radio" name="sub_role_limit" value=""{$checked_sub_role_limit_none}>
+{$GAME_OPT_CAPT->sub_role_limit_none}<br>
+</td>
+</tr>
+
+EOF;
+  }
+  OutputRoomOption(array('secret_sub_role'), '', false);
+}

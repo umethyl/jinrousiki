@@ -1,131 +1,258 @@
 <?php
-require_once(dirname(__FILE__) . '/../include/functions.php');
+define('JINRO_ROOT', '..');
+require_once(JINRO_ROOT . '/include/init.php');
+$INIT_CONF->LoadClass('SCRIPT_INFO');
 
-OutputHTMLHeader('Æò¤Ï¿ÍÏµ¤Ê¤ê¤ä¡©[½é´üÀßÄê]', 'action', '../css'); //HTML¥Ø¥Ã¥À
+OutputHTMLHeader($SERVER_CONF->title . $SERVER_CONF->comment . ' [åˆæœŸè¨­å®š]'); //HTMLãƒ˜ãƒƒãƒ€
 
-if(! ($dbHandle = ConnectDatabase(true, false))){ //DB ÀÜÂ³
-  mysql_query("CREATE DATABASE $db_name DEFAULT CHARSET ujis");
-  echo "¥Ç¡¼¥¿¥Ù¡¼¥¹ $db_name ¤òºîÀ®¤·¤Ş¤·¤¿¡£<br>";
-  $dbHandle = ConnectDatabase(true); //²ş¤á¤Æ DB ÀÜÂ³
+if(! $DB_CONF->Connect(true, false)){ //DB æ¥ç¶š
+  mysql_query("CREATE DATABASE {$DB_CONF->name} DEFAULT CHARSET utf8");
+  echo "ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ {$DB_CONF->name} ã‚’ä½œæˆã—ã¾ã—ãŸã€‚<br>";
+  $DB_CONF->Connect(true); //æ”¹ã‚ã¦ DB æ¥ç¶š
 }
-echo '</head><body>'."\n";
+echo "</head><body>\n";
 
-CheckTable(); //¥Æ¡¼¥Ö¥ëºîÀ®
-OutputHTMLFooter(); //HTML¥Õ¥Ã¥¿
-DisconnectDatabase($dbHandle); //DB ÀÜÂ³²ò½ü
+CheckTable(); //ãƒ†ãƒ¼ãƒ–ãƒ«ä½œæˆ
+OutputHTMLFooter(); //HTMLãƒ•ãƒƒã‚¿
 
-//-- ¥¯¥é¥¹ÄêµÁ --//
-//¥æ¡¼¥¶¥¢¥¤¥³¥ó¤Î½é´üÀßÄê
-//¥¢¥¤¥³¥ó¥¤¥á¡¼¥¸¤òPHPÀßÃÖ»ş¤ËÄÉ²Ã¤¹¤ë¾ì¹ç¤Ï¤³¤³¤âÉ¬¤ºÄÉ²Ã¤·¤Æ¤¯¤À¤µ¤¤¡£
+//-- ã‚¯ãƒ©ã‚¹å®šç¾© --//
+//ãƒ¦ãƒ¼ã‚¶ã‚¢ã‚¤ã‚³ãƒ³ã®åˆæœŸè¨­å®š
+//ã‚¢ã‚¤ã‚³ãƒ³ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’PHPè¨­ç½®æ™‚ã«è¿½åŠ ã™ã‚‹å ´åˆã¯ã“ã“ã®è¨­å®šã‚‚è¿½åŠ ã—ã¦ãã ã•ã„
 class DefaultIcon{
-  //¥æ¡¼¥¶¥¢¥¤¥³¥ó¥Ç¥£¥ì¥¯¥È¥ê¡§setup.php ¤«¤é¤ÎÁêÂĞ¥Ñ¥¹
-  //¼Âºİ¤Ë±¿ÍÑ¤¹¤ëºİ¤Ï TOP ¤«¤é¤ÎÁêÂĞ¥Ñ¥¹ (IconConfig->path) ¤ò»²¾È¤¹¤ëÅÀ¤ËÃí°Õ
-  var $path   = '../user_icon';  //¥¢¥¤¥³¥óÌ¾¤Î¥ê¥¹¥È
-
-  var $name = array('ÌÀ³¥', '°Å³¥', '²«¿§', '¥ª¥ì¥ó¥¸', 'ÀÖ', '¿å¿§', 'ÀÄ', 'ÎĞ', '»ç', '¤µ¤¯¤é¿§');
-
-  //¥¢¥¤¥³¥ó¤Î¿§ (¥¢¥¤¥³¥ó¤Î¥Õ¥¡¥¤¥ëÌ¾¤ÏÉ¬¤º001¡Á¤Î¿ô»ú¤Ë¤·¤Æ¤¯¤À¤µ¤¤), Éı, ¹â¤µ
-  var $color = array('#DDDDDD', '#999999', '#FFD700', '#FF9900', '#FF0000',
-		     '#99CCFF', '#0066FF', '#00EE00', '#CC00CC', '#FF9999');
-  var $width  = array(32, 32, 32, 32, 32, 32, 32, 32, 32, 32);
-  var $height = array(32, 32, 32, 32, 32, 32, 32, 32, 32, 32);
+  //ã‚¢ã‚¤ã‚³ãƒ³ãƒ‡ãƒ¼ã‚¿
+  public $data = array(
+     1 => array('name' => 'æ˜ç°',     'file' => '001.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#DDDDDD'),
+     2 => array('name' => 'æš—ç°',     'file' => '002.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#999999'),
+     3 => array('name' => 'é»„è‰²',     'file' => '003.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#FFD700'),
+     4 => array('name' => 'ã‚ªãƒ¬ãƒ³ã‚¸', 'file' => '004.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#FF9900'),
+     5 => array('name' => 'èµ¤',       'file' => '005.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#FF0000'),
+     6 => array('name' => 'æ°´è‰²',     'file' => '006.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#99CCFF'),
+     7 => array('name' => 'é’',       'file' => '007.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#0066FF'),
+     8 => array('name' => 'ç·‘',       'file' => '008.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#00EE00'),
+     9 => array('name' => 'ç´«',       'file' => '009.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#CC00CC'),
+    10 => array('name' => 'ã•ãã‚‰è‰²', 'file' => '010.gif', 'width' => 32, 'height' => 32,
+	       'color' => '#FF9999'));
 }
 
-//¿ÈÂå¤ï¤ê·¯¥¢¥¤¥³¥ó
+//èº«ä»£ã‚ã‚Šå›ã‚¢ã‚¤ã‚³ãƒ³
 class DummyBoyIcon{
-  var $path   = '../img/dummy_boy_user_icon.jpg'; //IconConfig->path ¤«¤é¤ÎÁêÂĞ¥Ñ¥¹
-  var $name   = '¿ÈÂå¤ï¤ê·¯ÍÑ'; //Ì¾Á°
-  var $color  = '#000000'; //¿§
-  var $width  = 45; //Éı
-  var $height = 45; //¹â¤µ
+  var $path   = '../img/dummy_boy_user_icon.jpg'; //IconConfig->path ã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹
+  var $name   = 'èº«ä»£ã‚ã‚Šå›ç”¨'; //åå‰
+  var $color  = '#000000'; //è‰²
+  var $width  = 45; //å¹…
+  var $height = 45; //é«˜ã•
 }
 
-//-- ´Ø¿ô --//
-//É¬Í×¤Ê¥Æ¡¼¥Ö¥ë¤¬¤¢¤ë¤«³ÎÇ§¤¹¤ë
+//-- é–¢æ•° --//
+//å¿…è¦ãªãƒ†ãƒ¼ãƒ–ãƒ«ãŒã‚ã‚‹ã‹ç¢ºèªã™ã‚‹
 function CheckTable(){
-  global $ICON_CONF, $db_name, $system_password;
+  global $SERVER_CONF, $DB_CONF, $SCRIPT_INFO;
 
-  //¥Æ¡¼¥Ö¥ë¤Î¥ê¥¹¥È¤òÇÛÎó¤Ë¼èÆÀ
-  $sql   = mysql_list_tables($db_name);
-  $count = mysql_num_rows($sql);
-  $table = array();
-  for($i=0; $i < $count; $i++) array_push($table, mysql_tablename($sql, $i));
-
-  //¥Á¥§¥Ã¥¯¤·¤Æ¥Æ¡¼¥Ö¥ë¤¬Â¸ºß¤·¤Ê¤±¤ì¤ĞºîÀ®¤¹¤ë
-  if(! in_array('room', $table)){
-    mysql_query("CREATE TABLE room(room_no int primary key, room_name text, room_comment text,
-		max_user int, game_option text, option_role text, status text,
-		date int, day_night text,last_updated text,victory_role text)");
-    echo '¥Æ¡¼¥Ö¥ë(room)¤òºîÀ®¤·¤Ş¤·¤¿<br>'."\n";
+  //å‰å›ã®ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã®ãƒªãƒ“ã‚¸ãƒ§ãƒ³ç•ªå·ã‚’å–å¾—
+  $revision = $SERVER_CONF->last_updated_revision;
+  if($revision >= $SCRIPT_INFO->revision){
+    echo 'åˆæœŸè¨­å®šã¯ã™ã§ã«å®Œäº†ã—ã¦ã„ã¾ã™ã€‚';
+    return;
   }
-  if(! in_array('user_entry', $table)){
-    mysql_query("CREATE TABLE user_entry(room_no int, user_no int, uname text, handle_name text,
-		icon_no int, profile text, sex text, password text, role text, live text,
-		session_id char(32) unique, last_words text, ip_address text, last_load_day_night text)");
-    echo '¥Æ¡¼¥Ö¥ë(user_entry)¤òºîÀ®¤·¤Ş¤·¤¿<br>'."\n";
+  $table_list = FetchArray('SHOW TABLES'); //ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒªã‚¹ãƒˆã‚’å–å¾—
 
-    mysql_query("INSERT INTO user_entry(room_no, user_no, uname, handle_name, icon_no, profile,
-		password, role, live)
-		VALUES(0, 0, 'system', '¥·¥¹¥Æ¥à', 1, '¥²¡¼¥à¥Ş¥¹¥¿¡¼', '$system_password', 'GM', 'live')");
+  //ãƒã‚§ãƒƒã‚¯ã—ã¦ãƒ†ãƒ¼ãƒ–ãƒ«ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°ä½œæˆã™ã‚‹
+  $header  = 'ãƒ†ãƒ¼ãƒ–ãƒ«';
+  $footer  = '<br>'."\n";
+  $str     = 'ã‚’ä½œæˆã—ã¾ã—ãŸ' . $footer;
+  $success = ') ã‚’è¿½åŠ ã—ã¾ã—ãŸ';
+  $failed  = ') ã‚’è¿½åŠ ã§ãã¾ã›ã‚“ã§ã—ãŸ';
+
+  $table = 'room';
+  $title = $header . ' (' . $table . ') ';
+  if(! in_array($table, $table_list)){
+    $query = <<<EOF
+room_no INT NOT NULL PRIMARY KEY, room_name TEXT, room_comment TEXT, max_user INT, game_option TEXT,
+option_role TEXT, status TEXT, date INT, day_night TEXT, last_updated TEXT, victory_role TEXT,
+establisher_ip TEXT, establish_time DATETIME, start_time DATETIME, finish_time DATETIME
+EOF;
+    SendQuery("CREATE TABLE {$table}({$query})");
+    echo $title . $str;
   }
-  if(! in_array('talk', $table)){
-    mysql_query("CREATE TABLE talk(room_no int, date int, location text, uname text, time text,
-		 sentence text, font_type text, spend_time int)");
-    echo '¥Æ¡¼¥Ö¥ë(talk)¤òºîÀ®¤·¤Ş¤·¤¿<br>'."\n";
-  }
-  if(! in_array('vote', $table)){
-    mysql_query("CREATE TABLE vote(room_no int NOT NULL, date int, uname text, target_uname text,
-		 vote_number int, vote_times int, situation text)");
-    echo '¥Æ¡¼¥Ö¥ë(vote)¤òºîÀ®¤·¤Ş¤·¤¿<br>'."\n";
-  }
-  if(! in_array('system_message', $table)){
-    mysql_query("CREATE TABLE system_message(room_no int, message text, type text, date int)");
-    echo '¥Æ¡¼¥Ö¥ë(system_message)¤òºîÀ®¤·¤Ş¤·¤¿<br>'."\n";
-  }
-  if(! in_array('user_icon', $table)){
-    mysql_query("CREATE TABLE user_icon(icon_no int primary key, icon_name text, icon_filename text,
-		icon_width int, icon_height int, color text, session_id text)");
-    echo '¥Æ¡¼¥Ö¥ë(user_icon)¤òºîÀ®¤·¤Ş¤·¤¿<br>'."\n";
-
-    //¿ÈÂå¤ï¤ê·¯¤Î¥¢¥¤¥³¥ó¤òÅĞÏ¿(¥¢¥¤¥³¥óNo¡§0)
-    $class = new DummyBoyIcon(); //¿ÈÂå¤ï¤ê·¯¥¢¥¤¥³¥ó¤ÎÀßÄê¤ò¥í¡¼¥É
-    mysql_query("INSERT INTO user_icon(icon_no, icon_name, icon_filename, icon_width,
-		 icon_height,color)
-		 VALUES(0, '{$class->name}', '{$class->path}', {$class->width},
-		 {$class->height}, '{$class->color}')");
-
-    //½é´ü¤Î¥¢¥¤¥³¥ó¤Î¥Õ¥¡¥¤¥ëÌ¾¤È¿§¥Ç¡¼¥¿¤ò DB ¤ËÅĞÏ¿¤¹¤ë
-    $icon_no = 1;
-    $class = new DefaultIcon(); //¥æ¡¼¥¶¥¢¥¤¥³¥ó¤Î½é´üÀßÄê¤ò¥í¡¼¥É
-
-    //¥Ç¥£¥ì¥¯¥È¥êÆâ¤Î¥Õ¥¡¥¤¥ë°ìÍ÷¤ò¼èÆÀ
-    if($handle = opendir($class->path)){
-      while (($file = readdir($handle)) !== false){
-	if($file != '.' && $file != '..' && $file != 'index.html'){
-	  //½é´ü¥Ç¡¼¥¿¤ÎÆÉ¤ß¹ş¤ß
-	  $name   = $class->name[  $icon_no - 1];
-	  $width  = $class->width[ $icon_no - 1];
-	  $height = $class->height[$icon_no - 1];
-	  $color  = $class->color[ $icon_no - 1];
-
-	  mysql_query("INSERT INTO user_icon(icon_no, icon_name, icon_filename, icon_width,
-			icon_height, color)
-			VALUES($icon_no, '$name', '$file', $width, $height, '$color')");
-	  $icon_no++;
-	  echo "¥æ¡¼¥¶¥¢¥¤¥³¥ó($file $name $width ¡ß $height $color)¤òÅĞÏ¿¤·¤Ş¤·¤¿<br>"."\n";
-	}
-      }
-      closedir($handle);
+  elseif($revision > 0){
+    //è¿½åŠ ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å‡¦ç†
+    $column = FetchArray('SHOW COLUMNS FROM ' . $table);
+    $stack  = array(
+      'establisher_ip' => 'TEXT',
+      'establish_time' => 'DATETIME',
+      'start_time'     => 'DATETIME',
+      'finish_time'    => 'DATETIME');
+    foreach($stack as $name => $type){
+      if(in_array($name, $column)) continue;
+      $status = SendQuery("ALTER TABLE {$table} ADD {$name} {$type}") ? $success : $failed;
+      echo $title . 'ã«ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ (' . $name . $status . $footer;
     }
   }
 
-  if(! in_array('admin_manage', $table)){
-    mysql_query("CREATE TABLE admin_manage(session_id text)");
-    mysql_query("INSERT INTO admin_manage VALUES('')");
-    echo '¥Æ¡¼¥Ö¥ë(admin_manage)¤òºîÀ®¤·¤Ş¤·¤¿<br>'."\n";
+  $table = 'user_entry';
+  $title = $header . ' (' . $table . ') ';
+  if(! in_array($table, $table_list)){
+    $query = <<<EOF
+room_no INT NOT NULL, user_no INT, uname TEXT, handle_name TEXT, icon_no INT, profile TEXT,
+sex TEXT, password TEXT, role TEXT, live TEXT, session_id CHAR(32) UNIQUE, last_words TEXT,
+ip_address TEXT, last_load_day_night TEXT, INDEX user_entry_index(room_no, user_no)
+EOF;
+    SendQuery("CREATE TABLE {$table}({$query})");
+    echo $title . $str;
+
+    //ç®¡ç†è€…ã‚’ç™»éŒ²
+    SendQuery("INSERT INTO {$table}
+		(room_no, user_no, uname, handle_name, icon_no, profile, password, role, live)
+		VALUES(0, 0, 'system', 'ã‚·ã‚¹ãƒ†ãƒ ', 1, 'ã‚²ãƒ¼ãƒ ãƒã‚¹ã‚¿ãƒ¼',
+		'{$SERVER_CONF->system_password}', 'GM', 'live')");
   }
+  elseif(0 < $revision && $revision < 152){
+    SendQuery("ALTER TABLE {$table} MODIFY room_no INT NOT NULL"); //room_no ã®å‹ã‚’å¤‰æ›´
+    echo $header . ' (' . $table . ') ã® room_no ã®å‹ã‚’ "INT NOT NULL" ã«å¤‰æ›´ã—ã¾ã—ãŸ' . $footer;
+
+    if($revision < 140){ //INDEX ã‚’è¨­å®š
+      SendQuery("ALTER TABLE {$table} ADD INDEX user_entry_index(room_no, user_no)");
+      echo $title . 'ã« INDEX (room_no, user_no) ã‚’è¨­å®šã—ã¾ã—ãŸ' . $footer;
+    }
+  }
+
+  $table = 'talk';
+  $title = $header . ' (' . $table . ') ';
+  if(! in_array($table, $table_list)){
+    $query = <<<EOF
+talk_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, room_no INT NOT NULL, date INT, location TEXT,
+uname TEXT, time INT NOT NULL, sentence TEXT, font_type TEXT, spend_time INT,
+INDEX talk_index(room_no, date, time)
+EOF;
+    SendQuery("CREATE TABLE {$table}({$query})");
+    echo $title . $str;
+  }
+  elseif($revision > 0){
+    //è¿½åŠ ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å‡¦ç†
+    $column = FetchArray('SHOW COLUMNS FROM ' . $table);
+    $stack  = array('talk_id' => 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
+    foreach($stack as $name => $type){
+      if(in_array($name, $column)) continue;
+      $status = SendQuery("ALTER TABLE room ADD $name $type") ? $success : $failed;
+      echo $title . 'ã«ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ (' . $name . $status . $footer;
+    }
+
+    if($revision < 152){
+      SendQuery("ALTER TABLE {$table} MODIFY room_no INT NOT NULL"); //room_no ã®å‹ã‚’å¤‰æ›´
+      echo $title . 'ã® room_no ã®å‹ã‚’ "INT NOT NULL" ã«å¤‰æ›´ã—ã¾ã—ãŸ' . $footer;
+
+      if($revision < 140){ //time ã®å‹ã‚’å¤‰æ›´ã€INDEX ã‚’è¨­å®š
+	SendQuery("ALTER TABLE {$table} MODIFY time INT NOT NULL");
+	echo $title . 'ã® time ã®å‹ã‚’ "INT NOT NULL" ã«å¤‰æ›´ã—ã¾ã—ãŸ' . $footer;
+
+	SendQuery("ALTER TABLE {$table} ADD INDEX talk_index(room_no, date, time)");
+	echo $title . 'ã« INDEX (room_no, date, time) ã‚’è¨­å®šã—ã¾ã—ãŸ' . $footer;
+      }
+    }
+  }
+
+  $table = 'vote';
+  $title = $header . ' (' . $table . ') ';
+  if(! in_array($table, $table_list)){
+    $query = <<<EOF
+room_no INT NOT NULL, date INT, uname TEXT, target_uname TEXT, vote_number INT, vote_times INT,
+situation TEXT, INDEX vote_index(room_no, date)
+EOF;
+    SendQuery("CREATE TABLE {$table}({$query})");
+    echo $title . $str;
+  }
+  elseif(0 < $revision && $revision < 152){
+    SendQuery("ALTER TABLE {$table} MODIFY room_no INT NOT NULL"); //room_no ã®å‹ã‚’å¤‰æ›´
+    echo $title . 'ã® room_no ã®å‹ã‚’ "INT NOT NULL" ã«å¤‰æ›´ã—ã¾ã—ãŸ' . $footer;
+
+    if($revision < 140){ //INDEX ã‚’è¨­å®š
+      SendQuery("ALTER TABLE {$table} ADD INDEX vote_index(room_no, date)");
+      echo $title . 'ã« INDEX (room_no, date) ã‚’è¨­å®šã—ã¾ã—ãŸ' . $footer;
+    }
+  }
+
+  $table = 'system_message';
+  $title = $header . ' (' . $table . ') ';
+  if(! in_array($table, $table_list)){
+    $query = <<<EOF
+room_no INT NOT NULL, message TEXT, type TEXT, date INT, INDEX system_message_index(room_no, date)
+EOF;
+    SendQuery("CREATE TABLE {$table}({$query})");
+    echo $title . $str;
+  }
+  elseif(0 < $revision && $revision < 152){
+    SendQuery("ALTER TABLE {$table} MODIFY room_no INT NOT NULL"); //room_no ã®å‹ã‚’å¤‰æ›´
+    echo $title . 'ã® room_no ã®å‹ã‚’ "INT NOT NULL" ã«å¤‰æ›´ã—ã¾ã—ãŸ' . $footer;
+
+    if($revision < 140){ //INDEX ã‚’è¨­å®š
+      SendQuery("ALTER TABLE {$table} ADD INDEX system_message_index(room_no, date)");
+      echo $title . 'ã« INDEX (room_no, date) ã‚’è¨­å®šã—ã¾ã—ãŸ' . $footer;
+    }
+  }
+
+
+  $table = 'user_icon';
+  $title = $header . ' (' . $table . ') ';
+  if(! in_array($table, $table_list)){
+    $query = <<<EOF
+icon_no INT PRIMARY KEY, icon_name TEXT, icon_filename TEXT, icon_width INT, icon_height INT,
+color TEXT, session_id TEXT, appearance TEXT, category TEXT, author TEXT, regist_date DATETIME,
+disable BOOL
+EOF;
+    SendQuery("CREATE TABLE {$table}({$query})");
+    echo $title . $str;
+
+    //èº«ä»£ã‚ã‚Šå›ã®ã‚¢ã‚¤ã‚³ãƒ³ã‚’ç™»éŒ² (No. 0)
+    $class = new DummyBoyIcon(); //èº«ä»£ã‚ã‚Šå›ã‚¢ã‚¤ã‚³ãƒ³ã®è¨­å®šã‚’ãƒ­ãƒ¼ãƒ‰
+    SendQuery("INSERT INTO ${table}(icon_no, icon_name, icon_filename, icon_width,
+		icon_height,color)
+		VALUES(0, '{$class->name}', '{$class->path}', {$class->width},
+		{$class->height}, '{$class->color}')");
+
+    //åˆæœŸã‚¢ã‚¤ã‚³ãƒ³ç™»éŒ²
+    $class = new DefaultIcon(); //ãƒ¦ãƒ¼ã‚¶ã‚¢ã‚¤ã‚³ãƒ³ã®åˆæœŸè¨­å®šã‚’ãƒ­ãƒ¼ãƒ‰
+    $query = <<<EOF
+INSERT INTO {$table}(icon_no, icon_name, icon_filename, icon_width, icon_height, color)
+VALUES
+EOF;
+    foreach($class->data as $id => $list){
+      extract($list);
+      SendQuery("{$query}($id, '$name', '$file', $width, $height, '$color')");
+      echo "ãƒ¦ãƒ¼ã‚¶ã‚¢ã‚¤ã‚³ãƒ³ ($id $file $name $width Ã— $height $color) ã‚’ç™»éŒ²ã—ã¾ã—ãŸ" . $footer;
+    }
+  }
+  elseif($revision > 0){ //è¿½åŠ ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å‡¦ç†
+    $column = FetchArray('SHOW COLUMNS FROM ' . $table);
+    $stack  = array(
+      'appearance'  => 'TEXT',
+      'category'    => 'TEXT',
+      'author'      => 'TEXT',
+      'regist_date' => 'DATETIME',
+      'disable'     => 'BOOL',);
+    foreach($stack as $name => $type){
+      if(in_array($name, $column)) continue;
+      $status = SendQuery("ALTER TABLE {$table} ADD {$name} {$type}") ? $success : $failed;
+      echo $title . 'ã«ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ (' . $name . $status . $footer;
+    }
+  }
+
+  $title = $header . '(admin_manage)';
+  if(! in_array('admin_manage', $table_list)){
+    SendQuery("CREATE TABLE admin_manage(session_id TEXT)");
+    SendQuery("INSERT INTO admin_manage VALUES('')");
+    echo $title . $str;
+  }
+
   mysql_query("GRANT ALL ON {$db_name}.* TO $db_uname");
-  mysql_query('COMMIT'); //°ì±ş¥³¥ß¥Ã¥È
-  echo '½é´üÀßÄê¤ÏÌµ»ö´°Î»¤·¤Ş¤·¤¿¡£<br>'."\n";
+  SendCommit();
+  echo 'åˆæœŸè¨­å®šã¯ç„¡äº‹å®Œäº†ã—ã¾ã—ãŸ' . $footer;
 }
-?>

@@ -1,3 +1,5 @@
+@charset "utf-8";
+@import url(base.css);
 a{text-decoration:none;}
 a:link{   color: #0000FF;}
 a:hover{  color: #999999; text-decoration: underline;}
@@ -10,22 +12,22 @@ body{
   background-attachment: fixed;
 }
 img{border: 0;}
-.comment{ /* ƒT[ƒo–¼ */
+.comment{ /* ã‚µãƒ¼ãƒå */
   text-align: right;
   font-weight: bold;
 }
-noscript{ /* JavaScript ‚ª–³Œø‚Ìê‡‚Ìƒ[ƒjƒ“ƒO */
+noscript{ /* JavaScript ãŒç„¡åŠ¹ã®å ´åˆã®ãƒ¯ãƒ¼ãƒ‹ãƒ³ã‚° */
   color: #FF0000;
   font-size: 15pt;
   font-weight: bold;
 }
-table.main{ /* ‘S‘Ì‚Ì table */
+table.main{ /* å…¨ä½“ã® table */
   border: 0;
   width: 100%;
   padding: 5px;
 }
 table.main td{vertical-align: top;}
-.menu{ /* ƒƒjƒ…[ */
+.menu{ /* ãƒ¡ãƒ‹ãƒ¥ãƒ¼ */
   border: 1px solid #CC3300;
   width: 140px;
   padding: 5px 1px;
@@ -33,45 +35,63 @@ table.main td{vertical-align: top;}
   text-align: center;
   font-weight: bold;
 }
-ul{ /* ƒƒjƒ…[‚ÌƒŠƒ“ƒN */
+ul{ /* ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ãƒªãƒ³ã‚¯ */
   list-style-type: none;
   margin-left: -32px;
-  _margin-left: 8px; /* IE6 ‘Î‰ */
+  *margin-left: 8px; /* IE6 å¯¾å¿œ */
   line-height: 150%;
   font-size: 95%;
 }
-.log{ /* HTML‰»ƒƒO */
+.log{ /* HTMLåŒ–ãƒ­ã‚° */
  color: #3333CC;
  font-weight: bold;
 }
-fieldset{margin-bottom: 10px;} /* ‰E‘¤‚Ì˜g */
-legend{font-weight: bold;} /* fieldset(‰E‘¤‚Ì˜g) ‚Ìƒ^ƒCƒgƒ‹ */
-.information{ /* Information (’†g‚Í info/index.html) */
-  margin: 20px 20px;
-  line-height: 135%;
+fieldset{margin-bottom: 10px;} /* å³å´ã®æ  */
+legend{font-weight: bold;} /* fieldset(å³å´ã®æ ) ã®ã‚¿ã‚¤ãƒˆãƒ« */
+.information{ /* Information (ä¸­èº«ã¯ info/index.html) */
+  margin: 10px 10px;
 }
-.information ul{list-style-type: circle;}
-.game-list{ /* ƒQ[ƒ€ˆê—— (’†g‚Í game_manager.php) */
+.information h1 h2 h3 h4{
+  margin: 0px;
+  padding: 5px 0px;
+}
+.information h1{
+  background-color: #CCFFCC;
+  font-size: 120%;
+}
+.information h2{
+  background-color: #CCFFFF;
+  font-size: 100%;
+}
+.information h3{
+  background-color: #FFDDDD;
+  font-size: 100%;
+}
+.information h4{
+  background-color: #DDDDDD;
+  font-size: 100%;
+}
+.game-list{ /* ã‚²ãƒ¼ãƒ ä¸€è¦§ (ä¸­èº«ã¯ game_manager.php) */
   margin: 20px 20px 30px;
   line-height: 135%;
   font-weight: bold;
 }
 .game-list div{text-align: right;}
-form{margin-top: 10px;} /* ‘º‚Ìì¬ƒtƒH[ƒ€ */
-label{ /* ‘ºì¬‚ÌƒIƒvƒVƒ‡ƒ“–¼ */
+form{margin-top: 10px;} /* æ‘ã®ä½œæˆãƒ•ã‚©ãƒ¼ãƒ  */
+label{ /* æ‘ä½œæˆã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³å */
   margin-left: 1em;
   font-weight: bold;
 }
-input, select{ /* İ’è€–Ú */
+input, select{ /* è¨­å®šé …ç›® */
   background-color: #F0F8FF;
   border:1px solid #C0C0C0;
 }
-.text{border:1px solid #C0C0C0;} /* ‘º‚Ì–¼‘O, à–¾‚È‚Ç */
-.explain{font-size: 80%;} /* ƒIƒvƒVƒ‡ƒ“‚Ìà–¾ */
-.explain input{border: 0px solid #000000;} /* ’‹, –é‚ÌŠÔ */
-.make{text-align: right;} /* ì¬ƒ{ƒ^ƒ“ */
+.text{border:1px solid #C0C0C0;} /* æ‘ã®åå‰, èª¬æ˜ãªã© */
+.explain{font-size: 80%;} /* ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®èª¬æ˜ */
+.explain input{border: 0px solid #000000;} /* æ˜¼, å¤œã®æ™‚é–“ */
+.make{text-align: right;} /* ä½œæˆãƒœã‚¿ãƒ³ */
 .make input{border: 1px solid #000000;}
-.footer{ /* ƒtƒbƒ^[ (‘fŞ‚ÌƒŠƒ“ƒN‚È‚Ç) */
+.footer{ /* ãƒ•ãƒƒã‚¿ãƒ¼ (ç´ æã®ãƒªãƒ³ã‚¯ãªã©) */
   margin-bottom: 5px;
   text-align:right;
   font-size: 80%;

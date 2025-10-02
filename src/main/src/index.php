@@ -1,40 +1,38 @@
-<?php require_once(dirname(__FILE__) . '/../include/setting.php'); ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN">
-<html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<link rel="stylesheet" href="../css/src.css">
-<title>│л╚п╚╟е╜б╝е╣е└ежеєеэб╝е╔</title>
+<?php
+define('JINRO_ROOT', '..');
+require_once(JINRO_ROOT . '/include/init.php');
+OutputHTMLHeader('щЦЛчЩ║чЙИуВ╜уГ╝уВ╣уГАуВжуГ│уГнуГ╝уГЙ', 'src');
+?>
 </head>
 <body>
-<a href="../index.php">вл╠сды</a><br>
-<?php include_once(dirname(__FILE__) . '/download.php'); ?>
+<a href="../">тЖРцИ╗уВЛ</a><br>
+<?php include_once('download.php'); ?>
 
 <form method="POST" action="upload.php" enctype="multipart/form-data">
 <table id="upload">
 <tr>
-  <td><label>е╒ебедеы┴к┬Є</label></td>
+  <td><label>уГХуВбуВдуГлщБ╕цКЮ</label></td>
   <td><input type="file" name="file" size="60"></td>
 </tr>
 <tr>
-  <td><label>е╒ебедеы╠╛</label></td>
+  <td><label>уГХуВбуВдуГлхРН</label></td>
   <td><input type="text" name="name" maxlength="20" size="20"></td>
 </tr>
 <tr>
-  <td><label>е╒ебедеыд╬└т╠└</label></td>
+  <td><label>уГХуВбуВдуГлуБошкмцШО</label></td>
   <td><input type="text" name="caption" maxlength="80" size="80"></td>
 </tr>
 <tr>
-  <td><label>║ю└о╝╘╠╛</label></td>
+  <td><label>ф╜ЬцИРшАЕхРН</label></td>
   <td><input type="text" name="user" maxlength="20" size="20"></td>
 </tr>
 <tr>
-  <td><label>е╤е╣еяб╝е╔</label></td>
+  <td><label>уГСуВ╣уГпуГ╝уГЙ</label></td>
   <td><input type="password" name="password" maxlength="20" size="20"></td>
 </tr>
 <tr>
-  <td><input type="submit" value="еве├е╫еэб╝е╔"></td>
-  <td><label>┬╨▒■│╚─е╗╥д╧ zip, lzh д╬д▀</label></td>
+  <td><input type="submit" value="уВвуГГуГЧуГнуГ╝уГЙ"></td>
+  <td><label>хп╛х┐ЬцЛбх╝╡хнРуБп zip, lzh уБоуБ┐</label></td>
 </tr>
 </table>
 </form>

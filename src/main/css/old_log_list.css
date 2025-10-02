@@ -1,62 +1,83 @@
+@charset "utf-8";
+@import url(base.css);
+a:link{   color: #0000FF;}
+a:visited{color: #0000FF;}
+a:active {color: #FF0000;}
+a:hover { color: #FF0000;}
 #room_list{
- background-color: #FFFFF;
- background-image:url("../img/old_log_bg.jpg");
- background-repeat:no-repeat;
- background-position:100% 100%;
- background-attachment:fixed;
+ background-color: #FFFFFF;
+ background-image: url("../img/old_log_bg.jpg");
+ background-repeat: no-repeat;
+ background-position: 100% 100%;
+ background-attachment: fixed;
 }
 #room_list table{
- filter:alpha(opacity=80,enabled=80)
- -moz-opacity:0.8;
- opacity:0.8;
+ filter: alpha(opacity=80, enabled=80)
+ -moz-opacity: 0.8;
+ opacity: 0.8;
 }
-h1 {
- font-size:12pt;
- font-weight:normal;
+h1{
+ font-size: 12pt;
+ font-weight: normal;
 }
-h1 em {
- font-size:15pt;
- font-weight:bold;
- font-style:normal;
+h1 em{
+ font-size: 15pt;
+ font-weight: bold;
+ font-style: normal;
 }
-table {
- border-collapse:collapse;
+table{
+  border-width: 0;
+  border-collapse: collapse;
 }
-th, td {
- border : #ffffff solid 0px ;
+td{border-width: 0;}
+.list{   text-align: right;}
+.list td{text-align: right;}
+.icon{text-align: left;}
+.main{
+  background-color: #CCCCCC;
+  border: 1px solid #FFFFFF;
+  text-align: center;
 }
-img.icon {
- height:16px;
- width:16px;
-}
-img.winner {
- height:15px;
- width:15px;
-}
-a:link {
- color:#0000ff;
-}
-a:visited {
- color:#0000ff;
-}
-a:active {
- color:#ff0000;
-}
-a:hover {
- color:#ff0000;
-}
-.column th{
+th{
   margin: 0px;
-  border-width : 1px 0 0 1px ;
   padding : 3px 3px 3px 6px;
+  border: 1px solid #000000;
   background-color: #526CD6;
-  color: #ffffff;
+  color: #FFFFFF;
   white-space: nowrap;
 }
-.row {
- margin: 0px;
- border-width : 1px 0 0 1px ;
- padding : 3px 3px 3px 6px;
- background-color:#f2eace;
- color: #333333;
+.main td{
+  margin: 0px;
+  padding: 3px 3px 3px 6px;
+  background-color: #F2EACE;
+  color: #333333;
+  vertical-align: middle;
+}
+.number{border: 1px solid  #000000;}
+.title{
+  border-top:    1px solid  #000000;
+  border-right:  1px solid  #000000;
+  border-left:   1px solid  #000000;
+  border-bottom: 1px dotted #CCCCCC;
+}
+.upper{
+  border-right:  1px dotted #CCCCCC;
+  border-bottom: 1px dotted #CCCCCC;
+}
+.side{
+  border-right:  1px solid  #000000;
+  border-bottom: 1px dotted #CCCCCC;
+}
+.middle{
+  border-bottom: 1px dotted #CCCCCC;
+}
+.lower td{
+  border-right:  1px solid  #000000;
+  border-left:   1px solid  #000000;
+  border-bottom: 1px solid  #000000;
+}
+.comment{font-size: 75%;}
+.time{
+  text-align: center;
+  border-right:  1px solid  #000000;
 }
