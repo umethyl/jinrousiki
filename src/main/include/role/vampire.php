@@ -50,7 +50,7 @@ class Role_vampire extends Role {
       RoleManager::LoadMain($user)->InfectVampire($actor); //吸血鬼襲撃
     }
     elseif ($user->IsDelayMania() && $user->IsCamp('vampire')) {
-      $this->AddSuccess($user->id, 'vampire_kill'); //時間差コピー能力者
+      if (! $user->IsAvoid()) $this->AddSuccess($user->id, 'vampire_kill'); //時間差コピー能力者
     }
     else {
       $this->SetInfectTarget($user->id);

@@ -1484,6 +1484,8 @@ class VoteNight extends VoteBase {
       RoleManager::LoadMain($user)->SetStepAssassin(explode(' ', $target_id));
     }
 
+    foreach (RoleManager::LoadFilter('trap') as $filter) $filter->DelayTrapKill(); //罠死処理
+
     //RoleManager::Stack()->p($role, "◆Target [{$role}]");
     if (RoleManager::Stack()->Exists($role)) RoleManager::GetClass($role)->AssassinKill();
     RoleManager::Stack()->Clear($role);
@@ -1725,7 +1727,7 @@ class VoteNight extends VoteBase {
 	  $target_list = explode(' ', $target_id);
 	  foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
 	    foreach ($target_list as $target_id) {
-	      if ($filter->TrapKill($user, $target_id)) continue 4;
+	      if ($filter->DelayTrap($user, $target_id)) continue 4;
 	    }
 	  }
 	  RoleManager::LoadMain($user)->StepScan($target_list);
@@ -1738,6 +1740,10 @@ class VoteNight extends VoteBase {
 	  RoleManager::LoadMain($user)->Report(DB::$USER->ByID($target_id));
 	  break;
 	}
+      }
+
+      if ($action == 'STEP_SCANNER_DO') {
+	foreach (RoleManager::LoadFilter('trap') as $filter) $filter->DelayTrapKill(); //罠死処理
       }
     }
   }

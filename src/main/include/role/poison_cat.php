@@ -165,7 +165,7 @@ class Role_poison_cat extends Role {
 	}
       }
       elseif ($user->IsLive(true)) { //生存者 (憑依状態確定)
-	if ($virtual->IsDrop()) return false; //蘇生辞退者対応
+	if ($virtual->IsReviveLimited()) return false; //蘇生辞退者対応
 
 	//見かけ上の蘇生処理
 	$user->ReturnPossessed('possessed_target');

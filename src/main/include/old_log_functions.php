@@ -147,7 +147,8 @@ class OldLogHTML {
     } else {
       $str = HTML::GenerateHeader($title, 'old_log', true);
     }
-    $str .= HTML::GenerateLink('old_log.php', Message::BACK) . Text::BRLF;
+    $url = RQ::Get()->db_no > 0 ? sprintf('?db_no=%d', RQ::Get()->db_no) : '';
+    $str .= HTML::GenerateLink('old_log.php' . $url, Message::BACK) . Text::BRLF;
     $str .= DB::$ROOM->GenerateTitleTag(true) . Text::BRLF;
     $str .= RoomOption::GenerateImage() . Text::BRLF;
     $str .= sprintf('<a href="#beforegame">%s</a>' . Text::LF, OldLogMessage::BEFORE);

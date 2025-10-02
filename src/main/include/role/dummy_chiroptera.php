@@ -20,7 +20,7 @@ class Role_dummy_chiroptera extends Role {
       }
       RoleHTML::OutputPartner($pair, 'cupid_pair');
     }
-    if (is_array($stack)) $this->OutputLovers($stack);
+    if (is_array($target)) $this->OutputLovers($target);
   }
 
   //仮想恋人表示

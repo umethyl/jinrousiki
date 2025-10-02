@@ -43,7 +43,7 @@ class Role_step_scanner extends Role_mind_scanner {
     //Text::p($around_list, '◆Target [Around]');
 
     //確率判定
-    $rate = min(80, count($around_list) * 8);
+    $rate = min(80, count($around_list) * 10);
     //Text::p($rate, '◆Rate');
     if (Lottery::Percent(100 - $rate)) return;
 

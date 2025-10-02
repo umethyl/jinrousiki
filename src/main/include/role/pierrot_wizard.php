@@ -19,7 +19,7 @@ class Role_pierrot_wizard extends Role_wizard {
   public function SetAssassin(User $user) {
     $actor = $this->GetActor();
     foreach (RoleManager::LoadFilter('trap') as $filter) { //罠判定
-      if ($filter->TrapStack($actor, $user->id)) return;
+      if ($filter->DelayTrap($actor, $user->id)) return;
     }
     foreach (RoleManager::LoadFilter('guard_assassin') as $filter) { //対暗殺護衛判定
       if ($filter->GuardAssassin($user->id)) return;

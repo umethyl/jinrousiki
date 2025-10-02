@@ -36,7 +36,9 @@ class Role_protected extends Role {
   private function Sacrifice(array $stack) {
     //Text::p($stack, sprintf('◆Sacrifice [%s]', $this->role));
     if (count($stack) < 1) return false;
-    DB::$USER->Kill(Lottery::Get($stack), 'SACRIFICE');
+    $id = Lottery::Get($stack);
+    DB::$USER->Kill($id, 'SACRIFICE');
+    $this->AddStack($id, 'sacrifice');
     return true;
   }
 }
