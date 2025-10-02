@@ -1,0 +1,17 @@
+<?php
+/*
+  ◆半鳥女 (doom_escaper)
+  ○仕様
+  ・逃亡失敗：死の宣告を受けた人
+  ・逃亡処理：死の宣告
+*/
+RoleLoader::LoadFile('escaper');
+class Role_doom_escaper extends Role_escaper {
+  protected function EscapeFailed(User $user) {
+    return $user->IsRole('death_warrant');
+  }
+
+  protected function EscapeAction(User $user) {
+    if (! RoleUser::IsAvoidLovers($user, true)) $user->AddDoom(4);
+  }
+}

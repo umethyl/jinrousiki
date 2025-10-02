@@ -1,0 +1,10 @@
+<?php
+/*
+  ◆サブ役職制限：HARDモード
+*/
+OptionLoader::LoadFile('sub_role_limit_none');
+class Option_sub_role_limit_hard extends Option_sub_role_limit_none {
+  public function GetCaption() {
+    return 'サブ役職制限：HARDモード';
+  }
+}
