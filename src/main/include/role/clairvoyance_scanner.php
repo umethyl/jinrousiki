@@ -48,7 +48,7 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
 	}
       }
       //審神者・山立・響狼・文武王
-      elseif ($user->IsRole('step_mage', 'step_guard', 'step_wolf'. 'step_vampire')) {
+      elseif ($user->IsRole('step_mage', 'step_guard', 'step_wolf', 'step_vampire')) {
 	$id_stack = explode(' ', $target_stack);
 	$target   = DB::$USER->ByVirtual(array_pop($id_stack)); //最終到達点は憑依を追跡する
 	$result_stack = array($target->id => $target->handle_name);

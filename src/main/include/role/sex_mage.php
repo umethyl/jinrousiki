@@ -10,12 +10,12 @@ class Role_sex_mage extends Role_psycho_mage {
     return $this->DistinguishSex($user);
   }
 
-  //性別鑑定
+  //性別鑑定 (サブ・金系 > 陣営 > 通常)
   final public function DistinguishSex(User $user) {
-    if ($user->IsMainCamp('ogre')) {
-      return 'ogre';
-    } elseif ($user->IsMainCamp('chiroptera') || $user->IsRoleGroup('gold')) {
+    if ($user->IsRoleGroup('gold')) {
       return 'chiroptera';
+    } elseif ($user->IsMainCamp('ogre') || $user->IsMainCamp('chiroptera')) {
+      return $user->DistinguishCamp();
     } else {
       return 'sex_' . $user->sex;
     }
