@@ -1,0 +1,9 @@
+@charset "utf-8";
+@import url(develop_history.css);
+pre {
+  padding-bottom: 0;
+  filter: alpha(opacity=80, enabled=80);
+  -moz-opacity: 0.8;
+  opacity: 0.8;
+  background-color: #FCFCF6;
+}

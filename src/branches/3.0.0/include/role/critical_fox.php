@@ -1,0 +1,39 @@
+<?php
+/*
+  ◆寿羊狐 (critical_fox)
+  ○仕様
+  ・仲間表示：子狐系
+  ・処刑投票：痛恨 (妖狐系)
+  ・勝利：妖狐系全滅
+*/
+RoleManager::LoadFile('child_fox');
+class Role_critical_fox extends Role_child_fox {
+  public $mix_in = array('critical_mad');
+  public $action = null;
+  public $result = null;
+  public $vote_day_type = 'init';
+
+  protected function OutputPartner() {
+    $stack = array();
+    foreach (DB::$USER->rows as $user) {
+      if ($this->IsActor($user) || $user->IsFox(true)) continue;
+      if ($user->IsChildFox() || $user->IsRoleGroup('scarlet')) {
+	$stack[] = $user->handle_name;
+      }
+    }
+    RoleHTML::OutputPartner($stack, 'child_fox_partner');
+  }
+
+  public function SetVoteAction(User $user) {
+    if (! $user->IsAvoid() && $user->IsFoxCount() && ! $user->IsChildFox()) {
+      $user->AddRole('critical_luck');
+    }
+  }
+
+  public function Win($winner) {
+    foreach (DB::$USER->rows as $user) {
+      if ($user->IsLive() && $user->IsFoxCount() && ! $user->IsChildFox()) return false;
+    }
+    return true;
+  }
+}

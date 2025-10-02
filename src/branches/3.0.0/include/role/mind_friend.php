@@ -1,0 +1,31 @@
+<?php
+/*
+  ◆共鳴者 (mind_friend)
+  ○仕様
+  ・表示：2 日目以降
+  ・仲間表示：共鳴先
+  ・発言公開：共鳴先
+*/
+class Role_mind_friend extends Role {
+  protected function IgnoreAbility() {
+    return DB::$ROOM->date < 2;
+  }
+
+  protected function OutputPartner() {
+    $target = $this->GetActor()->partner_list;
+    $stack  = array();
+    foreach (DB::$USER->GetRoleUser($this->role) as $user) {
+      if ($this->IsActor($user)) continue;
+      if ($user->IsPartner($this->role, $target)) {
+	$stack[$user->id] = $user->handle_name;
+      }
+    }
+    ksort($stack);
+    RoleHTML::OutputPartner($stack, $this->role . '_list');
+  }
+
+  public function IsMindRead() {
+    return $this->GetTalkFlag('mind_read') &&
+      $this->GetActor()->IsPartner($this->role, $this->GetViewer()->partner_list);
+  }
+}
