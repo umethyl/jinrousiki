@@ -1,0 +1,88 @@
+@charset "utf-8";
+@import url(talk_vote.css);
+/* talk_class */
+body { /* AA 用 */
+  font-family: "ＭＳ Ｐゴシック", "ＭＳＰゴシック", "MSPゴシック", "MS Pゴシック";
+}
+.talk { /* 発言全体の table */
+  width: 100%;
+  border: 0;
+  border-collapse: collapse;
+}
+/* 基本発言*/
+.normal { /* 通常の発言 */
+  font-size: 12pt;
+}
+.strong {  /* 大声 */
+  font-size: 20pt;
+  font-weight: bold;
+}
+.weak { /* 小声 */
+  /* 青文字 */
+  /*
+  color: #1E90FF;
+  */
+  font-size: 8pt;
+  font-weight: lighter;
+}
+.say { /* 発言の中身 */
+  padding: 3px 0;
+  margin-left: 1px;
+  width: 1000px;
+  /* 草対策：ブラウザ依存があるので採用様子見 */
+  /*
+  word-wrap:  break-word;
+  word-break: break-all;
+  */
+}
+/* 追加項目 */
+.add-role { /* 役職表示オプション用 */
+  font-size: 8pt;
+}
+.user-talk { /* プレイヤーの発言 */
+  vertical-align: middle;
+  text-align: left;
+}
+.user-talk td {
+  border-bottom: 1px dashed #C0C0C0;
+}
+.user-name { /* プレイヤー名 */
+  width: 200px;
+}
+.user-name span { /* 独り言など */
+  font-size: 8pt;
+}
+.date-time { /* 発言時刻 */
+  font-size: 80%;
+}
+/* 特殊能力者 */
+.system-user { /* システムユーザーの発言 */
+  width: 1000px;
+  padding-left: 6em;
+  background-color: #EFEFEF;
+  color: #000000;
+  font-weight: bold;
+}
+.dummy-boy { /* 身代わり君の発言 */
+  width: 1000px;
+  background-color: #F0F8FF;
+  color: #000000;
+  font-weight: bold;
+}
+.talk-common { font-size: 8pt; } /* 共有者の名前 (共有者以外用) */
+.say-common  { font-size: 6pt; } /* 共有者の発言 (共有者以外用) */
+.night-self-talk { color: #FFFAFA; } /* 夜の独り言 */
+.night-wolf      { color: #FFCCFF; } /* 狼の遠吠え */
+.night-common    { color: #CCFFCC; } /* 共有者の会話 */
+.night-fox       { color: #FAFA66; } /* 狐の念話 */
+/* システムメッセージ */
+.system-message {
+  text-align: left;
+}
+.system-message td {
+  width: 1000px;
+  padding-left: 6em;
+  border-top: 1px dashed #C0C0C0;
+  color: #FFFAFA;
+  font-weight: bold;
+}

@@ -1,0 +1,69 @@
+@charset "utf-8";
+.winner { /* 勝敗結果全体の table */
+  margin: 5px 0px;
+  width: 100%;
+  font-size: 120%;
+  font-weight: bold;
+}
+.winner td {
+  width: 100%;
+  padding: 12px;
+  vertical-align: middle;
+  text-align: center;
+}
+.winner-human { /* 村人勝利 */
+  background-color: #FFFF99;
+  color: #000000;
+}
+.winner-doll { /* 上海人形勝利 */
+  background-color: #6060FF;
+  color: #FFFAFA;
+}
+.winner-escaper { /* 逃亡者勝利 */
+  background-color: #606090;
+  color: #FFFAFA;
+}
+.winner-wolf { /* 人狼勝利 */
+  background-color: #CC0000;
+  color: #FFFAFA;
+}
+.winner-fox { /* 妖狐勝利 */
+  background-color: #993399;
+  color: #FFFAFA;
+}
+.winner-lovers { /* 恋人勝利 */
+  background-color: #FFFAFA;
+  color: #FF69B4;
+}
+.winner-quiz { /* 出題者勝利 */
+  background-color: #9999CC;
+  color: #FFFF99;
+}
+.winner-vampire { /* 吸血鬼勝利 */
+  background-color: #D000D0;
+  color: #FFFAFA;
+}
+.winner-chiroptera { /* 蝙蝠勝利 */
+  background-color: #888888;
+  color: #FFFAFA;
+}
+.winner-ogre { /* 鬼勝利 */
+  background-color: #E09000;
+  color: #FFFAFA;
+}
+.winner-duelist { /* 決闘者勝利 */
+  background-color: #F05070;
+  color: #FFFAFA;
+}
+.winner-draw { /* 引き分け */
+  background-color: #CCEECC;
+  color: #000000;
+}
+.winner-lose { /* 敗北 */
+  background-color: #000000;
+  color: #FFFAFA;
+}
+.winner-none { /* 廃村 */
+  background-color: #AAAAAA;
+  color: #FFFAFA;
+}

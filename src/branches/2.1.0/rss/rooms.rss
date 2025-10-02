@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xml:lang="ja" xmlns="http://purl.org/rss/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<channel about="http://localhost/jinrou/rss/rooms.rss">
+<title>汝は人狼なりや？</title>
+<link>http://localhost/jinrou/</link>
+<description></description>
+<items>
+<rdf:Seq>
+</rdf:Seq>
+</items>
+</channel>
+</rdf:RDF>
