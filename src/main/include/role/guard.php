@@ -33,7 +33,7 @@ class Role_guard extends Role {
   }
 
   //護衛
-  function Guard(User $user, $flag = false) {
+  function Guard(User $user) {
     $stack = array(); //護衛者検出
     foreach (RoleManager::LoadFilter('guard') as $filter) $filter->GetGuard($user->uname, $stack);
     //Text::p($stack, 'List [gurad/' . $this->GetVoter()->uname . ']');
@@ -49,7 +49,7 @@ class Role_guard extends Role {
       if ($failed = $filter->GuardFailed()) continue; //個別護衛失敗判定
       $result |= ! ($half && mt_rand(0, 1) > 0) && (! $limited || is_null($failed));
 
-      $filter->GuardAction($this->GetWolfVoter(), $flag); //護衛実行処理
+      $filter->GuardAction(); //護衛実行処理
       //護衛成功メッセージを登録
       $this->AddSuccess($actor->user_no, 'guard_success'); //成功者を登録
       if (! DB::$ROOM->IsOption('seal_message') && $actor->IsFirstGuardSuccess($user->uname)) {
@@ -79,7 +79,7 @@ class Role_guard extends Role {
   function GuardFailed() { return false; }
 
   //護衛処理
-  function GuardAction(User $user, $flag) {}
+  function GuardAction() {}
 
   //狩り
   function Hunt(User $user) {

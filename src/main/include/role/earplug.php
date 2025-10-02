@@ -13,7 +13,7 @@ class Role_earplug extends Role_strong_voice {
   public $mix_in = 'blinder';
 
   function IgnoreTalk() {
-    return parent::IgnoreTalk() || ! DB::$ROOM->IsPlaying() ||
+    return $this->filter->IgnoreTalk() || ! DB::$ROOM->IsPlaying() ||
       (DB::$ROOM->log_mode && DB::$ROOM->IsEvent($this->role) && ! DB::$ROOM->IsDay());
   }
 

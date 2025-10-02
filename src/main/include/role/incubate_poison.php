@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('poison');
 class Role_incubate_poison extends Role_poison {
-  public $ability = 'muster_ability';
+  public $ability = 'ability_poison';
 
   function OutputResult() {
     if (DB::$ROOM->date > 4) RoleHTML::OutputAbilityResult($this->ability, null);

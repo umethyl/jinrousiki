@@ -5,7 +5,7 @@
   ・投票数：+1 (4日目まで)
 */
 class Role_eccentricer extends Role {
-  public $ability = 'muster_ability';
+  public $ability = 'ability_eccentricer';
 
   function OutputResult() {
     if ($this->IsLost()) RoleHTML::OutputAbilityResult($this->ability, null);

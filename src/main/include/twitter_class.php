@@ -27,7 +27,7 @@ class JinroTwitter {
     //投稿
     $to  = new TwitterOAuth(TwitterConfig::KEY_CK, TwitterConfig::KEY_CS,
 			    TwitterConfig::KEY_AT, TwitterConfig::KEY_AS);
-    $url = 'https://api.twitter.com/1/statuses/update.json';
+    $url = 'https://api.twitter.com/1.1/statuses/update.json';
     $response = $to->OAuthRequest($url, 'POST', array('status' => $message));
 
     if (! ($response === false || strrpos($response, 'error'))) return true;

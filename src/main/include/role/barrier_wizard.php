@@ -76,5 +76,5 @@ class Role_barrier_wizard extends Role_wizard {
 
   function GuardFailed() { return false; }
 
-  function GuardAction(User $user, $flag) {}
+  function GuardAction() {}
 }

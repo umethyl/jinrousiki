@@ -57,9 +57,12 @@ class User {
 
   //player 入れ替え処理
   public function ChangePlayer($id) {
-    if (! isset($this->role_id) || $this->role_id == $id) return;
+    if (! isset(DB::$USER->player) || ! isset($this->role_id) || $this->role_id == $id) {
+      return false;
+    }
     $this->role_id = $id;
     $this->Parse(DB::$USER->player->roles[$id]);
+    return true;
   }
 
   //夜の投票取得

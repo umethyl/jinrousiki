@@ -13,7 +13,7 @@ class Role_speaker extends Role_strong_voice {
   public $mix_in = 'blinder';
 
   function IgnoreTalk() {
-    return parent::IgnoreTalk() || ! DB::$ROOM->IsPlaying();
+    return $this->filter->IgnoreTalk() || ! DB::$ROOM->IsPlaying();
   }
 
   function FilterTalk(User $user, &$name, &$voice, &$str) {

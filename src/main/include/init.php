@@ -1,5 +1,5 @@
 <?php
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 //-- 定数を定義 --//
 /*
   ServerConfig::SITE_ROOT を使って CSS や画像等をロードする仕様にすると
@@ -53,7 +53,7 @@ class Loader {
 				    'game_vote_functions', 'test_functions'),
     'paparazzi_class'      => 'paparazzi',
     'room_manager_class'   => array('image_class', 'room_option_class'),
-    'login_class'          => 'session_class',
+    'login_class'          => array('room_config', 'session_class'),
     'game_view_class'      => array('talk_class', 'icon_class'),
     'game_play_class'      => array('time_config', 'session_class', 'image_class', 'talk_class',
 				    'icon_class'),
