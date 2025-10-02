@@ -1,0 +1,27 @@
+@charset "utf-8";
+.title {
+  margin: 1px 0 1em 0;
+  border: 0;
+}
+.link {
+  margin: 5px;
+}
+fieldset {
+  background-color: transparent;
+  border: 1px solid #000000;
+}
+legend {
+  margin: 0px 5px;
+  font-size: 20px;
+  font-weight: bold;
+}
+table {
+  background-color: transparent;
+  border: 0;
+}
+td {
+  vertical-align: top
+}
+td.link {
+  text-align: right;
+}
