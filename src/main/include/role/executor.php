@@ -10,7 +10,7 @@ class Role_executor extends Role {
   public $display_role = 'human';
 
   function SetVoteDay($uname) {
-    if ($this->IsRealActor()) $this->AddStack($uname);
+    if ($this->IsRealActor()) $this->AddStackName($uname);
   }
 
   function DecideVoteKill() {

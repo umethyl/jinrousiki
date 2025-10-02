@@ -9,12 +9,12 @@ class Role_seal_medium extends Role_medium {
   public $mix_in = 'critical_mad';
   public $sudden_death = 'SEALED';
   public $seal_list = array(
-    'phantom_wolf', 'resist_wolf', 'revive_wolf', 'tongue_wolf', 'trap_mad', 'possessed_mad',
-    'revive_mad', 'phantom_fox', 'spell_fox', 'emerald_fox', 'revive_fox', 'possessed_fox',
-    'trap_fox', 'revive_cupid', 'revive_avenger');
+    'phantom_wolf', 'resist_wolf', 'revive_wolf', 'step_wolf', 'tongue_wolf', 'trap_mad',
+    'possessed_mad', 'revive_mad', 'phantom_fox', 'spell_fox', 'emerald_fox', 'revive_fox',
+    'possessed_fox', 'trap_fox', 'revive_cupid', 'revive_avenger');
 
   function SetVoteAction(User $user) {
     if (! $user->IsRole($this->seal_list)) return;
-    $user->IsActive() ? $user->LostAbility() : $this->SuddenDeathKill($user->user_no);
+    $user->IsActive() ? $user->LostAbility() : $this->SuddenDeathKill($user->id);
   }
 }

@@ -2,6 +2,7 @@
 /*
   ◆狡狼 (trap_wolf)
   ○仕様
+  ・罠：罠死 (自動自己設置型)
 */
 RoleManager::LoadFile('wolf');
 class Role_trap_wolf extends Role_wolf {
@@ -11,5 +12,5 @@ class Role_trap_wolf extends Role_wolf {
     if (DB::$ROOM->date > 2) RoleHTML::OutputAbilityResult($this->ability, null);
   }
 
-  function SetTrap($uname) { $this->AddStack($uname, 'trap'); }
+  final function SetTrap() { $this->AddStack($this->GetID(), 'trap'); }
 }

@@ -1,5 +1,11 @@
 <?php
-error_reporting(E_ALL);
+//-- エラー表示設定 --//
+define('JINRO_DISPLAY_ERROR', false); //デバッグ用
+if (JINRO_DISPLAY_ERROR) {
+  ini_set('display_errors', 'On');
+  error_reporting(E_ALL);
+}
+
 //-- 定数を定義 --//
 /*
   ServerConfig::SITE_ROOT を使って CSS や画像等をロードする仕様にすると
@@ -46,6 +52,7 @@ class Loader {
     'user_icon_class'      => 'user_icon_config',
     'sound_class'          => 'sound_config',
     'cookie_class'         => 'sound_class',
+    'cache_class'          => 'cache_config',
     'twitter_class'        => array('twitter_config', 'twitter'),
     'rss_class'            => array('image_class', 'room_option_class', 'feedengine',
 				    'site_summary'),
@@ -53,16 +60,17 @@ class Loader {
 				    'game_vote_functions', 'test_functions'),
     'paparazzi_class'      => 'paparazzi',
     'room_manager_class'   => array('image_class', 'room_option_class'),
-    'login_class'          => array('room_config', 'session_class'),
-    'game_view_class'      => array('talk_class', 'icon_class'),
+    'login_class'          => array('room_config','session_class'),
+    'game_view_class'      => array('talk_class', 'icon_class', 'cache_class'),
     'game_play_class'      => array('time_config', 'session_class', 'image_class', 'talk_class',
-				    'icon_class'),
+				    'icon_class', 'cache_class'),
     'game_vote_class'      => array('session_class', 'room_option_class', 'user_class',
-				    'icon_class', 'role_class', 'game_vote_functions'),
+				    'icon_class', 'role_class', 'cache_class',
+				    'game_vote_functions'),
     'game_log_class'       => array('session_class', 'talk_class'),
     'old_log_class'        => 'old_log_functions',
     'user_manager_class'   => array('room_config', 'game_config', 'message', 'session_class',
-				    'room_class', 'user_class', 'icon_functions'),
+				    'room_class', 'user_class', 'cache_class', 'icon_functions'),
     'icon_view_class'      => array('session_class', 'icon_functions'),
     'icon_edit_class'      => 'icon_functions',
     'icon_upload_class'    => array('session_class', 'icon_functions'),
@@ -71,7 +79,7 @@ class Loader {
     'game_vote_functions'  => array('game_config', 'message', 'game_functions'),
     'icon_functions'       => array('icon_class', 'user_icon_class'),
     'old_log_functions'    => array('old_log_config', 'cast_config', 'image_class',
-				    'room_option_class'),
+				    'room_option_class', 'cache_class'),
   );
 
   //依存クラス情報 (読み込むデータ => 依存するクラス)
@@ -113,19 +121,20 @@ class Loader {
     if (is_null($name) || in_array($name, self::$class)) return false;
     self::LoadDependence($name);
 
-    if (is_null($class_name = self::$class_list[$name])) {
-      $class_name = $name;
-      new $class_name();
+    if (isset(self::$class_list[$name])) {
+      $class_name = self::$class_list[$name];
+      $GLOBALS[$name] = new $class_name();
     }
     else {
-      $GLOBALS[$name] = new $class_name();
+      $class_name = $name;
+      new $class_name();
     }
     self::$class[] = $class_name;
     return true;
   }
 
   //リクエストクラスロード
-  static function LoadRequest($class = null, $load = false) {
+  static function LoadRequest($class = 'RequestBase' , $load = false) {
     if ($load) self::LoadFile('game_config');
     self::LoadFile('request_class');
     return RQ::Load($class);
@@ -135,7 +144,7 @@ class Loader {
   static function IsLoaded($file) { return in_array($file, self::$file); }
 
   //ファイルパス取得
-  private function GetPath($name) {
+  private static function GetPath($name) {
     switch ($name) {
     case 'copyright_config':
     case 'version':
@@ -145,26 +154,27 @@ class Loader {
     case 'game_config':
     case 'cast_config':
     case 'chaos_config':
-    case 'message':
-    case 'vote_message':
-    case 'winner_message':
     case 'time_config':
     case 'icon_config':
     case 'sound_config':
+    case 'message':
+    case 'vote_message':
+    case 'winner_message':
       $path = JINRO_CONF . '/game';
       break;
 
-    case 'database_config':
     case 'server_config':
+    case 'database_config':
     case 'room_config':
     case 'game_option_config':
+    case 'cache_config':
     case 'user_icon_config':
+    case 'old_log_config':
     case 'menu_config':
     case 'bbs_config':
-    case 'old_log_config':
     case 'shared_server_config':
-    case 'src_upload_config':
     case 'twitter_config':
+    case 'src_upload_config':
     case 'setup_config':
       $path = JINRO_CONF . '/server';
       break;
@@ -176,7 +186,6 @@ class Loader {
 
     case 'role_class':
     case 'role_data_class':
-    case 'chatengine':
     case 'paparazzi':
     case 'paparazzi_class':
     case 'test_class':
@@ -206,7 +215,7 @@ class Loader {
   }
 
   //依存解決処理
-  private function LoadDependence($name) {
+  private static function LoadDependence($name) {
     if (array_key_exists($name, self::$depend_file))  self::LoadFile(self::$depend_file[$name]);
     if (array_key_exists($name, self::$depend_class)) self::LoadClass(self::$depend_class[$name]);
   }
@@ -214,6 +223,11 @@ class Loader {
 
 //-- 初期化処理 --//
 Loader::LoadFile('database_class', 'server_config');
+
+if (ServerConfig::DISPLAY_ERROR) { //エラー表示設定
+  ini_set('display_errors', 'On');
+  error_reporting(E_ALL);
+}
 
 //mbstring 非対応の場合、エミュレータを使用する
 if (! extension_loaded('mbstring')) Loader::LoadFile('mb-emulator');

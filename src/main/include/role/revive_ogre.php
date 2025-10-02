@@ -19,11 +19,11 @@ class Role_revive_ogre extends Role_ogre {
     return true;
   }
 
-  function GetResistRate() { return 0; }
+  protected function GetResistRate() { return 0; }
 
   function Resurrect() {
     $user = $this->GetActor();
     $rate = is_null($event = $this->GetEvent()) ? 40 : $event;
-    if ($this->IsResurrect($user) && mt_rand(1, 100) <= $rate) $user->Revive();
+    if ($this->IsResurrect($user) && Lottery::Percent($rate)) $user->Revive();
   }
 }

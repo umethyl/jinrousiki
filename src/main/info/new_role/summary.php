@@ -100,7 +100,14 @@ Ver. 2.1.0
 <a href="#ver210a4">α4</a>
 <a href="#ver210a5">α5</a>
 <a href="#ver210a6">α6</a>
-<a href="#ver210a7">α7</a>
+<a href="#ver210a7">α7</a><br>
+Ver. 2.2.0
+<a href="#ver220a3">α3</a>
+<a href="#ver220a4">α4</a>
+<a href="#ver220a5">α5</a>
+<a href="#ver220a6">α6</a>
+<a href="#ver220a7">α7</a>
+<a href="#ver220a8">α8</a>
 </p>
 
 <p>
@@ -144,7 +151,9 @@ Ver. 1.5.0
 <a href="#sub_ver150b14">β14</a><br>
 Ver. 2.1.0
 <a href="#sub_ver210a3">α3</a>
-<a href="#sub_ver210a6">α6</a>
+<a href="#sub_ver210a6">α6</a><br>
+Ver. 2.2.0
+<a href="#sub_ver220a7">α7</a>
 </p>
 
 <table id="main_role">
@@ -645,7 +654,7 @@ Ver. 2.1.0
 </tr>
 <tr>
   <td><a href="fox.php#scarlet_fox">紅狐</a></td>
-  <td><a href="fox.php">妖狐</td>
+  <td><a href="fox.php">妖狐</a></td>
   <td><a href="fox.php#fox_group">妖狐系</a></td>
   <td>村人<br>(呪殺)</td>
   <td>村人</td>
@@ -672,7 +681,7 @@ Ver. 2.1.0
 </tr>
 <tr>
   <td><a href="fox.php#cute_fox">萌狐</a></td>
-  <td><a href="fox.php">妖狐</td>
+  <td><a href="fox.php">妖狐</a></td>
   <td><a href="fox.php#fox_group">妖狐系</a></td>
   <td>村人<br>(呪殺)</td>
   <td>村人</td>
@@ -681,7 +690,7 @@ Ver. 2.1.0
 </tr>
 <tr>
   <td><a href="fox.php#black_fox">黒狐</a></td>
-  <td><a href="fox.php">妖狐</td>
+  <td><a href="fox.php">妖狐</a></td>
   <td><a href="fox.php#fox_group">妖狐系</a></td>
   <td>人狼<br>(呪殺無し)</td>
   <td>妖狐</td>
@@ -1145,7 +1154,7 @@ Ver. 2.1.0
   <td>村人</td>
   <td>村人</td>
   <td class="ability">他の国で言う「奴隷」。<br>勝利条件は「<a href="human.php#doll_master">人形遣い</a>が全員死亡している + 村人陣営の勝利」で、自身の生死は不問。<br>
-    <href="human.php#doll_master">人形遣い</a>が人狼に襲撃されたら代わりに死亡する。</td>
+    <a href="human.php#doll_master">人形遣い</a>が人狼に襲撃されたら代わりに死亡する。</td>
   <td>Ver. 1.4.0 β10</td>
 </tr>
 <tr>
@@ -2482,7 +2491,7 @@ Ver. 2.1.0
   <td><a href="duelist.php#duelist_group">決闘者系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">自分撃ち固定で、<a href="sub_role.php#reduce_voter">無精者</a>相当の能力を持つ劣化決闘者。</td>
+  <td class="ability">自分撃ち固定で、<a href="sub_role.php#reduce_voter">無精者</a>相当の能力を持つ特殊な決闘者<br>自分と<a href="sub_role.php#rival">宿敵</a>との処刑投票次第で得票数変化やショック死が発生する。。</td>
   <td>Ver. 1.5.0 β6</td>
 </tr>
 <tr>
@@ -3021,6 +3030,123 @@ Ver. 2.1.0
   <td>蝙蝠</td>
   <td class="ability">吸血先に一定確率 (50%) で<a href="sub_role.php#passion">恋色迷彩</a>もつけてしまう特殊な吸血鬼。</td>
   <td>Ver. 2.1.0 α7</td>
+</tr>
+<tr id="ver220a3">
+  <td><a href="human.php#step_mage">審神者</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#mage_group">占い師系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">夜の投票時に自分と投票先の間で足音が鳴る特殊な占い師。</td>
+  <td>Ver. 2.2.0 α3</td>
+</tr>
+<tr>
+  <td><a href="human.php#step_guard">山立</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#guard_group">狩人系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">夜の投票時に自分と投票先の間で足音が鳴る特殊な狩人。</td>
+  <td>Ver. 2.2.0 α3</td>
+</tr>
+<tr>
+  <td><a href="wolf.php#step_wolf">響狼</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#wolf_group">人狼系</a></td>
+  <td>人狼</td>
+  <td>人狼</td>
+  <td class="ability">夜の投票時に自分と投票先の間で足音が鳴る人狼。</td>
+  <td>Ver. 2.2.0 α3</td>
+</tr>
+<tr>
+  <td><a href="wolf.php#step_mad">家鳴</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#mad_group">狂人系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">夜の投票先の間で足音が鳴る特殊な狂人。</td>
+  <td>Ver. 2.2.0 α3</td>
+</tr>
+<tr>
+  <td><a href="fox.php#step_fox">響狐</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#fox_group">妖狐系</a></td>
+  <td>村人<br>(呪殺)</td>
+  <td>村人</td>
+  <td class="ability">夜の投票先の間で足音が鳴る妖狐。</td>
+  <td>Ver. 2.2.0 α3</td>
+</tr>
+<tr id="ver220a4">
+  <td><a href="vampire.php#step_vampire">文武王</a></td>
+  <td><a href="vampire.php">吸血鬼</a></td>
+  <td><a href="vampire.php#vampire_group">吸血鬼系</a></td>
+  <td>蝙蝠</td>
+  <td>蝙蝠</td>
+  <td class="ability">夜の投票時に自分と投票先の間で足音が鳴る特殊な吸血鬼。<br>また、処刑投票先を一定確率自分の感染者にすることができる。</td>
+  <td>Ver. 2.2.0 α4</td>
+</tr>
+<tr id="ver220a5">
+  <td><a href="ogre.php#cow_ogre">牛頭鬼</a></td>
+  <td><a href="ogre.php">鬼</a></td>
+  <td><a href="ogre.php#ogre_group">鬼系</a></td>
+  <td>鬼</td>
+  <td>鬼</td>
+  <td class="ability">鬼系の一種で、勝利条件は「自分自身の生存 + <a href="human.php#assassin_group">暗殺者系</a>の全滅 + 村人陣営の勝利」。</td>
+  <td>Ver. 2.2.0 α5</td>
+</tr>
+<tr>
+  <td><a href="ogre.php#horse_ogre">馬頭鬼</a></td>
+  <td><a href="ogre.php">鬼</a></td>
+  <td><a href="ogre.php#ogre_group">鬼系</a></td>
+  <td>鬼</td>
+  <td>鬼</td>
+  <td class="ability">鬼系の一種で、勝利条件は「自分自身の生存 + <a href="ability.php#poison">毒能力者</a>の全滅 + 村人陣営の勝利」。</td>
+  <td>Ver. 2.2.0 α5</td>
+</tr>
+<tr id="ver220a6">
+  <td><a href="duelist.php#sea_duelist">海御前</a></td>
+  <td><a href="duelist.php">決闘者</a></td>
+  <td><a href="duelist.php#duelist_group">決闘者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">自分撃ち固定で、<a href="sub_role.php#rival">宿敵</a>に投票するとショック死する劣化決闘者。</td>
+  <td>Ver. 2.2.0 α6</td>
+</tr>
+<tr>
+  <td><a href="wolf.php#fire_mad">煙々羅</a></td>
+  <td><a href="wolf.php">人狼</a></td>
+  <td><a href="wolf.php#mad_group">狂人系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">処刑投票に<a href="sub_role.php#black_wisp">天火</a>を付加する特殊な狂人。</td>
+  <td>Ver. 2.2.0 α6</td>
+</tr>
+<tr id="ver220a7">
+  <td><a href="mania.php#scarlet_mania">紅天女</a></td>
+  <td><a href="mania.php">神話マニア</a></td>
+  <td><a href="mania.php#mania_group">神話マニア系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability"><a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える特殊な神話マニア。</td>
+  <td>Ver. 2.2.0 α7</td>
+</tr>
+<tr>
+  <td><a href="duelist.php#plumage_patron">鬼車鳥</a></td>
+  <td><a href="duelist.php">決闘者</a></td>
+  <td><a href="duelist.php#patron_group">後援者系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability"><a href="sub_role.php#supported">受援者</a>に<a href="sub_role.php#aspirator">吸毒者</a>を付加する特殊な後援者。</td>
+  <td>Ver. 2.2.0 α7</td>
+</tr>
+<tr id="ver220a8">
+  <td><a href="human.php#tough">益荒男</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#human_group">村人系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability"><a href="wolf.php#wolf_group">人狼</a> (種類を問わない) の襲撃に耐えることができるが、<a href="sub_role.php#death_warrant">死の宣告</a>を受けてしまう村人。</td>
+  <td>Ver. 2.2.0 α8</td>
 </tr>
 </table>
 
@@ -3768,6 +3894,20 @@ Ver. 2.1.0
     <td>無し</td>
     <td class="ability"><a href="fox.php#fox">妖狐</a>に変化した後の<a href="fox.php#vindictive_fox">昼狐</a>に付加される。</td>
     <td>Ver. 2.1.0 α6</td>
+  </tr>
+  <tr id="sub_ver220a7">
+    <td><a href="sub_role.php#copied_nymph">元紅天女</a></td>
+    <td><a href="sub_role.php#copied_group">元神話マニア系</a></td>
+    <td>無し</td>
+    <td class="ability">コピー後の<a href="mania.php#scarlet_mania">紅天女</a>に付加される。</td>
+    <td>Ver. 2.2.0 α7</td>
+  </tr>
+  <tr>
+    <td><a href="sub_role.php#aspirator">吸毒者</a></td>
+    <td><a href="sub_role.php#other_group">その他</a></td>
+    <td>強制</td>
+    <td class="ability">処刑時の毒中り候補になった場合、優先的に中る。</td>
+    <td>Ver. 2.2.0 α7</td>
   </tr>
 </table>
 

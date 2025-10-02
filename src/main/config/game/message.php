@@ -1,79 +1,62 @@
 <?php
 //-- 基本システムメッセージ --//
 class Message {
-  //-- room_manger.php --//
-  //CreateRoom() : 村作成
-  //身代わり君のコメント
-  static public $dummy_boy_comment = '僕はおいしくないよ';
+  /* 身代わり君 */
+  static public $dummy_boy            = '◆身代わり君　'; //仮想 GM 発言ヘッダー
+  static public $dummy_boy_comment    = '僕はおいしくないよ'; //コメント
+  static public $dummy_boy_last_words = '僕はおいしくないって言ったのに……'; //遺言
 
-  //身代わり君の遺言
-  static public $dummy_boy_last_words = '僕はおいしくないって言ったのに……';
-
-  //-- user_manager.php --//
-  //EntryUser() : ユーザ登録
+  /* ユーザ登録 */
   //入村メッセージ
-  static public $entry_user = 'さんが村の集会場にやってきました';
+  static public $entry_user = ' が村の集会場にやってきました';
 
-  //-- game_view.php & OutputGameHTMLHeader() --//
+  /* 特殊通知メッセージ */
   static public $vote_announce = '時間がありません。投票してください。'; //会話の制限時間切れ
-  static public $wait_morning = '待機時間中です。'; //早朝待機制の待機時間中
-  static public $close_cast = '配役隠蔽中です。'; //配役隠蔽通知 (霊界自動公開モード用)
+  static public $wait_morning  = '待機時間中です。'; //早朝待機制の待機時間中
+  static public $close_cast    = '配役隠蔽中です。'; //配役隠蔽通知 (霊界自動公開モード用)
 
-  //-- game_functions.php --//
-  //OutputRevoteList() : 再投票アナウンス
-  static public $revote = '再投票となりました'; //投票結果
+  /* 投票 */
+  static public $vote_reset = '＜投票がリセットされました　再度投票してください＞'; //投票リセット
+  static public $kick_out   = 'は席をあけわたし、村から去りました'; //Kick 処理
+
+  /* 再投票 */
+  static public $revote        = '再投票となりました'; //投票結果
   static public $draw_announce = '再投票となると引き分けになります'; //引き分け告知
 
-  //OutputTalkLog() : 会話、システムメッセージ出力
-  static public $objection = 'が「異議」を申し立てました'; //「異議」あり
-  //static public $game_start = 'はゲーム開始投票をしました'; //ゲーム開始投票 (現在は不使用)
-  static public $kick_do           = 'に KICK 投票しました'; //KICK 投票
-  static public $vote_do           = 'に処刑投票しました'; //処刑投票
-  static public $wolf_eat          = 'に狙いをつけました'; //人狼の投票
-  static public $escape_do         = 'の周辺に逃亡しました'; //逃亡者の投票
-  static public $mage_do           = 'を占います'; //占い師の投票
-  static public $voodoo_killer_do  = 'の呪いを祓います'; //陰陽師の投票
-  static public $jammer_do         = 'の占いを妨害します'; //月兎の投票
-  static public $trap_do           = 'の周辺に罠を仕掛けました'; //罠師の投票
-  static public $trap_not_do       = 'は罠設置を行いませんでした'; //罠師のキャンセル投票
-  static public $possessed_do      = 'に憑依します'; //犬神の投票
-  static public $possessed_not_do  = 'は憑依を行いませんでした'; //犬神のキャンセル投票
-  static public $voodoo_do         = 'に呪いをかけます'; //呪術師の投票
-  static public $dream_eat         = 'に狙いをつけました'; //獏の投票
-  static public $guard_do          = 'の護衛に付きました'; //狩人の投票
-  static public $anti_voodoo_do    = 'の厄を祓います'; //厄神の投票
-  static public $reporter_do       = 'を尾行しました'; //ブン屋の投票
-  static public $revive_do         = 'に蘇生処置をしました'; //猫又の投票
-  static public $revive_not_do     = 'は蘇生処置をしませんでした'; //猫又のキャンセル投票
-  static public $assassin_do       = 'に狙いをつけました'; //暗殺者の投票
-  static public $assassin_not_do   = 'は暗殺を行いませんでした'; //暗殺者のキャンセル投票
-  static public $mind_scanner_do   = 'の心を読みます'; //さとりの投票
-  static public $wizard_do         = 'に魔法をかけました'; //魔法使いの投票
-  static public $cupid_do          = 'に愛の矢を放ちました'; //キューピッドの投票
-  static public $vampire_do        = 'に狙いをつけました'; //吸血鬼の投票
-  static public $fairy_do          = 'に悪戯しました'; //妖精の投票
-  static public $ogre_do           = 'に狙いをつけました'; //鬼の投票
-  static public $ogre_not_do       = 'は人攫いを行いませんでした'; //鬼のキャンセル投票
-  static public $duelist_do        = 'に宿命を結び付けました'; //決闘者の投票
-  static public $mania_do          = 'の能力を真似ることにしました'; //神話マニアの投票
-  static public $death_note_do     = 'の名前を書きました'; //デスノートの投票
-  static public $death_note_not_do = 'はデスノートを使いませんでした'; //デスノートのキャンセル投票
+  /* 未投票処理 */
+  static public $sudden_death_announce = '投票完了されない方は死して地獄へ堕ちてしまいます'; //警告
+  static public $sudden_death_time     = '突然死になるまで後：'; //期限
+  static public $sudden_death          = 'は突然お亡くなりになられました'; //突然死処理
 
-  static public $morning_header = '朝日が昇り'; //朝のヘッダー
-  static public $morning_footer = '日目の朝がやってきました'; //朝のフッター
-  static public $night = '日が落ち、暗く静かな夜がやってきました'; //夜
-  static public $skip_night = '白澤の能力で夜が飛ばされました……'; //白澤の能力発動
-  static public $dummy_boy = '◆身代わり君　'; //仮想GMモード用ヘッダー
+  /* 発言 */
+  static public $say_limit = '文字数または行数が多すぎたので発言できませんでした'; //発言数上限
+  static public $silence   = 'ほどの沈黙が続いた'; //沈黙判定 (会話で時間経過制)
 
+  /* 遠吠え・囁き */
   static public $wolf_howl   = 'アオォーン・・・'; //人狼の遠吠え
   static public $common_talk = 'ヒソヒソ・・・'; //共有者の囁き
   static public $lovers_talk = 'うふふ・・・うふふ・・・'; //恋人の囁き
   static public $howling     = 'キィーーン・・・'; //スピーカーの音割れ効果音
 
-  //OutputLastWords() : 遺言の表示
+  /* 発言置換能力者 */
+  static public $cute_wolf = ''; //不審者・萌系 (空なら人狼の遠吠えになる)
+  static public $gentleman = "お待ち下さい。\n%sさん、ハンケチーフを落としておりますぞ。";  //紳士
+  static public $lady      = "お待ちなさい！\n%s、タイが曲がっていてよ。"; //淑女
+
+  /* シーン切り替え */
+  static public $morning    = '朝日が昇り、%s 日目の朝がやってきました'; //朝
+  static public $night      = '日が落ち、暗く静かな夜がやってきました'; //夜
+  static public $chaos      = '配役隠蔽モードです'; //配役隠蔽通知 (闇鍋用)
+  static public $skip_night = '白澤の能力で夜が飛ばされました……'; //白澤の能力発動
+
+  /* ランダムメッセージ挿入 */
+  //GameConfig::RANDOM_MESSAGE を true にすると、この配列の中身がランダムに表示される
+  static public $random_message_list = array();
+
+  /* 遺言 */
   static public $lastwords = '夜が明けると前の日に亡くなった方の遺言書が見つかりました';
 
-  //OutoutDeadManType() : 死因の表示
+  /* 死亡メッセージ */
   static public $vote_killed        = 'は投票の結果処刑されました'; //処刑
   static public $blind_vote         = '傘化けの能力で投票結果が隠されました'; //傘化け
   static public $deadman            = 'は無残な姿で発見されました'; //共通死亡メッセージ
@@ -87,7 +70,7 @@ class Message {
   static public $fox_dead           = 'は占い師に呪い殺されたようです'; //呪殺
   static public $cursed             = 'は呪詛に呪い殺されたようです'; //呪返し
   static public $hunted             = 'は狩人に狩られたようです'; //狩人の狩り
-  static public $reporter_duty      = 'は人外を尾行してしまい、襲われたようです'; //ブン屋の殉職
+  static public $reporter_duty      = 'は人外を尾行してしまい、襲われたようです'; //ブン屋殉職
   static public $escaper_dead       = 'は逃亡に失敗したようです'; //逃亡失敗
   static public $poison_dead        = 'は毒に冒され死亡したようです'; //毒
   static public $vampire_killed     = 'は血を吸い尽くされたようです'; //吸血
@@ -97,33 +80,35 @@ class Message {
   static public $revive_success     = 'は生き返りました'; //蘇生成功
   static public $revive_failed      = 'の蘇生に失敗したようです'; //蘇生失敗
   static public $sacrifice          = 'は誰かの犠牲となって死亡したようです'; //身代わり
-  static public $lovers_followed    = 'は恋人の後を追い自殺しました'; //恋人の後追い
+  static public $lovers_followed    = 'は恋人の後を追い自殺しました'; //恋人後追い
   static public $vote_sudden_death  = 'はショック死しました'; //投票系ショック死
   static public $novoted            = 'は突然お亡くなりになられました'; //未投票突然死
   static public $chicken            = 'は小心者だったようです'; //小心者
   static public $rabbit             = 'はウサギだったようです'; //ウサギ
   static public $perverseness       = 'は天邪鬼だったようです'; //天邪鬼
   static public $flattery           = 'はゴマすりだったようです'; //ゴマすり
-  static public $impatience         = 'は短気だったようです'; //短気
   static public $celibacy           = 'は独身貴族だったようです'; //独身貴族
   static public $nervy              = 'は自信家だったようです'; //自信家
   static public $androphobia        = 'は男性恐怖症だったようです'; //男性恐怖症
   static public $gynophobia         = 'は女性恐怖症だったようです'; //女性恐怖症
+  static public $impatience         = 'は短気だったようです'; //短気
+  static public $febris             = 'は熱病にかかったようです'; //熱病
+  static public $frostbite          = 'は凍傷にかかったようです'; //凍傷
+  static public $warrant            = 'は死の宣告を受けたようです'; //死の宣告
   static public $panelist           = 'は解答者 (不正解) だったようです'; //解答者
+  static public $challenge          = 'は難題を解けなかったようです'; //難題
   static public $sealed             = 'は封印されたようです'; //封印師
   static public $drunk              = 'は神主に酔い潰されたようです'; //神主
   static public $jealousy           = 'は橋姫に妬まれたようです'; //橋姫
   static public $agitated           = 'は扇動に巻き込まれたようです'; //扇動者
   static public $followed           = 'は道連れにされたようです'; //舟幽霊
-  static public $febris             = 'は熱病にかかったようです'; //熱病
-  static public $frostbite          = 'は凍傷にかかったようです'; //凍傷
-  static public $warrant            = 'は死の宣告を受けたようです'; //死の宣告
+  static public $duel               = 'は宿敵に退治されたようです'; //決闘者
   static public $thunderbolt        = 'は落雷を受けたようです'; //青天の霹靂
-  static public $challenge          = 'は難題を解けなかったようです'; //難題
   static public $joker_moved        = 'にジョーカーが移動したようです'; //ジョーカーの移動
   static public $death_note_moved   = 'にデスノートが移動したようです'; //デスノートの移動
+  static public $step               = 'で足音が聞こえた…'; //足音
 
-  //花妖精のリスト (A-Z)
+  /* 花妖精のリスト (A-Z) */
   static public $flowered_a = 'の頭の上に松の花が咲きました';
   static public $flowered_b = 'の頭の上に梅の花が咲きました';
   static public $flowered_c = 'の頭の上に桜の花が咲きました';
@@ -150,7 +135,8 @@ class Message {
   static public $flowered_x = 'の頭の上に薔薇の花が咲きました';
   static public $flowered_y = 'の頭の上に百合の花が咲きました';
   static public $flowered_z = 'の頭の上に仙人掌の花が咲きました';
-  //星妖精のリスト (A-Z)
+
+  /* 星妖精のリスト (A-Z) */
   static public $constellation_a = 'は昨夜、牡羊座を見ていたようです';
   static public $constellation_b = 'は昨夜、牡牛座を見ていたようです';
   static public $constellation_c = 'は昨夜、双子座を見ていたようです';
@@ -177,7 +163,8 @@ class Message {
   static public $constellation_x = 'は昨夜、竜座を見ていたようです';
   static public $constellation_y = 'は昨夜、鳳凰座を見ていたようです';
   static public $constellation_z = 'は昨夜、南十字座を見ていたようです';
-  //道化師のリスト (A-Z)
+
+  /* 道化師のリスト (A-Z) */
   static public $pierrot_a = 'は昨夜、玉乗りをしていたようです';
   static public $pierrot_b = 'は昨夜、綱渡りをしていたようです';
   static public $pierrot_c = 'は昨夜、火の輪くぐりをしていたようです';
@@ -205,15 +192,53 @@ class Message {
   static public $pierrot_y = 'は昨夜、ブラフに引っかかったようです';
   static public $pierrot_z = 'は昨夜、命乞いの練習をしていたようです';
 
-  //OutputAbility() : 能力の表示
+  /* 投票ログ */
+  //static public $game_start        = ' はゲーム開始投票をしました'; //ゲーム開始投票 (現在は不使用)
+  static public $objection         = ' が「異議」を申し立てました'; //「異議」あり
+  static public $kick_do           = ' に KICK 投票しました'; //KICK 投票
+  static public $vote_do           = ' に処刑投票しました'; //処刑投票
+  static public $wolf_eat          = ' に狙いをつけました'; //人狼の投票
+  static public $silent_wolf_eat   = ' に静かに狙いをつけました'; //響狼のステルス投票
+  static public $escape_do         = ' の周辺に逃亡しました'; //逃亡者の投票
+  static public $mage_do           = ' を占います'; //占い師の投票
+  static public $voodoo_killer_do  = ' の呪いを祓います'; //陰陽師の投票
+  static public $jammer_do         = ' の占いを妨害します'; //月兎の投票
+  static public $trap_do           = ' の周辺に罠を仕掛けました'; //罠師の投票
+  static public $trap_not_do       = ' は罠設置を行いませんでした'; //罠師のキャンセル投票
+  static public $possessed_do      = ' に憑依します'; //犬神の投票
+  static public $possessed_not_do  = ' は憑依を行いませんでした'; //犬神のキャンセル投票
+  static public $voodoo_do         = ' に呪いをかけます'; //呪術師の投票
+  static public $dream_eat         = ' に狙いをつけました'; //獏の投票
+  static public $step_do           = ' の周辺を徘徊します'; //家鳴の投票
+  static public $step_not_do       = ' は徘徊を行いませんでした'; //家鳴のキャンセル投票
+  static public $guard_do          = ' の護衛に付きました'; //狩人の投票
+  static public $anti_voodoo_do    = ' の厄を祓います'; //厄神の投票
+  static public $reporter_do       = ' を尾行しました'; //ブン屋の投票
+  static public $revive_do         = ' に蘇生処置をしました'; //猫又の投票
+  static public $revive_not_do     = ' は蘇生処置をしませんでした'; //猫又のキャンセル投票
+  static public $assassin_do       = ' に狙いをつけました'; //暗殺者の投票
+  static public $assassin_not_do   = ' は暗殺を行いませんでした'; //暗殺者のキャンセル投票
+  static public $mind_scanner_do   = ' の心を読みます'; //さとりの投票
+  static public $wizard_do         = ' に魔法をかけました'; //魔法使いの投票
+  static public $cupid_do          = ' に愛の矢を放ちました'; //キューピッドの投票
+  static public $vampire_do        = ' に狙いをつけました'; //吸血鬼の投票
+  static public $fairy_do          = ' に悪戯しました'; //妖精の投票
+  static public $ogre_do           = ' に狙いをつけました'; //鬼の投票
+  static public $ogre_not_do       = ' は人攫いを行いませんでした'; //鬼のキャンセル投票
+  static public $duelist_do        = ' に宿命を結び付けました'; //決闘者の投票
+  static public $mania_do          = ' の能力を真似ることにしました'; //神話マニアの投票
+  static public $death_note_do     = ' の名前を書きました'; //デスノートの投票
+  static public $death_note_not_do = ' はデスノートを使いませんでした'; //デスノートのキャンセル投票
+
+  /* 能力の表示 */
   static public $ability_dead             = 'アナタは息絶えました・・・'; //死者
   static public $ability_vote             = '処刑する人を選択してください'; //処刑
   static public $ability_wolf_eat         = '喰い殺す人を選択してください'; //人狼
   static public $ability_mage_do          = '占う人を選択してください'; //占い師
   static public $ability_voodoo_killer_do = '呪いを祓う人を選択してください'; //陰陽師
   static public $ability_guard_do         = '護衛する人を選択してください'; //狩人
-  static public $ability_anti_voodoo_do   = '厄を祓う人を選択してください'; //厄神
   static public $ability_reporter_do      = '尾行する人を選択してください'; //ブン屋
+  static public $ability_anti_voodoo_do   = '厄を祓う人を選択してください'; //厄神
   static public $ability_revive_do        = '蘇生する人を選択してください'; //猫又
   static public $ability_assassin_do      = '暗殺する人を選択してください'; //暗殺者
   static public $ability_mind_scanner_do  = '心を読む人を選択してください'; //さとり
@@ -221,9 +246,10 @@ class Message {
   static public $ability_escape_do        = '逃亡する先を選択してください'; //逃亡者
   static public $ability_jammer_do        = '占いを妨害する人を選択してください'; //月兎
   static public $ability_voodoo_do        = '呪いをかける人を選択してください'; //呪術師
-  static public $ability_trap_do          = '罠を設置する先を選択してください'; //罠師
-  static public $ability_possessed_do     = '憑依する人を選択してください'; //犬神
+  static public $ability_step_do          = '徘徊する人を選択してください'; //家鳴
   static public $ability_dream_eat        = '夢を食べる人を選択してください'; //獏
+  static public $ability_possessed_do     = '憑依する人を選択してください'; //犬神
+  static public $ability_trap_do          = '罠を設置する先を選択してください'; //罠師
   static public $ability_cupid_do         = '結びつける人を選択してください'; //キューピッド
   static public $ability_vampire_do       = '吸血する人を選択してください'; //吸血鬼
   static public $ability_fairy_do         = '悪戯する人を選択してください'; //妖精
@@ -231,37 +257,4 @@ class Message {
   static public $ability_duelist_do       = '結びつける人を選択してください'; //決闘者
   static public $ability_mania_do         = '能力を真似る人を選択してください'; //神話マニア
   static public $ability_death_note_do    = '名前を書く人を選択してください'; //デスノート
-
-  //-- game_play.php --//
-  //ConvertSay()
-  static public $say_limit = '文字数または行数が多すぎたので発言できませんでした';
-
-  //CheckSilence()
-  static public $silence = 'ほどの沈黙が続いた'; //沈黙で時間経過 (会話で時間経過制)
-  //突然死の警告メッセージ
-  static public $sudden_death_announce = '投票完了されない方は死して地獄へ堕ちてしまいます';
-  static public $sudden_death_time = '突然死になるまで後：'; //突然死発動まで
-  static public $sudden_death = 'さんは突然お亡くなりになられました'; //突然死
-
-  //投票リセット
-  static public $vote_reset = '＜投票がリセットされました　再度投票してください＞';
-
-  //発言置換系役職
-  static public $cute_wolf = ''; //萌狼・不審者 (空なら狼の遠吠えになる)
-  static public $gentleman_header = "お待ち下さい。\n";  //紳士 (前半)
-  static public $gentleman_footer = 'さん、ハンケチーフを落としておりますぞ。'; //紳士 (後半)
-  static public $lady_header = "お待ちなさい！\n"; //淑女 (前半)
-  static public $lady_footer = '、タイが曲がっていてよ。'; //淑女 (後半)
-
-  //-- game_vote.php --//
-  //Kick で村から去った人
-  static public $kick_out = 'さんは席をあけわたし、村から去りました';
-
-  //CheckVoteGameStart()
-  static public $chaos = '配役隠蔽モードです'; //配役隠蔽通知 (闇鍋用)
-
-  //-- InsertRandomMessage() --//
-  //GameConfig->random_message を true にすると
-  //ここに入れたメッセージがランダムに表示される
-  static public $random_message_list = array();
 }

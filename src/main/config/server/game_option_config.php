@@ -31,8 +31,10 @@ class GameOptionConfig {
 
   //-- 身代わり君設定 --//
   static $dummy_boy_enable = true; //初日の夜は身代わり君
-  //身代わり君のデフォルト ['':身代わり君無し / 'on':身代わり君有り / 'gm_login': GM有り ]
+  //身代わり君のデフォルト ['':身代わり君無し / 'on':身代わり君有り / 'gm_login': GM 有り ]
   static $default_dummy_boy = 'on';
+
+  static $gm_login_enable = true; //GM 有り
 
   static $gerd_enable  = true; //ゲルト君モード
   static $default_gerd = false;
@@ -45,7 +47,7 @@ class GameOptionConfig {
   static $default_not_open_cast = 'auto_open_cast';
 
   //-- 追加役職設定 --//
-  //必要人数は CastConfig の同名オプション名参照 (例： $poison_enable => CastConfig->poison)
+  //必要人数は CastConfig の同名オプション参照 (例： $poison_enable => CastConfig::$poison)
   static $poison_enable  = true; //埋毒者
   static $default_poison = true;
 
@@ -100,6 +102,9 @@ class GameOptionConfig {
 
   static $gentleman_enable  = true; //紳士・淑女村
   static $default_gentleman = false;
+
+  static $passion_enable  = true; //恋色迷彩村
+  static $default_passion = false;
 
   static $deep_sleep_enable  = true; //静寂村
   static $default_deep_sleep = false;
@@ -172,10 +177,11 @@ class GameOptionConfig {
   static $chaos_verso_enable = true; //裏・闇鍋モード
   static $duel               = true; //決闘村
   static $gray_random_enable = true; //グレラン村
+  static $step_enable        = true; //足音村
   static $quiz_enable        = true; //クイズ村
   //特殊配役モードの内訳
   static $special_role_list = array('' => 'なし', 'chaos', 'chaosfull', 'chaos_hyper',
-    'chaos_verso', 'duel', 'gray_random', 'quiz');
+    'chaos_verso', 'duel', 'gray_random', 'step', 'quiz');
 
   //-- 闇鍋モード専用設定 --//
   static $topping_enable = true; //固定配役追加モード
@@ -195,7 +201,10 @@ class GameOptionConfig {
     'l' => 'L：白銀村',
     'm' => 'M：暗殺村',
     'n' => 'N：罠村',
-    'o' => 'O：陰陽村');
+    'o' => 'O：陰陽村',
+    'p' => 'P：音鳴村',
+    'q' => 'Q：雛村',
+    'r' => 'R：妖精村');
 
   static $boost_rate_enable = true; //出現率変動モード
   static $boost_rate_list = array(

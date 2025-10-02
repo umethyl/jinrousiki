@@ -67,6 +67,7 @@
 .dead-type-revive       { color: #009966; }
 .dead-type-lovers       { color: #FF66CC; }
 .dead-type-fairy        { color: #888888; }
+.dead-type-step         { color: #669933; }
 .dead-type-sudden-death { color: #33CCFF; }
 /* GenerateWeatherReport() */
 .weather {

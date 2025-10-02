@@ -1,26 +1,26 @@
 <?php
 //-- テキスト処理クラス --//
 class Text {
-  //テキスト出力
+  const BR   = '<br>';
+  const LF   = "\n";
+  const BRLF = "<br>\n";
+  const TR   = "</tr>\n<tr>";
+
+  //結合
+  static function Concat($stack) {
+    $stack = func_get_args();
+    return implode(self::BRLF, $stack);
+  }
+
+  //出力
   static function Output($str = '', $line = false) {
-    echo $str . ($line ? '<br>' : '') . "\n";
+    echo $str . ($line ? self::BR : '') . self::LF;
   }
 
-  //改行タグ付きテキスト出力 (デバッグ用)
-  static function d($str = '') { self::Output($str, true); }
-
-  //変数表示関数 (デバッグ用)
-  static function p($data, $name = null) {
-    $str = is_null($name) ? '' : $name . ': ';
-    $str .= (is_array($data) || is_object($data)) ? print_r($data, true) : $data;
-    self::d($str);
-  }
-
-  //変数ダンプ (デバッグ用)
-  static function v($data, $name = null) {
-    if (! is_null($name)) echo $name . ': ';
-    var_dump($data);
-    self::d();
+  //出力 (NULL 対応版)
+  static function OutputExists($str) {
+    if (is_null($str)) return null;
+    echo $str;
   }
 
   //暗号化
@@ -38,7 +38,7 @@ class Text {
     テストてすと＃テストてすと#   => テストてすと ◆rtfFl6edK5fK (テストてすと◆XuUGgmt7XI)
     テストてすと＃テストてすと＃  => テストてすと ◆rtfFl6edK5fK (テストてすと◆XuUGgmt7XI)
   */
-  static function ConvertTrip($str) {
+  static function Trip($str) {
     if (GameConfig::TRIP) {
       if (get_magic_quotes_gpc()) $str = stripslashes($str); // \ を自動でつける処理系対策
       //トリップ関連のキーワードを置換
@@ -117,50 +117,57 @@ class Text {
   }
 
   //改行コードを <br> に変換する (PHP5.3 以下の nl2br() だと <br /> 固定なので HTML 4.01 だと不向き)
-  static function ConvertLine(&$str) {
-    return $str = str_replace("\n", '<br>', $str);
+  static function Line(&$str) {
+    return $str = str_replace(self::LF, self::BR, $str);
+  }
+
+  /* デバッグ用 */
+  //改行タグ付きテキスト出力
+  static function d($str = '') { self::Output($str, true); }
+
+  //データ表示
+  static function p($data, $name = null) {
+    $str = is_null($name) ? '' : $name . ': ';
+    $str .= (is_array($data) || is_object($data)) ? print_r($data, true) : $data;
+    self::d($str);
+  }
+
+  //データダンプ
+  static function v($data, $name = null) {
+    if (! is_null($name)) echo $name . ': ';
+    var_dump($data);
+    self::d();
   }
 }
 
 //-- セキュリティ関連クラス --//
 class Security {
+  //IPアドレス取得
+  static function GetIP() { return @$_SERVER['REMOTE_ADDR']; }
+
   //リファラチェック
   static function CheckReferer($page, $white_list = null) {
     if (is_array($white_list)) { //ホワイトリストチェック
+      $addr = self::GetIP();
       foreach ($white_list as $host) {
-	if (strpos($_SERVER['REMOTE_ADDR'], $host) === 0) return false;
+	if (strpos($addr, $host) === 0) return false;
       }
     }
     $url = ServerConfig::SITE_ROOT . $page;
     return strncmp(@$_SERVER['HTTP_REFERER'], $url, strlen($url)) != 0;
   }
 
-  //ブラックリストチェック
-  static function CheckBlackList() {
-    $addr = $_SERVER['REMOTE_ADDR'];
-    $host = gethostbyaddr($addr);
-    foreach (array('white' => false, 'black' => true) as $type => $flag) {
-      foreach (RoomConfig::${$type . '_list_ip'} as $ip) {
-	if (strpos($addr, $ip) === 0) return $flag;
-      }
-      $list = RoomConfig::${$type . '_list_host'};
-      if (isset($list) && preg_match($list, $host)) return $flag;
+  //ブラックリストチェック (ログイン用)
+  static function IsLoginBlackList($trip = '') {
+    if (GameConfig::TRIP && $trip != '' && in_array($trip, RoomConfig::$white_list_trip)) {
+      return false;
     }
-    return false;
+    return self::IsBlackList();
   }
 
-  //ブラックリストチェック (村立て限定)
-  static function CheckEstablishBlackList() {
-    $addr = $_SERVER['REMOTE_ADDR'];
-    $host = gethostbyaddr($addr);
-    foreach (array('white' => false, 'black' => true) as $type => $flag) {
-      foreach (RoomConfig::${'establish_' . $type . '_list_ip'} as $ip) {
-	if (strpos($addr, $ip) === 0) return $flag;
-      }
-      $list = RoomConfig::${'establish_' . $type . '_list_host'};
-      if (isset($list) && preg_match($list, $host)) return $flag;
-    }
-    return false;
+  //ブラックリストチェック (村立て用)
+  static function IsEstablishBlackList() {
+    return self::IsLoginBlackList() || self::IsBlackList('establish_');
   }
 
   /**
@@ -188,6 +195,20 @@ class Security {
 	  if (2.2250738585072011e-307 === floatval("{$matches[1]}e{$exp}")) return true;
 	}
       }
+    }
+    return false;
+  }
+
+  //ブラックリスト判定
+  private static function IsBlackList($prefix = '') {
+    $addr = self::GetIP();
+    $host = gethostbyaddr($addr);
+    foreach (array('white' => false, 'black' => true) as $type => $flag) {
+      foreach (RoomConfig::${$prefix . $type . '_list_ip'} as $ip) {
+	if (strpos($addr, $ip) === 0) return $flag;
+      }
+      $list = RoomConfig::${$prefix . $type . '_list_host'};
+      if (isset($list) && preg_match($list, $host)) return $flag;
     }
     return false;
   }
@@ -250,20 +271,21 @@ class HTML {
 
   //共通 HTML ヘッダ生成
   static function GenerateHeader($title, $css = null, $close = false) {
-    $str = <<<EOF
+    $format = <<<EOF
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="ja">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=%s">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
-<title>%s</title>%s
+<title>%s</title>
+
 EOF;
-    $data = sprintf($str, ServerConfig::ENCODE, $title, "\n");
+    $str = sprintf($format, ServerConfig::ENCODE, $title);
     if (is_null($css)) $css = 'action';
-    $data .= self::LoadCSS(sprintf('%s/%s', JINRO_CSS, $css));
-    if ($close) $data .= self::GenerateBodyHeader();
-    return $data;
+    $str .= self::LoadCSS(sprintf('%s/%s', JINRO_CSS, $css));
+    if ($close) $str .= self::GenerateBodyHeader();
+    return $str;
   }
 
   //ページジャンプ用 JavaScript 生成
@@ -283,33 +305,33 @@ EOF;
   }
 
   //ログへのリンク生成
-  static function GenerateLogLink($url, $watch = false, $header = '', $footer = '') {
+  static function GenerateLogLink($url, $watch = false, $header = '', $css = '', $footer = '') {
     $str = <<<EOF
-{$header} <a target="_top" href="{$url}"{$footer}>正</a>
-<a target="_top" href="{$url}&reverse_log=on"{$footer}>逆</a>
-<a target="_top" href="{$url}&heaven_talk=on"{$footer}>霊</a>
-<a target="_top" href="{$url}&reverse_log=on&heaven_talk=on"{$footer}>逆&amp;霊</a>
-<a target="_top" href="{$url}&heaven_only=on"{$footer} >逝</a>
-<a target="_top" href="{$url}&reverse_log=on&heaven_only=on"{$footer}>逆&amp;逝</a>
+{$header} <a target="_top" href="{$url}"{$css}>正</a>
+<a target="_top" href="{$url}&reverse_log=on"{$css}>逆</a>
+<a target="_top" href="{$url}&heaven_talk=on"{$css}>霊</a>
+<a target="_top" href="{$url}&reverse_log=on&heaven_talk=on"{$css}>逆&amp;霊</a>
+<a target="_top" href="{$url}&heaven_only=on"{$css} >逝</a>
+<a target="_top" href="{$url}&reverse_log=on&heaven_only=on"{$css}>逆&amp;逝</a>
 EOF;
 
     if ($watch) {
       $str .= <<<EOF
 
-<a target="_top" href="{$url}&watch=on"{$footer}>観</a>
-<a target="_top" href="{$url}&watch=on&reverse_log=on"{$footer}>逆&amp;観</a>
+<a target="_top" href="{$url}&watch=on"{$css}>観</a>
+<a target="_top" href="{$url}&watch=on&reverse_log=on"{$css}>逆&amp;観</a>
 EOF;
     }
-    return $str;
+    return $str . $footer;
   }
 
   //ログへのリンク生成 (観戦モード用)
-  static function GenerateWatchLogLink($url, $header = '', $footer = '') {
+  static function GenerateWatchLogLink($url, $header = '', $css = '', $footer = '') {
     $str = <<<EOF
-{$header} <a target="_top" href="{$url}"{$footer}>正</a>
-<a target="_top" href="{$url}&reverse_log=on"{$footer}>逆</a>
-<a target="_top" href="{$url}&wolf_sight=on"{$footer}>正&amp;狼</a>
-<a target="_top" href="{$url}&wolf_sight=on&reverse_log=on"{$footer}>逆&amp;狼</a>
+{$header} <a target="_top" href="{$url}"{$css}>正</a>
+<a target="_top" href="{$url}&reverse_log=on"{$css}>逆</a>
+<a target="_top" href="{$url}&wolf_sight=on"{$css}>正&amp;狼</a>
+<a target="_top" href="{$url}&wolf_sight=on&reverse_log=on"{$css}>逆&amp;狼</a>{$footer}
 EOF;
     return $str;
   }
@@ -370,9 +392,10 @@ EOF;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=%s">
 <title>%s</title>
-</head>%s
+</head>
+
 EOF;
-    printf($str, ServerConfig::ENCODE, $title, "\n");
+    printf($str, ServerConfig::ENCODE, $title);
   }
 
   //フレーム HTML フッタ出力

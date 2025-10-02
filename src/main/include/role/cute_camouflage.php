@@ -6,7 +6,7 @@
 */
 class Role_cute_camouflage extends Role {
   function ConvertSay() {
-    if (! DB::$ROOM->IsDay() || mt_rand(0, 9) > 0) return false; //スキップ判定
+    if (! DB::$ROOM->IsDay() || ! Lottery::Percent(10)) return false; //スキップ判定
     $this->SetStack(Message::$cute_wolf != '' ? Message::$cute_wolf : Message::$wolf_howl, 'say');
     return true;
   }

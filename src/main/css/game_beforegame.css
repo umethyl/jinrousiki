@@ -9,3 +9,7 @@ body, .real-time input, .vote-page td {
 .vote-page, .vote-page td {
   border-color: #000000;
 }
+.talk-cache {
+  background-color: #FFF8FE;
+  color: #AA88AA;
+}

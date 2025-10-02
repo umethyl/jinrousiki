@@ -7,7 +7,11 @@ class Option_gm_password extends TextRoomOptionItem {
 
   function __construct() {
     parent::__construct();
-    if (OptionManager::$change) $this->enable = false;
+    if (OptionManager::$change) {
+      $this->enable = false;
+    } else {
+      $this->enable = GameOptionConfig::$gm_login_enable;
+    }
   }
 
   function GetCaption() { return 'GM ログインパスワード'; }

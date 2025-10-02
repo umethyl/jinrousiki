@@ -4,5 +4,5 @@ Loader::LoadFile('user_manager_class');
 Loader::LoadRequest('RequestUserManager');
 DB::Connect();
 Session::Start();
-RQ::$get->entry ? UserManager::Entry() : UserManager::Output();
+RQ::Get()->entry ? UserManager::Entry() : UserManager::Output();
 DB::Disconnect();

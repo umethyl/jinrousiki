@@ -1,9 +1,8 @@
 <?php
 //-- 役職データベース --//
 class RoleData {
-  //-- 役職名の翻訳 --//
+  /* 役職名 (役職通知リストはこの順番で表示される) */
   //メイン役職のリスト (コード名 => 表示名)
-  //初日の役職通知リストはこの順番で表示される
   static public $main_role_list = array(
     'human'                 => '村人',
     'saint'                 => '聖女',
@@ -11,10 +10,12 @@ class RoleData {
     'elder'                 => '長老',
     'scripter'              => '執筆者',
     'eccentricer'           => '傾奇者',
+    'tough'                 => '益荒男',
     'suspect'               => '不審者',
     'unconscious'           => '無意識',
     'mage'                  => '占い師',
     'puppet_mage'           => '傀儡師',
+    'step_mage'             => '審神者',
     'soul_mage'             => '魂の占い師',
     'psycho_mage'           => '精神鑑定士',
     'sex_mage'              => 'ひよこ鑑定士',
@@ -50,6 +51,7 @@ class RoleData {
     'hunter_guard'          => '猟師',
     'blind_guard'           => '夜雀',
     'gatekeeper_guard'      => '門番',
+    'step_guard'            => '山立',
     'reflect_guard'         => '侍',
     'poison_guard'          => '騎士',
     'fend_guard'            => '忍者',
@@ -156,11 +158,12 @@ class RoleData {
     'resist_wolf'           => '抗毒狼',
     'revive_wolf'           => '仙狼',
     'trap_wolf'             => '狡狼',
+    'fire_wolf'             => '火狼',
+    'step_wolf'             => '響狼',
     'blue_wolf'             => '蒼狼',
     'emerald_wolf'          => '翠狼',
     'decieve_wolf'          => '欺狼',
     'doom_wolf'             => '冥狼',
-    'fire_wolf'             => '火狼',
     'sex_wolf'              => '雛狼',
     'sharp_wolf'            => '鋭狼',
     'hungry_wolf'           => '餓狼',
@@ -179,6 +182,7 @@ class RoleData {
     'jammer_mad'            => '月兎',
     'voodoo_mad'            => '呪術師',
     'enchant_mad'           => '狢',
+    'step_mad'              => '家鳴',
     'dream_eater_mad'       => '獏',
     'possessed_mad'         => '犬神',
     'trap_mad'              => '罠師',
@@ -188,6 +192,7 @@ class RoleData {
     'agitate_mad'           => '扇動者',
     'miasma_mad'            => '土蜘蛛',
     'critical_mad'          => '釣瓶落とし',
+    'fire_mad'              => '煙々羅',
     'follow_mad'            => '舟幽霊',
     'therian_mad'           => '獣人',
     'revive_mad'            => '尸解仙',
@@ -206,6 +211,7 @@ class RoleData {
     'sacrifice_fox'         => '白蔵主',
     'emerald_fox'           => '翠狐',
     'voodoo_fox'            => '九尾',
+    'step_fox'              => '響狐',
     'revive_fox'            => '仙狐',
     'possessed_fox'         => '憑狐',
     'doom_fox'              => '冥狐',
@@ -248,6 +254,7 @@ class RoleData {
     'incubus_vampire'       => '青髭公',
     'succubus_vampire'      => '飛縁魔',
     'passion_vampire'       => '牡丹灯籠',
+    'step_vampire'          => '文武王',
     'doom_vampire'          => '冥血鬼',
     'sacrifice_vampire'     => '吸血公',
     'soul_vampire'          => '吸血姫',
@@ -280,6 +287,8 @@ class RoleData {
     'ogre'                  => '鬼',
     'orange_ogre'           => '前鬼',
     'indigo_ogre'           => '後鬼',
+    'cow_ogre'              => '牛頭鬼',
+    'horse_ogre'            => '馬頭鬼',
     'poison_ogre'           => '榊鬼',
     'west_ogre'             => '金鬼',
     'east_ogre'             => '風鬼',
@@ -301,9 +310,10 @@ class RoleData {
     'duelist'               => '決闘者',
     'valkyrja_duelist'      => '戦乙女',
     'critical_duelist'      => '剣闘士',
+    'cowboy_duelist'        => '無鉄砲者',
     'triangle_duelist'      => '舞首',
     'doom_duelist'          => '黒幕',
-    'cowboy_duelist'        => '無鉄砲者',
+    'sea_duelist'           => '海御前',
     'avenger'               => '復讐者',
     'poison_avenger'        => '山わろ',
     'cursed_avenger'        => 'がしゃどくろ',
@@ -314,10 +324,12 @@ class RoleData {
     'soul_patron'           => '家神',
     'sacrifice_patron'      => '身代わり地蔵',
     'shepherd_patron'       => '羊飼い',
+    'plumage_patron'        => '鬼車鳥',
     'critical_patron'       => 'ひんな神',
     'mania'                 => '神話マニア',
     'trick_mania'           => '奇術師',
     'basic_mania'           => '求道者',
+    'scarlet_mania'         => '紅天女',
     'soul_mania'            => '覚醒者',
     'dummy_mania'           => '夢語部',
     'unknown_mania'         => '鵺',
@@ -328,7 +340,6 @@ class RoleData {
     'revive_mania'          => '五徳猫');
 
   //サブ役職のリスト (コード名 => 表示名)
-  //初日の役職通知リストはこの順番で表示される
   static public $sub_role_list = array(
     'chicken'            => '小心者',
     'rabbit'             => 'ウサギ',
@@ -428,6 +439,7 @@ class RoleData {
     'possessed_target'   => '憑依者',
     'possessed'          => '憑依',
     'protected'          => '庇護者',
+    'aspirator'          => '吸毒者',
     'lost_ability'       => '能力喪失',
     'muster_ability'     => '能力発現',
     'changed_disguise'   => '元朔狼',
@@ -436,6 +448,7 @@ class RoleData {
     'copied'             => '元神話マニア',
     'copied_trick'       => '元奇術師',
     'copied_basic'       => '元求道者',
+    'copied_nymph'       => '元紅天女',
     'copied_soul'        => '元覚醒者',
     'copied_teller'      => '元夢語部');
 
@@ -447,10 +460,12 @@ class RoleData {
     'elder'                 => '老',
     'scripter'              => '執筆',
     'eccentricer'           => '傾',
+    'tough'                 => '益',
     'suspect'               => '審',
     'unconscious'           => '無',
     'mage'                  => '占',
     'puppet_mage'           => '傀',
+    'step_mage'             => '音占',
     'soul_mage'             => '魂',
     'psycho_mage'           => '心',
     'sex_mage'              => '雛',
@@ -486,6 +501,7 @@ class RoleData {
     'hunter_guard'          => '猟',
     'blind_guard'           => '雀',
     'gatekeeper_guard'      => '門',
+    'step_guard'            => '立',
     'reflect_guard'         => '侍',
     'poison_guard'          => '騎',
     'fend_guard'            => '忍',
@@ -592,11 +608,12 @@ class RoleData {
     'resist_wolf'           => '抗',
     'revive_wolf'           => '仙狼',
     'trap_wolf'             => '狡狼',
+    'fire_wolf'             => '火狼',
+    'step_wolf'             => '響狼',
     'blue_wolf'             => '蒼狼',
     'emerald_wolf'          => '翠狼',
     'decieve_wolf'          => '欺狼',
     'doom_wolf'             => '冥狼',
-    'fire_wolf'             => '火狼',
     'sex_wolf'              => '雛狼',
     'sharp_wolf'            => '鋭',
     'hungry_wolf'           => '餓',
@@ -615,6 +632,7 @@ class RoleData {
     'jammer_mad'            => '兎',
     'voodoo_mad'            => '呪',
     'enchant_mad'           => '狢',
+    'step_mad'              => '家鳴',
     'dream_eater_mad'       => '獏',
     'possessed_mad'         => '犬',
     'trap_mad'              => '罠',
@@ -624,6 +642,7 @@ class RoleData {
     'agitate_mad'           => '扇',
     'miasma_mad'            => '蜘',
     'critical_mad'          => '釣',
+    'fire_mad'              => '煙',
     'follow_mad'            => '舟',
     'therian_mad'           => '獣',
     'revive_mad'            => '尸',
@@ -642,6 +661,7 @@ class RoleData {
     'sacrifice_fox'         => '蔵',
     'emerald_fox'           => '翠狐',
     'voodoo_fox'            => '九',
+    'step_fox'              => '響狐',
     'revive_fox'            => '仙狐',
     'possessed_fox'         => '憑狐',
     'doom_fox'              => '冥狐',
@@ -684,6 +704,7 @@ class RoleData {
     'incubus_vampire'       => '髭',
     'succubus_vampire'      => '飛',
     'passion_vampire'       => '牡',
+    'step_vampire'          => '文',
     'doom_vampire'          => '冥血',
     'sacrifice_vampire'     => '公',
     'soul_vampire'          => '血姫',
@@ -716,6 +737,8 @@ class RoleData {
     'ogre'                  => '鬼',
     'orange_ogre'           => '前',
     'indigo_ogre'           => '後',
+    'cow_ogre'              => '牛頭',
+    'horse_ogre'            => '馬頭',
     'poison_ogre'           => '榊',
     'west_ogre'             => '金鬼',
     'east_ogre'             => '風鬼',
@@ -737,9 +760,10 @@ class RoleData {
     'duelist'               => '闘',
     'valkyrja_duelist'      => '戦',
     'critical_duelist'      => '剣',
+    'cowboy_duelist'        => '無鉄',
     'triangle_duelist'      => '舞',
     'doom_duelist'          => '幕',
-    'cowboy_duelist'        => '無鉄',
+    'sea_duelist'           => '海御',
     'avenger'               => '讐',
     'poison_avenger'        => '山',
     'cursed_avenger'        => '餓紗',
@@ -750,10 +774,12 @@ class RoleData {
     'soul_patron'           => '家',
     'sacrifice_patron'      => '地蔵',
     'shepherd_patron'       => '羊飼',
+    'plumage_patron'        => '鬼車',
     'critical_patron'       => '雛神',
     'mania'                 => 'マ',
     'trick_mania'           => '奇',
     'basic_mania'           => '求道',
+    'scarlet_mania'         => '天女',
     'soul_mania'            => '覚醒',
     'dummy_mania'           => '夢語',
     'unknown_mania'         => '鵺',
@@ -860,6 +886,7 @@ class RoleData {
     'possessed_target'      => '憑',
     'possessed'             => '被憑',
     'protected'             => '庇',
+    'aspirator'             => '吸毒',
     'lost_ability'          => '失',
     'muster_ability'        => '発',
     'changed_disguise'      => '元朔',
@@ -868,49 +895,48 @@ class RoleData {
     'copied'                => '元マ',
     'copied_trick'          => '元奇',
     'copied_basic'          => '元求',
+    'copied_nymph'          => '元紅',
     'copied_soul'           => '元覚',
     'copied_teller'         => '元語');
 
+  /* 役職グループ */
   //メイン役職のグループリスト (役職 => 所属グループ)
   //このリストの並び順に strpos() で判別する (毒系など、順番依存の役職があるので注意)
   static public $main_role_group_list = array(
-    'wolf' => 'wolf',
-    'mad' => 'mad',
-    'child_fox' => 'child_fox', 'sex_fox'        => 'child_fox', 'stargazer_fox' => 'child_fox',
-    'monk_fox'  => 'child_fox', 'jammer_fox'     => 'child_fox', 'miasma_fox'    => 'child_fox',
-    'howl_fox'  => 'child_fox', 'vindictive_fox' => 'child_fox', 'critical_fox'  => 'child_fox',
-    'fox' => 'fox',
-    'cupid' => 'cupid',
-    'angel' => 'angel',
-    'quiz' => 'quiz',
-    'vampire' => 'vampire',
-    'chiroptera' => 'chiroptera',
-    'fairy' => 'fairy',
-    'ogre' => 'ogre',
-    'yaksa' => 'yaksa',
-    'duelist' => 'duelist',
-    'avenger' => 'avenger',
-    'patron' => 'patron',
-    'mage' => 'mage', 'voodoo_killer' => 'mage',
-    'necromancer' => 'necromancer',
-    'medium' => 'medium',
-    'jealousy' => 'jealousy',
-    'priest' => 'priest',
-    'guard' => 'guard', 'anti_voodoo' => 'guard', 'reporter' => 'guard',
-    'common' => 'common',
-    'cat' => 'poison_cat',
-    'pharmacist' => 'pharmacist',
-    'assassin' => 'assassin',
-    'scanner' => 'mind_scanner',
-    'brownie' => 'brownie',
-    'wizard' => 'wizard',
-    'doll' => 'doll',
-    'escaper' => 'escaper',
-    'poison' => 'poison',
+     //鵺系
     'unknown_mania'   => 'unknown_mania', 'wirepuller_mania' => 'unknown_mania',
     'fire_mania'      => 'unknown_mania', 'sacrifice_mania'  => 'unknown_mania',
     'resurrect_mania' => 'unknown_mania', 'revive_mania'     => 'unknown_mania',
-    'mania' => 'mania');
+    'mania' => 'mania', //神話マニア系
+    'chiroptera' => 'chiroptera', 'fairy' => 'fairy', //蝙蝠陣営
+    'ogre' => 'ogre', 'yaksa' => 'yaksa', //鬼陣営
+    'duelist' => 'duelist', 'avenger' => 'avenger', 'patron'  => 'patron', //決闘者陣営
+    'cupid' => 'cupid', 'angel' => 'angel', //恋人陣営
+    'quiz' => 'quiz', //出題者陣営
+    'vampire' => 'vampire', //吸血鬼陣営
+    //子狐系
+    'child_fox' => 'child_fox', 'sex_fox'        => 'child_fox', 'stargazer_fox' => 'child_fox',
+    'monk_fox'  => 'child_fox', 'jammer_fox'     => 'child_fox', 'miasma_fox'    => 'child_fox',
+    'howl_fox'  => 'child_fox', 'vindictive_fox' => 'child_fox', 'critical_fox'  => 'child_fox',
+    'fox' => 'fox', //妖狐系
+    'wolf' => 'wolf', 'mad' => 'mad', //人狼陣営
+    'necromancer' => 'necromancer', //霊能者系
+    'medium'      => 'medium', //巫女系
+    'jealousy'    => 'jealousy', //橋姫系
+    'priest'      => 'priest', //司祭系
+    'guard'       => 'guard', 'anti_voodoo' => 'guard', 'reporter' => 'guard', //狩人系
+    'common'      => 'common', //共有者系
+    'pharmacist'  => 'pharmacist', //薬師系
+    'assassin'    => 'assassin', //暗殺者系
+    'scanner'     => 'mind_scanner', //さとり系
+    'brownie'     => 'brownie', //座敷童子系
+    'wizard'      => 'wizard', //魔法使い系
+    'doll'        => 'doll', //上海人形系
+    'escaper'     => 'escaper', //逃亡者系
+    'mage'        => 'mage', 'voodoo_killer' => 'mage', //占い師系
+    'cat'         => 'poison_cat', //猫又系
+    'poison'      => 'poison' //埋毒者系
+  );
 
   //サブ役職のグループリスト (CSS のクラス名 => 所属役職)
   //このリストの表示順に PlayerList の役職が表示される
@@ -943,13 +969,146 @@ class RoleData {
     'assassin'     => array('death_note', 'death_selected'),
     'chiroptera'   => array('bad_status', 'sweet_status'),
     'guard'        => array('protected'),
+    'poison'       => array('aspirator'),
     'human'        => array('lost_ability', 'muster_ability'),
     'wolf'         => array('possessed_target', 'possessed', 'changed_disguise', 'changed_therian'),
     'fox'          => array('changed_vindictive'),
-    'mania'        => array('copied', 'copied_trick', 'copied_basic', 'copied_soul', 'copied_teller'));
+    'mania'        => array('copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul',
+			    'copied_teller'));
 
-  //天候のリスト
-  static public $weather_list = array(
+  /* 関数 */
+  //役職グループ取得
+  static function GetGroup($role) {
+    foreach (self::$main_role_group_list as $main_role => $group) {
+      if (strpos($role, $main_role) !== false) return $group;
+    }
+    return 'human';
+  }
+
+  //所属陣営取得
+  static function GetCamp($role, $start = false) {
+    switch ($camp = self::GetGroup($role)) {
+    case 'wolf':
+    case 'mad':
+      return 'wolf';
+
+    case 'fox':
+    case 'child_fox':
+      return 'fox';
+
+    case 'cupid':
+    case 'angel':
+      return $start ? 'cupid' : 'lovers';
+
+    case 'quiz':
+    case 'vampire':
+      return $camp;
+
+    case 'chiroptera':
+    case 'fairy':
+      return 'chiroptera';
+
+    case 'ogre':
+    case 'yaksa':
+      return 'ogre';
+
+    case 'duelist':
+    case 'avenger':
+    case 'patron':
+      return 'duelist';
+
+    case 'mania':
+    case 'unknown_mania':
+      return $start ? 'mania' : 'human';
+
+    default:
+      return 'human';
+    }
+  }
+
+  //役職クラス (CSS) 取得
+  static function GetCSS($role) {
+    switch ($css = self::GetGroup($role)) {
+    case 'poison_cat':
+      $css = 'cat';
+      break;
+
+    case 'mind_scanner':
+      $css = 'mind';
+      break;
+
+    case 'child_fox':
+      $css = 'fox';
+      break;
+
+    case 'unknown_mania':
+      $css = 'mania';
+      break;
+    }
+    return $css;
+  }
+
+  //役職名取得
+  static function GetName($role, $sub_role = false) {
+    return $sub_role ? @self::$sub_role_list[$role] : @self::$main_role_list[$role];
+  }
+
+  //役職省略名取得
+  static function GetShortName($role) { return @self::$short_role_list[$role]; }
+
+  //役職のコード名リスト取得
+  static function GetList($sub_role = false) {
+    return array_keys($sub_role ? self::$sub_role_list : self::$main_role_list);
+  }
+
+  //役職グループリスト取得
+  static function GetGroupList() {
+    $stack = array_merge(array('human'), self::$main_role_group_list); //村人は含まれていない
+    return array_intersect(self::GetList(), $stack);
+  }
+
+  //役職の差分取得
+  static function GetDiff(array $list, $sub_role = false) {
+    return array_intersect_key($sub_role ? self::$sub_role_list : self::$main_role_list, $list);
+  }
+
+  //役職の差分取得 (省略名用)
+  static function GetShortDiff(array $list) {
+    array_shift($list); //先頭はメイン役職
+    return array_intersect_key(self::$short_role_list, array_flip($list));
+  }
+
+  //表示対象役職取得
+  static function GetDisplayList(array $list) {
+    array_shift($list); //先頭はメイン役職
+
+    $stack = array();
+    foreach (array('real', 'virtual', 'none') as $name) {
+      $stack = array_merge($stack, RoleFilterData::${'display_' . $name});
+    }
+    //Text::p($stack);
+
+    $display_list = array_diff(array_keys(self::$sub_role_list), $stack);
+    return array_intersect($display_list, $list);
+  }
+
+  //メイン役職判定
+  static function IsMain($role) { return array_key_exists($role, self::$main_role_list); }
+
+  //サブ役職判定
+  static function IsSub($role) { return array_key_exists($role, self::$sub_role_list); }
+
+  //役職グループ判定
+  static function IsGroup($role, $group) { return self::GetGroup($role) == $group; }
+
+  //役職名のソート
+  static function Sort(array $list) { return array_intersect(self::GetList(), $list); }
+}
+
+//-- 天候データベース --//
+class WeatherData {
+  /* 天候リスト */
+  static public $list = array(
      0 => array('name'    => 'スコール',
 		'event'   => 'grassy',
 		'caption' => '全員 草原迷彩'),
@@ -1114,115 +1273,82 @@ class RoleData {
 		'caption' => '全員 公開者'),
     54 => array('name'    => '極光',
 		'event'   => 'aurora',
-		'caption' => '全員 目隠し・公開者'));
+		'caption' => '全員 目隠し・公開者'),
+    55 => array('name'    => '霜柱',
+		'event'   => 'random_step',
+		'caption' => 'ランダム足音発生'),
+    56 => array('name'    => '地吹雪',
+		'event'   => 'no_step',
+		'caption' => '足音能力封印'),
+    57 => array('name'    => '月虹',
+		'event'   => 'confession',
+		'caption' => '全員 告白'),
+    58 => array('name'    => '春一番',
+		'event'   => 'gentleman',
+		'caption' => '全員 紳士'),
+    59 => array('name'    => '桜吹雪',
+		'event'   => 'lady',
+		'caption' => '全員 淑女'),
+  );
 
-  //-- 関数 --//
-  //役職グループ判定
-  static function DistinguishRoleGroup($role) {
-    foreach (self::$main_role_group_list as $key => $value) {
-      if (strpos($role, $key) !== false) return $value;
+  /* 関数 */
+  //天候データ取得
+  static function Get($id = null) { return self::$list[$id]; }
+
+  //イベント取得
+  static function GetEvent($id) { return self::$list[$id]['event']; }
+
+  //存在判定
+  static function Exists($id) { return isset(self::$list[$id]); }
+
+  //天候名出力
+  static function OutputName($id) { echo self::$list[$id]['name']; }
+
+  //説明出力
+  static function OutputCaption($id) { echo self::$list[$id]['caption']; }
+}
+
+//-- HTML 生成クラス (RoleData 拡張) --//
+class RoleDataHTML {
+  const TAG  = '<%s class="%s">%s</%s>';
+  const SPAN = '<span class="%s">[%s]</span>';
+  const LINK = '<a href="new_role/%s.php#%s">%s</a>';
+
+  //タグ生成
+  static function Generate($role, $css = null, $sub_role = false) {
+    $str = $sub_role ? Text::BR : '';
+    if (is_null($css)) $css = RoleData::GetCSS($role);
+    return $str . sprintf(self::SPAN, $css, RoleData::GetName($role, $sub_role));
+  }
+
+  //タグ生成 (メイン役職専用)
+  static function GenerateMain($role, $tag = 'span') {
+    return sprintf(self::TAG, $tag, RoleData::GetCSS($role), RoleData::GetName($role), $tag);
+  }
+
+  //タグ生成 (サブ役職専用)
+  static function GenerateSub($role, $tag = 'span') {
+    foreach (RoleData::$sub_role_group_list as $css => $list) {
+      if (in_array($role, $list)) {
+	return sprintf(self::TAG, $tag, $css, RoleData::GetName($role, true), $tag);
+      }
     }
-    return 'human';
   }
 
-  //所属陣営判別
-  static function DistinguishCamp($role, $start = false) {
-    switch ($camp = self::DistinguishRoleGroup($role)) {
-    case 'wolf':
-    case 'mad':
-      return 'wolf';
-
-    case 'fox':
-    case 'child_fox':
-      return 'fox';
-
-    case 'cupid':
-    case 'angel':
-      return $start ? 'cupid' : 'lovers';
-
-    case 'quiz':
-    case 'vampire':
-      return $camp;
-
-    case 'chiroptera':
-    case 'fairy':
-      return 'chiroptera';
-
-    case 'ogre':
-    case 'yaksa':
-      return 'ogre';
-
-    case 'duelist':
-    case 'avenger':
-    case 'patron':
-      return 'duelist';
-
-    case 'mania':
-    case 'unknown_mania':
-      return $start ? 'mania' : 'human';
-
-    default:
-      return 'human';
-    }
-  }
-
-  //役職クラス (CSS) 判定
-  static function DistinguishRoleClass($role) {
-    switch ($class = self::DistinguishRoleGroup($role)) {
-    case 'poison_cat':
-      $class = 'cat';
-      break;
-
-    case 'mind_scanner':
-      $class = 'mind';
-      break;
-
-    case 'child_fox':
-      $class = 'fox';
-      break;
-
-    case 'unknown_mania':
-      $class = 'mania';
-      break;
-    }
-    return $class;
-  }
-
-  //役職名のタグ生成
-  static function GenerateRoleTag($role, $css = null, $sub_role = false) {
-    $str = '';
-    if (is_null($css)) $css = self::DistinguishRoleClass($role);
-    if ($sub_role) $str .= '<br>';
-    $str .= '<span class="' . $css . '">[' .
-      ($sub_role ? @self::$sub_role_list[$role] : @self::$main_role_list[$role]) . ']</span>';
-    return $str;
-  }
-
-  //役職名のタグ生成 (メイン役職専用)
-  static function GenerateMainRoleTag($role, $tag = 'span') {
-    return '<' . $tag . ' class="' . self::DistinguishRoleClass($role) . '">' .
-      self::$main_role_list[$role] . '</' . $tag .'>';
-  }
-
-  //役職の説明ページへのリンク生成
-  static function GenerateRoleLink($role) {
-    if (array_key_exists($role, self::$sub_role_list)) {
+  //役職説明ページへのリンク生成
+  static function GenerateLink($role) {
+    if (RoleData::IsSub($role)) {
       $url  = 'sub_role';
-      $name = self::$sub_role_list[$role];
+      $name = RoleData::GetName($role, true);
     }
-    elseif (self::DistinguishCamp($role, true) == 'mania') {
+    elseif (RoleData::GetCamp($role, true) == 'mania') {
       $url  = 'mania';
-      $name = self::$main_role_list[$role];
+      $name = RoleData::GetName($role);
     }
     else {
-      $url  = self::DistinguishCamp($role);
-      $name = self::$main_role_list[$role];
+      $url  = RoleData::GetCamp($role);
+      $name = RoleData::GetName($role);
     }
-    return '<a href="new_role/' . $url . '.php#' . $role . '">' . $name . '</a>';
-  }
-
-  //役職名のソート
-  static function SortRole(array $list) {
-    return array_intersect(array_keys(self::$main_role_list), $list);
+    return sprintf(self::LINK, $url, $role, $name);
   }
 }

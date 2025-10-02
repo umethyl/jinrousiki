@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_revive_wolf extends Role_wolf {
-  function Resurrect() {
+  final function Resurrect() {
     $user = $this->GetActor();
     if ($user->IsActive() && ! $user->IsLovers() && $user->IsLive() && $user->IsDead(true)) {
       $user->Revive();

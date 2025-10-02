@@ -13,34 +13,44 @@ class Option_dummy_boy_selector extends SelectorRoomOptionItem {
     if (OptionManager::$change) $this->enable = false;
   }
 
-  function GetCaption() { return '初日の夜は身代わり君'; }
-
-  function GetExplain() { return '配役は<a href="info/rule.php">ルール</a>を確認して下さい'; }
-
-  function GetItem() {
-    $stack = array(''         => new Option_no_dummy_boy(),
-		   'on'       => OptionManager::GetClass('dummy_boy'),
-		   'gm_login' => OptionManager::GetClass('gm_login'));
-    foreach ($stack as $key => $item) {
-      $item->form_name  = $this->form_name;
-      $item->form_value = $key;
-    }
-    if (isset($stack[$this->value])) $stack[$this->value]->value = true;
-    return $stack;
-  }
-
   function LoadPost() {
-    if (! isset($_POST[$this->name])) return false;
-    $post = $_POST[$this->name];
+    RQ::Get()->ParsePostData($this->name);
+    if (is_null(RQ::Get()->{$this->name})) return false;
 
-    foreach ($this->form_list as $option => $value) {
-      if ($post == $value) {
-	RQ::$get->$option = true;
+    $post = RQ::Get()->{$this->name};
+    foreach ($this->form_list as $option => $form_value) {
+      if ($post == $form_value) {
+	RQ::Set($option, true);
 	array_push(RoomOption::${$this->group}, $option);
 	break;
       }
     }
   }
+
+  function GetItem() {
+    $stack = array('' => new Option_no_dummy_boy());
+    foreach ($this->form_list as $option => $form_value) {
+      $item = OptionManager::GetClass($option);
+      if ($item->enable) $stack[$form_value] = $item;
+    }
+
+    foreach ($stack as $form_value => $item) {
+      $item->form_name  = $this->form_name;
+      $item->form_value = $form_value;
+    }
+
+    if (array_key_exists($this->value, $stack)) { //チェック位置判定
+      $stack[$this->value]->value = true;
+    } else {
+      $stack['']->value = true;
+    }
+
+    return $stack;
+  }
+
+  function GetCaption() { return '初日の夜は身代わり君'; }
+
+  function GetExplain() { return '配役は<a href="info/rule.php">ルール</a>を確認して下さい'; }
 }
 
 /*

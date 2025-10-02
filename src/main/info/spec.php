@@ -2,7 +2,7 @@
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
 Loader::LoadFile('message', 'info_functions');
-InfoHTML::OutputHeader('詳細な仕様');
+InfoHTML::OutputHeader('詳細な仕様', 0, 'spec');
 ?>
 <p>
 <a href="#decide_role">配役決定ルーチン</a>
@@ -56,10 +56,15 @@ InfoHTML::OutputHeader('詳細な仕様');
 <li>ゲーム開始前のみ遺言を変更できます</li>
 <li>ゲーム開始前のみ村のオプションを変更できます</li>
 <li>ゲーム中は「遺言」発言をすると専用システムメッセージになります</li>
+<li>処刑投票済みの人数が常時見えます</li>
 <li>投票能力がある役職であっても投票することはできません</li>
 <li>「<a href="#revive_refuse">蘇生辞退</a>」を実行することで一部の<a href="game_option.php#open_cast_option">霊界公開設定</a>を変更することができます</li>
 <li>「超過時間リセット」を実行することで投票超過時間をリセットすることができます</li>
 </ol>
+<h3>Ver. 2.2.0 α4～</h3>
+<pre>
+処刑投票済み人数表示機能実装
+</pre>
 <h3>Ver. 2.1.0 RC1～</h3>
 <pre>
 村オプション変更機能実装
@@ -103,7 +108,7 @@ InfoHTML::OutputHeader('詳細な仕様');
   </ol>
 </li>
 <li>恋人支配 (生存者が全て恋人) → 恋人勝利</li>
-<li>出題者死亡 (クイズ村限定) → 引き分け</li>
+<li>出題者死亡 (<a href="game_option.php#quiz">クイズ村</a>限定) → 引き分け</li>
 <li>規定数以上の再投票 → 引き分け</li>
 </ol>
 <pre>
@@ -163,16 +168,16 @@ InfoHTML::OutputHeader('詳細な仕様');
 <li>餓狼襲撃 (<a href="new_role/wolf.php#hungry_wolf">餓狼</a>)</li>
 <li>身代わり (<a href="new_role/ability.php#sacrifice">身代わり能力者</a>・<a href="new_role/human.php#sacrifice_cat">猫神</a>)</li>
 <li>毒 (<a href="new_role/ability.php#poison">毒能力者</a>・<a href="new_role/human.php#soul_assassin">辻斬り</a>)</li>
-<li>罠 (<a href="new_role/ability.php#trap">罠能力者</a>)</li>
+<li>罠 (<a href="new_role/ability.php#trap_night">罠能力者/夜投票型</a>)</li>
 <li>逃亡失敗 (<a href="new_role/human.php#escaper_group">逃亡者系</a>)</li>
-<li>狩り (<a href="new_role/human.php#guard_group">狩人系</a>)</li>
+<li>狩り (<a href="new_role/human.php#guard_hunt">狩人系/狩り能力者</a>)</li>
 <li>吸血 (<a href="new_role/vampire.php">吸血鬼陣営</a>)</li>
 <li>暗殺 (<a href="new_role/human.php#assassin_group">暗殺者系</a>・<a href="new_role/sub_role.php#death_note">デスノート</a>)</li>
-<li>人攫い (<a href="new_role/ogre.php">鬼陣営</a>)</li>
+<li>人攫い (<a href="new_role/ogre.php">鬼陣営/人攫い型</a>)</li>
 <li>夢食い (<a href="new_role/wolf.php#dream_eater_mad">獏</a>)</li>
 <li>呪殺 (<a href="new_role/human.php#mage_group">占い師系</a>)</li>
 <li>呪返し (<a href="new_role/ability.php#cursed_group">呪い能力者</a>・<a href="new_role/human.php#voodoo_killer">陰陽師</a>)</li>
-<li>憑依 (<a href="new_role/ability.php#possessed">憑依能力者</a>)</li>
+<li>憑依 (<a href="new_role/ability.php#possessed_direct">憑依能力者/直接型</a>)</li>
 <li>憑依解放 (<a href="new_role/human.php#anti_voodoo">厄神</a>)</li>
 <li>人外尾行 (<a href="new_role/human.php#reporter">ブン屋</a>)</li>
 <li>帰還 (<a href="new_role/human.php#revive_priest">天人</a>・<a href="new_role/sub_role.php#death_selected">オシラ遊び</a>)</li>
@@ -180,7 +185,7 @@ InfoHTML::OutputHeader('詳細な仕様');
 <h4>～<?php echo Message::$revive_success; ?> [Ver. 1.4.0 α18～]</h4>
 <ul>
 <li>蘇生 (<a href="new_role/ability.php#revive">蘇生能力者</a>)</li>
-<li>憑依・憑依解放 (<a href="new_role/ability.php#possessed">憑依能力者</a>)</li>
+<li>憑依・憑依解放 (<a href="new_role/ability.php#possessed_direct">憑依能力者/直接型</a>)</li>
 </ul>
 
 <h4>～<?php echo Message::$revive_failed; ?> [Ver. 1.4.0 α18～]</h4>
@@ -230,7 +235,7 @@ InfoHTML::OutputHeader('詳細な仕様');
   - <a href="new_role/human.php#pharmacist_group">薬師系</a> ＞ 抗毒判定 ＞ 毒発動判定 → <a href="new_role/human.php#brownie">座敷童子</a>・<a href="new_role/human.php#doom_doll">蓬莱人形</a>・<a href="new_role/fox.php#miasma_fox">蟲狐</a>
 
 + 役職判定
-  - <a href="new_role/human.php#seal_medium">封印師</a> → <a href="new_role/human.php#bacchus_medium">神主</a> → <a href="new_role/human.php#centaurus_pharmacist">人馬</a> → <a href="new_role/ability.php#vote_action">処刑投票能力者</a> → <a href="new_role/human.php#trap_common">策士</a> → <a href="new_role/human.php#jealousy">橋姫</a> →
+  - <a href="new_role/human.php#seal_medium">封印師</a> → <a href="new_role/human.php#bacchus_medium">神主</a> → <a href="new_role/duelist.php#cowboy_duelist">無鉄砲者</a> → <a href="new_role/duelist.php#sea_duelist">海御前</a> → <a href="new_role/human.php#centaurus_pharmacist">人馬</a> → <a href="new_role/ability.php#vote_action">処刑投票能力者</a> → <a href="new_role/human.php#trap_common">策士</a> → <a href="new_role/human.php#jealousy">橋姫</a> →
     <a href="new_role/ability.php#anti_sudden_death">ショック死抑制能力者</a> ＞ <a href="new_role/sub_role.php#challenge_lovers">難題</a> ＞ <a href="new_role/sub_role.php#chicken_group">小心者系</a> ＞ <a href="new_role/human.php#eclipse_medium">蝕巫女</a>・<a href="new_role/lovers.php#cursed_angel">堕天使</a> →
     <a href="new_role/wolf.php#follow_mad">舟幽霊</a> → <a href="new_role/sub_role.php#lovers">恋人</a>後追い → <a href="new_role/ability.php#vote_reaction">処刑得票能力者</a> → <a href="weather.php">天候</a>・<a href="new_role/sub_role.php#joker">ジョーカー</a>
 </pre>
@@ -238,11 +243,14 @@ InfoHTML::OutputHeader('詳細な仕様');
 <h3 id="vote_night">夜</h3>
 <pre>
 + 処理順序
-  - 恋人 → 接触 → 夢 → 占い → 透視 → コピー → 帰還 → 反魂 → 蘇生 →
-    憑依 → 覚醒コピー → 後追い → 蟲姫 → 司祭
+  - 恋人 → 足音 → 接触 → 夢 → 占い → 透視 → コピー → 帰還 → 反魂 →
+    蘇生 → 憑依 → 覚醒コピー → 後追い → 蟲姫 → 司祭
 
 + 恋人 (<a href="new_role/lovers.php">恋人陣営</a>)
   - 相互作用はないので投票直後に処理を行う
+
++ 足音 (<a href="new_role/ability.php#step">足音能力者</a>)
+  - 判定の時点で生存している全ての通り道で足音が鳴る
 
 + 接触 (罠・逃亡・護衛・身代わり・人狼襲撃・狩り・吸血・暗殺・人攫い)
   - 罠 ＞ 逃亡失敗 →

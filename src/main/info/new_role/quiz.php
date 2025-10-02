@@ -24,12 +24,12 @@ InfoHTML::OutputRoleHeader('出題者陣営');
 <h3 id="quiz">出題者 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α2～]</h3>
 <h4>[耐性] 人狼襲撃：無効 (クイズ村限定) / 毒：対象外</h4>
 <pre>
-<a href="../game_option.php#quiz">クイズ村</a>の GM です。闇鍋モードにも低確率で出現します。
+<a href="../game_option.php#quiz">クイズ村</a>の GM です。<a href="../chaos.php">闇鍋モード</a>にも低確率で出現します。
 決定能力を持っていますが、ルールの特殊なクイズ村以外ではまず勝ち目はありません。
 引いたら諦めてください。
 
-毒吊りで巻き込まれる対象になりません。
-例えば、出題者・<a href="human.php#poison">埋毒者</a>・<a href="wolf.php#poison_wolf">毒狼</a>の編成で毒能力者を吊った場合は確実に出題者が生き残ります。
+毒能力者の処刑で巻き込まれる対象になりません。
+例えば、出題者・<a href="human.php#poison">埋毒者</a>・<a href="wolf.php#poison_wolf">毒狼</a>の編成で毒能力者を処刑した場合は確実に出題者が生き残ります。
 </pre>
 <h4>処刑者決定法則</h4>
 <ol>

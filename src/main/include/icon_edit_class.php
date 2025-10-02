@@ -1,68 +1,70 @@
 <?php
 //-- アイコン変更処理クラス --//
 class IconEdit {
-  const TITLE  = 'ユーザアイコン編集';
-  const URL    = 'icon_view.php';
-  const BACK   = "<br>\n<a href=\"%s?icon_no=%d\">戻る</a>";
+  const TITLE = 'ユーザアイコン編集';
+  const URL   = 'icon_view.php';
 
+  //実行処理
   static function Execute() {
     //リファラチェック
-    if (Security::CheckReferer(self::URL)) HTML::OutputResult(self::TITLE, '無効なアクセスです');
+    if (Security::CheckReferer(self::URL)) self::Output('無効なアクセスです');
 
     //入力データチェック
     extract(RQ::ToArray()); //引数を展開
-    $back_url = sprintf(self::BACK, self::URL, $icon_no);
-    if ($password != UserIconConfig::PASSWORD) {
-      HTML::OutputResult(self::TITLE, 'パスワードが違います。' . $back_url);
-    }
+    $url = sprintf('<a href="%s?icon_no=%d">戻る</a>', self::URL, $icon_no);
+    if ($password != UserIconConfig::PASSWORD) self::Output('パスワードが違います。', $url);
 
     //アイコン名の文字列長のチェック
-    if (strlen($icon_name) < 1) {
-      HTML::OutputResult(self::TITLE, 'アイコン名が空欄になっています。' . $back_url);
-    }
+    if (strlen($icon_name) < 1) self::Output('アイコン名が空欄になっています。', $url);
     $query_stack = array();
-    foreach (UserIcon::CheckText(self::TITLE, $back_url) as $key => $value) {
+    foreach (UserIcon::CheckText(self::TITLE, $url) as $key => $value) {
       $query_stack[] = sprintf('%s = %s', $key, is_null($value) ? 'NULL' : "'{$value}'");
     }
 
     if (strlen($color) > 0) { //色指定のチェック
-      $color = UserIcon::CheckColor($color, self::TITLE, $back_url);
+      $color = UserIcon::CheckColor($color, self::TITLE, $url);
       $query_stack[] = sprintf("color = '%s'", $color);
     }
 
     //トランザクション開始
     DB::Connect();
-    $lock = "サーバが混雑しています。<br>\n時間を置いてから再登録をお願いします。" . $back_url;
-    if (! DB::Lock('icon')) HTML::OutputResult(self::TITLE, $lock);
-
+    if (! DB::Lock('icon')) {
+      $str = '[ロック失敗] サーバが混雑しています。時間を置いてから再登録をお願いします。';
+      self::Output($str, $url);
+    }
     if (! IconDB::Exists($icon_no)) { //存在チェック
-      HTML::OutputResult(self::TITLE, '無効なアイコン番号です：' . $icon_no . $back_url);
+      self::Output('無効なアイコン番号です：' . $icon_no, $url);
     }
 
     if (IconDB::IsDuplicate($icon_no, $icon_name)) { //アイコン名重複チェック
       $str = sprintf('アイコン名 "%s" は既に登録されています。', $icon_name);
-      HTML::OutputResult(self::TITLE, $str . $back_url);
+      self::Output($str, $url);
     }
 
     if (IconDB::IsUsing($icon_no)) { //編集制限チェック
       $str = '募集中・プレイ中の村で使用されているアイコンは編集できません。';
-      HTML::OutputResult(self::TITLE, $str . $back_url);
+      self::Output($str, $url);
     }
 
     if (IconDB::IsDisable($icon_no) !== $disable) { //非表示フラグチェック
       $query_stack[] = sprintf('disable = %s', $disable ? 'TRUE' : 'FALSE');
     }
 
-    if (count($query_stack) < 1) {
-      HTML::OutputResult(self::TITLE, '変更内容はありません' . $back_url);
-    }
+    if (count($query_stack) < 1) self::Output('変更内容はありません', $url);
     $query = implode(', ', $query_stack);
-    //HTML::OutputResult(self::TITLE, $query . $back_url); //テスト用
+    //self::Output($query, $url); //テスト用
 
     if (IconDB::Update($icon_no, $query)) {
-      HTML::OutputResult(self::TITLE, '編集完了', sprintf('icon_view.php?icon_no=%d', $icon_no));
+      HTML::OutputResult(self::TITLE, '編集完了', sprintf('%s?icon_no=%d', self::URL, $icon_no));
     } else {
-      HTML::OutputResult(self::TITLE, $lock);
+      $str = '[更新失敗] サーバが混雑しています。時間を置いてから再登録をお願いします。';
+      self::Output($str, $url);
     }
+  }
+
+  //エラー処理
+  private static function Output($str, $url = null) {
+    if (isset($url)) $str = Text::Concat($str, $url);
+    HTML::OutputResult(self::TITLE, $str);
   }
 }

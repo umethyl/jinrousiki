@@ -12,7 +12,7 @@ class Role_weather_priest extends Role_priest {
     $data = $this->GetStack('priest');
     //スキップ判定
     if (! (isset($data->{$this->role}) ||
-	   (DB::$ROOM->date > 2 && (DB::$ROOM->date % 3) == 0 &&
+	   (DB::$ROOM->date > 2 && DB::$ROOM->date % 3 == 0 &&
 	    $data->count['total'] - $data->count['human_side'] > $data->count['wolf'] * 2))) {
       return false;
     }

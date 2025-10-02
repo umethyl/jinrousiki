@@ -7,7 +7,7 @@
 RoleManager::LoadFile('fairy');
 class Role_ice_fairy extends Role_fairy {
   function FairyAction(User $user) {
-    $target = mt_rand(0, 9) < 3 ? $this->GetActor() : $user;
+    $target = Lottery::Percent(30) ? $this->GetActor() : $user;
     $target->AddDoom(1, 'frostbite');
   }
 }

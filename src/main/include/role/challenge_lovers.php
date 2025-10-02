@@ -20,7 +20,7 @@ class Role_challenge_lovers extends Role {
       foreach (array_keys($this->GetStack('target')) as $uname) {
 	$user = DB::$USER->ByRealUname($uname);
 	if ($user->IsLovers()) {
-	  foreach ($user->GetPartner('lovers') as $id) $cupid_list[$id][] = $user->user_no;
+	  foreach ($user->GetPartner('lovers') as $id) $cupid_list[$id][] = $user->id;
 	}
       }
       //Text::p($cupid_list, 'QP');

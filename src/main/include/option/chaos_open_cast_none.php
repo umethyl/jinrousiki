@@ -6,4 +6,6 @@ class Option_chaos_open_cast_none extends CheckRoomOptionItem {
   public $type = 'radio';
 
   function GetCaption() { return '通知なし'; }
+
+  protected function GetURL() { return 'chaos.php#' . $this->name; }
 }

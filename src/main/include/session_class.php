@@ -46,11 +46,7 @@ class Session {
 
   //認証
   static function Certify($exit = true) {
-    //$ip_address = $_SERVER['REMOTE_ADDR']; //IPアドレス認証は現在は行っていない
-    //セッション ID による認証
-    $query = "SELECT user_no FROM user_entry WHERE room_no = %d AND session_id = '%s'" .
-      " AND live <> 'kick'";
-    $stack = DB::FetchArray(sprintf($query, RQ::$get->room_no, self::GetID()));
+    $stack = SessionDB::Certify();
     if (count($stack) == 1) {
       self::$user_no = array_shift($stack);
       return true;
@@ -64,10 +60,8 @@ class Session {
   static function CertifyGamePlay() {
     if (self::Certify(false)) return true;
 
-    //村が存在するなら観戦ページにジャンプする
-    $query = 'SELECT room_no FROM room WHERE room_no = %d';
-    if (DB::Count(sprintf($query, RQ::$get->room_no)) > 0) {
-      $url   = sprintf('game_view.php?room_no=%d', RQ::$get->room_no);
+    if (RoomDataDB::Exists()) { //村が存在するなら観戦ページにジャンプする
+      $url   = sprintf('game_view.php?room_no=%d', RQ::Get()->room_no);
       $title = '観戦ページにジャンプ';
       $body  = "観戦ページに移動します。<br>\n" .
 	'切り替わらないなら <a href="%s" target="_top">ここ</a> 。' . "\n" . '%s';
@@ -79,23 +73,39 @@ class Session {
   }
 
   //ID セット
-  private function SetID() {
+  private static function SetID() {
     return self::$id = session_id();
   }
 
   //DB に登録されているセッション ID と被らないようにする
-  private function GetUniq() {
-    $query = "SELECT room_no FROM user_entry WHERE session_id = '%s'";
+  private static function GetUniq() {
     do {
       self::Reset();
-    } while (DB::Count(sprintf($query, self::GetID())) > 0);
+    } while (SessionDB::Exists());
     return self::GetID();
   }
 
   //エラー出力
-  private function Output() {
+  private static function Output() {
     $title = 'セッション認証エラー';
     $body  = $title . '：<a href="./" target="_top">トップページ</a>からログインしなおしてください';
     HTML::OutputResult($title, $body);
+  }
+}
+
+//-- データベースアクセス (Session 拡張) --//
+class SessionDB {
+  //ユニーク判定
+  static function Exists() {
+    $query = 'SELECT room_no FROM user_entry WHERE session_id = ?';
+    DB::Prepare($query, array(Session::GetID()));
+    return DB::Count() > 0;
+  }
+
+  //認証
+  static function Certify() {
+    $query = 'SELECT user_no FROM user_entry WHERE session_id = ? AND room_no = ? AND live <> ?';
+    DB::Prepare($query, array(Session::GetID(), RQ::Get()->room_no, 'kick'));
+    return DB::FetchColumn();
   }
 }

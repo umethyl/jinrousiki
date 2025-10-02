@@ -44,7 +44,7 @@ class Role_soul_mania extends Role_mania {
     'patron'		=> 'sacrifice_patron');
 
   protected function OutputResult() {
-    if (DB::$ROOM->date == 2) $this->OutputAbilityResult($this->result);
+    if (DB::$ROOM->IsDate(2)) $this->OutputAbilityResult($this->result);
   }
 
   protected function GetManiaRole(User $user) { return $user->DistinguishRoleGroup(); }
@@ -54,18 +54,15 @@ class Role_soul_mania extends Role_mania {
     $actor = $this->GetActor();
     if ($user->IsRoleGroup('mania', 'copied')) {
       $role = 'human';
-    }
-    elseif ($user->IsRole('changed_disguise')) {
+    } elseif ($user->IsRole('changed_disguise')) {
       $role = $this->copy_list['wolf'];
-    }
-    elseif ($user->IsRole('changed_therian')) {
+    } elseif ($user->IsRole('changed_therian')) {
       $role = $this->copy_list['mad'];
-    }
-    else {
+    } else {
       $role = $this->copy_list[$user->DistinguishRoleGroup()];
     }
     $actor->ReplaceRole($this->role, $role);
     $actor->AddRole($this->copied);
-    DB::$ROOM->ResultAbility($this->result, $role, $actor->handle_name, $actor->user_no);
+    DB::$ROOM->ResultAbility($this->result, $role, $actor->handle_name, $actor->id);
   }
 }

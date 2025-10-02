@@ -25,7 +25,7 @@ class Role_sacrifice_ogre extends Role_ogre {
 
   function Win($winner) { return $winner != 'human' && $this->IsLive(); }
 
-  function GetResistRate() { return 0; }
+  protected function GetResistRate() { return 0; }
 
   protected function GetReduceRate() { return 3 / 5; }
 
@@ -34,6 +34,6 @@ class Role_sacrifice_ogre extends Role_ogre {
   protected function Assassin(User $user) { $user->AddRole('psycho_infected'); }
 
   function IsSacrifice(User $user) {
-    return ! $this->IsActor($user->uname) && $user->IsRole('psycho_infected');
+    return ! $this->IsActor($user) && $user->IsRole('psycho_infected');
   }
 }

@@ -4,7 +4,7 @@ class Login {
   //基幹処理
   static function Execute() {
     DB::Connect();
-    if (RQ::$get->login_manually) { //ユーザ名とパスワードで手動ログイン
+    if (RQ::Get()->login_manually) { //ユーザ名とパスワードで手動ログイン
       if (self::LoginManually()) {
 	self::Output('ログインしました', 'game_frame');
       }
@@ -27,38 +27,58 @@ class Login {
     セッションを失った場合、ユーザ名とパスワードでログインする
     ログイン成功/失敗を true/false で返す
   */
-  private function LoginManually() {
-    //ブラックリストチェック
-    if (! ServerConfig::DEBUG_MODE && Security::CheckBlackList()) return false;
-
+  private static function LoginManually() {
     extract(RQ::ToArray()); //引数を展開
+    if (GameConfig::TRIP && $trip != '') {
+      $trip = Text::Trip('#' . $trip); //トリップ変換
+      $uname .= $trip;
+    } else {
+      $trip = ''; //ブラックリストチェック用にトリップを初期化
+    }
     if ($uname == '' || $password == '') return false;
 
-    //$ip = $_SERVER['REMOTE_ADDR']; //IPアドレス取得 //現在は IP アドレス認証は行っていない
+    //ブラックリストチェック
+    if (! ServerConfig::DEBUG_MODE && Security::IsLoginBlackList($trip)) return false;
+
     $crypt = Text::Crypt($password);
     //$crypt = $password; //デバッグ用
-
-    //該当するユーザ名とパスワードがあるか確認
-    $where = sprintf("WHERE room_no = %d AND uname = '%s' AND live <> 'kick'", $room_no, $uname);
-    $query = sprintf("SELECT uname FROM user_entry %s AND password = '%s'", $where, $crypt);
-    if (DB::Count($query) != 1) return false;
-
-    //DB のセッション ID を再登録
-    $query = sprintf("UPDATE user_entry SET session_id = '%s' %s", Session::GetID(true), $where);
-    return DB::FetchBool($query);
+    return LoginDB::Certify($uname, $crypt) && LoginDB::Update($uname, $crypt); //認証＆再登録処理
   }
 
   //結果出力関数
-  private function Output($title, $jump, $body = null) {
+  private static function Output($title, $jump, $body = null) {
     if (is_null($body)) $body = $title;
     if (is_null($jump)) {
       $url = '';
     }
     else {
-      $url = sprintf('%s.php?room_no=%s', $jump, RQ::$get->room_no);
+      $url = sprintf('%s.php?room_no=%s', $jump, RQ::Get()->room_no);
       $str = "。<br>\n".'切り替わらないなら <a href="%s" target="_top">ここ</a> 。';
       $body .= sprintf($str, $url);
     }
     HTML::OutputResult($title, $body, $url);
+  }
+}
+
+//-- データベースアクセス (Login 拡張) --//
+class LoginDB {
+  //ユーザ認証
+  static function Certify($uname, $password) {
+    $query = <<<EOF
+SELECT user_no FROM user_entry
+WHERE room_no = ? AND uname = ? AND password = ? AND live <> ?
+EOF;
+    DB::Prepare($query, array(RQ::Get()->room_no, $uname, $password, 'kick'));
+    return DB::Count() == 1;
+  }
+
+  //セッション ID 再登録
+  static function Update($uname, $password) {
+    $query = <<<EOF
+UPDATE user_entry SET session_id = ?
+WHERE room_no = ? AND uname = ? AND password = ? AND live <> ?
+EOF;
+    DB::Prepare($query, array(Session::GetID(true), RQ::Get()->room_no, $uname, $password, 'kick'));
+    return DB::Execute();
   }
 }

@@ -2,7 +2,7 @@
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
 Loader::LoadFile('cast_config', 'role_data_class', 'room_option_class', 'info_functions');
-InfoHTML::OutputHeader('ゲームオプション');
+InfoHTML::OutputHeader('ゲームオプション', 0, 'game_option');
 ?>
 <p>
 <a href="#basic_option">基本</a>
@@ -16,10 +16,11 @@ InfoHTML::OutputHeader('ゲームオプション');
 <h2 id="basic_option">基本設定</h2>
 <p>
 <?php InfoHTML::OutputCategory(array('wish_role', 'real_time', 'wait_morning', 'open_vote',
-'settle', 'seal_message', 'open_day')); ?>
+'settle')); ?>
 </p>
 <p>
-<?php InfoHTML::OutputCategory(array('necessary_name', 'necessary_trip')); ?>
+<?php InfoHTML::OutputCategory(array('seal_message', 'open_day', 'necessary_name',
+'necessary_trip')); ?>
 </p>
 
 <h3 id="wish_role"><?php OptionManager::OutputCaption('wish_role'); ?></h3>
@@ -134,12 +135,12 @@ InfoHTML::OutputHeader('ゲームオプション');
 <ul>
 <li>誰がどの役職なのかゲーム終了まで公開されません</li>
 <li>蘇生能力は有効になります</li>
-<li><a href="spec.php#dummy_boy">身代わり君</a>が<a href="spec.php#revive_refuse">蘇生辞退</a>すると<a href="#auto_open_cast"><?php OptionManager::OutputCaption('auto_open_cast'); ?></a>相当になります。
+<li><a href="spec.php#dummy_boy">身代わり君</a>が<a href="spec.php#revive_refuse">蘇生辞退</a>すると<a href="#auto_open_cast"><?php OptionManager::OutputCaption('auto_open_cast'); ?></a>相当になります</li>
 </ul>
 <h4>Ver. 1.5.0 β14～</h4>
-<pre>
-身代わり君の蘇生辞退で自動公開モード相当に移行。
-</pre>
+<ul>
+<li>身代わり君の蘇生辞退で自動公開モード相当に移行</li>
+</ul>
 
 <h3 id="auto_open_cast"><?php OptionManager::OutputCaption('auto_open_cast'); ?> [Ver. 1.4.0 β3～]</h3>
 <ul>
@@ -147,14 +148,14 @@ InfoHTML::OutputHeader('ゲームオプション');
 <li>非公開中の霊界モードには「隠蔽中」という趣旨のメッセージが画面に表示されます</li>
 </ul>
 <h4>Ver. 1.5.0 β6～</h4>
-<pre>
-非公開中の霊界モードには「隠蔽中」という趣旨のメッセージが画面に表示されます
-</pre>
+<ul>
+<li>非公開中の霊界モードには「隠蔽中」という趣旨のメッセージが画面に表示されます</li>
+</ul>
 
 
 <h2 id="add_role_option">追加役職設定</h2>
 <ul>
-<li>置換元の役職が足りない場合は出現しないことがあります。<br>
+<li>置換元の役職が足りない場合は出現しないことがあります<br>
 (例：村人1の場合、<a href="#poison"><?php OptionManager::OutputCaption('poison'); ?></a>は適用されない)</li>
 </ul>
 <p>
@@ -265,8 +266,8 @@ InfoHTML::OutputHeader('ゲームオプション');
 
 <h2 id="special_option">特殊村設定</h2>
 <p>
-<?php InfoHTML::OutputCategory(array('detective', 'liar', 'gentleman', 'deep_sleep', 'blinder',
-'mind_open', 'critical', 'sudden_death', 'perverseness')); ?>
+<?php InfoHTML::OutputCategory(array('detective', 'liar', 'gentleman', 'passion', 'deep_sleep',
+'blinder', 'mind_open', 'critical', 'sudden_death', 'perverseness')); ?>
 </p>
 <p>
 <?php InfoHTML::OutputCategory(array('joker', 'death_note', 'weather', 'festival')); ?>
@@ -303,6 +304,11 @@ InfoHTML::OutputHeader('ゲームオプション');
 <li><?php OptionManager::OutputExplain('gentleman'); ?></li>
 <li><a href="new_role/sub_role.php#gentleman">紳士</a>・<a href="new_role/sub_role.php#lady">淑女</a>の発動率はランダム付加の場合と同じです</li>
 <li><a href="#chaos"><?php OptionManager::OutputCaption('chaos'); ?></a>でランダムに付加される時は個々の性別を参照していません</li>
+</ul>
+
+<h3 id="passion"><?php OptionManager::OutputCaption('passion'); ?> [Ver. 2.2.0 α4～]</h3>
+<ul>
+<li>全ユーザに<a href="new_role/sub_role.php#passion">恋色迷彩</a>がつきます</li>
 </ul>
 
 <h3 id="deep_sleep"><?php OptionManager::OutputCaption('deep_sleep'); ?> [Ver. 1.4.0 β18～]</h3>
@@ -488,7 +494,7 @@ InfoHTML::OutputHeader('ゲームオプション');
 
 <h2 id="special_role_option">特殊配役設定</h2>
 <p>
-<?php InfoHTML::OutputCategory(array('special_role', 'chaos', 'duel', 'gray_random', 'quiz')); ?>
+<?php InfoHTML::OutputCategory(array('special_role', 'chaos', 'duel', 'gray_random', 'step', 'quiz')); ?>
 </p>
 
 <h3 id="special_role"><?php OptionManager::OutputCaption('special_role'); ?> [Ver. 1.4.0 β17～]</h3>
@@ -514,11 +520,25 @@ InfoHTML::OutputHeader('ゲームオプション');
 
 <h4 id="gray_random"><?php OptionManager::OutputCaption('gray_random'); ?> [Ver. 1.4.0 β17～]</h4>
 <ul>
-  <li>配役が基本職のみになります。初期設定は以下です。</li>
+  <li>配役が基本職のみになります。初期設定は以下です</li>
   <ol>
     <li>人狼系 → 人狼</li>
     <li>狂人系 → 狂人</li>
     <li>妖狐陣営 → 妖狐</li>
+    <li>上記以外 → 村人</li>
+  </ol>
+</ul>
+
+<h4 id="step"><?php OptionManager::OutputCaption('step'); ?> [Ver. 2.2.0 α3～]</h4>
+<ul>
+  <li>配役が<a href="new_role/ability.php#step">足音能力者</a>ベースになります。初期設定は以下です</li>
+  <ol>
+    <li>占い師系 → <a href="new_role/human.php#step_mage">審神者</a></li>
+    <li>霊能者系 → 霊能者</li>
+    <li>狩人系 → <a href="new_role/human.php#step_guard">山立</a></li>
+    <li>人狼系 → <a href="new_role/wolf.php#step_wolf">響狼</a></li>
+    <li>狂人系 → <a href="new_role/wolf.php#step_mad">家鳴</a></li>
+    <li>妖狐陣営 → <a href="new_role/fox.php#step_fox">響狐</a></li>
     <li>上記以外 → 村人</li>
   </ol>
 </ul>
@@ -531,7 +551,8 @@ InfoHTML::OutputHeader('ゲームオプション');
   <li>出現役職は村人・共有者・人狼・狂人・妖狐です</li>
   <li>GM 以外の全員に<a href="new_role/sub_role.php#panelist">解答者</a>がつきます</li>
   <li>人狼は常時 GM しか狙えません</li>
-  <li>GM は噛まれても殺されません</li>
+  <li>GM は人狼に襲撃されても死亡しません</li>
+  <li>GM のみ、処刑投票の集計状況が見えます</li>
   <li>以下のような使い方を想定しています</li>
   <ol>
     <li>GM がクイズを出題してゲーム開始</li>
@@ -544,5 +565,9 @@ InfoHTML::OutputHeader('ゲームオプション');
     <li>以下、勝敗が決まるまで繰り返す</li>
   </ol>
 </ul>
+<h5>Ver. 2.2.0 α4～</h5>
+<pre>
+GM のみ、処刑投票の集計状況が見えます
+</pre>
 </body>
 </html>

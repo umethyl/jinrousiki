@@ -8,13 +8,14 @@ RoleManager::LoadFile('fairy');
 class Role_sweet_fairy extends Role_fairy {
   public $action = 'CUPID_DO';
   public $submit = 'fairy_do';
-  public $ignore_message = '初日以外は投票できません';
 
-  function IsVote() { return DB::$ROOM->date == 1; }
+  function IsVote() { return DB::$ROOM->IsDate(1); }
 
-  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
+  function GetIgnoreMessage() { return '初日以外は投票できません'; }
 
   function IsVoteCheckbox(User $user, $live) { return $live && ! $user->IsDummyBoy(); }
+
+  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
 
   function VoteNight() {
     $stack = $this->GetVoteNightTarget();

@@ -13,8 +13,9 @@ class Role_trick_mania extends Role_mania {
     if ($role == 'human' || $user->IsDummyBoy() || $user->IsRole('widow_priest', 'revive_priest')) {
       return;
     }
+
     foreach ($this->GetStack('vote_data') as $stack) { //交換コピー判定
-      if (array_key_exists($user->user_no, $stack)) return;
+      if (array_key_exists($user->id, $stack)) return;
     }
     $user->ReplaceRole($role, $user->DistinguishRoleGroup());
   }

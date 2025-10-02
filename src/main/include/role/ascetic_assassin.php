@@ -10,11 +10,7 @@ class Role_ascetic_assassin extends Role_assassin {
     RoleHTML::OutputAbilityResult('ability_ascetic_' . $this->GetAsceticCount(), null);
   }
 
-  function WolfEatResist() {
-    $rate = floor($this->GetAsceticCount() / 3) * 10;
-    //Text::p($rate, 'resist_rate');
-    return mt_rand(1, 100) <= $rate;
-  }
+  function WolfEatResist() { return Lottery::Percent(floor($this->GetAsceticCount() / 3) * 10); }
 
   //周囲の生存者判定
   private function GetAsceticCount() {

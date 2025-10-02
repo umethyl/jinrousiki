@@ -13,9 +13,9 @@ class Role_fox extends Role {
     $fox_list       = array();
     $child_fox_list = array();
     foreach (DB::$USER->rows as $user) {
-      if ($this->IsActor($user->uname)) continue;
+      if ($this->IsActor($user)) continue;
       if ($user->IsRole('possessed_fox')) {
-	$fox_list[] = DB::$USER->GetHandleName($user->uname, true); //憑依先を追跡する
+	$fox_list[] = $user->GetName(); //憑依先を追跡する
       }
       elseif ($user->IsFox(true)) {
 	$fox_list[] = $user->handle_name;

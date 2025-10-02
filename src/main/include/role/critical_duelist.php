@@ -8,7 +8,7 @@ RoleManager::LoadFile('valkyrja_duelist');
 class Role_critical_duelist extends Role_valkyrja_duelist {
   public $self_shoot = true;
 
-  function FilterVoteDo(&$number) {
-    if (mt_rand(0, 99) < 5) $number += 100;
+  function FilterVoteDo(&$count) {
+    if (Lottery::Percent(5)) $count += 100;
   }
 }

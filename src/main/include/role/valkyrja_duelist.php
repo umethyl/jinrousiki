@@ -7,15 +7,14 @@
 */
 class Role_valkyrja_duelist extends Role {
   public $action = 'DUELIST_DO';
-  public $ignore_message = '初日以外は投票できません';
   public $partner_role   = 'rival';
   public $partner_header = 'duelist_pair';
   public $check_self_shoot = true;
-  public $self_shoot = false;
+  public $self_shoot  = false;
   public $shoot_count = 2;
 
   protected function OutputPartner() {
-    $id = $this->GetID();
+    $id    = $this->GetID();
     $stack = array();
     foreach (DB::$USER->rows as $user) {
       if ($user->IsPartner($this->partner_role, $id)) $stack[] = $user->handle_name;
@@ -27,22 +26,22 @@ class Role_valkyrja_duelist extends Role {
     RoleHTML::OutputVote('duelist-do', 'duelist_do', $this->action);
   }
 
-  function IsVote() { return DB::$ROOM->date == 1; }
+  function IsVote() { return DB::$ROOM->IsDate(1); }
 
-  function SetVoteNight() {
-    parent::SetVoteNight();
+  function GetIgnoreMessage() { return '初日以外は投票できません'; }
+
+  function SetVoteNightFilter() {
     $flag = $this->check_self_shoot && DB::$USER->GetUserCount() < GameConfig::CUPID_SELF_SHOOT;
     $this->SetStack($flag, 'self_shoot');
   }
 
-  function GetVoteCheckbox(User $user, $id, $live) {
-    return $this->IsVoteCheckbox($user, $live) ?
-      '<input type="checkbox" name="target_no[]"' .
-      ($this->IsSelfShoot() && $this->IsActor($user->uname) ? ' checked' : '') .
-      ' id="' . $id . '" value="' . $id . '">'."\n" : '';
+  function IsVoteCheckbox(User $user, $live) { return $live && ! $user->IsDummyBoy(); }
+
+  function IsVoteCheckboxChecked(User $user) {
+    return $this->IsSelfShoot() && $this->IsActor($user);
   }
 
-  function IsVoteCheckbox(User $user, $live) { return $live && ! $user->IsDummyBoy(); }
+  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
 
   //自分撃ち判定
   function IsSelfShoot() { return $this->GetStack('self_shoot') || $this->self_shoot; }
@@ -61,7 +60,7 @@ class Role_valkyrja_duelist extends Role {
       //例外処理
       if ($user->IsDead() || $user->IsDummyBoy()) return '死者と身代わり君には投票できません';
       $user_list[$id] = $user;
-      $self_shoot |= $this->IsActor($user->uname); //自分撃ち判定
+      $self_shoot |= $this->IsActor($user); //自分撃ち判定
     }
 
     if (! $self_shoot) { //自分撃ちエラー判定
@@ -95,7 +94,7 @@ class Role_valkyrja_duelist extends Role {
   //勝利判定
   function Win($winner) {
     $actor  = $this->GetActor();
-    $id     = $actor->user_no;
+    $id     = $actor->id;
     $target = 0;
     $count  = 0;
     foreach (DB::$USER->rows as $user) {

@@ -9,6 +9,7 @@
 */
 class Role_line_reverse extends Role {
   function ConvertSay() {
-    $this->SetStack(implode("\n", array_reverse(explode("\n", $this->GetStack('say')))), 'say');
+    $str = implode(Text::LF, array_reverse(explode(Text::LF, $this->GetStack('say'))));
+    $this->SetStack($str, 'say');
   }
 }

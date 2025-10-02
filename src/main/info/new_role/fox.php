@@ -15,13 +15,15 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 
 <h2 id="partner">仲間表示</h2>
 <ol>
-<li>全ての妖狐は<a href="#silver_fox">銀狐</a>以外の<a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>が誰か分かる。</li>
+<li><a href="#silver_fox">銀狐</a>・<a href="#critical_fox">寿羊弧</a>以外の全ての妖狐は<a href="#silver_fox">銀狐</a>以外の<a href="#fox_group">妖狐系</a>・<a href="#child_fox_group">子狐系</a>が誰か分かる。</li>
+<li><a href="#silver_fox">銀狐</a>は仲間が一切表示されない。</li>
+<li><a href="#critical_fox">寿羊弧</a>は<a href="#fox_group">妖狐系</a>が表示されない。</li>
 <li><a href="#fox_group">妖狐系</a>と<a href="#child_fox_group">子狐系</a>は別枠で表示される (<a href="wolf.php">人狼陣営</a>における<a href="wolf.php#wolf_group">人狼系</a>と<a href="wolf.php#whisper_mad">囁き狂人</a>相当)。<br>
 
 </li>
 <li><a href="#fox_group">妖狐系</a>は「深遠なる妖狐の智を持つ同胞は以下の人たちです」と表示され、<a href="#talk">念話</a>ができる。</li>
 <li><a href="#child_fox_group">子狐系</a>は「妖狐に与する仲間は以下の人たちです」と表示され、<br>
-同じ枠に<a href="human.php#scarlet_doll">和蘭人形</a>・<a href="wolf.php#scarlet_wolf">紅狼</a>・<a href="lovers.php#scarlet_angel">紅天使</a>・<a href="vampire.php#scarlet_vampire">屍鬼</a>・<a href="chiroptera.php#scarlet_chiroptera">紅蝙蝠</a>も混ざって表示される。</li>
+同じ枠に<a href="#scarlet_fox">紅狐</a>以外の<a href="ability.php#partner_scarlet">仲間情報妨害能力者 (混入型)</a> も混ざって表示される。</li>
 <li><a href="sub_role.php#mind_lonely">はぐれ者</a>になると仲間が分からなくなり、仲間リストからも消える (<a href="#silver_fox">銀狐</a>と同じ)。</li>
 <li><a href="#possessed_fox">憑狐</a>が憑依すると仲間表示が憑依先の名前に変更される。</li>
 </ol>
@@ -75,14 +77,15 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <a href="#sacrifice_fox">白蔵主</a>
 <a href="#emerald_fox">翠狐</a>
 <a href="#voodoo_fox">九尾</a>
+<a href="#step_fox">響狐</a>
 <a href="#revive_fox">仙狐</a>
 <a href="#possessed_fox">憑狐</a>
 <a href="#doom_fox">冥狐</a>
 <a href="#trap_fox">狡狐</a>
 <a href="#cursed_fox">天狐</a>
-<a href="#elder_fox">古狐</a>
 </p>
 <p>
+<a href="#elder_fox">古狐</a>
 <a href="#cute_fox">萌狐</a>
 <a href="#scarlet_fox">紅狐</a>
 <a href="#silver_fox">銀狐</a>
@@ -333,6 +336,21 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 呪い能力を持った代わりに<a href="human.php#guard_hunt">狩人</a>にも弱くなっています。
 </pre>
 
+<h3 id="step_fox">響狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 2.2.0 α3～]</h3>
+<h4>[耐性] 人狼襲撃：無効</h4>
+<pre>
+夜の投票先 (徘徊) の間で足音が鳴る妖狐。
+徘徊能力は<a href="wolf.php#step_mad">家鳴</a>参照。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#step">足音能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="wolf.php#step_mad">家鳴</a>の妖狐バージョンです。
+</pre>
+
 <h3 id="revive_fox">仙狐 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 1.4.0 β2～]</h3>
 <h4>[耐性] 人狼襲撃：無効 / 狩り：有効 / 蘇生：不可 / 封印：有効</h4>
 <h4>[蘇生能力] 成功率：100% (1回限定) / 誤爆：有り</h4>
@@ -436,7 +454,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#cursed_group">呪い能力者</a>
+<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#anti_assassin">暗殺耐性能力者</a>・<a href="ability.php#cursed_group">呪い能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -639,11 +657,11 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 <h4>[耐性] 人狼襲撃：死亡 + 熱病 / 処刑：熱病</h4>
 <pre>
 処刑されるか人狼に襲撃されたら<a href="sub_role.php#febris">熱病</a>を付加する子狐。
-処刑された場合は投票した人からランダムで一人 (妖狐陣営を除く)、
+処刑された場合は投票した人からランダムで一人、
 人狼に襲撃された場合は襲撃した人狼に付加する。
 </pre>
 <ol>
-<li>処刑時は<a href="human.php#detective_common">探偵</a>・<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態)・妖狐陣営・<a href="sub_role.php#challenge_lovers">難題</a>は能力の対象外。</li>
+<li>処刑時は妖狐陣営・<a href="ability.php#special_resist">特殊耐性能力者</a>は能力の対象外。</li>
 <li>人狼襲撃時は<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) には無効。</li>
 <li>対象者が誰もいなかった場合は不発となる。</li>
 </ol>
@@ -653,7 +671,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#febris">熱病能力者</a>
+<a href="ability.php#vote_kill_counter">処刑カウンター能力者</a>・<a href="ability.php#wolf_kill_counter">人狼襲撃カウンター能力者</a>・<a href="ability.php#febris">熱病能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -706,7 +724,7 @@ InfoHTML::OutputRoleHeader('妖狐陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="wolf.php#emperor_wolf">帝狼</a>・<a href="ogre.php#indigo_ogre">後鬼</a>・<a href="ogre.php#wise_ogre">夜行鬼</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
+<a href="wolf.php#emperor_wolf">帝狼</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

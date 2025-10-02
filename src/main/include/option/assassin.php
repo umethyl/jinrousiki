@@ -12,10 +12,10 @@ class Option_assassin extends CheckRoomOptionItem {
   }
 
   function SetRole(array &$list, $count) {
-    if ($count >= CastConfig::${$this->name} && $list['human'] > 1) {
-      $list['human'] -= 2;
-      $list[$this->name]++;
-      $list['wolf']++;
+    $role = 'human';
+    if ($count >= CastConfig::${$this->name} && isset($list[$role]) && $list[$role] > 1) {
+      OptionManager::Replace($list, $role, $this->name);
+      OptionManager::Replace($list, $role, 'wolf');
     }
   }
 }

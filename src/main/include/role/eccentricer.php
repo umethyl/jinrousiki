@@ -11,8 +11,8 @@ class Role_eccentricer extends Role {
     if ($this->IsLost()) RoleHTML::OutputAbilityResult($this->ability, null);
   }
 
-  function FilterVoteDo(&$number) {
-    if (! $this->IsLost()) $number++;
+  function FilterVoteDo(&$count) {
+    if (! $this->IsLost()) $count++;
   }
 
   private function IsLost() { return DB::$ROOM->date > 4; }

@@ -2,45 +2,30 @@
 /*
   ◆雪女 (snow_trap_mad)
   ○仕様
+  ・罠：凍傷
 */
 RoleManager::LoadFile('trap_mad');
 class Role_snow_trap_mad extends Role_trap_mad {
-  protected function IsVoteTrap() { return true; }
+  public $trap_action = 'snow_trap';
+  public $trap_result = 'frostbite';
 
-  protected function SetTrapAction(User $user, $uname) {
-    $this->AddStack($uname, 'snow_trap', $user->uname);
-  }
+  protected function IgnoreTrap() { return false; }
 
-  function TrapToTrap() {
-    //雪女が自分自身以外に罠を仕掛けた場合、設置先に罠があった場合は凍傷になる
-    $stack = $this->GetStack('snow_trap');
-    $count = array_count_values($stack);
-    foreach ($stack as $uname => $target_uname) {
-      if ($uname != $target_uname && $count[$target_uname] > 1) {
-	$this->AddSuccess($uname, 'frostbite');
-      }
-    }
+  protected function SetTrapAction() { return; }
 
-    foreach ($this->GetStack('trap') as $uname => $target_uname) { //罠師の凍傷判定
-      if ($uname != $target_uname && in_array($target_uname, $stack)) {
-	$this->AddSuccess($uname, 'frostbite');
-      }
-    }
-  }
+  protected function GetOtherTrap() { return 'trap'; }
 
-  function TrapKill(User $user, $uname) {
-    if ($this->IsTrap($uname)) $user->AddDoom(1, 'frostbite');
+  function TrapKill(User $user, $id) {
+    if ($this->IsTrap($id)) $user->AddDoom(1, $this->trap_result);
     return false;
   }
 
-  function DelayTrap(User $user, $uname) {
-    if ($this->IsTrap($uname)) $this->AddSuccess($user->uname, 'frostbite');
+  function DelayTrap(User $user, $id) {
+    if ($this->IsTrap($id)) $this->AddSuccess($user->id, $this->trap_result);
     return false;
   }
 
-  protected function IsTrap($uname) { return in_array($uname, $this->GetStack('snow_trap')); }
-
-  function TrapStack(User $user, $uname) { return $this->DelayTrap($user, $uname); }
+  function TrapStack(User $user, $id) { return $this->DelayTrap($user, $id); }
 
   function DelayTrapKill() { return; }
 }

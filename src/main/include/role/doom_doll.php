@@ -10,7 +10,7 @@ class Role_doom_doll extends Role_doll {
     $stack = array();
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if (! $user->IsAvoid() && ! $this->IsDoll($user)) $stack[] = $user->user_no;
+      if (! $user->IsAvoid() && ! $this->IsDoll($user)) $stack[] = $user->id;
     }
     if (count($stack) > 0) DB::$USER->ByID(Lottery::Get($stack))->AddDoom(2);
   }

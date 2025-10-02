@@ -6,14 +6,12 @@
 */
 class Role_gentleman extends Role {
   function ConvertSay() {
-    if (mt_rand(1, 100) > GameConfig::GENTLEMAN_RATE) return false; //スキップ判定
+    if (! Lottery::Percent(GameConfig::GENTLEMAN_RATE)) return false; //スキップ判定
 
-    $stack = DB::$USER->GetLivingUsers(); //生存者のユーザ名を取得
-    unset($stack[array_search($this->GetUname(), $stack)]); //自分を削除
-    $target = DB::$USER->GetHandleName(Lottery::Get($stack), true);
-
-    $say = Message::${$this->role . '_header'} . $target . Message::${$this->role . '_footer'};
-    $this->SetStack($say, 'say');
+    $stack = array_keys(DB::$USER->GetLivingUsers()); //生存者のユーザ ID を取得
+    unset($stack[array_search($this->GetID(), $stack)]); //自分を削除
+    $target = DB::$USER->ByVirtual(Lottery::Get($stack))->handle_name;
+    $this->SetStack(sprintf(Message::${$this->role}, $target), 'say');
     return true;
   }
 }

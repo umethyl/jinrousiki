@@ -8,7 +8,7 @@ class Role_common extends Role {
   protected function OutputPartner() {
     $stack = array();
     foreach (DB::$USER->rows as $user) {
-      if ($this->IsActor($user->uname)) continue;
+      if ($this->IsActor($user)) continue;
       if ($this->IsCommonPartner($user)) $stack[] = $user->handle_name;
     }
     RoleHTML::OutputPartner($stack, 'common_partner');

@@ -5,8 +5,8 @@
   ・投票数：+1 (座敷童子生存 / 天候「疎雨」)
 */
 class Role_human extends Role {
-  function FilterVoteDo(&$number) {
-    if ($this->IsBrownie()) $number++;
+  function FilterVoteDo(&$count) {
+    if ($this->IsBrownie()) $count++;
   }
 
   //投票数増加判定

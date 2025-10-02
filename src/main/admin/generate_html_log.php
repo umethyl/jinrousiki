@@ -10,19 +10,19 @@ if ($disable) {
 Loader::LoadFile('room_config', 'admin_class', 'old_log_functions');
 Loader::LoadRequest('RequestOldLog'); //引数を取得
 
-RQ::$get->prefix = ''; //各ページの先頭につける文字列 (テスト / 上書き回避用)
-RQ::$get->index_no    =   8; //インデックスページの開始番号
-RQ::$get->min_room_no = 351; //インデックス化する村の開始番号
-RQ::$get->max_room_no = 383; //インデックス化する村の終了番号
-RQ::$get->add_role       = true;
-RQ::$get->heaven_talk    = true;
-RQ::$get->generate_index = true;
+RQ::Set('prefix', ''); //各ページの先頭につける文字列 (テスト / 上書き回避用)
+RQ::Set('index_no', 8); //インデックスページの開始番号
+RQ::Set('min_room_no', 351); //インデックス化する村の開始番号
+RQ::Set('max_room_no', 383); //インデックス化する村の終了番号
+RQ::Set('add_role',       true);
+RQ::Set('heaven_talk',    true);
+RQ::Set('generate_index', true);
 
-//JinroAdmin::DeleteLog(RQ::$get->min_room_no, RQ::$get->max_room_no); //部屋削除
+//JinrouAdmin::DeleteLog(RQ::Get()->min_room_no, RQ::Get()->max_room_no); //部屋削除
 
-DB::Connect(RQ::$get->db_no);
+DB::Connect(RQ::Get()->db_no);
 //OldLogHTML::GenerateIndex(); //インデックスページ生成
 //HTML::OutputFooter(true);
 
 Loader::LoadFile('winner_message', 'icon_class', 'image_class', 'talk_class');
-JinroAdmin::GenerateLog();
+JinrouAdmin::GenerateLog();

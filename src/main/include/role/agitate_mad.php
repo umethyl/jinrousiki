@@ -9,7 +9,7 @@ class Role_agitate_mad extends Role {
   public $sudden_death = 'AGITATED';
 
   function SetVoteDay($uname) {
-    if ($this->IsRealActor()) $this->AddStack($uname);
+    if ($this->IsRealActor()) $this->AddStackName($uname);
   }
 
   function DecideVoteKill() {
@@ -17,7 +17,7 @@ class Role_agitate_mad extends Role {
     $uname = $this->GetVoteKill();
     foreach ($this->GetStack('max_voted') as $target_uname) { //$target_uname は仮想ユーザ
       if ($target_uname != $uname) {
-	$this->SuddenDeathKill(DB::$USER->ByRealUname($target_uname)->user_no);
+	$this->SuddenDeathKill(DB::$USER->ByRealUname($target_uname)->id);
       }
     }
   }

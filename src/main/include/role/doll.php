@@ -12,7 +12,7 @@ class Role_doll extends Role {
     $stack = array();
     if ($this->display_doll) $doll_stack = array(); //人形表示判定
     foreach (DB::$USER->rows as $user) {
-      if ($this->IsActor($user->uname)) continue;
+      if ($this->IsActor($user)) continue;
       if ($user->IsRole('doll_master', 'puppet_mage') || $user->IsRoleGroup('scarlet')) {
 	$stack[] = $user->handle_name;
       }
@@ -32,6 +32,6 @@ class Role_doll extends Role {
 
   //人形判定
   function IsDoll(User $user) {
-    return $user->IsRoleGroup('doll') && ! $user->IsRole('doll_master');
+    return $user->IsMainGroup('doll') && ! $user->IsRole('doll_master');
   }
 }

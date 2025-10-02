@@ -6,7 +6,7 @@
   ・処刑投票：反逆者と同じ人に投票すると -2
 */
 class Role_authority extends Role {
-  function FilterVoteDo(&$number) { $number++; }
+  function FilterVoteDo(&$count) { $count++; }
 
   function SetVoteDay($uname) {
     $this->SetStack($this->GetUname());

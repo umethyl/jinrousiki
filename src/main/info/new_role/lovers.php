@@ -45,6 +45,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </p>
 
 <h3 id="cupid">キューピッド (占い結果：村人 / 霊能結果：村人) [Ver. 1.2.0～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し</h4>
 <pre>
 恋人陣営の<a href="mania.php#basic_mania">基本種</a>。
 </pre>
@@ -54,6 +55,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="self_cupid">求愛者 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α21～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：有り / 付加：受信者 (相手限定)</h4>
 <pre>
 自分撃ち固定のキューピッド。
 矢を撃った相手に自分を対象にした<a href="sub_role.php#mind_receiver">受信者</a>が付く。
@@ -78,18 +80,20 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="moon_cupid">かぐや姫 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β11～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：有り / 付加：受信者 (自分限定) + 難題</h4>
 <pre>
 自分撃ち固定で、矢を撃った二人に<a href="sub_role.php#challenge_lovers">難題</a>を付加するキューピッド。
 自分に矢を撃った相手を対象にした<a href="sub_role.php#mind_receiver">受信者</a>が付く。
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
-バーボンハウス鯖＠東方陰陽鉄の管理人さんへの誕生日プレゼントです。
+バーボンハウス鯖＠鉄村人狼の管理人さんへの誕生日プレゼントです。
 かぐや姫の不老不死の秘薬の伝説を元に、序盤は無敵だけど後半は月に帰る
 (死亡する) 可能性が高くなるカップルを再現してみました。
 </pre>
 
 <h3 id="mind_cupid">女神 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α23～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：受信者 (他人撃ち + 自分限定) + 共鳴者</h4>
 <pre>
 矢を撃った二人を<a href="sub_role.php#mind_friend">共鳴者</a>にする上位キューピッド。
 他人撃ちの場合は、さらに自分が二人を対象にした<a href="sub_role.php#mind_receiver">受信者</a>になる。
@@ -103,6 +107,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="sweet_cupid">弁財天 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β22～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：共鳴者</h4>
 <pre>
 矢を撃った二人を<a href="sub_role.php#mind_friend">共鳴者</a>にする上位キューピッド。
 処刑投票先に<a href="sub_role.php#sweet_ringing">恋耳鳴</a>を付加する。
@@ -118,12 +123,13 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
-東方陰陽鉄のプレイヤーさんとの雑談から生まれた役職です。
-テーマは「恋人の甘い会話を雰囲気だけおすそ分け」で、実利はあまりないですね。
+鉄村人狼のプレイヤーさんとの雑談から生まれた役職です。
+テーマは「恋人の甘い会話を雰囲気だけおすそ分け」で、実利はあまりありません。
 むしろ能力を発動すると不利になるので自分撃ちの場合は注意が必要です。
 </pre>
 
 <h3 id="minstrel_cupid">吟遊詩人 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β1～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し</h4>
 <pre>
 2日目夜以降、全ての<a href="sub_role.php#lovers">恋人</a>に一方的に声が届く上位キューピッド。
 相手には誰の声が聞こえているのか分かるが、仲間表示などには何も出ない。
@@ -139,6 +145,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="triangle_cupid">小悪魔 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β8～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し</h4>
 <pre>
 矢を三本撃てるキューピッド。
 <a href="../rule.php#system_vote">他人撃ち</a>制限などは普通のキューピッドと同じ。
@@ -154,6 +161,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 
 <h3 id="revive_cupid">邪仙 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β13～]</h3>
 <h4>[耐性] 人狼襲撃：死亡 + 蘇生 (1回限定) / 蘇生：不可 / 憑依：無効 / 封印：有効</h4>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：死の宣告</h4>
 <pre>
 恋人に<a href="sub_role.php#death_warrant">死の宣告</a> (7日目昼) を付加する特殊なキューピッド。
 人狼に襲撃されて死亡した場合、一度だけ即座に蘇生する (自己蘇生)。
@@ -169,6 +177,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="snow_cupid">寒戸婆 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β8～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し</h4>
 <pre>
 処刑投票先が恋人なら<a href="sub_role.php#frostbite">凍傷</a>を付加してしまうキューピッド。
 </pre>
@@ -201,8 +210,13 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </p>
 
 <h3 id="angel">天使 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β8～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：共感者 (男女限定)</h4>
 <pre>
 天使系の<a href="mania.php#basic_mania">基本種</a>。矢を撃った二人が男女だった場合に<a href="sub_role.php#mind_sympathy">共感者</a>を付加する。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#sex">性別関連能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -211,8 +225,13 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="rose_angel">薔薇天使 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β8～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：共感者 (男性同士限定)</h4>
 <pre>
 矢を撃った二人が男性同士だった場合に<a href="sub_role.php#mind_sympathy">共感者</a>を付加する天使。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#sex">性別関連能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -221,8 +240,13 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="lily_angel">百合天使 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β8～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：共感者 (女性同士限定)</h4>
 <pre>
 矢を撃った二人が女性だった場合に<a href="sub_role.php#mind_sympathy">共感者</a>を付加する天使。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#sex">性別関連能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -231,6 +255,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="exchange_angel">魂移使 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β11～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：交換憑依</h4>
 <pre>
 矢を撃った二人を<a href="sub_role.php#possessed_exchange">交換憑依</a>させてしまう特殊な天使。
 </pre>
@@ -238,9 +263,13 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 <li>矢が競合した場合は抽選が発生し、一組だけが入れ替わる。<br>
   例) A-B・B-C と矢を撃たれた → A-B または B-C のどちらかだけが入れ替わる。
 </li>
-<li><a href="ability.php#possessed">憑依能力者</a>が対象だった場合は交換憑依は発生しない。</li>
+<li><a href="ability.php#possessed_direct">憑依能力者(直接型)</a>が対象だった場合は交換憑依は発生しない。</li>
 <li>他人撃ちをした場合、矢を撃った本人には交換憑依が成立したかどうかは分からない。</li>
 </ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#possessed">憑依能力者</a>
+</pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 ラブコメでよくある「中の人が入れ替わってしまう」展開を再現してみました。
@@ -249,6 +278,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="ark_angel">大天使 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β8～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し</h4>
 <pre>
 他の人が作成した<a href="sub_role.php#mind_sympathy">共感者</a>の結果を見ることができる上位天使。
 ただし、本人は<a href="sub_role.php#mind_sympathy">共感者</a>を作ることはできない。
@@ -266,6 +296,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 
 <h3 id="sacrifice_angel">守護天使 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β18～]</h3>
 <h4>[耐性] 人狼襲撃：無効</h4>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：共感者 + 庇護者</h4>
 <pre>
 矢を撃った相手に<a href="sub_role.php#mind_sympathy">共感者</a>と<a href="sub_role.php#protected">庇護者</a>を付加する上位天使。
 人狼に襲撃されても死亡しない (襲撃は失敗扱い)。
@@ -283,6 +314,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 </pre>
 
 <h3 id="scarlet_angel">紅天使 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β1～]</h3>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：共感者</h4>
 <pre>
 <a href="wolf.php#partner">人狼</a>から<a href="human.php#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="human.php#doll_rule">人形</a>から<a href="human.php#doll_master">人形遣い</a>に見える特殊な天使。
 夜に<a href="human.php#unconscious">無意識</a>が誰か分かる (人狼系の<a href="wolf.php#partner">仲間表示</a>参照)。
@@ -300,6 +332,7 @@ InfoHTML::OutputRoleHeader('恋人陣営');
 
 <h3 id="cursed_angel">堕天使 (占い結果：村人(呪返し) / 霊能結果：村人) [Ver. 1.5.0 β8～]</h3>
 <h4>[耐性] 狩り：有効 / 占い：呪返し / 陰陽師：死亡</h4>
+<h4>[恋人作成能力] 自分撃ち固定：無し / 付加：共感者 (別陣営限定)</h4>
 <pre>
 呪いを持ち、矢を撃った二人が別陣営だった場合に<a href="sub_role.php#mind_sympathy">共感者</a>を付加する天使。
 陣営の判定法則は<a href="human.php#medium_rule">巫女</a>と同じ。

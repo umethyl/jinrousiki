@@ -11,6 +11,6 @@ class Role_hariti_yaksa extends Role_yaksa {
   protected function IgnoreWin($winner) { return $winner == 'human'; }
 
   protected function IgnoreAssassin(User $user) {
-    return ! ($user->IsChildFox() || $user->IsRoleGroup('cupid', 'angel'));
+    return ! ($user->IsChildFox() || $user->IsMainGroup('cupid', 'angel'));
   }
 }

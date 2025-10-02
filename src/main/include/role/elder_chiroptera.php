@@ -5,5 +5,5 @@
   ・投票数：+1
 */
 class Role_elder_chiroptera extends Role {
-  function FilterVoteDo(&$number) { $number++; }
+  function FilterVoteDo(&$count) { $count++; }
 }

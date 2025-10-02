@@ -13,7 +13,7 @@ class Role_panelist extends Role_chicken {
     return ! $this->IgnoreSuddenDeath() && $this->GetVoteUser()->IsRole('quiz');
   }
 
-  function FilterVoteDo(&$number) {
-    $number = 0;
+  function FilterVoteDo(&$count) {
+    $count = 0;
   }
 }

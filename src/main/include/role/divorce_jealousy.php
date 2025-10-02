@@ -11,7 +11,7 @@ class Role_divorce_jealousy extends Role_jealousy {
       if ($this->IsVoted($uname)) continue;
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
 	$user = DB::$USER->ByRealUname($voted_uname);
-	if ($user->IsLive(true) && $user->IsLovers() && mt_rand(0, 9) < 4) {
+	if ($user->IsLive(true) && $user->IsLovers() && Lottery::Percent(40)) {
 	  $user->AddRole('confession');
 	}
       }

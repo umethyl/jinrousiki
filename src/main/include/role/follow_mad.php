@@ -8,7 +8,7 @@ class Role_follow_mad extends Role {
   public $sudden_death = 'FOLLOWED';
 
   function SetVoteDay($uname) {
-    if ($this->IsRealActor()) $this->AddStack($uname);
+    if ($this->IsRealActor()) $this->AddStackName($uname);
   }
 
   function Followed($user_list) {
@@ -20,7 +20,7 @@ class Role_follow_mad extends Role {
       if ($this->IsVoted($uname)) continue;
       $target = DB::$USER->ByRealUname($target_uname);
       if ($this->IsVoted($target->uname)) continue;
-      $target->suicide_flag ? $count++ : $follow_stack[$uname] = $target->user_no;
+      $target->suicide_flag ? $count++ : $follow_stack[$uname] = $target->id;
     }
     //Text::p($follow_stack, $this->role . ': ' . $count);
     if ($count < 1) return false;
@@ -28,7 +28,7 @@ class Role_follow_mad extends Role {
     $target_stack = array(); //対象者リスト
     foreach ($user_list as $uname) { //情報収集
       $user = DB::$USER->ByRealUname($uname);
-      if ($user->IsLive(true) && ! $user->IsAvoid(true)) $target_stack[] = $user->user_no;
+      if ($user->IsLive(true) && ! $user->IsAvoid(true)) $target_stack[] = $user->id;
     }
     //Text::p($target_stack, "BaseTarget [{$this->role}]" );
 
@@ -40,8 +40,8 @@ class Role_follow_mad extends Role {
 
       if (! in_array($id, $follow_stack)) continue;//連鎖判定
       $stack = array();
-      foreach ($follow_stack as $uname => $user_no) {
-	$id == $user_no ? $count++ : $stack[$uname] = $user_no;
+      foreach ($follow_stack as $uname => $id) {
+	$id == $id ? $count++ : $stack[$uname] = $id;
       }
       $follow_stack = $stack;
     }

@@ -5,5 +5,5 @@
   ・得票数：-1
 */
 class Role_star extends Role {
-  function FilterVotePoll(&$number) { $number--; }
+  function FilterVotePoll(&$count) { $count--; }
 }

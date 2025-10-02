@@ -10,6 +10,6 @@ class Role_bacchus_medium extends Role_medium {
   public $sudden_death = 'DRUNK';
 
   function SetVoteAction(User $user) {
-    if ($user->IsOgre()) $this->SuddenDeathKill($user->user_no);
+    if ($user->IsOgre()) $this->SuddenDeathKill($user->id);
   }
 }

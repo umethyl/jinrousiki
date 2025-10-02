@@ -7,8 +7,7 @@
 */
 class Role_cupid extends Role {
   public $action = 'CUPID_DO';
-  public $ignore_message = '初日以外は投票できません';
-  public $self_shoot = false;
+  public $self_shoot  = false;
   public $shoot_count = 2;
 
   protected function OutputPartner() {
@@ -24,19 +23,21 @@ class Role_cupid extends Role {
     RoleHTML::OutputVote('cupid-do', 'cupid_do', $this->action);
   }
 
-  function IsVote() { return DB::$ROOM->date == 1; }
+  function IsVote() { return DB::$ROOM->IsDate(1); }
 
-  function SetVoteNight() {
-    parent::SetVoteNight();
+  function GetIgnoreMessage() { return '初日以外は投票できません'; }
+
+  function SetVoteNightFilter() {
     $this->SetStack(DB::$USER->GetUserCount() < GameConfig::CUPID_SELF_SHOOT, 'self_shoot');
   }
 
-  function GetVoteCheckbox(User $user, $id, $live) {
-    return $live && ! $user->IsDummyBoy() ?
-      '<input type="checkbox" name="target_no[]"' .
-      ($this->IsSelfShoot() && $this->IsActor($user->uname) ? ' checked' : '') .
-      ' id="' . $id . '" value="' . $id . '">'."\n" : '';
+  function IsVoteCheckbox(User $user, $live) { return $live && ! $user->IsDummyBoy(); }
+
+  function IsVoteCheckboxChecked(User $user) {
+    return $this->IsSelfShoot() && $this->IsActor($user);
   }
+
+  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
 
   //自分撃ち判定
   function IsSelfShoot() { return $this->GetStack('self_shoot') || $this->self_shoot; }
@@ -55,7 +56,7 @@ class Role_cupid extends Role {
       //例外判定
       if ($user->IsDead() || $user->IsDummyBoy()) return '死者と身代わり君には投票できません';
       $user_list[$id] = $user;
-      $self_shoot |= $this->IsActor($user->uname); //自分撃ち判定
+      $self_shoot |= $this->IsActor($user); //自分撃ち判定
     }
 
     if (! $self_shoot) { //自分撃ちエラー判定

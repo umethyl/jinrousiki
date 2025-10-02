@@ -9,7 +9,7 @@ class Role_soul_patron extends Role_patron {
   public $result = 'PATRON_RESULT';
 
   protected function OutputResult() {
-    if (DB::$ROOM->date == 2) $this->OutputAbilityResult($this->result);
+    if (DB::$ROOM->IsDate(2)) $this->OutputAbilityResult($this->result);
   }
 
   protected function AddDuelistRole(User $user) {

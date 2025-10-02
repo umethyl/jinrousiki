@@ -7,7 +7,7 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_doom_wolf extends Role_wolf {
-  function FoxEatAction(User $user) { $user->AddDoom(2); }
+  protected function FoxEatAction(User $user) { $user->AddDoom(2); }
 
   function WolfEatAction(User $user) {
     $user->AddDoom(2);

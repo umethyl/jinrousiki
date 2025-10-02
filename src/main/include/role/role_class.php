@@ -5,216 +5,7 @@ class RoleManager {
   static $file  = array(); //ロード済みファイル
   static $class = array(); //ロード済みクラス
   static $actor; //対象ユーザ
-  static $get;   //スタックデータ
-
-  //常時表示サブ役職 (本体 / 順番依存あり)
-  static $display_real_list = array(
-    'copied', 'copied_trick', 'copied_basic', 'copied_soul', 'copied_teller', 'lost_ability',
-    'muster_ability', 'lovers', 'sweet_status', 'challenge_lovers', 'possessed_exchange', 'joker',
-    'rival', 'death_note');
-
-  //常時表示サブ役職 (仮想 / 順番依存あり)
-  static $display_virtual_list = array(
-    'death_selected', 'febris', 'frostbite', 'death_warrant', 'day_voter', 'wirepuller_luck',
-    'occupied_luck', 'mind_open', 'mind_read', 'mind_evoke', 'mind_lonely', 'mind_receiver',
-    'mind_friend', 'mind_sympathy', 'mind_sheep', 'mind_presage', 'wisp', 'black_wisp',
-    'spell_wisp', 'foughten_wisp', 'gold_wisp', 'sheep_wisp');
-
-  //非表示サブ役職 (呼び出し抑制用)
-  static $display_none_list = array(
-    'decide', 'plague', 'counter_decide', 'dropout', 'good_luck', 'bad_luck', 'critical_voter',
-    'critical_luck', 'confession', 'enemy', 'supported', 'infected', 'psycho_infected',
-    'possessed_target', 'possessed', 'bad_status', 'protected', 'changed_disguise',
-    'changed_therian', 'changed_vindictive');
-
-  //初期配役抑制役職
-  static $disable_cast_list = array(
-    'febris', 'frostbite', 'death_warrant', 'panelist', 'cute_camouflage', 'confession',
-    'day_voter', 'wirepuller_luck', 'occupied_luck', 'mind_read', 'mind_receiver', 'mind_friend',
-    'mind_sympathy', 'mind_evoke', 'mind_presage', 'mind_lonely', 'mind_sheep', 'sheep_wisp',
-    'lovers', 'challenge_lovers', 'possessed_exchange', 'joker', 'rival', 'enemy', 'supported',
-    'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
-    'bad_status', 'sweet_status', 'protected', 'lost_ability', 'muster_ability', 'changed_disguise',
-    'changed_therian', 'changed_vindictive', 'copied', 'copied_trick', 'copied_basic',
-    'copied_soul', 'copied_teller');
-
-  //発言表示
-  static $talk_list = array('blinder', 'earplug', 'speaker');
-
-  //発言表示 (囁き)
-  static $talk_whisper_list = array('lovers');
-
-  //発言表示 (妖狐)
-  static $talk_fox_list = array('wise_wolf', 'wise_ogre');
-
-  //発言表示 (独り言)
-  static $talk_self_list = array('silver_wolf', 'howl_fox', 'mind_lonely', 'lovers');
-
-  //発言表示 (耳鳴)
-  static $talk_ringing_list = array('whisper_ringing', 'howl_ringing');
-
-  //閲覧判定
-  static $mind_read_list = array(
-    'leader_common', 'whisper_scanner', 'howl_scanner', 'telepath_scanner', 'minstrel_cupid',
-    'mind_read', 'mind_friend', 'mind_open');
-
-  //閲覧判定 (能動型)
-  static $mind_read_active_list = array('mind_receiver');
-
-  //閲覧判定 (憑依型)
-  static $mind_read_possessed_list = array('possessed_wolf', 'possessed_mad', 'possessed_fox');
-
-  //発言置換 (仮想 / 順番依存あり)
-  static $say_convert_virtual_list = array('confession', 'cute_camouflage', 'gentleman', 'lady');
-
-  //発言置換 (本体)
-  static $say_convert_list = array('suspect', 'cute_mage', 'cute_wolf', 'cute_fox',
-				   'cute_chiroptera', 'cute_avenger');
-
-  //悪戯発言変換
-  static $say_bad_status_list = array('fairy', 'spring_fairy', 'summer_fairy', 'autumn_fairy',
-				      'winter_fairy', 'greater_fairy');
-
-  //発言変換 (順番依存あり)
-  static $say_list = array('passion', 'actor', 'liar', 'rainbow', 'weekly', 'grassy', 'invisible',
-			   'side_reverse', 'line_reverse', 'mower', 'silent');
-
-  //声量
-  static $voice_list = array('strong_voice', 'normal_voice', 'weak_voice', 'inside_voice',
-			     'outside_voice', 'upper_voice', 'downer_voice', 'random_voice');
-
-  //処刑投票 (メイン)
-  static $vote_do_main_list = array(
-    'human', 'elder', 'scripter', 'eccentricer', 'elder_guard', 'critical_common', 'ascetic_wolf',
-    'elder_wolf', 'possessed_mad', 'elder_fox', 'elder_chiroptera', 'critical_duelist',
-    'cowboy_duelist');
-
-  //処刑投票 (サブ)
-  static $vote_do_sub_list = array(
-    'authority', 'reduce_voter', 'upper_voter', 'downer_voter', 'critical_voter', 'random_voter',
-    'day_voter', 'wirepuller_luck', 'watcher', 'panelist');
-
-  //処刑得票 (メイン)
-  static $vote_poll_main_list = array('critical_common', 'critical_patron');
-
-  //処刑得票 (サブ)
-  static $vote_poll_sub_list = array(
-    'upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck', 'random_luck',
-    'occupied_luck', 'wirepuller_luck');
-
-  //処刑投票能力者
-  static $vote_day_list = array(
-    'saint', 'executor', 'bacchus_medium', 'seal_medium', 'trap_common', 'spell_common',
-    'pharmacist', 'cure_pharmacist', 'revive_pharmacist', 'alchemy_pharmacist',
-    'centaurus_pharmacist', 'jealousy', 'divorce_jealousy', 'miasma_jealousy', 'critical_jealousy',
-    'thunder_brownie', 'harvest_brownie', 'maple_brownie', 'cursed_brownie',  'disguise_wolf',
-    'purple_wolf', 'snow_wolf', 'corpse_courier_mad', 'amaze_mad', 'agitate_mad', 'miasma_mad',
-    'critical_mad', 'follow_mad', 'purple_fox', 'snow_fox', 'critical_fox', 'sweet_cupid',
-    'snow_cupid', 'quiz', 'cursed_avenger', 'critical_avenger', 'impatience', 'decide', 'plague',
-    'counter_decide', 'dropout', 'good_luck', 'bad_luck', 'authority', 'rebel');
-
-  //反逆者判定
-  static $rebel_list = array('rebel');
-
-  //処刑者決定 (順番依存あり)
-  static $vote_kill_list = array('decide', 'bad_luck', 'counter_decide', 'dropout', 'impatience',
-				 'good_luck', 'plague', 'quiz', 'executor', 'saint', 'agitate_mad');
-
-  //毒能力鑑定
-  static $distinguish_poison_list = array('pharmacist', 'alchemy_pharmacist');
-
-  //解毒判定
-  static $detox_list = array('pharmacist', 'cure_pharmacist', 'alchemy_pharmacist');
-
-  //処刑者カウンター
-  static $vote_kill_counter_list = array('brownie', 'sun_brownie', 'doom_doll', 'miasma_fox',
-					 'mirror_fairy');
-
-  //処刑投票能力処理 (順番依存あり)
-  static $vote_action_list = array(
-    'seal_medium', 'bacchus_medium', 'centaurus_pharmacist', 'spell_common', 'miasma_jealousy',
-    'critical_jealousy', 'corpse_courier_mad', 'amaze_mad', 'miasma_mad', 'critical_mad',
-    'critical_fox', 'critical_avenger', 'purple_wolf', 'purple_fox', 'cursed_avenger',
-    'sweet_cupid', 'snow_cupid', 'disguise_wolf');
-
-  //霊能
-  static $necromancer_list = array(
-    'necromancer', 'soul_necromancer', 'psycho_necromancer', 'embalm_necromancer',
-    'emissary_necromancer', 'dummy_necromancer', 'monk_fox');
-
-  //得票カウンター
-  static $voted_reaction_list = array('trap_common', 'jealousy');
-
-  //落雷判定
-  static $thunderbolt_list = array('thunder_brownie');
-
-  //ショック死 (メイン)
-  static $sudden_death_main_list = array('eclipse_medium', 'cursed_angel');
-
-  //ショック死 (サブ / 順番依存あり)
-  static $sudden_death_sub_list = array(
-    'challenge_lovers', 'febris', 'frostbite', 'death_warrant', 'panelist', 'chicken', 'rabbit',
-    'perverseness', 'flattery', 'celibacy', 'nervy', 'androphobia', 'gynophobia', 'impatience');
-
-  //ショック死抑制
-  static $cure_list = array('cure_pharmacist', 'revive_pharmacist');
-
-  //処刑得票カウンター
-  static $vote_kill_reaction_list = array('divorce_jealousy', 'harvest_brownie', 'maple_brownie',
-					  'cursed_brownie', 'snow_wolf', 'snow_fox');
-
-  //道連れ
-  static $followed_list = array('follow_mad');
-
-  //人狼襲撃耐性 (順番依存あり)
-  static $wolf_eat_resist_list = array(
-    'challenge_lovers', 'protected', 'sacrifice_angel', 'doom_vampire', 'sacrifice_patron',
-    'sacrifice_mania', 'fend_guard', 'ascetic_assassin', 'awake_wizard');
-
-  //人狼襲撃得票カウンター (+ 身代わり能力者)
-  static $wolf_eat_reaction_list = array(
-    'therian_mad', 'immolate_mad', 'sacrifice_common', 'doll_master', 'sacrifice_fox',
-    'sacrifice_vampire', 'boss_chiroptera', 'sacrifice_ogre');
-
-  //人狼襲撃カウンター
-  static $wolf_eat_counter_list = array(
-    'ghost_common', 'presage_scanner', 'cursed_brownie', 'sun_brownie', 'history_brownie',
-    'miasma_fox', 'revive_mania', 'mind_sheep');
-
-  //襲撃毒死回避
-  static $avoid_poison_eat_list = array('guide_poison', 'poison_jealousy', 'poison_wolf');
-
-  //罠
-  static $trap_list = array('trap_mad', 'snow_trap_mad');
-
-  //護衛
-  static $guard_list = array('guard', 'barrier_wizard');
-
-  //対暗殺護衛
-  static $guard_assassin_list = array('gatekeeper_guard');
-
-  //対夢護衛
-  static $guard_dream_list = array('dummy_guard');
-
-  //厄払い
-  static $guard_curse_list = array('anti_voodoo');
-
-  //復活
-  static $resurrect_list = array(
-    'revive_pharmacist', 'revive_brownie', 'revive_doll', 'revive_mad', 'revive_cupid',
-    'scarlet_vampire', 'revive_ogre', 'revive_avenger', 'resurrect_mania');
-
-  //イベントセット
-  static $event_virtual_list = array('no_last_words', 'whisper_ringing', 'howl_ringing',
-				     'sweet_ringing', 'deep_sleep', 'mind_open');
-
-  //イベントセット (昼限定)
-  static $event_virtual_day_list = array(
-    'actor', 'passion', 'rainbow', 'grassy', 'invisible', 'side_reverse', 'line_reverse',
-    'critical_voter', 'critical_luck', 'blinder', 'earplug', 'silent', 'mower');
-
-  //特殊勝敗判定 (ジョーカー系)
-  static $joker_list = array('joker', 'rival');
+  private static $get; //スタックデータ
 
   //フィルタロード
   static function Load($type, $shift = false, $virtual = false) {
@@ -243,7 +34,7 @@ class RoleManager {
 
   //メイン役職クラスロード
   static function LoadMain(User $user) {
-    self::$actor = $user;
+    self::SetActor($user);
     return self::Load('main_role', true);
   }
 
@@ -262,31 +53,59 @@ class RoleManager {
   //データ取得
   static function GetStack($name) { return isset(self::$get->$name) ? self::$get->$name : null; }
 
+  //ユーザ取得
+  static function GetActor() { return self::$actor; }
+
+  //クラスセット
+  static function SetClass($role) { return self::LoadFile($role) && self::LoadClass($role); }
+
+  //ユーザセット
+  static function SetActor(User $user) {
+    self::$actor = $user;
+  }
+
   //データセット
   static function SetStack($name, $data) {
     self::$get->$name = $data;
   }
 
-  //クラスセット
-  static function SetClass($role) { return self::LoadFile($role) && self::LoadClass($role); }
+  //スタック初期化
+  static function ConstructStack() {
+    self::$get = new StdClass();
+  }
+
+  //データ初期化
+  static function InitStack($name) { self::SetStack($name, array()); }
+
+  //データ消去
+  static function UnsetStack($name) { unset(self::$get->$name); }
+
+  //データ未設定 (空文字) 判定
+  static function IsEmpty($name) { return self::GetStack($name) == ''; }
+
+  //データ存在判定
+  static function ExistStack($name) { return count(self::GetStack($name)) > 0; }
+
+  //データ表示 (デバッグ用)
+  static function p($data = null, $name = null) {
+    Text::p(isset($data) ? self::GetStack($data) : self::$get, $name);
+  }
 
   //クラスのロード済み判定
-  private function IsClass($role) {
+  private static function IsClass($role) {
     return array_key_exists($role, self::$class) && is_object(self::$class[$role]);
   }
 
   //ファイルパス取得
-  private function GetPath($name) { return sprintf(self::PATH, JINRO_INC, $name); }
+  private static function GetPath($name) { return sprintf(self::PATH, JINRO_INC, $name); }
 
   //役職リスト取得
-  private function GetList($type) {
-    $stack = $type == 'main_role' ? array(self::$actor->GetMainRole(true)) :
-      self::${$type . '_list'};
-    return is_array($stack) ? $stack : array();
+  private static function GetList($type) {
+    return $type == 'main_role' ? array(self::$actor->GetMainRole(true)) : RoleFilterData::$$type;
   }
 
   //役職リストに応じたクラスリスト取得
-  private function GetFilter(array $list) {
+  private static function GetFilter(array $list) {
     $stack = array();
     foreach ($list as $role) { //順番依存があるので配列関数を使わないで処理する
       if (self::IsClass($role)) $stack[] = self::$class[$role];
@@ -295,7 +114,7 @@ class RoleManager {
   }
 
   //クラスロード
-  private function LoadClass($role) {
+  private static function LoadClass($role) {
     if (is_null($role)) return false;
     if (! self::IsClass($role)) {
       $class_name = 'Role_' . $role;
@@ -305,14 +124,228 @@ class RoleManager {
   }
 }
 
+//-- 役職フィルタデータベース --//
+class RoleFilterData {
+  //常時表示サブ役職 (本体 / 順番依存あり)
+  static $display_real = array(
+    'copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller',
+    'lost_ability', 'muster_ability', 'lovers', 'sweet_status', 'challenge_lovers',
+    'possessed_exchange', 'joker', 'rival', 'death_note');
+
+  //常時表示サブ役職 (仮想 / 順番依存あり)
+  static $display_virtual = array(
+    'death_selected', 'febris', 'frostbite', 'death_warrant', 'day_voter', 'wirepuller_luck',
+    'occupied_luck', 'mind_open', 'mind_read', 'mind_evoke', 'mind_lonely', 'mind_receiver',
+    'mind_friend', 'mind_sympathy', 'mind_sheep', 'mind_presage', 'wisp', 'black_wisp',
+    'spell_wisp', 'foughten_wisp', 'gold_wisp', 'sheep_wisp', 'aspirator');
+
+  //非表示サブ役職 (呼び出し抑制用)
+  static $display_none = array(
+    'decide', 'plague', 'counter_decide', 'dropout', 'good_luck', 'bad_luck', 'critical_voter',
+    'critical_luck', 'confession', 'enemy', 'supported', 'infected', 'psycho_infected',
+    'possessed_target', 'possessed', 'bad_status', 'protected', 'changed_disguise',
+    'changed_therian', 'changed_vindictive');
+
+  //初期配役抑制役職
+  static $disable_cast = array(
+    'febris', 'frostbite', 'death_warrant', 'panelist', 'cute_camouflage', 'confession',
+    'day_voter', 'wirepuller_luck', 'occupied_luck', 'mind_read', 'mind_receiver', 'mind_friend',
+    'mind_sympathy', 'mind_evoke', 'mind_presage', 'mind_lonely', 'mind_sheep', 'sheep_wisp',
+    'lovers', 'challenge_lovers', 'possessed_exchange', 'joker', 'rival', 'enemy', 'supported',
+    'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
+    'bad_status', 'sweet_status', 'protected', 'aspirator', 'lost_ability', 'muster_ability',
+    'changed_disguise', 'changed_therian', 'changed_vindictive', 'copied', 'copied_trick',
+    'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller');
+
+  //発言表示
+  static $talk = array('blinder', 'earplug', 'speaker');
+
+  //発言表示 (囁き)
+  static $talk_whisper = array('lovers');
+
+  //発言表示 (妖狐)
+  static $talk_fox = array('wise_wolf', 'wise_ogre');
+
+  //発言表示 (独り言)
+  static $talk_self = array('silver_wolf', 'howl_fox', 'mind_lonely', 'lovers');
+
+  //発言表示 (耳鳴)
+  static $talk_ringing = array('whisper_ringing', 'howl_ringing');
+
+  //閲覧判定
+  static $mind_read = array(
+    'leader_common', 'whisper_scanner', 'howl_scanner', 'telepath_scanner', 'minstrel_cupid',
+    'mind_read', 'mind_friend', 'mind_open');
+
+  //閲覧判定 (能動型)
+  static $mind_read_active = array('mind_receiver');
+
+  //閲覧判定 (憑依型)
+  static $mind_read_possessed = array('possessed_wolf', 'possessed_mad', 'possessed_fox');
+
+  //発言置換 (仮想 / 順番依存あり)
+  static $say_convert_virtual = array('confession', 'cute_camouflage', 'gentleman', 'lady');
+
+  //発言置換 (本体)
+  static $say_convert = array('suspect', 'cute_mage', 'cute_wolf', 'cute_fox',
+			      'cute_chiroptera', 'cute_avenger');
+
+  //悪戯発言変換
+  static $say_bad_status = array('fairy', 'spring_fairy', 'summer_fairy', 'autumn_fairy',
+				 'winter_fairy', 'greater_fairy');
+
+  //発言変換 (順番依存あり)
+  static $say = array('passion', 'actor', 'liar', 'rainbow', 'weekly', 'grassy', 'invisible',
+		      'side_reverse', 'line_reverse', 'mower', 'silent');
+
+  //声量
+  static $voice = array('strong_voice', 'normal_voice', 'weak_voice', 'inside_voice',
+			'outside_voice', 'upper_voice', 'downer_voice', 'random_voice');
+
+  //処刑投票 (メイン)
+  static $vote_do_main = array(
+    'human', 'elder', 'scripter', 'eccentricer', 'elder_guard', 'critical_common', 'ascetic_wolf',
+    'elder_wolf', 'possessed_mad', 'elder_fox', 'elder_chiroptera', 'critical_duelist',
+    'cowboy_duelist');
+
+  //処刑投票 (サブ)
+  static $vote_do_sub = array(
+    'authority', 'reduce_voter', 'upper_voter', 'downer_voter', 'critical_voter', 'random_voter',
+    'day_voter', 'wirepuller_luck', 'watcher', 'panelist');
+
+  //処刑得票 (メイン)
+  static $vote_poll_main = array('critical_common', 'critical_patron');
+
+  //処刑得票 (サブ)
+  static $vote_poll_sub = array(
+    'upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck', 'random_luck',
+    'occupied_luck', 'wirepuller_luck');
+
+  //処刑投票能力者
+  static $vote_day = array(
+    'saint', 'executor', 'bacchus_medium', 'seal_medium', 'trap_common', 'spell_common',
+    'pharmacist', 'cure_pharmacist', 'revive_pharmacist', 'alchemy_pharmacist',
+    'centaurus_pharmacist', 'jealousy', 'divorce_jealousy', 'miasma_jealousy', 'critical_jealousy',
+    'thunder_brownie', 'harvest_brownie', 'maple_brownie', 'cursed_brownie',  'disguise_wolf',
+    'purple_wolf', 'snow_wolf', 'corpse_courier_mad', 'amaze_mad', 'agitate_mad', 'miasma_mad',
+    'critical_mad', 'fire_mad', 'follow_mad', 'purple_fox', 'snow_fox', 'critical_fox',
+    'sweet_cupid', 'snow_cupid', 'quiz', 'step_vampire', 'cowboy_duelist', 'sea_duelist',
+    'cursed_avenger', 'critical_avenger', 'impatience', 'decide', 'plague', 'counter_decide',
+    'dropout', 'good_luck', 'bad_luck', 'authority', 'rebel');
+
+  //処刑投票補正能力者
+  static $vote_correct = array('cowboy_duelist', 'rebel');
+
+  //処刑者決定 (順番依存あり)
+  static $vote_kill = array('decide', 'bad_luck', 'counter_decide', 'dropout', 'impatience',
+			    'good_luck', 'plague', 'quiz', 'executor', 'saint', 'agitate_mad');
+
+  //毒能力鑑定
+  static $distinguish_poison = array('pharmacist', 'alchemy_pharmacist');
+
+  //解毒判定
+  static $detox = array('pharmacist', 'cure_pharmacist', 'alchemy_pharmacist');
+
+  //処刑者カウンター
+  static $vote_kill_counter = array('brownie', 'sun_brownie', 'doom_doll', 'miasma_fox',
+				    'mirror_fairy');
+
+  //処刑投票能力処理 (順番依存あり)
+  static $vote_action = array(
+    'seal_medium', 'bacchus_medium', 'cowboy_duelist', 'sea_duelist', 'centaurus_pharmacist',
+    'spell_common', 'miasma_jealousy', 'critical_jealousy', 'corpse_courier_mad', 'amaze_mad',
+    'miasma_mad', 'fire_mad', 'critical_mad', 'critical_fox', 'critical_avenger', 'purple_wolf',
+    'purple_fox', 'cursed_avenger', 'sweet_cupid', 'snow_cupid', 'step_vampire', 'disguise_wolf');
+
+  //霊能
+  static $necromancer = array(
+    'necromancer', 'soul_necromancer', 'psycho_necromancer', 'embalm_necromancer',
+    'emissary_necromancer', 'dummy_necromancer', 'monk_fox');
+
+  //得票カウンター
+  static $voted_reaction = array('trap_common', 'jealousy');
+
+  //落雷判定
+  static $thunderbolt = array('thunder_brownie');
+
+  //ショック死 (メイン)
+  static $sudden_death_main = array('eclipse_medium', 'cursed_angel');
+
+  //ショック死 (サブ / 順番依存あり)
+  static $sudden_death_sub = array(
+    'challenge_lovers', 'febris', 'frostbite', 'death_warrant', 'panelist', 'chicken', 'rabbit',
+    'perverseness', 'flattery', 'celibacy', 'nervy', 'androphobia', 'gynophobia', 'impatience');
+
+  //ショック死抑制
+  static $cure = array('cure_pharmacist', 'revive_pharmacist');
+
+  //処刑得票カウンター
+  static $vote_kill_reaction = array('divorce_jealousy', 'harvest_brownie', 'maple_brownie',
+				     'cursed_brownie', 'snow_wolf', 'snow_fox');
+
+  //道連れ
+  static $followed = array('follow_mad');
+
+  //人狼襲撃耐性 (順番依存あり)
+  static $wolf_eat_resist = array(
+    'challenge_lovers', 'protected', 'sacrifice_angel', 'doom_vampire', 'sacrifice_patron',
+    'sacrifice_mania', 'tough', 'fend_guard', 'ascetic_assassin', 'awake_wizard');
+
+  //人狼襲撃得票カウンター (+ 身代わり能力者)
+  static $wolf_eat_reaction = array(
+    'therian_mad', 'immolate_mad', 'sacrifice_common', 'doll_master', 'sacrifice_fox',
+    'sacrifice_vampire', 'boss_chiroptera', 'sacrifice_ogre');
+
+  //人狼襲撃カウンター
+  static $wolf_eat_counter = array(
+    'ghost_common', 'presage_scanner', 'cursed_brownie', 'sun_brownie', 'history_brownie',
+    'miasma_fox', 'revive_mania', 'mind_sheep');
+
+  //襲撃毒死回避
+  static $avoid_poison_eat = array('guide_poison', 'poison_jealousy', 'poison_wolf');
+
+  //罠
+  static $trap = array('trap_mad', 'snow_trap_mad');
+
+  //護衛
+  static $guard = array('guard', 'barrier_wizard');
+
+  //対暗殺護衛
+  static $guard_assassin = array('gatekeeper_guard');
+
+  //対夢護衛
+  static $guard_dream = array('dummy_guard');
+
+  //厄払い
+  static $guard_curse = array('anti_voodoo');
+
+  //復活
+  static $resurrect = array(
+    'revive_pharmacist', 'revive_brownie', 'revive_doll', 'revive_mad', 'revive_cupid',
+    'scarlet_vampire', 'revive_ogre', 'revive_avenger', 'resurrect_mania');
+
+  //イベントセット
+  static $event_virtual = array('gentleman', 'lady', 'no_last_words', 'whisper_ringing',
+				'howl_ringing', 'sweet_ringing', 'deep_sleep', 'mind_open');
+
+  //イベントセット (昼限定)
+  static $event_virtual_day = array(
+    'actor', 'passion', 'rainbow', 'grassy', 'invisible', 'side_reverse', 'line_reverse',
+    'confession', 'critical_voter', 'critical_luck', 'blinder', 'earplug', 'silent', 'mower');
+
+  //特殊勝敗判定 (ジョーカー系)
+  static $joker = array('joker', 'rival');
+}
+
 //-- 役職の基底クラス --//
 abstract class Role {
   public $role;
   public $action;
   public $not_action;
+  public $add_action;
   public $submit;
   public $not_submit;
-  public $ignore_message;
+  public $add_submit;
 
   function __construct() {
     $this->role = array_pop(explode('Role_', get_class($this)));
@@ -326,12 +359,13 @@ abstract class Role {
 
   //Mixin 呼び出し用
   function __call($name, $args) {
+    $format = 'Error: %s not found: %s: %s()';
     if (! is_object($this->filter)) {
-      Text::p('Error: Mixin not found: ' . get_class($this) . ": {$name}()");
+      Text::p(sprintf($format, 'Mixin', get_class($this), $name));
       return false;
     }
     if (! method_exists($this->filter, $name)) {
-      Text::p('Error: Method not found: ' . get_class($this) . ": {$name}()");
+      Text::p(sprintf($format, 'Method', get_class($this), $name));
       return false;
     }
     return call_user_func_array(array($this->filter, $name), $args);
@@ -340,7 +374,8 @@ abstract class Role {
   //メソッド保持クラス取得 (Mixin 用)
   protected function GetClass($method) {
     $class = 'Role_' . $this->role;
-    return method_exists($class, $method) ? new $class() : $this;
+    if ($class == get_class($this)) return $this;
+    return method_exists($class, $method) ? RoleManager::GetClass($this->role) : $this;
   }
 
   //プロパティ取得 (Mixin 用)
@@ -355,20 +390,14 @@ abstract class Role {
 
   //-- 汎用関数 --//
   //ユーザ取得
-  protected function GetActor() { return RoleManager::$actor; }
+  protected function GetActor() { return RoleManager::GetActor(); }
 
   //ユーザ ID 取得
-  protected function GetID() { return $this->GetActor()->user_no; }
+  protected function GetID() { return $this->GetActor()->id; }
 
   //ユーザ名取得
   protected function GetUname($uname = null) {
     return is_null($uname) ? $this->GetActor()->uname : $uname;
-  }
-
-  //データ初期化
-  protected function InitStack($name = null) {
-    $data = is_null($name) ? $this->role : $name;
-    if (! isset(RoleManager::$get->$data)) RoleManager::$get->$data = array();
   }
 
   //データ取得
@@ -382,13 +411,32 @@ abstract class Role {
     RoleManager::SetStack(is_null($role) ? $this->role : $role, $data);
   }
 
+  //データ初期化
+  protected function InitStack($name = null) {
+    $data  = is_null($name) ? $this->role : $name;
+    $stack = RoleManager::GetStack($data);
+    if (! isset($stack)) RoleManager::InitStack($data);
+  }
+
   //データ追加
-  protected function AddStack($data, $role = null, $uname = null) {
-    RoleManager::$get->{is_null($role) ? $this->role : $role}[$this->GetUname($uname)] = $data;
+  protected function AddStack($data, $role = null, $id = null) {
+    if (is_null($id)) $id = $this->GetID();
+    $name  = is_null($role) ? $this->role : $role;
+    $stack = RoleManager::GetStack($name);
+    $stack[$id] = $data;
+    RoleManager::SetStack($name, $stack);
+  }
+
+  //データ追加 (Uname 用)
+  protected function AddStackName($data, $role = null, $uname = null) {
+    $name  = is_null($role) ? $this->role : $role;
+    $stack = RoleManager::GetStack($name);
+    $stack[$this->GetUname($uname)] = $data;
+    RoleManager::SetStack($name, $stack);
   }
 
   //同一ユーザ判定
-  protected function IsActor($uname) { return $this->GetActor()->IsSame($uname); }
+  protected function IsActor(User $user) { return $this->GetActor()->IsSame($user); }
 
   //発動日判定
   protected function IsDoom() {
@@ -427,6 +475,7 @@ abstract class Role {
     $header = null;
     $footer = 'result_';
     $limit  = false;
+    $uniq   = false;
     switch ($action) {
     case 'MAGE_RESULT':
     case 'CHILD_FOX_RESULT':
@@ -552,6 +601,7 @@ abstract class Role {
       $header = 'clairvoyance_result_header';
       $footer = 'clairvoyance_result_footer';
       $limit  = true;
+      $uniq   = true;
       break;
 
     case 'SEX_WOLF_RESULT':
@@ -584,6 +634,7 @@ abstract class Role {
       $type   = 'mage';
       $header = 'sympathy_result';
       $limit  = ! DB::$SELF->IsRole('ark_angel');
+      $uniq   = true;
       break;
 
     case 'PRESAGE_RESULT':
@@ -599,34 +650,20 @@ abstract class Role {
 
     $target_date = DB::$ROOM->date - 1;
     if (DB::$ROOM->test_mode) {
-      $stack = RQ::GetTest()->result_ability;
-      $stack = array_key_exists($target_date, $stack) ? $stack[$target_date] : array();
-      $stack = array_key_exists($action, $stack) ? $stack[$action] : array();
-      //Text::p($stack, $user_no);
-      if ($limit) {
-	$limit_stack = array();
-	foreach ($stack as $list) {
-	  if ($list['user_no'] == DB::$SELF->user_no) $limit_stack[] = $list;
-	}
-	$stack = $limit_stack;
-	//Text::p($stack, $user_no);
-      }
-      $result_list = $stack;
-    }
-    else {
-      $str = 'SELECT DISTINCT target, result FROM result_ability WHERE room_no = %d ' .
-	"AND date = %d AND type = '%s'";
-      $query = sprintf($str, DB::$ROOM->id, $target_date, $action);
-      if ($limit) $query .= sprintf(' AND user_no = %d', DB::$SELF->user_no);
-      $result_list = DB::FetchAssoc($query);
+      $result_list = DevRoom::GetAbility($target_date, $action, $limit);
+    } else {
+      $result_list = SystemMessageDB::GetAbility($target_date, $action, $limit);
     }
     //Text::p($result_list);
 
     switch ($type) {
     case 'mage':
     case 'guard':
+      if ($uniq) $stack = array();
       foreach ($result_list as $result) {
+	if ($uniq && in_array($result['target'], $stack)) continue;
 	RoleHTML::OutputAbilityResult($header, $result['target'], $footer . $result['result']);
+	if ($uniq) $stack[] = $result['target'];
       }
       break;
 
@@ -657,9 +694,12 @@ abstract class Role {
       break;
 
     case 'reporter':
+      if ($uniq) $stack = array();
       foreach ($result_list as $result) {
+	if ($uniq && in_array($result['target'], $stack)) continue;
 	$target = $result['target'] . ' さんは ' . $result['result'];
 	RoleHTML::OutputAbilityResult($header, $target, $footer);
+	if ($uniq) $stack[] = $result['target'];
       }
       break;
 
@@ -734,17 +774,30 @@ abstract class Role {
       VoteHTML::OutputResult('夜：あなたは投票できません');
     }
     else {
-      if (! is_null($str = $this->IgnoreVote())) VoteHTML::OutputResult('夜：' . $str);
-      foreach (array('', 'not_') as $header) {
+      $str = $this->IgnoreVote();
+      if (is_null($str)) $str = $this->IgnoreVoteFilter(); //null なら追加判定
+      if (! is_null($str)) VoteHTML::OutputResult('夜：' . $str);
+
+      foreach (array('', 'not_', 'add_') as $header) {
 	foreach (array('action', 'submit') as $data) {
 	  $this->SetStack($this->{$header . $data}, $header . $data);
 	}
       }
+      $this->SetVoteNightFilter();
     }
   }
 
+  //投票データセット (夜) 追加処理
+  function SetVoteNightFilter() {}
+
   //投票スキップ判定
-  function IgnoreVote() { return $this->IsVote() ? null : $this->ignore_message; }
+  function IgnoreVote() { return $this->IsVote() ? null : $this->GetIgnoreMessage(); }
+
+  //投票スキップ追加判定
+  function IgnoreVoteFilter() { return null; }
+
+  //投票無効メッセージ取得
+  function GetIgnoreMessage() { return null; }
 
   //-- 投票画面表示 (夜) --//
   //投票対象ユーザ取得
@@ -757,14 +810,17 @@ abstract class Role {
 
   //投票のチェックボックス取得
   function GetVoteCheckbox(User $user, $id, $live) {
-    return $this->IsVoteCheckbox($user, $live) ?
-      $this->GetVoteCheckboxHeader() . ' id="' . $id . '" value="' . $id . '">'."\n" : '';
+    if (! $this->IsVoteCheckbox($user, $live)) return '';
+    $checked = $this->IsVoteCheckboxChecked($user) ? ' checked' : '';
+    $str     = sprintf(' id="%d" value="%d"%s>', $id, $id, $checked);
+    return $this->GetVoteCheckboxHeader() . $str . "\n";
   }
 
   //投票対象判定
-  protected function IsVoteCheckbox(User $user, $live) {
-    return $live && ! $this->IsActor($user->uname);
-  }
+  function IsVoteCheckbox(User $user, $live) { return $live && ! $this->IsActor($user); }
+
+  //投票対象自動チェック判定
+  function IsVoteCheckboxChecked(User $user) { return false; }
 
   //投票のチェックボックスヘッダ取得
   function GetVoteCheckboxHeader() { return '<input type="radio" name="target_no"'; }
@@ -772,15 +828,26 @@ abstract class Role {
   //-- 投票処理 (夜) --//
   //未投票チェック
   function IsFinishVote(array $list) {
-    if (! $this->IsVote()) return true;
-    $id = $this->GetID();
-    return (isset($list[$this->not_action]) && array_key_exists($id, $list[$this->not_action])) ||
-      isset($list[$this->action][$id]);
+    return ! $this->IsVote() || $this->IgnoreFinishVote() || $this->ExistsAction($list);
   }
+
+  //未投票チェックスキップ判定
+  function IgnoreFinishVote() { return false; }
+
+  //投票コマンド存在判定
+  function ExistsAction(array $list) {
+    $list = $this->ExistsActionFilter($list);
+    $id   = $this->GetID();
+    return isset($list[$this->action][$id]) ||
+      (isset($list[$this->not_action]) && array_key_exists($id, $list[$this->not_action]));
+  }
+
+  //投票コマンド存在判定前フィルタ
+  function ExistsActionFilter(array $list) { return $list; }
 
   //投票結果チェック (夜)
   function CheckVoteNight() {
-    $this->SetStack(RQ::$get->situation, 'message');
+    $this->SetStack(RQ::Get()->situation, 'message');
     if (! is_null($str = $this->VoteNight())) {
       VoteHTML::OutputResult('夜：投票先が正しくありません<br>'."\n" . $str);
     }
@@ -789,25 +856,38 @@ abstract class Role {
   //投票処理 (夜)
   function VoteNight() {
     $user = DB::$USER->ByID($this->GetVoteNightTarget());
-    $live = DB::$USER->IsVirtualLive($user->user_no); //仮想的な生死を判定
+    $live = DB::$USER->IsVirtualLive($user->id); //仮想的な生死を判定
     if (! is_null($str = $this->IgnoreVoteNight($user, $live))) return $str;
-    $this->SetStack(DB::$USER->ByReal($user->user_no)->user_no, 'target_no');
+    $this->SetStack(DB::$USER->ByReal($user->id)->id, 'target_no');
     $this->SetStack($user->handle_name, 'target_handle');
     return null;
   }
 
   //投票対象者取得 (夜)
-  function GetVoteNightTarget() { return RQ::$get->target_no; }
+  function GetVoteNightTarget() { return RQ::Get()->target_no; }
 
   //投票スキップ判定 (夜)
   function IgnoreVoteNight(User $user, $live) {
-    return ! $live || $this->IsActor($user->uname) ? '自分・死者には投票できません' : null;
+    return ! $live || $this->IsActor($user) ? '自分・死者には投票できません' : null;
+  }
+
+  //隣り合っている ID を取得
+  protected function GetChain($id, $max) {
+    $stack = array();
+    if ($id - 5 >= 1)    $stack['N'] = $id - 5;
+    if ($id + 5 <= $max) $stack['S'] = $id + 5;
+    if ((($id - 1) % 5) != 0 && $id > 1)    $stack ['W'] = $id - 1;
+    if ((($id + 1) % 5) != 1 && $id < $max) $stack ['E'] = $id + 1;
+    return $stack;
   }
 
   //-- 投票集計処理 (夜) --//
   //成功データ追加
   protected function AddSuccess($target, $data = null, $null = false) {
-    RoleManager::$get->{is_null($data) ? $this->role : $data}[$target] = $null ? null : true;
+    $name  = is_null($data) ? $this->role : $data;
+    $stack = RoleManager::GetStack($name);
+    $stack[$target] = $null ? null : true;
+    RoleManager::SetStack($name, $stack);
   }
 
   //投票者取得
@@ -837,7 +917,7 @@ class RoleTalk {
     if ($say == '') return null; //リロード時なら処理スキップ
     //文字数・行数チェック
     if (strlen($say) > GameConfig::LIMIT_SAY ||
-	substr_count($say, "\n") >= GameConfig::LIMIT_SAY_LINE) {
+	substr_count($say, Text::LF) >= GameConfig::LIMIT_SAY_LINE) {
       $say = '';
       return false;
     }
@@ -848,13 +928,15 @@ class RoleTalk {
     if (DB::$SELF->IsDead() || ! DB::$ROOM->IsPlaying()) return null;
     //if (DB::$SELF->IsDead()) return false; //テスト用
 
-    RoleManager::$get->say = $say;
-    RoleManager::$actor = ($virtual = DB::$USER->ByVirtual(DB::$SELF->user_no)); //仮想ユーザを取得
+    $virtual = DB::$SELF->GetVirtual(); //仮想ユーザを取得
+    RoleManager::SetStack('say', $say);
     do { //発言置換処理
+      RoleManager::SetActor($virtual);
       foreach (RoleManager::Load('say_convert_virtual') as $filter) {
 	if ($filter->ConvertSay()) break 2;
       }
-      RoleManager::$actor = DB::$SELF;
+
+      RoleManager::SetActor(DB::$SELF);
       foreach (RoleManager::Load('say_convert') as $filter) {
 	if ($filter->ConvertSay()) break 2;
       }
@@ -862,23 +944,23 @@ class RoleTalk {
 
     foreach ($virtual->GetPartner('bad_status', true) as $id => $date) { //妖精の処理
       if ($date != DB::$ROOM->date) continue;
-      RoleManager::$actor = DB::$USER->ByID($id);
+      RoleManager::SetActor(DB::$USER->ByID($id));
       foreach (RoleManager::Load('say_bad_status') as $filter) $filter->ConvertSay();
     }
 
-    RoleManager::$actor = $virtual;
+    RoleManager::SetActor($virtual);
     foreach (RoleManager::Load('say') as $filter) $filter->ConvertSay(); //他のサブ役職の処理
-    $say = RoleManager::$get->say;
-    unset(RoleManager::$get->say);
+    $say = RoleManager::GetStack('say');
+    RoleManager::UnsetStack('say');
     return true;
   }
 
   //発言を DB に登録する
   static function Save($say, $scene, $location = null, $spend_time = 0, $update = false) {
     //声の大きさを決定
-    $voice = RQ::$get->font_type;
+    $voice = RQ::Get()->font_type;
     if (DB::$ROOM->IsPlaying() && DB::$SELF->IsLive()) {
-      RoleManager::$actor = DB::$USER->ByVirtual(DB::$SELF->user_no);
+      RoleManager::SetActor(DB::$SELF->GetVirtual());
       foreach (RoleManager::Load('voice') as $filter) $filter->FilterVoice($voice, $say);
     }
 
@@ -890,7 +972,7 @@ class RoleTalk {
       $role_id = DB::$ROOM->IsPlaying() ? DB::$SELF->role_id : null;
       DB::$ROOM->Talk($say, null, $uname, $scene, $location, $voice, $role_id, $spend_time);
     }
-    if ($update) DB::$ROOM->UpdateTime();
+    if ($update) RoomDB::UpdateTime();
   }
 }
 
@@ -901,10 +983,10 @@ class RoleHTML {
     if (! DB::$ROOM->IsPlaying()) return false; //ゲーム中のみ表示する
 
     if (DB::$SELF->IsDead()) { //死亡したら口寄せ以外は表示しない
-      echo '<span class="ability ability-dead">' . Message::$ability_dead . '</span><br>';
+      echo '<span class="ability ability-dead">' . Message::$ability_dead . '</span>' . Text::BR;
       if (DB::$SELF->IsRole('mind_evoke')) Image::Role()->Output('mind_evoke');
       if (DB::$SELF->IsDummyBoy() && ! DB::$ROOM->IsOpenCast()) { //身代わり君のみ隠蔽情報を表示
-	echo '<div class="system-vote">' . Message::$close_cast . '</div>'."\n";
+	echo '<div class="system-vote">' . Message::$close_cast . '</div>' . Text::LF;
       }
       return;
     }
@@ -914,32 +996,26 @@ class RoleHTML {
     foreach (RoleManager::Load('display_real') as $filter) $filter->OutputAbility();
 
     //-- ここからは憑依先の役職を表示 --//
-    RoleManager::$actor = DB::$USER->ByVirtual(DB::$SELF->user_no);
+    RoleManager::SetActor(DB::$SELF->GetVirtual());
     foreach (RoleManager::Load('display_virtual') as $filter) $filter->OutputAbility();
 
     //-- これ以降はサブ役職非公開オプションの影響を受ける --//
     if (DB::$ROOM->IsOption('secret_sub_role')) return;
 
-    $stack = array();
-    foreach (array('real', 'virtual', 'none') as $name) {
-      $stack = array_merge($stack, RoleManager::${'display_' . $name . '_list'});
+    foreach (RoleData::GetDisplayList(RoleManager::GetActor()->role_list) as $role) {
+      Image::Role()->Output($role);
     }
-    //Text::p($stack);
-    $display_list = array_diff(array_keys(RoleData::$sub_role_list), $stack);
-    $target_list  = array_intersect($display_list, array_slice(RoleManager::$actor->role_list, 1));
-    //Text::p($target_list);
-    foreach ($target_list as $role) Image::Role()->Output($role);
   }
 
   //仲間表示
   static function OutputPartner(array $list, $header, $footer = null) {
     if (count($list) < 1) return false; //仲間がいなければ表示しない
     $list[] = '</td>';
-    $str = '<table class="ability-partner"><tr>'."\n" .
-      Image::Role()->Generate($header, null, true) ."\n" .
-      '<td>　' . implode('さん　', $list) ."\n";
-    if ($footer) $str .= Image::Role()->Generate($footer, null, true) ."\n";
-    echo $str . '</tr></table>'."\n";
+    $str = '<table class="ability-partner"><tr>' . Text::LF .
+      Image::Role()->Generate($header, null, true)  . Text::LF .
+      '<td>　' . implode('さん　', $list)  . Text::LF;
+    if ($footer) $str .= Image::Role()->Generate($footer, null, true)  . Text::LF;
+    Text::Output($str . '</tr></table>');
   }
 
   //現在の憑依先表示
@@ -957,28 +1033,57 @@ class RoleHTML {
     if (count($stack) < 1) {
       $str = Message::${'ability_' . $sentence};
     }
-    elseif ($type == 'WOLF_EAT' || $type == 'CUPID_DO' || $type == 'DUELIST_DO') {
-      $str = '投票済み';
-    }
-    elseif ($type == 'SPREAD_WIZARD_DO') {
-      $str_stack = array();
-      foreach (explode(' ', $stack['target_no']) as $id) {
-	$user = DB::$USER->ByVirtual($id);
-	$str_stack[$user->user_no] = $user->handle_name;
-      }
-      ksort($str_stack);
-      $str = implode('さん ', $str_stack) . 'さんに投票済み';
-    }
-    elseif ($not_type != '' && $stack['type'] == $not_type) {
-      $str = 'キャンセル投票済み';
-    }
-    elseif ($type == 'POISON_CAT_DO' || $type == 'POSSESSED_DO') {
-      $str = DB::$USER->ByID($stack['target_no'])->handle_name . 'さんに投票済み';
-    }
     else {
-      $str = DB::$USER->ByVirtual($stack['target_no'])->handle_name . 'さんに投票済み';
+      switch ($type) {
+      case 'WOLF_EAT':
+      case 'STEP_WOLF_EAT':
+      case 'SILENT_WOLF_EAT':
+      case 'CUPID_DO':
+      case 'DUELIST_DO':
+	$str = '投票済み';
+	break;
+
+      case 'STEP_MAGE_DO':
+      case 'STEP_GUARD_DO':
+      case 'SPREAD_WIZARD_DO':
+      case 'STEP_VAMPIRE_DO':
+	$str_stack = array();
+	foreach (explode(' ', $stack['target_no']) as $id) {
+	  $user = DB::$USER->ByVirtual($id);
+	  $str_stack[$user->id] = $user->handle_name;
+	}
+	ksort($str_stack);
+	$str = implode('さん ', $str_stack) . 'さんに投票済み';
+	break;
+
+      case 'STEP_DO':
+	if ($not_type != '' && $stack['type'] == $not_type) {
+	  $str = 'キャンセル投票済み';
+	  break;
+	}
+	$str_stack = array();
+	foreach (explode(' ', $stack['target_no']) as $id) {
+	  $user = DB::$USER->ByVirtual($id);
+	  $str_stack[$user->id] = $user->handle_name;
+	}
+	ksort($str_stack);
+	$str = implode('さん ', $str_stack) . 'さんに投票済み';
+	break;
+
+      default:
+	if ($not_type != '' && $stack['type'] == $not_type) {
+	  $str = 'キャンセル投票済み';
+	}
+	elseif ($type == 'POISON_CAT_DO' || $type == 'POSSESSED_DO') {
+	  $str = DB::$USER->ByID($stack['target_no'])->handle_name . 'さんに投票済み';
+	}
+	else {
+	  $str = DB::$USER->ByVirtual($stack['target_no'])->handle_name . 'さんに投票済み';
+	}
+	break;
+      }
     }
-    echo '<span class="ability ' . $class . '">' . $str . '</span><br>'."\n";
+    printf('<span class="ability %s">%s</span><br>'."\n", $class, $str);
   }
 
   //能力発動結果を表示する

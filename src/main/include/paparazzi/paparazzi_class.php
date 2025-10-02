@@ -1,23 +1,23 @@
 <?php
-class Paparazzi{
+class Paparazzi {
   public $version = 'paparazzi Ver. 2.0 beta2';
   public $date;
   public $memory;
   public $time;
   public $log;
 
-  function __construct(){
+  function __construct() {
     $this->date   = date('Y-m-d H:i:s');
     $this->time   = microtime();
     $this->memory = memory_get_usage();
     $this->log    = array();
   }
 
-  function GetElapsedTime(){
+  function GetElapsedTime() {
     return microtime() - $this->time;
   }
 
-  function shot($comment, $category = 'general'){
+  function shot($comment, $category = 'general') {
     $this->log[] = array('time'     => $this->GetElapsedTime(),
 			 'memory'   => memory_get_usage() - $this->memory,
 			 'category' => $category,
@@ -25,16 +25,16 @@ class Paparazzi{
     return $comment;
   }
 
-  function InsertBenchResult($label = NULL){
+  function InsertBenchResult($label = null) {
     echo (is_null($label) ? '' : $label . ':') . sprintf('%f[s]', $this->GetElapsedTime());
   }
 
-  function CollectLog($force = false){
-    if(! $force && $this->written) return;
+  function CollectLog($force = false) {
+    if (! $force && $this->written) return;
     $this->written |= ! $force;
 
     $output = '<dl>';
-    foreach ($this->log as $item){
+    foreach ($this->log as $item) {
       extract($item, EXTR_PREFIX_ALL, 'unsafe');
       $category = Text::Escape($unsafe_category);
       $comment  = Text::Escape($unsafe_comment);
@@ -43,12 +43,12 @@ class Paparazzi{
     return $output . '</dl>';
   }
 
-  function InsertLog(){
+  function InsertLog() {
     echo $this->CollectLog();
   }
 
-  function Save($room_no, $uname, $action){
-    if($this->serialized) return;
+  function Save($room_no, $uname, $action) {
+    if ($this->serialized) return;
 
     $this->ModifySchema();
 
@@ -60,7 +60,7 @@ class Paparazzi{
 
     //ログの記録
     $items = 'article_id, step_no, elapsed_time, category, note';
-    foreach ($this->log as $i => $item){
+    foreach ($this->log as $i => $item) {
       extract($item, EXTR_PREFIX_ALL, 'unsafe');
       $category = mysql_real_escape_string($unsafe_category);
       $comment  = mysql_real_escape_string($unsafe_comment);
@@ -70,7 +70,7 @@ class Paparazzi{
     $this->serialized = true;
   }
 
-  function ModifySchema(){
+  function ModifySchema() {
     mysql_query('CREATE TABLE IF NOT EXISTS pp_articles (
 			article_id INT AUTO_INCREMENT PRIMARY KEY,
 			room_no INT NOT NULL,

@@ -12,6 +12,6 @@ class Role_monk_fox extends Role_child_fox {
 
   //霊能
   function Necromancer(User $user, $flag) {
-    return $flag || mt_rand(0, 9) < 3 ? 'stolen' : $user->DistinguishNecromancer();
+    return $flag || Lottery::Percent(30) ? 'stolen' : $user->DistinguishNecromancer();
   }
 }

@@ -21,7 +21,7 @@ class Role_angel extends Role_cupid {
     $action = 'SYMPATHY_RESULT';
     $a->AddRole('mind_sympathy');
     $b->AddRole('mind_sympathy');
-    DB::$ROOM->ResultAbility($action, $b->main_role, $b->handle_name, $a->user_no);
-    DB::$ROOM->ResultAbility($action, $a->main_role, $a->handle_name, $b->user_no);
+    DB::$ROOM->ResultAbility($action, $b->main_role, $b->handle_name, $a->id);
+    DB::$ROOM->ResultAbility($action, $a->main_role, $a->handle_name, $b->id);
   }
 }

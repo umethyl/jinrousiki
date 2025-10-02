@@ -8,11 +8,11 @@
 class Role_wirepuller_luck extends Role {
   protected function IgnoreAbility() { return DB::$ROOM->date < 2; }
 
-  function FilterVoteDo(&$number) {
-    if ($this->IsLivePartner()) $number += 2;
+  function FilterVoteDo(&$count) {
+    if ($this->IsLivePartner()) $count += 2;
   }
 
-  function FilterVotePoll(&$number) {
-    if (! $this->IsLivePartner()) $number += 3;
+  function FilterVotePoll(&$count) {
+    if (! $this->IsLivePartner()) $count += 3;
   }
 }

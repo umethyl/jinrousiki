@@ -15,8 +15,7 @@ class Role_sex_wolf extends Role_wolf {
 
   function WolfEatAction(User $user) {
     $result = $this->DistinguishSex($user);
-    $target = DB::$USER->GetHandleName($user->uname, true);
-    DB::$ROOM->ResultAbility($this->result, $result, $target, $this->GetWolfVoter()->user_no);
+    DB::$ROOM->ResultAbility($this->result, $result, $user->GetName(), $this->GetWolfVoter()->id);
 
     $user->wolf_eat = true; //襲撃は成功扱い
     return true;

@@ -17,15 +17,15 @@ class Role_border_priest extends Role_priest {
 
   function Priest(StdClass $role_flag) {
     $event = $this->GetEvent();
-    foreach ($role_flag->{$this->role} as $uname) {
-      $user  = DB::$USER->ByUname($uname);
+    foreach ($role_flag->{$this->role} as $id) {
+      $user  = DB::$USER->ByID($id);
       $count = 0;
       foreach (DB::$ROOM->vote as $vote_stack) {
 	foreach ($vote_stack as $stack) {
-	  if ($stack['target_no'] == $user->user_no) $count++;
+	  if ($stack['target_no'] == $user->id) $count++;
 	}
       }
-      DB::$ROOM->ResultAbility($event, $count, null, $user->user_no);
+      DB::$ROOM->ResultAbility($event, $count, null, $user->id);
     }
   }
 }

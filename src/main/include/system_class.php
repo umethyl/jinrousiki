@@ -1,9 +1,7 @@
 <?php
 //-- 外部リンク生成の基底クラス --//
 class ExternalLinkBuilder {
-  const TIME    = 5; //タイムアウト時間 (秒)
-  const TIMEOUT = "%s: Connection timed out (%d seconds)\n";
-  const GET     = "GET / HTTP/1.1\r\nHost: %s\r\nConnection: Close\r\n\r\n";
+  const TIME = 5; //タイムアウト時間 (秒)
 
   //サーバ通信状態チェック
   static function CheckConnection($url) {
@@ -12,16 +10,16 @@ class ExternalLinkBuilder {
     if (! ($io = @fsockopen($host, 80, $status, $str, self::TIME))) return false;
 
     stream_set_timeout($io, self::TIME);
-    fwrite($io, sprintf(self::GET, $host));
+    fwrite($io, sprintf("GET / HTTP/1.1\r\nHost: %s\r\nConnection: Close\r\n\r\n", $host));
     $data = fgets($io, 128);
     $stream_stack = stream_get_meta_data($io);
     fclose($io);
     return ! $stream_stack['timed_out'];
   }
 
-  //HTML タグ生成
-  static function Generate($title, $data) {
-    return <<<EOF
+  //出力
+  static function Output($title, $data) {
+    echo <<<EOF
 <fieldset>
 <legend>{$title}</legend>
 <div class="game-list"><dl>{$data}</dl></div>
@@ -30,25 +28,43 @@ class ExternalLinkBuilder {
 EOF;
   }
 
-  //タイムアウトメッセージ生成
-  static function GenerateTimeOut($url) {
+  //タイムアウトメッセージ出力
+  static function OutputTimeOut($title, $url) {
+    $format = '%s: Connection timed out (%d seconds)' . Text::LF;
     $stack  = explode('/', $url);
-    return sprintf(self::TIMEOUT, $stack[2], self::TIME);
-  }
-
-  //外部村リンク生成
-  function GenerateSharedServerRoom($name, $url, $data) {
-    $format = 'ゲーム一覧 (<a href="%s">%s</a>)';
-    return self::Generate(sprintf($format, $url, $name), $data);
+    self::Output($title, sprintf($format, $stack[2], self::TIME));
   }
 }
 
 //-- 「福引」クラス --//
 class Lottery {
-  //配列からランダムに一つ取り出す
-  static function Get(array $array) {
-    return count($array) > 0 ? $array[array_rand($array)] : null;
+  static public $display = false;
+
+  //確率表示設定 (デバッグ用)
+  static function d($flag = true) {
+    self::$display = $flag;
   }
+
+  //確率判定
+  static function Rate($base, $rate) {
+    $rand = mt_rand(1, $base);
+    if (self::$display) Text::p(sprintf('%d <= %d', $rand, $rate), 'rate');
+    return $rand <= $rate;
+  }
+
+  //bool 判定
+  static function Bool() { return self::Percent(50); }
+
+  //パーセント判定
+  static function Percent($rate) { return self::Rate(100, $rate); }
+
+  //配列からランダムに一つ取り出す
+  static function Get(array $list) {
+    return count($list) > 0 ? $list[mt_rand(0, count($list) - 1)] : null;
+  }
+
+  //一定範囲からランダムに取り出す
+  static function GetRange($from, $to) { return self::Get(range($from, $to)); }
 
   //闇鍋モードの配役リスト取得
   static function GetChaos(array $list, array $filter) {
@@ -72,9 +88,8 @@ class Lottery {
 
   //「福引き」を一定回数行ってリストに追加する
   static function Add(array &$list, array $random_list, $count) {
-    $total = count($random_list) - 1;
     for (; $count > 0; $count--) {
-      $role = $random_list[mt_rand(0, $total)];
+      $role = self::Get($random_list);
       isset($list[$role]) ? $list[$role]++ : $list[$role] = 1;
     }
   }

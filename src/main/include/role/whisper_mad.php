@@ -8,9 +8,9 @@ class Role_whisper_mad extends Role {
     $wolf = array();
     $mad  = array();
     foreach (DB::$USER->rows as $user) {
-      if ($this->IsActor($user->uname)) continue;
+      if ($this->IsActor($user)) continue;
       if ($user->IsRole('possessed_wolf')) {
-	$wolf[] = DB::$USER->GetHandleName($user->uname, true); //憑依先を追跡する
+	$wolf[] = $user->GetName(); //憑依先を追跡する
       }
       elseif ($user->IsWolf(true)) {
 	$wolf[] = $user->handle_name;

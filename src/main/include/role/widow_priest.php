@@ -12,19 +12,19 @@ class Role_widow_priest extends Role_priest {
   protected function GetOutputRole() { return null; }
 
   protected function SetPriest() {
-    if (DB::$ROOM->date == 1 && DB::$ROOM->IsDummyBoy()) parent::SetPriest();
+    if (DB::$ROOM->IsDate(1) && DB::$ROOM->IsDummyBoy()) parent::SetPriest();
     return false;
   }
 
   function Priest(StdClass $role_flag) {
     $dummy_boy = DB::$USER->ByID(1);
-    $result = $dummy_boy->main_role;
-    $target = $dummy_boy->handle_name;
-    foreach ($role_flag->{$this->role} as $uname) {
-      $user = DB::$USER->ByUname($uname);
+    $result    = $dummy_boy->main_role;
+    $target    = $dummy_boy->handle_name;
+    foreach ($role_flag->{$this->role} as $id) {
+      $user = DB::$USER->ByID($id);
       if ($user->IsDummyBoy()) continue;
       $user->AddRole('mind_sympathy');
-      DB::$ROOM->ResultAbility('SYMPATHY_RESULT', $result, $target, $user->user_no);
+      DB::$ROOM->ResultAbility('SYMPATHY_RESULT', $result, $target, $user->id);
     }
   }
 }

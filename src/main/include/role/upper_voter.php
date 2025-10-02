@@ -5,7 +5,7 @@
   ・投票数：+1 (5日目以降)
 */
 class Role_upper_voter extends Role {
-  function FilterVoteDo(&$number) {
-    if (DB::$ROOM->date > 4) $number++;
+  function FilterVoteDo(&$count) {
+    if (DB::$ROOM->date > 4) $count++;
   }
 }

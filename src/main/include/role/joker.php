@@ -15,7 +15,7 @@ class Role_joker extends Role {
   //ジョーカー移動
   function SetJoker() {
     $user    = $this->GetJoker(); //現在の所持者を取得
-    $virtual = DB::$USER->ByVirtual($user->user_no)->uname; //仮想ユーザ名を取得
+    $virtual = $user->GetVirtual()->uname; //仮想ユーザ名を取得
     $uname   = $this->GetVoteTargetUname($virtual); //ジョーカーの投票先
     $this->SetStack($uname, 'joker_uname');
     //Text::p($uname, 'Vote');

@@ -12,9 +12,10 @@ class Option_quiz extends CheckRoomOptionItem {
   function GetExplain() { return 'GM が出題者になり、プレイヤー全員に回答者がつきます。'; }
 
   function Cast(array &$list, &$rand) {
-    $role = 'panelist';
+    $role  = 'panelist';
+    $stack = RoleManager::GetStack('uname_list');
     foreach (array_keys($list) as $id) {
-      if (RoleManager::$get->uname_list[$id] != 'dummy_boy')  $list[$id] .= ' ' . $role;
+      if ($stack[$id] != 'dummy_boy') $list[$id] .= ' ' . $role;
     }
     return array($role);
   }

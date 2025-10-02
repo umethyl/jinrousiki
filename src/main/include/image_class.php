@@ -56,7 +56,7 @@ class ImageManager {
   }
 
   //画像出力
-  function Output($name) { echo $this->Generate($name) . "<br>\n"; }
+  function Output($name) { Text::Output($this->Generate($name), true); }
 
   //画像のファイルパス取得
   private function GetPath($name) {

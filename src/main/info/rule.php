@@ -14,7 +14,7 @@ InfoHTML::OutputHeader('ルール', 0, 'rule');
 
 <h2 id="worning">ゲームに参加する上で重要なこと</h2>
 <div>
-<span class="worning">ゲームのプレイ内容についてこのゲーム以外の場所で話すのはやめてください。<br></span>
+<span class="worning">ゲームのプレイ内容についてこのゲーム以外の場所で話すのはやめてください。</span><br>
 これをやってしまうとゲームが面白くなくなります。<br>
 特に自分が死んだからといって役割を公開するようなことは絶対にしないでください。 <br>
 </div>
@@ -23,6 +23,7 @@ InfoHTML::OutputHeader('ルール', 0, 'rule');
 <ul>
   <li><a href="#rule_purpose">ゲームの目的</a></li>
   <li><a href="#rule_win">勝利条件</a></li>
+  <li><a href="#rule_live_count">村人の人数の数え方</a></li>
   <li><a href="#rule_cast">村の人口推移</a></li>
   <li><a href="#rule_role">役割紹介</a></li>
 </ul>
@@ -45,13 +46,30 @@ InfoHTML::OutputHeader('ルール', 0, 'rule');
 </ul>
 <div>
 必ずしもあなたが生き残ることがこのゲームの目的ではありません。<br>
-自分を犠牲にしてもあなたのチームが勝てば勝利となります。<br>
+自分を犠牲にしてもあなたのチームが勝てば勝利となります。 → <a href="spec.php#win">詳細</a><br>
+村人の人数の数え方は<a href="#rule_live_count">別項目</a>で説明します。
+</div>
+
+<h3 id="rule_live_count">[村人の人数の数え方]</h3>
+<div>
+生存者のうち、村人カウントに属する人のみの人数を当プログラムの説明内で「生存カウント」と表現する事があります。<br>
+村の勝利判定に使用される「村人の人数」とは生存カウントのことを指します。
+</div>
+
+<ul>
+  <li>村人の人数(村人カウント)：生存者 - (人狼カウント + 妖狐カウント)</li>
+  <li><span class="wolf">人狼</span>の人数(人狼カウント)：人狼の人数 (狂人は含まない)</li>
+  <li><span class="fox">妖狐</span>の人数(妖狐カウント)：妖狐の人数</li>
+</ul>
+
+<div>
+例：村人3　人狼2　狂人1　妖狐1 (合計7人) → 7 - (2 + 1) = 4
 </div>
 
 <h3 id="rule_cast">[村人の人口推移]</h3>
 <div>
 村には特殊な能力を持った人や、考えの異なる人が居ます。<br>
-下の表がその人口の推移です → <a href="cast.php">詳細</a>。
+下の表がその人口の推移です。 → <a href="cast.php">詳細</a>
 </div>
 <ul>
   <li>村人側の勝利を望む人たち　村人、占い師、霊能者、狩人、共有者</li>
@@ -64,7 +82,7 @@ InfoHTML::OutputHeader('ルール', 0, 'rule');
 <?php InfoHTML::OutputCast(8, 22); ?>
 
 <h3 id="rule_role">[役割紹介]</h3>
-<div>　登場する役割について詳しく説明します。</div>
+<div>登場する役割について詳しく説明します。</div>
 
 <ul>
   <li><a href="#rule_role_human">村人</a></li>
@@ -137,7 +155,7 @@ InfoHTML::OutputHeader('ルール', 0, 'rule');
     人狼から襲われた場合は人狼からランダムに一人道連れにします。<br>
     あなたが恋人で、最愛の人に先立たれた場合は後を追って自殺し、道連れは出ません。<br>
     勝利条件は村人勝利です<br>
-    埋毒者は村作成の時にオプションとして設定され、村の人数 [<?php echo CastConfig::$poison; ?>人] 以上で登場します。<br>
+    埋毒者は村作成の時にオプションとして設定され、村の人数 [ <?php echo CastConfig::$poison; ?>人 ] 以上で登場します。<br>
     （埋毒者が登場する場合、村人の代わりとして入ります。その際村人がもう一人減り、人狼が一人増えます）
   </div></td>
 </tr>
@@ -389,7 +407,7 @@ Ver. 1.5.0 β1 からは、「半角スペース一つ」のみを遺言にセ�
 <tr id="display_role_poison"><td class="poison">埋毒者</td><?php echo Image::Role()->Generate('poison', '埋毒者', true); ?></tr>
 <tr id="display_role_wolf">
 <td class="wolf">人狼</td><td><?php echo Image::Role()->Generate('wolf', '人狼'); ?>
-<table class="view"><tr><?php echo Image::Role()->Generate('wolf_partner', '人狼の仲間一覧', true); ?><td>　人狼一号さん　人狼二号さん　</td></tr></table>
+<table class="view"><tr><?php echo Image::Role()->Generate('wolf_partner', '人狼の仲間一覧', true); ?><td>人狼一号さん　人狼二号さん</td></tr></table>
 </td>
 </tr>
 <tr id="display_role_mad"><td class="wolf">狂人</td><?php echo Image::Role()->Generate('mad', '狂人', true); ?></tr>
@@ -399,13 +417,13 @@ Ver. 1.5.0 β1 からは、「半角スペース一つ」のみを遺言にセ�
 </tr>
 <tr id="display_role_cupid">
 <td class="lovers">キューピッド</td><td><?php echo Image::Role()->Generate('cupid', 'キューピッド'); ?>
-<table class="view"><tr><?php echo Image::Role()->Generate('cupid_pair', '自分の作った恋人一覧', true); ?><td>　恋人一号さん　恋人二号さん　</td></tr></table></td>
+<table class="view"><tr><?php echo Image::Role()->Generate('cupid_pair', '自分の作った恋人一覧', true); ?><td>恋人一号さん　恋人二号さん</td></tr></table></td>
 </tr>
 <tr id="display_role_decide"><td>決定者</td><td>--なし--</td></tr>
 <tr id="display_role_authority"><td>権力者</td><?php echo Image::Role()->Generate('authority', '権力者', true); ?></tr>
 <tr id="display_role_lovers">
 <td class="lovers">恋人</td>
-<td><table class="view"><tr><?php echo Image::Role()->Generate('partner_header', '自分の仲間一覧：ヘッダー', true); ?><td>　恋人一号さん　</td>
+<td><table class="view"><tr><?php echo Image::Role()->Generate('partner_header', '自分の仲間一覧：ヘッダー', true); ?><td>恋人一号さん</td>
 <?php echo Image::Role()->Generate('lovers_footer', '自分の恋人一覧：フッター', true); ?></tr></table></td>
 </tr>
 </table>

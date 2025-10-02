@@ -12,7 +12,6 @@ class Role_revive_fox extends Role_fox {
   public $not_action = 'POISON_CAT_NOT_DO';
   public $submit     = 'revive_do';
   public $not_submit = 'revive_not_do';
-  public $ignore_message = '初日は蘇生できません';
 
   protected function OutputResult() {
     if (DB::$ROOM->date > 2 && ! DB::$ROOM->IsOption('seal_message')) {

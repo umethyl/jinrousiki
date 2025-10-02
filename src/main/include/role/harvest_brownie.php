@@ -7,7 +7,7 @@
 class Role_harvest_brownie extends Role {
   function SetVoteDay($uname) {
     $this->InitStack();
-    if ($this->IsRealActor()) $this->AddStack($uname);
+    if ($this->IsRealActor()) $this->AddStackName($uname);
   }
 
   function VoteKillReaction() {
@@ -15,7 +15,7 @@ class Role_harvest_brownie extends Role {
       $flag = $this->IsVoted($uname);
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
 	$user = DB::$USER->ByRealUname($voted_uname);
-	if ($user->IsDead(true) || mt_rand(0, 9) > 2) continue;
+	if ($user->IsDead(true) || ! Lottery::Percent(30)) continue;
 	if ($flag) {
 	  $user->AddDoom(1, 'frostbite');
 	}

@@ -12,7 +12,7 @@ class Role_dummy_chiroptera extends Role {
     $target = $user->GetPartner($this->role);
     $stack  = $target;
     if (is_array($stack)) { //仮想恋人作成結果を表示
-      $stack[] = $user->user_no;
+      $stack[] = $user->id;
       asort($stack);
       $pair = array();
       foreach ($stack as $id) $pair[] = DB::$USER->ById($id)->handle_name;
@@ -22,14 +22,14 @@ class Role_dummy_chiroptera extends Role {
     if (! is_array($target) || $this->GetActor()->IsRole('lovers', 'sweet_status')) return;
     $lovers = array();
     foreach ($target as $id) {
-      $lovers[] = DB::$USER->GetHandleName(DB::$USER->ById($id)->uname, true);
+      $lovers[] = DB::$USER->ByVirtual($id)->handle_name;
     }
     RoleHTML::OutputPartner($lovers, 'partner_header', 'lovers_footer');
   }
 
   function OutputAction() { $this->filter->OutputAction(); }
 
-  function IsVote() { return DB::$ROOM->date == 1; }
+  function IsVote() { return DB::$ROOM->IsDate(1); }
 
   function IsFinishVote(array $list) { return $this->filter->IsFinishVote($list); }
 
@@ -45,7 +45,7 @@ class Role_dummy_chiroptera extends Role {
     $stack = array();
     foreach ($list as $user) {
       $stack[] = $user->handle_name;
-      if (! $this->IsActor($user->uname)) $this->GetActor()->AddMainRole($user->user_no);
+      if (! $this->IsActor($user)) $this->GetActor()->AddMainRole($user->id);
     }
 
     $this->SetStack(implode(' ', array_keys($list)), 'target_no');

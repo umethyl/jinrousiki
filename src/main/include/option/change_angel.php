@@ -4,7 +4,7 @@
   ○仕様
   ・配役：キューピッド → 天使
 */
-OptionManager::Load('replace_human');
-class Option_change_angel extends Option_replace_human {
+OptionManager::Load('change_cupid');
+class Option_change_angel extends Option_change_cupid {
   function GetCaption() { return '天使村'; }
 }

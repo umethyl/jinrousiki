@@ -10,9 +10,8 @@ class Option_tongue_wolf extends CheckRoomOptionItem {
   function GetExplain() { return '襲撃した人の役職が分かる狼です [人狼1→舌禍狼1]'; }
 
   function SetRole(array &$list, $count) {
-    if ($count >= CastConfig::${$this->name} && $list['wolf'] > 0) {
-      $list['wolf']--;
-      $list[$this->name]++;
+    if ($count >= CastConfig::${$this->name}) {
+      OptionManager::Replace($list, 'wolf', $this->name);
     }
   }
 }

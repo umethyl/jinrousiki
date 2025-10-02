@@ -15,7 +15,7 @@ class Role_awake_wizard extends Role_wizard {
 
   protected function GetWizard() {
     return $this->GetActor()->IsActive() ?
-      (mt_rand(0, 9) < 3 ? $this->wizard_list : array(1 => 'MAGE_DO')) :
+      (Lottery::Percent(30) ? $this->wizard_list : array(1 => 'MAGE_DO')) :
       array('soul_mage' => 'MAGE_DO');
   }
 

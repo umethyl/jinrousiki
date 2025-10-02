@@ -7,9 +7,9 @@
 */
 RoleManager::LoadFile('common');
 class Role_critical_common extends Role_common {
-  function FilterVoteDo(&$number) { $number++; }
+  function FilterVoteDo(&$count) { $count++; }
 
-  function FilterVotePoll(&$number) {
-    if (mt_rand(0, 99) < 5) $number += 100;
+  function FilterVotePoll(&$count) {
+    if (Lottery::Percent(5)) $count += 100;
   }
 }

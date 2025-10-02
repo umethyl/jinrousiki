@@ -11,9 +11,10 @@ class Option_gentleman extends CheckRoomOptionItem {
 
   function Cast(array &$list, &$rand) {
     $stack = array('male' => 'gentleman', 'female' => 'lady');
+    $uname_list = RoleManager::GetStack('uname_list');
     foreach (array_keys($list) as $id) {
-      $list[$id] .= ' ' . $stack[DB::$USER->ByUname(RoleManager::$get->uname_list[$id])->sex];
+      $list[$id] .= ' ' . $stack[DB::$USER->ByUname($uname_list[$id])->sex];
     }
-    return array('gentleman', 'lady');
+    return array_values($stack);
   }
 }

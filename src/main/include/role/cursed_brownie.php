@@ -8,14 +8,14 @@
 class Role_cursed_brownie extends Role {
   function SetVoteDay($uname) {
     $this->InitStack();
-    if ($this->IsRealActor()) $this->AddStack($uname);
+    if ($this->IsRealActor()) $this->AddStackName($uname);
   }
 
   function VoteKillReaction() {
     foreach (array_keys($this->GetStack()) as $uname) {
       foreach ($this->GetVotedUname($uname) as $voted_uname) {
 	$user = DB::$USER->ByRealUname($voted_uname);
-	if ($user->IsLive(true) && ! $user->IsAvoid() && mt_rand(0, 9) < 3) $user->AddDoom(2);
+	if ($user->IsLive(true) && ! $user->IsAvoid() && Lottery::Percent(30)) $user->AddDoom(2);
       }
     }
   }

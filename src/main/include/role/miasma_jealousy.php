@@ -9,6 +9,6 @@ class Role_miasma_jealousy extends Role_jealousy {
   public $mix_in = 'critical_mad';
 
   function SetVoteAction(User $user) {
-    if ($user->IsLovers() && mt_rand(0, 1) < 1) $user->AddDoom(1, 'febris');
+    if ($user->IsLovers() && ! $user->IsAvoid() && Lottery::Bool()) $user->AddDoom(1, 'febris');
   }
 }

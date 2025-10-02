@@ -16,7 +16,7 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 <h2 id="rule">基本ルール</h2>
 <ol>
 <li>他国の「カルトリーダー」・「笛吹き」に相当します。</li>
-<li>勝利条件は「生存者が自分と自分の<a href="#infected">感染者</a>のみになっていること」で、本人だけが勝利扱いになります。</li>
+<li><a href="../spec.php#win">勝利条件</a>は「生存者が自分と自分の<a href="#infected">感染者</a>のみになっていること」で、本人だけが勝利扱いになります。</li>
 <li>生存者が自分一人だけになった場合も勝利となります。</li>
 <li>勝利条件を満たした時に恋人が生存していた場合は<a href="lovers.php">恋人陣営</a>勝利になります。</li>
 <li>吸血鬼陣営をコピーした変化前の<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>と<a href="mania.php#unknown_mania_group">鵺系</a>の勝利条件は<br>
@@ -28,15 +28,13 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 </ol>
 <h5>Ver. 1.4.0 β19～</h5>
 <pre>
-吸血鬼陣営をコピーした変化前の<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>と<a href="mania.php#unknown_mania_group">鵺系</a>の勝利条件は
-例外的に「吸血鬼陣営の誰かが勝利」となります。
-コピー先の勝敗や自己の生存は不問です。
+コピー能力者の勝利条件を変更
 </pre>
 
 <h2 id="vampire_do">吸血の仕様</h2>
 <ol>
-<li>襲撃先が<a href="human.php#guard_group">狩人系</a>に護衛されていた場合は失敗し、狩人には「護衛成功」のメッセージが出ます。</li>
-<li><a href="human.php#guard_group">狩人系</a>の護衛判定は<a href="human.php#guard_limit">護衛制限</a>が適用されます。</li>
+<li>襲撃先が<a href="ability.php#guard">護衛能力者</a>に護衛されていた場合は失敗し、護衛者には「護衛成功」のメッセージが出ます。</li>
+<li>護衛判定には<a href="human.php#guard_limit">護衛制限</a>が適用されます。</li>
 <li><a href="human.php#hunter_guard">猟師</a>が護衛成功しても死亡しません。</li>
 <li><a href="human.php#blind_guard">夜雀</a>・<a href="ability.php#trap">罠能力者</a>の能力は有効です。</li>
 <li><a href="human.php#escaper_group">逃亡者系</a>との関係は<a href="human.php#escaper_rule">基本ルール [逃亡者] </a>を参照してください。</li>
@@ -45,7 +43,7 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 </li>
 <li>吸血鬼が吸血鬼を襲撃すると吸血死が発生します。相互襲撃の場合は相討ちとなります。</li>
 <li><a href="#incubus_vampire">青髭公</a>・<a href="#succubus_vampire">飛縁魔</a>は一定の条件で襲撃先を吸血死させます。<br>
-  <a href="human.php#detective_common">探偵</a>・<a href="wolf.php#sirius_wolf">天狼</a> (覚醒状態)・<a href="sub_role.php#challenge_lovers">難題</a>を対象にした場合は発生しません。
+  <a href="ability.php#special_resist">特殊耐性能力者</a>を対象にした場合は発生しません。
 </li>
 <li><a href="#doom_vampire">冥血鬼</a>は吸血鬼の襲撃を無効化します。</li>
 <li><a href="#soul_vampire">吸血姫</a>は吸血鬼の襲撃を反射し、襲撃した吸血鬼が吸血死します。<br>
@@ -56,7 +54,7 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 </ol>
 <h5>Ver. 1.5.0 β12～</h5>
 <pre>
-吸血鬼をコピーした<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="mania.php#unknown_mania_group">鵺系</a>に関する仕様を変更。
+コピー能力者に関する仕様を変更。
 <a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>：吸血無効→吸血死
 <a href="mania.php#unknown_mania_group">鵺系</a>：吸血無効→吸血有効
 </pre>
@@ -83,6 +81,7 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 <a href="#incubus_vampire">青髭公</a>
 <a href="#succubus_vampire">飛縁魔</a>
 <a href="#passion_vampire">牡丹灯籠</a>
+<a href="#step_vampire">文武王</a>
 <a href="#doom_vampire">冥血鬼</a>
 <a href="#sacrifice_vampire">吸血公</a>
 <a href="#soul_vampire">吸血姫</a>
@@ -169,6 +168,34 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 <a href="sub_role.php#infected">感染者</a>が自覚できてしまうので難易度が上がります。
 </pre>
 
+<h3 id="step_vampire">文武王 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 2.2.0 α4～]</h3>
+<pre>
+夜の投票時に自分と投票先の間で足音が鳴る特殊な吸血鬼。
+足音システムの基本は<a href="human.php#step_mage">審神者</a>参照。
+また、処刑投票先を一定確率 (30%) 自分の<a href="sub_role.php#infected">感染者</a>にすることができる。
+</pre>
+<ol>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合でも有効。</li>
+<li>対象が死亡していた場合は無効 (例：処刑・毒死)。
+<li>自分が処刑された場合は無効。
+<li>吸血鬼系、吸血鬼をコピーした<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>には無効。
+</ol>
+<h4>足音能力補足</h4>
+<ol>
+<li>投票の始点は自分から (チェック不要) で、終点は実際に護衛したい人を選んでください。</li>
+<li>死者を通り道に選ぶ事もできますが、死者を襲撃することはできません。</li>
+<li>足音は始点と終点の間で鳴ります。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#step">足音能力者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="human.php#step_mage">審神者</a>の吸血鬼バージョンです。
+感染力は高いですが、露出しやすい欠点をどうカバーするかがポイントになります。
+</pre>
+
 <h3 id="doom_vampire">冥血鬼 (占い結果：蝙蝠 / 霊能結果：蝙蝠) [Ver. 1.4.0 β19～]</h3>
 <h4>[耐性] 人狼襲撃：無効 / 狩り：有効 / 吸血襲撃：無効</h4>
 <pre>
@@ -219,7 +246,7 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#soul">役職鑑定能力者</a>
+<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#anti_assassin">暗殺耐性能力者</a>・<a href="ability.php#soul">役職鑑定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -242,7 +269,7 @@ InfoHTML::OutputRoleHeader('吸血鬼陣営');
 </ol>
 <h5>Ver. 1.5.0 β16～</h5>
 <pre>
-自己蘇生能力取得
+自己蘇生能力追加
 </pre>
 <h4>関連役職</h4>
 <pre>

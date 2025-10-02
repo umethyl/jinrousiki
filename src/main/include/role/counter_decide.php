@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('decide');
 class Role_counter_decide extends Role_decide {
-  function SetVoteDay($uname) { $this->AddStack($uname); }
+  function SetVoteDay($uname) { $this->AddStackName($uname); }
 
   function DecideVoteKill() {
     if ($this->IsVoteKill()) return;

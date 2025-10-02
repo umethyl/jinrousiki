@@ -617,7 +617,10 @@ InfoHTML::OutputHeader('闇鍋モード');
 <?php InfoHTML::OutputItemList('topping', range('a', 'h')); ?>
 </p>
 <p>
-<?php InfoHTML::OutputItemList('topping', range('i', 'o')); ?>
+<?php InfoHTML::OutputItemList('topping', range('i', 'p')); ?>
+</p>
+<p>
+<?php InfoHTML::OutputItemList('topping', array('q', 'r')); ?>
 </p>
 
 <?php InfoHTML::OutputItem('topping', 'a', 'Ver. 1.4.0 β19'); ?>
@@ -741,6 +744,22 @@ InfoHTML::OutputHeader('闇鍋モード');
 <a href="new_role/human.php#voodoo_killer">陰陽師</a>1　<a href="new_role/human.php#wizard_group">魔法使い系</a>1　<a href="new_role/ogre.php#cursed_yaksa">滝夜叉姫</a>1　<a href="new_role/duelist.php#cursed_avenger">がしゃどくろ</a>1
 </pre>
 
+<?php InfoHTML::OutputItem('topping', 'p', 'Ver. 2.2.0 α3'); ?>
+<pre>
+<a href="new_role/wolf.php#step_wolf">響狼</a>1　<a href="new_role/ability.php#step">足音能力者</a>2 (<a href="new_role/wolf.php#step_wolf">響狼</a>を除く)
+</pre>
+
+<?php InfoHTML::OutputItem('topping', 'q', 'Ver. 2.2.0 α6'); ?>
+<pre>
+<a href="new_role/ability.php#sex_mage">性別鑑定能力者</a>1 (<a href="new_role/human.php#wizard_group">魔法使い系</a>を除く)　<a href="new_role/ability.php#sex_only">性別限定能力者</a>1 (メイン役職のみ)
+</pre>
+
+<?php InfoHTML::OutputItem('topping', 'r', 'Ver. 2.2.0 α8'); ?>
+<pre>
+<a href="new_role/chiroptera.php#fairy_group">妖精系</a>1　対妖精枠1 (<a href="new_role/human.php#dummy_guard">夢守人</a>・<a href="new_role/human.php#dummy_poison">夢毒者</a>・<a href="new_role/wolf.php#dream_eater_mad">獏</a>)
+</pre>
+
+
 <h2 id="boost_rate"><?php OptionManager::OutputCaption('boost_rate'); ?> [Ver. 1.5.0 β7～]</h2>
 <ol>
 <li><?php OptionManager::OutputExplain('boost_rate'); ?>。</li>
@@ -775,7 +794,7 @@ InfoHTML::OutputHeader('闇鍋モード');
 
 <?php InfoHTML::OutputItem('boost_rate', 'e', 'Ver. 1.5.0 β9'); ?>
 <pre>
-<a href="new_role/lovers.php#exchange_angel">魂移使</a>・<a href="new_role/ability.php#possessed">憑依能力者</a>の出現率が 0 になります。
+<a href="new_role/ability.php#possessed">憑依能力者</a>の出現率が 0 になります。
 </pre>
 
 <?php InfoHTML::OutputItem('boost_rate', 'f', 'Ver. 1.5.0 β12'); ?>
@@ -790,7 +809,7 @@ InfoHTML::OutputHeader('闇鍋モード');
 
 <?php InfoHTML::OutputItem('boost_rate', 'h', 'Ver. 2.1.0 α5'); ?>
 <pre>
-<a href="new_role/human.php#pharmacist">薬師系</a>・<a href="new_role/wolf.php#resist_wolf">抗毒狼</a>・<a href="new_role/ability.php#poison">毒能力者</a>の出現率が 0 になります。
+<a href="new_role/wolf.php#resist_wolf">抗毒狼</a>・<a href="new_role/ogre.php#horse_ogre">馬頭鬼</a>・<a href="new_role/duelist.php#plumage_patron">鬼車鳥</a>・<a href="new_role/human.php#pharmacist">薬師系</a>・<a href="new_role/ability.php#poison">毒能力者</a>の出現率が 0 になります。
 </pre>
 
 <h2 id="chaos_open_cast"><?php OptionManager::OutputCaption('chaos_open_cast'); ?> [Ver. 1.4.0 α14～]</h2>

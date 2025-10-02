@@ -15,7 +15,5 @@ class Role_jammer_fox extends Role_child_fox {
 
   function SetVoteNight() { $this->filter->SetVoteNight(); }
 
-  function SetJammer(User $user) {
-    if ($this->IsJammer($user) && mt_rand(0, 9) < 7) $this->AddStack($user->uname, 'jammer');
-  }
+  function IsJammer(User $user) { return $this->filter->IsJammer($user) && Lottery::Percent(70); }
 }

@@ -46,8 +46,7 @@ class IndexHTML {
     if (BBSConfig::DISABLE) return;
     if (! ExternalLinkBuilder::CheckConnection(BBSConfig::RAW_URL)) {
       $title = sprintf(self::BBS_TITLE, BBSConfig::VIEW_URL, BBSConfig::THREAD);
-      $str   = ExternalLinkBuilder::GenerateTimeOut(BBSConfig::RAW_URL);
-      echo ExternalLinkBuilder::Generate($title, $str);
+      ExternalLinkBuilder::OutputTimeOut($title, BBSConfig::RAW_URL);
       return;
     }
 
@@ -59,14 +58,14 @@ class IndexHTML {
     }
 
     $str = '';
-    $str_stack = explode("\n", $data);
+    $str_stack = explode(Text::LF, $data);
     array_pop($str_stack);
     foreach ($str_stack as $res_stack) {
       $res = explode('<>', $res_stack);
       $str .= sprintf(self::BBS_RES, $res[0], $res[1], $res[3], $res[6], $res[4]);
     }
     $title = sprintf(self::BBS_TITLE, BBSConfig::VIEW_URL, BBSConfig::THREAD);
-    echo ExternalLinkBuilder::Generate($title, $str);
+    ExternalLinkBuilder::Output($title, $str);
   }
 
   //フッター出力

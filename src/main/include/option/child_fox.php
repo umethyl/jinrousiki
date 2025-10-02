@@ -13,9 +13,8 @@ class Option_child_fox extends CheckRoomOptionItem {
   }
 
   function SetRole(array &$list, $count) {
-    if ($count >= CastConfig::${$this->name} && $list['fox'] > 0) {
-      $list['fox']--;
-      $list[$this->name]++;
+    if ($count >= CastConfig::${$this->name}) {
+      OptionManager::Replace($list, 'fox', $this->name);
     }
   }
 }

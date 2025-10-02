@@ -7,9 +7,9 @@
 RoleManager::LoadFile('wolf');
 class Role_fire_wolf extends Role_wolf {
   function GuardCounter() {
-    foreach (RoleManager::$get->guard_success as $id => $flag) {
+    foreach (array_keys(RoleManager::GetStack('guard_success')) as $id) {
       DB::$USER->ByID($id)->AddRole('black_wisp');
     }
-    unset(RoleManager::$get->guard_success);
+    RoleManager::UnsetStack('guard_success');
   }
 }

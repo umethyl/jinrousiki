@@ -5,7 +5,7 @@
   ・投票数：-1 ～ +1
 */
 class Role_random_voter extends Role {
-  function FilterVoteDo(&$number) {
-    $number += mt_rand(0, 2) - 1;
+  function FilterVoteDo(&$count) {
+    $count += Lottery::GetRange(-1, 1);
   }
 }

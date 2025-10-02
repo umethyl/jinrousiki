@@ -11,6 +11,6 @@ class Role_dummy_poison extends Role_poison {
   function IsPoison() { return DB::$ROOM->IsDay(); }
 
   function IsPoisonTarget(User $user) {
-    return $user->IsRole('dream_eater_mad') || $user->IsRoleGroup('fairy');
+    return $user->IsRole('dream_eater_mad') || $user->IsMainGroup('fairy');
   }
 }

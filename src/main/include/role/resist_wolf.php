@@ -10,6 +10,7 @@ class Role_resist_wolf extends Role_wolf {
   function GetPoisonEatTarget() { return $this->GetWolfVoter(); }
 
   function PoisonDead() {
-    $this->GetActor()->IsActive() ? $this->GetActor()->LostAbility() : parent::PoisonDead();
+    $actor = $this->GetActor();
+    $actor->IsActive() ? $actor->LostAbility() : parent::PoisonDead();
   }
 }

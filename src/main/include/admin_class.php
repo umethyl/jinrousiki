@@ -1,6 +1,6 @@
 <?php
 //-- 管理用クラス --//
-class JinroAdmin {
+class JinrouAdmin {
   //村削除
   static function DeleteRoom() {
     if (! ServerConfig::DEBUG_MODE) {
@@ -56,18 +56,18 @@ class JinroAdmin {
 
   //ログ生成
   static function GenerateLog() {
-    $format = sprintf('../log_test/%s', RQ::$get->prefix) . '%d%s.html';
+    $format = sprintf('../log_test/%s', RQ::Get()->prefix) . '%d%s.html';
     $footer = HTML::FOOTER . "\n";
-    for ($i = RQ::$get->min_room_no; $i <= RQ::$get->max_room_no; $i++) {
-      RQ::$get->room_no = $i;
+    for ($i = RQ::Get()->min_room_no; $i <= RQ::Get()->max_room_no; $i++) {
+      RQ::Set('room_no', $i);
       foreach (array(false, true) as $flag) {
-	RQ::$get->reverse_log = $flag;
+	RQ::Set('reverse_log', $flag);
 
-	DB::$ROOM = new Room(RQ::$get);
+	DB::$ROOM = new Room(RQ::Get());
 	DB::$ROOM->log_mode  = true;
 	DB::$ROOM->last_date = DB::$ROOM->date;
 
-	DB::$USER = new UserDataSet(RQ::$get);
+	DB::$USER = new UserData(RQ::Get());
 	DB::$SELF = new User();
 
 	$file = sprintf($format, $i, $flag ? 'r' : '');
@@ -76,12 +76,13 @@ class JinroAdmin {
     }
 
     $format = '%d 番地から %d 番地までを HTML 化しました';
-    HTML::OutputResult('ログ生成', sprintf($format, RQ::$get->min_room_no, RQ::$get->max_room_no));
+    $str = sprintf($format, RQ::Get()->min_room_no, RQ::Get()->max_room_no);
+    HTML::OutputResult('ログ生成', $str);
   }
 
   //ログ削除
   static function DeleteLog($from, $to) {
-    DB::Connect(RQ::$get->db_no);
+    DB::Connect(RQ::Get()->db_no);
     HTML::OutputHeader('DB削除モード', null, true);
     for ($i = $from; $i <= $to; $i++) {
       DB::DeleteRoom($i);

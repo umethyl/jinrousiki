@@ -10,7 +10,7 @@ class Option_liar extends CheckRoomOptionItem {
 
   function Cast(array &$list, &$rand) {
     foreach (array_keys($list) as $id) {
-      if (mt_rand(0, 9) < 6) $list[$id] .= ' ' . $this->name;
+      if (Lottery::Percent(70)) $list[$id] .= ' ' . $this->name;
     }
     return array($this->name);
   }

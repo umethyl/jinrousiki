@@ -11,7 +11,7 @@ class Role_rival extends Role {
     $target = $this->GetActor()->partner_list;
     $stack  = array();
     foreach (DB::$USER->rows as $user) {
-      if ($this->IsActor($user->uname)) continue;
+      if ($this->IsActor($user)) continue;
       if ($user->IsPartner($this->role, $target)) $stack[] = $user->handle_name; //憑依は追跡しない
     }
     RoleHTML::OutputPartner($stack, 'partner_header', 'rival_footer');
@@ -25,8 +25,7 @@ class Role_rival extends Role {
     }
     $stack = $this->GetActor()->partner_list;
     foreach (DB::$USER->rows as $user) {
-      if (! $this->IsActor($user->uname) && $user->IsPartner($this->role, $stack) &&
-	  $user->IsLive()) {
+      if (! $this->IsActor($user) && $user->IsPartner($this->role, $stack) && $user->IsLive()) {
 	$flag = false;
 	return;
       }

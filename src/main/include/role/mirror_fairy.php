@@ -10,13 +10,14 @@ class Role_mirror_fairy extends Role_fairy {
   public $action = 'CUPID_DO';
   public $submit = 'fairy_do';
   public $event_day = 'vote_duel';
-  public $ignore_message = '初日以外は投票できません';
 
-  function IsVote() { return DB::$ROOM->date == 1; }
+  function IsVote() { return DB::$ROOM->IsDate(1); }
 
-  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
+  function GetIgnoreMessage() { return '初日以外は投票できません'; }
 
   function IsVoteCheckbox(User $user, $live) { return $live && ! $user->IsDummyBoy(); }
+
+  function GetVoteCheckboxHeader() { return '<input type="checkbox" name="target_no[]"'; }
 
   function VoteNight() {
     $stack = $this->GetVoteNightTarget();
@@ -43,7 +44,7 @@ class Role_mirror_fairy extends Role_fairy {
     DB::$ROOM->SystemMessage($this->GetID(), 'VOTE_DUEL', 1);
   }
 
-  function SetEvent($USERS) {
+  function SetEvent(UserData $USERS) {
     $stack = array(); //決選投票対象者の ID リスト
     foreach ($this->GetActor()->GetPartner($this->role, true) as $key => $value) { //生存確認
       if ($USERS->IsVirtualLive($key))   $stack[] = $key;

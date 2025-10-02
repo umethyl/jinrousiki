@@ -12,6 +12,6 @@ class Role_cursed_yaksa extends Role_yaksa {
   protected function IgnoreWin($winner) { return false; }
 
   protected function IgnoreAssassin(User $user) {
-    return ! ($user->IsRoleGroup('mage', 'wizard') || $user->IsRole('voodoo_killer'));
+    return ! ($user->IsMainGroup('mage', 'wizard') || $user->IsRole('voodoo_killer'));
   }
 }

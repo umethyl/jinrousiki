@@ -4,10 +4,14 @@ class DatabaseConfig {
   //データベースサーバのホスト名 hostname:port
   //ポート番号を省略するとデフォルトポートがセットされます。(MySQL:3306)
   const HOST     = 'localhost';
-  const NAME     = 'jinrou';	//データベース名
-  const USER     = 'xxxx';	//ユーザ名
-  const PASSWORD = 'xxxxxxxx';	//パスワード
+  #const NAME     = 'jinrou';	//データベース名
+  const NAME     = 'jinrou_aya';
+  #const USER     = 'xxxx';	//ユーザ名
+  const USER     = 'grayran';
+  #const PASSWORD = 'xxxxxxxx';	//パスワード
+  const PASSWORD = 'satorituri';
   const ENCODE   = 'utf8';	//文字コード
+  const DISABLE  = false;	// true にすると DB 接続をしません
 
   //サブデータベースのリスト (サーバによってはサブのデータベースを作れないので注意)
   /*

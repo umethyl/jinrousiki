@@ -6,14 +6,14 @@
   text-align: right;
 }
 td.icon-details {
-  padding: 4px;
+  padding: 2px;
 }
 td.icon-details .icon_wrapper {
   display: block;
-  float: left;
+  text-align: left;
 }
 td.icon-details ul {
+  margin: 4px;
   padding: 0;
-  float: left;
   list-style: none;
 }

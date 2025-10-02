@@ -8,7 +8,7 @@ class Icon {
 
   //パス取得
   static function GetPath() {
-    if (is_null(self::$path)) self::$path = sprintf('%s/%s/', JINRO_ROOT, IconConfig::PATH);
+    if (is_null(self::$path)) self::$path = JINRO_ROOT . '/' . IconConfig::PATH . '/';
     return self::$path;
   }
 
@@ -17,13 +17,13 @@ class Icon {
 
   //死亡アイコン取得
   static function GetDead() {
-    if (is_null(self::$dead)) self::$dead = sprintf('%s/%s', JINRO_IMG, IconConfig::$dead);
+    if (is_null(self::$dead)) self::$dead = JINRO_IMG . '/' . IconConfig::$dead;
     return self::$dead;
   }
 
   //人狼アイコン取得
   static function GetWolf() {
-    if (is_null(self::$wolf)) self::$wolf = sprintf('%s/%s', JINRO_IMG, IconConfig::$wolf);
+    if (is_null(self::$wolf)) self::$wolf = JINRO_IMG . '/' . IconConfig::$wolf;
     return self::$wolf;
   }
 

@@ -11,7 +11,7 @@ class Role_grassy extends Role {
     $count  = mb_strlen($say);
     for ($i = 0; $i < $count; $i++) {
       $str = mb_substr($say, $i, 1);
-      $result .= ($str == "\n" ? $str : $str . 'w '); //改行判定
+      $result .= ($str == Text::LF ? $str : $str . 'w '); //改行判定
     }
     $this->SetStack($result, 'say');
   }

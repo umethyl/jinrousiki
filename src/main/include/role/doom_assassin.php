@@ -6,7 +6,7 @@
 */
 RoleManager::LoadFile('assassin');
 class Role_doom_assassin extends Role_assassin {
-  function Assassin(User $user) {
-    if ($user->IsLive(true)) $user->AddDoom(2, 'death_warrant');
-  }
+  protected function SetAssassinTarget(User $user) { return; }
+
+  protected function AssassinAction(User $user) { $user->AddDoom(2, 'death_warrant'); }
 }

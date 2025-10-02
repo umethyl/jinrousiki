@@ -15,7 +15,7 @@ class Role_critical_fox extends Role_child_fox {
   protected function OutputPartner() {
     $stack = array();
     foreach (DB::$USER->rows as $user) {
-      if ($this->IsActor($user->uname) || $user->IsFox(true)) continue;
+      if ($this->IsActor($user) || $user->IsFox(true)) continue;
       if ($user->IsChildFox() || $user->IsRoleGroup('scarlet')) $stack[] = $user->handle_name;
     }
     RoleHTML::OutputPartner($stack, 'child_fox_partner');

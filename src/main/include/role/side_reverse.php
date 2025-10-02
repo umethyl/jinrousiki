@@ -12,7 +12,7 @@ class Role_side_reverse extends Role {
     $count  = mb_strlen($say);
     for ($i = 0; $i < $count; $i++) {
       $str = mb_substr($say, $i, 1);
-      if ($str == "\n") {
+      if ($str == Text::LF) {
 	if (count($line) > 0) $result .= implode('', array_reverse($line));
 	$result .= $str;
 	$line = array();

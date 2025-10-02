@@ -12,7 +12,7 @@ class Role_quiz extends Role {
   }
 
   function SetVoteDay($uname) {
-    if ($this->IsRealActor()) $this->AddStack($uname);
+    if ($this->IsRealActor()) $this->AddStackName($uname);
   }
 
   function DecideVoteKill() { $this->DecideVoteKillSame(); }

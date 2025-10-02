@@ -19,6 +19,6 @@ class Role_mind_receiver extends Role {
 
   function IsMindReadActive(User $user) {
     return $this->GetTalkFlag('mind_read') &&
-      $this->GetActor()->IsPartner($this->role, $user->user_no);
+      $this->GetActor()->IsPartner($this->role, $user->id);
   }
 }

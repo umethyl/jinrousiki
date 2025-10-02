@@ -9,7 +9,7 @@
 RoleManager::LoadFile('angel');
 class Role_sacrifice_angel extends Role_angel {
   protected function AddCupidRole(User $user, $flag) {
-    if (! $this->IsActor($user->uname)) $user->AddRole($this->GetActor()->GetID('protected'));
+    if (! $this->IsActor($user)) $user->AddRole($this->GetActor()->GetID('protected'));
   }
 
   protected function IsSympathy(User $a, User $b) { return true; }

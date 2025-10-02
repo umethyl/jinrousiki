@@ -11,6 +11,7 @@ class VoteMessage {
   //night
   static public $CAUTION           = '* 投票先の変更はできません。慎重に！';	//注意事項
   static public $WOLF_EAT          = '対象を喰い殺す (先着)';	//人狼
+  static public $SILENT_WOLF_EAT   = '音を立てない (回数限定)';	//響狼(ステルス)
   static public $MAGE_DO           = '対象を占う';		//占い師
   static public $VOODOO_KILLER_DO  = '対象の呪いを祓う';	//陰陽師
   static public $GUARD_DO          = '対象を護衛する';		//狩人
@@ -30,6 +31,8 @@ class VoteMessage {
   static public $TRAP_NOT_DO       = '罠を設置しない';		//罠師(キャンセル)
   static public $POSSESSED_DO      = '対象に憑依する';		//犬神
   static public $POSSESSED_NOT_DO  = '誰にも憑依しない';	//犬神(キャンセル)
+  static public $STEP_DO           = '対象の周辺を徘徊する';	//家鳴
+  static public $STEP_NOT_DO       = 'どこにも徘徊しない';	//家鳴(キャンセル)
   static public $CUPID_DO          = '対象に愛の矢を放つ';	//キューピッド
   static public $VAMPIRE_DO        = '対象を吸血する';		//吸血鬼
   static public $FAIRY_DO          = '対象に悪戯する';		//妖精

@@ -4,7 +4,7 @@
   ○仕様
   ・役職表示：覚醒者
   ・コピー：特殊
-  ・変化：基本・劣化種
+  ・変化：劣化種
 */
 RoleManager::LoadFile('soul_mania');
 class Role_dummy_mania extends Role_soul_mania {
@@ -40,7 +40,7 @@ class Role_dummy_mania extends Role_soul_mania {
     'fairy'		=> 'mirror_fairy',
     'ogre'		=> 'incubus_ogre',
     'yaksa'		=> 'succubus_yaksa',
-    'duelist'		=> 'cowboy_duelist',
+    'duelist'		=> 'sea_duelist',
     'avenger'		=> 'cute_avenger',
     'patron'		=> 'critical_patron');
 }

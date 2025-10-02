@@ -13,10 +13,8 @@ class Option_cupid extends CheckRoomOptionItem {
   }
 
   function SetRole(array &$list, $count) {
-    if ($count >= CastConfig::${$this->name} && ! DB::$ROOM->IsOption('full_' . $this->name) &&
-	$list['human'] > 0) {
-      $list['human']--;
-      $list[$this->name]++;
+    if ($count >= CastConfig::${$this->name} && ! DB::$ROOM->IsOption('full_' . $this->name)) {
+      OptionManager::Replace($list, 'human', $this->name);
     }
   }
 }

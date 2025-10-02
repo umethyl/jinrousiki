@@ -22,7 +22,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 <li><a href="sub_role.php#lovers">恋人</a>は<a href="lovers.php">恋人陣営</a>と判定します (例：恋人の人狼は人狼陣営とはカウントしない)。</li>
 <li>2 日目以降の夜に村人一人を攫う (<a href="human.php#assassin_spec">暗殺</a>の一種) ことができます。</li>
 <li><a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) 以外の人狼に襲撃されても一定確率で無効化します (襲撃は失敗扱い)。</li>
-<li><a href="human.php#assassin_spec">暗殺</a>を一定確率で反射します。</li>
+<li><a href="human.php#assassin_spec">暗殺</a>を一定確率で反射します (<a href="ability.php#anti_assassin">暗殺耐性能力者</a>)。</li>
 <li>生存カウントは村人です。</li>
 <li><a href="human.php#psycho_mage">精神鑑定士</a>・<a href="human.php#sex_mage">ひよこ鑑定士</a>の判定は「鬼」です。</li>
 </ol>
@@ -31,7 +31,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 <ol>
 <li>暗殺カテゴリに属し、<a href="human.php#assassin_spec">暗殺の仕様</a>が適用されます。</li>
 <li>「人攫いする / しない」を必ず投票する必要があります。</li>
-<li>攫われた人の死亡メッセージは人狼の襲撃と同じで、死因は「鬼に攫われた」です。</li>
+<li>攫われた人の死亡メッセージは人狼の襲撃と同じで、<a href="../spec.php#dead">死因</a>は「鬼に攫われた」です。</li>
 <li>人攫いの種類にかかわらず、<a href="ability.php#trap">罠</a>は有効です。</li>
 <li>人攫いが成立するたびに成功率が低下 (下限は 1%) します (例：100% → 20% → 4% → 1%)。</li>
 <li><a href="#yaksa_group">夜叉系</a>は人攫いが成立する対象が個々で限定されています。</li>
@@ -43,15 +43,17 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 <a href="#ogre">鬼</a>
 <a href="#orange_ogre">前鬼</a>
 <a href="#indigo_ogre">後鬼</a>
+<a href="#cow_ogre">牛頭鬼</a>
+<a href="#horse_ogre">馬頭鬼</a>
 <a href="#poison_ogre">榊鬼</a>
 <a href="#west_ogre">金鬼</a>
 <a href="#east_ogre">風鬼</a>
 <a href="#north_ogre">水鬼</a>
 <a href="#south_ogre">隠行鬼</a>
-<a href="#incubus_ogre">般若</a>
-<a href="#wise_ogre">夜行鬼</a>
 </p>
 <p>
+<a href="#incubus_ogre">般若</a>
+<a href="#wise_ogre">夜行鬼</a>
 <a href="#power_ogre">星熊童子</a>
 <a href="#revive_ogre">茨木童子</a>
 <a href="#sacrifice_ogre">酒呑童子</a>
@@ -66,7 +68,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#orange_ogre">前鬼</a>・<a href="#wise_ogre">夜行鬼</a>・<a href="#yaksa">夜叉</a>
+<a href="ability.php#ogre_anti_wolf">鬼陣営/対人狼陣営型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -84,7 +86,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#ogre">鬼</a>・<a href="#wise_ogre">夜行鬼</a>・<a href="#yaksa">夜叉</a>
+<a href="wolf.php#emperor_wolf">帝狼</a>・<a href="#ogre">鬼</a>・<a href="ability.php#ogre_anti_wolf">鬼陣営/対人狼陣営型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -102,12 +104,45 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="fox.php#critical_fox">寿羊狐</a>・<a href="#wise_ogre">夜行鬼</a>・<a href="#hariti_yaksa">鬼子母神</a>
+<a href="fox.php#critical_fox">寿羊狐</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="#orange_ogre">前鬼</a>の対妖狐バージョンです。
 勝利条件が競合する陣営が少ないので比較的動きやすいと思います。
+</pre>
+
+<h3 id="cow_ogre">牛頭鬼 (占い結果：鬼 / 霊能結果：鬼) [Ver. 2.2.0 α5～]</h3>
+<h4>[耐性] 人狼襲撃：無効 (30%) / 暗殺：反射 (45%)</h4>
+<h4>[人攫い能力] タイプ：暗殺 / 成功率低下：1/5</h4>
+<pre>
+鬼系の一種で、勝利条件は「自分自身の生存 + <a href="human.php#assassin_group">暗殺者系</a>の全滅 + 村人陣営の勝利」。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="human.php#divine_escaper">麒麟</a>・<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#horse_ogre">馬頭鬼</a>とセットで語られることが多い地獄の獄卒です。
+全滅対象の関係で対暗殺性能が高めに設定されています。
+</pre>
+
+<h3 id="horse_ogre">馬頭鬼 (占い結果：鬼 / 霊能結果：鬼) [Ver. 2.2.0 α5～]</h3>
+<h4>[耐性] 人狼襲撃：無効 (30%) / 暗殺：反射 (30%) / 毒：対象外</h4>
+<h4>[人攫い能力] タイプ：暗殺 / 成功率低下：1/5</h4>
+<pre>
+鬼系の一種で、勝利条件は「自分自身の生存 + <a href="ability.php#poison">毒能力者</a>の全滅 + 村人陣営の勝利」。
+毒耐性を持つ。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#resist_poison">毒耐性能力者</a>・<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#cow_ogre">牛頭鬼</a>とセットで語られることが多い地獄の獄卒です。
+全滅対象の関係で毒耐性を獲得しています。
 </pre>
 
 <h3 id="poison_ogre">榊鬼 (占い結果：鬼 / 霊能結果：鬼) [Ver. 1.4.0 β19～]</h3>
@@ -140,7 +175,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#east_ogre">風鬼</a>・<a href="#north_ogre">水鬼</a>・<a href="#south_ogre">隠行鬼</a>・<a href="#betray_yaksa">夜叉丸</a>
+<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -158,7 +193,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#west_ogre">金鬼</a>・<a href="#north_ogre">水鬼</a>・<a href="#south_ogre">隠行鬼</a>・<a href="#betray_yaksa">夜叉丸</a>
+<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -175,7 +210,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#west_ogre">金鬼</a>・<a href="#east_ogre">風鬼</a>・<a href="#south_ogre">隠行鬼</a>・<a href="#betray_yaksa">夜叉丸</a>
+<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -192,13 +227,13 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#west_ogre">金鬼</a>・<a href="#east_ogre">風鬼</a>・<a href="#north_ogre">水鬼</a>・<a href="#betray_yaksa">夜叉丸</a>
+<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>・<a href="ability.php#ogre_direction">鬼陣営/四方型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
 <a href="#west_ogre">金鬼</a>の対下側バージョンです。
 隠行鬼は火鬼と言われることもあり、火気を南と見立てています。
-四鬼系は互いの位置によって敵にも味方にもなるのが厄介なところですね。
+四鬼は互いの位置によって敵にも味方にもなるのが厄介なところですね。
 </pre>
 
 <h3 id="incubus_ogre">般若 (占い結果：鬼 / 霊能結果：鬼) [Ver. 1.4.0 β19～]</h3>
@@ -210,7 +245,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#succubus_yaksa">荼枳尼天</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#sex">性別関連能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#sex">性別関連能力者</a>・<a href="ability.php#ogre_sex">鬼陣営/対性別型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -227,7 +262,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="fox.php#critical_fox">寿羊狐</a>・<a href="#ogre">鬼</a>・<a href="#orange_ogre">前鬼</a>・<a href="#indigo_ogre">後鬼</a>・<a href="#yaksa">夜叉</a>・<a href="#hariti_yaksa">鬼子母神</a>
+<a href="wolf.php#wise_wolf">賢狼</a>・<a href="fox.php#critical_fox">寿羊狐</a>・<a href="#ogre">鬼</a>・<a href="ability.php#ogre_anti_wolf">鬼陣営/対人狼陣営型</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -300,7 +335,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#hariti_yaksa">鬼子母神</a>・<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#sacrifice">身代わり能力者</a>
+<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#sacrifice">身代わり能力者</a>・<a href="ability.php#ogre_anti_human">鬼陣営/非村人陣営勝利型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -330,7 +365,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#ogre">鬼</a>・<a href="#orange_ogre">前鬼</a>・<a href="#wise_ogre">夜行鬼</a>
+<a href="#ogre">鬼</a>・<a href="ability.php#ogre_anti_wolf">鬼陣営/対人狼陣営型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -348,7 +383,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#west_ogre">金鬼</a>・<a href="#east_ogre">風鬼</a>・<a href="#north_ogre">水鬼</a>・<a href="#south_ogre">隠行鬼</a>
+<a href="ability.php#ogre_human">鬼陣営/村人陣営勝利型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -383,7 +418,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#incubus_ogre">般若</a>・<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#sex">性別関連能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#sex">性別関連能力者</a>・<a href="ability.php#ogre_sex">鬼陣営/対性別型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -403,7 +438,7 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#indigo_ogre">後鬼</a>・<a href="#wise_ogre">夜行鬼</a>・<a href="#sacrifice_ogre">酒呑童子</a>
+<a href="ability.php#ogre_anti_human">鬼陣営/非村人陣営勝利型</a>・<a href="ability.php#ogre_anti_fox">鬼陣営/対妖狐陣営型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -420,6 +455,10 @@ InfoHTML::OutputRoleHeader('鬼陣営');
 「自分自身の生存 + <a href="ability.php#revive">蘇生能力者</a>の全滅 + 村人陣営以外の勝利」。
 人攫いの対象が<a href="ability.php#revive">蘇生能力者</a>以外だった場合は無条件で失敗する。
 <a href="ability.php#revive">蘇生</a>に失敗した人が分かる (<a href="human.php#attempt_necromancer">蟲姫</a>と同じ)。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="human.php#attempt_necromancer">蟲姫</a>・<a href="ability.php#ogre_anti_human">鬼陣営/非村人陣営勝利型</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

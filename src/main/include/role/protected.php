@@ -18,7 +18,7 @@ class Role_protected extends Role {
   function IgnoreSacrifice() { return DB::$ROOM->IsEvent('no_sacrifice'); }
 
   //身代わり処理
-  function Sacrifice($stack) {
+  function Sacrifice(array $stack) {
     //Text::p($stack, sprintf('Sacrifice [%s]', $this->role));
     if (count($stack) < 1) return false;
     DB::$USER->Kill(Lottery::Get($stack), 'SACRIFICE');
@@ -31,7 +31,7 @@ class Role_protected extends Role {
     $stack = array();
     $class = $this->GetClass($method = 'IsSacrifice');
     foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive(true) && $class->$method($user)) $stack[] = $user->user_no;
+      if ($user->IsLive(true) && $class->$method($user)) $stack[] = $user->id;
     }
     return $this->Sacrifice($stack);
   }

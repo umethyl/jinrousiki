@@ -10,12 +10,8 @@ class Option_detective extends CheckRoomOptionItem {
   function GetExplain() { return '「探偵」が登場し、初日の夜に全員に公表されます'; }
 
   function SetRole(array &$list, $count) {
-    foreach (array('common', 'human') as $role) {
-      if (isset($list[$role]) && $list[$role] > 0) {
-	$list[$role]--;
-	$list['detective_common']++;
-	break;
-      }
+    foreach (array('mania', 'common', 'human') as $role) {
+      if (OptionManager::Replace($list, $role, 'detective_common')) break;
     }
   }
 }

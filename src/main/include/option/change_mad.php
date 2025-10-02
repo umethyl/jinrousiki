@@ -7,4 +7,6 @@
 OptionManager::Load('replace_human');
 class Option_change_mad extends Option_replace_human {
   function GetCaption() { return '狂人置換村'; }
+
+  function GetExplain() { return '「狂人」が全員特定の役職に入れ替わります'; }
 }

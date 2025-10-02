@@ -14,8 +14,8 @@ class Role_east_ogre extends Role_ogre {
     if ($winner != 'human' || $this->IsDead()) return false;
     $id = $this->GetID();
     foreach (DB::$USER->rows as $user) {
-      if ($user->user_no > ceil($id / 5) * 5) return true;
-      if ($user->user_no > $id && $user->IsLive()) return false;
+      if ($user->id > ceil($id / 5) * 5) return true;
+      if ($user->id > $id && $user->IsLive()) return false;
     }
     return true;
   }

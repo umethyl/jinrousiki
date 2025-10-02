@@ -6,5 +6,4 @@
 */
 RoleManager::LoadFile('passion');
 class Role_actor extends Role_passion {
-  protected function GetConvertSayList() { return GameConfig::$actor_replace_list; }
 }

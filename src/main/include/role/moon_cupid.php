@@ -10,6 +10,6 @@ class Role_moon_cupid extends Role_cupid {
 
   protected function AddCupidRole(User $user, $flag) {
     $user->AddRole('challenge_lovers');
-    if (! $this->IsActor($user->uname)) $this->GetActor()->AddRole($user->GetID('mind_receiver'));
+    if (! $this->IsActor($user)) $this->GetActor()->AddRole($user->GetID('mind_receiver'));
   }
 }

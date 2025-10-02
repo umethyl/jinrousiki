@@ -15,7 +15,7 @@ class Role_priest extends Role {
 
   //司祭結果表示役職取得
   protected function GetOutputRole() {
-    return DB::$ROOM->date > 3 && (DB::$ROOM->date % 2) == 0 ? $this->role : null;
+    return DB::$ROOM->date > 3 && DB::$ROOM->date % 2 == 0 ? $this->role : null;
   }
 
   //イベント名取得
@@ -33,14 +33,14 @@ class Role_priest extends Role {
 
   //司祭能力発動判定
   protected function GetPriestRole(array $list) {
-    return DB::$ROOM->date > 2 && (DB::$ROOM->date % 2) == 1 ? $this->role : null;
+    return DB::$ROOM->date > 2 && DB::$ROOM->date % 2 == 1 ? $this->role : null;
   }
 
   //司祭能力対象取得
   function GetPriestType() { return $this->priest_type; }
 
   //情報収集
-  function AggregatePriest(StdClass $role_flag) {
+  final function AggregatePriest(StdClass $role_flag) {
     $flag = false;
     $data = new StdClass();
     $data->list  = array();
@@ -88,7 +88,8 @@ class Role_priest extends Role {
 	$data->count['sub_role'] += count($dummy_user->role_list) - 1;
       }
 
-      if (in_array('dummy_priest', $data->list) && $user->IsRoleGroup('dummy', 'fairy')) {
+      if (in_array('dummy_priest', $data->list) &&
+	  ($user->IsRoleGroup('dummy') || $user->IsMainGroup('fairy'))) {
 	$data->count['dream']++;
       }
     }

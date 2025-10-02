@@ -6,8 +6,7 @@
 */
 RoleManager::LoadFile('vampire');
 class Role_passion_vampire extends Role_vampire {
-  function Infect(User $user) {
-    parent::Infect($user);
-    if (mt_rand(0, 1) > 0) $user->AddRole('passion');
+  protected function InfectAction(User $user) {
+    if (Lottery::Bool()) $user->AddRole('passion');
   }
 }

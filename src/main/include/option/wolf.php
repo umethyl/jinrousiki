@@ -10,9 +10,8 @@ class Option_wolf extends CheckRoomOptionItem {
   function GetExplain() { return '人狼をもう一人追加します [村人1→人狼1]'; }
 
   function SetRole(array &$list, $count) {
-    if ($count >= CastConfig::${$this->name} && $list['human'] > 0) {
-      $list['human']--;
-      $list[$this->name]++;
+    if ($count >= CastConfig::${$this->name}) {
+      OptionManager::Replace($list, 'human', $this->name);
     }
   }
 }

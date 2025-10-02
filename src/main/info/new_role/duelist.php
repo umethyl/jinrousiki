@@ -41,21 +41,22 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 <a href="#duelist">決闘者</a>
 <a href="#valkyrja_duelist">戦乙女</a>
 <a href="#critical_duelist">剣闘士</a>
+<a href="#cowboy_duelist">無鉄砲者</a>
 <a href="#triangle_duelist">舞首</a>
 <a href="#doom_duelist">黒幕</a>
-<a href="#cowboy_duelist">無鉄砲者</a>
+<a href="#sea_duelist">海御前</a>
 </p>
 
 <h2 id="duelist_rule">基本ルール [決闘者系]</h2>
 <ol>
 <li>初日の夜に「<a href="sub_role.php#rival">宿敵</a>」を二人作ります (人数は例外あり)。</li>
 <li>勝利条件は「自分の作った宿敵が一人だけ生存すること」で、自身の生死は不問です。</li>
-<li>自分以外を宿敵の対象に選ぶことができる (<a href="../rule.php#system_vote">他人撃ち</a>) 人数の制限は<a href="lovers.php">恋人陣営</a>と同じで、<br>
-  明記されていなければ自分撃ち固定制限はありません。
+<li>自分以外を宿敵の対象に選ぶことができる (<a href="../rule.php#system_vote">他人撃ち</a>) 人数の制限は<a href="lovers.php">恋人陣営</a>と同じです。
 </li>
 </ol>
 
 <h3 id="duelist">決闘者 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β1～]</h3>
+<h4>[宿敵作成能力] 自分撃ち固定：有り</h4>
 <pre>
 決闘者陣営の<a href="mania.php#basic_mania">基本種</a>。
 自分撃ち固定で、<a href="sub_role.php#rival">宿敵</a>の相手に自分を対象にした<a href="sub_role.php#mind_receiver">受信者</a>が付く。
@@ -71,8 +72,9 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 </pre>
 
 <h3 id="valkyrja_duelist">戦乙女 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β1～]</h3>
+<h4>[宿敵作成能力] 自分撃ち固定：無し</h4>
 <pre>
-自分撃ち固定制限がない、決闘者系の標準種。
+決闘者系の標準種。
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -81,6 +83,7 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 </pre>
 
 <h3 id="critical_duelist">剣闘士 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β4～]</h3>
+<h4>[宿敵作成能力] 自分撃ち固定：有り</h4>
 <pre>
 自分撃ち固定で、<a href="sub_role.php#critical_voter">会心</a>相当 (<a href="../weather.php#weather_critical">烈日</a>は無効) の能力を持つ上位決闘者。
 </pre>
@@ -94,7 +97,40 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 <a href="sub_role.php#rival">宿敵</a>が共有者であっても運次第で吊ることが可能となります。
 </pre>
 
+<h3 id="cowboy_duelist">無鉄砲者 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β6～]</h3>
+<h4>[宿敵作成能力] 自分撃ち固定：有り</h4>
+<pre>
+自分撃ち固定で、<a href="sub_role.php#reduce_voter">無精者</a>相当の能力を持つ特殊な決闘者。
+自分と<a href="sub_role.php#rival">宿敵</a>との処刑投票次第で得票数変化やショック死が発生する。
+</pre>
+<ol>
+<li>自分が宿敵に、宿敵が自分以外に投票したら自分の得票数 +5。</li>
+<li>自分が宿敵以外に、宿敵が自分に投票したら自分がショック死。</li>
+<li>自分と宿敵が相互に投票したら宿敵がショック死。</li>
+<li>自分の宿敵であれば、宿敵を作った決闘者が誰であっても有効。</li>
+<li>自分か宿敵が処刑されていたらショック死は無効。</li>
+<li>宿敵同士の無鉄砲者が相互に投票した場合は相討ち。</li>
+<li>ショック死が発生した場合の死因は「宿敵に退治された」。</li>
+<li><a href="ability.php#anti_sudden_death">ショック死抑制能力者</a>の能力は無効 (→ <a href="../spec.php#vote_day">判定</a>)。</li>
+</ol>
+<h5>Ver. 2.2.0 α6～</h5>
+<pre>
+自分と<a href="sub_role.php#rival">宿敵</a>との処刑投票次第で得票数変化やショック死が発生する。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#sudden_death">ショック死発動能力者</a>・<a href="ability.php#authority">投票数変化能力者</a>・<a href="ability.php#luck">得票数変化能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+流石兄弟鯖＠やる夫人狼のオリジナル役職「ニート」を元にアレンジしました。
+自力で<a href="sub_role.php#rival">宿敵</a>を倒すのが非常に難しいという点において劣化種ではありますが、
+村も狼も積極的に排除する理由があまり無いため、案外生き残れるかもしれません。
+→ あまり劣化種らしくなかったので再デザインして決闘者らしい能力を追加しました。
+</pre>
+
 <h3 id="triangle_duelist">舞首 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β1～]</h3>
+<h4>[宿敵作成能力] 自分撃ち固定：無し</h4>
 <pre>
 <a href="sub_role.php#rival">宿敵</a>を三人作る特殊な決闘者。
 </pre>
@@ -106,6 +142,7 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 </pre>
 
 <h3 id="doom_duelist">黒幕 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β3～]</h3>
+<h4>[宿敵作成能力] 自分撃ち固定：無し / 付加：死の宣告</h4>
 <pre>
 <a href="sub_role.php#rival">宿敵</a>に加えて、<a href="sub_role.php#death_warrant">死の宣告</a> (7日目昼) を付加する特殊な決闘者。
 </pre>
@@ -120,19 +157,25 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 一部のレアケースを除いて短期決戦が必要となるので難易度は高めです。
 </pre>
 
-<h3 id="cowboy_duelist">無鉄砲者 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β6～]</h3>
+<h3 id="sea_duelist">海御前 (占い結果：村人 / 霊能結果：村人) [Ver. 2.2.0 α6～]</h3>
+<h4>[宿敵作成能力] 自分撃ち固定：有り</h4>
 <pre>
-自分撃ち固定で、<a href="sub_role.php#reduce_voter">無精者</a>相当の能力を持つ劣化決闘者。
+自分撃ち固定で、<a href="sub_role.php#rival">宿敵</a>に投票するとショック死する劣化決闘者。
 </pre>
+<ol>
+<li>自分の宿敵であれば、宿敵を作った決闘者が誰であっても有効。</li>
+<li>自分か宿敵が処刑されていたらショック死は無効。</li>
+<li>宿敵同士の海御前が相互に投票した場合は相討ち。</li>
+<li>ショック死の死因は「宿敵に退治された」で<a href="ability.php#anti_sudden_death">ショック死抑制能力者</a>の能力は無効 (→ <a href="../spec.php#vote_day">判定</a>)。</li>
+</ol>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#authority">投票数変化能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#sudden_death">ショック死発動能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
-流石兄弟鯖＠やる夫人狼のオリジナル役職「ニート」を元にアレンジしました。
-自力で<a href="sub_role.php#rival">宿敵</a>を倒すのが非常に難しいという点において劣化種ではありますが、
-村も狼も積極的に排除する理由があまり無いため、案外生き残れるかもしれません。
+源平合戦に端を発する平家出身の海の妖怪が出展で
+源氏を「勝つことが出来ない宿敵」と見立てたデザインになっています。
 </pre>
 
 <h2 id="avenger_group">復讐者系</h2>
@@ -259,6 +302,7 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 <a href="#soul_patron">家神</a>
 <a href="#sacrifice_patron">身代わり地蔵</a>
 <a href="#shepherd_patron">羊飼い</a>
+<a href="#plumage_patron">鬼車鳥</a>
 <a href="#critical_patron">ひんな神</a>
 </p>
 
@@ -322,6 +366,23 @@ InfoHTML::OutputRoleHeader('決闘者陣営');
 <pre>
 「<a href="sub_role.php#supported">受援者</a>を複数持てる代りに人狼から狙われやすい後援者」がコンセプトです。
 お互いを認識できる点をどう活かすかがポイントです。
+</pre>
+
+<h3 id="plumage_patron">鬼車鳥 (占い結果：村人 / 霊能結果：村人) [Ver. 2.2.0 α7～]</h3>
+<h4>[耐性] 毒：対象外</h4>
+<pre>
+<a href="sub_role.php#supported">受援者</a>に<a href="sub_role.php#aspirator">吸毒者</a>を付加する特殊な後援者。
+毒耐性を持つ。
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#resist_poison">毒耐性能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#sacrifice_patron">身代わり地蔵</a>の毒耐性バージョンです。「きしゃどり」と読みます。
+ただし、<a href="sub_role.php#aspirator">吸毒者</a>のアイディアを活かすために作成したので、能力的には
+勝利の枷となっています。
 </pre>
 
 <h3 id="critical_patron">ひんな神 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 β6～]</h3>

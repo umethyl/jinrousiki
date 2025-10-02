@@ -11,8 +11,8 @@ class Role_scripter extends Role {
     if ($this->IsActive()) RoleHTML::OutputAbilityResult($this->ability, null);
   }
 
-  function FilterVoteDo(&$number) {
-    if ($this->IsActive()) $number++;
+  function FilterVoteDo(&$count) {
+    if ($this->IsActive()) $count++;
   }
 
   private function IsActive() { return DB::$ROOM->date > 4; }

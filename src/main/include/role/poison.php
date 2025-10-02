@@ -7,15 +7,20 @@
 class Role_poison extends Role {
   //毒対象者選出 (処刑)
   function GetPoisonVoteTarget(array $list) {
-    $stack = array();
+    $stack     = array();
+    $aspirator = array();
     $class = $this->GetClass($method = 'IsPoisonTarget');
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
       if ($user->IsLive(true) && ! $user->IsAvoidPoison(true) && $class->$method($user)) {
-	$stack[] = $user->user_no;
+	if ($user->IsRole('aspirator')) { //吸毒者判定
+	  $aspirator[] = $user->id;
+	} else {
+	  $stack[] = $user->id;
+	}
       }
     }
-    return $stack;
+    return count($aspirator) > 0 ? $aspirator : $stack;
   }
 
   //毒発動判定

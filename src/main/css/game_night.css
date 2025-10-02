@@ -17,3 +17,7 @@ a:active, a:hover {
 .already-vote {
   background-color: #0030A0;
 }
+.talk-cache {
+  background-color: #000099;
+  color: #CCDDFF;
+}

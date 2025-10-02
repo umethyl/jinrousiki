@@ -25,19 +25,20 @@ class GameUp {
 <a class="top-link" href="./" target="_top">TOP</a>
 </td>
 </tr></table>
-</form>%s
+</form>
+
 EOF;
 
     //送信用フォーム
-    $form_header = '<form method="POST" action="game_play.php%s" target="bottom" ';
-    $header = sprintf($form_header, RQ::$get->url);
+    $form_header = '<form method="post" action="game_play.php%s" target="bottom" ';
+    $header = sprintf($form_header, RQ::Get()->url);
     $reload = $header . 'name="reload_game"></form>'; //自動リロード用ダミー送信フォーム
 
     //霊話モードの時は発言用フレームでリロード・書き込みしたときに真ん中のフレームもリロードする
     $submit = $header . 'class="input-say" name="send" onSubmit="';
-    if (RQ::$get->heaven_mode) $submit .= 'reload_middle_frame();';
+    if (RQ::Get()->heaven_mode) $submit .= 'reload_middle_frame();';
     $submit .= 'set_focus();">';
-    printf($format, $reload, $submit, RQ::$get->url, "\n");
+    printf($format, $reload, $submit, RQ::Get()->url);
     HTML::OutputFooter();
   }
 }

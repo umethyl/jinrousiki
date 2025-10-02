@@ -9,10 +9,10 @@ class Role_bishop_priest extends Role_priest {
   public $priest_type = 'dead';
 
   protected function GetOutputRole() {
-    return DB::$ROOM->date > 2 && (DB::$ROOM->date % 2) == 1 ? $this->role : null;
+    return DB::$ROOM->date > 2 && DB::$ROOM->date % 2 == 1 ? $this->role : null;
   }
 
   protected function GetPriestRole(array $list) {
-    return DB::$ROOM->date > 1 && (DB::$ROOM->date % 2) == 0 ? $this->role : null;
+    return DB::$ROOM->date > 1 && DB::$ROOM->date % 2 == 0 ? $this->role : null;
   }
 }

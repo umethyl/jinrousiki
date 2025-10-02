@@ -8,6 +8,6 @@ RoleManager::LoadFile('pharmacist');
 class Role_cure_pharmacist extends Role_pharmacist {
   protected function SetDetoxFlag($uname) {
     $this->GetActor()->detox = true;
-    $this->AddStack('cured', 'pharmacist_result', $uname);
+    $this->AddStackName('cured', 'pharmacist_result', $uname);
   }
 }

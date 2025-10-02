@@ -10,7 +10,7 @@ class Role_light_fairy extends Role_fairy {
 
   function FairyAction(User $user) {
     $target = $this->GetWolfTarget();
-    if (! $target->wolf_killed || ! $target->IsSame($user->uname)) return false;
+    if (! $target->wolf_killed || ! $target->IsSame($user)) return false;
     $this->AddStack($this->GetProperty('bad_status'), 'event');
   }
 }

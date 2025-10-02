@@ -14,9 +14,7 @@ class Role_wise_ogre extends Role_ogre {
   function Win($winner) {
     if ($this->IsDead()) return false;
     foreach (DB::$USER->rows as $user) {
-      if ($user->IsLive() && $user->IsRoleGroup('common', 'wolf', 'fox') && ! $user->IsChildFox()) {
-	return false;
-      }
+      if ($user->IsLive() && $user->IsMainGroup('common', 'wolf', 'fox')) return false;
     }
     return true;
   }

@@ -5,7 +5,7 @@
   ・得票数：-2 ～ +2
 */
 class Role_random_luck extends Role {
-  function FilterVotePoll(&$number) {
-    $number += mt_rand(1, 5) - 3;
+  function FilterVotePoll(&$count) {
+    $count += Lottery::GetRange(-2, 2);
   }
 }

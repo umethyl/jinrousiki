@@ -7,11 +7,10 @@
 */
 class Role_poison_cat extends Role {
   public $mix_in = 'poison';
-  public $action     = 'POISON_CAT_DO';
-  public $not_action = 'POISON_CAT_NOT_DO';
-  public $submit     = 'revive_do';
-  public $not_submit = 'revive_not_do';
-  public $ignore_message = '初日は蘇生できません';
+  public $action      = 'POISON_CAT_DO';
+  public $not_action  = 'POISON_CAT_NOT_DO';
+  public $submit      = 'revive_do';
+  public $not_submit  = 'revive_not_do';
   public $revive_rate = 25;
   public $missfire_rate;
 
@@ -28,8 +27,9 @@ class Role_poison_cat extends Role {
 
   function IsVote() { return DB::$ROOM->date > 1 && ! DB::$ROOM->IsOpenCast(); }
 
-  function IgnoreVote() {
-    if (! is_null($str = parent::IgnoreVote())) return $str;
+  function GetIgnoreMessage() { return '初日は蘇生できません'; }
+
+  function IgnoreVoteFilter() {
     if (DB::$ROOM->IsOpenCast()) {
       return '「霊界で配役を公開しない」オプションがオフの時は投票できません';
     }
@@ -41,7 +41,7 @@ class Role_poison_cat extends Role {
   function GetVoteIconPath(User $user, $live) { return Icon::GetFile($user->icon_filename); }
 
   function IsVoteCheckbox(User $user, $live) {
-    return ! $live && ! $this->IsActor($user->uname) && ! $user->IsDummyBoy();
+    return ! $live && ! $this->IsActor($user) && ! $user->IsDummyBoy();
   }
 
   function IgnoreVoteNight(User $user, $live) {
@@ -74,8 +74,7 @@ class Role_poison_cat extends Role {
     $event  = DB::$ROOM->IsEvent('full_revive') ? 100 : (DB::$ROOM->IsEvent('no_revive') ? 0 : null);
     $class  = $this->GetClass($method = 'GetReviveRate');
     $revive = isset($event) ? $event : $class->$method(); //蘇生率
-    if ($this->IsBoostRevive()) $revive = ceil($revive * 1.3);
-    if ($revive > 100) $revive = 100;
+    if ($this->IsBoostRevive()) $revive = min(100, ceil($revive * 1.3));
 
     $missfire = isset($event) ? 0 :
       (isset($this->missfire_rate) ? $this->missfire_rate : floor($revive / 5)); //誤爆率
@@ -92,15 +91,15 @@ class Role_poison_cat extends Role {
       $stack = array();
       //現時点の身代わり君と蘇生能力者が選んだ人以外の死者と憑依者を検出
       foreach (DB::$USER->rows as $target) {
-	if ($target->IsDummyBoy() || $target->revive_flag || $user == $target ||
-	   $target->IsReviveLimited()) continue;
-	if ($target->dead_flag || ! DB::$USER->IsVirtualLive($target->user_no, true)) {
-	  $stack[] = $target->uname;
+	if ($target->IsDummyBoy() || $target->revive_flag || $user->IsSame($target) ||
+	    $target->IsReviveLimited()) continue;
+	if ($target->dead_flag || ! DB::$USER->IsVirtualLive($target->id, true)) {
+	  $stack[] = $target->id;
 	}
       }
       //Text::p($stack, 'Target/Missfire');
       //候補がいる時だけ入れ替える
-      if (count($stack) > 0) $user = DB::$USER->ByUname(Lottery::Get($stack));
+      if (count($stack) > 0) $user = DB::$USER->ByID(Lottery::Get($stack));
     }
     //$target = DB::$USER->ByID(24); //テスト用
     //Text::p($user->uname, 'ReviveUser');
@@ -130,14 +129,14 @@ class Role_poison_cat extends Role {
     if ($user->IsPossessedGroup()) { //憑依能力者対応
       if ($user->revive_flag) return true; //蘇生済みならスキップ
 
-      $virtual = DB::$USER->ByVirtual($user->user_no);
+      $virtual = $user->GetVirtual();
       if ($user->IsDead()) { //確定死者
-	if ($user != $virtual) { //憑依後に死亡していた場合はリセット処理を行う
+	if (! $user->IsSame($virtual)) { //憑依後に死亡していた場合はリセット処理を行う
 	  $user->ReturnPossessed('possessed_target');
 
 	  //憑依先が他の憑依能力者に憑依されていないのならリセット処理を行う
 	  $stack = $virtual->GetPartner('possessed');
-	  if ($user->user_no == $stack[max(array_keys($stack))]) {
+	  if ($user->id == $stack[max(array_keys($stack))]) {
 	    $virtual->ReturnPossessed('possessed');
 	  }
 	}
@@ -154,26 +153,26 @@ class Role_poison_cat extends Role {
 	$virtual->ReturnPossessed('possessed');
 
 	//憑依予定者が居たらキャンセル
-	if (array_key_exists($user->uname, $this->GetStack('possessed'))) {
+	if (array_key_exists($user->id, $this->GetStack('possessed'))) {
 	  $user->possessed_reset  = false;
 	  $user->possessed_cancel = true;
 	}
 	return true;
       }
       else { //当夜に死んだケース
-	if ($user != $virtual) { //憑依中ならリセット
+	if (! $user->IsSame($virtual)) { //憑依中ならリセット
 	  $user->ReturnPossessed('possessed_target'); //本人
 	  $virtual->ReturnPossessed('possessed'); //憑依先
 	}
 
 	//憑依予定者が居たらキャンセル
-	if (array_key_exists($user->uname, $this->GetStack('possessed'))) {
+	if (array_key_exists($user->id, $this->GetStack('possessed'))) {
 	  $user->possessed_reset  = false;
 	  $user->possessed_cancel = true;
 	}
       }
     }
-    elseif ($user != DB::$USER->ByReal($user->user_no)) { //憑依されていたらリセット
+    elseif (! $user->IsSame(DB::$USER->ByReal($user->id))) { //憑依されていたらリセット
       $user->ReturnPossessed('possessed');
     }
     $user->Revive(); //蘇生処理

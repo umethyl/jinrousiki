@@ -12,8 +12,8 @@ class Role_mind_friend extends Role {
     $target = $this->GetActor()->partner_list;
     $stack  = array();
     foreach(DB::$USER->rows as $user) {
-      if($this->IsActor($user->uname)) continue;
-      if($user->IsPartner($this->role, $target)) $stack[$user->user_no] = $user->handle_name;
+      if($this->IsActor($user)) continue;
+      if($user->IsPartner($this->role, $target)) $stack[$user->id] = $user->handle_name;
     }
     ksort($stack);
     RoleHTML::OutputPartner($stack, $this->role . '_list');

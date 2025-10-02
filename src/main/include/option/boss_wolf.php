@@ -12,9 +12,8 @@ class Option_boss_wolf extends CheckRoomOptionItem {
   }
 
   function SetRole(array &$list, $count) {
-    if ($count >= CastConfig::${$this->name} && $list['wolf'] > 0) {
-      $list['wolf']--;
-      $list[$this->name]++;
+    if ($count >= CastConfig::${$this->name}) {
+      OptionManager::Replace($list, 'wolf', $this->name);
     }
   }
 }

@@ -11,27 +11,36 @@ class Option_not_open_cast_selector extends SelectorRoomOptionItem {
     parent::__construct();
     $this->value = GameOptionConfig::$default_not_open_cast;
     if (OptionManager::$change) {
-      foreach ($this->form_list as $key => $value) {
-	if (DB::$ROOM->IsOption($value)) {
-	  $this->value = $value;
+      foreach ($this->form_list as $option) {
+	if (DB::$ROOM->IsOption($option)) {
+	  $this->value = $option;
 	  break;
 	}
       }
     }
   }
 
-  function GetCaption() { return '霊界で配役を公開しない'; }
-
   function GetItem() {
-    $stack = array(''               => OptionManager::GetClass('not_close_cast'),
-		   'not_open_cast'  => OptionManager::GetClass('not_open_cast'),
-		   'auto_open_cast' => OptionManager::GetClass('auto_open_cast'));
-    foreach ($stack as $key => $item) {
+    $stack = array('' => OptionManager::GetClass('not_close_cast'));
+    foreach ($this->form_list as $option) {
+      $item = OptionManager::GetClass($option);
+      if ($item->enable) $stack[$option] = $item;
+    }
+
+    foreach ($stack as $form_value => $item) {
       $item->value      = false;
       $item->form_name  = $this->form_name;
-      $item->form_value = $key;
+      $item->form_value = $form_value;
     }
-    if (isset($stack[$this->value])) $stack[$this->value]->value = true;
+
+    if (array_key_exists($this->value, $stack)) { //チェック位置判定
+      $stack[$this->value]->value = true;
+    } else {
+      $stack['']->value = true;
+    }
+
     return $stack;
   }
+
+  function GetCaption() { return '霊界で配役を公開しない'; }
 }

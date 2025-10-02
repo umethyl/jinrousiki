@@ -11,7 +11,7 @@ class Role_vajra_yaksa extends Role_yaksa {
   protected function IgnoreWin($winner) { return $winner == 'human'; }
 
   protected function IgnoreAssassin(User $user) {
-    return ! $user->IsRoleGroup('cat', 'revive') &&
-      ! $user->IsRole('scarlet_vampire', 'resurrect_mania');
+    return ! ($user->IsMainGroup('poison_cat') || $user->IsRoleGroup('revive') ||
+	      $user->IsRole('scarlet_vampire', 'resurrect_mania'));
   }
 }

@@ -8,7 +8,7 @@
 RoleManager::LoadFile('escaper');
 class Role_divine_escaper extends Role_escaper {
   protected function EscapeFailed(User $user) {
-    return $user->IsWolf() || $user->IsRoleGroup('assassin') || $user->IsOgre();
+    return $user->IsWolf() || $user->IsMainGroup('assassin') || $user->IsOgre();
   }
 
   protected function EscapeAction(User $user) {

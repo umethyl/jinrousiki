@@ -20,9 +20,8 @@ class Role_mimic_wizard extends Role_wizard {
   function Necromancer(User $user, $flag) {
     if (DB::$ROOM->date < 3) return;
     $failed = ! DB::$ROOM->IsEvent('full_wizard') &&
-      (DB::$ROOM->IsEvent('debilitate_wizard') || mt_rand(0, 1) > 0);
+      (DB::$ROOM->IsEvent('debilitate_wizard') || Lottery::Bool());
     $result = $flag || $failed ? 'stolen' : $user->DistinguishNecromancer();
-    $target = DB::$USER->GetHandleName($user->uname, true);
-    DB::$ROOM->ResultAbility('MIMIC_WIZARD_RESULT', $result, $target);
+    DB::$ROOM->ResultAbility('MIMIC_WIZARD_RESULT', $result, $user->GetName());
   }
 }

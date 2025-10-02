@@ -6,18 +6,18 @@
 */
 RoleManager::LoadFile('assassin');
 class Role_reverse_assassin extends Role_assassin {
-  function Assassin(User $user) {
-    RoleManager::$get->reverse_assassin[$this->GetActor()->uname] = $user->uname;
-  }
+  function Assassin(User $user) { $this->AddStack($user->id); }
 
   function AssassinKill() {
-    foreach ($this->GetStack() as $uname => $target_uname) {
-      $target = DB::$USER->ByUname($target_uname);
+    foreach ($this->GetStack() as $id => $target_id) {
+      $target = DB::$USER->ByID($target_id);
       if ($target->IsLive(true)) {
-	DB::$USER->Kill($target->user_no, 'ASSASSIN_KILLED');
+	DB::$USER->Kill($target->id, 'ASSASSIN_KILLED');
       }
       elseif (! $target->IsLovers()) {
-	RoleManager::$get->reverse[$target_uname] = ! RoleManager::$get->reverse[$target_uname];
+	$stack = RoleManager::GetStack('reverse');
+	$stack[$target_id] = isset($stack[$target_id]) ? ! $stack[$target_id] : true;
+	RoleManager::SetStack('reverse', $stack);
       }
     }
   }
@@ -25,27 +25,27 @@ class Role_reverse_assassin extends Role_assassin {
   //反魂処理
   function Resurrect() {
     $role = 'possessed';
-    foreach ($this->GetStack('reverse') as $uname => $flag) {
+    foreach ($this->GetStack('reverse') as $id => $flag) {
       if (! $flag) continue;
-      $user = DB::$USER->ByUname($uname);
+      $user = DB::$USER->ByID($id);
       if ($user->IsPossessedGroup()) { //憑依能力者対応
 	if ($user->revive_flag) continue; //蘇生済みならスキップ
 
-	$virtual = DB::$USER->ByVirtual($user->user_no);
-	if ($user != $virtual) { //憑依中ならリセット
+	$virtual = $user->GetVirtual();
+	if (! $user->IsSame($virtual)) { //憑依中ならリセット
 	  $user->ReturnPossessed('possessed_target'); //本人
 	  $virtual->ReturnPossessed($role); //憑依先
 	}
 
 	//憑依予定者が居たらキャンセル
-	if (array_key_exists($user->uname, $this->GetStack($role))) {
+	if (array_key_exists($user->id, $this->GetStack($role))) {
 	  $user->possessed_reset  = false;
 	  $user->possessed_cancel = true;
 	}
-	elseif (in_array($user->uname, $this->GetStack($role))) {
+	elseif (in_array($user->id, $this->GetStack($role))) {
 	  //憑依中の犬神に憑依しようとした憑狼を検出
-	  $stack = array_keys($this->GetStack($role), $user->uname);
-	  DB::$USER->ByUname($stack[0])->possessed_cancel = true;
+	  $stack = array_keys($this->GetStack($role), $user->id);
+	  DB::$USER->ByID($stack[0])->possessed_cancel = true;
 	}
 
 	//特殊ケースなのでベタに処理
@@ -55,7 +55,7 @@ class Role_reverse_assassin extends Role_assassin {
       }
       else {
 	//憑依されていたらリセット
-	if ($user != DB::$USER->ByReal($user->user_no)) $user->ReturnPossessed($role);
+	if (! $user->IsSame(DB::$USER->ByReal($user->id))) $user->ReturnPossessed($role);
 	$user->Revive(); //蘇生処理
       }
     }

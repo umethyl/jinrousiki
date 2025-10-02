@@ -14,12 +14,10 @@ class Role_soul_vampire extends Role_vampire {
   }
 
   protected function InfectVampire(User $user) {
-    $this->AddSuccess($user->user_no, 'vampire_kill');
+    $this->AddSuccess($user->id, 'vampire_kill');
   }
 
-  function Infect(User $user) {
-    parent::Infect($user);
-    $target = DB::$USER->GetHandleName($user->uname, true);
-    DB::$ROOM->ResultAbility($this->result, $user->main_role, $target, $this->GetID());
+  protected function InfectAction(User $user) {
+    DB::$ROOM->ResultAbility($this->result, $user->main_role, $user->GetName(), $this->GetID());
   }
 }

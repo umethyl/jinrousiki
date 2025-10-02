@@ -5,5 +5,5 @@
   ・投票数：-1
 */
 class Role_reduce_voter extends Role {
-  function FilterVoteDo(&$number) { $number--; }
+  function FilterVoteDo(&$count) { $count--; }
 }

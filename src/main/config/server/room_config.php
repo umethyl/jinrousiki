@@ -16,6 +16,8 @@ class RoomConfig {
   static $white_list_host = null; //ホスト名 (ホワイトリスト)
   static $black_list_host = null; //ホスト名 (ブラックリスト)
   //static $black_list_host = '/localhost.localdomain/'; //入力例
+  static $white_list_trip = array(); //トリップ (ホワイトリスト/入村制限限定)
+  //static $white_list_trip = array('◆1234567'); //入力例
 
   /* 村立てのみ制限 */
   //記法は村立て・入村制限と同じ

@@ -4,7 +4,7 @@
   ○仕様
   ・配役：狂人 → 囁き狂人
 */
-OptionManager::Load('replace_human');
-class Option_change_fanatic_mad extends Option_replace_human {
+OptionManager::Load('change_mad');
+class Option_change_fanatic_mad extends Option_change_mad {
   function GetCaption() { return '狂信者村'; }
 }

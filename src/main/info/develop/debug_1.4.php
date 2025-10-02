@@ -6,11 +6,11 @@ InfoHTML::OutputHeader('デバッグ情報 / ～ 1.4', 1, 'debug');
 ?>
 <p><a href="debug.php">最新情報</a></p>
 <p>
-Ver. 1.4.x</a><br>
+Ver. 1.4.x<br>
 <a href="#ver146">6</a>
 </p>
 <p>
-Ver. 1.4.0</a><br>
+Ver. 1.4.0<br>
 <a href="#ver140a24">α24</a>
 <a href="#ver140b2">β2</a>
 <a href="#ver140b3">β3</a>
@@ -28,11 +28,11 @@ Ver. 1.4.0</a><br>
 <a href="#ver140">Release</a>
 </p>
 <p>
-Ver. 1.3.x</a><br>
+Ver. 1.3.x<br>
 <a href="#ver133">3</a>
 </p>
 
-<h2><a id="ver146">Ver. 1.4.6</a></h2>
+<h2 id="ver146">Ver. 1.4.6</h2>
 <h3>include/game_vote_functions.php % 2488行目付近 (2011/02/24 (Thu) 08:24)</h3>
 
 <h4>[before]</h4>

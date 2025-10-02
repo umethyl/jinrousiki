@@ -5,5 +5,5 @@
   ・得票数：+1
 */
 class Role_disfavor extends Role {
-  function FilterVotePoll(&$number) { $number++; }
+  function FilterVotePoll(&$count) { $count++; }
 }

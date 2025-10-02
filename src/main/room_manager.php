@@ -6,15 +6,19 @@ if (! DB::ConnectInHeader()) return false;
 if (Loader::IsLoaded('index_functions')) RoomManager::Maintenance();
 
 Loader::LoadRequest('RequestRoomManager');
-if (RQ::$get->create_room) {
-  Loader::LoadFile('message', 'user_icon_class', 'twitter_class');
+if (RQ::Get()->create_room) {
+  Loader::LoadFile('message', 'user_icon_class', 'cache_class', 'twitter_class');
   RoomManager::Create();
 }
-elseif (RQ::$get->change_room) {
-  Loader::LoadFile('session_class', 'user_class');
+elseif (RQ::Get()->change_room) {
+  Loader::LoadFile('session_class', 'user_class', 'cache_class');
   RoomManager::Create();
 }
-elseif (RQ::$get->room_no > 0) {
+elseif (RQ::Get()->describe_room) {
+  Loader::LoadFile('chaos_config');
+  RoomManager::OutputDescribe();
+}
+elseif (RQ::Get()->room_no > 0) {
   Loader::LoadFile('session_class', 'user_class', 'option_form_class');
   RoomManager::OutputCreate();
 }

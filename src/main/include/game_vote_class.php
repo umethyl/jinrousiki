@@ -10,17 +10,17 @@ class GameVote {
       VoteHTML::OutputResult('サーバが混雑しています。再度投票をお願いします。');
     }
 
-    DB::$ROOM = new Room(RQ::$get, true); //村情報をロード
+    DB::$ROOM = new Room(RQ::Get(), true); //村情報をロード
     if (DB::$ROOM->IsFinished()) VoteHTML::OutputError('ゲーム終了', 'ゲームは終了しました');
     DB::$ROOM->system_time = Time::Get(); //現在時刻を取得
 
-    DB::$USER = new UserDataSet(RQ::$get, true); //ユーザ情報をロード
+    DB::$USER = new UserData(RQ::Get(), true); //ユーザ情報をロード
     DB::$SELF = DB::$USER->BySession(); //自分の情報をロード
 
     //-- メインルーチン --//
-    if (RQ::$get->vote) { //投票処理
+    if (RQ::Get()->vote) { //投票処理
       if (DB::$ROOM->IsBeforeGame()) { //ゲーム開始 or Kick 投票処理
-	switch (RQ::$get->situation) {
+	switch (RQ::Get()->situation) {
 	case 'GAMESTART':
 	  Loader::LoadFile('chaos_config', 'cast_class'); //配役情報をロード
 	  Vote::VoteGameStart();
@@ -36,13 +36,13 @@ class GameVote {
 	}
       }
       elseif (DB::$SELF->IsDead()) { //死者の霊界投票処理
-	if (DB::$SELF->IsDummyBoy() && RQ::$get->situation == 'RESET_TIME') {
+	if (DB::$SELF->IsDummyBoy() && RQ::Get()->situation == 'RESET_TIME') {
 	  Vote::VoteResetTime();
 	} else {
 	  Vote::VoteHeaven();
 	}
       }
-      elseif (RQ::$get->target_no == 0) { //空投票検出
+      elseif (RQ::Get()->target_no == 0) { //空投票検出
 	VoteHTML::OutputError('空投票', '投票先を指定してください');
       }
       elseif (DB::$ROOM->IsDay()) { //昼の処刑投票処理

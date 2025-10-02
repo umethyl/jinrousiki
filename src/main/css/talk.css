@@ -86,3 +86,8 @@ body { /* AA 用 */
   color: #FFFAFA;
   font-weight: bold;
 }
+/* キャッシュメッセージ*/
+.talk-cache {
+  padding-left: 6em;
+  font-weight: bold;
+}

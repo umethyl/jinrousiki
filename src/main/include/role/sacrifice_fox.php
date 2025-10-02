@@ -10,6 +10,6 @@ class Role_sacrifice_fox extends Role_fox {
   public $resist_wolf = false;
 
   function IsSacrifice(User $user) {
-    return $user->IsChildFox() || $user->IsRoleGroup('chiroptera');
+    return $user->IsChildFox() || $user->IsMainGroup('chiroptera');
   }
 }

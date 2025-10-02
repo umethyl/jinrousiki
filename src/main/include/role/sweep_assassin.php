@@ -6,13 +6,10 @@
 */
 RoleManager::LoadFile('assassin');
 class Role_sweep_assassin extends Role_assassin {
-  function IsFinishVote(array $list) {
+  function ExistsActionFilter(array $list) {
     unset($list[$this->not_action]);
-    return parent::IsFinishVote($list);
+    return $list;
   }
 
-  function SetVoteNight() {
-    parent::SetVoteNight();
-    $this->SetStack(null, 'not_action');
-  }
+  function SetVoteNightFilter() { $this->SetStack(null, 'not_action'); }
 }

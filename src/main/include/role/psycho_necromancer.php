@@ -12,7 +12,7 @@ class Role_psycho_necromancer extends Role_necromancer {
     if ($user->IsRoleGroup('copied'))        return $str . 'mania';
     if ($user->IsRole('changed_therian'))    return $str . 'mad';
     if ($user->IsRole('changed_vindictive')) return $str . 'child_fox';
-    if ($user->IsRoleGroup('mad'))           return $str . 'wolf';
+    if ($user->IsMainGroup('mad'))           return $str . 'wolf';
     if ($user->IsLiar())                     return $str . 'mad';
     return $str . 'human';
   }

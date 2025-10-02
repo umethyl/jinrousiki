@@ -6,8 +6,7 @@
 */
 RoleManager::LoadFile('wolf');
 class Role_decieve_wolf extends Role_wolf {
-  function WolfKill(User $user) {
-    parent::WolfKill($user);
+  protected function WolfKillAction(User $user) {
     $actor = $this->GetWolfVoter();
     $actor->SaveLastWords($user->handle_name);
     $actor->Update('last_words', null);

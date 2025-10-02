@@ -4,7 +4,7 @@
   ○仕様
   ・配役：共有者 → 隠者
 */
-OptionManager::Load('replace_human');
-class Option_change_hermit_common extends Option_replace_human {
+OptionManager::Load('change_common');
+class Option_change_hermit_common extends Option_change_common {
   function GetCaption() { return '隠者村'; }
 }

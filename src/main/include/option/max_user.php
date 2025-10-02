@@ -11,9 +11,9 @@ class Option_max_user extends SelectorRoomOptionItem {
     $this->value     = OptionManager::$change ? DB::$ROOM->max_user : RoomConfig::$default_max_user;
   }
 
+  function LoadPost() { RQ::Get()->ParsePostInt($this->name); }
+
   function GetCaption() { return '最大人数'; }
 
   function GetExplain() { return '配役は<a href="info/rule.php">ルール</a>を確認して下さい'; }
-
-  function LoadPost() { RQ::$get->Parse('intval', 'post.' . $this->name); }
 }

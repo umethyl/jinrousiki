@@ -1,6 +1,6 @@
 <?php
 //-- RSS 投稿クラス --//
-class JinroRSS {
+class JinrouRSS {
   const FILE = '/rss/rooms.rss';
 
   //出力

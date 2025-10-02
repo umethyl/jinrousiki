@@ -9,13 +9,11 @@ RoleManager::LoadFile('mind_scanner');
 class Role_presage_scanner extends Role_mind_scanner {
   public $mind_role = 'mind_presage';
 
-  function WolfEatCounter(User $target) {
-    $actor = $this->GetActor();
+  function WolfEatCounter(User $voter) {
+    $actor  = $this->GetActor();
     foreach (DB::$USER->rows as $user) {
-      if ($user->IsPartner($this->mind_role, $actor->user_no)) {
-	$result = DB::$USER->GetHandleName($target->uname, true);
-	$target = DB::$USER->GetHandleName($actor->uname, true);
-	DB::$ROOM->ResultAbility('PRESAGE_RESULT', $result, $target, $user->user_no);
+      if ($user->IsPartner($this->mind_role, $actor->id)) {
+	DB::$ROOM->ResultAbility('PRESAGE_RESULT', $voter->GetName(), $actor->GetName(), $user->id);
 	break;
       }
     }

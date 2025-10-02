@@ -45,7 +45,7 @@ class UserIcon {
 		   'category'   => 'カテゴリ',
 		   'author'     => 'アイコンの作者');
     foreach ($list as $key => $label) {
-      $value = RQ::$get->$key;
+      $value = RQ::Get()->$key;
       if (strlen($value) > UserIconConfig::LENGTH) {
 	HTML::OutputResult($title, $label . ': ' . self::GetLengthLimit() . $url);
       }

@@ -13,11 +13,10 @@ class Option_poison_wolf extends CheckRoomOptionItem {
   }
 
   function SetRole(array &$list, $count) {
-    if ($count >= CastConfig::${$this->name} && $list['wolf'] > 0 && $list['human'] > 0) {
-      $list['wolf']--;
-      $list[$this->name]++;
-      $list['human']--;
-      $list['pharmacist']++;
+    if ($count >= CastConfig::${$this->name} &&
+	isset($list['wolf']) && $list['wolf'] > 0 && isset($list['human']) && $list['human'] > 0) {
+      OptionManager::Replace($list, 'wolf', $this->name);
+      OptionManager::Replace($list, 'human', 'pharmacist');
     }
   }
 }

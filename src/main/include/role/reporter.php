@@ -7,7 +7,6 @@
 class Role_reporter extends Role {
   public $action = 'REPORTER_DO';
   public $result = 'REPORTER_SUCCESS';
-  public $ignore_message = '初日の尾行はできません';
 
   protected function OutputResult() {
     if (DB::$ROOM->date > 2) $this->OutputAbilityResult($this->result);
@@ -19,16 +18,17 @@ class Role_reporter extends Role {
 
   function IsVote() { return DB::$ROOM->date > 1; }
 
+  function GetIgnoreMessage() { return '初日の尾行はできません'; }
+
   //尾行
   function Report(User $user) {
     $target = $this->GetWolfTarget();
-    if ($user->IsSame($target->uname)) { //尾行成功
+    if ($user->IsSame($target)) { //尾行成功
       if (! $user->wolf_eat) return; //人狼襲撃が失敗していたらスキップ
-      $result = DB::$USER->GetHandleName($this->GetWolfVoter()->uname, true);
-      $name   = DB::$USER->GetHandleName($target->uname, true);
-      DB::$ROOM->ResultAbility($this->result, $result, $name, $this->GetID());
+      $result = $this->GetWolfVoter()->GetName();
+      DB::$ROOM->ResultAbility($this->result, $result, $target->GetName(), $this->GetID());
     }
-    elseif ($user->IsLiveRoleGroup('wolf', 'fox')) { //尾行対象が人狼か妖狐なら殺される
+    elseif ($user->IsLiveRoleGroup('wolf', 'fox')) { //尾行対象が人狼か妖狐なら死亡する
       DB::$USER->Kill($this->GetID(), 'REPORTER_DUTY');
     }
   }

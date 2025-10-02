@@ -12,12 +12,10 @@ class Role_tongue_wolf extends Role_wolf {
     if (DB::$ROOM->date > 1) $this->OutputAbilityResult($this->result);
   }
 
-  function WolfKill(User $user) {
-    parent::WolfKill($user);
+  protected function WolfKillAction(User $user) {
     $actor = $this->GetWolfVoter();
     if (! $actor->IsActive()) return; //能力失効判定
     if ($user->IsRole('human')) $actor->LostAbility(); //村人なら能力失効
-    $target = DB::$USER->GetHandleName($user->uname, true);
-    DB::$ROOM->ResultAbility($this->result, $user->main_role, $target, $actor->user_no);
+    DB::$ROOM->ResultAbility($this->result, $user->main_role, $user->GetName(), $actor->id);
   }
 }

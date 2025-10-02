@@ -1,6 +1,6 @@
 <?php
 //-- クッキー処理クラス --//
-class JinroCookie {
+class JinrouCookie {
   const TIME = 3600; //保持時間
   static $scene;      //夜明け
   static $objection;  //「異議あり」情報
@@ -17,11 +17,10 @@ class JinroCookie {
     setcookie('scene', DB::$ROOM->scene, $time); //シーンを登録
 
     /* 再投票 */
-    if (DB::$ROOM->vote_count > 1) { //再投票回数を登録
-      setcookie('vote_count', DB::$ROOM->vote_count, $time);
-    }
-    else { //再投票が無いなら削除
-      setcookie('vote_count', '', DB::$ROOM->system_time - self::TIME);
+    if (DB::$ROOM->vote_count > 1) {
+      setcookie('vote_count', DB::$ROOM->vote_count, $time); //再投票回数を登録
+    } else {
+      setcookie('vote_count', '', DB::$ROOM->system_time - self::TIME); //再投票が無いなら削除
     }
 
     /* 入村情報 */
@@ -46,7 +45,7 @@ class JinroCookie {
   }
 
   //データロード
-  private function Load() {
+  private static function Load() {
     self::$scene      = @$_COOKIE['scene'];
     self::$objection  = @$_COOKIE['objection'];
     self::$vote_count = @(int)$_COOKIE['vote_count'];

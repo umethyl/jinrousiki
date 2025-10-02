@@ -1,10 +1,13 @@
 @charset "utf-8";
 .room { /* 村のタイトル */
-  text-decoration:underline;
+  text-decoration: underline;
 }
-.room span {
+.room-name {
   font-size: 15pt;
   font-weight: bold;
+}
+.room-comment {
+  font-size: 12pt;
 }
 .game-option { /* ゲームオプション */
   padding: 3px;
@@ -54,6 +57,13 @@
   padding: 7px;
   background-color: #CC3300;
   color: #FFFAFA;
+  font-weight: bold;
+}
+.system-sudden-death {
+  margin-bottom: 3px;
+  padding: 7px;
+  background-color: #1010A0;
+  color: #66DDFF;
   font-weight: bold;
 }
 /* OutputGameHeader() */

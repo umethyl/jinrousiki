@@ -13,12 +13,9 @@ class Role_emerald_fox extends Role_fox {
     if ($this->GetActor()->IsActive()) RoleHTML::OutputVote('mage-do', 'mage_do', $this->action);
   }
 
-  function IsFinishVote(array $list) {
-    return ! $this->GetActor()->IsActive() || parent::IsFinishVote($list);
-  }
+  function IgnoreFinishVote() { return ! $this->GetActor()->IsActive(); }
 
-  function IgnoreVote() {
-    if (! is_null($str = parent::IgnoreVote())) return $str;
+  function IgnoreVoteFilter() {
     return $this->GetActor()->IsActive() ? null : '能力喪失しています';
   }
 

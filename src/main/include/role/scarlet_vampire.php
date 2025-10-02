@@ -10,6 +10,6 @@ class Role_scarlet_vampire extends Role_vampire {
 
   function Resurrect() {
     $user = $this->GetActor();
-    if ($this->IsResurrect($user) && mt_rand(0, 9) < 4) $user->Revive();
+    if ($this->IsResurrect($user) && Lottery::Percent(40)) $user->Revive();
   }
 }

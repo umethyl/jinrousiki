@@ -22,7 +22,19 @@ class Option_chaos_open_cast extends SelectorRoomOptionItem {
     }
   }
 
-  function GetCaption() { return '配役を通知する'; }
+  function LoadPost() {
+    RQ::Get()->ParsePostData($this->name);
+    if (is_null(RQ::Get()->{$this->name})) return false;
+
+    $post = RQ::Get()->{$this->name};
+    foreach ($this->form_list as $option => $value) {
+      if ($value == $post) {
+	RQ::Set($option, true);
+	array_push(RoomOption::${$this->group}, $option);
+	break;
+      }
+    }
+  }
 
   function GetItem() {
     $stack = array(''     => OptionManager::GetClass('chaos_open_cast_none'),
@@ -37,16 +49,7 @@ class Option_chaos_open_cast extends SelectorRoomOptionItem {
     return $stack;
   }
 
-  function LoadPost() {
-    if (! isset($_POST[$this->name])) return false;
-    $post = $_POST[$this->name];
+  function GetCaption() { return '配役を通知する'; }
 
-    foreach ($this->form_list as $option => $value) {
-      if ($value == $post) {
-	RQ::$get->$option = true;
-	array_push(RoomOption::${$this->group}, $option);
-	break;
-      }
-    }
-  }
+  protected function GetURL() { return 'chaos.php#' . $this->name; }
 }

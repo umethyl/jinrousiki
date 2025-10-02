@@ -10,10 +10,7 @@ RoleManager::LoadFile('vampire');
 class Role_doom_vampire extends Role_vampire {
   protected function InfectVampire(User $user) { return; }
 
-  function Infect(User $user) {
-    parent::Infect($user);
-    $user->AddDoom(4);
-  }
+  protected function InfectAction(User $user) { $user->AddDoom(4); }
 
   function WolfEatResist() { return true; }
 }
