@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import url(base.css);
-a{text-decoration:none;}
+a{text-decoration: none;}
 a:link{   color: #0000FF;}
 a:hover{  color: #999999; text-decoration: underline;}
 a:visited{color: #0000FF;}
@@ -42,15 +42,9 @@ ul{ /* メニューのリンク */
   line-height: 150%;
   font-size: 95%;
 }
-.log{ /* HTML化ログ */
- color: #3333CC;
- font-weight: bold;
-}
 fieldset{margin-bottom: 10px;} /* 右側の枠 */
 legend{font-weight: bold;} /* fieldset(右側の枠) のタイトル */
-.information{ /* Information (中身は info/index.html) */
-  margin: 10px 10px;
-}
+.information{margin: 10px 10px;} /* Information (中身は info/top.php) */
 .information h1 h2 h3 h4{
   margin: 0px;
   padding: 5px 0px;
@@ -71,7 +65,7 @@ legend{font-weight: bold;} /* fieldset(右側の枠) のタイトル */
   background-color: #DDDDDD;
   font-size: 100%;
 }
-.game-list{ /* ゲーム一覧 (中身は game_manager.php) */
+.game-list{ /* ゲーム一覧 (中身は room_manager.php) */
   margin: 20px 20px 30px;
   line-height: 135%;
   font-weight: bold;
@@ -84,14 +78,14 @@ label{ /* 村作成のオプション名 */
 }
 input, select{ /* 設定項目 */
   background-color: #F0F8FF;
-  border:1px solid #C0C0C0;
+  border: 1px solid #C0C0C0;
 }
-.text{border:1px solid #C0C0C0;} /* 村の名前, 説明など */
+.text{border: 1px solid #C0C0C0;} /* 村の名前, 説明など */
 .explain{font-size: 80%;} /* オプションの説明 */
 .explain input{border: 0px solid #000000;} /* 昼, 夜の時間 */
 .make{text-align: right;} /* 作成ボタン */
 .make input{border: 1px solid #000000;}
-.footer{ /* フッター (素材のリンクなど) */
+.footer{ /* フッター (バージョン情報など) */
   margin-bottom: 5px;
   text-align:right;
   font-size: 80%;

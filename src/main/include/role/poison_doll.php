@@ -1,20 +1,13 @@
 <?php
 /*
-  ◆鈴蘭人形
+  ◆鈴蘭人形 (poison_doll)
   ○仕様
-  ・毒：上海人形系以外 (人形遣いは毒対象)
+  ・毒：人形以外
 */
-class Role_poison_doll extends Role{
-  function Role_poison_doll(){ $this->__construct(); }
+RoleManager::LoadFile('doll');
+class Role_poison_doll extends Role_doll{
+  public $mix_in = 'poison';
   function __construct(){ parent::__construct(); }
 
-  function FilterPoisonTarget(&$list){
-    global $USERS;
-
-    $stack = array();
-    foreach($list as $uname){
-      if(! $USERS->ByRealUname($uname)->IsDoll()) $stack[] = $uname;
-    }
-    $list = $stack;
-  }
+  function IsPoisonTarget($user){ return ! Role_doll::IsDoll($user); }
 }

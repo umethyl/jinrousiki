@@ -1,6 +1,6 @@
 <?php
 require_once('include/init.php');
-$INIT_CONF->LoadClass('ICON_CONF', 'USER_ICON');
+$INIT_CONF->LoadFile('icon_functions');
 $INIT_CONF->LoadRequest('RequestIconEdit'); //引数を取得
 EditIcon();
 
@@ -14,6 +14,8 @@ function EditIcon(){
   }
 
   extract($RQ_ARGS->ToArray()); //引数を展開
+  $back_url = "<br>\n".'<a href="icon_view.php?icon_no=' . $icon_no . '">戻る</a>';
+
   //入力データチェック
   if(strlen($icon_name) < 1) OutputActionResult($title, 'アイコン名が空欄になっています');
   if($password != $USER_ICON->password) OutputActionResult($title, 'パスワードが違います');
@@ -28,14 +30,14 @@ function EditIcon(){
   }
 
   //アイコン名の文字列長のチェック
-  $text_list = array('icon_name' => 'アイコン名',
+  $text_list = array('icon_name'  => 'アイコン名',
 		     'appearance' => '出典',
-		     'category' => 'カテゴリ',
-		     'author' => 'アイコンの作者');
+		     'category'   => 'カテゴリ',
+		     'author'     => 'アイコンの作者');
   foreach($text_list as $text => $label){
     $value = $RQ_ARGS->$text;
     if(strlen($value) > $USER_ICON->name){
-      OutputActionResult($title, $label . ': ' . $USER_ICON->IconNameMaxLength());
+      OutputActionResult($title, $label . ': ' . $USER_ICON->MaxNameLength());
     }
     $query_stack[] = "{$text} = " . (strlen($value) > 0 ? "'{$value}'" : 'NULL');
   }
@@ -63,8 +65,8 @@ function EditIcon(){
   //OutputActionResult($title, $query); //テスト用
 
   if(! mysql_query('LOCK TABLES user_icon WRITE')){ //user_icon テーブルをロック
-    $sentence = "サーバが混雑しています。<br>\n時間を置いてから再登録をお願いします。";
-    OutputActionResult($title, $sentence);
+    $str = "サーバが混雑しています。<br>\n時間を置いてから再登録をお願いします。";
+    OutputActionResult($title, $str);
   }
   SendQuery($query, true);
   OutputActionResult($title, '編集完了', 'icon_view.php?icon_no=' . $icon_no, true);

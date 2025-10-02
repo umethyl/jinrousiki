@@ -1,20 +1,31 @@
 <?php
 class Talk{
-  function Talk(){ $this->__construct(); }
-  function __construct(){
+  public $uname;
+  public $location;
+  public $scene;
+  public $type;
+  public $sentence;
+  public $font_type;
+
+  function __construct($list = NULL){
+    if(is_array($list)){
+      foreach($list as $key => $data) $this->$key = $data;
+    }
     $this->ParseLocation();
     $this->ParseSentence();
   }
 
+  //シーン解析
   function ParseLocation($location = NULL){
     if(! is_null($location)) $this->location = $location; //初期化処理
 
-    list($scene, $type) = explode(' ', $this->location);
+    @list($scene, $type) = explode(' ', $this->location);
     $this->scene = $scene;
     $this->type  = $type;
   }
 
-  function ParseSentence($sentence = NULL){
+  //データ解析
+  protected function ParseSentence($sentence = NULL){
     global $GAME_CONF, $MESSAGE;
 
     is_null($sentence) ? $sentence = $this->sentence : $this->sentence = $sentence; //初期化処理
@@ -58,14 +69,19 @@ class Talk{
 	$this->class = 'mage-do';
 	break;
 
-      case 'CHILD_FOX_DO':
-	$action = 'mage_do';
-	$this->class = 'mage-do';
+      case 'REPORTER_DO':
+      case 'ANTI_VOODOO_DO':
+	$this->class = 'guard-do';
 	break;
 
-      case 'DREAM_EAT':
-	$action = 'wolf_eat';
-	$this->class = 'wolf-eat';
+      case 'POISON_CAT_DO':
+	$action = 'revive_do';
+	$this->class = 'revive-do';
+	break;
+
+      case 'SPREAD_WIZARD_DO':
+	$action = 'wizard_do';
+	$this->class = 'wizard-do';
 	break;
 
       case 'JAMMER_MAD_DO':
@@ -77,24 +93,13 @@ class Talk{
 	$this->class = 'wolf-eat';
 	break;
 
-      case 'TRAP_MAD_NOT_DO':
+      case 'DREAM_EAT':
 	$this->class = 'wolf-eat';
-	$this->sentence = ' ' . $MESSAGE->trap_not_do;
-	return;
-
-      case 'POSSESSED_NOT_DO':
-	$this->class = 'wolf-eat';
-	$this->sentence = ' ' . $MESSAGE->possessed_not_do;
-	return;
-
-      case 'REPORTER_DO':
-      case 'ANTI_VOODOO_DO':
-	$this->class = 'guard-do';
 	break;
 
-      case 'POISON_CAT_DO':
-	$action = 'revive_do';
-	$this->class = 'revive-do';
+      case 'CHILD_FOX_DO':
+	$action = 'mage_do';
+	$this->class = 'mage-do';
 	break;
 
       case 'POISON_CAT_NOT_DO':
@@ -107,14 +112,24 @@ class Talk{
 	$this->sentence = ' ' . $MESSAGE->assassin_not_do;
 	return;
 
-      case 'VAMPIRE_DO':
-	$action = 'wolf_eat';
-	$this->class = 'vampire-do';
-	break;
+      case 'TRAP_MAD_NOT_DO':
+	$this->class = 'wolf-eat';
+	$this->sentence = ' ' . $MESSAGE->trap_not_do;
+	return;
+
+      case 'POSSESSED_NOT_DO':
+	$this->class = 'wolf-eat';
+	$this->sentence = ' ' . $MESSAGE->possessed_not_do;
+	return;
 
       case 'OGRE_NOT_DO':
 	$this->class = 'ogre-do';
 	$this->sentence = ' ' . $MESSAGE->ogre_not_do;
+	return;
+
+      case 'DEATH_NOTE_NOT_DO':
+	$this->class = 'death-note-do';
+	$this->sentence = ' ' . $MESSAGE->death_note_not_do;
 	return;
 
       default:

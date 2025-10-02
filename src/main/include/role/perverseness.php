@@ -2,16 +2,14 @@
 /*
   ◆天邪鬼 (perverseness)
   ○仕様
-  ・自分の投票先に複数の人が投票していたらショック死する
+  ・ショック死：自分の投票先に複数の人が投票している
 */
-class Role_perverseness extends Role{
-  function Role_perverseness(){ $this->__construct(); }
+RoleManager::LoadFile('chicken');
+class Role_perverseness extends Role_chicken{
+  public $sudden_death = 'PERVERSENESS';
   function __construct(){ parent::__construct(); }
 
-  function FilterSuddenDeath(&$reason){
-    global $ROLES;
-    if($reason == '' && $ROLES->stack->count[$ROLES->stack->target[$ROLES->actor->uname]] > 1){
-      $reason = 'PERVERSENESS';
-    }
+  function IsSuddenDeath(){
+    return ! $this->IgnoreSuddenDeath() && $this->GetVoteTargetCount() > 1;
   }
 }

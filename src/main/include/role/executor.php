@@ -2,28 +2,24 @@
 /*
   ◆執行者 (executor)
   ○仕様
-  ・処刑投票が拮抗したら自分の投票先が非村人の場合のみ処刑される
+  ・役職表示：村人
+  ・処刑者決定：同一投票先 + 非村人
 */
-class Role_executor extends RoleVoteAbility{
-  var $data_type = 'array';
-
-  function Role_executor(){ $this->__construct(); }
+class Role_executor extends Role{
+  public $mix_in = 'decide';
+  public $display_role = 'human';
   function __construct(){ parent::__construct(); }
 
-  function DecideVoteKill(&$uname){
-    global $ROOM, $ROLES, $USERS;
+  function SetVoteDay($uname){ if($this->IsRealActor()) $this->AddStack($uname); }
 
-    if(parent::DecideVoteKill($uname) || ! is_array($ROLES->stack->executor)) return true;
+  function DecideVoteKill(){
+    global $USERS;
+
+    if($this->IsVoteKill() || ! is_array($this->GetStack())) return;
     $stack = array();
-    foreach($ROLES->stack->executor as $actor_uname){ //最多得票者に投票した執行者の投票先を収集
-      $target = $USERS->ByVirtualUname($ROOM->vote[$actor_uname]['target_uname']);
-      if(in_array($target->uname, $ROLES->stack->vote_possible) &&
-	 $USERS->ByReal($target->user_no)->GetCamp(true) != 'human'){ //最多得票者リストは仮想ユーザ
-	$stack[$target->uname] = true;
-      }
+    foreach($this->GetMaxVotedUname() as $uname){
+      if(! $USERS->ByRealUname($uname)->IsCamp('human', true)) $stack[$uname] = true;
     }
-    //PrintData($stack);
-    //対象を一人に固定できる時のみ有効
-    if(count($stack) == 1) $uname = array_shift(array_keys($stack));
+    if(count($stack) == 1) $this->SetVoteKill(array_shift(array_keys($stack)));
   }
 }

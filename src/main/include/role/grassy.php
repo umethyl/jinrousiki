@@ -2,21 +2,19 @@
 /*
   ◆草原迷彩 (grassy)
   ○仕様
-  ・自分の発言の一文字毎に草がつく
-  ・改行の後 (行頭) にはつけない
-  ・ゲームプレイ中で生存時のみ有効 (呼び出し関数側で対応)
+  ・発言変換：草追加 (一文字毎/行頭以外)
 */
 class Role_grassy extends Role{
-  function Role_grassy(){ $this->__construct(); }
   function __construct(){ parent::__construct(); }
 
-  function FilterSay(&$sentence){
+  function ConvertSay(){
+    $say    = $this->GetStack('say');
     $result = '';
-    $count = mb_strlen($sentence);
+    $count  = mb_strlen($say);
     for($i = 0; $i < $count; $i++){
-      $str = mb_substr($sentence, $i, 1);
-      $result .= ($str == "\n" ? $str : $str . 'w ');
+      $str = mb_substr($say, $i, 1);
+      $result .= ($str == "\n" ? $str : $str . 'w '); //改行判定
     }
-    $sentence = $result;
+    $this->SetStack($result, 'say');
   }
 }

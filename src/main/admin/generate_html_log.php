@@ -3,7 +3,6 @@ define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
 
 $disable = true; //使用時には false に変更する
-//$disable = false;
 if($disable){
   OutputActionResult('認証エラー', 'このスクリプトは使用できない設定になっています。');
 }
@@ -15,11 +14,12 @@ $DB_CONF->ChangeName($RQ_ARGS->db_no); //DB 名をセット
 $DB_CONF->Connect(); //DB 接続
 
 $RQ_ARGS->generate_index = true;
-$RQ_ARGS->index_no = 1; //インデックスページの開始番号 (現在は 1 で固定)
-$RQ_ARGS->min_room_no = 1; //インデックス化する村の開始番号 (現在は 1 で固定)
-$RQ_ARGS->max_room_no = 200; //インデックス化する村の終了番号
+$RQ_ARGS->index_no = 8; //インデックスページの開始番号
+$RQ_ARGS->min_room_no = 351; //インデックス化する村の開始番号
+$RQ_ARGS->max_room_no = 383; //インデックス化する村の終了番号
 $RQ_ARGS->prefix = ''; //各ページの先頭につける文字列 (テスト / 上書き回避用)
 $RQ_ARGS->add_role = true;
+$RQ_ARGS->heaven_talk = true;
 
 $db_delete_mode = false; //部屋削除のみ
 if($db_delete_mode){
@@ -32,12 +32,15 @@ if($db_delete_mode){
   OutputHTMLFooter(true);
 }
 
-GenerateLogIndex(); //インデックスページ生成
+//GenerateLogIndex(); //インデックスページ生成
+//OutputHTMLFooter(true);
 
-$INIT_CONF->LoadFile('game_play_functions', 'user_class', 'talk_class');
+$INIT_CONF->LoadFile('game_play_functions', 'talk_class');
 $INIT_CONF->LoadClass('ROLES', 'ICON_CONF', 'VICT_MESS');
 
 $room_delete = false; //DB削除設定
+$header = "../log_test/{$RQ_ARGS->prefix}";
+$footer = '</body></html>'."\n";
 for($i = $RQ_ARGS->min_room_no; $i <= $RQ_ARGS->max_room_no; $i++){
   $RQ_ARGS->room_no = $i;
   $ROOM = new Room($RQ_ARGS);
@@ -48,7 +51,7 @@ for($i = $RQ_ARGS->min_room_no; $i <= $RQ_ARGS->max_room_no; $i++){
   $SELF  = new User();
 
   $RQ_ARGS->reverse_log = false;
-  file_put_contents("../log/{$RQ_ARGS->prefix}{$i}.html", GenerateOldLog());
+  file_put_contents("{$header}{$i}.html", GenerateOldLog() . $footer);
 
   $RQ_ARGS->reverse_log = true;
   $ROOM = new Room($RQ_ARGS);
@@ -57,7 +60,7 @@ for($i = $RQ_ARGS->min_room_no; $i <= $RQ_ARGS->max_room_no; $i++){
 
   $USERS = new UserDataSet($RQ_ARGS);
   $SELF  = new User();
-  file_put_contents("../log/{$RQ_ARGS->prefix}{$i}r.html", GenerateOldLog());
+  file_put_contents("{$header}{$i}r.html", GenerateOldLog() . $footer);
   if($room_delete) DeleteRoom($i);
 }
 if($room_delete) OptimizeTable();

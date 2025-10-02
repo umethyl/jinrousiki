@@ -2,7 +2,7 @@
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
 
-if(! $DEBUG_MODE){
+if(! $SERVER_CONF->debug_mode){
   OutputActionResult('認証エラー', 'このスクリプトは使用できない設定になっています。');
 }
 
@@ -14,7 +14,7 @@ $INIT_CONF->LoadClass('ICON_CONF');
 $DB_CONF->Connect(); //DB 接続
 $file = FetchResult('SELECT icon_filename FROM user_icon WHERE icon_no = ' . $icon_no);
 unlink($ICON_CONF->path . '/' . $file); //ファイルの存在をチェックしていないので要注意
-SendQuery(sprintf('DELETE FROM user_icon WHERE icon_no = %d', $icon_no));
+SendQuery('DELETE FROM user_icon = ' . $icon_no);
 OptimizeTable('user_icon');
 
 //DB 接続解除は OutputActionResult() 経由

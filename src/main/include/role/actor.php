@@ -2,15 +2,14 @@
 /*
   ◆役者 (actor)
   ○仕様
-  ・自分の発言の一部が入れ替わる
-  ・ゲームプレイ中で生存時のみ有効 (呼び出し関数側で対応)
+  ・変換リスト：サーバ設定 (GameConfig->actor_replace_list)
 */
-class Role_actor extends Role{
-  function Role_actor(){ $this->__construct(); }
+RoleManager::LoadFile('passion');
+class Role_actor extends Role_passion{
   function __construct(){ parent::__construct(); }
 
-  function FilterSay(&$sentence){
+  protected function GetConvertSayList(){
     global $GAME_CONF;
-    $sentence = strtr($sentence, $GAME_CONF->actor_replace_list);
+    return $GAME_CONF->actor_replace_list;
   }
 }

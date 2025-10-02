@@ -77,9 +77,7 @@ function SendQuery($query, $commit = false){
 }
 
 //コミット処理
-function SendCommit(){
-  return mysql_query('COMMIT');
-}
+function SendCommit(){ return mysql_query('COMMIT'); }
 
 //DB から単体の値を取得する処理のラッパー関数
 function FetchResult($query){
@@ -123,6 +121,19 @@ function FetchObject($query, $class, $shift = false){
   while(($stack = mysql_fetch_object($sql, $class)) !== false) $array[] = $stack;
   mysql_free_result($sql);
   return $shift ? array_shift($array) : $array;
+}
+
+//talk 専用 DB 取得関数 (負荷実験テスト用)
+function FetchTalk($query, $class, $reverse){
+  global $GAME_CONF, $ROOM;
+
+  $stack = array();
+  foreach(FetchObject($query, $class) as $object) $stack[$object->talk_id] = $object;
+  if(! $reverse) krsort($stack);
+  if(! $ROOM->IsPlaying() && $GAME_CONF->display_talk_limit > 0){
+    $stack = array_slice($stack, 0, $GAME_CONF->display_talk_limit);
+  }
+  return $stack;
 }
 
 //データベース登録のラッパー関数
@@ -169,13 +180,11 @@ function LockTable($type = NULL){
 
   $query_stack = array();
   foreach($stack as $table) $query_stack[] = $table . ' WRITE';
-  return SendQuery('LOCK TABLES ' . implode(', ', $query_stack));
+  return ! SendQuery('LOCK TABLES ' . implode(', ', $query_stack));
 }
 
 //テーブルロック解除
-function UnlockTable(){
-  return SendQuery('UNLOCK TABLES');
-}
+function UnlockTable(){ return SendQuery('UNLOCK TABLES'); }
 
 //部屋削除
 function DeleteRoom($room_no){
@@ -337,7 +346,7 @@ function ConvertTrip($str){
   return EscapeStrings($str); //特殊文字のエスケープ
 }
 
-//改行コードを <br> に変換する (nl2br() だと <br /> なので HTML 4.01 だと不向き)
+//改行コードを <br> に変換する (PHP5.3 以下の nl2br() だと <br /> 固定なので HTML 4.01 だと不向き)
 function LineToBR(&$str){
   $str = str_replace("\n", '<br>', $str);
   return $str;
@@ -425,8 +434,8 @@ function GeneratePageLink($CONFIG, $page, $title = NULL){
   array_unshift($list, $option);
   $url = $CONFIG->url . '.php?' . implode('&', $list);
   $attributes = array();
-  if (isset($CONFIG->attributes)) {
-    foreach($CONFIG->attributes as $attr => $value) {
+  if(isset($CONFIG->attributes)){
+    foreach($CONFIG->attributes as $attr => $value){
       $attributes[] = $attr . '="'. eval($value) . '"';
     }
   }
@@ -438,19 +447,19 @@ function GeneratePageLink($CONFIG, $page, $title = NULL){
 //ログへのリンクを生成
 function GenerateLogLink($url, $watch = false, $header = '', $footer = ''){
   $str = <<<EOF
-{$header} <a href="{$url}"{$footer}>正</a>
-<a href="{$url}&reverse_log=on"{$footer}>逆</a>
-<a href="{$url}&heaven_talk=on"{$footer}>霊</a>
-<a href="{$url}&reverse_log=on&heaven_talk=on"{$footer}>逆&amp;霊</a>
-<a href="{$url}&heaven_only=on"{$footer} >逝</a>
-<a href="{$url}&reverse_log=on&heaven_only=on"{$footer}>逆&amp;逝</a>
+{$header} <a target="_top" href="{$url}"{$footer}>正</a>
+<a target="_top" href="{$url}&reverse_log=on"{$footer}>逆</a>
+<a target="_top" href="{$url}&heaven_talk=on"{$footer}>霊</a>
+<a target="_top" href="{$url}&reverse_log=on&heaven_talk=on"{$footer}>逆&amp;霊</a>
+<a target="_top" href="{$url}&heaven_only=on"{$footer} >逝</a>
+<a target="_top" href="{$url}&reverse_log=on&heaven_only=on"{$footer}>逆&amp;逝</a>
 EOF;
 
   if($watch){
     $str .= <<<EOF
 
-<a href="{$url}&watch=on"{$footer}>観</a>
-<a href="{$url}&watch=on&reverse_log=on"{$footer}>逆&amp;観</a>
+<a target="_top" href="{$url}&watch=on"{$footer}>観</a>
+<a target="_top" href="{$url}&watch=on&reverse_log=on"{$footer}>逆&amp;観</a>
 EOF;
   }
   return $str;
@@ -460,18 +469,22 @@ EOF;
 function GenerateGameOptionImage($game_option, $option_role = ''){
   global $CAST_CONF, $ROOM_IMG, $GAME_OPT_MESS;
 
-  $stack = new OptionManager($game_option . ' ' . $option_role);
+  $stack = new OptionParser($game_option . ' ' . $option_role);
   //PrintData($stack); //テスト用
   $str = '';
   $display_order_list = array(
     'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'gerd', 'wait_morning', 'open_vote',
-    'open_day', 'not_open_cast', 'auto_open_cast', 'poison', 'assassin', 'boss_wolf',
-    'poison_wolf', 'possessed_wolf', 'sirius_wolf', 'cupid', 'medium', 'mania', 'decide',
-    'authority', 'liar', 'gentleman', 'sudden_death', 'perverseness', 'deep_sleep', 'mind_open',
-    'blinder', 'critical', 'joker', 'detective', 'festival', 'full_mania', 'full_chiroptera',
-    'full_cupid', 'replace_human', 'duel', 'gray_random', 'quiz', 'chaos', 'chaosfull', 'chaos_hyper',
-    'topping', 'chaos_open_cast', 'chaos_open_cast_camp', 'chaos_open_cast_role', 'secret_sub_role',
-    'no_sub_role', 'sub_role_limit_easy', 'sub_role_limit_normal');
+    'seal_message', 'open_day', 'not_open_cast', 'auto_open_cast', 'poison', 'assassin', 'wolf',
+    'boss_wolf', 'poison_wolf', 'possessed_wolf', 'sirius_wolf', 'fox', 'child_fox', 'cupid',
+    'medium', 'mania', 'decide', 'authority', 'detective', 'liar', 'gentleman', 'deep_sleep',
+    'blinder', 'mind_open', 'sudden_death', 'perverseness', 'critical', 'joker', 'death_note',
+    'weather', 'festival', 'replace_human', 'full_mad', 'full_cupid', 'full_quiz', 'full_vampire',
+    'full_chiroptera', 'full_mania', 'full_unknown_mania', 'change_common', 'change_hermit_common',
+    'change_mad', 'change_fanatic_mad', 'change_whisper_mad', 'change_immolate_mad', 'change_cupid',
+    'change_mind_cupid', 'change_triangle_cupid', 'change_angel', 'duel', 'gray_random', 'quiz',
+    'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'topping', 'boost_rate', 'chaos_open_cast',
+    'chaos_open_cast_camp', 'chaos_open_cast_role', 'secret_sub_role', 'no_sub_role',
+    'sub_role_limit_easy', 'sub_role_limit_normal', 'sub_role_limit_hard');
 
   foreach($display_order_list as $option){
     if(! $stack->Exists($option) || $GAME_OPT_MESS->$option == '') continue;
@@ -489,6 +502,7 @@ function GenerateGameOptionImage($game_option, $option_role = ''){
       break;
 
     case 'topping':
+    case 'boost_rate':
       $type = $stack->options[$option][0];
       $sentence .= '(Type' . $GAME_OPT_MESS->{$option . '_' . $type} . ')';
       $footer = '['. strtoupper($type) . ']';
@@ -502,7 +516,6 @@ function GenerateGameOptionImage($game_option, $option_role = ''){
 //ゲームオプションの画像タグを作成する (最大人数用)
 function GenerateMaxUserImage($number){
   global $ROOM_CONF, $ROOM_IMG;
-
   return in_array($number, $ROOM_CONF->max_user_list) && $ROOM_IMG->Exists("max{$number}") ?
     $ROOM_IMG->Generate("max{$number}", "最大{$number}人") : "(最大{$number}人)";
 }
@@ -513,7 +526,7 @@ function GenerateHTMLHeader($title, $css = 'action'){
 
   $css_path = JINRO_CSS . '/' . $css . '.css';
   return <<<EOF
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="ja"><head>
 <meta http-equiv="Content-Type" content="text/html; charset={$SERVER_CONF->encode}">
 <meta http-equiv="Content-Style-Type" content="text/css">
@@ -525,20 +538,16 @@ EOF;
 }
 
 //共通 HTML ヘッダ出力
-function OutputHTMLHeader($title, $css = 'action'){
-  echo GenerateHTMLHeader($title, $css);
-}
+function OutputHTMLHeader($title, $css = 'action'){ echo GenerateHTMLHeader($title, $css); }
 
 //結果ページ HTML ヘッダ出力
 function OutputActionResultHeader($title, $url = ''){
   global $ROOM;
 
-  OutputHTMLHeader($title);
-  if($url != '') echo '<meta http-equiv="Refresh" content="1;URL=' . $url . '">'."\n";
-  if($ROOM->day_night != ''){
-    echo '<link rel="stylesheet" href="css/game_' . $ROOM->day_night . '.css">'."\n";
-  }
-  echo '</head><body>'."\n";
+  $str = GenerateHTMLHeader($title);
+  if($url != '') $str .= '<meta http-equiv="Refresh" content="1;URL='.$url.'">'."\n";
+  if(is_object($ROOM)) $str .= $ROOM->GenerateCSS();
+  echo $str . '</head><body>'."\n";
 }
 
 //結果ページ出力
@@ -582,41 +591,6 @@ function OutputFrameHTMLFooter(){
 フレーム非対応のブラウザの方は利用できません。
 </body></noframes>
 </frameset></html>
-
-EOF;
-}
-
-//情報一覧ページ HTML ヘッダ出力
-function OutputInfoPageHeader($title, $level = 0, $css = 'info'){
-  global $SERVER_CONF;
-
-  $info = $level == 0 ? './' : str_repeat('../', $level);
-  $top  = str_repeat('../', $level + 1);
-  OutputHTMLHeader($SERVER_CONF->title . '[' . $title . ']', $css);
-  echo <<<EOF
-</head>
-<body>
-<h1>{$title}</h1>
-<p>
-<a href="{$top}" target="_top">&lt;= TOP</a>
-<a href="{$info}" target="_top">←情報一覧</a>
-</p>
-
-EOF;
-}
-
-//役職情報ページ HTML ヘッダ出力
-function OutputRolePageHeader($title){
-  OutputHTMLHeader('新役職情報 - ' . '[' . $title . ']', 'new_role');
-  echo <<<EOF
-</head>
-<body>
-<h1>{$title}</h1>
-<p>
-<a href="../" target="_top">&lt;=情報一覧</a>
-<a href="./" target="_top">&lt;-メニュー</a>
-<a href="summary.php">←一覧表</a>
-</p>
 
 EOF;
 }

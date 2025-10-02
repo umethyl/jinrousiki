@@ -31,9 +31,7 @@ h5{
   background-color: #DDDDDD;
   font-size: 90%;
 }
-pre{
-  padding-bottom: 10px;
-}
+pre{padding-bottom: 10px;}
 .menu{
   border: 1px solid #CC3300;
   padding: 5px 1px;
@@ -49,3 +47,23 @@ ul{ /* メニューのリンク */
   font-size: 95%;
 }
 ol{line-height: 150%;}
+table{
+  margin: 10px 0px 20px 0px;
+  border: 1px solid;
+  border-collapse: collapse;
+}
+caption{
+  margin-left: 1em;
+  color: #CC0000;
+  font-size: 120%;
+  font-weight: bold;
+  text-align: left;
+}
+th, td{
+  padding: 5px;
+  border: 1px solid;
+  text-align: center;
+  white-space: nowrap;
+}
+td{font-size: 90%;}
+span{color: #FF0000;} /* デバッグ情報用 */

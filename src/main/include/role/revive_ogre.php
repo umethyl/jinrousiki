@@ -1,22 +1,29 @@
 <?php
 /*
-  ◆茨木童子
+  ◆茨木童子 (revive_ogre)
   ○仕様
-  ・勝利条件：自分自身の生存 + 嘘吐きの全滅
+  ・勝利：生存 + 嘘吐き全滅
+  ・人狼襲撃：確率蘇生
 */
-class Role_revive_ogre extends Role{
-  var $resist_rate = 0;
-
-  function Role_revive_ogre(){ $this->__construct(); }
+RoleManager::LoadFile('ogre');
+class Role_revive_ogre extends Role_ogre{
+  public $mix_in = 'revive_pharmacist';
+  public $reduce_rate = 2;
   function __construct(){ parent::__construct(); }
 
-  function DistinguishVictory($victory){
-    global $USERS;
-
+  function Win($victory){
     if($this->IsDead()) return false;
-    foreach($USERS->rows as $user){
-      if($user->IsLive() && $user->DistinguishLiar() == 'psycho_mage_liar') return false;
+    foreach($this->GetUser() as $user){
+      if($user->IsLive() && $user->IsLiar()) return false;
     }
     return true;
+  }
+
+  function GetResistRate(){ return 0; }
+
+  function Resurrect(){
+    $user = $this->GetActor();
+    $rate = is_null($event = $this->GetEvent()) ? 40 : $event;
+    if($this->IsResurrect($user) && mt_rand(1, 100) <= $rate) $user->Revive();
   }
 }

@@ -12,6 +12,7 @@
 .mind{        color: #A0A000;} /* さとり */
 .jealousy{    color: #00CC00;} /* 橋姫 */
 .brownie{     color: #90C0A0;} /* 座敷童子 */
+.wizard{      color: #BB88CC;} /* 魔法使い */
 .doll{        color: #6060FF;} /* 上海人形 */
 .escaper{     color: #606090;} /* 逃亡者 */
 .wolf{        color: #FF0000;} /* 人狼 */
@@ -25,12 +26,16 @@
 .fairy{       color: #888888;} /* 妖精 */
 .ogre{        color: #E09000;} /* 鬼 */
 .yaksa{       color: #E09000;} /* 夜叉 */
+.duelist{     color: #F05070;} /* 決闘者 */
+.avenger{     color: #F05070;} /* 復讐者 */
+.patron{      color: #F05070;} /* 後援者 */
 .mania{       color: #C0A060;} /* 神話マニア */
-.lovers{      color: #FF66CC;} /* 恋人 */
-.authority{   color: #666633;} /* 権力者 */
+.sudden-death{color: #33CCFF;} /* 小心者 */
+.convert{     color: #660099;} /* 狼少年 */
 .decide{      color: #999999;} /* 決定者 */
-.luck{        color: #66CC99;} /* 得票数変化形 */
-.voice{       color: #FF9900;} /* 声変化系 */
-.seal{        color: #DD2222;} /* 封印系 */
-.convert{     color: #660099;} /* 発言変換系 */
-.sudden-death{color: #33CCFF;} /* ショック死系 */
+.authority{   color: #666633;} /* 権力者 */
+.luck{        color: #66CC99;} /* 雑草魂 */
+.voice{       color: #FF9900;} /* 大声 */
+.seal{        color: #DD2222;} /* 筆不精 */
+.wisp{        color: #AA66FF;} /* 鬼火 */
+.lovers{      color: #FF66CC;} /* 恋人 */

@@ -14,9 +14,7 @@ body{ /* AA 用 */
   padding: 3px;
   vertical-align: top;
 }
-.game-option img{ /* ゲームオプション */
-  vertical-align: top;
-}
+.game-option img{vertical-align: top;}
 .time-table{
   width: 100%;
   border: 0;
@@ -25,7 +23,8 @@ body{ /* AA 用 */
 }
 .time-table td{
   padding-left: 5px;
-  border: 1px dotted #CCCCCC;
+  border: 0;
+  border-collapse: collapse;
   vertical-align: middle;
   text-align: left;
 }
@@ -38,6 +37,7 @@ body{ /* AA 用 */
   vertical-align: middle;
 }
 .real-time span{font-weight: bold;}
+.real-time form{margin-bottom: 0;}
 .real-time input{ /* JavaScript の表示窓 */
   border: 0px solid;
   vertical-align: middle;
@@ -118,6 +118,10 @@ body{ /* AA 用 */
   background-color: #E09000;
   color: #FFFAFA;
 }
+.victory-duelist{ /* 決闘者勝利 */
+  background-color: #F05070;
+  color: #FFFAFA;
+}
 .victory-draw{ /* 引き分け */
   background-color: #CCEECC;
   color: #000000;
@@ -144,7 +148,7 @@ body{ /* AA 用 */
   border-collapse: collapse;
   width: 100%
 }
-.normal{font-size:12pt;} /* 通常の発言 */
+.normal{font-size: 12pt;} /* 通常の発言 */
 .strong{  /* 大声 */
   font-size: 20pt;
   font-weight: bold;
@@ -159,9 +163,7 @@ body{ /* AA 用 */
   text-align: left;
   vertical-align: middle;
 }
-.user-talk td{
-  border-bottom: 1px dashed #C0C0C0;
-}
+.user-talk td{border-bottom: 1px dashed #C0C0C0;}
 .user-name{width: 200px;} /* プレイヤー名 */
 .user-name span{font-size: 8pt;} /* ～の独り言など */
 .say{ /* 発言の中身 */
@@ -186,18 +188,21 @@ body{ /* AA 用 */
 .game-start{      background-color: #999900;} /* ゲーム開始投票 (現在は不使用) */
 .kick-do{         background-color: #AAAA33;} /* キック投票 */
 .vote-do{         background-color: #999900;} /* 処刑投票 */
-.mage-do{         background-color: #990099;} /* 占い師 */
-.guard-do{        background-color: #0099FF;} /* 狩人 */
+.mage-do{         background-color: #9933FF;} /* 占い師 */
+.guard-do{        background-color: #3399FF;} /* 狩人 */
 .revive-do{       background-color: #009966;} /* 猫又 */
 .assassin-do{     background-color: #904040;} /* 暗殺者 */
 .mind-scanner-do{ background-color: #A0A000;} /* さとり */
+.wizard-do{       background-color: #BB88CC;} /* 魔法使い */
 .escape-do{       background-color: #606090;} /* 逃亡者 */
 .wolf-eat{        background-color: #CC3300;} /* 人狼 */
-.cupid-do{        background-color: #FF66CC;} /* キューピッド */
-.vampire-do{      background-color: #D000D0;} /* 吸血鬼 */
-.fairy-do{        background-color: #888888;} /* 妖精 */
-.ogre-do{         background-color: #E09000;} /* 鬼 */
+.cupid-do{        background-color: #FF88DD;} /* キューピッド */
+.vampire-do{      background-color: #A000A0;} /* 吸血鬼 */
+.fairy-do{        background-color: #666666;} /* 妖精 */
+.ogre-do{         background-color: #C07000;} /* 鬼 */
+.duelist-do{      background-color: #D04060;} /* 決闘者 */
 .mania-do{        background-color: #C0A060;} /* 神話マニア */
+.death-note-do{   background-color: #904040;} /* デスノート */
 .system-user{ /* システムユーザーの発言 */
   width: 1000px;
   padding-left: 6em;
@@ -276,6 +281,14 @@ body{ /* AA 用 */
 .dead-type-lovers{      color: #FF66CC;}
 .dead-type-fairy{       color: #888888;}
 .dead-type-sudden-death{color: #33CCFF;}
+/* GenerateWeatherReport() */
+.weather{
+  padding: 7px 0 7px 6em;
+  background-color: #CCDDFF;
+  color: #000000;
+  font-weight: bold;
+}
+.weather span{color: #990000;}
 /* OutputVoteListDay() */
 .vote-list{ /* 投票結果の table */
   border: 2px solid;
@@ -310,7 +323,9 @@ body{ /* AA 用 */
   font-weight: bold;
 }
 .caution span{font-size: 80%;}
-.objection{ /* 「異議あり」ボタン */
+.objection{vertical-align: middle;} /* 「異議あり」ボタン */
+.objection form{
+  margin-bottom: 0;
   vertical-align: middle;
   text-align: right;
 }
@@ -321,7 +336,7 @@ body{ /* AA 用 */
   font-size: 14pt;
   font-weight: bold;
 }
-.ability-dead{background-color:#CC0000;} /* 死んでいる場合 */
+.ability-dead{background-color: #CC0000;} /* 死んでいる場合 */
 .ability-partner{ /* 仲間の表示 */
   border: 1px solid;
   border-collapse: collapse;
@@ -340,3 +355,10 @@ body{ /* AA 用 */
 }
 /* CheckSelfVote() */
 .self-vote{margin: 5px 0;}
+/* game_log.php */
+h1{
+  margin: 0;
+  font-size: 120%;
+  font-weight: normal;
+  text-align: right;
+}

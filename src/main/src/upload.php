@@ -4,7 +4,7 @@ require_once(JINRO_ROOT  . '/include/init.php');
 if(FindDangerValue($_FILES)) die;
 
 $INIT_CONF->LoadRequest('RequestSrcUpload'); //引数をセット
-$config = new SourceUploadConfig(); //設定をロード
+$config =& new SourceUploadConfig(); //設定をロード
 
 if($config->disable){
   OutputActionResult('ファイルアップロード', '現在アップロードは停止しています');

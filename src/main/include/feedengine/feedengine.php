@@ -1,9 +1,9 @@
 <?php
 class FeedEngine {
-  var $url;
-  var $title;
-  var $description;
-  var $items = array();
+  public $url;
+  public $title;
+  public $description;
+  public $items = array();
 
   function Initialize($filename){
     global $INIT_CONF;

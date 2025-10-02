@@ -2,16 +2,19 @@
 /*
   ◆死の宣告 (death_warrant)
   ○仕様
-  ・発動当日ならショック死する
+  ・ショック死：発動当日
 */
-class Role_death_warrant extends Role{
-  function Role_death_warrant(){ $this->__construct(); }
+RoleManager::LoadFile('febris');
+class Role_death_warrant extends Role_febris{
+  public $sudden_death = 'WARRANT';
   function __construct(){ parent::__construct(); }
 
-  function FilterSuddenDeath(&$reason){
-    global $ROLES, $ROOM;
-    if($reason == '' && $ROOM->date == $ROLES->actor->GetDoomDate('death_warrant')){
-      $reason = 'WARRANT';
+  protected function IgnoreAbility(){ return false; }
+
+  protected function OutputResult(){
+    global $ROOM;
+    if(($date = $this->GetActor()->GetDoomDate($this->role)) >= $ROOM->date){
+      OutputAbilityResult($this->role . '_header', $date, 'sudden_death_footer');
     }
   }
 }

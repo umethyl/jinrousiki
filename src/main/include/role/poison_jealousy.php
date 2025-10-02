@@ -1,20 +1,16 @@
 <?php
 /*
-  ◆毒橋姫
+  ◆毒橋姫 (poison_jealousy)
   ○仕様
   ・毒：恋人
+  ・襲撃毒死回避：恋人以外
 */
 class Role_poison_jealousy extends Role{
-  function Role_poison_jealousy(){ $this->__construct(); }
+  public $mix_in = 'poison';
+  public $display_role = 'poison';
   function __construct(){ parent::__construct(); }
 
-  function FilterPoisonTarget(&$list){
-    global $USERS;
+  function IsPoisonTarget($user){ return $user->IsLovers(); }
 
-    $stack = array();
-    foreach($list as $uname){
-      if($USERS->ByRealUname($uname)->IsLovers()) $stack[] = $uname;
-    }
-    $list = $stack;
-  }
+  function AvoidPoisonEat($user){ return ! $user->IsLovers(); }
 }

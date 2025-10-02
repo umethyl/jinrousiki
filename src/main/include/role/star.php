@@ -2,13 +2,10 @@
 /*
   ◆人気者 (star)
   ○仕様
-  ・得票数が -1 される
+  ・得票数：-1
 */
 class Role_star extends Role{
-  function Role_star(){ $this->__construct(); }
   function __construct(){ parent::__construct(); }
 
-  function FilterVoted(&$voted_number){
-    $voted_number--;
-  }
+  function FilterVoted(&$number){ $number--; }
 }

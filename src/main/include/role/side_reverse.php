@@ -2,19 +2,18 @@
 /*
   ◆鏡面迷彩 (side_reverse)
   ○仕様
-  ・自分の発言が行単位で左右が入れ替わる
-  ・ゲームプレイ中で生存時のみ有効 (呼び出し関数側で対応)
+  ・発言変換：左右置換 (行単位)
 */
 class Role_side_reverse extends Role{
-  function Role_side_reverse(){ $this->__construct(); }
   function __construct(){ parent::__construct(); }
 
-  function FilterSay(&$sentence){
+  function ConvertSay(){
+    $say    = $this->GetStack('say');
     $result = '';
-    $line = array();
-    $count = mb_strlen($sentence);
+    $line   = array();
+    $count  = mb_strlen($say);
     for($i = 0; $i < $count; $i++){
-      $str = mb_substr($sentence, $i, 1);
+      $str = mb_substr($say, $i, 1);
       if($str == "\n"){
 	if(count($line) > 0) $result .= implode('', array_reverse($line));
 	$result .= $str;
@@ -25,6 +24,6 @@ class Role_side_reverse extends Role{
       }
     }
     if(count($line) > 0) $result .= implode('', array_reverse($line));
-    $sentence = $result;
+    $this->SetStack($result, 'say');
   }
 }

@@ -1,38 +1,37 @@
 <?php
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadClass('ROOM_CONF', 'CAST_CONF', 'ICON_CONF');
+$INIT_CONF->LoadClass('ROOM_CONF', 'CAST_CONF', 'ICON_CONF', 'ROLES');
 $INIT_CONF->LoadFile('game_vote_functions', 'user_class');
 
 //-- 仮想村データをセット --//
 $INIT_CONF->LoadRequest('RequestBaseGame');
 $RQ_ARGS->room_no = 1;
 $RQ_ARGS->TestItems->test_room = array(
-  'id' => $RQ_ARGS->room_no,
-  'name' => '配役テスト村',
-  'comment' => '',
-  'game_option'  => 'dummy_boy real_time:6:4',
+  'id' => $RQ_ARGS->room_no, 'name' => '配役テスト村', 'comment' => '',
+  'game_option' => 'dummy_boy real_time:6:4 wish_role',
   'option_role' => '',
-  'date' => 0,
-  'day_night' => 'beforegame',
-  'status' => 'waiting'
+  'date' => 0, 'day_night' => 'beforegame', 'status' => 'waiting'
 );
-$RQ_ARGS->TestItems->test_room['game_option'] .= ' wish_role';
+#$RQ_ARGS->TestItems->test_room['game_option'] .= ' quiz';
 #$RQ_ARGS->TestItems->test_room['game_option'] .= ' chaosfull';
-#$RQ_ARGS->TestItems->test_room['game_option'] .= ' chaos_hyper';
-#$RQ_ARGS->TestItems->test_room['game_option'] .= ' deep_sleep';
+$RQ_ARGS->TestItems->test_room['game_option'] .= ' chaos_hyper';
+#$RQ_ARGS->TestItems->test_room['game_option'] .= ' blinder';
 #$RQ_ARGS->TestItems->test_room['option_role'] .= ' gerd';
-#$RQ_ARGS->TestItems->test_room['option_role'] .= ' poison';
+#$RQ_ARGS->TestItems->test_room['option_role'] .= ' poison cupid medium mania';
 $RQ_ARGS->TestItems->test_room['option_role'] .= ' decide';
 #$RQ_ARGS->TestItems->test_room['option_role'] .= ' detective';
-#$RQ_ARGS->TestItems->test_room['option_role'] .= ' joker';
+$RQ_ARGS->TestItems->test_room['option_role'] .= ' joker';
+#$RQ_ARGS->TestItems->test_room['option_role'] .= ' gentleman';
 #$RQ_ARGS->TestItems->test_room['option_role'] .= ' sudden_death';
-#$RQ_ARGS->TestItems->test_room['option_role'] .= ' full_mania';
 #$RQ_ARGS->TestItems->test_room['option_role'] .= ' replace_human';
-#$RQ_ARGS->TestItems->test_room['option_role'] .= ' chaos_open_cast';
+#$RQ_ARGS->TestItems->test_room['option_role'] .= ' full_mania';
+$RQ_ARGS->TestItems->test_room['option_role'] .= ' chaos_open_cast';
 #$RQ_ARGS->TestItems->test_room['option_role'] .= ' chaos_open_cast_role';
 #$RQ_ARGS->TestItems->test_room['option_role'] .= ' chaos_open_cast_camp';
 #$RQ_ARGS->TestItems->test_room['option_role'] .= ' sub_role_limit_easy';
+#$RQ_ARGS->TestItems->test_room['option_role'] .= ' sub_role_limit_normal';
+#$RQ_ARGS->TestItems->test_room['option_role'] .= ' sub_role_limit_hard';
 $RQ_ARGS->TestItems->is_virtual_room = true;
 $RQ_ARGS->vote_times = 1;
 $RQ_ARGS->TestItems->test_users = array();
@@ -78,7 +77,7 @@ $RQ_ARGS->TestItems->test_users[9]->role = 'mad';
 
 $RQ_ARGS->TestItems->test_users[10]->uname = 'purple';
 $RQ_ARGS->TestItems->test_users[10]->handle_name = '紫';
-$RQ_ARGS->TestItems->test_users[10]->role = 'wolf';
+$RQ_ARGS->TestItems->test_users[10]->role = 'duelist';
 
 $RQ_ARGS->TestItems->test_users[11]->uname = 'cherry';
 $RQ_ARGS->TestItems->test_users[11]->handle_name = 'さくら';
@@ -90,7 +89,7 @@ $RQ_ARGS->TestItems->test_users[12]->role = '';
 
 $RQ_ARGS->TestItems->test_users[13]->uname = 'black';
 $RQ_ARGS->TestItems->test_users[13]->handle_name = '黒';
-$RQ_ARGS->TestItems->test_users[13]->role = 'wolf';
+$RQ_ARGS->TestItems->test_users[13]->role = 'wizard';
 
 $RQ_ARGS->TestItems->test_users[14]->uname = 'gold';
 $RQ_ARGS->TestItems->test_users[14]->handle_name = '金';
@@ -133,7 +132,7 @@ $icon_color_list = array('#DDDDDD', '#999999', '#FFD700', '#FF9900', '#FF0000',
 foreach($RQ_ARGS->TestItems->test_users as $id => $user){
   $user->room_no = $RQ_ARGS->room_no;
   $user->user_no = $id;
-  $user->sex = $id % 1 == 0 ? 'female' : 'male';
+  $user->sex = $id % 2 == 0 ? 'female' : 'male';
   $user->profile = '';
   $user->live = 'live';
   $user->last_load_day_night = 'beforegame';
@@ -161,6 +160,7 @@ $SELF = $USERS->ByID(1);
 
 //-- データ出力 --//
 OutputHTMLHeader('配役テスト', 'game'); //HTMLヘッダ
+echo '</head><body>'."\n";
 OutputPlayerList(); //プレイヤーリスト
 AggregateVoteGameStart(); //配役処理
 $ROOM->date++;

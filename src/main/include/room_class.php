@@ -1,29 +1,31 @@
 <?php
 //-- 個別の村情報の基底クラス --//
 class Room{
-  var $id;
-  var $name;
-  var $comment;
-  var $game_option = '';
-  var $option_role = '';
-  var $date;
-  var $day_night;
-  var $status;
-  var $system_time;
-  var $sudden_death;
-  var $view_mode = false;
-  var $dead_mode = false;
-  var $heaven_mode = false;
-  var $log_mode = false;
-  var $watch_mode = false;
-  var $single_view_mode = false;
-  var $test_mode = false;
+  public $id;
+  public $name;
+  public $comment;
+  public $game_option = '';
+  public $option_role = '';
+  public $date;
+  public $day_night;
+  public $status;
+  public $system_time;
+  public $sudden_death;
+  public $view_mode        = false;
+  public $dead_mode        = false;
+  public $heaven_mode      = false;
+  public $log_mode         = false;
+  public $watch_mode       = false;
+  public $single_log_mode  = false;
+  public $single_view_mode = false;
+  public $personal_mode    = false;
+  public $test_mode        = false;
 
-  function Room($request = NULL){ $this->__construct($request); }
   function __construct($request = NULL){
     if(is_null($request)) return;
     if($request->IsVirtualRoom()){
       $stack = $request->TestItems->test_room;
+      $this->event = new StdClass();
       $this->event->rows = $request->TestItems->event;
     }
     else{
@@ -48,14 +50,21 @@ class Room{
 
     $option_role = $RQ_ARGS->IsVirtualRoom() ? $RQ_ARGS->TestItems->test_room['option_role'] :
       FetchResult($this->GetQueryHeader('room', 'option_role'));
-    $this->option_role = new OptionManager($option_role);
+    $this->option_role = new OptionParser($option_role);
     $this->option_list = array_merge($this->option_list, array_keys($this->option_role->options));
   }
 
   //発言を取得する
   function LoadTalk($heaven = false){
-    global $GAME_CONF;
+    global $SERVER_CONF, $GAME_CONF, $RQ_ARGS;
 
+    if($RQ_ARGS->IsVirtualRoom()) return $RQ_ARGS->TestItems->talk;
+    if($SERVER_CONF->sort_talk_by_php){ //負荷実験用モード
+      $query = 'SELECT talk_id, uname, sentence, font_type, location FROM talk' .
+	$this->GetQuery(! $heaven) . ' AND location LIKE ' .
+	($heaven ? "'heaven'" : "'{$this->day_night}%'");
+      return FetchTalk($query, 'Talk', false);
+    }
     $query = 'SELECT uname, sentence, font_type, location FROM talk' . $this->GetQuery(! $heaven) .
       ' AND location LIKE ' . ($heaven ? "'heaven'" : "'{$this->day_night}%'") .
       ' ORDER BY talk_id DESC';
@@ -107,7 +116,7 @@ class Room{
       foreach($vote_list as $list){
 	$uname = $list['uname'];
 	unset($list['uname']);
-	$stack[$uname] = $list;
+	$this->IsDay() ? $stack[$uname] = $list : $stack[$uname][] = $list;
       }
     }
     $this->vote = $stack;
@@ -128,36 +137,69 @@ class Room{
 
     if(! $this->IsPlaying()) return NULL;
     $date = $this->date;
-    if($this->log_mode && ! $RQ_ARGS->reverse_log) $date--;
+    if($this->log_mode && ! $this->single_log_mode && ! $RQ_ARGS->reverse_log) $date--;
     $day   = $date;
     $night = $date - 1;
     if($this->IsDay() && ! ($this->watch_mode || $this->single_view_mode)) $day--;
-
     $query = $this->GetQueryHeader('system_message', 'message', 'type') .
-      " AND((date = '{$day}'   AND type = 'VOTE_KILLED') OR " .
+      " AND(" . ($this->log_mode ? '' : "(date = '{$date}' AND type = 'WEATHER') OR") .
+      "     (date = '{$day}'   AND type = 'VOTE_KILLED') OR" .
       "     (date = '{$night}' AND type = 'WOLF_KILLED'))";
     $this->event->rows = FetchAssoc($query);
+  }
+
+  //天候判定用の情報を DB から取得する
+  function LoadWeather($shift = false){
+    global $RQ_ARGS;
+
+    if(! $this->IsPlaying()) return NULL;
+    $date = $this->date;
+    if(($shift && $RQ_ARGS->reverse_log) || $this->IsAfterGame()) $date++;
+    if($this->date == 1) $date = 2;
+    $query = $this->GetQueryHeader('system_message', 'message') .
+      " AND date = '{$date}' AND type = 'WEATHER'";
+    $result = FetchResult($query);
+    $this->event->weather = $result === false ? NULL : $result; //天候を格納
+  }
+
+  //勝敗情報を DB から取得する
+  function LoadVictory(){
+    global $RQ_ARGS;
+
+    if(! property_exists($this, 'victory')){
+      $this->victory = $this->test_mode ? $RQ_ARGS->TestItems->victory :
+	FetchResult($this->GetQueryHeader('room', 'victory_role'));
+    }
+    return $this->victory;
   }
 
   //投票情報をコマンド毎に分割する
   function ParseVote(){
     $stack = array();
-    foreach($this->vote as $uname => $list){
-      $stack[$list['situation']][$uname] = $list['target_uname'];
+    foreach($this->vote as $uname => $vote_stack){
+      if($this->IsDay()){
+	$stack[$vote_stack['situation']][$uname] = $vote_stack['target_uname'];
+      }
+      else{
+	foreach($vote_stack as $list){
+	  $stack[$list['situation']][$uname] = $list['target_uname'];
+	}
+      }
     }
     return $stack;
   }
 
   //ゲームオプションの展開処理
   function ParseOption($join = false){
-    $this->game_option = new OptionManager($this->game_option);
-    $this->option_role = new OptionManager($this->option_role);
+    $this->game_option = new OptionParser($this->game_option);
+    $this->option_role = new OptionParser($this->option_role);
     $this->option_list = $join ?
       array_merge(array_keys($this->game_option->options),
 		  array_keys($this->option_role->options)) :
       array_keys($this->game_option->options);
 
     if($this->IsRealTime()){
+      $this->real_time = new StdClass();
       $this->real_time->day   = $this->game_option->options['real_time'][0];
       $this->real_time->night = $this->game_option->options['real_time'][1];
     }
@@ -168,11 +210,17 @@ class Room{
     if(is_null($this->id)) return true;
 
     $query = 'DELETE FROM vote' . $this->GetQuery();
-    if($this->IsDay())
+    if($this->IsDay()){
       $query .= " AND situation = 'VOTE_KILL' AND vote_times = " . $this->GetVoteTimes();
-    elseif($this->IsNight())
-      $query .= ' AND situation <> ' . ($this->date == 1 ? "'CUPID_DO'" : "'VOTE_KILL'");
-
+    }
+    elseif($this->IsNight()){
+      if($this->date == 1){
+	$query .= " AND situation NOT IN ('CUPID_DO', 'DUELIST_DO')";
+      }
+      else{
+	$query .= " AND situation NOT IN ('VOTE_KILL')";
+      }
+    }
     SendQuery($query);
     OptimizeTable('vote');
     return true;
@@ -195,7 +243,7 @@ class Room{
   //投票回数を取得する
   function GetVoteTimes($revote = false){
     $value = $revote ? 'revote_times' : 'vote_times';
-    if(is_null($this->$value)) $this->$value = $this->LoadVoteTimes($revote);
+    if(! property_exists($this, $value)) $this->$value = $this->LoadVoteTimes($revote);
     return $this->$value;
   }
 
@@ -203,14 +251,19 @@ class Room{
   function GetEvent($force = false){
     if(! $this->IsPlaying()) return array();
     if($force) unset($this->event);
-    if(is_null($this->event)) $this->LoadEvent();
+    if(! property_exists($this, 'event')) $this->LoadEvent();
     return $this->event->rows;
   }
 
-  //オプション判定
-  function IsOption($option){
-    return in_array($option, $this->option_list);
+  //特殊オプションの配役データ取得
+  function GetOptionList($option){
+    global $CAST_CONF;
+    return $this->IsOption($option) ?
+      $CAST_CONF->{$option.'_list'}[$this->option_role->options[$option][0]] : array();
   }
+
+  //オプション判定
+  function IsOption($option){ return in_array($option, $this->option_list); }
 
   //オプショングループ判定
   function IsOptionGroup($option){
@@ -221,43 +274,41 @@ class Room{
   }
 
   //リアルタイム制判定
-  function IsRealTime(){
-    return $this->IsOption('real_time');
-  }
+  function IsRealTime(){ return $this->IsOption('real_time'); }
 
   //身代わり君使用判定
-  function IsDummyBoy(){
-    return $this->IsOption('dummy_boy');
-  }
+  function IsDummyBoy(){ return $this->IsOption('dummy_boy'); }
 
   //クイズ村判定
-  function IsQuiz(){
-    return $this->IsOption('quiz');
-  }
+  function IsQuiz(){ return $this->IsOption('quiz'); }
 
   //村人置換村グループオプション判定
   function IsReplaceHumanGroup(){
-    return $this->IsOption('replace_human') || $this->IsOption('full_mania') ||
-      $this->IsOption('full_chiroptera') || $this->IsOption('full_cupid');
+    return $this->IsOption('replace_human') || $this->IsOptionGroup('full_');
   }
 
   //闇鍋式希望制オプション判定
   function IsChaosWish(){
     return $this->IsOptionGroup('chaos') || $this->IsOption('duel') ||
-      $this->IsOption('festival') || $this->IsReplaceHumanGroup();
+      $this->IsOption('festival') || $this->IsReplaceHumanGroup() ||
+      $this->IsOptionGroup('change_');
   }
 
   //霊界公開判定
   function IsOpenCast(){
     global $USERS;
 
-    if(is_null($this->open_cast)){ //未設定ならキャッシュする
-      if($this->IsOption('not_open_cast')) //常時非公開
-	$this->open_cast = false;
-      elseif($this->IsOption('auto_open_cast')) //自動公開
+    if(! property_exists($this, 'open_cast')){ //未設定ならキャッシュする
+      if($this->IsOption('not_open_cast')){ //常時非公開
+	$user = $USERS->ByID(1); //身代わり君の蘇生辞退判定
+	$this->open_cast = $user->IsDummyBoy() && $user->IsDrop() && $USERS->IsOpenCast();
+      }
+      elseif($this->IsOption('auto_open_cast')){ //自動公開
 	$this->open_cast = $USERS->IsOpenCast();
-      else
-	$this->open_cast = true; //常時公開
+      }
+      else{ //常時公開
+	$this->open_cast = true;
+      }
     }
     return $this->open_cast;
   }
@@ -271,38 +322,40 @@ class Room{
   }
 
   //ゲーム開始前判定
-  function IsBeforeGame(){
-    return $this->day_night == 'beforegame';
-  }
+  function IsBeforeGame(){ return $this->day_night == 'beforegame'; }
 
   //ゲーム中 (昼) 判定
-  function IsDay(){
-    return $this->day_night == 'day';
-  }
+  function IsDay(){ return $this->day_night == 'day'; }
 
   //ゲーム中 (夜) 判定
-  function IsNight(){
-    return $this->day_night == 'night';
-  }
+  function IsNight(){ return $this->day_night == 'night'; }
 
   //ゲーム終了後判定
-  function IsAfterGame(){
-    return $this->day_night == 'aftergame';
-  }
+  function IsAfterGame(){ return $this->day_night == 'aftergame'; }
 
   //ゲーム中判定 (仮想処理をする為、status では判定しない)
-  function IsPlaying(){
-    return $this->IsDay() || $this->IsNight();
-  }
+  function IsPlaying(){ return $this->IsDay() || $this->IsNight(); }
 
   //ゲーム終了判定
-  function IsFinished(){
-    return $this->status == 'finished';
-  }
+  function IsFinished(){ return $this->status == 'finished'; }
 
   //特殊イベント判定
   function IsEvent($type){
-    return $this->event->$type;
+    if(! property_exists($this, 'event')) $this->event = new StdClass();
+    return property_exists($this->event, $type) ? $this->event->$type : NULL;
+  }
+
+  //天候セット
+  function SetWeather(){
+    global $ROLE_DATA;
+
+    if($this->watch_mode || $this->single_view_mode){
+      $this->LoadWeather();
+      if(isset($ROLE_DATA->weather_list[$this->event->weather])){
+	$this->event->{$ROLE_DATA->weather_list[$this->event->weather]['event']} = true;
+      }
+    }
+    $this->LoadWeather(true);
   }
 
   //発言登録
@@ -310,7 +363,7 @@ class Room{
     if($uname == '') $uname = 'system';
     if($location == '') $location = $this->day_night . ' system';
     if($this->test_mode){
-      PrintData($sentence, 'Talk: ' . $uname . ': '. $location);
+      PrintData(LineToBR($sentence), "Talk: {$uname}: {$location}: {$font_type}");
       return true;
     }
 
@@ -332,9 +385,10 @@ class Room{
   }
 
   //システムメッセージ登録
-  function SystemMessage($str, $type){
+  function SystemMessage($str, $type, $add_date = 0){
     global $RQ_ARGS;
 
+    $date = $this->date + $add_date;
     if($this->test_mode){
       PrintData($str, 'SystemMessage: ' . $type);
       if(is_array($RQ_ARGS->TestItems->system_message)){
@@ -344,15 +398,26 @@ class Room{
 	  break;
 
 	default:
-	  $RQ_ARGS->TestItems->system_message[$this->date][$type][] = $str;
+	  $RQ_ARGS->TestItems->system_message[$date][$type][] = $str;
 	  break;
 	}
       }
       return true;
     }
     $items = 'room_no, date, message, type';
-    $values = "{$this->id}, {$this->date}, '{$str}', '{$type}'";
+    $values = "{$this->id}, {$date}, '{$str}', '{$type}'";
     return InsertDatabase('system_message', $items, $values);
+  }
+
+  //天候登録
+  function EntryWeather($id, $date, $priest = false){
+    global $ROLE_DATA;
+
+    $this->SystemMessage($id, 'WEATHER', $date);
+    if($priest){ //祈祷師の処理
+      $result = 'prediction_weather_' . $ROLE_DATA->weather_list[$id]['event'];
+      $this->SystemMessage($result, 'WEATHER_PRIEST_RESULT');
+    }
   }
 
   //最終更新時刻を更新
@@ -373,6 +438,7 @@ class Room{
   function ChangeDate(){
     $this->date++;
     $this->day_night = 'day';
+    if($this->test_mode) return true;
     SendQuery("UPDATE room SET date = {$this->date}, day_night = 'day'" . $this->GetQuery(false));
 
     //夜が明けた通知
@@ -396,6 +462,12 @@ class Room{
     }
   }
 
+  //背景設定 CSS タグを生成
+  function GenerateCSS(){
+    if(empty($this->day_night)) return '';
+    return '<link rel="stylesheet" href="'.JINRO_CSS.'/game_'.$this->day_night.'.css">'."\n";
+  }
+
   //村のタイトルタグを生成
   function GenerateTitleTag(){
     return '<td class="room"><span>' . $this->name . '村</span>　[' . $this->id .
@@ -404,7 +476,7 @@ class Room{
 }
 
 class RoomDataSet{
-  var $rows = array();
+  public $rows = array();
 
   function LoadFinishedRoom($room_no){
     $query = <<<EOF

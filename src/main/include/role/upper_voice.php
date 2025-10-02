@@ -2,14 +2,11 @@
 /*
   ◆メガホン (upper_voice)
   ○仕様
-  ・声の大きさが一段階大きく発言され、大声は音割れしてしまう
-  ・ゲームプレイ中で生存時のみ有効
+  ・声量変換：上方シフト
 */
-class Role_upper_voice extends RoleTalkFilter{
-  function Role_upper_voice(){ $this->__construct(); }
+RoleManager::LoadFile('strong_voice');
+class Role_upper_voice extends Role_strong_voice{
   function __construct(){ parent::__construct(); }
 
-  function FilterVoice(&$volume, &$sentence){
-    $this->ChangeVolume('up', $volume, $sentence);
-  }
+  function FilterVoice(&$voice, &$str){ $this->ShiftVoice($voice, $str); }
 }

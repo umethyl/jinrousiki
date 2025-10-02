@@ -1,7 +1,15 @@
 <?php
 //-- 引数解析の基底クラス --//
 class RequestBase{
-  function GetItems($items){
+  //データ展開
+  function ToArray(){
+    $stack = array();
+    foreach($this as $key => $value) $stack[$key] = $value;
+    return $stack;
+  }
+
+  //引数解析
+  protected function GetItems($items){
     $spec_list = func_get_args();
     $processor = array_shift($spec_list);
     $src_list  = @array('get' => $_GET, 'post' => $_POST, 'file' => $_FILES['file']);
@@ -25,58 +33,63 @@ class RequestBase{
     }
   }
 
-  function GetDefault($item, &$value){ return false; }
+  //初期値設定
+  protected function GetDefault($item, &$value){ return false; }
 
-  function Exists($arg){ return ! empty($arg); }
+  //存在判定
+  protected function Exists($arg){ return ! empty($arg); }
 
-  function IsOn($arg){ return $arg == 'on'; }
+  //有効判定
+  protected function IsOn($arg){ return $arg == 'on'; }
 
-  function SetPage($arg){
+  //村番号判定
+  protected function IsRoomNo($arg){
+    $room_no = intval($arg);
+    if($room_no < 1) OutputActionResult('村番号エラー', '無効な村番号です: ' . $room_no);
+    return $room_no;
+  }
+
+  //仮想村判定
+  function IsVirtualRoom(){
+    return isset($this->TestItems) && $this->TestItems->is_virtual_room;
+  }
+
+  //ページセット
+  protected function SetPage($arg){
     if($arg == 'all') return $arg;
     $int = intval($arg);
     return $int > 0 ? $int : 1;
   }
 
-  function ToArray(){
-    $stack = array();
-    foreach($this as $key => $value) $stack[$key] = $value;
-    return $stack;
-  }
-
-  function AttachTestParameters(){
-    global $DEBUG_MODE;
-    if($DEBUG_MODE) $this->TestItems = new TestParams();
-  }
-
-  function IsVirtualRoom(){
-    return isset($this->TestItems) && $this->TestItems->is_virtual_room;
+  //テスト用パラメータセット
+  protected function AttachTestParameters(){
+    global $SERVER_CONF;
+    if($SERVER_CONF->debug_mode) $this->TestItems = new RequestTestParams();
   }
 }
 
 //-- テスト用パラメータ設定クラス --//
-class TestParams extends RequestBase{
-  function TestParams(){ $this->__construct(); }
+class RequestTestParams extends RequestBase{
   function __construct(){
-    $this->GetItems(NULL, 'test_users', 'test_room', 'test_mode');
+    $this->GetItems(NULL, 'post.test_users', 'post.test_room', 'post.test_mode');
     $this->is_virtual_room = isset($this->test_users);
   }
 }
 
 //-- game 用共通クラス --//
 class RequestBaseGame extends RequestBase{
-  function RequestBaseGame(){ $this->__construct(); }
   function __construct(){
     global $GAME_CONF;
 
     $this->GetItems('intval', 'get.room_no', 'get.auto_reload');
     $min = min($GAME_CONF->auto_reload_list);
     if($this->auto_reload != 0 && $this->auto_reload < $min) $this->auto_reload = $min;
+    $this->add_role = NULL;
   }
 }
 
 //-- game play 用共通クラス --//
 class RequestBaseGamePlay extends RequestBaseGame{
-  function RequestBaseGamePlay(){ $this->__construct(); }
   function __construct(){
     parent::__construct();
     $this->GetItems('IsOn', 'get.list_down', 'get.play_sound');
@@ -85,7 +98,6 @@ class RequestBaseGamePlay extends RequestBaseGame{
 
 //-- icon 用共通クラス --//
 class RequestBaseIcon extends RequestBase{
-  function RequestBaseIcon(){ $this->__construct(); }
   function __construct(){
     EncodePostData();
     $this->GetItems('EscapeStrings', 'post.icon_name', 'post.appearance',
@@ -94,9 +106,10 @@ class RequestBaseIcon extends RequestBase{
     $this->GetItems('Exists', 'post.search');
   }
 
-  function GetIconData(){
+  protected function GetIconData(){
     $this->GetItems('SetPage', 'page'); //get・post に限定しないこと
-    $this->GetItems('EscapeStrings', 'appearance', 'category', 'author', 'keyword');
+    $this->GetItems('EscapeStrings', 'appearance', 'category', 'author',
+		    'keyword');
     $this->GetItems('IsOn', 'sort_by_name');
     $this->GetItems('Exists', 'search');
   }
@@ -104,25 +117,24 @@ class RequestBaseIcon extends RequestBase{
 
 //-- login.php --//
 class RequestLogin extends RequestBase{
-  function RequestLogin(){ $this->__construct(); }
   function __construct(){
     EncodePostData();
     $this->GetItems('intval', 'get.room_no');
     $this->GetItems('IsOn', 'post.login_manually');
     $this->GetItems('ConvertTrip', 'post.uname');
-    $this->GetItems('EscapeStrings', 'post.password');
+    $this->GetItems('EscapeStrings', 'password');
   }
 }
 
 //-- user_manager.php --//
 class RequestUserManager extends RequestBaseIcon{
-  function RequestUserManager(){ $this->__construct(); }
   function __construct(){
     EncodePostData();
-    $this->GetItems('intval', 'get.room_no', 'post.icon_no');
+    $this->GetItems('IsRoomNo', 'get.room_no');
+    $this->GetItems('intval', 'post.icon_no');
     $this->GetItems('EscapeStrings', 'post.password');
     $this->GetItems('Exists', 'post.entry');
-    $this->GetItems(NULL, 'post.profile', 'post.sex', 'post.role');
+    $this->GetItems(NULL, 'post.trip', 'post.profile', 'post.sex', 'post.role');
     $this->GetItems('IsOn', 'post.login_manually');
     $this->GetIconData();
     EscapeStrings($this->profile, false);
@@ -130,19 +142,41 @@ class RequestUserManager extends RequestBaseIcon{
       $this->GetItems('ConvertTrip', 'post.uname', 'post.handle_name');
     }
     else{
-      $this->GetItems('EscapeStrings', 'post.uname', 'post.handle_name');
+      $this->GetItems('EscapeStrings', 'post.uname', 'post.trip', 'post.handle_name');
     }
+  }
+}
 
-    if($this->room_no < 1){
-      $str = '村番号エラー：村の番号が正常ではありません。<br>'."\n".'<a href="./">←戻る</a>';
-      OutputActionResult('村人登録 [村番号エラー]', $str);
-    }
+//-- game_frame.php --//
+class RequestGameFrame extends RequestBaseGamePlay{
+  function __construct(){
+    parent::__construct();
+    $this->GetItems('IsOn', 'get.dead_mode');
+
+    $url = '?room_no=' . $this->room_no . '&auto_reload=' . $this->auto_reload;
+    if($this->play_sound) $url .= '&play_sound=on';
+    if($this->list_down)  $url .= '&list_down=on';
+    $this->url = $url;
+  }
+}
+
+//-- game_up.php --//
+class RequestGameUp extends RequestBaseGamePlay{
+  function __construct(){
+    parent::__construct();
+    $this->GetItems('IsOn', 'get.dead_mode', 'get.heaven_mode');
+
+    $url = '?room_no=' . $this->room_no . '&auto_reload=' . $this->auto_reload;
+    if($this->play_sound)  $url .= '&play_sound=on';
+    if($this->list_down)   $url .= '&list_down=on';
+    if($this->dead_mode)   $url .= '&dead_mode=on';
+    if($this->heaven_mode) $url .= '&heaven_mode=on';
+    $this->url = $url;
   }
 }
 
 //-- game_play.php --//
 class RequestGamePlay extends RequestBaseGamePlay{
-  function RequestGamePlay(){ $this->__construct(); }
   function __construct(){
     EncodePostData();
     parent::__construct();
@@ -156,14 +190,14 @@ class RequestGamePlay extends RequestBaseGamePlay{
 
 //-- game_log.php --//
 class RequestGameLog extends RequestBase{
-  function RequestGameLog(){ $this->__construct(); }
   function __construct(){
-    $this->GetItems('intval', 'get.room_no', 'get.date');
+    $this->GetItems('IsRoomNo', 'get.room_no');
+    $this->GetItems('intval', 'get.date', 'get.user_no');
     $this->GetItems(NULL, 'get.day_night');
     if($this->IsInvalidScene()) OutputActionResult('引数エラー', '無効な引数です');
   }
 
-  function IsInvalidScene(){
+  private function IsInvalidScene(){
     switch($this->day_night){
     case 'beforegame':
       return $this->date != 0;
@@ -171,6 +205,10 @@ class RequestGameLog extends RequestBase{
     case 'day':
     case 'night':
       return $this->date < 1;
+
+    case 'aftergame':
+    case 'heaven':
+      return false;
 
     default:
       return true;
@@ -187,7 +225,6 @@ class RequestGameVote extends RequestBaseGamePlay{
     target_no : 投票先の user_no (キューピッドがいるため単純に整数型にキャストしてはだめ)
     situation : 投票の分類 (Kick・処刑・占い・人狼襲撃など)
   */
-  function RequestGameVote(){ $this->__construct(); }
   function __construct(){
     parent::__construct();
     $this->GetItems('intval', 'post.vote_times');
@@ -206,7 +243,6 @@ class RequestGameVote extends RequestBaseGamePlay{
 
 //-- old_log.php --//
 class RequestOldLog extends RequestBase{
-  function RequestOldLog(){ $this->__construct(); }
   function __construct(){
     $this->GetItems('intval', 'get.db_no');
     $this->GetItems('IsOn', 'get.watch');
@@ -225,7 +261,6 @@ class RequestOldLog extends RequestBase{
 
 //-- icon_view.php --//
 class RequestIconView extends RequestBaseIcon{
-  function RequestIconView(){ $this->__construct(); }
   function __construct(){
     $this->GetIconData();
     $this->GetItems('intval', 'get.icon_no');
@@ -236,7 +271,6 @@ class RequestIconView extends RequestBaseIcon{
 
 //-- icon_edit.php --//
 class RequestIconEdit extends RequestBaseIcon{
-  function RequestIconEdit(){ $this->__construct(); }
   function __construct(){
     parent::__construct();
     $this->GetItems('EscapeStrings', 'post.password');
@@ -246,7 +280,6 @@ class RequestIconEdit extends RequestBaseIcon{
 
 //-- icon_upload.php --//
 class RequestIconUpload extends RequestBaseIcon{
-  function RequestIconUpload(){ $this->__construct(); }
   function __construct(){
     parent::__construct();
     $this->GetItems('intval', 'file.size');
@@ -256,7 +289,6 @@ class RequestIconUpload extends RequestBaseIcon{
 
 //-- src/upload.php --//
 class RequestSrcUpload extends RequestBase{
-  function RequestSrcUpload(){ $this->__construct(); }
   function __construct(){
     EncodePostData();
     $this->GetItems('EscapeStrings', 'post.name', 'post.caption', 'post.user', 'post.password');

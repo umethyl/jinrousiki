@@ -2,19 +2,20 @@
 /*
   ◆独身貴族 (celibacy)
   ○仕様
-  ・恋人に投票されたらショック死する
+  ・ショック死：恋人からの得票
 */
-class Role_celibacy extends Role{
-  function Role_celibacy(){ $this->__construct(); }
+RoleManager::LoadFile('chicken');
+class Role_celibacy extends Role_chicken{
+  public $sudden_death = 'CELIBACY';
   function __construct(){ parent::__construct(); }
 
-  function FilterSuddenDeath(&$reason){
-    global $ROLES, $USERS;
+  function SuddenDeath(){
+    global $USERS;
 
-    if($reason != '') return;
-    foreach(array_keys($ROLES->stack->target, $ROLES->actor->uname) as $uname){
+    if($this->IgnoreSuddenDeath()) return;
+    foreach($this->GetVotedUname() as $uname){
       if($USERS->ByRealUname($uname)->IsLovers()){
-	$reason = 'CELIBACY';
+	$this->SetSuddenDeath($this->sudden_death);
 	break;
       }
     }

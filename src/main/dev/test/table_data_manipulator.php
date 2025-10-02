@@ -5,7 +5,7 @@
   アクセス、という使い方を想定しています。
 
   開発者のテスト用コードそのままなので要注意！
- */
+*/
 define('JINRO_ROOT', '../..');
 require_once(JINRO_ROOT . '/include/init.php');
 
@@ -83,8 +83,11 @@ function DeleteUsedIcon($from, $to){
     PrintData($to, 'Invalid Icon No');
     return false;
   }
-  if(LockTable('icon_delete') &&
-     SendQuery("UPDATE user_entry SET icon_no = {$to} WHERE icon_no = {$from}")){
+  if(LockTable('icon_delete')){
+    PrintData('Lock Failed', 'icon_delete');
+    return false;
+  }
+  if(SendQuery("UPDATE user_entry SET icon_no = {$to} WHERE icon_no = {$from}")){
     $file = FetchResult("SELECT icon_filename FROM user_icon WHERE icon_no = {$from}");
     unlink(JINRO_ROOT . '/user_icon/' . $file); //ファイルの存在をチェックしていないので要注意
     SendQuery("DELETE FROM user_icon WHERE icon_no = {$from}");
@@ -124,7 +127,8 @@ function ReconstructEstablishTime($test = false){
   $keyword = '村作成：';
   foreach($room_list as $room_no){
     #if($room_no == 434) return;
-    $query = "SELECT sentence, talk_id FROM talk WHERE room_no = {$room_no} AND sentence LIKE '%{$keyword}%'";
+    $query = "SELECT sentence, talk_id FROM talk WHERE room_no = {$room_no} AND " .
+      "sentence LIKE '%{$keyword}%'";
     $talk = FetchAssoc($query, true);
     if(count($talk) > 0){
       $str = array_pop(explode($keyword, $talk['sentence']));
@@ -167,7 +171,8 @@ function ReconstructStartTime($test = false){
   //PrintData($room_list);
   foreach($room_list as $room_no){
     #if($room_no == 434) return;
-    $query = "SELECT sentence, talk_id FROM talk WHERE room_no = {$room_no} AND sentence LIKE '%{$keyword}%'";
+    $query = "SELECT sentence, talk_id FROM talk WHERE room_no = {$room_no} " .
+      "AND sentence LIKE '%{$keyword}%'";
     $talk = FetchAssoc($query, true);
     if(count($talk) > 0){
       $str = array_pop(explode($keyword, $talk['sentence']));
@@ -207,7 +212,8 @@ function ReconstructFinishTime($test = false){
   $keyword = 'ゲーム終了：';
   foreach($room_list as $room_no){
     #if($room_no == 434) return;
-    $query = "SELECT sentence, talk_id FROM talk WHERE room_no = {$room_no} AND sentence LIKE '%{$keyword}%'";
+    $query = "SELECT sentence, talk_id FROM talk WHERE room_no = {$room_no} " .
+      "AND sentence LIKE '%{$keyword}%'";
     $talk = FetchAssoc($query, true);
     if(count($talk) > 0){
       $str = array_pop(explode($keyword, $talk['sentence']));
@@ -224,7 +230,8 @@ function ReconstructFinishTime($test = false){
     }
     else{
       continue;
-      $query = "SELECT time FROM talk WHERE room_no = {$room_no} AND ! (location LIKE '%aftergame%') ORDER BY talk_id DESC";
+      $query = "SELECT time FROM talk WHERE room_no = {$room_no} " .
+	"AND ! (location LIKE '%aftergame%') ORDER BY talk_id DESC";
       $talk = FetchResult($query);
       if($test){
 	$time = gmdate('Y/m/d (D) H:i:s', $talk);
@@ -247,7 +254,7 @@ function ReconstructFinishTime($test = false){
   id    : 村番号
 */
 function UpdateRoomInfo($item, $value, $id){
-  mysql_query("UPDATE room SET {$item} = '{$value}' WHERE room_no = {$id}");
+  SendQuery("UPDATE room SET {$item} = '{$value}' WHERE room_no = {$id}");
 }
 
 //テーブルデータの文字コード変換

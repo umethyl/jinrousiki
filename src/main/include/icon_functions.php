@@ -10,19 +10,6 @@ function CheckColorString($str, $title, $url){
   return strtoupper($str);
 }
 
-function OutputIconPageHeader(){
-  OutputHTMLHeader('ユーザアイコン一覧', 'icon_view');
-  echo <<<HTML
-<script type="text/javascript" src="javascript/submit_icon_search.js"></script>
-</head>
-<body>
-<a href="./">←ホームページに戻る</a><br>
-<img class="title" src="img/icon_view_title.jpg" title="アイコン一覧"><br>
-<div class="link"><a href="icon_upload.php">→アイコン登録</a></div>
-
-HTML;
-}
-
 function OutputIconList($base_url = 'icon_view'){
   global $RQ_ARGS;
 
@@ -71,8 +58,8 @@ HTML;
 function OutputIconEditForm($icon_no){
   global $ICON_CONF, $USER_ICON, $RQ_ARGS;
 
-  $size = $USER_ICON->name;
-  foreach(FetchAssoc("SELECT * FROM user_icon WHERE icon_no = {$icon_no}") as $selected) {
+  $size = ' size="' . $USER_ICON->name . '" maxlength="' . $USER_ICON->name . '"';
+  foreach(FetchAssoc("SELECT * FROM user_icon WHERE icon_no = {$icon_no}") as $selected){
     extract($selected, EXTR_PREFIX_ALL, 'selected');
     $location = $ICON_CONF->path . '/' . $selected_icon_filename;
     $checked  = $selected_disable > 0 ? ' checked' : '';
@@ -81,26 +68,26 @@ function OutputIconEditForm($icon_no){
 <input type="hidden" name="icon_no" value="{$selected_icon_no}">
 <table cellpadding="3">
 <tr><td rowspan="7"><img src="{$location}" style="border:3px solid {$selected_color};"></td>
-<td><label>アイコンの名前</label></td>
-<td><input type="text" name="icon_name" maxlength="{$size}" size="{$size}" value="{$selected_icon_name}"></td></tr>
+<td><label for="name">アイコンの名前</label></td>
+<td><input type="text" id="name" name="icon_name" value="{$selected_icon_name}"{$size}></td></tr>
 
-<tr><td><label>出典</label></td>
-<td><input type="text" name="appearance" maxlength="{$size}" size="{$size}" value="{$selected_appearance}"></td></tr>
+<tr><td><label for="appearance">出典</label></td>
+<td><input type="text" id="appearance" name="appearance" value="{$selected_appearance}"{$size}></td></tr>
 
-<tr><td><label>カテゴリ</label></td>
-<td><input type="text" name="category" maxlength="{$size}" size="{$size}" value="{$selected_category}"></td></tr>
+<tr><td><label for="category">カテゴリ</label></td>
+<td><input type="text" id="category" name="category" value="{$selected_category}"{$size}></td></tr>
 
-<tr><td><label>アイコンの作者</label></td>
-<td><input type="text" name="author" maxlength="{$size}" size="{$size}" value="{$selected_author}"></td></tr>
+<tr><td><label for="author">アイコンの作者</label></td>
+<td><input type="text" id="author" name="author" value="{$selected_author}"{$size}></td></tr>
 
-<tr><td><label>アイコン枠の色</label></td>
-<td><input type="text" name="color" size="10px" maxlength="7" value="{$selected_color}"> (例：#6699CC)</td></tr>
+<tr><td><label for="color">アイコン枠の色</label></td>
+<td><input type="text" id="color" name="color" value="{$selected_color}" size="10px" maxlength="7"> (例：#6699CC)</td></tr>
 
 <tr><td><label for="disable">非表示</label></td>
 <td><input type="checkbox" id="disable" name="disable" value="on"{$checked}></td></tr>
 
-<tr><td><label>編集パスワード</label></td>
-<td><input type="password" name="password" size="20"></td></tr>
+<tr><td><label for="password">編集パスワード</label></td>
+<td><input type="password" id="password" name="password" size="20" value=""></td></tr>
 
 <tr><td colspan="3"><input type="submit" value="変更"></td></tr>
 </table>
@@ -135,7 +122,7 @@ function ConcreteOutputIconList($base_url = 'icon_view'){
     echo <<<HTML
 <td>
 <label for="{$type}[]">{$caption}</label><br>
-<select name="{$type}[]" size="6" style="width:12em;" multiple>
+<select name="{$type}[]" size="6" multiple>
 <option value="__all__">全て</option>
 
 HTML;
@@ -175,7 +162,7 @@ HTML;
   //PrintData($category_list);
   $all_url = $url_header;
   if($RQ_ARGS->room_no > 0) $all_url .= 'room_no=' . $RQ_ARGS->room_no;
-  echo "<table>\n<tr>\n";
+  echo "<table class=\"selector\">\n<tr>\n";
 
   //検索条件の表示
   $where_cond = array();
@@ -198,7 +185,7 @@ HTML;
     $where_cond[] = _generateInClause('author', $selected_authors);
   }
 
-  $selected_keywords = _outputSelectionByType('keyword', 'キーワード'); //"キーワード"は未使用
+  $selected_keywords = _outputSelectionByType('keyword', 'キーワード');
   if(0 < count($selected_keywords)){
     $str = "LIKE '%{$selected_keywords[0]}%'";
     $where_cond[] = "(category {$str} OR appearance {$str} OR author {$str} OR icon_name {$str})";
@@ -270,7 +257,7 @@ HTML;
   $PAGE_CONF->option  = $url_option;
   $PAGE_CONF->attributes  = array('onclick' => 'return "return submit_icon_search(\'$page\');";');
   if($RQ_ARGS->room_no > 0) $PAGE_CONF->option[] = 'room_no=' . $RQ_ARGS->room_no;
-  echo '<td colspan="' . $colspan . '" style="text-align:right;">';
+  echo '<td colspan="' . $colspan . '" class="page-link">';
   //PrintData($PAGE_CONF, 'PAGE_CONF');
   OutputPageLink($PAGE_CONF);
   echo <<<HTML
@@ -322,7 +309,7 @@ function OutputIconDetailsForIconView($icon_info, $format_info){
   $edit_url = "icon_view.php?icon_no={$icon_no}";
   if($disable > 0) $icon_name = '<s>'.$icon_name.'</s>';
   echo <<<HTML
-<td class="icon_details">
+<td class="icon-details">
 <label for="icon_{$icon_no}">
 <a href="{$edit_url}" class="icon_wrapper" style="width:{$wrapper_width}px">
 <img alt="{$icon_name}" src="{$location}" width="{$icon_width}" height="{$icon_height}" style="border:3px solid {$color};">
@@ -335,9 +322,9 @@ function OutputIconDetailsForIconView($icon_info, $format_info){
 HTML;
 
   $data = '';
-  if(!empty($appearance)) $data .= '<li>[S]' . $appearance;
-  if(!empty($category))   $data .= '<li>[C]' . $category;
-  if(!empty($author))     $data .= '<li>[A]' . $author;
+  if(! empty($appearance)) $data .= '<li>[S]' . $appearance;
+  if(! empty($category))   $data .= '<li>[C]' . $category;
+  if(! empty($author))     $data .= '<li>[A]' . $author;
   echo $data;
   echo <<<HTML
 </ul>

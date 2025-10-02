@@ -2,15 +2,15 @@
 /*
   ◆外弁慶 (outside_voice)
   ○仕様
-  ・声の大きさが昼は「大声」、夜は「小声」で固定される
-  ・ゲームプレイ中で生存時のみ有効
+  ・声量変換：昼「大声」 / 夜「小声」固定
 */
-class Role_outside_voice extends RoleTalkFilter{
-  function Role_outside_voice(){ $this->__construct(); }
+RoleManager::LoadFile('strong_voice');
+class Role_outside_voice extends Role_strong_voice{
   function __construct(){ parent::__construct(); }
 
-  function FilterVoice(&$volume, &$sentence){
+  function FilterVoice(&$voice, &$str){
     global $ROOM;
-    $volume = $ROOM->IsDay() ? 'strong' : 'weak';
+    $stack = $this->voice_list;
+    $voice = $ROOM->IsDay() ? array_pop($stack) : array_shift($stack);
   }
 }

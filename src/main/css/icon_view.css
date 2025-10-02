@@ -1,5 +1,6 @@
 @charset "utf-8";
 @import url(base.css);
+@import url(icon.css);
 body{
   background-image: url("../img/icon_view_bg.jpg");
   background-repeat: no-repeat;
@@ -9,11 +10,8 @@ body{
   margin : 0;
   padding : 0;
 }
-.title{
-  border: 0;
-  margin: 1px 0 1em 0;
-}
-.link{margin-bottom: 5px;}
+.title{border: 0;}
+.link{margin: 5px;}
 fieldset{
   filter: alpha(opacity=80,enabled=80);
   border: 1px solid #000000;
@@ -29,17 +27,3 @@ table td{
   vertical-align: top;
   font-size: 15px;
 }
-table img{border: 2px solid;}
-td.icon_details {
-  padding:4px;
-}
-td.icon_details .icon_wrapper {
-  display:block;
-  float:left;
-}
-td.icon_details ul {
-  list-style:none;
-  float:left;
-  padding:0;
-}
-.name{width: 150px;}

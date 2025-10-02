@@ -1,6 +1,6 @@
 function auto_clear(){
   if(self.document.send){
-    self.document.send.say.value = "";
+    self.document.send.say.value = '';
     self.document.send.say.focus();
     self.document.send.font_type.options[1].selected = true;
   }

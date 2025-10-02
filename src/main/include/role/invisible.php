@@ -2,35 +2,31 @@
 /*
   ◆光学迷彩 (invisible)
   ○仕様
-  ・自分の発言の一部が一定確率で消える
-  ・判定は一文字毎で、空白、タブ、改行文字は対象外
-  ・確率の初期値は GameConfig->invisible_rate で定義し, 一文字毎に 1% アップする
-  ・ゲームプレイ中で生存時のみ有効 (呼び出し関数側で対応)
+  ・発言変換：消滅 (割合：GameConfig->invisible_rate)
+    - 判定は一文字毎で、空白、タブ、改行文字は対象外
 */
 class Role_invisible extends Role{
-  function Role_invisible(){ $this->__construct(); }
   function __construct(){ parent::__construct(); }
 
-  function FilterSay(&$sentence){
+  function ConvertSay(){
     global $GAME_CONF;
 
+    $say    = $this->GetStack('say');
     $result = '';
-    $regex  = "/[\t\r\n 　]/";
-    $rate   = $GAME_CONF->invisible_rate;
-    $count  = mb_strlen($sentence);
+    $regex  = "/[\t\r\n\s]/";
+    $count  = mb_strlen($say);
+    $stack  = range(0, $count);
+    shuffle($stack);
+    $target_stack = array_slice($stack, 0, ceil($count * $GAME_CONF->invisible_rate / 100));
     for($i = 0; $i < $count; $i++){
-      $str = mb_substr($sentence, $i, 1);
-      if(preg_match($regex, $str)){
+      $str = mb_substr($say, $i, 1);
+      if(preg_match($regex, $str))
 	$result .= $str;
-	continue;
-      }
-
-      if(mt_rand(1, 100) <= $rate)
+      elseif(in_array($i, $target_stack))
 	$result .= (strlen($str) == 2 ? '　' : '&nbsp;');
       else
 	$result .= $str;
-      if(++$rate > 100) break;
     }
-    $sentence = $result;
+    $this->SetStack($result, 'say');
   }
 }

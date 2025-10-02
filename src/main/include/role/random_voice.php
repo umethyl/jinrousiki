@@ -2,14 +2,11 @@
 /*
   ◆臆病者 (random_voice)
   ○仕様
-  ・声の大きさがランダムで変化する
-  ・ゲームプレイ中で生存時のみ有効
+  ・声量変換：ランダム
 */
-class Role_random_voice extends RoleTalkFilter{
-  function Role_random_voice(){ $this->__construct(); }
+RoleManager::LoadFile('strong_voice');
+class Role_random_voice extends Role_strong_voice{
   function __construct(){ parent::__construct(); }
 
-  function FilterVoice(&$volume, &$sentence){
-    $volume = GetRandom($this->volume_list);
-  }
+  function FilterVoice(&$voice, &$str){ $voice = GetRandom($this->voice_list); }
 }

@@ -2,13 +2,13 @@
 /*
   ◆会心 (critical_voter)
   ○仕様
-  ・5% の確率で投票数が +100 される
+  ・投票数：+100 (5% / 天候「烈日」)
 */
 class Role_critical_voter extends Role{
-  function Role_critical_voter(){ $this->__construct(); }
   function __construct(){ parent::__construct(); }
 
-  function FilterVoteDo(&$vote_number){
-    $vote_number += mt_rand(1, 100) <= 5 ? 100 : 0;
+  function FilterVoteDo(&$number){
+    global $ROOM;
+    if($ROOM->IsEvent('critical') || mt_rand(1, 100) <= 5) $number += 100;
   }
 }

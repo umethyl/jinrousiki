@@ -1,12 +1,11 @@
 <?php
 class Table{
-  var $name;
-  var $default_charset;
-  var $engine;
-  var $fields = array();
-  var $indices = array();
+  public $name;
+  public $default_charset;
+  public $engine;
+  public $fields  = array();
+  public $indices = array();
 
-  function Table(){ $this->__construct(); }
   function __construct(){}
 
   function Exists($use_cache = true){

@@ -2,15 +2,15 @@
 /*
   ◆内弁慶 (inside_voice)
   ○仕様
-  ・声の大きさが昼は「小声」、夜は「大声」で固定される
-  ・ゲームプレイ中で生存時のみ有効
+  ・声量変換：昼「小声」 / 夜「大声」固定
 */
-class Role_inside_voice extends RoleTalkFilter{
-  function Role_inside_voice(){ $this->__construct(); }
+RoleManager::LoadFile('strong_voice');
+class Role_inside_voice extends Role_strong_voice{
   function __construct(){ parent::__construct(); }
 
-  function FilterVoice(&$volume, &$sentence){
+  function FilterVoice(&$voice, &$str){
     global $ROOM;
-    $volume = $ROOM->IsDay() ? 'weak' : 'strong';
+    $stack = $this->voice_list;
+    $voice = $ROOM->IsNight() ? array_pop($stack) : array_shift($stack);
   }
 }

@@ -1,9 +1,7 @@
 <?php
 //-- 基礎関数 --//
 //配列からランダムに一つ取り出す
-function GetRandom($array){
-  return $array[array_rand($array)];
-}
+function GetRandom($array){ return $array[array_rand($array)]; }
 
 //-- 時間関連 --//
 //リアルタイムの経過時間
@@ -105,7 +103,7 @@ function CheckVictory($check_draw = false){
 
   if($ROOM->test_mode) return false;
 
-  //コピー系がいるのでキャッシュを更新するかクエリから引くこと
+  //コピー能力者がいるのでキャッシュを更新するかクエリから引くこと
   $query_count = $ROOM->GetQuery(false, 'user_entry') . " AND live = 'live' AND user_no > 0 AND ";
   $human  = FetchResult($query_count . "!(role LIKE '%wolf%') AND !(role LIKE '%fox%')"); //村人
   $wolf   = FetchResult($query_count . "role LIKE '%wolf%'"); //人狼
@@ -116,7 +114,7 @@ function CheckVictory($check_draw = false){
   //-- 吸血鬼の勝利判定 --//
   $vampire = false;
   $living_id_list = array(); //生存者の ID リスト
-  $infected_list = array(); //吸血鬼 => 感染者リスト
+  $infected_list  = array(); //吸血鬼 => 感染者リスト
   foreach($USERS->GetLivingUsers(true) as $uname){
     $user = $USERS->ByUname($uname);
     $user->ReparseRoles();
@@ -193,18 +191,19 @@ function CheckSelfVoteNight($situation, $not_situation = ''){
 //-- 出力関連 --//
 //HTMLヘッダー出力
 function OutputGamePageHeader(){
-  global $SERVER_CONF, $TIME_CONF, $GAME_CONF, $RQ_ARGS, $ROOM, $SELF;
+  global $SERVER_CONF, $GAME_CONF, $TIME_CONF, $RQ_ARGS, $ROOM, $SELF;
 
   //引数を格納
-  $url_header = 'game_frame.php?room_no=' . $ROOM->id . '&auto_reload=' . $RQ_ARGS->auto_reload;
-  if($RQ_ARGS->play_sound) $url_header .= '&play_sound=on';
-  if($RQ_ARGS->list_down)  $url_header .= '&list_down=on';
+  $url_header = 'game_frame.php?room_no=' . $ROOM->id;
+  if($RQ_ARGS->auto_reload > 0) $url_header .= '&auto_reload=' . $RQ_ARGS->auto_reload;
+  if($RQ_ARGS->play_sound)      $url_header .= '&play_sound=on';
+  if($RQ_ARGS->list_down)       $url_header .= '&list_down=on';
 
   $title = $SERVER_CONF->title . ' [プレイ]';
   $anchor_header = '<br>'."\n";
   /*
-    Mac で JavaScript でエラーを吐くブラウザがあった当時のコード
-    現在の Safari、Firefox では不要なので false でスキップしておく
+    Mac に JavaScript でエラーを吐くブラウザがあった当時のコード
+    現在の Safari・Firefox では不要なので false でスキップしておく
     //if(preg_match('/Mac( OS|intosh|_PowerPC)/i', $_SERVER['HTTP_USER_AGENT'])){
   */
   if(false){
@@ -220,13 +219,13 @@ function OutputGamePageHeader(){
     $anchor_footer = '" target="_top">ここ</a>';
   }
 
-  //ゲーム中、死んで霊話モードに行くとき
+  //ゲーム画面→天国モード (ゲーム中に死亡)
   if($ROOM->IsPlaying() && $SELF->IsDead() &&
      ! ($ROOM->log_mode || $ROOM->dead_mode || $ROOM->heaven_mode)){
-    $jump_url =  $url_header . '&dead_mode=on';
+    $jump_url = $url_header . '&dead_mode=on';
     $sentence .= '天国モードに切り替えます。';
   }
-  elseif($ROOM->IsAfterGame() && $ROOM->dead_mode){ //ゲームが終了して霊話から戻るとき
+  elseif($ROOM->IsAfterGame() && $ROOM->dead_mode){ //天国モード→ゲーム終了画面
     $jump_url = $url_header;
     $sentence .= 'ゲーム終了後のお部屋に飛びます。';
   }
@@ -234,6 +233,7 @@ function OutputGamePageHeader(){
     $jump_url = $url_header;
     $sentence .= 'ゲーム画面に飛びます。';
   }
+  else $jump_url = '';
 
   if($jump_url != ''){ //移動先が設定されていたら画面切り替え
     $sentence .= $anchor_header . $jump_url . $anchor_footer;
@@ -255,7 +255,7 @@ function OutputGamePageHeader(){
   $game_top = '<a id="game_top"></a>';
   if($ROOM->IsPlaying() && $ROOM->IsRealTime() && ! ($ROOM->log_mode || $ROOM->heaven_mode)){
     list($start_time, $end_time) = GetRealPassTime($left_time);
-    $sound_type = NULL;
+    $sound_type = null;
     $alert_flag = false;
     $on_load .= 'output_realtime();';
     if($left_time < 1 && $SELF->IsLive()){ //超過判定
@@ -286,7 +286,7 @@ function OutputGamePageHeader(){
 }
 
 //リアルタイム表示に使う JavaScript の変数を出力
-function OutputRealTimer($start_time, $end_time, $type = NULL, $flag = false){
+function OutputRealTimer($start_time, $end_time, $type = null, $flag = false){
   global $TIME_CONF, $ROOM, $SOUND;
 
   $js_path     = JINRO_ROOT . '/javascript/';
@@ -318,11 +318,11 @@ function GenerateJavaScriptDate($time){
 function OutputAutoReloadLink($url){
   global $GAME_CONF, $RQ_ARGS;
 
-  $str = '[自動更新](' . $url . '0">' . ($RQ_ARGS->auto_reload == 0 ? '【手動】' : '手動') . '</a>';
+  $str = '[自動更新](' . $url . '">' . ($RQ_ARGS->auto_reload > 0 ? '手動' : '【手動】') . '</a>';
   foreach($GAME_CONF->auto_reload_list as $time){
     $name = $time . '秒';
     $value = $RQ_ARGS->auto_reload == $time ? '【' . $name . '】' : $name;
-    $str .= ' ' . $url . $time . '">' . $value . '</a>';
+    $str .= ' ' . $url . '&auto_reload=' . $time . '">' . $value . '</a>';
   }
   echo $str . ')'."\n";
 }
@@ -360,7 +360,7 @@ function OutputTimeTable(){
 
 //プレイヤー一覧生成
 function GeneratePlayerList(){
-  global $DEBUG_MODE, $ICON_CONF, $ROOM, $USERS, $SELF;
+  global $SERVER_CONF, $ICON_CONF, $ROOM, $USERS, $SELF;
 
   //PrintData($ROOM->event); //テスト用
   $beforegame = $ROOM->IsBeforeGame();
@@ -372,12 +372,10 @@ function GeneratePlayerList(){
     $count++;
 
     //ゲーム開始投票をしていたら背景色を変える
-    if($beforegame && ($user->IsDummyBoy(true) || isset($ROOM->vote[$user->uname]))){
+    if($beforegame && ($user->IsDummyBoy(true) || isset($ROOM->vote[$user->uname])))
       $td_header = '<td class="already-vote">';
-    }
-    else{
+    else
       $td_header = '<td>';
-    }
 
     //ユーザプロフィールと枠線の色を追加
     //Alt, Title 内の改行はブラウザ依存あり (Firefox 系は無効)
@@ -404,7 +402,7 @@ function GeneratePlayerList(){
 
     //HN を追加
     $str .= $td_header . '<font color="' . $user->color . '">◆</font>' . $user->handle_name;
-    if($DEBUG_MODE) $str .= ' (' . $id . ')';
+    if($SERVER_CONF->debug_mode) $str .= ' (' . $id . ')';
     $str .= '<br>'."\n";
 
     if($open_data){ //ゲーム終了後・死亡後＆霊界役職公開モードなら、役職・ユーザネームも表示
@@ -425,35 +423,34 @@ function GeneratePlayerList(){
 }
 
 //プレイヤー一覧出力
-function OutputPlayerList(){
-  echo GeneratePlayerList();
-}
+function OutputPlayerList(){ echo GeneratePlayerList(); }
 
 //勝敗結果の生成
 function GenerateVictory($id = 0){
-  global $VICT_MESS, $ROOM, $ROLES, $USERS, $SELF;
+  global $VICT_MESS, $RQ_ARGS, $ROOM, $ROLES, $USERS, $SELF;
 
   //-- 村の勝敗結果 --//
-  $victory = FetchResult($ROOM->GetQueryHeader('room', 'victory_role'));
+  $victory = $ROOM->LoadVictory();
   $class   = $victory;
   $winner  = $victory;
 
   switch($victory){ //特殊ケース対応
-  //妖狐勝利系
+  //妖狐勝利
   case 'fox1':
   case 'fox2':
-    $class = 'fox';
+    $victory = 'fox';
+    $class   = $victory;
     break;
 
-  //引き分け系
+  //引き分け
   case 'draw': //引き分け
   case 'vanish': //全滅
   case 'quiz_dead': //クイズ村 GM 死亡
     $class = 'draw';
     break;
 
-  //廃村系
-  case NULL:
+  //廃村
+  case null:
     $class  = 'none';
     $winner = $ROOM->date > 0 ? 'unfinished' : 'none';
     break;
@@ -465,6 +462,7 @@ function GenerateVictory($id = 0){
 
 EOF;
 
+  //-- 個々の勝敗結果 --//
   //スキップ判定 (勝敗未決定/観戦モード/ログ閲覧モード)
   if(is_null($victory) || $ROOM->view_mode ||
      ($ROOM->log_mode && ! $ROOM->single_view_mode && ! $ROOM->personal_mode)){
@@ -472,61 +470,44 @@ EOF;
   }
 
   $result = 'win';
-  $class  = NULL;
-  $actor  = $id > 0 ? $USERS->ByID($id) : $SELF;
-  if($actor->user_no < 1) return $str;
-  $camp   = $actor->GetCamp(true); //所属陣営を取得
+  $class  = null;
+  $user   = $id > 0 ? $USERS->ByID($id) : $SELF;
+  if($user->user_no < 1) return $str;
+  $camp   = $user->GetCamp(true); //所属陣営を取得
 
-  if($victory == 'draw' || $victory == 'vanish'){ //引き分け系
-    $class  = 'draw';
+  switch($victory){
+  case 'draw':   //引き分け
+  case 'vanish': //全滅
     $result = 'draw';
-  }
-  elseif($victory == 'quiz_dead'){ //出題者死亡
-    $class  = $camp == 'quiz' ? 'lose' : 'draw';
+    $class  = $result;
+    break;
+
+  case 'quiz_dead': //出題者死亡
     $result = $camp == 'quiz' ? 'lose' : 'draw';
-  }
-  else{
-    $win_flag = false;
+    $class  = $result;
+    break;
+
+  default:
+    $ROLES->stack->class = null;
     switch($camp){
     case 'human':
-      if($actor->IsDoll()){ //人形系は人形遣いが生存していたら敗北
-	foreach($USERS->rows as $user){
-	  if($user->IsLiveRole('doll_master')) break 2;
-	}
-	$class = 'doll';
-      }
-      elseif($actor->IsRoleGroup('escaper')){ //逃亡者系は死亡していたら敗北
-	if($actor->IsDead()) break;
-	$class = 'escaper';
-      }
-      $win_flag = $victory == $camp;
-      break;
-
+    case 'wolf':
     case 'fox':
-      $win_flag = (strpos($victory, $camp) !== false);
+      $win_flag = $victory == $camp && $ROLES->LoadMain($user)->Win($victory);
       break;
 
-    case 'vampire': //吸血鬼陣営は生き残った者だけが勝利
-      if($actor->IsRoleGroup('mania')){ //神話マニア陣営がコピーした場合は陣営の勝敗依存
-	$win_flag = $victory == $camp;
-      }
-      else{
-	$win_flag = $victory == $camp && $actor->IsLive();
-      }
+    case 'vampire':
+      $win_flag = $victory == $camp && ($SELF->IsRoleGroup('mania') || $user->IsLive());
       break;
 
-    case 'chiroptera': //蝙蝠陣営は生きていれば勝利
-      $win_flag = $actor->IsLive();
+    case 'chiroptera':
+      $win_flag = $user->IsLive();
       break;
 
     case 'ogre':
-      if($actor->IsRoleGroup('mania')){ //神話マニア陣営は生存のみ
-	$win_flag = $actor->IsLive();
-	break;
-      }
-      //個別判定
-      $ROLES->actor = $actor;
-      $win_flag = $ROLES->Load('ogre', true)->DistinguishVictory($victory);
+    case 'duelist':
+      $win_flag = $user->IsRoleGroup('mania') ? $user->IsLive()
+	: $ROLES->LoadMain($user)->Win($victory);
       break;
 
     default:
@@ -534,14 +515,19 @@ EOF;
       break;
     }
 
-    if($win_flag && (! $actor->IsJoker($ROOM->date) ||
-		     ($actor->IsLive() && count($USERS->GetLivingUsers()) == 1))){
-      if(is_null($class)) $class = $camp;
+    if($win_flag){ //ジョーカー系判定
+      $ROLES->actor = $user;
+      foreach($ROLES->Load('joker') as $filter) $filter->FilterWin($win_flag);
+    }
+
+    if($win_flag){
+      $class = is_null($ROLES->stack->class) ? $camp : $ROLES->stack->class;
     }
     else{
-      $class  = 'lose';
       $result = 'lose';
+      $class  = $result;
     }
+    break;
   }
   if($id > 0){
     switch($result){
@@ -569,16 +555,14 @@ EOF;
 }
 
 //勝敗結果の出力
-function OutputVictory(){
-  echo GenerateVictory();
-}
+function OutputVictory(){ echo GenerateVictory(); }
 
 //投票の集計生成
 function GenerateVoteResult(){
   global $MESSAGE, $ROOM;
 
-  if(! $ROOM->IsPlaying()) return NULL; //ゲーム中以外は出力しない
-  if($ROOM->IsEvent('blind_vote') && ! $ROOM->IsOpenData()) return NULL; //傘化けの判定
+  if(! $ROOM->IsPlaying()) return null; //ゲーム中以外は出力しない
+  if($ROOM->IsEvent('blind_vote') && ! $ROOM->IsOpenData()) return null; //傘化けの判定
 
   //昼なら前日、夜ならの今日の集計を表示
   return GetVoteList(($ROOM->IsDay() && ! $ROOM->log_mode) ? $ROOM->date - 1 : $ROOM->date);
@@ -617,7 +601,7 @@ function OutputRevoteList(){
 function GetVoteList($date){
   global $ROOM;
 
-  if($ROOM->personal_mode) return NULL; //スキップ判定
+  if($ROOM->personal_mode) return null; //スキップ判定
   //指定された日付の投票結果を取得
   $query = $ROOM->GetQueryHeader('system_message', 'message') .
     " AND date = {$date} and type = 'VOTE_KILL'";
@@ -628,7 +612,7 @@ function GetVoteList($date){
 function GenerateVoteList($raw_data, $date){
   global $RQ_ARGS, $ROOM, $SELF;
 
-  if(count($raw_data) < 1) return NULL; //投票総数
+  if(count($raw_data) < 1) return null; //投票総数
 
   $open_vote = $ROOM->IsOpenData() || $ROOM->IsOption('open_vote'); //投票数開示判定
   $table_stack = array();
@@ -642,9 +626,7 @@ function GenerateVoteList($raw_data, $date){
 		   $header . $target_name, '</tr>');
     $table_stack[$vote_times][] = implode('</td>', $stack);
   }
-
   if(! $RQ_ARGS->reverse_log) krsort($table_stack); //正順なら逆転させる
-
   $str = '';
   $header = '<tr><td class="vote-times" colspan="4">' . $date . ' 日目 ( ';
   $footer = ' 回目)</td>';
@@ -669,166 +651,205 @@ function OutputTalkLog(){
 
 //会話出力
 function OutputTalk($talk, &$builder){
-  global $RQ_ARGS, $ROOM, $USERS, $SELF;
+  global $MESSAGE, $RQ_ARGS, $ROOM, $ROLES, $USERS, $SELF;
 
   //PrintData($talk);
   //発言ユーザを取得
   /*
     $uname は必ず $talk から取得すること。
-    $USERS にはシステムユーザー 'system' が存在しないため、$said_user は常に NULL になっている。
+    $USERS にはシステムユーザー 'system' が存在しないため、$actor は常に null になっている。
   */
-  $said_user = $talk->scene == 'heaven' ? $USERS->ByUname($talk->uname) :
+  $actor = $talk->scene == 'heaven' ? $USERS->ByUname($talk->uname) :
     $USERS->ByVirtualUname($talk->uname);
 
   //基本パラメータを取得
-  $symbol      = '<font color="' . $said_user->color . '">◆</font>';
-  $handle_name = $said_user->handle_name;
-  $sentence    = $talk->sentence;
-  $font_type   = $talk->font_type;
+  if($talk->uname == 'system'){
+    $symbol = '';
+    $name   = '';
+    $actor->user_no = 0;
+  }
+  else{
+    $symbol = '<font color="' . $actor->color . '">◆</font>';
+    $name   = $actor->handle_name;
+  }
 
   //実ユーザを取得
-  if($RQ_ARGS->add_role && $said_user->user_no > 0){ //役職表示モード対応
-    $real_user = $talk->scene == 'heaven' ? $said_user : $USERS->ByReal($said_user->user_no);
-    $handle_name .= $real_user->GenerateShortRoleName($talk->scene == 'heaven');
+  if($RQ_ARGS->add_role && $actor->user_no > 0){ //役職表示モード対応
+    $real_user = $talk->scene == 'heaven' ? $actor : $USERS->ByReal($actor->user_no);
+    $name .= $real_user->GenerateShortRoleName($talk->scene == 'heaven');
   }
   else{
     $real_user = $USERS->ByRealUname($talk->uname);
   }
 
-  //サトラレ系表示判定 (サトラレ / 受信者 / 共鳴者)
-  $is_mind_read = $builder->flag->mind_read &&
-    (($said_user->IsPartner('mind_read', $builder->actor->user_no) &&
-      ! $said_user->IsRole('unconscious')) ||
-     $builder->actor->IsPartner('mind_receiver', $said_user->user_no) ||
-     $said_user->IsPartner('mind_friend', $builder->actor->partner_list));
-
-  //特殊発言表示判定 (公開者 / 騒霊 / 憑依能力者)
-  $flag_mind_read = $is_mind_read ||
-    ($ROOM->date > 1 && ($said_user->IsRole('mind_open') ||
-			 ($builder->flag->common && $said_user->IsRole('whisper_scanner')) ||
-			 ($builder->flag->wolf   && $said_user->IsRole('howl_scanner')) ||
-			 ($builder->flag->fox    && $said_user->IsRole('telepath_scanner')))) ||
-    ($real_user->IsRole('possessed_wolf') && $builder->flag->wolf) ||
-    ($real_user->IsRole('possessed_mad')  && $said_user->IsSame($builder->actor->uname)) ||
-    ($real_user->IsRole('possessed_fox')  && $builder->flag->fox);
-
   if($talk->type == 'system' && isset($talk->action)){ //投票情報
-    /*
-      + ゲーム開始前の投票 (KICK 等) は常時表示
-      + 「異議」ありは常時表示
-    */
     switch($talk->action){
-    case 'OBJECTION':
-      return $builder->AddSystemMessage('objection-' . $said_user->sex, $handle_name . $sentence);
-
-    case 'GAMESTART_DO':
+    case 'GAMESTART_DO': //現在は不使用
       return true;
 
-    default:
+    case 'OBJECTION': //「異議」ありは常時表示
+      return $builder->AddSystemMessage('objection-' . $actor->sex, $name . $talk->sentence);
+
+    default: //ゲーム開始前の投票 (例：KICK) は常時表示
       return $builder->flag->open_talk || $ROOM->IsBeforeGame() ?
-	$builder->AddSystemMessage($talk->class, $handle_name . $sentence) : false;
+	$builder->AddSystemMessage($talk->class, $name . $talk->sentence) : false;
     }
   }
-
-  //システムメッセージ
-  if($talk->uname == 'system') return $builder->AddSystemTalk($sentence);
+  if($talk->uname == 'system') return $builder->AddSystemTalk($talk->sentence); //システムメッセージ
 
   //身代わり君専用システムメッセージ
-  if($talk->type == 'dummy_boy') return $builder->AddSystemTalk($sentence, 'dummy-boy');
+  if($talk->type == 'dummy_boy') return $builder->AddSystemTalk($talk->sentence, 'dummy-boy');
 
   switch($talk->scene){
+  case 'day':
+    //強風判定 (身代わり君と本人は対象外)
+    if($ROOM->IsEvent('blind_talk_day') &&
+       ! $builder->flag->dummy_boy && ! $builder->actor->IsSame($talk->uname)){
+      //位置判定 (観戦者以外の上下左右)
+      $viewer = $builder->actor->user_no;
+      $target = $actor->user_no;
+      if(is_null($viewer) ||
+	 ! (abs($target - $viewer) == 5 ||
+	    ($target == $viewer - 1 && ($target % 5) != 0) ||
+	    ($target == $viewer + 1 && ($viewer % 5) != 0))){
+	$talk->sentence = $MESSAGE->common_talk;
+      }
+    }
+    return $builder->AddTalk($actor, $talk);
+
   case 'night':
     if($builder->flag->open_talk){
-      $talk_class = '';
+      $class = '';
+      $voice = $talk->font_type;
       switch($talk->type){
       case 'common':
-	$handle_name .= '<span>(共有者)</span>';
-	$talk_class = 'night-common';
-	$font_type .= ' night-common';
+	$name .= '<span>(共有者)</span>';
+	$class = 'night-common';
+	$voice .= ' ' . $class;
 	break;
 
       case 'wolf':
-	$handle_name .= '<span>(人狼)</span>';
-	$talk_class = 'night-wolf';
-	$font_type .= ' night-wolf';
+	$name .= '<span>(人狼)</span>';
+	$class = 'night-wolf';
+	$voice .= ' ' . $class;
 	break;
 
       case 'mad':
-	$handle_name .= '<span>(囁き狂人)</span>';
-	$talk_class = 'night-wolf';
-	$font_type .= ' night-wolf';
+	$name .= '<span>(囁き狂人)</span>';
+	$class = 'night-wolf';
+	$voice .= ' ' . $class;
 	break;
 
       case 'fox':
-	$handle_name .= '<span>(妖狐)</span>';
-	$talk_class = 'night-fox';
-	$font_type .= ' night-fox';
+	$name .= '<span>(妖狐)</span>';
+	$class = 'night-fox';
+	$voice .= ' ' . $class;
 	break;
 
       case 'self_talk':
-	$handle_name .= '<span>の独り言</span>';
-	$talk_class = 'night-self-talk';
+	$name .= '<span>の独り言</span>';
+	$class = 'night-self-talk';
 	break;
       }
-      return $builder->RawAddTalk($symbol, $handle_name, $sentence, $font_type, '', $talk_class);
+      return $builder->RawAddTalk($symbol, $name, $talk->sentence, $voice, '', $class);
     }
     else{
+      $mind_read = false; //特殊発言透過判定
+      $ROLES->actor = $actor;
+      foreach($ROLES->Load('mind_read') as $filter) $mind_read |= $filter->IsMindRead();
+
+      $ROLES->actor = $builder->actor;
+      foreach($ROLES->Load('mind_read_active') as $filter){
+	$mind_read |= $filter->IsMindReadActive($actor);
+      }
+
+      $ROLES->actor = $real_user;
+      foreach($ROLES->Load('mind_read_possessed') as $filter){
+	$mind_read |= $filter->IsMindReadPossessed($actor);
+      }
+
+      $ROLES->actor = $actor;
       switch($talk->type){
       case 'common': //共有者
-	return ($builder->flag->common || $flag_mind_read) ? $builder->AddTalk($said_user, $talk)
-	  : $builder->AddWhisper('common', $talk);
+	if($builder->flag->common || $mind_read) return $builder->AddTalk($actor, $talk);
+	if($ROLES->LoadMain($actor)->Whisper($builder, $talk->font_type)) return;
+	foreach($ROLES->Load('talk_whisper') as $filter){
+	  if($filter->Whisper($builder, $talk->font_type)) return;
+	}
+	return false;
 
       case 'wolf': //人狼
-	return ($builder->flag->wolf || $flag_mind_read) ? $builder->AddTalk($said_user, $talk)
-	  : $builder->AddWhisper('wolf', $talk);
+	if($builder->flag->wolf || $mind_read) return $builder->AddTalk($actor, $talk);
+	if($ROLES->LoadMain($actor)->Howl($builder, $talk->font_type)) return;
+	foreach($ROLES->Load('talk_whisper') as $filter){
+	  if($filter->Whisper($builder, $talk->font_type)) return;
+	}
+	return false;
 
       case 'mad': //囁き狂人
-	if($builder->flag->wolf || $flag_mind_read)
-	  return $builder->AddTalk($said_user, $talk);
-	elseif($builder->flag->lovers && $said_user->IsLovers())
-	  return $builder->AddWhisper('lovers', $talk);
-	else
-	  return false;
+	if($builder->flag->wolf || $mind_read) return $builder->AddTalk($actor, $talk);
+	foreach($ROLES->Load('talk_whisper') as $filter){
+	  if($filter->Whisper($builder, $talk->font_type)) return;
+	}
+	return false;
 
       case 'fox': //妖狐
-	if($builder->flag->fox || $flag_mind_read)
-	  return $builder->AddTalk($said_user, $talk);
-	elseif($SELF->IsRole('wise_wolf'))
-	  return $builder->AddWhisper('common', $talk);
-	elseif($builder->flag->lovers && $said_user->IsLovers())
-	  return $builder->AddWhisper('lovers', $talk);
-	else
-	  return false;
+	if($builder->flag->fox || $mind_read) return $builder->AddTalk($actor, $talk);
+	$ROLES->actor = $SELF;
+	foreach($ROLES->Load('talk_fox') as $filter){
+	  if($filter->Whisper($builder, $talk->font_type)) return;
+	}
+	$ROLES->actor = $actor;
+	foreach($ROLES->Load('talk_whisper') as $filter){
+	  if($filter->Whisper($builder, $talk->font_type)) return;
+	}
+	return false;
 
       case 'self_talk': //独り言
-	if($builder->flag->dummy_boy || $flag_mind_read || $builder->actor->IsSame($talk->uname)){
-	  return $builder->AddTalk($said_user, $talk);
+	if($builder->flag->dummy_boy || $mind_read || $builder->actor->IsSame($talk->uname)){
+	  return $builder->AddTalk($actor, $talk);
 	}
-	elseif($builder->flag->whisper){ //囁き判定 (囁耳鳴)
-	  return $builder->AddWhisper('common', $talk);
+	foreach($ROLES->Load('talk_self') as $filter){
+	  if($filter->Whisper($builder, $talk->font_type)) return;
 	}
-	//遠吠え判定 (孤立した狼 / 化狐 / 吠耳鳴)
-	elseif(($said_user->IsWolf() && $said_user->IsLonely()) ||
-	       $said_user->IsRole('howl_fox') || $builder->flag->howl){
-	  return $builder->AddWhisper('wolf', $talk);
+	$ROLES->actor = $builder->actor;
+	foreach($ROLES->Load('talk_ringing') as $filter){
+	  if($filter->Whisper($builder, $talk->font_type)) return;
 	}
-	elseif($builder->flag->lovers && $said_user->IsLovers()){ //恋耳鳴判定
-	  return $builder->AddWhisper('lovers', $talk);
-	}
-	else{
-	  return false;
-	}
+	return false;
       }
     }
     return false;
 
   case 'heaven':
-    return $builder->flag->open_talk ?
-      $builder->RawAddTalk($symbol, $handle_name, $sentence, $font_type, $talk->scene) : false;
+    return ! $builder->flag->open_talk ? false :
+      $builder->RawAddTalk($symbol, $name, $talk->sentence, $talk->font_type, $talk->scene);
 
   default:
-    return $builder->AddTalk($said_user, $talk);
+    return $builder->AddTalk($actor, $talk);
   }
+}
+
+//天国の霊話ログ出力
+function OutputHeavenTalkLog(){
+  global $ROOM, $USERS;
+
+  //出力条件をチェック
+  //if($SELF->IsDead()) return false; //呼び出し側でチェックするので現在は不要
+
+  $is_open = $ROOM->IsOpenCast(); //霊界公開判定
+  $builder = new DocumentBuilder();
+  $builder->BeginTalk('talk');
+  foreach($ROOM->LoadTalk(true) as $talk){
+    $user = $USERS->ByUname($talk->uname); //ユーザを取得
+
+    $symbol = '<font color="' . $user->color . '">◆</font>';
+    $handle_name = $user->handle_name;
+    if($is_open) $handle_name .= '<span>(' . $talk->uname . ')</span>'; //HN 追加処理
+
+    $builder->RawAddTalk($symbol, $handle_name, $talk->sentence, $talk->font_type);
+  }
+  $builder->EndTalk();
 }
 
 //[村立て / ゲーム開始 / ゲーム終了] 時刻を出力
@@ -867,7 +888,7 @@ function OutputAbilityAction(){
   $header = '<b>前日の夜、';
   $footer = '</b><br>'."\n";
   if($ROOM->test_mode){
-    $stack_list = $RQ_ARGS->TestItems->ablity_action_list;
+    $stack_list = $RQ_ARGS->TestItems->ability_action_list;
   }
   else{
     $yesterday = $ROOM->date - 1;
@@ -875,13 +896,14 @@ function OutputAbilityAction(){
 			 'JAMMER_MAD_DO', 'VOODOO_MAD_DO', 'VOODOO_FOX_DO', 'CHILD_FOX_DO',
 			 'FAIRY_DO');
     if($yesterday == 1){
-      array_push($action_list, 'CUPID_DO', 'MANIA_DO');
+      array_push($action_list, 'CUPID_DO', 'DUELIST_DO', 'MANIA_DO');
     }
     else{
-      array_push($action_list, 'ESCAPE_DO', 'GUARD_DO', 'ANTI_VOODOO_DO', 'REPORTER_DO',
-		 'DREAM_EAT', 'ASSASSIN_DO', 'ASSASSIN_NOT_DO', 'POISON_CAT_DO',
-		 'POISON_CAT_NOT_DO', 'TRAP_MAD_DO', 'TRAP_MAD_NOT_DO',
-		 'POSSESSED_DO', 'POSSESSED_NOT_DO', 'VAMPIRE_DO', 'OGRE_DO', 'OGRE_NOT_DO');
+      array_push($action_list, 'GUARD_DO', 'ANTI_VOODOO_DO', 'REPORTER_DO', 'WIZARD_DO',
+		 'SPREAD_WIZARD_DO', 'ESCAPE_DO', 'DREAM_EAT', 'ASSASSIN_DO', 'ASSASSIN_NOT_DO',
+		 'POISON_CAT_DO', 'POISON_CAT_NOT_DO', 'TRAP_MAD_DO', 'TRAP_MAD_NOT_DO',
+		 'POSSESSED_DO', 'POSSESSED_NOT_DO', 'VAMPIRE_DO', 'OGRE_DO', 'OGRE_NOT_DO',
+		 'DEATH_NOTE_DO', 'DEATH_NOTE_NOT_DO');
     }
     $action = '';
     foreach($action_list as $this_action){
@@ -896,23 +918,69 @@ function OutputAbilityAction(){
   foreach($stack_list as $stack){
     list($actor, $target) = explode("\t", $stack['message']);
     echo $header.$USERS->ByHandleName($actor)->GenerateShortRoleName(false, true).' ';
-    //DB 登録時にタブ区切りで登録していないので CUPID_DO の個別の名前は取得不可
-    if($stack['type'] == 'CUPID_DO')
-      $target = 'は '.$target;
-    else
-      $target = 'は '.$USERS->ByHandleName($target)->GenerateShortRoleName(false, true).' ';
     switch($stack['type']){
-    case 'WOLF_EAT':
-    case 'DREAM_EAT':
-    case 'POSSESSED_DO':
-    case 'ASSASSIN_DO':
-    case 'VAMPIRE_DO':
-    case 'OGRE_DO':
-      echo $target.'を狙いました';
+    case 'CUPID_DO': //DB 登録時にタブ区切りで登録していないので個別の名前は取得不可
+    case 'FAIRY_DO':
+    case 'DUELIST_DO':
+    case 'SPREAD_WIZARD_DO':
+      $target = 'は '.$target;
       break;
 
+    case 'SPREAD_WIZARD_DO': //テストコード (現在は不使用)
+      $str_stack = array();
+      foreach(explode(' ', $target) as $id){
+	$str_stack[] = $USERS->ByID($id)->GenerateShortRoleName(false, true);
+      }
+      $target = 'は '.implode(' ', $str_stack);
+      break;
+
+    default:
+      $target = 'は '.$USERS->ByHandleName($target)->GenerateShortRoleName(false, true).' ';
+      break;
+    }
+
+    switch($stack['type']){
+    case 'GUARD_DO':
+    case 'REPORTER_DO':
+    case 'ASSASSIN_DO':
+    case 'WIZARD_DO':
     case 'ESCAPE_DO':
-      echo $target.$MESSAGE->escape_do;
+    case 'WOLF_EAT':
+    case 'DREAM_EAT':
+    case 'CUPID_DO':
+    case 'VAMPIRE_DO':
+    case 'FAIRY_DO':
+    case 'OGRE_DO':
+    case 'DUELIST_DO':
+    case 'DEATH_NOTE_DO':
+      echo $target.$MESSAGE->{strtolower($stack['type'])};
+      break;
+
+    case 'ASSASSIN_NOT_DO':
+    case 'POSSESSED_NOT_DO':
+    case 'OGRE_NOT_DO':
+    case 'DEATH_NOTE_NOT_DO':
+      echo $MESSAGE->{strtolower($stack['type'])};
+      break;
+
+    case 'POISON_CAT_DO':
+      echo $target.$MESSAGE->revive_do;
+      break;
+
+    case 'POISON_CAT_NOT_DO':
+      echo $MESSAGE->revive_not_do;
+      break;
+
+    case 'SPREAD_WIZARD_DO':
+      echo $target.$MESSAGE->wizard_do;
+      break;
+
+    case 'TRAP_MAD_DO':
+      echo $target.$MESSAGE->trap_do;
+      break;
+
+    case 'TRAP_MAD_NOT_DO':
+      echo $MESSAGE->trap_not_do;
       break;
 
     case 'MAGE_DO':
@@ -924,28 +992,16 @@ function OutputAbilityAction(){
       echo $target.'の呪いを祓いました';
       break;
 
+    case 'ANTI_VOODOO_DO':
+      echo $target.'の厄を祓いました';
+      break;
+
+    case 'MIND_SCANNER_DO':
+      echo $target.'の心を読みました';
+      break;
+
     case 'JAMMER_MAD_DO':
       echo $target.'の占いを妨害しました';
-      break;
-
-    case 'TRAP_MAD_DO':
-      echo $target.$MESSAGE->trap_do;
-      break;
-
-    case 'TRAP_MAD_NOT_DO':
-      echo $MESSAGE->trap_not_do;
-      break;
-
-    case 'POISON_CAT_DO':
-      echo $target.$MESSAGE->revive_do;
-      break;
-
-    case 'POISON_CAT_NOT_DO':
-      echo $MESSAGE->revive_not_do;
-      break;
-
-    case 'POSSESSED_NOT_DO':
-      echo $MESSAGE->possessed_not_do;
       break;
 
     case 'VOODOO_MAD_DO':
@@ -953,40 +1009,8 @@ function OutputAbilityAction(){
       echo $target.'に呪いをかけました';
       break;
 
-    case 'GUARD_DO':
-      echo $target.$MESSAGE->guard_do;
-      break;
-
-    case 'ANTI_VOODOO_DO':
-      echo $target.'の厄を祓いました';
-      break;
-
-    case 'REPORTER_DO':
-      echo $target.$MESSAGE->reporter_do;
-      break;
-
-    case 'ASSASSIN_NOT_DO':
-      echo $MESSAGE->assassin_not_do;
-      break;
-
-    case 'OGRE_NOT_DO':
-      echo $MESSAGE->ogre_not_do;
-      break;
-
-    case 'MIND_SCANNER_DO':
-      echo $target.'の心を読みました';
-      break;
-
-    case 'POISON_CAT_DO':
-      echo $target.$MESSAGE->revive_do;
-      break;
-
-    case 'CUPID_DO':
-      echo $target.$MESSAGE->cupid_do;
-      break;
-
-    case 'FAIRY_DO':
-      echo $target.$MESSAGE->fairy_do;
+    case 'POSSESSED_DO':
+      echo $target.'を狙いました';
       break;
 
     case 'MANIA_DO':
@@ -998,17 +1022,18 @@ function OutputAbilityAction(){
 }
 
 //死亡者の遺言を生成
-function GenerateLastWords(){
+function GenerateLastWords($shift = false){
   global $MESSAGE, $ROOM;
 
-  if(! ($ROOM->IsPlaying() || $ROOM->log_mode) || $ROOM->personal_mode) return NULL; //スキップ判定
+  if(! ($ROOM->IsPlaying() || $ROOM->log_mode) || $ROOM->personal_mode) return null; //スキップ判定
 
   //前日の死亡者遺言を出力
   $set_date = $ROOM->date - 1;
+  if($shift) $set_date++;
   $query = $ROOM->GetQueryHeader('system_message', 'message') .
     " AND date = {$set_date} AND type = 'LAST_WORDS' ORDER BY RAND()";
   $array = FetchArray($query);
-  if(count($array) < 1) return NULL;
+  if(count($array) < 1) return null;
 
   $str = <<<EOF
 <table class="system-lastwords"><tr>
@@ -1034,8 +1059,8 @@ EOF;
 }
 
 //死亡者の遺言を出力
-function OutputLastWords(){
-  if(is_null($str = GenerateLastWords())) return false;
+function OutputLastWords($shift = false){
+  if(is_null($str = GenerateLastWords($shift))) return false;
   echo $str;
 }
 
@@ -1044,7 +1069,7 @@ function GenerateDeadMan(){
   global $ROOM;
 
   //ゲーム中以外は出力しない
-  if(! $ROOM->IsPlaying()) return NULL;
+  if(! $ROOM->IsPlaying()) return null;
 
   $yesterday = $ROOM->date - 1;
 
@@ -1053,19 +1078,20 @@ function GenerateDeadMan(){
 
   //死亡タイプリスト
   $dead_type_list = array(
-    'day' => array('VOTE_KILLED' => true, 'BLIND_VOTE' => true, 'POISON_DEAD_day' => true,
-		   'LOVERS_FOLLOWED_day' => true, 'SUDDEN_DEATH_%' => false, 'NOVOTED_day' => true,
-		   'JOKER_MOVED_day' => true),
+    'day' => array(
+      'VOTE_KILLED' => true, 'BLIND_VOTE' => true, 'POISON_DEAD_day' => true,
+      'LOVERS_FOLLOWED_day' => true, 'SUDDEN_DEATH_%' => false, 'NOVOTED_day' => true,
+      'JOKER_MOVED_day' => true),
 
-    'night' => array('WOLF_KILLED' => true, 'HUNGRY_WOLF_KILLED' => true, 'POSSESSED' => true,
-		     'POSSESSED_TARGETED' => true, 'POSSESSED_RESET' => true,
-		     'DREAM_KILLED' => true, 'TRAPPED' => true, 'CURSED' => true, 'FOX_DEAD' => true,
-		     'HUNTED' => true, 'REPORTER_DUTY' => true, 'VAMPIRE_KILLED' => true,
-		     'ASSASSIN_KILLED' => true, 'ESCAPER_DEAD' => true, 'OGRE_KILLED' => true,
-		     'PRIEST_RETURNED' => true, 'POISON_DEAD_night' => true,
-		     'LOVERS_FOLLOWED_night' => true, 'REVIVE_%' => false, 'SACRIFICE' => true,
-		     'FLOWERED_%' => false, 'CONSTELLATION_%' => false, 'NOVOTED_night' => true,
-		     'JOKER_MOVED_night' => true));
+    'night' => array(
+      'WOLF_KILLED' => true, 'HUNGRY_WOLF_KILLED' => true, 'POSSESSED' => true,
+      'POSSESSED_TARGETED' => true, 'POSSESSED_RESET' => true, 'DREAM_KILLED' => true,
+      'TRAPPED' => true, 'CURSED' => true, 'FOX_DEAD' => true, 'HUNTED' => true,
+      'REPORTER_DUTY' => true, 'VAMPIRE_KILLED' => true, 'ASSASSIN_KILLED' => true,
+      'ESCAPER_DEAD' => true, 'OGRE_KILLED' => true, 'PRIEST_RETURNED' => true,
+      'POISON_DEAD_night' => true, 'LOVERS_FOLLOWED_night' => true, 'REVIVE_%' => false,
+      'SACRIFICE' => true, 'FLOWERED_%' => false, 'CONSTELLATION_%' => false, 'PIERROT_%' => false,
+      'NOVOTED_night' => true, 'JOKER_MOVED_night' => true, 'DEATH_NOTE_MOVED' => true));
 
   foreach($dead_type_list as $scene => $action_list){
     $query_list = array();
@@ -1084,7 +1110,7 @@ function GenerateDeadMan(){
     $type = $type_list->day;
   }
 
-  $str = '';
+  $str = GenerateWeatherReport();
   foreach(FetchAssoc("{$query_header} {$set_date} AND ({$type}) ORDER BY RAND()") as $stack){
     $str .= GenerateDeadManType($stack['message'], $stack['type']);
   }
@@ -1100,6 +1126,18 @@ function GenerateDeadMan(){
     $str .= GenerateDeadManType($stack['message'], $stack['type']);
   }
   return $str;
+}
+
+//天候メッセージの生成
+function GenerateWeatherReport(){
+  global $ROLE_DATA, $RQ_ARGS, $ROOM;
+
+  if(! property_exists($ROOM->event, 'weather') || is_null($ROOM->event->weather) ||
+     ($ROOM->log_mode && $RQ_ARGS->reverse_log && $ROOM->IsNight())) return '';
+
+  $weather = $ROLE_DATA->weather_list[$ROOM->event->weather];
+  return '<div class="weather">今日の天候は<span>' . $weather['name'] . '</span>です (' .
+    $weather['caption'] . ')</div>';
 }
 
 //前日に死亡メッセージの出力
@@ -1128,6 +1166,7 @@ function GenerateDeadManType($name, $type){
     case 'SUDDEN_DEATH':
     case 'FLOWERED':
     case 'CONSTELLATION':
+    case 'PIERROT':
       $base_type = $implode_type;
       break;
     }
@@ -1136,8 +1175,8 @@ function GenerateDeadManType($name, $type){
 
   $name .= ' ';
   $base   = true;
-  $class  = NULL;
-  $reason = NULL;
+  $class  = null;
+  $reason = null;
   $action = strtolower($base_type);
   $open_reason = $ROOM->IsOpenData();
   $show_reason = $open_reason || $SELF->IsLiveRole('yama_necromancer');
@@ -1189,12 +1228,14 @@ function GenerateDeadManType($name, $type){
 
   case 'FLOWERED':
   case 'CONSTELLATION':
+  case 'PIERROT':
     $base   = false;
     $class  = 'fairy';
     $action = strtolower($type);
     break;
 
   case 'JOKER_MOVED':
+  case 'DEATH_NOTE_MOVED':
     if(! $open_reason) return;
     $base  = false;
     $class = 'fairy';

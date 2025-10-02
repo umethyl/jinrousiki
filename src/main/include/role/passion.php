@@ -2,16 +2,29 @@
 /*
   ◆恋色迷彩 (passion)
   ○仕様
-  ・自分の発言の一部が「恋色」な言葉に変換される
-  ・変換テーブルは GameConfig->passion_replace_list で定義する
-  ・ゲームプレイ中で生存時のみ有効 (呼び出し関数側で対応)
+  ・発言変換：部分置換
+  ・変換リスト：恋色
 */
 class Role_passion extends Role{
-  function Role_passion(){ $this->__construct(); }
+  public $convert_say_list = array(
+    '村人' => '好き', '好き' => '村人',
+    '人狼' => '嫌い', '嫌い' => '人狼',
+    'むらびと' => 'すき', 'すき' => 'むらびと',
+    'おおかみ' => 'きらい', 'きらい' => 'おおかみ',
+    'ムラビト' => 'スキ', 'スキ' => 'ムラビト',
+    'オオカミ' => 'キライ', 'キライ' => 'オオカミ',
+    '白' => '愛してる', '愛してる' => '白',
+    '黒' => '妬ましい', '妬ましい' => '黒',
+    '○' => 'あいしてる', 'あいしてる' => '○',
+    '●' => 'ねたましい', 'ねたましい' => '●',
+    'グレラン' => '告白', '告白'  => 'グレラン',
+    'ローラー' => 'ハーレム', 'ハーレム'  => 'ローラー');
   function __construct(){ parent::__construct(); }
 
-  function FilterSay(&$sentence){
-    global $GAME_CONF;
-    $sentence = strtr($sentence, $GAME_CONF->passion_replace_list);
+  function ConvertSay(){
+    if(! is_array($stack = $this->GetConvertSayList())) return;
+    $this->SetStack(strtr($this->GetStack('say'), $stack), 'say');
   }
+
+  protected function GetConvertSayList(){ return $this->convert_say_list; }
 }

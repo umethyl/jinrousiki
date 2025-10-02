@@ -1,16 +1,41 @@
 <?php
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
-$INIT_CONF->LoadClass('TIME_CALC', 'GAME_CONF', 'CAST_CONF', 'ROLE_DATA', 'ROOM_IMG',
-		      'USER_ICON', 'GAME_OPT_MESS');
+$INIT_CONF->LoadFile('info_functions');
+$INIT_CONF->LoadClass('TIME_CALC', 'USER_ICON', 'MESSAGE', 'GAME_OPT_MESS');
+
+//-- 関数定義 --//
+//村の最大人数設定出力
+function OutputMaxUser(){
+  global $ROOM_CONF, $CAST_CONF;
+
+  $str = '[ ' . implode('人・', $ROOM_CONF->max_user_list);
+  $min_user = min(array_keys($CAST_CONF->role_list));
+  $str .= '人 ] のどれかを村に登録できる村人の最大人数として設定することができます。<br>';
+  $str .= "ただしゲームを開始するには最低 [ {$min_user}人 ] の村人が必要です。";
+  echo $str;
+}
+
+//身代わり君がなれない役職のリスト出力
+function OutputDisableDummyBoyRole(){
+  global $ROLE_DATA, $CAST_CONF;
+
+  $stack = array('人狼', '妖狐');
+  foreach($CAST_CONF->disable_dummy_boy_role_list as $role){
+    $stack[] = $ROLE_DATA->main_role_list[$role];
+  }
+  echo implode($stack, '・');
+}
+
+//-- 表示 --//
 OutputInfoPageHeader('仕様', 0, 'script_info');
 ?>
 <script type="text/javascript" src="../javascript/output_diff_time.js"></script>
-<img src="../img/script_info_title.jpg">
+<img src="../img/script_info_title.jpg" title="スクリプトの仕様" alt="スクリプトの仕様">
 <ul>
   <li><a href="#environment">ゲームに参加するために必要な環境</a></li>
   <li><a href="#difference">他のスクリプトとどこが違うの？</a></li>
-  <li><a href="#faq">FAQ よくある質問と答え</a></li>
+  <li><a href="#faq">FAQ (よくある質問と答え)</a></li>
 </ul>
 
 <h2 id="environment">ゲームに参加するために必要な環境</h2>
@@ -78,7 +103,7 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 
 <h3 id="difference_icon">ユーザの似顔絵などを表すユーザアイコンを自由にアップロードできます</h3>
 <div class="info">
-<a href="../icon_upload.php" target="_top">専用のページ</a>から [ <?php echo $USER_ICON->IconSizeMax() . '、容量 ' . $USER_ICON->IconFileSizeMax() ?> ] のファイルをアップロードできます。<br>
+<a href="../icon_upload.php" target="_top">専用のページ</a>から [ <?php echo $USER_ICON->MaxIconSize() . '、容量 ' . $USER_ICON->MaxFileSize() ?> ] のファイルをアップロードできます。<br>
 登録数の上限は [ <?php echo $USER_ICON->number ?>個 ] です。
 </div>
 
@@ -97,8 +122,8 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 
 <h3 id="difference_deadman">死亡者の順序がランダム表示</h3>
 <div class="info">
-人狼に襲われて死亡した場合、妖狐が占われて死亡した場合、埋毒者に道連れにされた場合、表示されるメッセージは「～は無残な姿で発見されました」となります。<br>
-また、恋人が後追いした場合、表示されるメッセージは「～は恋人の後を追って自殺しました」となります。<br>
+人狼に襲われて死亡した場合、妖狐が占われて死亡した場合、埋毒者に道連れにされた場合、表示されるメッセージは「～<?php echo $MESSAGE->deadman ?>」となります。<br>
+また、恋人が後追いした場合、表示されるメッセージは「～<?php echo $MESSAGE->lovers_followed ?>」となります。<br>
 表示される順番ですが、どの死に方をした人が上に表示されるということはなく順序がランダムに表示されます。<br>
 注意しなければいけないことはリロードするたびにランダムに順序が変更されるということです。
 </div>
@@ -142,7 +167,7 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 <h3 id="difference_night_talk">夜の独り言</h3>
 <div class="info">
 人狼、共有者以外は夜中会話することは出来ませんが、発言すると独り言となり、本人と死亡者(天国モード)からは見ることができます。<br>
-ただし、「霊界で配役を公開しない」オプションが設定されている場合は見えません。<br>
+ただし、「<a href="game_option.php#not_open_cast"><?php echo $GAME_OPT_MESS->not_open_cast ?></a>」オプションが設定されている場合は見えません。<br>
 暇つぶしにでも使ってください。
 </div>
 
@@ -156,11 +181,11 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 「未投票者への警告 (超過時間残り [ <?php echo $TIME_CALC->alert ?> ] より、[ <?php echo $TIME_CALC->alert_distance ?> ] 毎) 」「異議ありの時」に音でお知らせしてくれます。<br>
 「異議あり」については<a href="#difference_objection">別項目</a>で説明します。
 </div>
-<h4>Ver. 1.4.14～</h4>
+<h4>Ver. 1.4.14～ / Ver. 1.5.0 ～</h4>
 <div class="info">
 「未投票者への告知」「未投票者への警告」でも音が鳴ります。
 </div>
-<h4>Ver. 1.4.4～</h4>
+<h4>Ver. 1.4.4～ / Ver. 1.5.0 α4～</h4>
 <div class="info">
 「ゲーム開始前で人数が変動した時」「ゲーム開始前で満員になった時」にも音が鳴ります。
 </div>
@@ -190,19 +215,13 @@ Perl から PHP にすることで動作を高速にし、排他制御を MySQL 
 
 <h3 id="difference_max_user">村の最大人数を制限できます</h3>
 <div class="info">
-<?php
-$str = '[' . implode('人]、[', $ROOM_CONF->max_user_list);
-$min_user = min(array_keys($CAST_CONF->role_list));
-$str .= '人] のどれかを村に登録できる村人の最大人数として設定することができます。<br>';
-$str .= "ただしゲームを開始するには最低 [ {$min_user}人 ] の村人が必要です。";
-echo $str;
-?>
+<?php OutputMaxUser() ?>
 </div>
 
 <h3 id="difference_active_room">同時稼働できる村の数 [Ver. 1.4.0 α19～]</h3>
 <div class="info">
 サーバ負荷の調整のため、同時稼働できる村の数をサーバ管理者が設定できます。<br>
-現在の設定は [ <?php echo $ROOM_CONF->max_active_room ?>村まで ] です。
+現在の設定は [ <?php echo $ROOM_CONF->max_active_room ?>村 ] までです。
 </div>
 
 <h3 id="difference_establish_wait">次の村を立てられるまでの待ち時間 [Ver. 1.4.0 β1～]</h3>
@@ -233,20 +252,14 @@ echo $str;
 <h3 id="difference_dummy_boy">初日の夜は身代わり君</h3>
 <div class="info">
 初日の夜に一度も発言することなく人狼に襲われて、ゲームに参加したとはいえない！と思ったことはありませんか？<br>
-村を作成するときに「初日の夜は身代わり君」にチェックを入れると初日の夜、人狼は身代わり君しか襲えないようになります。<br>
+村を作成するときに「<a href="game_option.php#dummy_boy">初日の夜は身代わり君</a>」にチェックを入れると初日の夜、人狼は身代わり君しか襲えないようになります。<br>
 身代わり君はプレイヤーが操作するのではなく、初日に襲われる為だけに存在します。<br>
-割り当てられる役割は [人狼] [妖狐]<?php
-$str = '';
-foreach($CAST_CONF->disable_dummy_boy_role_list as $role){
-  $str .= ' [' . $ROLE_DATA->main_role_list[$role] . ']';
-}
-echo $str;
-?> 以外のどれかランダムに設定されます。<br>
+割り当てられる役割は [ <?php OutputDisableDummyBoyRole() ?> ] 以外のどれかランダムに設定されます。
 </div>
 
 <h3 id="difference_real_time">リアルタイム制オプション</h3>
 <div class="info">
-村を作成するときに「リアルタイム制」にチェックを入れると、ゲーム中の仮想時間 (昼12時間、夜6時間) が発言により消費されるのではなく固定された実時間で消費されていきます。<br>
+村を作成するときに「<a href="game_option.php#real_time">リアルタイム制</a>」にチェックを入れると、ゲーム中の仮想時間 (昼12時間、夜6時間) が発言により消費されるのではなく固定された実時間で消費されていきます。<br>
 設定される時間は村を作成する人が決定することができます
 (デフォルト 昼： [ <?php echo $TIME_CONF->default_day ?>分 ]　夜： [ <?php echo $TIME_CONF->default_night ?>分 ])。<br>
 その村に設定された制限時間を知るには、ゲーム一覧のゲームオプションアイコン、リアルタイム制用 <?php echo
@@ -260,7 +273,7 @@ PC の時計をサーバと合わせる必要がなくなりました。
 
 <h3 id="difference_spend_time">非リアルタイム制の会話の時間消費の上限</h3>
 <div class="info">
-半角100文字(全角50文字)で 昼： [ <?php echo $TIME_CALC->spend_day ?> ] 夜：[ <?php echo $TIME_CALC->spend_night ?> ] ずつ消費されていきますが、どれだけ文字が増えても最大半角400文字(全角200文字)までの消費時間までしか増えません。<br>
+半角100文字 (全角50文字) で 昼： [ <?php echo $TIME_CALC->spend_day ?> ] 夜：[ <?php echo $TIME_CALC->spend_night ?> ] ずつ消費されていきますが、どれだけ文字が増えても最大半角400文字 (全角200文字) までの消費時間までしか増えません。<br>
 半角400文字以上で発言しても消費される時間は半角400文字分と同じです。
 </div>
 
@@ -279,7 +292,12 @@ PC の時計をサーバと合わせる必要がなくなりました。
 <h3 id="difference_trip">トリップ [Ver. 1.4.0 β8～]</h3>
 <div class="info">
 村人登録時に、ユーザ名の入力欄にユーザ名に続けて「#任意の文字列」と入力することでトリップ変換されます。<br>
+また、ユーザ名の「#」の右側のトリップ入力専用欄を使用することで「#」の入力の手間を省くことができます。<br>
 現在の設定は [ トリップ使用<?php echo ($GAME_CONF->trip ? '可' : '不可') ?> ] になっています。
+</div>
+<h4>Ver. 1.5.0 β6～</h4>
+<div class="info">
+トリップ入力専用欄の実装。
 </div>
 
 <h3 id="difference_escape_talk">半角 &yen; マークは発言できません</h3>
@@ -297,7 +315,7 @@ PC の時計をサーバと合わせる必要がなくなりました。
 同じ名前を狙うのなら、半角数字を全角にしたり工夫してください。
 </div>
 
-<h2 id="faq">FAQ よくある質問と答え</h2>
+<h2 id="faq">FAQ (よくある質問と答え)</h2>
 <ul>
   <li><a href="#faq_session">セッションエラーと表示されました</a></li>
   <li><a href="#faq_login">ログインするには</a></li>
@@ -332,6 +350,7 @@ Cookie は有効にしてください。
 
 <h3 id="faq_heaven_mode">死亡して天国モードに行く場合に画面がおかしくなる</h3>
 <div class="info">
+自動ジャンプは JavaScript で実装されているので、ブラウザ依存でおかしくなっている可能性があります。<br>
 Mac では一応対策されているつもりです。<br>
 あとタブブラウザでなる場合もあるそうです。<br>
 もし画面が変になりましたら再ログインするか、それでもダメなら公式の連絡掲示板に詳しく状況を報告していただければ助かります。<br>

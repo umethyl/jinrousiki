@@ -8,19 +8,26 @@ body{
 }
 img{margin-bottom: 1em;}
 .worning{color: #FF0000;}
-.info{margin: 0.5em 0em 1em 1em;}
+.info{
+  margin: 0.5em 0em 1em 1em;
+  text-align: left;
+}
 .role{
-  border: 1px solid;
   margin-left: 20px;
+  border: 1px solid;
   border-collapse:collapse;
   padding: 3px;
 }
 .role th{border: 1px solid;}
-.role td{border: 1px solid;}
+.role td{
+  border: 1px solid;
+  text-align: left;
+}
 div img{margin: 0;}
 .view{
+  margin: 0;
   border: 0;
   border-collapse: collapse;
 }
-.view td{ border: 1px solid; }
+.view td{border: 1px solid;}
 .view img{margin: 0;}

@@ -2,7 +2,7 @@
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
 
-if(! $DEBUG_MODE){
+if(! $SERVER_CONF->debug_mode){
   OutputActionResult('認証エラー', 'このスクリプトは使用できない設定になっています。');
 }
 

@@ -1,4 +1,8 @@
 <?php
+/*
+  変更履歴 from Ver. 1.5.0
+  + 変更：なし
+*/
 //-- 配役設定 --//
 class CastConfig extends CastConfigBase{
   //-- 配役テーブル --//
@@ -6,9 +10,9 @@ class CastConfig extends CastConfigBase{
     [ゲーム参加人数] => array([配役名1] => [配役名1の人数], [配役名2] => [配役名2の人数], ...),
     ゲーム参加人数と配役名の人数の合計が合わない場合はゲーム開始投票時にエラーが返る
   */
-  var $role_list = array(
+  public $role_list = array(
      4 => array('human' =>  1, 'wolf' => 1, 'mage' => 1, 'mad' => 1),
-     5 => array('wolf' =>   1, 'mage' => 2, 'mad' => 2),
+     5 => array('wolf'  =>  1, 'mage' => 2, 'mad'  => 2),
      6 => array('human' =>  1, 'wolf' => 1, 'mage' => 1, 'poison' => 1, 'fox' => 1, 'cupid' => 1),
      7 => array('human' =>  3, 'wolf' => 1, 'mage' => 1, 'guard' => 1, 'fox' => 1),
      8 => array('human' =>  5, 'wolf' => 2, 'mage' => 1),
@@ -28,186 +32,216 @@ class CastConfig extends CastConfigBase{
     22 => array('human' => 12, 'wolf' => 3, 'mage' => 1, 'necromancer' => 1, 'mad' => 1, 'guard' => 1, 'common' => 2, 'fox' => 1),
     23 => array('human' => 12, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 1, 'guard' => 1, 'common' => 2, 'fox' => 1),
     24 => array('human' => 13, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 1, 'guard' => 1, 'common' => 2, 'fox' => 1),
-    25 => array('human' => 14, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 1, 'guard' => 1, 'common' => 2, 'fox' => 1),
-    26 => array('human' => 15, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 1, 'guard' => 1, 'common' => 2, 'fox' => 1),
+    25 => array('human' => 13, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 1, 'guard' => 1, 'common' => 2, 'fox' => 2),
+    26 => array('human' => 14, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 1, 'guard' => 1, 'common' => 2, 'fox' => 2),
     27 => array('human' => 15, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 1, 'guard' => 1, 'common' => 2, 'fox' => 2),
     28 => array('human' => 14, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 2, 'guard' => 1, 'common' => 3, 'fox' => 2),
     29 => array('human' => 15, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 2, 'guard' => 1, 'common' => 3, 'fox' => 2),
-    30 => array('human' => 16, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 2, 'guard' => 1, 'common' => 3, 'fox' => 2),
-    31 => array('human' => 17, 'wolf' => 4, 'mage' => 1, 'necromancer' => 1, 'mad' => 2, 'guard' => 1, 'common' => 3, 'fox' => 2),
-    32 => array('human' => 16, 'wolf' => 5, 'mage' => 1, 'necromancer' => 1, 'mad' => 2, 'guard' => 2, 'common' => 3, 'fox' => 2),
-    33 => array('human' => 32, 'wolf' => 1),
-    34 => array('human' => 33, 'wolf' => 1),
-    35 => array('human' => 34, 'wolf' => 1),
-    36 => array('human' => 35, 'wolf' => 1),
-    37 => array('human' => 36, 'wolf' => 1),
-    38 => array('human' => 37, 'wolf' => 1),
-    39 => array('human' => 38, 'wolf' => 1),
-    40 => array('human' => 39, 'wolf' => 1),
-    41 => array('human' => 40, 'wolf' => 1),
-    42 => array('human' => 41, 'wolf' => 1),
-    43 => array('human' => 42, 'wolf' => 1),
-    44 => array('human' => 43, 'wolf' => 1),
-    45 => array('human' => 44, 'wolf' => 1),
-    46 => array('human' => 45, 'wolf' => 1),
-    47 => array('human' => 46, 'wolf' => 1),
-    48 => array('human' => 47, 'wolf' => 1),
-    49 => array('human' => 48, 'wolf' => 1),
-    50 => array('human' => 49, 'wolf' => 1)
+    30 => array('human' => 14, 'wolf' => 5, 'mage' => 2, 'necromancer' => 1, 'mad' => 2, 'guard' => 1, 'common' => 3, 'fox' => 2),
+    31 => array('human' => 15, 'wolf' => 5, 'mage' => 2, 'necromancer' => 1, 'mad' => 2, 'guard' => 1, 'common' => 3, 'fox' => 2),
+    32 => array('human' => 15, 'wolf' => 5, 'mage' => 2, 'necromancer' => 1, 'mad' => 2, 'guard' => 2, 'common' => 3, 'fox' => 2),
+    33 => array('human' => 15, 'wolf' => 5, 'mage' => 2, 'necromancer' => 1, 'mad' => 2, 'common' => 3, 'guard' => 2, 'fox' => 3),
+    34 => array('human' => 16, 'wolf' => 5, 'mage' => 2, 'necromancer' => 1, 'mad' => 2, 'common' => 3, 'guard' => 2, 'fox' => 3),
+    35 => array('human' => 16, 'wolf' => 5, 'mage' => 2, 'necromancer' => 2, 'mad' => 2, 'common' => 3, 'guard' => 2, 'fox' => 3),
+    36 => array('human' => 17, 'wolf' => 5, 'mage' => 2, 'necromancer' => 2, 'mad' => 2, 'common' => 3, 'guard' => 2, 'fox' => 3),
+    37 => array('human' => 17, 'wolf' => 6, 'mage' => 2, 'necromancer' => 2, 'mad' => 2, 'common' => 3, 'guard' => 2, 'fox' => 3),
+    38 => array('human' => 18, 'wolf' => 6, 'mage' => 2, 'necromancer' => 2, 'mad' => 2, 'common' => 3, 'guard' => 2, 'fox' => 3),
+    39 => array('human' => 19, 'wolf' => 6, 'mage' => 2, 'necromancer' => 2, 'mad' => 2, 'common' => 3, 'guard' => 2, 'fox' => 3),
+    40 => array('human' => 19, 'wolf' => 6, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 3, 'guard' => 2, 'fox' => 3),
+    41 => array('human' => 20, 'wolf' => 6, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 3, 'guard' => 2, 'fox' => 3),
+    42 => array('human' => 20, 'wolf' => 6, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 3, 'guard' => 2, 'fox' => 4),
+    43 => array('human' => 20, 'wolf' => 6, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 4, 'guard' => 2, 'fox' => 4),
+    44 => array('human' => 20, 'wolf' => 7, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 4, 'guard' => 2, 'fox' => 4),
+    45 => array('human' => 21, 'wolf' => 7, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 4, 'guard' => 2, 'fox' => 4),
+    46 => array('human' => 22, 'wolf' => 7, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 4, 'guard' => 2, 'fox' => 4),
+    47 => array('human' => 23, 'wolf' => 7, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 4, 'guard' => 2, 'fox' => 4),
+    48 => array('human' => 24, 'wolf' => 7, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 4, 'guard' => 2, 'fox' => 4),
+    49 => array('human' => 25, 'wolf' => 7, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 4, 'guard' => 2, 'fox' => 4),
+    50 => array('human' => 26, 'wolf' => 7, 'mage' => 2, 'necromancer' => 2, 'mad' => 3, 'common' => 4, 'guard' => 2, 'fox' => 4)
                          );
   //-- 役職出現人数 --//
   //各役職の出現に必要な人数を設定する
-  var $poison         = 20; //埋毒者 [村人2 → 埋毒者1、人狼1]
-  var $assassin       = 22; //暗殺者 [村人2 → 暗殺者1、人狼1]
-  var $boss_wolf      = 18; //白狼 [人狼1 → 白狼]
-  var $poison_wolf    = 20; //毒狼 (+ 薬師) [人狼1 → 毒狼1、村人1 → 薬師1]
-  var $possessed_wolf = 17; //憑狼 [人狼1 → 憑狼1]
-  var $sirius_wolf    = 17; //天狼 [人狼1 → 天狼1]
-  var $cupid          = 16; //キューピッド [村人1 → キューピッド1]
-  var $medium         = 20; //巫女 (+ 女神) [村人2 → 巫女1、女神1]
-  var $mania          = 16; //神話マニア [村人1 → 神話マニア1]
-  var $decide         = 16; //決定者 [兼任]
-  var $authority      = 16; //権力者 [兼任]
+  public $poison         = 20; //埋毒者 [村人2 → 埋毒者1、人狼1]
+  public $assassin       = 22; //暗殺者 [村人2 → 暗殺者1、人狼1]
+  public $wolf           = 20; //人狼追加 [村人1 → 人狼1]
+  public $boss_wolf      = 18; //白狼 [人狼1 → 白狼]
+  public $poison_wolf    = 20; //毒狼 (+ 薬師) [人狼1 → 毒狼1、村人1 → 薬師1]
+  public $possessed_wolf =  8; //憑狼 [人狼1 → 憑狼1]
+  public $sirius_wolf    =  8; //天狼 [人狼1 → 天狼1]
+  public $fox            =  8; //妖狐追加 [村人1 → 妖狐1]
+  public $child_fox      =  8; //子狐 [妖狐1 → 子狐1]
+  public $cupid          = 16; //キューピッド [村人1 → キューピッド1]
+  public $medium         = 20; //巫女 (+ 女神) [村人2 → 巫女1、女神1]
+  public $mania          = 16; //神話マニア [村人1 → 神話マニア1]
+  public $decide         = 16; //決定者 [兼任]
+  public $authority      = 16; //権力者 [兼任]
 
-  //希望制で役職希望が通る確率 (%) (身代わり君がいる場合は 100% にしても保証されません)
-  var $wish_role_rate = 100;
+  //希望制で役職希望が通る確率 (%) (身代わり君がいる場合は 100% にしても保証されない)
+  public $wish_role_rate = 100;
 
-  //身代わり君がならない役職グループのリスト (人狼・妖狐陣営は常時対象外なので設定不要)
-  var $disable_dummy_boy_role_list = array('poison');
+  //身代わり君がならない役職グループのリスト (人狼・妖狐は常時対象外なので設定不要)
+  public $disable_dummy_boy_role_list = array('poison');
 
-  //-- 真・闇鍋の配役設定 --//
-  //固定配役 (普通闇鍋)
-  var $chaos_fix_role_list = array('mage' => 1, 'wolf' => 1);
+  //-- 役職置換モード --//
+  //オプション名 => 置換先役職
+  public $replace_role_list = array(
+    'replace_human' => 'escaper',
+    'change_common' => 'leader_common',
+    'change_mad'    => 'jammer_mad',
+    'change_cupid'  => 'exchange_angel');
 
-  //固定配役 (真・闇鍋)
-  var $chaosfull_fix_role_list = array('mage' => 1, 'wolf' => 1);
-
-  //固定配役 (超・闇鍋)
-  var $chaos_hyper_fix_role_list = array('mage' => 1, 'wolf' => 1);
-
-  //人狼の最低出現枠 (役職名 => 出現比)
-  //普通闇鍋
-  var $chaos_wolf_list = array(
-    'wolf'           => 60,
-    'boss_wolf'      =>  5,
-    'poison_wolf'    => 10,
-    'tongue_wolf'    =>  5,
-    'silver_wolf'    => 20);
+  //-- 闇鍋モード --//
+  //-- 固定枠 --//
+  //闇鍋
+  public $chaos_fix_role_list = array('mage' => 1, 'wolf' => 1);
 
   //真・闇鍋
-  var $chaosfull_wolf_list = array(
-    'wolf'           => 60,
-    'boss_wolf'      =>  5,
-    'cursed_wolf'    =>  5,
-    'poison_wolf'    =>  5,
-    'resist_wolf'    =>  5,
-    'tongue_wolf'    =>  5,
-    'cute_wolf'      => 10,
-    'silver_wolf'    =>  5);
+  public $chaosfull_fix_role_list = array('mage' => 1, 'wolf' => 1);
 
   //超・闇鍋
-  var $chaos_hyper_wolf_list = array(
-    'wolf'           => 40,
+  public $chaos_hyper_fix_role_list = array('mage' => 1, 'wolf' => 1);
+
+  //裏・闇鍋
+  public $chaos_verso_fix_role_list = array();
+
+  //-- 配役テーブル --//
+  //人狼の最小出現枠 (役職名 => 出現比)
+  //闇鍋
+  public $chaos_wolf_list = array(
+    'wolf'        => 60,
+    'boss_wolf'   =>  5,
+    'poison_wolf' => 10,
+    'tongue_wolf' =>  5,
+    'silver_wolf' => 20);
+
+  //真・闇鍋
+  public $chaosfull_wolf_list = array(
+    'wolf'        => 60,
+    'boss_wolf'   =>  5,
+    'cursed_wolf' =>  5,
+    'poison_wolf' =>  5,
+    'resist_wolf' =>  5,
+    'tongue_wolf' =>  5,
+    'cute_wolf'   => 10,
+    'silver_wolf' =>  5);
+
+  //超・闇鍋
+  public $chaos_hyper_wolf_list = array(
+    'wolf'           => 20,
     'boss_wolf'      =>  2,
+    'mist_wolf'      =>  2,
     'gold_wolf'      =>  3,
     'phantom_wolf'   =>  2,
     'cursed_wolf'    =>  2,
+    'quiet_wolf'     =>  2,
     'wise_wolf'      =>  3,
     'poison_wolf'    =>  3,
-    'resist_wolf'    =>  3,
-    'blue_wolf'      =>  2,
-    'emerald_wolf'   =>  2,
-    'sex_wolf'       =>  2,
+    'resist_wolf'    =>  2,
+    'revive_wolf'    =>  2,
+    'trap_wolf'      =>  2,
+    'blue_wolf'      =>  3,
+    'emerald_wolf'   =>  3,
+    'doom_wolf'      =>  2,
+    'fire_wolf'      =>  2,
+    'sex_wolf'       =>  3,
+    'sharp_wolf'     =>  2,
+    'hungry_wolf'    =>  3,
     'tongue_wolf'    =>  2,
     'possessed_wolf' =>  2,
-    'hungry_wolf'    =>  2,
-    'doom_wolf'      =>  2,
     'sirius_wolf'    =>  2,
     'elder_wolf'     =>  3,
     'cute_wolf'      => 10,
     'scarlet_wolf'   =>  3,
-    'silver_wolf'    => 10);
+    'silver_wolf'    => 10,
+    'emperor_wolf'   =>  5);
 
-  //妖狐の最低出現枠 (役職名 => 出現比)
-  //普通闇鍋
-  var $chaos_fox_list = array(
-    'fox'           => 90,
-    'child_fox'     => 10);
+  //妖狐の最小出現枠 (役職名 => 出現比)
+  //闇鍋
+  public $chaos_fox_list = array(
+    'fox'       => 90,
+    'child_fox' => 10);
 
   //真・闇鍋
-  var $chaosfull_fox_list = array(
-    'fox'           => 80,
-    'white_fox'     =>  3,
-    'poison_fox'    =>  3,
-    'voodoo_fox'    =>  3,
-    'cursed_fox'    =>  3,
-    'silver_fox'    =>  3,
-    'child_fox'     =>  5);
+  public $chaosfull_fox_list = array(
+    'fox'        => 80,
+    'white_fox'  =>  3,
+    'poison_fox' =>  3,
+    'voodoo_fox' =>  3,
+    'cursed_fox' =>  3,
+    'silver_fox' =>  3,
+    'child_fox'  =>  5);
 
   //超・闇鍋
-  var $chaos_hyper_fox_list = array(
-    'fox'           => 40,
+  public $chaos_hyper_fox_list = array(
+    'fox'           => 30,
     'white_fox'     =>  2,
     'black_fox'     =>  2,
+    'mist_fox'      =>  2,
     'gold_fox'      =>  3,
     'phantom_fox'   =>  2,
     'poison_fox'    =>  3,
     'blue_fox'      =>  2,
+    'spell_fox'     =>  2,
+    'sacrifice_fox' =>  2,
     'emerald_fox'   =>  2,
     'voodoo_fox'    =>  2,
     'revive_fox'    =>  2,
     'possessed_fox' =>  2,
     'doom_fox'      =>  2,
+    'trap_fox'      =>  2,
     'cursed_fox'    =>  2,
     'elder_fox'     =>  3,
     'cute_fox'      =>  5,
     'scarlet_fox'   =>  3,
     'silver_fox'    =>  3,
-    'child_fox'     =>  8,
-    'sex_fox'       =>  4,
+    'immolate_fox'  =>  2,
+    'child_fox'     =>  6,
+    'sex_fox'       =>  2,
     'stargazer_fox' =>  2,
     'jammer_fox'    =>  2,
+    'monk_fox'      =>  2,
     'miasma_fox'    =>  2,
-    'howl_fox'      =>  2);
+    'howl_fox'      =>  2,
+    'critical_fox'  =>  2);
 
   //ランダム配役テーブル (役職名 => 出現比)
-  //普通闇鍋
-  var $chaos_random_role_list = array(
-    'human'              => 88,
-    'mage'               => 50,
-    'soul_mage'          =>  5,
-    'psycho_mage'        => 10,
-    'necromancer'        => 60,
-    'medium'             => 30,
-    'guard'              => 70,
-    'poison_guard'       =>  5,
-    'reporter'           => 15,
-    'common'             => 75,
-    'poison'             => 40,
-    'incubate_poison'    => 10,
-    'pharmacist'         => 20,
-    'assassin'           => 20,
-    'doll'               => 20,
-    'doll_master'        => 10,
-    'escaper'            => 30,
-    'wolf'               => 80,
-    'boss_wolf'          => 10,
-    'poison_wolf'        => 40,
-    'tongue_wolf'        => 20,
-    'silver_wolf'        => 30,
-    'mad'                => 60,
-    'fanatic_mad'        => 20,
-    'whisper_mad'        => 10,
-    'fox'                => 50,
-    'child_fox'          => 20,
-    'cupid'              => 30,
-    'self_cupid'         => 10,
-    'quiz'               =>  2,
-    'chiroptera'         => 50,
-    'mania'              => 10);
+  //闇鍋
+  public $chaos_random_role_list = array(
+    'human'           => 88,
+    'mage'            => 50,
+    'soul_mage'       =>  5,
+    'psycho_mage'     => 10,
+    'necromancer'     => 60,
+    'medium'          => 30,
+    'guard'           => 70,
+    'poison_guard'    =>  5,
+    'reporter'        => 15,
+    'common'          => 75,
+    'poison'          => 40,
+    'incubate_poison' => 10,
+    'pharmacist'      => 20,
+    'assassin'        => 20,
+    'doll'            => 20,
+    'doll_master'     => 10,
+    'escaper'         => 30,
+    'wolf'            => 80,
+    'boss_wolf'       => 10,
+    'poison_wolf'     => 40,
+    'tongue_wolf'     => 20,
+    'silver_wolf'     => 30,
+    'mad'             => 60,
+    'fanatic_mad'     => 20,
+    'whisper_mad'     => 10,
+    'fox'             => 50,
+    'child_fox'       => 20,
+    'cupid'           => 30,
+    'self_cupid'      => 10,
+    'quiz'            =>  2,
+    'chiroptera'      => 50,
+    'mania'           => 10);
 
   //真・闇鍋
-  var $chaosfull_random_role_list = array(
+  public $chaosfull_random_role_list = array(
     'human'              =>  3,
     'suspect'            => 15,
     'unconscious'        => 20,
@@ -272,86 +306,123 @@ class CastConfig extends CastConfigBase{
     'unknown_mania'      => 10);
 
   //超・闇鍋
-  var $chaos_hyper_random_role_list = array(
+  public $chaos_hyper_random_role_list = array(
     'human'                =>  1,
-    'saint'                =>  2,
-    'executor'             =>  2,
-    'elder'                =>  3,
-    'scripter'             =>  2,
+    'saint'                =>  1,
+    'executor'             =>  1,
+    'elder'                =>  2,
+    'scripter'             =>  1,
     'suspect'              =>  2,
     'unconscious'          =>  2,
-    'mage'                 => 15,
-    'soul_mage'            =>  5,
-    'psycho_mage'          => 10,
-    'sex_mage'             => 10,
+    'mage'                 => 10,
+    'puppet_mage'          =>  6,
+    'soul_mage'            =>  3,
+    'psycho_mage'          =>  5,
+    'sex_mage'             =>  5,
     'stargazer_mage'       =>  5,
-    'voodoo_killer'        => 10,
-    'dummy_mage'           => 10,
-    'necromancer'          => 25,
-    'soul_necromancer'     =>  5,
-    'attempt_necromancer'  =>  5,
-    'yama_necromancer'     => 10,
-    'dummy_necromancer'    => 10,
-    'medium'               =>  7,
+    'voodoo_killer'        =>  9,
+    'cute_mage'            =>  5,
+    'dummy_mage'           =>  7,
+    'necromancer'          => 10,
+    'soul_necromancer'     =>  3,
+    'psycho_necromancer'   =>  6,
+    'embalm_necromancer'   =>  6,
+    'emissary_necromancer' =>  3,
+    'attempt_necromancer'  =>  6,
+    'yama_necromancer'     =>  9,
+    'dummy_necromancer'    =>  7,
+    'medium'               =>  5,
     'bacchus_medium'       =>  5,
-    'seal_medium'          =>  5,
+    'seal_medium'          =>  4,
     'revive_medium'        =>  3,
-    'priest'               =>  4,
-    'bishop_priest'        =>  4,
-    'dowser_priest'        =>  3,
-    'high_priest'          =>  3,
-    'crisis_priest'        =>  4,
+    'eclipse_medium'       =>  3,
+    'priest'               =>  5,
+    'bishop_priest'        =>  2,
+    'dowser_priest'        =>  2,
+    'weather_priest'       =>  2,
+    'high_priest'          =>  2,
+    'crisis_priest'        =>  3,
+    'widow_priest'         =>  2,
+    'holy_priest'          =>  2,
     'revive_priest'        => 10,
-    'border_priest'        =>  3,
-    'dummy_priest'         =>  4,
-    'guard'                => 20,
-    'hunter_guard'         => 10,
+    'border_priest'        =>  2,
+    'dummy_priest'         =>  3,
+    'guard'                => 12,
+    'hunter_guard'         =>  9,
     'blind_guard'          =>  5,
+    'gatekeeper_guard'     =>  5,
     'reflect_guard'        =>  5,
-    'poison_guard'         =>  5,
+    'poison_guard'         =>  3,
     'fend_guard'           =>  5,
     'reporter'             => 10,
     'anti_voodoo'          => 15,
-    'dummy_guard'          => 15,
-    'common'               => 50,
-    'detective_common'     =>  5,
+    'elder_guard'          =>  7,
+    'dummy_guard'          =>  9,
+    'common'               => 25,
+    'leader_common'        =>  4,
+    'detective_common'     =>  4,
     'trap_common'          =>  5,
-    'ghost_common'         =>  5,
-    'dummy_common'         => 10,
-    'poison'               => 15,
-    'strong_poison'        =>  5,
-    'incubate_poison'      => 10,
-    'guide_poison'         =>  5,
-    'chain_poison'         =>  5,
-    'dummy_poison'         => 10,
-    'poison_cat'           =>  6,
+    'sacrifice_common'     =>  5,
+    'ghost_common'         =>  3,
+    'spell_common'         =>  4,
+    'critical_common'      =>  4,
+    'hermit_common'        =>  6,
+    'dummy_common'         => 15,
+    'poison'               => 12,
+    'strong_poison'        =>  3,
+    'incubate_poison'      =>  8,
+    'guide_poison'         =>  6,
+    'snipe_poison'         =>  6,
+    'chain_poison'         =>  6,
+    'dummy_poison'         =>  9,
+    'poison_cat'           =>  4,
     'revive_cat'           =>  3,
     'sacrifice_cat'        =>  3,
+    'missfire_cat'         =>  2,
     'eclipse_cat'          =>  3,
-    'pharmacist'           =>  8,
+    'pharmacist'           =>  6,
     'cure_pharmacist'      =>  4,
-    'revive_pharmacist'    =>  4,
-    'alchemy_pharmacist'   =>  4,
+    'revive_pharmacist'    =>  3,
+    'alchemy_pharmacist'   =>  3,
+    'centaurus_pharmacist' =>  4,
     'assassin'             =>  4,
-    'doom_assassin'        =>  4,
-    'reverse_assassin'     =>  3,
-    'soul_assassin'        =>  3,
+    'doom_assassin'        =>  2,
+    'select_assassin'      =>  2,
+    'reverse_assassin'     =>  2,
+    'soul_assassin'        =>  2,
     'eclipse_assassin'     =>  3,
-    'mind_scanner'         =>  5,
+    'mind_scanner'         =>  4,
     'evoke_scanner'        =>  3,
     'presage_scanner'      =>  3,
-    'clairvoyance_scanner' =>  3,
+    'clairvoyance_scanner' =>  2,
     'whisper_scanner'      =>  2,
     'howl_scanner'         =>  2,
     'telepath_scanner'     =>  2,
-    'jealousy'             =>  3,
-    'divorce_jealousy'     =>  3,
-    'priest_jealousy'      =>  3,
-    'poison_jealousy'      =>  3,
+    'dummy_scanner'        =>  2,
+    'jealousy'             =>  2,
+    'divorce_jealousy'     =>  2,
+    'priest_jealousy'      =>  2,
+    'poison_jealousy'      =>  1,
+    'miasma_jealousy'      =>  1,
+    'critical_jealousy'    =>  2,
     'brownie'              =>  2,
-    'history_brownie'      =>  2,
-    'revive_brownie'       =>  2,
-    'cursed_brownie'       =>  2,
+    'thunder_brownie'      =>  1,
+    'echo_brownie'         =>  1,
+    'revive_brownie'       =>  1,
+    'harvest_brownie'      =>  1,
+    'maple_brownie'        =>  1,
+    'cursed_brownie'       =>  1,
+    'sun_brownie'          =>  1,
+    'history_brownie'      =>  1,
+    'wizard'               =>  2,
+    'soul_wizard'          =>  1,
+    'awake_wizard'         =>  2,
+    'mimic_wizard'         =>  2,
+    'spiritism_wizard'     =>  2,
+    'philosophy_wizard'    =>  2,
+    'barrier_wizard'       =>  1,
+    'astray_wizard'        =>  2,
+    'pierrot_wizard'       =>  1,
     'doll'                 =>  5,
     'friend_doll'          =>  3,
     'phantom_doll'         =>  2,
@@ -361,233 +432,624 @@ class CastConfig extends CastConfigBase{
     'scarlet_doll'         =>  2,
     'silver_doll'          =>  2,
     'doll_master'          => 10,
-    'escaper'              =>  3,
+    'escaper'              =>  2,
+    'psycho_escaper'       =>  2,
     'incubus_escaper'      =>  2,
-    'wolf'                 => 10,
+    'succubus_escaper'     =>  2,
+    'doom_escaper'         =>  1,
+    'divine_escaper'       =>  1,
+    'wolf'                 => 15,
     'boss_wolf'            =>  5,
-    'gold_wolf'            => 10,
-    'phantom_wolf'         => 10,
+    'mist_wolf'            =>  5,
+    'gold_wolf'            =>  5,
+    'phantom_wolf'         =>  5,
     'cursed_wolf'          =>  5,
+    'quiet_wolf'           =>  5,
     'wise_wolf'            => 10,
     'poison_wolf'          => 15,
-    'resist_wolf'          => 15,
-    'blue_wolf'            => 10,
-    'emerald_wolf'         => 10,
-    'sex_wolf'             =>  5,
-    'tongue_wolf'          => 10,
-    'possessed_wolf'       => 10,
-    'hungry_wolf'          =>  5,
+    'resist_wolf'          => 10,
+    'revive_wolf'          =>  5,
+    'trap_wolf'            =>  5,
+    'blue_wolf'            =>  5,
+    'emerald_wolf'         =>  5,
     'doom_wolf'            =>  5,
+    'fire_wolf'            =>  5,
+    'sex_wolf'             =>  5,
+    'sharp_wolf'           =>  5,
+    'hungry_wolf'          =>  5,
+    'tongue_wolf'          =>  5,
+    'possessed_wolf'       =>  5,
     'sirius_wolf'          =>  5,
-    'elder_wolf'           => 10,
+    'elder_wolf'           =>  5,
     'cute_wolf'            => 10,
     'scarlet_wolf'         => 10,
     'silver_wolf'          => 10,
+    'emperor_wolf'         =>  5,
     'mad'                  => 10,
     'fanatic_mad'          =>  5,
-    'whisper_mad'          =>  5,
+    'whisper_mad'          =>  3,
+    'swindle_mad'          =>  4,
     'jammer_mad'           =>  5,
-    'voodoo_mad'           =>  5,
-    'enchant_mad'          =>  5,
-    'dream_eater_mad'      => 10,
-    'possessed_mad'        =>  5,
-    'trap_mad'             => 10,
-    'snow_trap_mad'        =>  5,
-    'corpse_courier_mad'   =>  5,
-    'amaze_mad'            =>  5,
-    'agitate_mad'          =>  5,
-    'miasma_mad'           =>  5,
-    'therian_mad'          =>  5,
-    'fox'                  =>  3,
-    'white_fox'            =>  3,
-    'black_fox'            =>  3,
-    'gold_fox'             =>  3,
-    'phantom_fox'          =>  3,
-    'poison_fox'           =>  3,
-    'blue_fox'             =>  3,
-    'emerald_fox'          =>  3,
-    'voodoo_fox'           =>  3,
-    'revive_fox'           =>  3,
-    'possessed_fox'        =>  3,
-    'doom_fox'             =>  3,
+    'voodoo_mad'           =>  4,
+    'enchant_mad'          =>  4,
+    'dream_eater_mad'      =>  5,
+    'possessed_mad'        =>  4,
+    'trap_mad'             =>  4,
+    'snow_trap_mad'        =>  4,
+    'corpse_courier_mad'   =>  4,
+    'amaze_mad'            =>  3,
+    'agitate_mad'          =>  3,
+    'miasma_mad'           =>  3,
+    'critical_mad'         =>  3,
+    'follow_mad'           =>  4,
+    'therian_mad'          =>  4,
+    'revive_mad'           =>  4,
+    'immolate_mad'         =>  5,
+    'fox'                  =>  5,
+    'white_fox'            =>  2,
+    'black_fox'            =>  2,
+    'mist_fox'             =>  2,
+    'gold_fox'             =>  2,
+    'phantom_fox'          =>  2,
+    'poison_fox'           =>  2,
+    'blue_fox'             =>  2,
+    'spell_fox'            =>  2,
+    'sacrifice_fox'        =>  2,
+    'emerald_fox'          =>  2,
+    'voodoo_fox'           =>  2,
+    'revive_fox'           =>  2,
+    'possessed_fox'        =>  2,
+    'doom_fox'             =>  2,
+    'trap_fox'             =>  2,
     'cursed_fox'           =>  2,
-    'elder_fox'            =>  3,
+    'elder_fox'            =>  2,
     'cute_fox'             =>  3,
     'scarlet_fox'          =>  3,
-    'silver_fox'           =>  3,
-    'child_fox'            =>  5,
-    'sex_fox'              =>  3,
-    'stargazer_fox'        =>  3,
-    'jammer_fox'           =>  3,
-    'miasma_fox'           =>  3,
-    'howl_fox'             =>  3,
-    'cupid'                =>  5,
-    'self_cupid'           =>  4,
-    'moon_cupid'           =>  3,
-    'mind_cupid'           =>  3,
+    'silver_fox'           =>  2,
+    'immolate_fox'         =>  3,
+    'child_fox'            =>  3,
+    'sex_fox'              =>  2,
+    'stargazer_fox'        =>  2,
+    'jammer_fox'           =>  1,
+    'monk_fox'             =>  1,
+    'miasma_fox'           =>  2,
+    'howl_fox'             =>  2,
+    'critical_fox'         =>  2,
+    'cupid'                =>  3,
+    'self_cupid'           =>  3,
+    'moon_cupid'           =>  2,
+    'mind_cupid'           =>  2,
     'sweet_cupid'          =>  2,
+    'minstrel_cupid'       =>  1,
     'triangle_cupid'       =>  2,
-    'angel'                =>  4,
-    'rose_angel'           =>  4,
-    'lily_angel'           =>  4,
-    'exchange_angel'       =>  3,
-    'ark_angel'            =>  3,
-    'sacrifice_angel'      =>  3,
+    'revive_cupid'         =>  1,
+    'snow_cupid'           =>  2,
+    'angel'                =>  3,
+    'rose_angel'           =>  2,
+    'lily_angel'           =>  2,
+    'exchange_angel'       =>  2,
+    'ark_angel'            =>  2,
+    'sacrifice_angel'      =>  2,
+    'scarlet_angel'        =>  2,
+    'cursed_angel'         =>  2,
     'quiz'                 =>  2,
     'vampire'              =>  4,
     'incubus_vampire'      =>  2,
     'succubus_vampire'     =>  2,
     'doom_vampire'         =>  2,
     'sacrifice_vampire'    =>  2,
-    'soul_vampire'         =>  2,
-    'chiroptera'           =>  2,
-    'poison_chiroptera'    =>  2,
+    'soul_vampire'         =>  1,
+    'scarlet_vampire'      =>  2,
+    'chiroptera'           =>  4,
+    'poison_chiroptera'    =>  3,
     'cursed_chiroptera'    =>  2,
     'boss_chiroptera'      =>  2,
     'elder_chiroptera'     =>  2,
-    'scarlet_chiroptera'   =>  2,
+    'cute_chiroptera'      =>  3,
+    'scarlet_chiroptera'   =>  3,
     'dummy_chiroptera'     =>  2,
-    'fairy'                =>  2,
-    'spring_fairy'         =>  2,
-    'summer_fairy'         =>  2,
-    'autumn_fairy'         =>  2,
-    'winter_fairy'         =>  2,
-    'flower_fairy'         =>  2,
-    'star_fairy'           =>  2,
-    'sun_fairy'            =>  2,
-    'moon_fairy'           =>  2,
-    'grass_fairy'          =>  2,
+    'fairy'                =>  1,
+    'spring_fairy'         =>  1,
+    'summer_fairy'         =>  1,
+    'autumn_fairy'         =>  1,
+    'winter_fairy'         =>  1,
+    'flower_fairy'         =>  1,
+    'star_fairy'           =>  1,
+    'sun_fairy'            =>  1,
+    'moon_fairy'           =>  1,
+    'grass_fairy'          =>  1,
     'light_fairy'          =>  1,
     'dark_fairy'           =>  1,
     'shadow_fairy'         =>  1,
-    'ice_fairy'            =>  1,
+    'greater_fairy'        =>  1,
     'mirror_fairy'         =>  1,
-    'ogre'                 =>  2,
-    'orange_ogre'          =>  2,
-    'indigo_ogre'          =>  2,
+    'sweet_fairy'          =>  1,
+    'ice_fairy'            =>  1,
+    'ogre'                 =>  1,
+    'orange_ogre'          =>  1,
+    'indigo_ogre'          =>  1,
     'poison_ogre'          =>  1,
     'west_ogre'            =>  1,
     'east_ogre'            =>  1,
     'north_ogre'           =>  1,
     'south_ogre'           =>  1,
     'incubus_ogre'         =>  1,
+    'wise_ogre'            =>  1,
     'power_ogre'           =>  1,
     'revive_ogre'          =>  1,
     'sacrifice_ogre'       =>  1,
-    'yaksa'                =>  2,
+    'yaksa'                =>  1,
+    'betray_yaksa'         =>  1,
+    'cursed_yaksa'         =>  1,
     'succubus_yaksa'       =>  1,
+    'hariti_yaksa'         =>  1,
+    'power_yaksa'          =>  1,
     'dowser_yaksa'         =>  1,
+    'duelist'              =>  1,
+    'valkyrja_duelist'     =>  1,
+    'critical_duelist'     =>  1,
+    'triangle_duelist'     =>  1,
+    'doom_duelist'         =>  1,
+    'cowboy_duelist'       =>  1,
+    'avenger'              =>  1,
+    'poison_avenger'       =>  1,
+    'cursed_avenger'       =>  1,
+    'critical_avenger'     =>  1,
+    'revive_avenger'       =>  1,
+    'cute_avenger'         =>  1,
+    'patron'               =>  3,
+    'soul_patron'          =>  1,
+    'sacrifice_patron'     =>  1,
+    'shepherd_patron'      =>  1,
+    'critical_patron'      =>  2,
     'mania'                =>  3,
-    'trick_mania'          =>  3,
-    'soul_mania'           =>  2,
-    'dummy_mania'          =>  2,
-    'unknown_mania'        =>  3,
-    'sacrifice_mania'      =>  2);
+    'trick_mania'          =>  2,
+    'basic_mania'          =>  2,
+    'soul_mania'           =>  1,
+    'dummy_mania'          =>  1,
+    'unknown_mania'        =>  1,
+    'wirepuller_mania'     =>  1,
+    'fire_mania'           =>  1,
+    'sacrifice_mania'      =>  1,
+    'resurrect_mania'      =>  1,
+    'revive_mania'         =>  1);
 
-  var $chaos_min_wolf_rate = 10; //人狼の最小出現比 (総人口 / N)
-  var $chaos_min_fox_rate  = 15; //妖狐の最小出現比 (総人口 / N)
+  //裏・闇鍋
+  public $chaos_verso_random_role_list = array(
+    'human'       => 14,
+    'mage'        => 10,
+    'necromancer' => 10,
+    'guard'       =>  5,
+    'common'      => 10,
+    'poison'      =>  5,
+    'assassin'    =>  5,
+    'wolf'        => 20,
+    'mad'         => 10,
+    'fanatic_mad' =>  5,
+    'fox'         =>  5,
+    'quiz'        =>  1);
 
-  //役職グループの最大出現比率 (グループ => 最大人口比率)
-  var $chaos_role_group_rate_list = array(
-    'wolf' => 0.21, 'mad' => 0.12, 'fox' => 0.1, 'child_fox' => 0.08,
-    'mage' => 0.18, 'necromancer' => 0.15, 'medium' => 0.1, 'priest' => 0.1, 'guard' => 0.15,
-    'common' => 0.17, 'poison' => 0.13, 'cat' => 0.1, 'pharmacist' => 0.15, 'assassin' => 0.15,
-    'scanner' => 0.15, 'jealousy' => 0.1, 'doll' => 0.15, 'escaper' => 0.15,
-    'cupid' => 0.1, 'angel' => 0.07, 'quiz' => 0.15, 'vampire' => 0.15,
-    'chiroptera' => 0.12, 'fairy' => 0.12, 'ogre' => 0.12, 'yaksa' => 0.12);
-
-  //村人の出現上限補正
-  var $chaos_max_human_rate = 0.1; //村人の最大人口比 (1.0 = 100%)
   //村人から振り返る役職 => 出現比
-  //普通闇鍋
-  var $chaos_replace_human_role_list = array('mania' => 1);
+  //闇鍋
+  public $chaos_replace_human_role_list = array('mania' => 1);
 
   //真・闇鍋
-  var $chaosfull_replace_human_role_list = array('mania' => 7, 'unknown_mania' => 3);
+  public $chaosfull_replace_human_role_list = array('mania' => 7, 'unknown_mania' => 3);
 
   //超・闇鍋
-  var $chaos_hyper_replace_human_role_list = array(
-    'mania' => 35, 'trick_mania' => 20, 'soul_mania' => 10, 'dummy_mania' => 10,
-    'unknown_mania' => 15, 'sacrifice_mania' => 10);
+  public $chaos_hyper_replace_human_role_list = array(
+    'mania'            => 20,
+    'trick_mania'      => 12,
+    'basic_mania'      => 12,
+    'soul_mania'       =>  9,
+    'dummy_mania'      =>  7,
+    'unknown_mania'    => 10,
+    'wirepuller_mania' =>  6,
+    'fire_mania'       =>  6,
+    'sacrifice_mania'  =>  6,
+    'resurrect_mania'  =>  6,
+    'revive_mania'     =>  6);
 
-  //固定配役追加モード
+  //-- 出現補正値 --//
+  public $chaos_min_wolf_rate  = 10; //人狼の最小出現比 (総人口 / N)
+  public $chaos_min_fox_rate   = 15; //妖狐の最小出現比 (総人口 / N)
+  public $chaos_max_human_rate = 10; //村人の最大出現比 (総人口 / N)
+
+  //役職グループの最大出現比 (グループ => 総人口 / N)
+  public $chaos_role_group_rate_list = array(
+    'mage'        =>  6.2,
+    'necromancer' =>  6.7,
+    'medium'      =>  8,
+    'priest'      =>  6.7,
+    'guard'       =>  7.1,
+    'common'      =>  6.7,
+    'poison'      =>  7.1,
+    'cat'         => 10,
+    'pharmacist'  =>  6.7,
+    'assassin'    =>  7.1,
+    'scanner'     =>  6.7,
+    'jealousy'    =>  8,
+    'wizard'      =>  6.7,
+    'doll'        =>  6.7,
+    'escaper'     =>  7.1,
+    'wolf'        =>  4.8,
+    'mad'         =>  7.1,
+    'fox'         => 10,
+    'child_fox'   => 12,
+    'cupid'       => 10,
+    'angel'       => 12,
+    'quiz'        =>  6.7,
+    'vampire'     =>  6.7,
+    'chiroptera'  =>  8,
+    'fairy'       =>  8,
+    'ogre'        =>  8,
+    'yaksa'       =>  8,
+    'duelist'     => 14.2,
+    'avenger'     => 14.2,
+    'patron'      => 12);
+
+  //-- 固定配役追加モード --//
   /*
     fix    : 固定枠
-    random : ランダム枠 (各配列の中身は役職：出現比)
+    random : ランダム枠 (各配列の中身は役職 => 出現比)
     count  : ランダム出現数 (ランダム枠毎の出現数)
 
     例)
-    doll_master が +1, [doll:poison_doll = 1:1] の割合でランダムに +1,
+    doll_master が +1, [doll:poison_doll = 2:1] の割合でランダムに +1,
     [scarlet_doll:silver_doll = 5:1] の割合でランダムに +2
     'a' => array('fix'    => array('doll_master' => 1),
-		 'random' => array(array('doll'  => 1, 'poison_doll' => 1),
+		 'random' => array(array('doll'  => 2, 'poison_doll' => 1),
 				   array('scarlet_doll' => 5, 'silver_doll' => 1)),
 		 'count'  => array(1, 2)),
   */
-  var $topping_list = array(
+  public $topping_list = array(
     'a' => array('fix' => array('doll_master' => 1),
 		 'random' => array(
-                    array('doll'         =>  40,
-			  'friend_doll'  =>   5,
-			  'phantom_doll' =>  10,
-			  'poison_doll'  =>  10,
-			  'doom_doll'    =>  10,
-			  'revive_doll'  =>  10,
-			  'scarlet_doll' =>  10,
-			  'silver_doll'  =>   5)),
-		 'count'  => array(1)),
+                    array('doll'         => 30,
+			  'friend_doll'  =>  5,
+			  'phantom_doll' => 10,
+			  'poison_doll'  => 15,
+			  'doom_doll'    => 15,
+			  'revive_doll'  => 10,
+			  'scarlet_doll' => 10,
+			  'silver_doll'  =>  5),
+                    array('puppet_mage'        => 15,
+			  'scarlet_doll'       =>  5,
+			  'scarlet_wolf'       => 30,
+			  'scarlet_fox'        => 15,
+			  'scarlet_angel'      => 15,
+			  'scarlet_vampire'    => 10,
+			  'scarlet_chiroptera' => 10)),
+		 'count'  => array(1, 1)),
     'b' => array('fix' => array('quiz' => 1, 'poison_ogre' => 1)),
     'c' => array('random' => array(
-                   array('vampire'           => 4,
+                   array('vampire'           => 3,
 			 'incubus_vampire'   => 1,
 			 'succubus_vampire'  => 1,
 			 'doom_vampire'      => 1,
-			 'sacrifice_vampire' => 2,
-			 'soul_vampire'      => 1)),
+			 'sacrifice_vampire' => 1,
+			 'soul_vampire'      => 1,
+			 'scarlet_vampire'   => 2)),
 		 'count' => array(1)),
     'd' => array('fix' => array('resist_wolf' => 1),
 		 'random' => array(
-                    array('poison_cat'    =>  4,
-			  'revive_cat'    =>  2,
-			  'sacrifice_cat' =>  2,
-			  'eclipse_cat'   =>  2)),
+                    array('poison_cat'    => 3,
+			  'revive_cat'    => 2,
+			  'sacrifice_cat' => 2,
+			  'missfire_cat'  => 1,
+			  'eclipse_cat'   => 2)),
 		 'count'  => array(1)),
     'e' => array('fix' => array('anti_voodoo' => 1, 'possessed_wolf' => 1)),
     'f' => array('random' => array(
-                   array('ogre'           =>  2,
-			 'orange_ogre'    =>  2,
-			 'indigo_ogre'    =>  2,
-			 'poison_ogre'    =>  1,
-			 'west_ogre'      =>  1,
-			 'east_ogre'      =>  1,
-			 'north_ogre'     =>  1,
-			 'south_ogre'     =>  1,
-			 'incubus_ogre'   =>  1,
-			 'power_ogre'     =>  1,
-			 'revive_ogre'    =>  1,
-			 'sacrifice_ogre' =>  1,
-			 'yaksa'          =>  2,
-			 'succubus_yaksa' =>  1,
-			 'dowser_yaksa'   =>  1)),
+                   array('ogre'           => 10,
+			 'orange_ogre'    =>  5,
+			 'indigo_ogre'    =>  5,
+			 'poison_ogre'    =>  5,
+			 'west_ogre'      =>  3,
+			 'east_ogre'      =>  3,
+			 'north_ogre'     =>  3,
+			 'south_ogre'     =>  3,
+			 'incubus_ogre'   =>  5,
+			 'wise_ogre'      =>  5,
+			 'power_ogre'     =>  5,
+			 'revive_ogre'    =>  5,
+			 'sacrifice_ogre' =>  3,
+			 'yaksa'          => 10,
+			 'betray_yaksa'   =>  5,
+			 'cursed_yaksa'   =>  5,
+			 'succubus_yaksa' =>  5,
+			 'hariti_yaksa'   =>  5,
+			 'power_yaksa'    =>  5,
+			 'dowser_yaksa'   =>  5)),
 		 'count' => array(2)),
+    'g' => array('random' => array(
+		   array('mad'                => 1,
+			 'fanatic_mad'        => 1,
+			 'whisper_mad'        => 1,
+			 'swindle_mad'        => 1,
+			 'jammer_mad'         => 1,
+			 'voodoo_mad'         => 1,
+			 'enchant_mad'        => 1,
+			 'dream_eater_mad'    => 1,
+			 'possessed_mad'      => 1,
+			 'trap_mad'           => 1,
+			 'snow_trap_mad'      => 1,
+			 'corpse_courier_mad' => 1,
+			 'amaze_mad'          => 1,
+			 'agitate_mad'        => 1,
+			 'miasma_mad'         => 1,
+			 'critical_mad'       => 1,
+			 'follow_mad'         => 1,
+			 'therian_mad'        => 1,
+			 'revive_mad'         => 1,
+			 'immolate_mad'       => 1),
+                   array('suspect'           => 1,
+			 'unconscious'       => 1,
+			 'dummy_mage'        => 1,
+			 'dummy_necromancer' => 1,
+			 'dummy_priest'      => 1,
+			 'dummy_guard'       => 1,
+			 'dummy_common'      => 1,
+			 'dummy_poison'      => 1,
+			 'dummy_scanner'     => 1,
+			 'dummy_chiroptera'  => 1,
+			 'dummy_mania'       => 1),
+		   array('psycho_mage'        => 10,
+			 'psycho_necromancer' =>  5,
+			 'psycho_escaper'     => 20,
+			 'dream_eater_mad'    => 10,
+			 'revive_ogre'        =>  5)),
+		 'count' => array(1, 1, 1)),
+    'h' => array('fix' => array('human' => 2)),
+    'i' => array('random' => array(
+		   array('jealousy'          => 30,
+			 'divorce_jealousy'  => 20,
+			 'priest_jealousy'   => 15,
+			 'poison_jealousy'   => 10,
+			 'miasma_jealousy'   =>  5,
+			 'critical_jealousy' => 20),
+                   array('cupid'           => 10,
+			 'self_cupid'      =>  8,
+			 'moon_cupid'      =>  5,
+			 'mind_cupid'      =>  3,
+			 'sweet_cupid'     =>  5,
+			 'minstrel_cupid'  =>  3,
+			 'triangle_cupid'  =>  5,
+			 'revive_cupid'    =>  3,
+			 'snow_cupid'      =>  8,
+			 'angel'           =>  8,
+			 'rose_angel'      =>  8,
+			 'lily_angel'      =>  8,
+			 'exchange_angel'  =>  5,
+			 'ark_angel'       =>  5,
+			 'sacrifice_angel' =>  5,
+			 'scarlet_angel'   =>  5,
+			 'cursed_angel'    =>  6)),
+		 'count' => array(1, 2)),
+    'j' => array('random' => array(
+		   array('duelist'          => 15,
+			 'valkyrja_duelist' => 10,
+			 'critical_duelist' =>  5,
+			 'triangle_duelist' =>  5,
+			 'doom_duelist'     =>  5,
+			 'cowboy_duelist'   => 10,
+			 'avenger'          =>  5,
+			 'poison_avenger'   =>  3,
+			 'cursed_avenger'   =>  3,
+			 'critical_avenger' =>  3,
+			 'revive_avenger'   =>  3,
+			 'cute_avenger'     =>  3,
+			 'patron'           => 10,
+			 'soul_patron'      =>  4,
+			 'sacrifice_patron' =>  4,
+			 'shepherd_patron'  =>  6,
+			 'critical_patron'  =>  6)),
+		 'count' => array(1)),
+    'k' => array('random' => array(
+		   array('executor'             => 8,
+			 'soul_mage'            => 4,
+			 'soul_necromancer'     => 6,
+			 'revive_medium'        => 6,
+			 'high_priest'          => 6,
+			 'poison_guard'         => 4,
+			 'ghost_common'         => 4,
+			 'strong_poison'        => 6,
+			 'revive_cat'           => 6,
+			 'alchemy_pharmacist'   => 6,
+			 'soul_assassin'        => 4,
+			 'clairvoyance_scanner' => 6,
+			 'miasma_jealousy'      => 6,
+			 'history_brownie'      => 6,
+			 'soul_wizard'          => 6,
+			 'doll_master'          => 8,
+			 'divine_escaper'       => 8),
+                   array('boss_wolf'      => 2,
+			 'resist_wolf'    => 2,
+			 'tongue_wolf'    => 2,
+			 'possessed_wolf' => 1,
+			 'sirius_wolf'    => 1,
+			 'whisper_mad'    => 3),
+		   array('cursed_fox'       => 10,
+			 'jammer_fox'       =>  5,
+			 'minstrel_cupid'   =>  5,
+			 'sacrifice_angel'  => 10,
+			 'quiz'             =>  5,
+			 'soul_vampire'     => 15,
+			 'boss_chiroptera'  => 10,
+			 'ice_fairy'        =>  5,
+			 'sacrifice_ogre'   =>  5,
+			 'dowser_yaksa'     => 10,
+			 'critical_duelist' =>  4,
+			 'revive_avenger'   =>  3,
+			 'sacrifice_patron' =>  3,
+			 'soul_mania'       =>  5,
+			 'sacrifice_mania'  =>  5)),
+		 'count' => array(1, 1, 1)),
+    'l' => array('fix' => array('ghost_common' => 1, 'boss_wolf' => 1,
+				'silver_wolf' => 1, 'howl_fox' => 1))
 			    );
 
+  //-- 出現率変動モード --//
+  /* 役職 => 倍率 (0 なら出現しなくなる) */
+  public $boost_rate_list = array(
+    'a' => array('swindle_mad' =>  7),
+    'b' => array('elder'             => 0,
+		 'scripter'          => 0,
+		 'elder_guard'       => 0,
+		 'critical_common'   => 0,
+		 'critical_jealousy' => 0,
+		 'brownie'           => 0,
+		 'harvest_brownie'   => 0,
+		 'maple_brownie'     => 0,
+		 'philosophy_wizard' => 0,
+		 'divine_escaper'    => 0,
+		 'elder_wolf'        => 0,
+		 'elder_fox'         => 0,
+		 'elder_chiroptera'  => 0,
+		 'critical_mad'      => 0,
+		 'critical_fox'      => 0,
+		 'poison_ogre'       => 0,
+		 'critical_duelist'  => 0,
+		 'cowboy_duelist'    => 0,
+		 'critical_avenger'  => 0,
+		 'critical_patron'   => 0,
+		 'wirepuller_mania'  => 0),
+    'c' => array('human'         => 0,
+		 'mage'          => 0,
+		 'necromancer'   => 0,
+		 'medium'        => 0,
+		 'priest'        => 0,
+		 'guard'         => 0,
+		 'common'        => 0,
+		 'poison'        => 0,
+		 'poison_cat'    => 0,
+		 'pharmacist'    => 0,
+		 'assassin'      => 0,
+		 'mind_scanner'  => 0,
+		 'jealousy'      => 0,
+		 'brownie'       => 0,
+		 'wizard'        => 0,
+		 'doll'          => 0,
+		 'escaper'       => 0,
+		 'wolf'          => 0,
+		 'mad'           => 0,
+		 'fox'           => 0,
+		 'child_fox'     => 0,
+		 'cupid'         => 0,
+		 'angel'         => 0,
+		 'quiz'          => 0,
+		 'vampire'       => 0,
+		 'chiroptera'    => 0,
+		 'fairy'         => 0,
+		 'ogre'          => 0,
+		 'yaksa'         => 0,
+		 'duelist'       => 0,
+		 'avenger'       => 0,
+		 'patron'        => 0,
+		 'mania'         => 0,
+		 'unknown_mania' => 0),
+    'd' => array('revive_medium' => 0,
+		 'poison_cat'    => 0,
+		 'revive_cat'    => 0,
+		 'sacrifice_cat' => 0,
+		 'missfire_cat'  => 0,
+		 'eclipse_cat'   => 0,
+		 'revive_fox'    => 0,
+		 'revive_mania'  => 0),
+    'e' => array('possessed_wolf' => 0,
+		 'possessed_mad'  => 0,
+		 'possessed_fox'  => 0,
+		 'exchange_angel' => 0),
+    'f' => array('chiroptera'         =>  0,
+		 'poison_chiroptera'  =>  0,
+		 'cursed_chiroptera'  =>  0,
+		 'boss_chiroptera'    =>  0,
+		 'elder_chiroptera'   =>  0,
+		 'cute_chiroptera'    =>  0,
+		 'scarlet_chiroptera' =>  0,
+		 'dummy_chiroptera'   =>  0,
+		 'fairy'              =>  0,
+		 'spring_fairy'       =>  0,
+		 'summer_fairy'       =>  0,
+		 'autumn_fairy'       =>  0,
+		 'winter_fairy'       =>  0,
+		 'flower_fairy'       =>  0,
+		 'star_fairy'         =>  0,
+		 'sun_fairy'          =>  0,
+		 'moon_fairy'         =>  0,
+		 'grass_fairy'        =>  0,
+		 'light_fairy'        =>  0,
+		 'dark_fairy'         =>  0,
+		 'shadow_fairy'       =>  0,
+		 'greater_fairy'      =>  0,
+		 'mirror_fairy'       =>  0,
+		 'sweet_fairy'        =>  0,
+		 'ice_fairy'          =>  0,
+		 'ogre'               =>  0,
+		 'orange_ogre'        =>  0,
+		 'indigo_ogre'        =>  0,
+		 'poison_ogre'        =>  0,
+		 'west_ogre'          =>  0,
+		 'east_ogre'          =>  0,
+		 'north_ogre'         =>  0,
+		 'south_ogre'         =>  0,
+		 'incubus_ogre'       =>  0,
+		 'wise_ogre'          =>  0,
+		 'power_ogre'         =>  0,
+		 'revive_ogre'        =>  0,
+		 'sacrifice_ogre'     =>  0,
+		 'yaksa'              =>  0,
+		 'betray_yaksa'       =>  0,
+		 'cursed_yaksa'       =>  0,
+		 'succubus_yaksa'     =>  0,
+		 'hariti_yaksa'       =>  0,
+		 'power_yaksa'        =>  0,
+		 'dowser_yaksa'       =>  0,
+		 'duelist'            =>  0,
+		 'valkyrja_duelist'   =>  0,
+		 'doom_duelist'       =>  0,
+		 'critical_duelist'   =>  0,
+		 'triangle_duelist'   =>  0,
+		 'cowboy_duelist'     =>  0,
+		 'avenger'            =>  0,
+		 'poison_avenger'     =>  0,
+		 'cursed_avenger'     =>  0,
+		 'critical_avenger'   =>  0,
+		 'revive_avenger'     =>  0,
+		 'cute_avenger'       =>  0,
+		 'patron'             =>  0,
+		 'soul_patron'        =>  0,
+		 'sacrifice_patron'   =>  0,
+		 'shepherd_patron'    =>  0,
+		 'critical_patron'    =>  0)
+			       );
+
   //サブ役職制限：EASYモード
-  var $chaos_sub_role_limit_easy_list = array(
-    'authority', 'critical_voter', 'random_voter', 'rebel', 'watcher', 'decide', 'plague',
-    'good_luck', 'bad_luck');
+  public $chaos_sub_role_limit_easy_list = array(
+    'decide', 'plague', 'counter_decide', 'dropout', 'good_luck', 'bad_luck', 'authority',
+    'reduce_voter', 'upper_voter', 'downer_voter', 'critical_voter', 'random_voter', 'rebel',
+    'watcher');
 
   //サブ役職制限：NORMALモード
-  var $chaos_sub_role_limit_normal_list = array(
-    'authority', 'critical_voter', 'random_voter', 'rebel', 'watcher', 'decide', 'plague',
-    'good_luck', 'bad_luck', 'upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck',
-    'random_luck', 'strong_voice', 'normal_voice', 'weak_voice', 'upper_voice', 'downer_voice',
-    'inside_voice', 'outside_voice', 'random_voice');
+  public $chaos_sub_role_limit_normal_list = array(
+    'decide', 'plague', 'counter_decide', 'dropout', 'good_luck', 'bad_luck', 'authority',
+    'reduce_voter', 'upper_voter', 'downer_voter', 'critical_voter', 'random_voter', 'rebel',
+    'watcher', 'upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck', 'random_luck',
+    'wisp', 'black_wisp', 'spell_wisp', 'foughten_wisp', 'gold_wisp');
+
+  //サブ役職制限：HARDモード
+  public $chaos_sub_role_limit_hard_list = array(
+    'decide', 'plague', 'counter_decide', 'dropout', 'good_luck', 'bad_luck', 'authority',
+    'reduce_voter', 'upper_voter', 'downer_voter', 'critical_voter', 'random_voter', 'rebel',
+    'watcher', 'upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck', 'random_luck',
+    'strong_voice', 'normal_voice', 'weak_voice', 'upper_voice', 'downer_voice', 'inside_voice',
+    'outside_voice', 'random_voice', 'mind_open', 'wisp', 'black_wisp', 'spell_wisp',
+    'foughten_wisp', 'gold_wisp');
 
   //お祭り村専用配役テーブル
-  var $festival_role_list = array(
+  public $festival_role_list = array(
      8 => array('human' => 2, 'mage' => 1, 'necromancer' => 1, 'wolf' => 1, 'mad' => 1, 'whisper_mad' => 1, 'fox' => 1),
-     9 => array('human' => 3 , 'guard' => 3, 'wolf' => 2, 'chiroptera' => 1),
+     9 => array('human' => 3, 'guard' => 3, 'wolf' => 2, 'chiroptera' => 1),
     10 => array('human' => 2, 'mage' => 1, 'necromancer' => 1, 'guard' => 1, 'escaper' => 1, 'wolf' => 2, 'mad' => 1, 'fox' => 1),
     11 => array('wise_wolf' => 1, 'jammer_mad' => 7, 'voodoo_fox' => 2, 'fairy' => 1),
     12 => array('human' => 5, 'mage' => 1, 'necromancer' => 1, 'guard' => 1, 'wolf' => 2, 'mad' => 1, 'vampire' => 1),
@@ -604,8 +1066,8 @@ class CastConfig extends CastConfigBase{
 				);
 
   //決闘村配役データ (実際は InitializeDuel() で設定する)
-  var $duel_fix_list = array(); //固定配役
-  var $duel_rate_list = array('assassin' => 11, 'wolf' => 4, 'trap_mad' => 5); //配役比率
+  public $duel_fix_list = array(); //固定配役
+  public $duel_rate_list = array('assassin' => 11, 'wolf' => 4, 'trap_mad' => 5); //配役比率
 
   //-- 関数 --//
   //決闘村の配役初期化処理
@@ -627,16 +1089,15 @@ class CastConfig extends CastConfigBase{
     elseif($ROOM->IsOption('auto_open_cast')){ //自動公開
       //-- 恋色決闘 --//
       $duel_fix_list = array();
-      if($user_count >= 15) $duel_fix_list['howl_scanner'] = 1;
+      if($user_count >= 15) $duel_fix_list['sweet_fairy'] = 1;
       if($user_count >= 20) $duel_fix_list['enchant_mad'] = 1;
       if($user_count >= 25){
 	$duel_fix_list['sirius_wolf'] = 1;
 	$duel_fix_list['moon_cupid'] = 1;
       }
       if($user_count >= 30) $duel_fix_list['quiz'] = 1;
-
-      $duel_rate_list = array('assassin' => 5, 'wolf' => 3, 'self_cupid' => 1, 'mind_cupid' => 4,
-			      'triangle_cupid' => 1);
+      $duel_rate_list = array('select_assassin' => 5, 'wolf' => 3, 'self_cupid' => 1,
+			      'mind_cupid' => 4, 'triangle_cupid' => 1);
     }
     else{ //常時公開
       //-- 暗殺決闘 --//
@@ -660,11 +1121,11 @@ class CastConfig extends CastConfigBase{
 	$role_list['self_cupid']--;
 	$role_list['dummy_chiroptera']++;
       }
-      if($role_list['mind_cupid'] > 2){
+      if($role_list['mind_cupid'] > 3){
 	$role_list['mind_cupid']--;
 	$role_list['exchange_angel']++;
       }
-      if($role_list['mind_cupid'] > 2){
+      if($role_list['mind_cupid'] > 3){
 	$role_list['mind_cupid']--;
 	$role_list['sweet_cupid']++;
       }
@@ -674,28 +1135,6 @@ class CastConfig extends CastConfigBase{
       }
     }
     else{ //常時公開
-    }
-  }
-
-  //村人置換村の処理
-  function ReplaceHuman(&$role_list, $count){
-    global $ROOM;
-
-    if($ROOM->IsOption('full_mania')){ //神話マニア村
-      $role_list['mania'] += $count;
-      $role_list['human'] -= $count;
-    }
-    elseif($ROOM->IsOption('full_chiroptera')){ //蝙蝠村
-      $role_list['chiroptera'] += $count;
-      $role_list['human'] -= $count;
-    }
-    elseif($ROOM->IsOption('full_cupid')){ //キューピッド村
-      $role_list['cupid'] += $count;
-      $role_list['human'] -= $count;
-    }
-    elseif($ROOM->IsOption('replace_human')){ //村人置換村
-      $role_list['escaper'] += $count;
-      $role_list['human'] -= $count;
     }
   }
 }

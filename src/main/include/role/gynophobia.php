@@ -2,17 +2,14 @@
 /*
   ◆女性恐怖症 (gynophobia)
   ○仕様
-  ・女性に投票したらショック死する
+  ・ショック死：女性に投票
 */
-class Role_gynophobia extends Role{
-  function Role_gynophobia(){ $this->__construct(); }
+RoleManager::LoadFile('chicken');
+class Role_gynophobia extends Role_chicken{
+  public $sudden_death = 'GYNOPHOBIA';
   function __construct(){ parent::__construct(); }
 
-  function FilterSuddenDeath(&$reason){
-    global $ROLES, $USERS;
-    if($reason == '' &&
-       $USERS->ByRealUname($ROLES->stack->target[$ROLES->actor->uname])->sex == 'female'){
-      $reason = 'GYNOPHOBIA';
-    }
+  function IsSuddenDeath(){
+    return ! $this->IgnoreSuddenDeath() && $this->GetVoteUser()->IsFemale();
   }
 }

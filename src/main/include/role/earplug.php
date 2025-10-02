@@ -4,26 +4,26 @@
   ○仕様
   ・声の大きさが一段階小さくなり、小声は共有者の囁きに見える
   ・共有者の囁きは変換対象外
-  ・ゲームプレイ中で生存時のみ有効
 
   ○問題点
   ・観戦モードにすると普通に見えてしまう
 */
-class Role_earplug extends RoleTalkFilter{
-  function Role_earplug(){ $this->__construct(); }
+RoleManager::LoadFile('strong_voice');
+class Role_earplug extends Role_strong_voice{
+  public $mix_in = 'blinder';
   function __construct(){ parent::__construct(); }
 
-  function Ignored(){
+  function IgnoreTalk(){
     global $ROOM;
-    return parent::Ignored() ||
-      ($ROOM->log_mode && $ROOM->IsEvent('earplug') && ! $ROOM->IsDay());
+    return parent::IgnoreTalk() || ! $ROOM->IsPlaying() ||
+      ($ROOM->log_mode && $ROOM->IsEvent($this->role) && ! $ROOM->IsDay());
   }
 
-  function AddTalk($user, $talk, &$user_info, &$volume, &$sentence){
-    $this->ChangeVolume('down', $volume, $sentence);
+  function FilterTalk($user, &$name, &$voice, &$str){
+    if(! $this->IgnoreTalk()) $this->ShiftVoice($voice, $str, false);
   }
 
-  function AddWhisper($role, $talk, &$user_info, &$volume, &$sentence){
-    if($role == 'wolf') $this->ChangeVolume('down', $volume, $sentence);
+  function FilterWhisper(&$voice, &$str){
+    if(! $this->IgnoreTalk()) $this->ShiftVoice($voice, $str, false);
   }
 }

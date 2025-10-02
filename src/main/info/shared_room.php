@@ -1,20 +1,20 @@
 <?php
 define('JINRO_ROOT', '..');
 require_once(JINRO_ROOT . '/include/init.php');
+$INIT_CONF->LoadClass('SHARED_CONF');
 OutputInfoPageHeader('関連サーバ村情報', 0, 'shared_room');
-OutputSharedServerRoom();
+OutputSharedRoom();
 OutputHTMLFooter();
 
+//-- 関数 --//
 //他のサーバの部屋画面を出力
-function OutputSharedServerRoom(){
-  global $SERVER_CONF;
+function OutputSharedRoom(){
+  global $SERVER_CONF, $SHARED_CONF;
 
-  $SHARED_CONF = new SharedServerConfig();
   if($SHARED_CONF->disable) return false;
 
   foreach($SHARED_CONF->server_list as $server => $array){
     extract($array);
-    //PrintData($url, 'URL'); //テスト用
     if($disable) continue;
 
     if(! $SHARED_CONF->CheckConnection($url)){ //サーバ通信状態チェック
@@ -25,13 +25,11 @@ function OutputSharedServerRoom(){
 
     //部屋情報を取得
     if(($data = @file_get_contents($url.'room_manager.php')) == '') continue;
-    //PrintData($data, 'Data'); //テスト用
     if($encode != '' && $encode != $SHARED_CONF->encode){
       $data = mb_convert_encoding($data, $SHARED_CONF->encode, $encode);
     }
     if($separator != ''){
       $split_list = mb_split($separator, $data);
-      //PrintData($split_list, 'Split'); //テスト用
       $data = array_pop($split_list);
     }
     if($footer != ''){

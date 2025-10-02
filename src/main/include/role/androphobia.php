@@ -2,17 +2,12 @@
 /*
   ◆男性恐怖症 (androphobia)
   ○仕様
-  ・男性に投票したらショック死する
+  ・ショック死：男性に投票
 */
-class Role_androphobia extends Role{
-  function Role_androphobia(){ $this->__construct(); }
+RoleManager::LoadFile('chicken');
+class Role_androphobia extends Role_chicken{
+  public $sudden_death = 'ANDROPHOBIA';
   function __construct(){ parent::__construct(); }
 
-  function FilterSuddenDeath(&$reason){
-    global $ROLES, $USERS;
-    if($reason == '' &&
-       $USERS->ByRealUname($ROLES->stack->target[$ROLES->actor->uname])->sex == 'male'){
-      $reason = 'ANDROPHOBIA';
-    }
-  }
+  function IsSuddenDeath(){ return ! $this->IgnoreSuddenDeath() && $this->GetVoteUser()->IsMale(); }
 }

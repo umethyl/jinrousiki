@@ -1,13 +1,9 @@
 <?php
 require_once('include/init.php');
-$INIT_CONF->LoadClass('SCRIPT_INFO', 'MENU_LINK', 'BBS_CONF');
-OutputHTMLHeader($SERVER_CONF->title . $SERVER_CONF->comment, 'index');
-echo "</head>\n<body>\n";
-if($SERVER_CONF->back_page != ''){
-  echo '<a href="' . $SERVER_CONF->back_page . '">←戻る</a><br>'."\n";
-}
+$INIT_CONF->LoadClass('MENU_LINK');
+OutputIndexHeader();
 ?>
-<a href="./"><img src="img/top_title.jpg"></a>
+<a href="./"><img src="img/top_title.jpg" title="汝は人狼なりや？" alt="汝は人狼なりや？"></a>
 <div class="comment"><?php echo $SERVER_CONF->comment ?></div>
 <noscript>&lt;&lt; JavaScriptを有効にしてください &gt;&gt;</noscript>
 <table class="main"><tr>
@@ -21,14 +17,12 @@ if($SERVER_CONF->back_page != ''){
     <li><a href="info/shared_room.php">関連サーバ村情報</a></li>
     <li><a href="info/">その他の情報一覧</a></li>
     <li>★☆★☆★☆★</li>
-    <li><a href="old_log.php">ログ閲覧</a><!-- (<a href="log/">HTML化ログ</a>) --></li>
+    <li><a href="old_log.php">ログ閲覧</a> (<a href="log/">HTML化ログ</a>)</li>
     <li>★☆★☆★☆★</li>
     <li><a href="icon_view.php">アイコン一覧</a></li>
     <li><a href="icon_upload.php">アイコン登録</a></li>
-<!--
     <li>★☆★☆★☆★</li>
     <li><a href="src/">ソースコードダウンロード</a></li>
--->
   </ul>
   <?php $MENU_LINK->Output() ?>
 </td>
@@ -41,12 +35,12 @@ if($SERVER_CONF->back_page != ''){
     <legend>ゲーム一覧</legend>
     <div class="game-list"><?php include_once 'room_manager.php' ?></div>
   </fieldset>
-  <?php $BBS_CONF->Output() ?>
+  <?php OutputBBSInfo() ?>
   <fieldset>
     <legend>村の作成</legend><?php OutputCreateRoomPage() ?>
   </fieldset>
 </td>
 </tr></table>
 
-<div class="footer"><?php $SCRIPT_INFO->Output() ?></div>
+<div class="footer"><?php OutputScriptInfo() ?></div>
 </body></html>

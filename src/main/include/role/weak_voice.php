@@ -2,14 +2,9 @@
 /*
   ◆小声 (weak_voice)
   ○仕様
-  ・声の大きさが常時「小声」で固定される
-  ・ゲームプレイ中で生存時のみ有効
+  ・声量変換：「小声」固定
 */
-class Role_weak_voice extends RoleTalkFilter{
-  function Role_weak_voice(){ $this->__construct(); }
+RoleManager::LoadFile('strong_voice');
+class Role_weak_voice extends Role_strong_voice{
   function __construct(){ parent::__construct(); }
-
-  function FilterVoice(&$volume, &$sentence){
-    $volume = 'weak';
-  }
 }

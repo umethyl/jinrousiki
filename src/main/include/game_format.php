@@ -1,39 +1,39 @@
 <?php
 //-- 発言処理の基底クラス --//
 class DocumentBuilder{
-  var $actor;
-  var $flag;
-  var $extension_list = array();
+  public $actor;
+  public $flag;
+  public $filter = array();
 
-  function DocumentBuilder(){ $this->__construct(); }
   function __construct(){
     global $ROOM, $USERS, $SELF;
 
     $this->actor = $USERS->ByVirtual($SELF->user_no); //仮想ユーザを取得
-    if(is_null($this->actor->live) || ! $ROOM->IsOpenCast()){ //観戦モード判定
-      foreach(array('blinder', 'earplug') as $role){ //本人視点が変化するタイプ
-	if(($ROOM->IsEvent($role)  && $ROOM->IsDay()) ||
-	   ($ROOM->IsOption($role) && ! $ROOM->IsFinished())){
+    //観戦モード判定
+    if((is_null($this->actor->live) || ! $ROOM->IsOpenCast()) && ! $ROOM->IsFinished()){
+      //本人視点が変化するタイプ
+      $stack = array('blinder' => $ROOM->IsDay(), 'earplug' => $ROOM->IsDay(),
+		     'deep_sleep' => true);
+      foreach($stack as $role => $flag){
+	if(($ROOM->IsEvent($role) && $flag) || $ROOM->IsOption($role)){
 	  $this->actor->virtual_live = true;
 	  $this->actor->role_list[] = $role;
 	}
       }
-      $role = 'deep_sleep'; //爆睡者は処理の位置が違うので個別対応
-      if($ROOM->IsOption($role) && ! $ROOM->IsFinished()){
-	$SELF->virtual_live = true;
-	$SELF->role_list[] = $role;
-      }
     }
-    $this->LoadExtension();
+    $this->LoadFilter();
     $this->SetFlag();
   }
 
   //フィルタ対象役職の情報をロード
-  function LoadExtension(){
+  function LoadFilter(){
     global $ROLES;
 
     $ROLES->actor = $this->actor;
-    $this->extension_list = $ROLES->Load('talk');
+    if(! property_exists($ROLES->actor, 'virtual_live')) $ROLES->actor->virtual_live = false;
+    $this->filter = $ROLES->Load('talk');
+    $ROLES->stack->viewer = $ROLES->actor;
+    $ROLES->stack->builder = $this;
   }
 
   //フィルタ用フラグをセット
@@ -41,14 +41,19 @@ class DocumentBuilder{
     global $ROOM, $SELF;
 
     //フラグをセット
-    $this->flag->dummy_boy = $SELF->IsDummyBoy();
-    $this->flag->common    = $this->actor->IsCommon(true);
-    $this->flag->wolf      = $SELF->IsWolf(true) || $this->actor->IsRole('whisper_mad');
-    $this->flag->fox       = $SELF->IsFox(true);
-    $this->flag->whisper   = $this->actor->IsRole('whisper_ringing');
-    $this->flag->howl      = $this->actor->IsRole('howl_ringing');
-    $this->flag->lovers    = $ROOM->date > 1 && $this->actor->IsRole('sweet_ringing');
-    $this->flag->mind_read = $ROOM->date > 1 && ($SELF->IsLive() || $ROOM->single_view_mode);
+    $this->flag->dummy_boy  = $SELF->IsDummyBoy();
+    $this->flag->common     = $this->actor->IsCommon(true);
+    $this->flag->wolf       = $SELF->IsWolf(true) || $this->actor->IsRole('whisper_mad');
+    $this->flag->fox        = $SELF->IsFox(true);
+    $this->flag->lovers     = $SELF->IsLovers();
+    $this->flag->mind_read  = $ROOM->date > 1 && ($SELF->IsLive() || $ROOM->single_view_mode);
+    $this->flag->deep_sleep = $this->actor->IsRole('deep_sleep');
+    foreach(array('whisper_ringing', 'howl_ringing', 'sweet_ringing') as $role){ //耳鳴
+      $this->flag->$role = $this->actor->IsRole($role) && ! $this->flag->deep_sleep;
+    }
+    $this->flag->sweet_ringing = $this->flag->sweet_ringing && $ROOM->date > 1;
+    $this->flag->common_whisper = ! $SELF->IsRole('dummy_common') && ! $this->flag->deep_sleep;
+    $this->flag->wolf_howl      = ! $SELF->IsRole('mind_scanner') && ! $this->flag->deep_sleep;
 
     //発言完全公開フラグ
     /*
@@ -70,20 +75,20 @@ class DocumentBuilder{
   }
 
   //基礎発言処理
-  function RawAddTalk($symbol, $user_info, $sentence, $volume, $row_class = '',
+  function RawAddTalk($symbol, $user_info, $str, $voice, $row_class = '',
 		      $user_class = '', $say_class = ''){
     global $GAME_CONF;
 
     if($row_class  != '') $row_class  = ' ' . $row_class;
     if($user_class != '') $user_class = ' ' . $user_class;
     if($say_class  != '') $say_class  = ' ' . $say_class;
-    LineToBR($sentence);
-    if($GAME_CONF->quote_words) $sentence = '「' . $sentence . '」';
+    LineToBR($str);
+    if($GAME_CONF->quote_words) $str = '「' . $str . '」';
 
     $this->cache .= <<<EOF
 <tr class="user-talk{$row_class}">
 <td class="user-name{$user_class}">{$symbol}{$user_info}</td>
-<td class="say{$say_class} {$volume}">{$sentence}</td>
+<td class="say{$say_class} {$voice}">{$str}</td>
 </tr>
 
 EOF;
@@ -92,57 +97,43 @@ EOF;
 
   //標準的な発言処理
   function AddTalk($user, $talk){
-    global $GAME_CONF, $RQ_ARGS, $ROOM, $USERS;
+    global $RQ_ARGS, $ROOM, $USERS;
 
     //表示情報を抽出
-    $handle_name = $user->handle_name;
+    $symbol = '<font style="color:'.$user->color.'">◆</font>';
+    $name   = $user->handle_name;
     if($RQ_ARGS->add_role){ //役職表示モード対応
-      $real_user = $talk->scene == 'heaven' ? $user : $USERS->ByReal($user->user_no);
-      $handle_name .= $real_user->GenerateShortRoleName();
+      $real = $talk->scene == 'heaven' ? $user : $USERS->ByReal($user->user_no);
+      $name .= $real->GenerateShortRoleName();
     }
-
-    $user_info = '<font style="color:'.$user->color.'">◆</font>'.$handle_name;
-    if(($talk->type == 'self_talk' && ! $user->IsRole('dummy_common')) ||
-       ($user->IsRole('mind_read', 'mind_open') && $ROOM->IsNight())){
-      $user_info .= '<span>の独り言</span>';
+    if($ROOM->IsNight() &&
+       (($talk->type == 'self_talk' && ! $user->IsRole('dummy_common')) ||
+	$user->IsRole('leader_common', 'mind_read', 'mind_open'))){
+      $name .= '<span>の独り言</span>';
     }
-    $volume = $talk->font_type;
-    $sentence = $talk->sentence;
-    foreach($this->extension_list as $extension){ //フィルタリング処理
-      $extension->AddTalk($user, $talk, $user_info, $volume, $sentence);
-    }
-    return $this->RawAddTalk('', $user_info, $sentence, $volume);
+    $str   = $talk->sentence;
+    $voice = $talk->font_type;
+    //フィルタリング処理
+    foreach($this->filter as $filter) $filter->FilterTalk($user, $name, $voice, $str);
+    return $this->RawAddTalk($symbol, $name, $str, $voice);
   }
 
-  //囁き処理
-  function AddWhisper($role, $talk){
-    global $ROLES;
-
-    if(($user_info = $ROLES->GetWhisperingUserInfo($role, $user_class)) === false) return false;
-    $volume = $talk->font_type;
-    $sentence = $ROLES->GetWhisperingSound($role, $talk, $say_class);
-    foreach($this->extension_list as $extension){ //フィルタリング処理
-      $extension->AddWhisper($role, $talk, $user_info, $volume, $sentence);
-    }
-    return $this->RawAddTalk('', $user_info, $sentence, $volume, '', $user_class, $say_class);
-  }
-
-  function AddSystemTalk($sentence, $class = 'system-user'){
-    LineToBR($sentence);
+  function AddSystemTalk($str, $class = 'system-user'){
+    LineToBR($str);
     $this->cache .= <<<EOF
 <tr>
-<td class="{$class}" colspan="2">{$sentence}</td>
+<td class="{$class}" colspan="2">{$str}</td>
 </tr>
 
 EOF;
     return true;
   }
 
-  function AddSystemMessage($class, $sentence, $add_class = ''){
+  function AddSystemMessage($class, $str, $add_class = ''){
     if($add_class != '') $add_class = ' ' . $add_class;
     $this->cache .= <<<EOF
 <tr class="system-message{$add_class}">
-<td class="{$class}" colspan="2">{$sentence}</td>
+<td class="{$class}" colspan="2">{$str}</td>
 </tr>
 
 EOF;
@@ -155,7 +146,5 @@ EOF;
     return $str;
   }
 
-  function EndTalk(){
-    echo $this->RefreshTalk();
-  }
+  function EndTalk(){ echo $this->RefreshTalk(); }
 }

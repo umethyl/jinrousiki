@@ -2,22 +2,17 @@
 /*
   ◆解答者 (panelist)
   ○仕様
-  ・出題者に投票するとショック死する
-  ・投票数が 0 で固定される
+  ・ショック死：出題者投票
+  ・投票数：0
 */
-class Role_panelist extends Role{
-  function Role_panelist(){ $this->__construct(); }
+RoleManager::LoadFile('chicken');
+class Role_panelist extends Role_chicken{
+  public $sudden_death = 'PANELIST';
   function __construct(){ parent::__construct(); }
 
-  function FilterVoteDo(&$vote_number){
-    $vote_number = 0;
+  function IsSuddenDeath(){
+    return ! $this->IgnoreSuddenDeath() && $this->GetVoteUser()->IsRole('quiz');
   }
 
-  function FilterSuddenDeath(&$reason){
-    global $ROLES, $USERS;
-    if($reason == '' &&
-       $USERS->ByRealUname($ROLES->stack->target[$ROLES->actor->uname])->IsRole('quiz')){
-      $reason = 'PANELIST';
-    }
-  }
+  function FilterVoteDo(&$number){ $number = 0; }
 }

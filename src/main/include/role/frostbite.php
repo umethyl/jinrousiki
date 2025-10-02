@@ -2,15 +2,17 @@
 /*
   ◆凍傷 (frostbite)
   ○仕様
-  ・発動当日に投票されていなかったらショック死する
+  ・ショック死：発動当日に無得票
 */
-class Role_frostbite extends Role{
-  function Role_frostbite(){ $this->__construct(); }
+RoleManager::LoadFile('febris');
+class Role_frostbite extends Role_febris{
+  public $sudden_death = 'FROSTBITE';
   function __construct(){ parent::__construct(); }
 
-  function FilterSuddenDeath(&$reason){
-    global $ROLES, $ROOM;
-    if($reason == '' && $ROOM->date == $ROLES->actor->GetDoomDate('frostbite') &&
-       $ROLES->stack->count[$ROLES->actor->uname] == 0) $reason = 'FROSTBITE';
+  protected function OutputResult(){
+    global $ROOM;
+    OutputAbilityResult($this->role . '_header', $ROOM->date, $this->role . '_footer');
   }
+
+  function IsSuddenDeath(){ return parent::IsSuddenDeath() && $this->GetVotedCount() == 0; }
 }

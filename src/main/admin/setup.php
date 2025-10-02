@@ -45,11 +45,11 @@ class DefaultIcon{
 
 //身代わり君アイコン
 class DummyBoyIcon{
-  var $path   = '../img/dummy_boy_user_icon.jpg'; //IconConfig->path からの相対パス
-  var $name   = '身代わり君用'; //名前
-  var $color  = '#000000'; //色
-  var $width  = 45; //幅
-  var $height = 45; //高さ
+  public $path   = '../img/dummy_boy_user_icon.jpg'; //IconConfig->path からの相対パス
+  public $name   = '身代わり君用'; //名前
+  public $color  = '#000000'; //色
+  public $width  = 45; //幅
+  public $height = 45; //高さ
 }
 
 //-- 関数 --//
@@ -199,7 +199,6 @@ EOF;
     }
   }
 
-
   $table = 'user_icon';
   $title = $header . ' (' . $table . ') ';
   if(! in_array($table, $table_list)){
@@ -252,7 +251,7 @@ EOF;
     echo $title . $str;
   }
 
-  mysql_query("GRANT ALL ON {$db_name}.* TO $db_uname");
+  mysql_query("GRANT ALL ON {$DB_CONF->name}.* TO {$DB_CONF->user}");
   SendCommit();
   echo '初期設定は無事完了しました' . $footer;
 }

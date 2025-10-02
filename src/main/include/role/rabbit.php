@@ -2,14 +2,12 @@
 /*
   ◆ウサギ (rabbit)
   ○仕様
-  ・投票されていなかったらショック死する
+  ・ショック死：無得票
 */
-class Role_rabbit extends Role{
-  function Role_rabbit(){ $this->__construct(); }
+RoleManager::LoadFile('chicken');
+class Role_rabbit extends Role_chicken{
+  public $sudden_death = 'RABBIT';
   function __construct(){ parent::__construct(); }
 
-  function FilterSuddenDeath(&$reason){
-    global $ROLES;
-    if($reason == '' && $ROLES->stack->count[$ROLES->actor->uname] == 0) $reason = 'RABBIT';
-  }
+  function IsSuddenDeath(){ return ! $this->IgnoreSuddenDeath() && $this->GetVotedCount() == 0; }
 }

@@ -27,6 +27,7 @@ OutputHTMLHeader('新役職情報 - [メニュー]', 'info_menu');
 <li><a target="body" href="human.php#mind_scanner_group">さとり系</a></li>
 <li><a target="body" href="human.php#jealousy_group">橋姫系</a></li>
 <li><a target="body" href="human.php#brownie_group">座敷童子系</a></li>
+<li><a target="body" href="human.php#wizard_group">魔法使い系</a></li>
 <li><a target="body" href="human.php#doll_group">上海人形系</a></li>
 <li><a target="body" href="human.php#escaper_group">逃亡者系</a></li>
 <li>★☆★☆★☆★</li>
@@ -56,6 +57,11 @@ OutputHTMLHeader('新役職情報 - [メニュー]', 'info_menu');
 <li><a target="body" href="ogre.php#ogre_group">鬼系</a></li>
 <li><a target="body" href="ogre.php#yaksa_group">夜叉系</a></li>
 <li>★☆★☆★☆★</li>
+<li><a target="body" href="duelist.php">&lt;決闘者陣営&gt;</a></li>
+<li><a target="body" href="duelist.php#duelist_group">決闘者系</a></li>
+<li><a target="body" href="duelist.php#avenger_group">復讐者系</a></li>
+<li><a target="body" href="duelist.php#patron_group">後援者系</a></li>
+<li>★☆★☆★☆★</li>
 <li><a target="body" href="mania.php">&lt;神話マニア陣営&gt;</a></li>
 <li><a target="body" href="mania.php#mania_group">神話マニア系</a></li>
 <li><a target="body" href="mania.php#unknown_mania_group">鵺系</a></li>
@@ -63,14 +69,19 @@ OutputHTMLHeader('新役職情報 - [メニュー]', 'info_menu');
 <li><a target="body" href="sub_role.php">&lt;サブ役職&gt;</a></li>
 <li><a target="body" href="sub_role.php#chicken_group">小心者系</a></li>
 <li><a target="body" href="sub_role.php#liar_group">狼少年系</a></li>
+<li><a target="body" href="sub_role.php#decide_group">決定者系</a></li>
 <li><a target="body" href="sub_role.php#authority_group">権力者系</a></li>
 <li><a target="body" href="sub_role.php#upper_luck_group">雑草魂系</a></li>
-<li><a target="body" href="sub_role.php#decide_group">決定者系</a></li>
 <li><a target="body" href="sub_role.php#strong_voice_group">大声系</a></li>
 <li><a target="body" href="sub_role.php#no_last_words_group">筆不精系</a></li>
 <li><a target="body" href="sub_role.php#mind_read_group">サトラレ系</a></li>
+<li><a target="body" href="sub_role.php#wisp_group">鬼火系</a></li>
 <li><a target="body" href="sub_role.php#lovers_group">恋人系</a></li>
+<li><a target="body" href="sub_role.php#infected_group">感染者系</a></li>
 <li><a target="body" href="sub_role.php#joker_group">ジョーカー系</a></li>
+<li><a target="body" href="sub_role.php#death_note_group">デスノート系</a></li>
+<li><a target="body" href="sub_role.php#bad_status_group">悪戯系</a></li>
+<li><a target="body" href="sub_role.php#copied_group">元神話マニア系</a></li>
 <li><a target="body" href="sub_role.php#other_group">その他</a></li>
 </ul>
 </body></html>
