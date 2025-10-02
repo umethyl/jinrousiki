@@ -1,113 +1,113 @@
 -----------------------------------------------------------------------------
-  �l�T�� �`���͐l�T�Ȃ��H���_�G�f�B�V���� Version 1.3.5 README 2011/10/14
+  人狼式 ～汝は人狼なりや？式神エディション Version 1.3.5 README 2011/10/14
 -----------------------------------------------------------------------------
-�l�T�� �`���͐l�T�Ȃ��H���_�G�f�B�V�����i�ȉ��{�X�N���v�g�j�́A
-�l�T�X�N���v�g�u���͐l�T�Ȃ��H��PHP+MySQL�ڐA��(from �ӂ���) �v�̃R�[�h�����
-���ǁE�V�@�\��ǉ������APHP�ŋL�q���ꂽ�l�T�X�N���v�g�ł��B
+人狼式 ～汝は人狼なりや？式神エディション（以下本スクリプト）は、
+人狼スクリプト「汝は人狼なりや？のPHP+MySQL移植版(from ふたば) 」のコードを基に
+改良・新機能を追加した、PHPで記述された人狼スクリプトです。
 
-���͐l�T�Ȃ��H��PHP+MySQL�ڐA��(from �ӂ���)�̊J�����͂�����ł��B
+汝は人狼なりや？のPHP+MySQL移植版(from ふたば)の開発元はこちらです。
 http://f45.aaa.livedoor.jp/~netfilms/
 
 ------------------
-  �p�b�P�[�W���e
+  パッケージ内容
 ------------------
-�{�X�N���v�g�̃f�B���N�g���\���͈ȉ��̂Ƃ���ł��B
-<top>          : �{�̃R�[�h
-����admin      : �Ǘ��p�R�[�h
-����css        : �\���pCSS�t�@�C��
-����img        : �V�X�e���摜�t�@�C��
-����include    : �C���N���[�h�t�@�C��
-����info       : �g�b�v��ʂɕ\������C���t�H���[�V�������R�[�h
-����javascript : Javascript�t�@�C��
-����module     : mbstring�G�~�����[�^�p�t�@�C��
-����swf        : �����t�@�C��
-����user_icon  : �A�C�R���摜�t�@�C��
+本スクリプトのディレクトリ構成は以下のとおりです。
+<top>          : 本体コード
+├─admin      : 管理用コード
+├─css        : 表示用CSSファイル
+├─img        : システム画像ファイル
+├─include    : インクルードファイル
+├─info       : トップ画面に表示するインフォメーション文コード
+├─javascript : Javascriptファイル
+├─module     : mbstringエミュレータ用ファイル
+├─swf        : 音声ファイル
+└─user_icon  : アイコン画像ファイル
 
 ------------
-  �����
+  動作環境
 ------------
-�{�X�N���v�g�́APHP4�{MySQL4.0�����ł̓����z�肵�Ă��܂��B
-MySQL�ȊO��RDBS����p����ꍇ�AMySQL�p�N�G���֐������������K�v������܂��B
+本スクリプトは、PHP4＋MySQL4.0環境下での動作を想定しています。
+MySQL以外のRDBS環境を用いる場合、MySQL用クエリ関数を書き直す必要があります。
 
 ------------
-  �ݒu���@
+  設置方法
 ------------
-1. MySQL�T�[�o���ɐ�p�f�[�^�x�[�X�ƃA�J�E���g���쐬
-   �����R�[�h�A�ƍ�������ujis_japanese_ci���g�p���邱��
-2. include/setting.php��ҏW���A�f�[�^�x�[�X�T�[�o�⃆�[�U���A�p�X���[�h��ݒ�
-3. �p�b�P�[�W���T�[�o�ɃA�b�v���[�h�i�R�[�h���ϊ��A�܂��̓o�C�i�����[�h�j
-4. �T�[�o���user_icon/�f�B���N�g���ɏ������ݑ�����t�^
-5. admin/�f�B���N�g���ɃA�N�Z�X������ݒ�
-6. �����Z�b�g�A�b�v��Ɓi�����j�̂��߂�admin/setup.php�ɃA�N�Z�X
-7. index.php�ɃA�N�Z�X���A������m�F
+1. MySQLサーバ内に専用データベースとアカウントを作成
+   文字コード、照合順序はujis_japanese_ciを使用すること
+2. include/setting.phpを編集し、データベースサーバやユーザ名、パスワードを設定
+3. パッケージをサーバにアップロード（コード無変換、またはバイナリモード）
+4. サーバ上のuser_icon/ディレクトリに書き込み属性を付与
+5. admin/ディレクトリにアクセス制限を設定
+6. 初期セットアップ作業（自動）のためにadmin/setup.phpにアクセス
+7. index.phpにアクセスし、動作を確認
 
 ----------------------------
-  �Ǘ��p�X�N���v�g�ɂ���
+  管理用スクリプトについて
 ----------------------------
-�{�X�N���v�g�ŊǗ��p�̃X�N���v�g�͈ȉ��̒ʂ�ł��B
-�S��admin/�f�B���N�g�����ɑ��݂��܂��B
-  setup.php       : �����ݒ���s���X�N���v�g�B
-                    �V�����T�[�o�ɐݒu�����ۂɁA���߂Ɏ��s���邱�ƁB
-  room_delete.php : �ғ����̑����폜���邽�߂̃X�N���v�g�B
-                    include/setting.php����$DEBUG_MODE��true�̎��̂ݗL��
+本スクリプトで管理用のスクリプトは以下の通りです。
+全てadmin/ディレクトリ内に存在します。
+  setup.php       : 初期設定を行うスクリプト。
+                    新しくサーバに設置した際に、初めに実行すること。
+  room_delete.php : 稼働中の村を削除するためのスクリプト。
+                    include/setting.php中の$DEBUG_MODEがtrueの時のみ有効
 
-room_delete.php�ɂ��Ă͒��ڌĂяo�����̂ł͂Ȃ��A�ғ����̑��ꗗ�ɕ\�������
-�폜�p�����N����Ăяo�������̂ł��B
-�������Aadmin/�f�B���N�g���ɃA�N�Z�X�����������Ă��Ȃ��ꍇ�A
-����$DEBUG_MODE��true�̎��ɂ͒��ڃA�h���X���͂��邱�ƂŁA
-�ғ����̑��̍폜���N�ɂł��\�ƂȂ�܂��B
-���̂��߁A�ʏ�ғ����ɂ�$DEBUG_MODE��false�ɐݒ肵�Ă����悤�ɂ��Ă��������B
-�f�t�H���g�ł�false�ɐݒ肳��Ă��܂��B
+room_delete.phpについては直接呼び出すものではなく、稼働中の村一覧に表示される
+削除用リンクから呼び出されるものです。
+ただし、admin/ディレクトリにアクセス制限をかけていない場合、
+かつ$DEBUG_MODEがtrueの時には直接アドレス入力することで、
+稼働中の村の削除が誰にでも可能となります。
+そのため、通常稼動時には$DEBUG_MODEをfalseに設定しておくようにしてください。
+デフォルトではfalseに設定されています。
 
 ------------------------
-  �ݒ�t�@�C���ɂ���
+  設定ファイルについて
 ------------------------
-�{�X�N���v�g�̐ݒ�t�@�C���͈ȉ��̒ʂ�ł��B
-�S��include/�f�B���N�g�����ɑ��݂��܂��B
-  setting.php       : �{�X�N���v�g���T�[�o��œ��삳���邽�߂̐ݒ�t�@�C��
-  config.php        : �z���A�������ԂȂǁA�Q�[���p�����[�^�̐ݒ�t�@�C��
-  system_class.php  : �{�X�N���v�g���Ŏg�p�����摜�t�@�C���̃p�X�ݒ�t�@�C��
-  message_class.php : �Q�[�����ŕ\�������V�X�e�����b�Z�[�W�̐ݒ�t�@�C��
-  version.php       : �g�b�v�y�[�W�ŕ\�������o�[�W�������̐ݒ�t�@�C��
+本スクリプトの設定ファイルは以下の通りです。
+全てinclude/ディレクトリ内に存在します。
+  setting.php       : 本スクリプトをサーバ上で動作させるための設定ファイル
+  config.php        : 配役、制限時間など、ゲームパラメータの設定ファイル
+  system_class.php  : 本スクリプト中で使用される画像ファイルのパス設定ファイル
+  message_class.php : ゲーム中で表示されるシステムメッセージの設定ファイル
+  version.php       : トップページで表示されるバージョン情報の設定ファイル
 
-���̂����A�K���ݒ肪�K�v�ɂȂ�̂�setting.php�݂̂ł��B
-���̃t�@�C���ɂ��Ă͕K�v�ɉ����ĕύX���Ă��������B
-�ڍׂ͊e�t�@�C���̃R�����g���Q�Ƃ��Ă��������B
+このうち、必ず設定が必要になるのはsetting.phpのみです。
+他のファイルについては必要に応じて変更してください。
+詳細は各ファイルのコメントを参照してください。
 
 ----------------------
-  �g�p�A���ςɂ���
+  使用、改変について
 ----------------------
-���ρA�Ĕz�z�͎��R�ł��B
-�������A�A���̔w�i�摜�A����ɂ��镶���̓������^�C�g���摜�͓V�̌��Ђ���̑f�ނ��g�p���Ă��܂��B
-���̉摜�����̂܂܎g���ꍇ�� index.php �̓V�̌��Ђ���ւ̃����N���폜���Ȃ��悤�ɂ��肢���܂��B
+改変、再配布は自由です。
+しかし、植物の背景画像、左上にある文字の入ったタイトル画像は天の欠片さんの素材を使用しています。
+この画像をそのまま使う場合は index.php の天の欠片さんへのリンクを削除しないようにお願いします。
 http://keppen.web.infoseek.co.jp/
-�܂����̉摜�̒��쌠�͓V�̌��Ђ���̕��Ȃ̂ŁA�����ŎB�e�����Ƃ������ō�����Ƃ�����Ȃ��悤�ɂ��Ă��������B 
-version1.2.0�ȍ~�Œǉ������摜�ɂ��ẮA �������ӂ���Ƃ���̃t�H���g�𗘗p�����Ă��������Ă��܂��B
-���̉摜�����̂܂܎g���ꍇ�� index.php �̂������ӂ���Ƃ���ւ̃����N���폜���Ȃ��悤�ɂ��肢���܂��B
+またこの画像の著作権は天の欠片さんの物なので、自分で撮影したとか自分で作ったとか言わないようにしてください。 
+version1.2.0以降で追加した画像については、 あずきふぉんとさんのフォントを利用させていただいています。
+この画像をそのまま使う場合は index.php のあずきふぉんとさんへのリンクを削除しないようにお願いします。
 http://azukifont.mints.ne.jp/
-module�t�H���_�̒���mbstring�G�~�����[�^�������Ă��܂��B
+moduleフォルダの中はmbstringエミュレータが入っています。
 http://www.matsubarafamily.com/blog/mbemu.php
-�����mbstring���g���Ȃ����ł������R�[�h�֘A�̏��������邽�߂ł��B
-���쌠��mbstring�̍�҂���̂��̂ł��B
-index.php �̃����N���폜���Ȃ��悤�ɂ��肢���܂��B
+これはmbstringが使えない環境でも文字コード関連の処理をするためです。
+著作権はmbstringの作者さんのものです。
+index.php のリンクを削除しないようにお願いします。
 
 --------------
-  �N���W�b�g
+  クレジット
 --------------
-�����_�������D����o�[
+◆式神研究同好会メンバー
 enogu
-���߃`��
-����
-�Ԃ�����
-�挎
+埋めチル
+お肉
+赤いきつね
+乗月
 Kei
 atari
-�Ό�
+火月
 
-���u�ًc����v�����쐬��
-���̖��
-�V�g�E
+◆「異議あり」音源作成者
+炎の紋章
+シトウ
 
-��Special Thanks
-�����̃e�X�g�v���C���[�A���͂��Ă������������X
-���A�����̃e�X�g�v���C���[�A���͂��Ă������������X
+◆Special Thanks
+多数のテストプレイヤー、協力していただいた方々
+他、多数のテストプレイヤー、協力していただいた方々
