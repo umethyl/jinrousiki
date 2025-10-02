@@ -1,0 +1,64 @@
+@import url(role.css);
+body {
+  background-color: #FFFFFF;
+  background-image: url("../img/rule_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-attachment: fixed;
+}
+img{margin-bottom: 1em;}
+h1{
+  background-color: #AAEEAA;
+  font-size: 130%;
+}
+.worning{
+  color: #FF0000;
+  margin-left: 1.5em;
+}
+.worning2{margin-left: 1.5em;}
+.caption
+{
+  font-weight: bold;
+  margin-left: 1.5em;
+}
+.caption2{margin-left: 1.6em;}
+.info{
+  font-size: 95%;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  margin-left: 1.8em;
+}
+ul{
+  font-size: 95%;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  margin-left: -5px;
+}
+.member{
+  border: 1px solid;
+  margin: 20px 20px;
+  border-collapse:collapse;
+  text-align: right;
+  padding: 3px;
+}
+.member th{border: 1px solid;}
+.member td{border: 1px solid;}
+.role{
+  border: 1px solid;
+  margin-left: 20px;
+  border-collapse:collapse;
+  padding: 3px;
+}
+.role th{border: 1px solid;}
+.role td{border: 1px solid;}
+div img{margin: 0;}
+h2{
+  margin: 0;
+  font-size:110%;
+}
+.view{
+  border: 0;
+  border-collapse: collapse;
+}
+.view td{ border: 1px solid; }
+.view img{margin: 0;}

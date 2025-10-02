@@ -1,0 +1,46 @@
+body{
+  background-image: url("../img/icon_upload_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-attachment: fixed;
+  background-color: #FFFFFF;
+}
+table{margin: 10px 0px 20px 0px;}
+caption{
+  margin-left: 1em;
+  color: #CC0000;
+  font-size: 120%;
+  font-weight: bold;
+  text-align: left;
+}
+td{padding: 5px;}
+#upload{border: 1px dotted #303030;}
+label{font-weight: bold;}
+#download{
+  border: 1px solid #000000;
+  border-collapse: collapse;
+}
+#download .caption{
+  text-align: center;
+  font-weight: bold;
+}
+#download td{
+  border: 1px solid;
+  vertical-align: middle;
+}
+#download .link{white-space:nowrap;}
+#download .type{
+  text-align: center;
+  white-space:nowrap;
+}
+#download .size{
+  text-align: right;
+  white-space:nowrap;
+}
+#download .explain{vertical-align: top;}
+#download .name{
+  text-align: center;
+  white-space:nowrap;
+}
+#download .date{white-space:nowrap;}
+span{color: #FF0000;}

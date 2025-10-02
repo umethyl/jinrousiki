@@ -1,0 +1,272 @@
+Ver. 1.2.1 との違い
+# 最終的にはまとめた情報を"設置方法.txt" の更新履歴か更新履歴専用テキストファイルを作ります。
+
+Ver. 1.3.0 beta23
+・KICK 投票がカウントされないバグ修正
+・配役テーブルのバグ修正
+・admin/room_delete.php のバグ修正
+・old_log.php の関数名のスペルミス修正
+
+Ver. 1.3.0 beta22
+・admin/setup.php の追加バグ修正
+・死因・遺言表示がおかしくなるバグ修正
+　(DB の書き込み更新時間関係のデータがおかしくなった事に起因するので
+　 このバグがあった期間中のログはおかしいまま)
+・old_log.php : 仮想 GM の発言がゲーム中以外もシステム相当になったまま表記されるバグ修正
+・文字のエスケープ処理の最適化
+・トリップに仮対応 (# が含まれていたらエラーを返すだけ)
+・処理の高速化 (strstr() → strpos())
+
+Ver. 1.3.0 beta21
+・beta20 の Kick 処理が不完全だったので追加修正
+・身代わり君は単独(一票)で Kick 処理を行える仕様に変更
+・突然死などの制限時間表示のバグ修正
+・複数狩人・狐の処理が正しく行われるよう修正
+・配役テーブルの仕様変更 (beta17相当)
+・狼・共有者の仲間表示を改善
+
+Ver. 1.3.0 beta20
+・ソースコードのベースを beta16 に巻き戻す
+・Kick 処理が全ての村に影響するバグ修正
+・admin/setup.php のバグ修正
+・old_log.php を beta15 の版に入れ替え
+
+Ver. 1.3.0 beta19
+・beta18 で見つかったバグフィックス
+
+Ver. 1.3.0 beta18
+・beta17 で見つかったバグフィックス
+
+Ver. 1.3.0 beta17
+・Kick 処理が全ての村に影響するバグ修正
+・配役テーブルの仕様変更 (config.php を参照すること)
+
+Ver. 1.3.0 beta16
+・「霊界で配役を公開しない」オプションが機能しなくなったバグ修正
+・身代わり君のみ「霊界で配役を公開しない」オプションの影響を受けない仕様に変更
+・過去ログ表示の「ALL」が機能しないバグ修正
+・設置時のみに使用する機能を admin/setup.php(新設) へ移動
+・room_delete.php → admin/room_delete.php
+
+Ver. 1.3.0 beta15
+・廃村処理が正しく行われないバグ修正
+・過去ログを逆順で表示できる機能実装(デフォルトは設定ファイルで変更可能)
+
+Ver. 1.3.0 beta14
+・埋毒者を噛んでも50%の確率で狼が巻き込まれないバグ修正
+・埋毒者を噛んで巻き込まれる狼の対象決定方法を任意で変更できるよう変更
+
+Ver. 1.3.0 beta13
+・引き分け判定処理の改善
+・突然死処理の改善
+
+Ver. 1.3.0 beta12
+・game_view.php		自動更新機能追加 (config.php を参照すること)
+・色々バグフィックス
+
+Ver. 1.3.0 beta11
+・色々バグフィックス
+
+Ver. 1.3.0 beta10
+・game_vote.php		ソースの最適化
+
+Ver. 1.3.0 beta9
+・投票画面のデザイン変更
+
+Ver. 1.3.0 beta8
+・Ver. 1.3.0 beta7 で見つかったバグ修正
+・遺言は昼/夜の切り替えの影響を受けずに保存できるよう変更
+
+Ver. 1.3.0 beta7
+・Ver. 1.3.0 beta6 で見つかったバグ修正
+・ソースアップロード機能のバグ修正
+
+Ver. 1.3.0 beta6
+・システムメッセージを設定ファイルに移動
+  include/message_class.php	システムメッセージを格納したクラス
+・ユーザアイコンをソースコードに含めるのを止めました。
+
+Ver. 1.3.0 beta5
+・ソースアップロード機能のバグ修正
+
+Ver. 1.3.0 beta4
+・作成
+  src/upload.php	ソースアップロード処理
+  src/download.php	ソースダウンロードページ表示
+  src/file		ソース置き場
+  src/html		ソースの情報置き場
+
+Ver. 1.3.0 beta3
+・パス変更
+  setting.php → include/setting.php
+  config.inc.php → include/config.php
+  information.html → info/index.html
+
+・各ファイルのロード処理を最適化
+
+・作成
+  src/index.php			ソースのアップロード機能のインターフェイスのみ作成
+
+・遺言出力関数のゴミを削除
+・一部の CSS 記述ミスを修正
+
+Ver. 1.3.0 beta2
+・Ver. 1.3.0 beta1 で見つかったバグ取り
+
+Ver. 1.3.0 beta1
+・埋毒者バグ対応
+
+Ver. 1.2.2 beta20
+・変更
+  beta19 で取り損ねたバグ取り
+
+Ver. 1.2.2 beta19
+・変更
+  beta18 テストで指摘された＆目に付いたバグ取り
+
+Ver. 1.2.2 beta18
+・変更
+  game 関連色々			ソースを最適化
+
+・身代わり君を仮想GMにする機能を仮実装
+
+Ver. 1.2.2 beta17
+・変更
+  game_view.php			ソースを最適化中
+  include/game_functions.php	関数を一つ最適化
+  css/game.css			ゲーム関連の共通 css
+
+Ver. 1.2.2 beta16
+・追加
+  include/game_functions.php	game_functions.php のコピー
+				徐々にこちらに読み替えていく方向で
+  css/game_up.css		game.up.php 用
+  css/game_view.css		game_view.php 用
+  css/game_view_afteragme.css	game_view.php 用
+  css/game_view_beforegame.css	game_view.php 用
+  css/game_view_day.css		game_view.php 用
+  css/game_view_night.css	game_view.php 用
+  javascript/			javascript 置き場
+  javascript/game_up.js		game_up.php 用
+  javascript/output_realtime.js	game_view.php 用
+
+・変更
+  paparazzi			build 3 にアップ
+  game_frame.php		ソースを最適化
+  game_up.php			ソースを最適化
+  game_view.php			ソースを最適化中
+  rule.php			css を最適化
+  script_info.php		css を最適化
+  css/rule.css			rule.php 参照
+  css/script_info.css		script_info 参照
+
+Ver. 1.2.2 beta15
+・変更
+  user_manager.php		ソースを最適化
+  css/user_regist.css		user_manager.php 用
+
+Ver. 1.2.2 beta14
+・変更
+  login.php			ソースを最適化
+  room_manager.php		ソースを最適化
+  include/functions.php		共通の簡易 HTML 出力関数を実装
+
+Ver. 1.2.2 beta13
+・パス変更
+  functions.php → include/functions.php
+
+・変更
+  paparazzi			build 2 をアップ
+  login.php			ソースを最適化
+  room_manager.php		ソースを最適化
+  user_manager.php		ソースを最適化
+  icon_upload_check.php		ソースを最適化
+  icon_upload_finish.php	ソースを最適化
+  include/functions.php		エスケープ処理用関数を実装
+
+Ver. 1.2.2 beta12
+・変更
+  room_manager.php	ソースを最適化中
+  login.php		ソースを最適化中
+  css/room.css		room_manager.php 用
+
+Ver. 1.2.2 beta11
+・変更
+  game_play.php		未投票の人数を表示する機能を実装
+  css/index.css		IEに対応
+
+Ver. 1.2.2 beta10
+・変更
+  upload.php  → icon_upload_check.php
+  upload2.php → icon_upload_finish.php
+  icon_upload.php	html を最適化
+  config.inc.php	アイコン登録最大値の設定
+
+Ver. 1.2.2 beta9
+・追加
+  include/icon_data_check.php	icon_upload.php と upload.php の共通関数
+
+・変更
+  icon_upload.php	ソースを最適化中
+  upload.php		ソースを最適化中
+
+Ver. 1.2.2 beta8
+・追加
+  css/icon_view.css
+  css/icon_upload.css
+  src/diff.txt		このファイル
+
+・変更
+  index.php		開発者向けリンクを追加
+  icon_view.php		html を最適化
+  icon_upload.php	html を最適化
+
+Ver. 1.2.2 beta7
+・追加
+  include/time_calc.php			script_info.php と rule.php の共通項目をカット
+  include/contenttypeset_set.php	トップにある同名ファイルのコピー
+					徐々に読込先をこちらに切り替える方向で
+
+Ver. 1.2.2 beta6
+・追加
+  include		include 専用ファイル置き場(予定)
+  include/version.php	バージョン情報
+  paparazzi/		paparazzi 関連ファイル置き場
+  css/rule.css		rule.php用
+  css/script_info.css	script_info.php用
+
+・変更
+  script_info.php	html を最適化
+  rule.php		html を最適化
+  setting.php		バージョン情報を version.php に移動
+  index.php		css を最適化
+  css/index.css		index.php 参照
+
+Ver. 1.2.2 beta4
+・追加
+  config.inc.php	setting.phpから高度な設定を抽出。
+
+・変更
+  setting.php		config.inc.phpに移行した情報を削除。
+  paparazzi.php		build 01。村建て出来ない問題に対応。
+  room_manager.php	paparazzi対応。
+
+Ver. 1.2.2 beta3 2009/04/29 (Wed) 17:18
+・追加
+  information.html	トップページの更新情報用
+
+・変更
+  index.php		現在のさとり鯖の情報をマージ
+  css/index.css		index.php の変更に伴うもの
+  setting.php		バージョン情報 & 昼夜の時間をさとり鯖の値に変更
+
+Ver. 1.2.2 beta2 2009/04/29 (Wed) 08:48
+・追加
+  ayayayaya.inc.php	デバッグ用
+  paparazzi.php		デバッグ用
+  css/			css 格納フォルダ
+  css/index.css		index.php 用 css ファイル
+
+・変更
+  index.php		html を最適化 (css 対応)
+  setting.php		バージョン情報を定義 (変数名は仮設定)

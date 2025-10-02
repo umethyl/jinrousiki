@@ -1,0 +1,32 @@
+body{
+  background-image: url("../img/icon_view_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-attachment: fixed;
+  background-color: #FFFFFF;
+}
+.title{
+  border: 0;
+  margin: 1px 0 1em 0;
+}
+.link{margin-bottom: 5px;}
+fieldset{
+  filter:alpha(opacity=80,enabled=80);
+  border: 1px solid #000000;
+  background-color:#FFFFFF;
+}
+legend{
+  margin: 0px 5px;
+  font-size: 20px;
+  font-weight:bold;
+}
+table{border: 0;}
+table td{
+  vertical-align: top;
+  font-size: 15px;
+}
+table img{border: 2px solid;}
+.name{
+  width: 150px;
+  font-family:"ÇlÇr ÉSÉVÉbÉN";
+}
