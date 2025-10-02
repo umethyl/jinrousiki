@@ -1,0 +1,87 @@
+@charset "utf-8";
+.room { /* 村のタイトル */
+  text-decoration:underline;
+}
+.room span {
+  font-size: 15pt;
+  font-weight: bold;
+}
+.game-option { /* ゲームオプション */
+  padding: 3px;
+  vertical-align: top;
+}
+.game-option img {
+  vertical-align: top;
+}
+.time-table {
+  width: 100%;
+  border: 0;
+  border-collapse: collapse;
+  vertical-align: top;
+}
+.time-table td {
+  padding-left: 5px;
+  border: 0;
+  border-collapse: collapse;
+  vertical-align: middle;
+  text-align: left;
+}
+.time-table span {
+  margin-left: 1em;
+  font-size: 80%;
+}
+.real-time { /* リアルタイムの時間表示 */
+  padding-top: 5px;
+  vertical-align: middle;
+}
+.real-time span {
+  font-weight: bold;
+}
+.real-time form {
+  margin-bottom: 0;
+}
+.real-time input { /* JavaScript の表示窓 */
+  border: 0px solid;
+  vertical-align: middle;
+  font-size:11pt;
+}
+.option-on {
+}
+.option-off {
+  background-color: #CCCCCC;
+}
+.system-vote { /* 投票を促すメッセージ */
+  padding: 7px;
+  background-color: #CC3300;
+  color: #FFFAFA;
+  font-weight: bold;
+}
+/* OutputGameHeader() */
+.game-header {
+  width: 100%;
+  border: 0;
+  border-collapse: collapse;
+}
+.view-option { /* 表示オプションのリンク */
+  border: 0;
+  text-align: right;
+  font-size: 80%;
+}
+.caution { /* ゲーム開始前の注意 */
+  padding: 7px 0;
+  background-color: #009900;
+  color: #FFFAFA;
+  text-align: center;
+  font-weight: bold;
+}
+.caution span {
+  font-size: 80%;
+}
+.objection { /* 「異議あり」ボタン */
+  vertical-align: middle;
+}
+.objection form {
+  margin-bottom: 0;
+  vertical-align: middle;
+  text-align: right;
+}
