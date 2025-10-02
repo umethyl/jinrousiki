@@ -1,0 +1,912 @@
+<?php
+//-- テキスト関連 --//
+class Text {
+  const CR   = "\r";
+  const LF   = "\n";
+  const BR   = '<br>';
+  const CRLF = "\r\n";
+  const BRLF = "<br>\n";
+
+  /* 判定 */
+  //存在
+  public static function Exists($str) {
+    return self::Over($str, 0);
+  }
+
+  //検索
+  public static function Search($str, $target) {
+    return strpos($str, $target) !== false;
+  }
+
+  //先頭
+  public static function IsPrefix($str, $target) {
+    return strpos($str, $target) === 0;
+  }
+
+  //文字数上限
+  public static function Over($str, $limit) {
+    return strlen($str) > $limit;
+  }
+
+  //RGB 文字列
+  public static function IsRGB($str) {
+    return strlen($str) == 7 && substr($str, 0, 1) == '#' && ctype_xdigit(substr($str, 1, 7));
+  }
+
+  /* 変換 */
+  //整形
+  public static function Format($stack) {
+    $stack  = func_get_args();
+    $format = array_shift($stack);
+    return self::Add(vsprintf($format, $stack));
+  }
+
+  //結合 (Text::BRLF 固定)
+  public static function Concat($stack) {
+    $stack = func_get_args();
+    return ArrayFilter::Concat($stack, self::BRLF);
+  }
+
+  //改行追加
+  public static function Add($str) {
+    return $str . self::LF;
+  }
+
+  //ヘッダ追加
+  public static function AddHeader($str, $header, $delimiter = ': ') {
+    return self::Exists($header) ? $header . $delimiter . $str : $str;
+  }
+
+  //フッタ追加
+  public static function AddFooter($str, $footer, $delimiter = '_') {
+    return self::Exists($footer) ? $str . $delimiter . $footer : $str;
+  }
+
+  //折り返し
+  public static function Fold($count, $str, $base = Position::BASE) {
+    return ($count > 0 && $count % $base == 0) ? self::Add($str) : null;
+  }
+
+  //カッコで括る
+  public static function Quote($str) {
+    return '(' . $str . ')';
+  }
+
+  //カッコで括る (ブラケット版)
+  public static function QuoteBracket($str) {
+    return '[' . $str . ']';
+  }
+
+  //分離 (explode() ラッパー)
+  public static function Parse($str, $delimiter = ' ', $limit = null) {
+    return self::Exists($limit) ? explode($delimiter, $str, $limit) : explode($delimiter, $str);
+  }
+
+  //分割
+  public static function Split($str) {
+    $stack = array();
+    $count = self::Count($str);
+    for ($i = 0; $i < $count; $i++) {
+      $stack[$i] = mb_substr($str, $i, 1);
+    }
+    return $stack;
+  }
+
+  //キーワードで分離して末尾を取り出す
+  public static function Cut($str, $delimiter = '_', $limit = null, $pop = true) {
+    return ArrayFilter::Pick(self::Parse($str, $delimiter, $limit), $pop);
+  }
+
+  //切り詰め
+  public static function Shrink($str, $limit) {
+    return mb_substr($str, 0, $limit);
+  }
+
+  //BOM 消去
+  public static function RemoveBOM($str) {
+    if (ord($str{0}) == '0xef' && ord($str{1}) == '0xbb' && ord($str{2}) == '0xbf') {
+      $str = substr($str, 3);
+    }
+    return $str;
+  }
+
+  //改行コードを <br> に変換する (PHP5.3 以下の nl2br() だと <br /> 固定なので HTML 4.01 だと不向き)
+  public static function Line($str) {
+    return str_replace(self::LF, self::BR, $str);
+  }
+
+  //暗号化
+  public static function Crypt($str) {
+    return sha1(ServerConfig::SALT . $str);
+  }
+
+  //文字コード変換
+  public static function Encode($str, $encode, $convert = ServerConfig::ENCODE) {
+    if ($encode == '' || $encode == 'ASCII' || $encode == $convert) {
+      return $str;
+    } else {
+      return mb_convert_encoding($str, $convert, $encode);
+    }
+  }
+
+  //トリップ変換
+  /*
+    変換テスト結果＠2ch (2009/07/26)
+    [入力文字列] => [変換結果] (Text::Trip() の結果)
+    test#test                     => test ◆.CzKQna1OU (test◆.CzKQna1OU)
+    テスト#テスト                 => テスト ◆SQ2Wyjdi7M (テスト◆SQ2Wyjdi7M)
+    てすと＃てすと                => てすと ◆ZUNa78GuQc (てすと◆ZUNa78GuQc)
+    てすとテスト#てすと＃テスト   => てすとテスト ◆TBYWAU/j2qbJ (てすとテスト◆sXitOlnF0g)
+    テストてすと＃テストてすと    => テストてすと ◆RZ9/PhChteSA (テストてすと◆XuUGgmt7XI)
+    テストてすと＃テストてすと#   => テストてすと ◆rtfFl6edK5fK (テストてすと◆XuUGgmt7XI)
+    テストてすと＃テストてすと＃  => テストてすと ◆rtfFl6edK5fK (テストてすと◆XuUGgmt7XI)
+  */
+  public static function Trip($str) {
+    if (GameConfig::TRIP) {
+      self::FilterSlash($str);
+
+      //トリップ関連のキーワードを置換
+      $trip_list = array(Message::TRIP, Message::TRIP_KEY);
+      $str = str_replace($trip_list, array(Message::TRIP_CONVERT, '#'), $str);
+
+      if (($trip_start = mb_strpos($str, '#')) !== false) { //トリップキーの位置を検索
+	$name = self::Shrink($str, $trip_start);
+	$key  = mb_substr($str, $trip_start + 1);
+	//self::p(sprintf('%s, name: %s, key: %s', $trip_start, $name, $key), '◆Trip Start');
+	$key  = self::Encode($key, ServerConfig::ENCODE, 'SJIS'); //文字コードを変換
+
+	if (GameConfig::TRIP_2ch && self::Over($key, 12 - 1)) {
+	  $trip = self::ConvertTrip2ch($key);
+	} else {
+	  $trip = self::ConvertTrip($key);
+	}
+	$str = $name . Message::TRIP . $trip;
+      }
+      //self::p($str, 'Result');
+    } elseif (self::Search($str, '#') || self::Search($str, Message::TRIP_KEY)) {
+      $sentence = sprintf(Message::TRIP_FORMAT, '#', Message::TRIP_KEY);
+      HTML::OutputResult(Message::TRIP_ERROR, Message::DISABLE_TRIP . self::BRLF . $sentence);
+    }
+
+    return self::Escape($str); //特殊文字のエスケープ
+  }
+
+  //トリップ変換処理
+  private static function ConvertTrip($key) {
+    $salt = substr($key . 'H.', 1, 2);
+
+    //$salt =~ s/[^\.-z]/\./go; にあたる箇所
+    $pattern = '/[\x00-\x20\x7B-\xFF]/';
+    $salt    = preg_replace($pattern, '.', $salt);
+
+    //特殊文字の置換
+    $from_list = array(':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`');
+    $to_list   = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'a', 'b',  'c', 'd', 'e', 'f');
+    $salt      = str_replace($from_list, $to_list, $salt);
+
+    return substr(crypt($key, $salt), -10);
+  }
+
+  //トリップ変換処理 (2ch 仕様)
+  private static function ConvertTrip2ch($key) {
+    $trip_mark = substr($key, 0, 1);
+    if ($trip_mark == '#' || $trip_mark == '$') {
+      if (preg_match('|^#([[:xdigit:]]{16})([./0-9A-Za-z]{0,2})$|', $key, $stack)) {
+	$trip = substr(crypt(pack('H*', $stack[1]), "{$stack[2]}.."), -12);
+      } else {
+	$trip = '???';
+      }
+    } else {
+      $trip = str_replace('+', '.', substr(base64_encode(sha1($key, true)), 0, 12));
+    }
+    return $trip;
+  }
+
+  //文字数カウント
+  public static function Count($str) {
+    return mb_strlen($str);
+  }
+
+  /* 出力 */
+  //出力
+  public static function Output($str = '', $line = false) {
+    echo self::Add($str . ($line ? self::BR : ''));
+  }
+
+  //出力 (NULL 対応版)
+  public static function OutputExists($str) {
+    if (is_null($str)) return null;
+    echo $str;
+  }
+
+  //出力 (折り返し用)
+  public static function OutputFold($count, $str, $base = Position::BASE) {
+    self::OutputExists(self::Fold($count, $str, $base));
+  }
+
+  //出力 (整形用)
+  public static function Printf($stack) {
+    $stack  = func_get_args();
+    $format = array_shift($stack);
+    echo self::Add(vsprintf($format, $stack));
+  }
+
+  /* 更新系 */
+  //POST されたデータの文字コードを統一する
+  public static function EncodePost() {
+    foreach ($_POST as $key => $value) {
+      $encode = @mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
+      $_POST[$key] = self::Encode($value, $encode);
+    }
+  }
+
+  //特殊文字のエスケープ処理
+  //htmlentities() を使うと文字化けを起こしてしまうようなので敢えてべたに処理
+  public static function Escape(&$str, $trim = true) {
+    if (is_array($str)) {
+      $stack = array();
+      foreach ($str as $item) {
+	$stack[] = self::Escape($item);
+      }
+      return $stack;
+    }
+
+    self::FilterSlash($str);
+    //$str = htmlentities($str, ENT_QUOTES); //UTF に移行したら機能する？
+    $replace_list = array(
+      '&'  => '&amp;',
+      '<'  => '&lt;',
+      '>'  => '&gt;',
+      '\\' => '&yen;',
+      '"'  => '&quot;',
+      "'"  => '&#039;'
+    );
+    $str = strtr($str, $replace_list);
+    if ($trim) {
+      $str = trim($str);
+    } else {
+      $str = str_replace(array(self::CRLF, self::CR, self::LF), self::LF, $str);
+    }
+    return $str;
+  }
+
+  //'\' を自動でつける処理系対策
+  private static function FilterSlash(&$str) {
+    if (get_magic_quotes_gpc()) {
+      $str = stripslashes($str);
+    }
+  }
+
+  /* デバッグ用 */
+  //改行タグ付きテキスト出力
+  public static function d($str = '') {
+    self::Output($str, true);
+  }
+
+  //データ表示
+  public static function p($data, $name = null) {
+    $str = (is_array($data) || is_object($data)) ? print_r($data, true) : $data;
+    self::d(self::AddHeader($str, $name));
+  }
+
+  //データダンプ
+  public static function v($data, $name = null) {
+    self::OutputExists(self::AddHeader(null, $name));
+    var_dump($data);
+    self::d();
+  }
+
+  //Talk 出力
+  public static function t($data, $name = null) {
+    $builder = class_exists('Talk') ? Talk::GetBuilder() : null;
+    return is_null($builder) ? self::p($data, $name) : $builder->TalkDebug($data, $name);
+  }
+}
+
+//-- Switch (bool) 関連 --//
+class Switcher {
+  const ON  = 'on';
+  const OFF = 'off';
+  const OK  = 'true';
+  const NG  = 'false';
+
+  /* 判定 */
+  //ON・OFF 判定
+  public static function IsOn($str) {
+    return $str == self::ON;
+  }
+
+  /* 変換 */
+  //ON・OFF 変換
+  public static function Get($flag) {
+    return $flag ? self::ON : self::OFF;
+  }
+
+  //OK・NG 変換
+  public static function GetBool($flag) {
+    return $flag ? self::OK : self::NG;
+  }
+}
+
+//-- URL 関連 --//
+class URL {
+  //存在判定 (db_no)
+  public static function ExistsDB() {
+    return is_int(RQ::Get()->db_no) && RQ::Get()->db_no > 0;
+  }
+
+  //拡張子 + ヘッダー取得
+  public static function GetExt() {
+    return '.php?';
+  }
+
+  //取得 (数値型)
+  public static function GetInt($key, $value) {
+    return sprintf('%s=%d', $key, $value);
+  }
+
+  //取得 (追加)
+  public static function GetAdd($key) {
+    return sprintf('&%s=%s', $key, Switcher::ON);
+  }
+
+  //取得 (配列)
+  public static function GetList($key, $value) {
+    return sprintf('%s[]=%s', $key, $value);
+  }
+
+  //取得 (追加/数値型)
+  public static function GetAddInt($key, $value) {
+    return '&' . self::GetInt($key, $value);
+  }
+
+  //取得 (自動更新)
+  public static function GetReload($time) {
+    return self::GetAddInt(RequestDataGame::RELOAD, $time);
+  }
+
+  //取得 (db_no)
+  public static function GetDB() {
+    return self::ExistsDB() ? self::GetAddInt(RequestDataGame::DB, RQ::Get()->db_no) : '';
+  }
+
+  //取得 (ヘッダーリンク)
+  public static function GetHeaderLink($url, $key, $value) {
+    return $url . self::GetExt() . self::GetInt($key, $value);
+  }
+
+  //取得 (部屋共通)
+  public static function GetRoom($url, $id = null) {
+    return self::GetHeaderLink($url, RequestDataGame::ID, is_null($id) ? DB::$ROOM->id : $id);
+  }
+
+  //取得 (移動用)
+  public static function GetJump($url) {
+    return sprintf(Message::JUMP, $url);
+  }
+
+  //取得 (OldLog 用)
+  public static function GetBackLink() {
+    return self::ExistsDB() ? self::GetHeaderInt(RequestDataGame::DB, RQ::Get()->db_no) : '';
+  }
+}
+
+//-- 配列関連 --//
+class ArrayFilter {
+  /* 取得 */
+  //取得
+  public static function Get(array $list, $key) {
+    return isset($list[$key]) ? $list[$key] : null;
+  }
+
+  //取得 (int 型)
+  public static function GetInt(array $list, $key) {
+    return isset($list[$key]) ? intval($list[$key]) : 0;
+  }
+
+  //取得 (配列型)
+  public static function GetList(array $list, $key) {
+    return self::IsArray($list, $key) ? $list[$key] : array();
+  }
+
+  //取得 (array_keys() ラッパー)
+  public static function GetKeyList(array $list, $key = null) {
+    return is_null($key) ? array_keys($list) : array_keys($list, $key);
+  }
+
+  //取得 (引数)
+  public static function GetArg(array $list) {
+    return is_array($list[0]) ? $list[0] : $list;
+  }
+
+  //先頭/末尾取得
+  public static function Pick(array $list, $pop = false) {
+    return $pop ? array_pop($list) : array_shift($list);
+  }
+
+  //先頭/末尾取得 (key ベース)
+  public static function PickKey(array $list, $pop = false) {
+    return self::Pick(array_keys($list), $pop);
+  }
+
+  //最大値取得 (key ベース)
+  public static function GetMax(array $list) {
+    return max(array_keys($list));
+  }
+
+  //最小値取得 (key ベース)
+  public static function GetMin(array $list) {
+    return min(array_keys($list));
+  }
+
+  //最大値 key 取得
+  public static function GetMaxKey(array $list) {
+    return $list[self::GetMax($list)];
+  }
+
+  /* 判定 */
+  //連想配列
+  public static function IsArray(array $list, $key) {
+    return isset($list[$key]) && is_array($list[$key]);
+  }
+
+  //存在 (key ベース)
+  public static function Exists($data, $key) {
+    return is_array($data) && isset($data[$key]);
+  }
+
+  //存在 (is_array() && in_array() ラッパー)
+  public static function IsInclude($data, $value) {
+    return is_array($data) && in_array($value, $data);
+  }
+
+  //存在 (連想配列内 key)
+  public static function IsIncludeKey(array $list, $key, $value) {
+    return isset($list[$key]) && array_key_exists($value, $list[$key]);
+  }
+
+  /* 変換 */
+  //配列化
+  public static function Pack($data) {
+    return is_array($data) ? $data : array($data);
+  }
+
+  //型変換
+  public static function Cast($data, $fill = false) {
+    return is_array($data) ? $data : self::Fill($fill);
+  }
+
+  //空データ
+  public static function Fill($flag) {
+    return $flag ? array() : null;
+  }
+
+  //結合 (implode() ラッパー)
+  public static function Concat(array $list, $delimiter = ' ') {
+    return implode($delimiter, $list);
+  }
+
+  //結合 (key ベース)
+  public static function ConcatKey(array $list, $delimiter = ' ') {
+    return self::Concat(array_keys($list), $delimiter);
+  }
+
+  //結合 (array_reverse() ラッパー)
+  public static function ConcatReverse(array $list, $delimiter = ' ') {
+    return self::Concat(array_reverse($list), $delimiter);
+  }
+
+  //CSV変換
+  public static function ToCSV(array $list) {
+    return self::Concat($list, ',');
+  }
+
+  /* 更新系 */
+  //初期化
+  public static function Initialize(array &$list, $target, $value = array()) {
+    if (is_array($target)) {
+      foreach ($target as $key) self::Initialize($list, $key);
+    } else {
+      $key = $target;
+    }
+
+    if (! self::IsArray($list, $key)) {
+      $list[$key] = $value;
+    }
+  }
+
+  //空配列化
+  public static function Reset(array &$list, $target) {
+    if (is_array($target)) {
+      foreach ($target as $key) self::Reset($list, $key);
+    } else {
+      $key = $target;
+    }
+    $list[$key] = array();
+  }
+
+  //追加
+  public static function Add(array &$list, $key, $value = 1) {
+    if (isset($list[$key])) {
+      $list[$key] += $value;
+    } else {
+      $list[$key]  = $value;
+    }
+  }
+
+  //登録
+  public static function Register(array &$list, $value) {
+    if (! in_array($value, $list)) {
+      $list[] = $value;
+    }
+  }
+
+  //bool 反転
+  public static function ReverseBool(array &$list, $key) {
+    if (isset($list[$key])) {
+      $list[$key] = ! $list[$key];
+    } else {
+      $list[$key] = true;
+    }
+  }
+
+  //置換
+  public static function Replace(array &$list, $from, $to, $value = 1) {
+    $list[$from] -= $value;
+    self::Add($list, $to, $value);
+  }
+
+  //配列追加
+  public static function Merge(array &$list, $data) {
+    if (is_array($data)) {
+      $list = array_merge($list, $data);
+    }
+  }
+
+  //削除
+  public static function Delete(array &$list, $value) {
+    $key = array_search($value, $list);
+    if (false === $key) return false;
+    unset($list[$key]);
+    return true;
+  }
+
+  //切り詰め (削除 + 再生成)
+  public static function Shrink(array &$list, $value) {
+    if (self::Delete($list, $value)) {
+      $list = array_values($list);
+    }
+  }
+
+  //中身が無い場合は削除
+  public static function Sweep(array &$list, $key) {
+    if ($list[$key] < 1) {
+      unset($list[$key]);
+    }
+  }
+}
+
+//-- 日時関連 --//
+class Time {
+  //TZ 補正をかけた時刻を返す (環境変数 TZ を変更できない環境想定？)
+  public static function Get() {
+    $time = time();
+    if (ServerConfig::ADJUST_TIME) $time += ServerConfig::OFFSET_SECONDS;
+    return $time;
+    /*
+    // ミリ秒対応のコード(案) 2009-08-08 enogu
+    $preg = '/([0-9]+)( [0-9]+)?/i';
+    return preg_replace($preg, '$$2.$$1', microtime()) + ServerConfig::OFFSET_SECONDS; // ミリ秒
+    */
+  }
+
+  //TZ 補正をかけた日時を返す
+  public static function GetDate($format, $time) {
+    return ServerConfig::ADJUST_TIME ? gmdate($format, $time) : date($format, $time);
+  }
+
+  //DATETIME 形式の日時を返す
+  public static function GetDateTime($time) {
+    return self::GetDate('Y-m-d H:i:s', $time);
+  }
+
+  //TIMESPAMP 形式の日時を返す
+  public static function GetTimeStamp($time) {
+    return self::GetDate('Y/m/d (D) H:i:s', $time);
+  }
+
+  //分 -> 秒
+  public static function ByMinute($minute) {
+    return $minute * 60;
+  }
+
+  //時間 -> 秒
+  public static function ByHour($hour) {
+    return self::ByMinute($hour * 60);
+  }
+
+  //時間 (秒) を変換する
+  public static function Convert($second) {
+    $hour   = 0;
+    $minute = 0;
+    if ($second >= 60) {
+      $minute = floor($second / 60);
+      $second %= 60;
+    }
+    if ($minute >= 60) {
+      $hour = floor($minute / 60);
+      $minute %= 60;
+    }
+
+    $str = '';
+    if ($hour   > 0) $str .= $hour   . Message::HOUR;
+    if ($minute > 0) $str .= $minute . Message::MINUTE;
+    if ($second > 0) $str .= $second . Message::SECOND;
+    return $str;
+  }
+
+  //TIMESTAMP 形式の時刻を変換する
+  public static function ConvertTimeStamp($time_stamp, $date = true) {
+    $time = strtotime($time_stamp);
+    if (ServerConfig::ADJUST_TIME) $time += ServerConfig::OFFSET_SECONDS;
+    return $date ? self::GetTimeStamp($time) : $time;
+  }
+}
+
+//-- 性別関連クラス --//
+class Sex {
+  const MALE   = 'male';
+  const FEMALE = 'female';
+
+  //定数・表示変換リスト取得
+  public static function GetList() {
+    return array(self::MALE => Message::MALE, self::FEMALE => Message::FEMALE);
+  }
+
+  //性別リスト存在判定
+  public static function Exists($sex) {
+    return array_key_exists($sex, self::GetList());
+  }
+
+  //性別取得
+  public static function Get(User $user) {
+    return 'sex_' . $user->sex;
+  }
+
+  //男性判定
+  public static function IsMale(User $user) {
+    return $user->sex == self::MALE;
+  }
+
+  //女性判定
+  public static function IsFemale(User $user) {
+    return $user->sex == self::FEMALE;
+  }
+
+  //同姓判定
+  public static function IsSame(User $a, User $b) {
+    return $a->sex == $b->sex;
+  }
+}
+
+//-- 「福引」クラス --//
+class Lottery {
+  public static $display = false;
+
+  //乱数取得
+  public static function Rand($max) {
+    return mt_rand(1, $max);
+  }
+
+  //確率判定
+  public static function Rate($base, $rate) {
+    $rand = self::Rand($base);
+    if (self::$display) Text::p(sprintf('%d <= %d', $rand, $rate), '◆Rate');
+    return $rand <= $rate;
+  }
+
+  //パーセント判定
+  public static function Percent($rate) {
+    return self::Rate(100, $rate);
+  }
+
+  //bool 判定
+  public static function Bool() {
+    return self::Percent(50);
+  }
+
+  //配列からランダムに一つ取り出す
+  public static function Get(array $list) {
+    if (count($list) == 1) {
+      return array_shift($list);
+    } elseif (count($list) > 0) {
+      return $list[self::Rand(count($list)) - 1];
+    } else {
+      return null;
+    }
+  }
+
+  //一定範囲からランダムに取り出す
+  public static function GetRange($from, $to) {
+    return self::Get(range($from, $to));
+  }
+
+  //パーセント値取得
+  public static function GetPercent() {
+    return self::Rand(100);
+  }
+
+  //シャッフルした配列を返す
+  public static function GetList(array $list) {
+    shuffle($list);
+    return $list;
+  }
+
+  //闇鍋モードの配役リスト取得
+  public static function GetChaos(array $list, array $filter) {
+    foreach ($filter as $role => $rate) { //出現率補正
+      if (isset($list[$role])) {
+	$list[$role] = round($list[$role] * $rate);
+      }
+    }
+    return $list;
+  }
+
+  //「比」の配列から一つ引く
+  public static function Draw(array $list) {
+    return self::Get(self::Generate($list));
+  }
+
+  //「比」の配列から「福引き」を作成する
+  public static function Generate(array $list) {
+    $stack = array();
+    foreach ($list as $role => $rate) {
+      for (; $rate > 0; $rate--) {
+	$stack[] = $role;
+      }
+    }
+    return $stack;
+  }
+
+  //「福引き」を一定回数行ってリストに追加する
+  public static function Add(array &$list, array $random_list, $count) {
+    for (; $count > 0; $count--) {
+      ArrayFilter::Add($list, self::Get($random_list));
+    }
+  }
+
+  //「比」から「確率」に変換する (テスト用)
+  public static function ToProbability(array $list) {
+    $stack = array();
+    $total = array_sum($list);
+    foreach ($list as $role => $rate) {
+      $stack[$role] = sprintf('%01.2f', $rate / $total * 100);
+    }
+    Text::p($stack);
+  }
+
+  //確率表示設定 (デバッグ用)
+  public static function d($flag = true) {
+    self::$display = $flag;
+  }
+}
+
+//-- セキュリティ関連クラス --//
+class Security {
+  //IPアドレス取得
+  public static function GetIP() {
+    return @$_SERVER['REMOTE_ADDR'];
+  }
+
+  //リファラチェック
+  public static function CheckReferer($page, $white_list = null) {
+    if (is_array($white_list)) { //ホワイトリストチェック
+      $addr = self::GetIP();
+      foreach ($white_list as $host) {
+	if (Text::IsPrefix($addr, $host)) return false;
+      }
+    }
+    $url = ServerConfig::SITE_ROOT . $page;
+    return strncmp(@$_SERVER['HTTP_REFERER'], $url, strlen($url)) != 0;
+  }
+
+  //ブラックリストチェック (ログイン用)
+  public static function IsLoginBlackList($trip = '') {
+    if (GameConfig::TRIP && $trip != '' && in_array($trip, RoomConfig::$white_list_trip)) {
+      return false;
+    }
+    return self::IsBlackList();
+  }
+
+  //ブラックリストチェック (村立て用)
+  public static function IsEstablishBlackList() {
+    return self::IsLoginBlackList() || self::IsBlackList('establish_');
+  }
+
+  //CSRF対策用ハッシュ生成
+  public static function GetHash($id) {
+    return md5(ServerConfig::GAME_HASH . $id);
+  }
+
+  //CSRF対策用ハッシュチェック
+  public static function CheckHash($id) {
+    return RQ::Get()->hash == self::GetHash($id);
+  }
+
+  /**
+   * 実行環境にダメージを与える可能性がある値が含まれているかどうか検査します。
+   * @param  : mixed   : $data 検査対象の変数
+   * @param  : boolean : $found 疑わしい値が存在しているかどうかを示す値。
+                         この値がtrueの場合、強制的に詳細なスキャンが実行されます。
+   * @return : boolean : 危険な値が発見された場合 true、それ以外の場合 false
+   */
+  public static function CheckValue($data, $found = false) {
+    $num = '22250738585072011';
+    if ($found || Text::Search(str_replace('.', '', serialize($data)), $num)) {
+      //文字列の中に問題の数字が埋め込まれているケースを排除する
+      if (is_array($data)) {
+	foreach ($data as $item) {
+	  if (self::CheckValue($item, true)) return true;
+	}
+      } else {
+	$preg = '/^([0.]*2[0125738.]{15,16}1[0.]*)e(-[0-9]+)$/i';
+	$item = strval($data);
+	$matches = '';
+	if (preg_match($preg, $item, $matches)) {
+	  $exp = intval($matches[2]) + 1;
+	  if (2.2250738585072011e-307 === floatval("{$matches[1]}e{$exp}")) return true;
+	}
+      }
+    }
+    return false;
+  }
+
+  //ブラックリスト判定
+  private static function IsBlackList($prefix = '') {
+    $addr = self::GetIP();
+    $host = gethostbyaddr($addr);
+    foreach (array('white' => false, 'black' => true) as $type => $flag) {
+      foreach (RoomConfig::${$prefix . $type . '_list_ip'} as $ip) {
+	if (Text::IsPrefix($addr, $ip)) return $flag;
+      }
+      $list = RoomConfig::${$prefix . $type . '_list_host'};
+      if (isset($list) && preg_match($list, $host)) return $flag;
+    }
+    return false;
+  }
+}
+
+//-- 外部リンク生成の基底クラス --//
+class ExternalLinkBuilder {
+  const TIME = 5; //タイムアウト時間 (秒)
+
+  //サーバ通信状態チェック
+  public static function IsConnect($url) {
+    $url_stack = Text::Parse($url, '/');
+    $host = $url_stack[2];
+    if (! ($io = @fsockopen($host, 80, $status, $str, self::TIME))) return false;
+
+    stream_set_timeout($io, self::TIME);
+    $format = 'GET / HTTP/1.1%sHost: %s%sConnection: Close' . Text::CRLF . Text::CRLF;
+    fwrite($io, sprintf($format, Text::CRLF, $host, Text::CRLF));
+    $data = fgets($io, 128);
+    $stream_stack = stream_get_meta_data($io);
+    fclose($io);
+    return ! $stream_stack['timed_out'];
+  }
+
+  //出力
+  public static function Output($title, $data) {
+    $str = HTML::GenerateTagHeader('dl') . $data . HTML::GenerateTagFooter('dl');
+    HTML::OutputFieldsetHeader($title);
+    HTML::OutputDiv($str, 'game-list');
+    HTML::OutputFieldsetFooter();
+  }
+
+  //タイムアウトメッセージ出力
+  public static function OutputTimeOut($title, $url) {
+    $stack  = Text::Parse($url, '/');
+    $format = '%s: Connection timed out (%d seconds)';
+    self::Output($title, sprintf($format, $stack[2], self::TIME));
+  }
+}

@@ -1,0 +1,19 @@
+<?php
+/*
+  ◆星狐 (stargazer_fox)
+  ○仕様
+  ・占い：投票能力鑑定
+  ・呪い：無効
+*/
+RoleLoader::LoadFile('child_fox');
+class Role_stargazer_fox extends Role_child_fox {
+  public $mix_in = array('stargazer_mage');
+
+  public function IgnoreCursed() {
+    return true;
+  }
+
+  protected function GetMageResult(User $user) {
+    return $this->Stargazer($user);
+  }
+}
