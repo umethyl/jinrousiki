@@ -9,7 +9,11 @@ abstract class LoadManager {
   //-- 共通 --//
   //ライブラリロード
   final public static function Load($name) {
-    return (self::LoadFile($name) && self::LoadClass($name)) ? static::$class[$name] : null;
+    if (true === self::LoadFile($name) && true === self::LoadClass($name)) {
+      return static::$class[$name];
+    } else {
+      return null;
+    }
   }
 
   //依存解決処理
@@ -38,8 +42,8 @@ abstract class LoadManager {
   final public static function RegisterFile($name) {
     $file = static::GetPath($name);
     if (true == require_once($file)) {
-      static::$file[] = $name;
       //printf('◆Register: %s: %s<br>', $name, $file);
+      static::$file[] = $name;
       return true;
     } else {
       throw new RuntimeException("Load file failed: {$name}");
@@ -78,8 +82,8 @@ abstract class LoadManager {
   //クラス登録
   final public static function RegisterClass($name) {
     $class_name  = static::CLASS_PREFIX . $name;
-    static::$class[$name] = new $class_name();
     //printf('◆Class: %s<br>', $class_name);
+    static::$class[$name] = new $class_name();
     return true;
   }
 
@@ -106,15 +110,13 @@ final class Loader extends LoadManager {
 
   //初期化処理
   public static function Initialize() {
-    self::LoadFile('db_class', 'server_config');
-
     if (ServerConfig::DISPLAY_ERROR) { //エラー表示設定
       ini_set('display_errors', 'On');
       error_reporting(E_ALL);
     }
 
     //mbstring 非対応の場合、エミュレータを使用する
-    if (! extension_loaded('mbstring')) {
+    if (false === extension_loaded('mbstring')) {
       self::LoadFile('mb-emulator');
     }
 
@@ -136,7 +138,7 @@ final class Loader extends LoadManager {
     //declare(encoding='UTF-8');
 
     //-- マルチバイト入出力指定 --//
-    if (extension_loaded('mbstring')) {
+    if (true === extension_loaded('mbstring')) {
       mb_language('ja');
       mb_internal_encoding(ServerConfig::ENCODE);
       mb_http_input('auto');
@@ -144,9 +146,20 @@ final class Loader extends LoadManager {
     }
 
     //-- ヘッダ強制指定 --//
-    if (ServerConfig::SET_HEADER_ENCODE && ! headers_sent()) { //ヘッダ未送信時にセットする
+    //ヘッダ未送信時にセットする
+    if (ServerConfig::SET_HEADER_ENCODE && false === headers_sent()) {
       header(sprintf('Content-type: text/html; charset=%s', ServerConfig::ENCODE));
       header('Content-Language: ja');
+    }
+  }
+
+  //オートロード
+  public static function AutoLoad($name) {
+    $file = self::GetFile($name);
+    if (true === is_null($file)) {
+      throw new RuntimeException("AutoLoad failed: {$name}");
+    } else {
+      self::LoadFile($file);
     }
   }
 
@@ -157,13 +170,9 @@ final class Loader extends LoadManager {
     }
   }
 
-  //リクエストクラスロード
-  public static function LoadRequest($class = 'Request', $game = false) {
-    if (true === $game) {
-      self::LoadFile('game_config');
-    }
-    self::LoadFile('request_class');
-    return RQ::LoadRequest($class);
+  //ファイル取得
+  protected static function GetFile($name) {
+    return isset(LoaderData::$file[$name]) ? LoaderData::$file[$name] : null;
   }
 
   //ファイルパス取得
@@ -232,134 +241,326 @@ final class Loader extends LoadManager {
 final class LoaderData {
   //依存ファイル情報 (読み込むデータ => 依存するファイル)
   public static $depend = [
-    //class
-    'InfoTime'	=> [
-	'room_config', 'time_config', 'game_config', 'cast_config', 'role_data_manager_class',
-	'image_class'],
     //config
-    'server_config'	=> ['message', 'system_class', 'room_class', 'functions'], //常時ロード
-    'chaos_config'	=> 'cast_config',
-    //database
-    'db_class'	=> ['database_config', 'html_class', 'table_html_class'], //常時ロード
-    //html
-    'icon_html_class'	=> ['icon_class', 'icon_db_class', 'user_icon_class'],
-    'info_html_class'	=> 'info_message',
-    //function
-    'room_class'		=> [ //常時ロード (依存)
-	'room_data_class', 'room_db_class', 'request_data_class', 'dead_reason_data_class',
-	'vote_data_class', 'event_data_class', 'room_html_class', 'option_class'],
-    'user_class'		=> [
-	'user_data_class', 'user_db_class', 'role_data_manager_class', 'game_functions'],
-    'option_class'		=> [ //常時ロード (依存)
-	'game_option_config', 'option_message', 'option_data_class', 'option_filter_data_class',
-	'option_html_class', 'event_class'],
-    'room_option_class'		=> [
-	'room_config', 'time_config', 'game_config', 'game_option_config'],
-    'option_form_class'		=> ['option_form_html_class', 'room_option_class'],
-    'event_class'		=> 'event_filter_data_class', //常時ロード (依存)
-    'weather_class'		=> 'weather_data_class',
-    'cast_class'		=> 'chaos_config',
-    'role_class'		=> [
-	'role_talk_message', 'role_ability_message', 'role_filter_data_class', 'talk_data_class',
-	'role_user_class', 'role_html_class', 'role_data_manager_class'],
-    'role_data_manager_class'	=> ['role_data_class', 'role_data_html_class'],
-    'role_data_class'		=> [
-	'camp_data_class', 'role_sub_data_class', 'role_group_data_class',
-	'role_group_sub_data_class', 'role_short_data_class', 'role_vote_data_class',
-	'weather_class'],
-    'talk_class'		=> [
-	'game_config', 'talk_message', 'vote_talk_message', 'role_talk_message', 'talk_data_class',
-	'talk_db_class', 'talk_html_class', 'user_class', 'role_class'],
-    'session_class'		=> ['session_db_class', 'user_data_class'],
-    'image_class'		=> ['camp_data_class', 'image_html_class'],
-    'icon_class'		=> ['icon_config', 'image_html_class'],
-    'user_icon_class'		=> ['user_icon_config', 'icon_message'],
-    'sound_class'		=> ['sound_config', 'sound_html_class'],
-    'cookie_class'		=> 'sound_class',
-    'cache_class'		=> ['cache_config', 'cache_message', 'cache_db_class'],
-    'twitter_class'		=> ['twitter_config', 'twitter_message', 'twitter'],
-    'paparazzi_class'		=> 'paparazzi',
-    'game_functions'		=> [
-	'game_message', 'dead_message', 'camp_data_class', 'game_html_class'],
-    'game_vote_functions'	=> [
-	'vote_message', 'vote_role_message', 'vote_group_data_class', 'vote_html_class',
-	'room_option_class', 'role_vote_class', 'talk_class', 'game_functions'],
-    'old_log_functions'		=> [
-	'old_log_config', 'cast_config', 'game_message', 'winner_message', 'old_log_message',
-	'old_log_html_class', 'image_class', 'room_option_class', 'cache_class'],
-    'info_functions'		=> 'info_html_class',
-    'test_functions'		=> [
-	'room_config', 'test_message', 'test_html_class', 'icon_class', 'game_vote_functions'],
-    //controller
-    'index_class'		=> [
-	'top_page_config', 'menu_config', 'bbs_config', 'version', 'top_page_message',
-	'index_html_class', 'info_html_class', 'option_form_class'],
-    'room_manager_class'	=> [
-	'room_manager_message', 'room_manager_db_class', 'room_manager_html_class', 'image_class',
-	'room_option_class'],
-    'login_class'		=> [
-	'room_config', 'login_message', 'login_db_class', 'session_class'],
-    'game_view_class'		=> [
-	'game_view_message', 'game_view_html_class', 'talk_class', 'icon_class', 'cache_class'],
-    'game_frame_class'		=> ['game_message', 'game_frame_html_class'],
-    'game_up_class'		=> [
-	'game_up_message', 'talk_data_class', 'game_up_html_class', 'game_html_class'],
-    'game_play_class'		=> [
-	'time_config', 'game_play_message', 'game_play_html_class', 'game_play_talk_class',
-	'session_class', 'image_class', 'talk_class', 'icon_class', 'cache_class'],
-    'game_vote_class'		=> [
-	'session_class', 'user_class', 'icon_class', 'role_class', 'cache_class',
-	'game_vote_functions'],
-    'game_log_class'		=> ['game_log_message', 'session_class', 'talk_class'],
-    'user_manager_class'	=> [
-	'user_manager_message', 'talk_message', 'user_manager_html_class', 'talk_data_class',
-	'session_class', 'cookie_class', 'user_class', 'room_option_class', 'cache_class',
-	'icon_html_class'],
-    'icon_view_class'		=> [
-	'icon_view_html_class', 'icon_html_class', 'session_class'],
-    'icon_edit_class'		=> ['icon_edit_message', 'icon_html_class'],
-    'icon_upload_class'		=> [
-	'icon_upload_message', 'icon_upload_html_class', 'icon_html_class', 'session_class'],
-    'old_log_class'		=> 'old_log_functions',
-    'admin_class'		=> 'admin_message',
-    'setup_class'		=> [
-	'setup_config', 'version', 'setup_message', 'setup_db_class', 'user_data_class'],
-    //controller/info
-    'script_info_class'		=> [
-	'script_info_message', 'cache_config', 'dead_message', 'talk_message', 'user_icon_class',
-	'room_option_class', 'role_data_manager_class', 'cast_class'],
-    'rule_info_class'		=> 'rule_info_message',
-    'cast_info_class'		=> [
-	'cast_info_message', 'cast_config', 'role_data_manager_class'],
-    'game_option_info_class'	=> [
-	'game_option_info_message', 'cast_config', 'room_option_class', 'role_data_manager_class'],
-    'chaos_info_class'		=> [
-	'chaos_info_message', 'chaos_info_html_class', 'room_option_class'],
-    'weather_info_class'	=> [
-	'weather_info_message', 'role_data_class', 'room_option_class'],
-    'spec_info_class'		=> ['spec_info_message', 'dead_message'],
-    'shared_room_info_class'	=> ['shared_room_info_message', 'shared_server_config'],
-    'copyright_info_class'	=> [
-	'copyright_info_message', 'copyright_config', 'version', 'copyright_info_html_class'],
-    'search_role_info_class'	=> ['search_role_info_message', 'search_role_info_html_class'],
+    'server_config'	=> ['system_class', 'functions', 'request_data_class'], //常時ロード
+    //library
+    'twitter_class'	=> 'twitter',
+    'paparazzi_class'	=> 'paparazzi',
     //controller/test
-    'name_test_class'		=> 'name_test_message',
-    'role_test_class'		=> [
-	'role_test_message', 'test_functions', 'cast_class', 'room_option_class'],
-    'cast_test_class'		=> ['cast_test_message', 'cast_class', 'room_option_class'],
-    'chaos_verso_test_class'	=> ['chaos_verso_test_message', 'cast_class'],
-    'user_entry_test_class'	=> ['session_class', 'user_manager_class'],
-    'vote_test_class'		=> ['vote_test_message', 'image_class'],
-    'step_vote_test_class'	=> ['vote_test_message', 'image_class'],
-    'objection_test_class'	=> [
-	'objection_test_message', 'objection_test_html_class', 'cast_class'],
-    'trip_test_class'		=> ['trip_test_message', 'trip_test_html_class'],
-    'twitter_test_class'	=> ['twitter_test_html_class', 'twitter_class']
+    'user_entry_test_class'	=> 'user_manager_class',
+  ];
+
+  //クラス => ファイル対応表
+  public static $file = [
+    //config/server
+    'ServerConfig'		=> 'server_config',
+    'DatabaseConfig'		=> 'database_config',
+    'RoomConfig'		=> 'room_config',
+    'GameOptionConfig'		=> 'game_option_config',
+    'CacheConfig'		=> 'cache_config',
+    'UserIconConfig'		=> 'user_icon_config',
+    'OldLogConfig'		=> 'old_log_config',
+    'TopPageConfig'		=> 'top_page_config',
+    'MenuConfig'		=> 'menu_config',
+    'BBSConfig'			=> 'bbs_config',
+    'SharedServerConfig'	=> 'shared_server_config',
+    'TwitterConfig'		=> 'twitter_config',
+    'SetupConfig'		=> 'setup_config',
+    //config/game
+    'GameConfig'	=> 'game_config',
+    'CastConfig'	=> 'cast_config',
+    'ChaosConfig'	=> 'chaos_config',
+    'TimeConfig'	=> 'time_config',
+    'IconConfig'	=> 'icon_config',
+    'SoundConfig'	=> 'sound_config',
+    //config/system
+    'CopyrightConfig'	=> 'copyright_config',
+    'ScriptInfo'	=> 'version',
+    //config/message
+    'Message'			=> 'message',
+    'GameMessage'		=> 'game_message',
+    'DeadMessage'		=> 'dead_message',
+    'TalkMessage'		=> 'talk_message',
+    'VoteMessage'		=> 'vote_message',
+    'RoleTalkMessage'		=> 'role_talk_message',
+    'VoteTalkMessage'		=> 'vote_talk_message',
+    'VoteRoleMessage'		=> 'vote_role_message',
+    'WinnerMessage'		=> 'winner_message',
+    'RoleAbilityMessage'	=> 'role_ability_message',
+    'OptionMessage'		=> 'option_message',
+    'IconMessage'		=> 'icon_message',
+    'InfoMessage'		=> 'info_message',
+    'CacheMessage'		=> 'cache_message',
+    'TwitterMessage'		=> 'twitter_message',
+    'TestMessage'		=> 'test_message',
+    //data
+    'DeadReason'	=> 'dead_reason_data_class',
+    //data/room
+    'RoomScene'		=> 'room_data_class',
+    'RoomStatus'	=> 'room_data_class',
+    'RoomMode'		=> 'room_data_class',
+    //data/user
+    'UserLive'	=> 'user_data_class',
+    'UserMode'	=> 'user_data_class',
+    //data/talk
+    'TalkLocation'	=> 'talk_data_class',
+    'TalkAction'	=> 'talk_data_class',
+    'TalkVoice'		=> 'talk_data_class',
+    'TalkElement'	=> 'talk_data_class',
+    'TalkCSS'		=> 'talk_data_class',
+    //data/camp
+    'BaseCamp'	=> 'camp_data_class',
+    'Camp'	=> 'camp_data_class',
+    'CampGroup'	=> 'camp_data_class',
+    'WinCamp'	=> 'camp_data_class',
+    //data/role
+    'RoleData'		=> 'role_data_class',
+    'RoleSubData'	=> 'role_sub_data_class',
+    'RoleShortData'	=> 'role_short_data_class',
+    'RoleGroupData'	=> 'role_group_data_class',
+    'RoleGroupSubData'	=> 'role_group_sub_data_class',
+    'RoleActionDate'	=> 'role_vote_data_class',
+    'RoleAbility'	=> 'role_vote_data_class',
+    'RoleStackVoteKill'	=> 'role_vote_data_class',
+    'RoleFilterData'	=> 'role_filter_data_class',
+    //data/option
+    'OptionGroup'	=> 'option_data_class',
+    'OptionFormType'	=> 'option_data_class',
+    'OptionFilterData'	=> 'option_filter_data_class',
+    //data/event
+    'EventType'		=> 'event_data_class',
+    'EventFilterData'	=> 'event_filter_data_class',
+    'WeatherData'	=> 'weather_data_class',
+    //date/vote
+    'VoteAction'	=> 'vote_data_class',
+    'VoteKickElement'	=> 'vote_data_class',
+    'VoteDayElement'	=> 'vote_data_class',
+    'VoteCSS'		=> 'vote_data_class',
+    'VoteActionGroup'	=> 'vote_group_data_class',
+    //system
+    'Cast'			=> 'cast_class',
+    'PageLinkBuilder'		=> 'old_log_functions',
+    'JinrouCacheManager'	=> 'cache_class',
+    //system/game
+    'GameTime'	=> 'game_functions',
+    'Position'	=> 'game_functions',
+    'Objection'	=> 'game_functions',
+    'Winner'	=> 'game_functions',
+    //system/room
+    'Room'		=> 'room_class',
+    //system/user
+    'User'		=> 'user_class',
+    'UserLoader'	=> 'user_class',
+    //database
+    'DB'		=> 'db_class',
+    'RoomDB'		=> 'room_db_class',
+    'SystemMessageDB'	=> 'room_db_class',
+    'RoomLoaderDB'	=> 'room_db_class',
+    'RoomTalkDB'	=> 'room_db_class',
+    'UserDB'		=> 'user_db_class',
+    'UserLoaderDB'	=> 'user_db_class',
+    'TalkDB'		=> 'talk_db_class',
+    'IconDB'		=> 'icon_db_class',
+    'SessionDB'		=> 'session_db_class',
+    'JinrouCacheDB'	=> 'cache_db_class',
+    'RoomManagerDB'	=> 'room_manager_db_class',
+    'LoginDB'		=> 'login_db_class',
+    'SetupDB'		=> 'setup_db_class',
+    //request
+    'RQ'		=> 'request_class',
+    'Session'		=> 'session_class',
+    'JinrouCookie'	=> 'cookie_class',
+    //option
+    'OptionManager'	=> 'option_class',
+    'OptionLoader'	=> 'option_class',
+    'OptionParser'	=> 'option_class',
+    'OptionForm'	=> 'option_form_class',
+    'RoomOption'	=> 'room_option_class',
+    //talk
+    'Talk'		=> 'talk_class',
+    'TalkParser'	=> 'talk_class',
+    'TalkBuilder'	=> 'talk_class',
+    'GamePlayTalk'	=> 'game_play_talk_class',
+    'AutoPlayTalk'	=> 'auto_play_talk_class',
+    //media
+    'ImageManager'	=> 'image_class',
+    'Icon'		=> 'icon_class',
+    'UserIcon'		=> 'user_icon_class',
+    'Sound'		=> 'sound_class',
+    'JinrouTwitter'	=> 'twitter_class',
+    //role
+    'RoleManager'	=> 'role_class',
+    'RoleLoader'	=> 'role_class',
+    'RoleTalk'		=> 'role_class',
+    'RoleTalkStruct'	=> 'role_class',
+    'RoleDataManager'	=> 'role_data_manager_class',
+    'RoleUser'		=> 'role_user_class',
+    'RoleVote'		=> 'role_vote_class',
+    //event
+    'EventManager'	=> 'event_class',
+    'WeatherManager'	=> 'weather_class',
+    //vote
+    'VoteKick'		=> 'game_vote_functions',
+    'VoteGameStart'	=> 'game_vote_functions',
+    'VoteDay'		=> 'game_vote_functions',
+    'VoteNight'		=> 'game_vote_functions',
+    'VoteHeaven'	=> 'game_vote_functions',
+    'VoteDummyBoy'	=> 'game_vote_functions',
+    //controller/test
+    'VoteTestController' => 'vote_test_class',
+    //controller/message
+    'AdminMessage'		=> 'admin_message',
+    'TopPageMessage'		=> 'top_page_message',
+    'RoomManagerMessage'	=> 'room_manager_message',
+    'LoginMessage'		=> 'login_message',
+    'UserManagerMessage'	=> 'user_manager_message',
+    'GameViewMessage'		=> 'game_view_message',
+    'GameUpMessage'		=> 'game_up_message',
+    'GamePlayMessage'		=> 'game_play_message',
+    'GameLogMessage'		=> 'game_log_message',
+    'OldLogMessage'		=> 'old_log_message',
+    'IconEditMessage'		=> 'icon_edit_message',
+    'IconUploadMessage'		=> 'icon_upload_message',
+    'SetupMessage'		=> 'setup_message',
+    //controller/info/message
+    'ScriptInfoMessage'		=> 'script_info_message',
+    'RuleInfoMessage'		=> 'rule_info_message',
+    'CastInfoMessage'		=> 'cast_info_message',
+    'GameOptionInfoMessage'	=> 'game_option_info_message',
+    'ChaosInfoMessage'		=> 'chaos_info_message',
+    'WeatherInfoMessage'	=> 'weather_info_message',
+    'SpecInfoMessage'		=> 'spec_info_message',
+    'SharedRoomInfoMessage'	=> 'shared_room_info_message',
+    'CopyrightInfoMessage'	=> 'copyright_info_message',
+    'SearchRoleInfoMessage'	=> 'search_role_info_message',
+    //config/test/message
+    'NameTestMessage'		=> 'name_test_message',
+    'RoleTestMessage'		=> 'role_test_message',
+    'CastTestMessage'		=> 'cast_test_message',
+    'ChaosVersoTestMessage'	=> 'chaos_verso_test_message',
+    'VoteTestMessage'		=> 'vote_test_message',
+    'ObjectionTestMessage'	=> 'objection_test_message',
+    'TripTestMessage'		=> 'trip_test_message',
+    //html
+    'HTML'		=> 'html_class',
+    'TableHTML'		=> 'table_html_class',
+    'GameHTML'		=> 'game_html_class',
+    'RoomHTML'		=> 'room_html_class',
+    'TalkHTML'		=> 'talk_html_class',
+    'VoteHTML'		=> 'vote_html_class',
+    'OldLogHTML'	=> 'old_log_html_class',
+    'InfoHTML'		=> 'info_html_class',
+    //html/media
+    'ImageHTML'		=> 'image_html_class',
+    'IconHTML'		=> 'icon_html_class',
+    'SoundHTML'		=> 'sound_html_class',
+    //html/option
+    'OptionHTML'	=> 'option_html_class',
+    'OptionFormHTML'	=> 'option_form_html_class',
+    //html/role
+    'RoleHTML'		=> 'role_html_class',
+    'RoleDataHTML'	=> 'role_data_html_class',
+    //html/controller
+    'IndexHTML'		=> 'index_html_class',
+    'RoomManagerHTML'	=> 'room_manager_html_class',
+    'GameViewHTML'	=> 'game_view_html_class',
+    'GameFrameHTML'	=> 'game_frame_html_class',
+    'GameUpHTML'	=> 'game_up_html_class',
+    'GamePlayHTML'	=> 'game_play_html_class',
+    'UserManagerHTML'	=> 'user_manager_html_class',
+    'IconViewHTML'	=> 'icon_view_html_class',
+    'IconUploadHTML'	=> 'icon_upload_html_class',
+    //html/controller/info
+    'ChaosInfoHTML'		=> 'chaos_info_html_class',
+    'CopyrightInfoHTML'		=> 'copyright_info_html_class',
+    'SearchRoleInfoHTML'	=> 'search_role_info_html_class',
+    //html/controller/test
+    'DevHTML'		=> 'test_html_class',
+    'VoteTestHTML'	=> 'vote_test_html_class',
+    'ObjectionTestHTML'	=> 'objection_test_html_class',
+    'TripTestHTML'	=> 'trip_test_html_class',
+    'TwitterTestHTML'	=> 'twitter_test_html_class',
+    //info
+    'Info'	=> 'info_functions',
+    'InfoTime'	=> 'info_functions',
+    //module
+    'OAuthException'	=> 'twitter',
+    //test
+    'DevRoom' => 'test_functions'
   ];
 
   //パス情報 (ファイル名 => パス区分)
   public static $path = [
     /* include */
+    //config
+    'server_config'		=> 'server',
+    'database_config'		=> 'server',
+    'room_config'		=> 'server',
+    'game_option_config'	=> 'server',
+    'cache_config'		=> 'server',
+    'user_icon_config'		=> 'server',
+    'old_log_config'		=> 'server',
+    'top_page_config'		=> 'server',
+    'menu_config'		=> 'server',
+    'bbs_config'		=> 'server',
+    'shared_server_config'	=> 'server',
+    'twitter_config'		=> 'server',
+    'setup_config'		=> 'server',
+    'game_config'		=> 'game',
+    'cast_config'		=> 'game',
+    'chaos_config'		=> 'game',
+    'time_config'		=> 'game',
+    'icon_config'		=> 'game',
+    'sound_config'		=> 'game',
+    'copyright_config'		=> 'system',
+    'version'			=> 'system',
+    'message'			=> 'message',
+    'game_message'		=> 'message',
+    'dead_message'		=> 'message',
+    'talk_message'		=> 'message',
+    'role_talk_message'		=> 'message',
+    'vote_talk_message'		=> 'message',
+    'vote_message'		=> 'message',
+    'vote_role_message'		=> 'message',
+    'winner_message'		=> 'message',
+    'role_ability_message'	=> 'message',
+    'option_message'		=> 'message',
+    'icon_message'		=> 'message',
+    'info_message'		=> 'message',
+    'cache_message'		=> 'message',
+    'twitter_message'		=> 'message',
+    'test_message'		=> 'message',
+    'admin_message'		=> 'message/controller',
+    'top_page_message'		=> 'message/controller',
+    'room_manager_message'	=> 'message/controller',
+    'login_message'		=> 'message/controller',
+    'user_manager_message'	=> 'message/controller',
+    'game_view_message'		=> 'message/controller',
+    'game_up_message'		=> 'message/controller',
+    'game_play_message'		=> 'message/controller',
+    'game_log_message'		=> 'message/controller',
+    'old_log_message'		=> 'message/controller',
+    'icon_edit_message'		=> 'message/controller',
+    'icon_upload_message'	=> 'message/controller',
+    'setup_message'		=> 'message/controller',
+    'script_info_message'	=> 'message/controller/info',
+    'rule_info_message'		=> 'message/controller/info',
+    'cast_info_message'		=> 'message/controller/info',
+    'game_option_info_message'	=> 'message/controller/info',
+    'chaos_info_message'	=> 'message/controller/info',
+    'weather_info_message'	=> 'message/controller/info',
+    'spec_info_message'		=> 'message/controller/info',
+    'shared_room_info_message'	=> 'message/controller/info',
+    'copyright_info_message'	=> 'message/controller/info',
+    'search_role_info_message'	=> 'message/controller/info',
+    //config/message/test
+    'name_test_message'		=> 'message/controller/test',
+    'role_test_message'		=> 'message/controller/test',
+    'cast_test_message'		=> 'message/controller/test',
+    'chaos_verso_test_message'	=> 'message/controller/test',
+    'vote_test_message'		=> 'message/controller/test',
+    'objection_test_message'	=> 'message/controller/test',
+    'trip_test_message'		=> 'message/controller/test',
     //data
     'room_data_class'		=> 'data',
     'user_data_class'		=> 'data',
@@ -500,74 +701,6 @@ final class LoaderData {
     'paparazzi_class'	=> 'paparazzi',
     //test
     'test_class'	=> 'test',
-    'test_functions'	=> 'test',
-    //config
-    'server_config'		=> 'server',
-    'database_config'		=> 'server',
-    'room_config'		=> 'server',
-    'game_option_config'	=> 'server',
-    'cache_config'		=> 'server',
-    'user_icon_config'		=> 'server',
-    'old_log_config'		=> 'server',
-    'top_page_config'		=> 'server',
-    'menu_config'		=> 'server',
-    'bbs_config'		=> 'server',
-    'shared_server_config'	=> 'server',
-    'twitter_config'		=> 'server',
-    'setup_config'		=> 'server',
-    'game_config'		=> 'game',
-    'cast_config'		=> 'game',
-    'chaos_config'		=> 'game',
-    'time_config'		=> 'game',
-    'icon_config'		=> 'game',
-    'sound_config'		=> 'game',
-    'copyright_config'		=> 'system',
-    'version'			=> 'system',
-    'message'			=> 'message',
-    'game_message'		=> 'message',
-    'dead_message'		=> 'message',
-    'talk_message'		=> 'message',
-    'role_talk_message'		=> 'message',
-    'vote_talk_message'		=> 'message',
-    'vote_message'		=> 'message',
-    'vote_role_message'		=> 'message',
-    'winner_message'		=> 'message',
-    'role_ability_message'	=> 'message',
-    'option_message'		=> 'message',
-    'icon_message'		=> 'message',
-    'info_message'		=> 'message',
-    'cache_message'		=> 'message',
-    'twitter_message'		=> 'message',
-    'test_message'		=> 'message',
-    'admin_message'		=> 'message/controller',
-    'top_page_message'		=> 'message/controller',
-    'room_manager_message'	=> 'message/controller',
-    'login_message'		=> 'message/controller',
-    'user_manager_message'	=> 'message/controller',
-    'game_view_message'		=> 'message/controller',
-    'game_up_message'		=> 'message/controller',
-    'game_play_message'		=> 'message/controller',
-    'game_log_message'		=> 'message/controller',
-    'old_log_message'		=> 'message/controller',
-    'icon_edit_message'		=> 'message/controller',
-    'icon_upload_message'	=> 'message/controller',
-    'setup_message'		=> 'message/controller',
-    'script_info_message'	=> 'message/controller/info',
-    'rule_info_message'		=> 'message/controller/info',
-    'cast_info_message'		=> 'message/controller/info',
-    'game_option_info_message'	=> 'message/controller/info',
-    'chaos_info_message'	=> 'message/controller/info',
-    'weather_info_message'	=> 'message/controller/info',
-    'spec_info_message'		=> 'message/controller/info',
-    'shared_room_info_message'	=> 'message/controller/info',
-    'copyright_info_message'	=> 'message/controller/info',
-    'search_role_info_message'	=> 'message/controller/info',
-    'name_test_message'		=> 'message/controller/test',
-    'role_test_message'		=> 'message/controller/test',
-    'cast_test_message'		=> 'message/controller/test',
-    'chaos_verso_test_message'	=> 'message/controller/test',
-    'vote_test_message'		=> 'message/controller/test',
-    'objection_test_message'	=> 'message/controller/test',
-    'trip_test_message'		=> 'message/controller/test'
+    'test_functions'	=> 'test'
   ];
 }

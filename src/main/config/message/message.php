@@ -9,7 +9,7 @@ class Message {
   /* 共通 HTML 用 */
   const VIEW_TITLE   = '観戦ページにジャンプ';
   const VIEW_BODY    = '観戦ページに移動します。';
-  const CLOSE_WINDOW = 'ウィンドウを閉じる';
+  const CLOSE_WINDOW = '自分でウィンドウを閉じてください。';
   const NO_FRAME     = 'フレーム非対応のブラウザの方は利用できません。';
 
   /* DB 接続 */

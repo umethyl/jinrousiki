@@ -30,7 +30,6 @@ abstract class VoteBase {
   //音声用データセット
   protected static function FilterSound() {
     if (RQ::Get()->play_sound) {
-      Loader::LoadFile('cookie_class');
       JinrouCookie::SetVote(DB::$ROOM->scene);
     }
   }
@@ -300,10 +299,10 @@ final class VoteDay extends VoteBase {
 
     if (RoleManager::Stack()->Exists(VoteDayElement::VOTE_KILL)) { //夜に切り替え
       self::ChangeNight();
+      DB::$ROOM->SkipNight();
       if (DB::$ROOM->IsTest()) {
 	return RoleManager::Stack()->Get(VoteDayElement::MESSAGE_LIST);
       }
-      DB::$ROOM->SkipNight();
     } else { //再投票処理
       if (DB::$ROOM->IsTest()) {
 	return RoleManager::Stack()->Get(VoteDayElement::MESSAGE_LIST);
@@ -1035,6 +1034,11 @@ final class VoteNight extends VoteBase {
   //人狼の情報収集
   private static function LoadWolf() {
     //天候などで投票情報が空になった場合はスキップ判定をセットしておくこと
+    if (RoleManager::Stack()->Get('skip')) { //スキップ判定
+      RoleLoader::Load('wolf')->SetSkipWolf();
+      return true;
+    }
+
     $vote_data = RoleManager::GetVoteData();
     foreach (VoteActionGroup::$wolf as $action) {
       foreach ($vote_data[$action] as $id => $target_id) {

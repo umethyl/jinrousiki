@@ -146,7 +146,8 @@ class Option_chaos extends OptionCastCheckbox {
 
     //-- 村人上限補正 --//
     if (true === $this->EnableCastChaosCalibration() &&
-	false === DB::$ROOM->IsReplaceHumanGroup() && ArrayFilter::Exists($role_list, 'human')) {
+	false === OptionManager::ExistsReplaceHuman() &&
+	ArrayFilter::Exists($role_list, 'human')) {
       $role  = 'human';
       $count = $role_list[$role] - round($user_count / ChaosConfig::$max_human_rate);
 

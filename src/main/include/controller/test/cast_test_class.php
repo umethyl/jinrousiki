@@ -2,7 +2,7 @@
 //-- 村配役テストコントローラー --//
 final class CastTestController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('game_view', true);
+    RQ::LoadRequest('game_view');
 
     //仮想村
     DevRoom::Initialize(['name' => GameMessage::ROOM_TITLE_FOOTER]);

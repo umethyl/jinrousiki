@@ -43,42 +43,29 @@ final class Cast {
   public static function Get($user_count) {
     //人数に応じた配役リストを取得
     $role_list = ArrayFilter::Get(CastConfig::$role_list, $user_count);
-    if (is_null($role_list)) { //配役リスト存在判定
+    if (true === is_null($role_list)) { //配役リスト設定存在判定
       self::OutputError(sprintf(VoteMessage::NO_CAST_LIST, $user_count));
     }
     //Text::p($role_list, '◆RoleList [CastConfig]');
     //Text::p(DB::$ROOM->option_list, '◆OptionList');
 
-    //配役オプション
-    $filter = null;
-    foreach (OptionFilterData::$cast_base as $option) {
-      if (false === DB::$ROOM->IsOption($option)) {
-	continue;
-      }
-
-      $filter = OptionLoader::Load($option);
-      if (true === $filter->EnableCast($user_count)) {
-	$role_list = $filter->GetCastRole($user_count);
-	break;
-      } else {
-	$filter = null; //適用されなかった場合はリセットする
-      }
-    }
-
-    //配役オプションが適用されなかった場合は通常村用オプションを適用する
-    if (is_null($filter)) {
+    //基礎配役オプション取得 (適用されなかった場合は通常村用オプションを適用する)
+    $filter = OptionManager::GetCastBase($user_count);
+    if (true === is_null($filter)) {
       OptionManager::FilterCastAddRole($role_list, $user_count);
+    } else {
+      $role_list = $filter->GetCastRole($user_count);
     }
     //Text::p($role_list, '◆RoleList [Option]');
 
     //村人置換村の処理
-    if (is_null($filter) || true === $filter->EnableReplaceRole()) {
+    if (true === is_null($filter) || true === $filter->EnableReplaceRole()) {
       self::ReplaceRole($role_list);
     }
     //Text::p($role_list, '◆RoleList [ReplaceRole]');
     //Text::p(Cast::Stack()->Get(self::DUMMY), '◆DummyBoyCastLimit');
 
-    if (false === is_array($role_list)) {
+    if (false === is_array($role_list)) { //配役リスト存在判定
       self::OutputError(VoteMessage::INVALID_CAST);
     }
 
@@ -229,26 +216,27 @@ final class Cast {
     $role_list = self::Stack()->Get(self::ROLE);
 
     //役職固定オプション判定
-    foreach (OptionFilterData::$cast_dummy_boy_fix_role as $option) {
-      if (DB::$ROOM->IsOption($option)) {
-	$fix_role = OptionLoader::Load($option)->GetCastDummyBoyFixRole($role_list);
-	//Text::p($fix_role, '◆DummyBoy: [fix_role]');
-	if (isset($fix_role)) {
-	  $key = array_search($fix_role, $role_list);
-	  if (false !== $key) {
-	    self::Stack()->Add(self::CAST, $fix_role);
-	    self::Stack()->DeleteKey(self::ROLE, $key);
-	  }
-	  return;
+    $filter = OptionManager::GetFilter('cast_dummy_boy_fix_role');
+    if (null !== $filter) {
+      $fix_role = $filter->GetCastDummyBoyFixRole($role_list);
+      //Text::p($fix_role, '◆DummyBoy: [fix_role]');
+      if (true === isset($fix_role)) {
+	$key = array_search($fix_role, $role_list);
+	if (false !== $key) {
+	  self::Stack()->Add(self::CAST, $fix_role);
+	  self::Stack()->DeleteKey(self::ROLE, $key);
 	}
+	return;
       }
     }
 
     //対象外役職セット
     $disable_role_list = self::GetDisableCastDummyBoyRoleList(); //身代わり君の対象外役職リスト
-    $option = 'dummy_boy_cast_limit';
-    if (DB::$ROOM->IsOption($option)) { //身代わり君配役制限の調整
-      OptionLoader::Load($option)->UpdateDummyBoyCastLimit($disable_role_list);
+
+    //身代わり君配役制限の調整
+    $filter = OptionManager::GetFilter('dummy_boy_cast_limit');
+    if (null !== $filter) {
+      $filter->UpdateDummyBoyCastLimit($disable_role_list);
     }
 
     shuffle($role_list); //配列をシャッフル
@@ -308,7 +296,8 @@ final class Cast {
   //希望制配役
   private static function CastWishRole() {
     $stack = self::Stack();
-    $stack->Set(self::WISH, DB::$ROOM->IsChaosWish() || DB::$ROOM->IsOption('step')); //特殊村用
+    //特殊村用
+    $stack->Set(self::WISH, OptionManager::ExistsWishRoleChaos() || DB::$ROOM->IsOption('step'));
 
     foreach ($stack->Get(self::USER) as $uname) {
       $role = self::GetWishRole($uname);   //希望役職を取得
@@ -352,7 +341,7 @@ final class Cast {
   }
 
   //未決定者配役
-  public static function CastRemain(array $uname_list) {
+  private static function CastRemain(array $uname_list) {
     $stack = self::Stack();
 
     //全員配役決定済みに登録
@@ -410,7 +399,7 @@ final class Cast {
     //self::Stack()->p(self::RAND,   '◆Rand');
 
     //闇鍋モード処理
-    if (DB::$ROOM->IsOption('no_sub_role') || false === DB::$ROOM->IsOptionGroup('chaos')) {
+    if (DB::$ROOM->IsOption('no_sub_role') || false === OptionManager::ExistsChaos()) {
       return;
     }
 
@@ -513,6 +502,7 @@ final class Cast {
 
   //エラーメッセージ出力
   private static function OutputError($str) {
-    VoteHTML::OutputResult(sprintf(VoteMessage::ERROR_CAST, $str), false === DB::$ROOM->IsTest());
+    $reset = (false === DB::$ROOM->IsTest());
+    VoteHTML::OutputResult(sprintf(VoteMessage::ERROR_CAST, $str), $reset);
   }
 }

@@ -3,7 +3,7 @@
 //-- TOPページコントローラー --//
 final class JinrouIndexController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('request_index');
+    RQ::LoadRequest('request_index');
   }
 
   protected static function Output() {

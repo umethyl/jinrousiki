@@ -5,7 +5,7 @@ final class GamePlayController extends JinrouController {
   private static $view;
 
   protected static function Load() {
-    Loader::LoadRequest('game_play', true);
+    RQ::LoadRequest('game_play');
     DB::Connect();
     Session::LoginGamePlay();
 
@@ -38,7 +38,6 @@ final class GamePlayController extends JinrouController {
     //-- 音声情報 --//
     Objection::Set(); //「異議」ありセット判定
     if (RQ::Get()->play_sound) { //音でお知らせ
-      Loader::LoadFile('cookie_class');
       JinrouCookie::Set(); //クッキー情報セット
     }
 
@@ -249,7 +248,6 @@ final class GamePlayController extends JinrouController {
       return;
     }
 
-    Loader::LoadFile('game_vote_functions');
     RQ::Set(RequestDataVote::SITUATION, VoteAction::VOTE_KILL); //仮想的に処刑投票コマンドをセット
     /*
       Vote は初期化時点で ROOM/USER をロックをかけて生成している
@@ -262,12 +260,7 @@ final class GamePlayController extends JinrouController {
 
 //-- GamePlay 出力基礎クラス --//
 abstract class GamePlayView {
-  public function __construct() {
-    $this->Load();
-  }
-
-  //追加ライブラリロード
-  protected function Load() {}
+  public function __construct() {}
 
   //リンク情報取得 (差分型)
   protected function GetURL(array $except, $header = null) {
@@ -366,8 +359,12 @@ abstract class GamePlayView {
   protected function OutputHeaderLinkFooter() {}
 
   //過去ログリンク一覧出力
-  final protected function OutputLogLinkList() {
-    echo GamePlayHTML::GetLogLinkTableTd() . GamePlayMessage::LOG_NAME . ' ';
+  final protected function OutputLogLinkList($skip_header = false) {
+    if (true === $skip_header) { //protected 関数を増やして bool 引数による分岐を最適化した方がよい
+      echo Text::BR;
+    } else {
+      echo GamePlayHTML::GetLogLinkTableTd() . GamePlayMessage::LOG_NAME . ' ';
+    }
     $this->OutputLogLink(RoomScene::BEFORE, GamePlayMessage::LOG_BEFOREGAME, 0);
     if (DB::$ROOM->date > 1) {
       if (DB::$ROOM->IsOption('open_day')) {
@@ -607,10 +604,6 @@ abstract class GamePlayView {
 
 //-- GamePlay 出力クラス (ゲーム開始前) --//
 class GamePlayView_Before extends GamePlayView {
-  protected function Load() {
-    Loader::LoadFile('cast_config', 'image_class', 'room_option_class');
-  }
-
   protected function OutputHeaderLinkFooter() {
     $url = sprintf('%s&user_no=%s', $this->SelectURL([]), DB::$SELF->id);
     GamePlayHTML::OutputHeaderLink('user_manager', $url); //登録情報変更
@@ -662,6 +655,10 @@ class GamePlayView_Before extends GamePlayView {
 
 //-- GamePlay 出力クラス (昼) --//
 class GamePlayView_Day extends GamePlayView {
+  protected function OutputHeaderLinkFooter() {
+    $this->OutputLogLinkList(true);
+  }
+
   protected function OutputSoundScene() {
     if (JinrouCookie::$scene != '' && JinrouCookie::$scene != DB::$ROOM->scene) { //夜明け
       SoundHTML::Output('morning');
@@ -675,6 +672,10 @@ class GamePlayView_Day extends GamePlayView {
 
 //-- GamePlay 出力クラス (夜) --//
 class GamePlayView_Night extends GamePlayView {
+  protected function OutputHeaderLinkFooter() {
+    $this->OutputLogLinkList(true);
+  }
+
   protected function OutputSoundScene() {
     if (JinrouCookie::$scene != '' && JinrouCookie::$scene != DB::$ROOM->scene) { //日没
       SoundHTML::Output('night');
@@ -688,10 +689,6 @@ class GamePlayView_Night extends GamePlayView {
 
 //-- GamePlay 出力クラス (ゲーム終了後) --//
 class GamePlayView_After extends GamePlayView {
-  protected function Load() {
-    Loader::LoadFile('winner_message');
-  }
-
   protected function OutputHeaderLogLink() {
     $this->OutputLogLinkList();
   }

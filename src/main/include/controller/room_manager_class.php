@@ -9,7 +9,7 @@ final class RoomManagerController extends JinrouController {
     if (Loader::IsLoadedFile('index_class')) {
       self::Maintenance();
     }
-    Loader::LoadRequest('room_manager');
+    RQ::LoadRequest('room_manager');
   }
 
   protected static function EnableCommand() {
@@ -18,19 +18,14 @@ final class RoomManagerController extends JinrouController {
 
   protected static function RunCommand() {
     if (RQ::Get()->create_room) {
-      Loader::LoadFile('user_class', 'user_icon_class', 'cache_class', 'twitter_class');
       self::Create();
     } elseif (RQ::Get()->change_room) {
-      Loader::LoadFile('session_class', 'user_class', 'cache_class');
       self::Create();
     } elseif (RQ::Get()->describe_room) {
-      Loader::LoadFile('chaos_config', 'game_message');
       self::OutputDescribe();
     } elseif (RQ::Get()->room_no > 0) {
-      Loader::LoadFile('session_class', 'user_class', 'option_form_class');
       self::OutputCreate();
     } else {
-      Loader::LoadFile('chaos_config', 'game_message');
       self::OutputList();
     }
   }

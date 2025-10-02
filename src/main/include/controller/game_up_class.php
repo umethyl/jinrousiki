@@ -3,7 +3,7 @@
 //-- GameUp コントローラー --//
 final class GameUpController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('game_up', true);
+    RQ::LoadRequest('game_up');
   }
 
   protected static function Output() {

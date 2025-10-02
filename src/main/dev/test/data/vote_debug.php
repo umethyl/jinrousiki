@@ -30,7 +30,6 @@
 //foreach (RoleData::$list as $role => $v) RoleLoader::LoadMain(new User($role))->OutputAbility();
 
 /* 配役情報 */
-//Loader::LoadFile('chaos_config');
 //Text::p(Lottery::ToProbability(ChaosConfig::$chaos_hyper_random_role_list));	//確率
 //Text::p(array_sum(ChaosConfig::$chaos_hyper_random_role_list), '◆Sum');	//確率合計
 //self::OutputChaosSumGroup();							//系列合計
@@ -40,7 +39,6 @@
 //Text::p(Lottery::ToProbability(GameConfig::$weather_list));
 
 /* DB テスト */
-//Loader::LoadFile('room_manager_db_class');
 //DB::Connect(); DB::d();
 //$q = Query::Init()->Table('user_entry')->Select(['user_no'])->Where(['room_no']);
 //$q->p();

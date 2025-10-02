@@ -2,7 +2,7 @@
 //-- 検索情報コントローラー (新役職情報) --//
 final class SearchRoleInfoController extends JinrouController {
   protected static function Load(){
-    Loader::LoadRequest();
+    RQ::LoadRequest();
     RQ::Get()->ParsePostOn('execute');
     RQ::Get()->ParsePostData('role');
   }
@@ -23,7 +23,6 @@ final class SearchRoleInfoController extends JinrouController {
 
   //検索実行
   private static function RunSearch() {
-    Loader::LoadFile('role_data_manager_class');
     $stack = [];
     $search_list = RoleDataManager::Search(RQ::Get()->role);
     foreach ($search_list as $category => $list) {

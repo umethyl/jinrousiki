@@ -3,7 +3,7 @@
 //-- GameLog コントローラー --//
 final class GameLogController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('game_log');
+    RQ::LoadRequest('game_log');
     DB::Connect();
     Session::Login();
 
@@ -41,6 +41,9 @@ final class GameLogController extends JinrouController {
 
   //認証 (死者 or ゲーム終了後のみ)
   private static function Certify() {
+    //参加者であればプレイ中でも見えるように調整中 (問題ないと判断できたら関数自体を削除できる想定)
+    return;
+
     if (DB::$SELF->IsDead() || DB::$ROOM->IsFinished()) {
       return;
     }
@@ -101,7 +104,6 @@ final class GameLogController extends JinrouController {
   private static function OutputAbility() {
     if (RQ::Get()->user_no > 0 && DB::$SELF->IsDummyBoy() &&
 	false === DB::$ROOM->IsOption('gm_login')) {
-      Loader::LoadFile('image_class');
       DB::LoadSelf(RQ::Get()->user_no);
       DB::$SELF->live = UserLive::LIVE;
       RoleHTML::OutputAbility();

@@ -2,7 +2,7 @@
 //-- ユーザ登録コントローラー --//
 final class UserManagerController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('user_manager');
+    RQ::LoadRequest('user_manager');
     DB::Connect();
     Session::Start();
   }
@@ -105,7 +105,7 @@ final class UserManagerController extends JinrouController {
     DB::$ROOM->ParseOption(true);
 
     //DB から現在のユーザ情報を取得 (ロック付き)
-    RQ::LoadRequest('Request', true);
+    //ここで起動している Request クラスは Load 時の Requset_user_manager
     RQ::Set(RequestDataGame::ID, $room_no);
     RQ::Get('retrieve_type', 'entry_user');
     DB::LoadUser();

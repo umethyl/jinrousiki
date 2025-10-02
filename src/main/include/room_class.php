@@ -118,18 +118,6 @@ final class Room extends StackManager {
     return $this->IsOption('quiz');
   }
 
-  //村人置換村グループオプション判定
-  public function IsReplaceHumanGroup() {
-    return $this->IsOption('replace_human') || $this->IsOptionGroup('full_');
-  }
-
-  //闇鍋式希望制オプション判定
-  public function IsChaosWish() {
-    return $this->IsOptionGroup('chaos') || $this->IsOption('duel') ||
-      $this->IsOption('festival') || $this->IsReplaceHumanGroup() ||
-      $this->IsOptionGroup('change_');
-  }
-
   //-- イベント関連 --//
   //イベント情報を DB から取得
   public function LoadEvent() {

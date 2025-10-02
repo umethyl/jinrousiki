@@ -12,8 +12,8 @@ class RQ extends LoadManager {
   }
 
   //Request クラスのロード
-  public static function LoadRequest($name = 'Request', $force = false) {
-    if ($force || is_null(self::$instance)) {
+  public static function LoadRequest($name = 'Request') {
+    if (true === is_null(self::$instance)) {
       if ($name != 'Request' && self::LoadFile($name)) {
 	$class = self::CLASS_PREFIX . $name;
       } else {

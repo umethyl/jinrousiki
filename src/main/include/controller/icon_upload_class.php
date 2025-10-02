@@ -10,7 +10,7 @@ final class IconUploadController extends JinrouController {
   }
 
   protected static function Load() {
-    Loader::LoadRequest('icon_upload');
+    RQ::LoadRequest('icon_upload');
   }
 
   protected static function EnableCommand() {

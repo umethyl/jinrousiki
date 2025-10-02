@@ -2,7 +2,7 @@
 //投票テストコントローラー
 final class VoteTestController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('game_view', true);
+    RQ::LoadRequest('game_view');
     include('data/vote_header.php');
 
     //特殊モード
@@ -112,14 +112,11 @@ final class VoteTestController extends JinrouController {
 
   //配役情報出力
   private static function OutputCast() {
-    Loader::LoadFile('chaos_config', 'vote_test_html_class');
     VoteTestHTML::OutputCast();
   }
 
   //発言出力
   private static function OutputTalk() {
-    Loader::LoadFile('talk_class');
-
     RQ::Set(RequestDataLogRoom::ROLE, false);
     require_once('data/vote_talk.php');
     RQ::GetTest()->talk = [];
@@ -171,8 +168,6 @@ final class VoteTestController extends JinrouController {
 
   //投票処理結果後表示
   private static function OutputResult() {
-    Loader::LoadFile('vote_test_html_class');
-
     foreach (DB::$USER->Get() as $user) {
       unset($user->virtual_role);
       $user->live = $user->IsLive(true) ? UserLive::LIVE : UserLive::DEAD;
@@ -196,7 +191,6 @@ final class VoteTestController extends JinrouController {
 
   //勝敗結果表示
   private static function OutputWinner() {
-    Loader::LoadFile('winner_message');
     DB::$ROOM->Flag()->Off(RoomMode::LOG);
     DB::$ROOM->Flag()->Off(RoomMode::PERSONAL);
     Winner::Output();

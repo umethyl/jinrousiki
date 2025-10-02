@@ -3,7 +3,7 @@
 //-- 観戦画面コントローラー --//
 final class GameViewController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('game_view', true);
+    RQ::LoadRequest('game_view');
     DB::Connect(RQ::Get()->db_no);
 
     //村情報ロード
@@ -11,14 +11,9 @@ final class GameViewController extends JinrouController {
     DB::$ROOM->SetFlag(RoomMode::VIEW);
     DB::$ROOM->system_time = Time::Get();
 
-    //シーンに応じた追加クラスをロード
-    if (DB::$ROOM->IsFinished()) { //勝敗結果表示
-      Loader::LoadFile('winner_message');
-    } else { //ゲームオプション表示
-      Loader::LoadFile('cast_config', 'image_class', 'room_option_class');
-      if (DB::$ROOM->IsBeforeGame()) {
-	RQ::Set('retrieve_type', DB::$ROOM->scene);
-      }
+    //シーン別調整
+    if (DB::$ROOM->IsBeforeGame()) {
+      RQ::Set('retrieve_type', DB::$ROOM->scene); //投票済み情報
     }
 
     //ユーザ情報ロード

@@ -7,7 +7,7 @@ class JinrouAdmin {
       HTML::OutputUnusableError();
     }
 
-    Loader::LoadRequest();
+    RQ::LoadRequest();
     RQ::Get()->ParseGetRoomNo();
 
     DB::Connect();
@@ -28,7 +28,7 @@ class JinrouAdmin {
       HTML::OutputUnusableError();
     }
 
-    Loader::LoadRequest();
+    RQ::LoadRequest();
     RQ::Get()->ParseGetInt(RequestDataIcon::ID);
     $icon_no = RQ::Get()->icon_no;
     $title   = AdminMessage::DELETE_ICON . ' ' . Message::ERROR_TITLE;
@@ -36,7 +36,6 @@ class JinrouAdmin {
       HTML::OutputResult($title, sprintf(IconMessage::NOT_EXISTS, $icon_no));
     }
 
-    Loader::LoadFile('icon_html_class');
     DB::Connect();
     if (false === DB::Lock('icon')) {
       HTML::OutputResult($title, Message::DB_ERROR_LOAD);

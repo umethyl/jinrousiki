@@ -3,19 +3,17 @@
 //-- 過去ログ表示クラス --//
 final class OldLogController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('old_log');
+    RQ::LoadRequest('old_log');
     DB::Connect(RQ::Get()->db_no);
   }
 
   protected static function Output() {
     if (RQ::Get()->is_room) {
-      Loader::LoadFile('icon_class', 'image_class', 'talk_class');
       self::LoadRoom();
       self::LoadUser();
       self::LoadSelf();
       OldLogHTML::Output();
     } else {
-      Loader::LoadFile('room_config');
       OldLogHTML::OutputList(RQ::Get()->page);
     }
     HTML::OutputFooter();

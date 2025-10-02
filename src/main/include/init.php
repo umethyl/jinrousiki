@@ -21,4 +21,5 @@ define('JINROU_MOD',  JINROU_ROOT . '/module');
 
 //-- 初期化処理 --//
 require_once(JINROU_INC . '/loader_class.php');
+spl_autoload_register(['Loader', 'AutoLoad']);
 Loader::Initialize();

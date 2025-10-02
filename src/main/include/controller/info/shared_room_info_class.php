@@ -3,7 +3,7 @@
 //-- 関連サーバ村情報コントローラー --//
 final class SharedRoomInfoController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('shared_room');
+    RQ::LoadRequest('shared_room');
   }
 
   protected static function Output() {

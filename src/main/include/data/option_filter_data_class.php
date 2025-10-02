@@ -2,22 +2,41 @@
 //-- ◆文字化け抑制◆ --//
 //-- オプションフィルタデータベース --//
 final class OptionFilterData {
+  //-- 役職グループ --//
+  //村人置換村グループ
+  public static $group_replace_human = [
+    'replace_human', 'full_mad', 'full_cupid', 'full_quiz', 'full_vampire',
+    'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania'
+  ];
+
+  //闇鍋モードグループ
+  public static $group_chaos = ['chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso'];
+
+  //闇鍋式希望制グループ (村人置換 + 闇鍋を追加)
+  public static $group_wish_role_chaos = [
+    'duel', 'festival',
+    'change_common', 'change_hermit_common',
+    'change_mad', 'change_fanatic_mad', 'change_whisper_mad', 'change_immolate_mad',
+    'change_cupid', 'change_mind_cupid', 'change_triangle_cupid',
+    'change_angel', 'change_exchange_angel'
+  ];
+
   //-- Cast::Get() --//
-  //配役 (順番依存あり)
+  //基礎配役 (順番依存あり)
   public static $cast_base = [
     'festival', 'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso',
     'duel', 'gray_random', 'step', 'quiz'
   ];
 
-  //配役/闇鍋固定枠追加
-  public static $cast_chaos_fix_role = ['topping', 'gerd', 'detective'];
-
-  //配役/追加役職
+  //追加配役/普通村
   public static $cast_add_role = [
     'detective', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf',
     'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'cupid',
     'medium', 'mania'
   ];
+
+  //追加配役/闇鍋固定枠
+  public static $cast_chaos_fix_role = ['topping', 'gerd', 'detective'];
 
   //-- Cast::Execute() --//
   //身代わり君固定配役 (順番依存あり)
@@ -25,6 +44,9 @@ final class OptionFilterData {
 
   //身代わり君配役対象外
   public static $disable_cast_dummy_boy_role = ['detective'];
+
+  //身代わり君配役制限
+  public static $dummy_boy_cast_limit = ['dummy_boy_cast_limit'];
 
   //ユーザーサブ役職配役
   public static $cast_user_sub_role = [

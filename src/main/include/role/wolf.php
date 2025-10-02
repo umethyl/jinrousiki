@@ -139,8 +139,13 @@ class Role_wolf extends Role {
 
   //人狼襲撃情報登録
   final public function SetWolf($id) {
-    $this->SetStack($this->GetActor(), 'voted_wolf');
-    $this->SetStack(DB::$USER->ByID($this->GetWolfTargetID($id)), 'wolf_target');
+    $this->SetWolfStack($this->GetActor(), DB::$USER->ByID($this->GetWolfTargetID($id)));
+  }
+
+  //人狼襲撃情報登録 (スキップ対応)
+  final public function SetSkipWolf() {
+    $user = new User();
+    $this->SetWolfStack($user, $user);
   }
 
   //人狼襲撃対象者ID取得
@@ -352,6 +357,12 @@ class Role_wolf extends Role {
   //毒死回避判定
   protected function IgnorePoisonDead() {
     return false;
+  }
+
+  //人狼襲撃情報 Stack 登録
+  private function SetWolfStack(User $actor, User $target) {
+    $this->SetStack($actor, 'voted_wolf');
+    $this->SetStack($target, 'wolf_target');
   }
 
   //人狼襲撃失敗ログ出力

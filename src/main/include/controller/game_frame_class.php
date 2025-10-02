@@ -3,7 +3,7 @@
 //-- GameFrame コントローラー --//
 final class GameFrameController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('game_frame', true);
+    RQ::LoadRequest('game_frame');
   }
 
   protected static function Output() {

@@ -4,7 +4,7 @@ final class UserEntryTestController extends JinrouController {
   protected static function Load() {
     DB::Connect();
     Session::Start();
-    Loader::LoadRequest('game_view', true);
+    RQ::LoadRequest('game_view');
 
     //仮想村
     DevRoom::Initialize(['name' => GameMessage::ROOM_TITLE_FOOTER]);

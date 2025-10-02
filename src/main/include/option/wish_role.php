@@ -21,7 +21,7 @@ class Option_wish_role extends OptionCheckbox {
     }
 
     //固有判定
-    if (DB::$ROOM->IsChaosWish()) {
+    if (OptionManager::ExistsWishRoleChaos()) {
       if (DB::$ROOM->IsOption('detective')) {
 	$stack[] = 'detective_common';
       }

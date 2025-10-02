@@ -16,7 +16,6 @@ final class ObjectionTestController extends JinrouController {
 
   //テスト実行
   private static function RunTest() {
-    Loader::LoadFile('sound_class');
     $id  = RequestDataTalk::OBJECTION;
     RQ::Get()->ParsePostData($id);
     $key = RQ::Get()->$id;

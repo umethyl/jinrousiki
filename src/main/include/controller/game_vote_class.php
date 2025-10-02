@@ -3,7 +3,7 @@
 //-- GameVote コントローラー --//
 final class GameVoteController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('game_vote', true);
+    RQ::LoadRequest('game_vote');
     DB::Connect();
     Session::Login();
     if (false === DB::Transaction()) { //トランザクション開始
@@ -28,7 +28,6 @@ final class GameVoteController extends JinrouController {
     if (DB::$ROOM->IsBeforeGame()) { //ゲーム開始 or Kick 投票処理
       switch (RQ::Get()->situation) {
       case VoteAction::GAME_START:
-	Loader::LoadFile('cast_class'); //配役情報をロード
 	return VoteGameStart::Execute();
 
       case VoteAction::KICK:
@@ -55,7 +54,6 @@ final class GameVoteController extends JinrouController {
   }
 
   protected static function Output() {
-    Loader::LoadFile('vote_message');
     if (DB::$SELF->IsDead()) { //死者は専用ページ
       return DB::$SELF->IsDummyBoy() ? VoteHTML::OutputDummyBoy() : VoteHTML::OutputHeaven();
     }

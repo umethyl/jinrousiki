@@ -10,7 +10,7 @@ final class IconEditController extends JinrouController {
   }
 
   protected static function Load() {
-    Loader::LoadRequest('icon_edit');
+    RQ::LoadRequest('icon_edit');
   }
 
   protected static function EnableCommand() {

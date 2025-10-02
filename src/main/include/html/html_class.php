@@ -139,7 +139,7 @@ class HTML {
     return (true === $flag) ? self::GenerateAttribute('selected') : '';
   }
 
-  //窓を閉じるボタン生成
+  //窓を閉じてもらうメッセージを生成
   public static function GenerateCloseWindow($str) {
     return Text::Format(self::GetCloseWindow(), $str, Text::BR, Message::CLOSE_WINDOW);
   }
@@ -399,14 +399,9 @@ EOF;
 EOF;
   }
 
-  //窓を閉じるボタンタグ
+  //窓を閉じてもらうメッセージタグ
   private static function GetCloseWindow() {
-    return <<<EOF
-%s%s
-<form method="post" action="#">
-<input type="button" value="%s" onClick="window.close()">
-</form>
-EOF;
+    return '%s%s<span style="color:#0000FF">%s</span>';
   }
 
   //リンクタグ

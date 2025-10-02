@@ -27,6 +27,32 @@ class OptionManager {
     return self::Stack()->Get('change');
   }
 
+  //オプション存在判定
+  public static function Exists($type) {
+    foreach (OptionFilterData::$$type as $option) {
+      if (DB::$ROOM->IsOption($option)) {
+	return true;
+      }
+    }
+    return false;
+  }
+
+  //オプション存在判定 (村人置換村)
+  public static function ExistsReplaceHuman() {
+    return self::Exists('group_replace_human');
+  }
+
+  //オプション存在判定 (闇鍋モード)
+  public static function ExistsChaos() {
+    return self::Exists('group_chaos');
+  }
+
+  //オプション存在判定 (闇鍋式希望制)
+  public static function ExistsWishRoleChaos() {
+    return self::ExistsReplaceHuman() || self::ExistsChaos() ||
+      self::Exists('group_wish_role_chaos');
+  }
+
   //オプションクラスロード
   public static function GetFilter($type) {
     foreach (OptionFilterData::$$type as $option) {
@@ -53,20 +79,35 @@ class OptionManager {
   }
 
   //-- Cast --//
-  //配役 (闇鍋固定枠追加)
-  public static function FilterCastChaosFixRole(array &$list) {
-    foreach (OptionFilterData::$cast_chaos_fix_role as $option) {
-      if (DB::$ROOM->IsOption($option)) {
-	OptionLoader::Load($option)->FilterCastChaosFixRole($list);
+  //基礎配役取得
+  public static function GetCastBase($user_count) {
+    foreach (OptionFilterData::$cast_base as $option) {
+      if (false === DB::$ROOM->IsOption($option)) {
+	continue;
+      }
+
+      $filter = OptionLoader::Load($option);
+      if (true === $filter->EnableCast($user_count)) {
+	return $filter;
       }
     }
+    return null;
   }
 
-  //配役 (普通村追加役職)
+  //追加配役 (普通村)
   public static function FilterCastAddRole(array &$list, $count) {
     foreach (OptionFilterData::$cast_add_role as $option) {
       if (DB::$ROOM->IsOption($option) && OptionLoader::LoadFile($option)) {
 	OptionLoader::Load($option)->FilterCastAddRole($list, $count);
+      }
+    }
+  }
+
+  //追加配役 (闇鍋固定枠)
+  public static function FilterCastChaosFixRole(array &$list) {
+    foreach (OptionFilterData::$cast_chaos_fix_role as $option) {
+      if (DB::$ROOM->IsOption($option)) {
+	OptionLoader::Load($option)->FilterCastChaosFixRole($list);
       }
     }
   }
@@ -113,7 +154,7 @@ class OptionManager {
   //配役一覧出力用フィルター取得
   public static function GetCastMessageFilter() {
     //闇鍋モード判定
-    if (DB::$ROOM->IsOptionGroup('chaos')) {
+    if (OptionManager::ExistsChaos()) {
       foreach (OptionFilterData::$cast_message as $option) {
 	if (DB::$ROOM->IsOption($option)) {
 	  return OptionLoader::Load($option);
@@ -148,17 +189,6 @@ class OptionManager {
       }
     }
     return RoomScene::NIGHT;
-  }
-
-  //-- User --//
-  //発言回数初期化実施判定
-  public static function IsInitializeTalkCount() {
-    foreach (OptionFilterData::$initialize_talk_count as $option) {
-      if (DB::$ROOM->IsOption($option)) {
-	return true;
-      }
-    }
-    return false;
   }
 }
 

@@ -26,7 +26,6 @@ class OldLogHTML {
     if (RQ::Get()->auto_play) { //自動再生モード判定
       if (false === RQ::Get()->reverse_log && RQ::Get()->time && DB::$ROOM->IsOn(RoomMode::WATCH)) {
 	DB::$ROOM->Flag()->Set(RoomMode::AUTO_PLAY, true);
-	Loader::LoadFile('auto_play_talk_class');
 	AutoPlayTalk::InitStack();
       } else {
 	RQ::Set(RoomMode::AUTO_PLAY, false);

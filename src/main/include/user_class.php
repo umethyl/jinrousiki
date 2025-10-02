@@ -1168,7 +1168,7 @@ class UserLoader {
 
   //ゲーム開始処理
   public function GameStart() {
-    $flag = OptionManager::IsInitializeTalkCount();
+    $flag = OptionManager::Exists('initialize_talk_count');
     foreach ($this->rows as $user) {
       $user->UpdatePlayer();
       if (true === $flag) {

@@ -247,7 +247,6 @@ class DevVote {
 
   //ロード
   private static function Load($url) {
-    Loader::LoadFile('vote_message');
     RQ::LoadFile('game_vote');
 
     $stack = new Request_game_vote();

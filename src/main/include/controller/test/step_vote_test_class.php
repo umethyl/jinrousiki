@@ -2,7 +2,7 @@
 //足音投票テストコントローラー
 final class StepVoteTestController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('game_view', true);
+    RQ::LoadRequest('game_view');
 
     //仮想村
     $stack = ['name' => GameMessage::ROOM_TITLE_FOOTER, 'status' => RoomStatus::PLAYING];

@@ -3,7 +3,7 @@
 //-- ログイン処理コントローラー --//
 final class LoginController extends JinrouController {
   protected static function Load() {
-    Loader::LoadRequest('login', true);
+    RQ::LoadRequest('login');
     DB::Connect();
   }
 

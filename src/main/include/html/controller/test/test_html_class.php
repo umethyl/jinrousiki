@@ -3,7 +3,7 @@
 class DevHTML {
   //共通リクエストロード
   public static function LoadRequest() {
-    Loader::LoadRequest();
+    RQ::LoadRequest();
     RQ::Get()->ParsePostOn('execute');
   }
 

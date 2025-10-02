@@ -9,7 +9,7 @@ class Role_quiz extends Role {
   public $mix_in = ['decide'];
 
   protected function IgnoreResult() {
-    return false === DB::$ROOM->IsOptionGroup('chaos');
+    return false === OptionManager::ExistsChaos();
   }
 
   protected function OutputAddResult() {
