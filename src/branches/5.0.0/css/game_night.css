@@ -1,0 +1,23 @@
+@charset "utf-8";
+body, .real-time input {
+  background-color: #000030;
+}
+body, .real-time input, .vote-page td {
+  color: #FFFAFA;
+}
+.vote-page, .vote-page td, .vote-list, .vote-list td {
+  border-color: #FFFAFA;
+}
+a:link, a:visited {
+  color: #8080FF;
+}
+a:active, a:hover {
+  color: #FF0000;
+}
+.already-vote {
+  background-color: #0030A0;
+}
+.talk-cache {
+  background-color: #000099;
+  color: #CCDDFF;
+}
