@@ -1,0 +1,19 @@
+<?php
+/*
+  ◆傾奇者 (eccentricer)
+  ○仕様
+  ・投票数：+1 (4日目まで)
+*/
+class Role_eccentricer extends Role {
+  public $ability = 'ability_eccentricer';
+
+  function OutputResult() {
+    if ($this->IsLost()) RoleHTML::OutputAbilityResult($this->ability, null);
+  }
+
+  function FilterVoteDo(&$count) {
+    if (! $this->IsLost()) $count++;
+  }
+
+  private function IsLost() { return DB::$ROOM->date > 4; }
+}

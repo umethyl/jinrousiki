@@ -1,0 +1,102 @@
+@charset "utf-8";
+@import url(talk.css);
+@import url(role.css);
+@import url(ability.css);
+/* OutputRevoteList() */
+.revote { /* 再投票メッセージ */
+  padding: 0px 3em;
+  background-color: #FF0000;
+  color: #FFFAFA; /* snow */
+  font-size: 14pt;
+  font-weight: bold;
+}
+/* OutputLastWords() & OutputSelfLastWords() */
+.lastwords { /* 遺言全体の table */
+  width: 100%;
+  border: 0;
+  border-spacing: 5px;
+  background-color: #DDEEFF;
+}
+.lastwords td {
+  border-top: 1px dashed #C0C0C0;
+  color: #000000;
+}
+.lastwords-title { /* 名前 */
+  width: 140px;
+  vertical-align: middle;
+  text-align: left;
+}
+.lastwords-title span { /*「～さんの遺言」*/
+  margin-right: 1px;
+  font-size: 80%;
+}
+.lastwords-body { /* 本文 */
+  width: 1000px;
+  vertical-align: top;
+}
+/* OutputLastWords() */
+.system-lastwords { /* 遺言のシステムメッセージの table */
+  width: 100%;
+  border: 0;
+  border-collapse: collapse;
+  background-color: #CCDDFF;
+  color: #000000;
+}
+.system-lastwords td { /* インデントは他のシステムメッセージと合わせる */
+  padding-left: 6em;
+  text-align: left;
+  font-weight: bold;
+}
+/* OutputDeadManType() */
+.dead-type {
+  width: 100%;
+  border: 0;
+  border-collapse: collapse;
+  background-color: #FFFAFA;
+  color: #990000;
+  font-weight:bold;
+}
+.dead-type td {
+  width: 100%;
+  padding-left: 6em;
+  height: 35px;
+  vertical-align: middle;
+  text-align: left;
+}
+.dead-type-vote         { color: #666600; }
+.dead-type-revive       { color: #009966; }
+.dead-type-lovers       { color: #FF66CC; }
+.dead-type-fairy        { color: #888888; }
+.dead-type-step         { color: #669933; }
+.dead-type-sudden-death { color: #33CCFF; }
+/* GenerateWeatherReport() */
+.weather {
+  padding: 7px 0 7px 6em;
+  background-color: #CCDDFF;
+  color: #000000;
+  font-weight: bold;
+}
+.weather span {
+  color: #990000;
+}
+/* OutputVoteListDay() */
+.vote-list { /* 投票結果の table */
+  border: 2px solid;
+  border-collapse: collapse;
+  font-size:12pt;
+}
+.vote-list td {
+  padding: 5px;
+  border: 1px solid;
+}
+.vote-times { /* 投票回数 */
+  text-align: center;
+}
+.vote-name { /* ユーザ名 */
+  text-align: left;
+  font-weight: bold;
+}
+/* CheckSelfVote() */
+.self-vote {
+  margin: 5px 0;
+}
