@@ -71,11 +71,11 @@ final class RoomManagerDB {
   public static function Insert($room_no, $game_option, $option_role) {
     $column = [
       'room_no', 'name', 'comment', 'max_user', 'game_option',
-      'option_role', 'status', 'date', 'scene', 'vote_count', 'establisher_ip'
+      'option_role', 'status', 'date', 'scene', 'vote_count', 'revote_count', 'establisher_ip'
     ];
     $list = [
       $room_no, RQ::Get()->room_name, RQ::Get()->room_comment, RQ::Get()->max_user, $game_option,
-      $option_role, RoomStatus::WAITING, 0, RoomScene::BEFORE, 1, Security::GetIP()
+      $option_role, RoomStatus::WAITING, 0, RoomScene::BEFORE, 1, 0, Security::GetIP()
     ];
 
     $query = self::GetQueryBase()->Insert()->Into($column)

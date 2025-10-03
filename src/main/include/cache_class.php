@@ -173,7 +173,7 @@ final class JinrouCacheManager {
 
   //有効期限切れ判定
   private static function Expire($data) {
-    if ((null === $data) || Time::Get() > $data['expire']) {
+    if ((null === $data) || Time::Get() > ($data['expire'] ?? 0)) {
       return true;
     }
     return isset(self::Load()->hash) && isset($data['hash']) && self::Load()->hash != $data['hash'];

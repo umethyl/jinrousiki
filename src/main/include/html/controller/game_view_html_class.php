@@ -32,6 +32,7 @@ class GameViewHTML {
     HTML::OutputHeader(ServerConfig::TITLE . GameViewMessage::TITLE, 'game_view');
 
     DB::$ROOM->OutputCSS();
+    GameHTML::OutputNoCacheHeader();
     if (GameConfig::AUTO_RELOAD && RQ::Get()->auto_reload > 0) { //自動更新
       GameHTML::OutputAutoReloadHeader();
     }

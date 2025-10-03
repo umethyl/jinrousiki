@@ -720,6 +720,9 @@ class User extends StackManager {
     if (isset($vote_number)) {
       $list['vote_number']  = $vote_number;
       $list['revote_count'] = RQ::Get()->revote_count;
+    } else {
+      //NULL 非許容なので初期値を設定する
+      $list['revote_count'] = 0;
     }
 
     return DB::Insert('vote', $list);

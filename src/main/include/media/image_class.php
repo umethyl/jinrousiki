@@ -51,6 +51,9 @@ abstract class Image {
     }
     $css = $this->class == '' ? '' : ImageHTML::GenerateCSS($this->class);
     $str = ImageHTML::Generate($this->GetPath($name), $title, $css);
+    if (true === static::EnableLink()) {
+      $str = static::GenerateLink($name, $str);
+    }
     return $table ? TableHTML::GenerateTd($str) : $str;
   }
 
@@ -64,6 +67,16 @@ abstract class Image {
     if ($this->Exists($name)) {
       $this->Output($name);
     }
+  }
+
+  //リンク追加有効判定
+  protected static function EnableLink() {
+    return false;
+  }
+
+  //リンク追加
+  protected static function GenerateLink($role, $str) {
+    return $str;
   }
 
   //画像のファイルパス取得
@@ -99,6 +112,28 @@ final class RoleImage extends Image {
   public $path      = 'role';
   public $extension = 'gif';
   public $class     = '';
+
+  protected static function EnableLink() {
+    return true;
+  }
+
+  protected static function GenerateLink($role, $str) {
+    //役職名画像のみリンクを生成する
+    if (true === RoleDataManager::IsMain($role)) {
+      $camp = RoleDataManager::GetManualPage($role);
+    } elseif (true === RoleDataManager::IsSub($role)) {
+      $camp = 'sub_role';
+    } else {
+      return $str;
+    }
+
+    return sprintf(self::GetLink(), JINROU_ROOT, $camp, $role, $str);
+  }
+
+  //リンクタグ
+  private static function GetLink() {
+    return '<a href="%s/info/new_role/%s.php#%s" target="_blank">%s</a>';
+  }
 }
 
 //-- 勝利陣営の画像 --//

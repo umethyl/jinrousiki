@@ -66,8 +66,9 @@ final class UserDB {
 
   //ユーザ登録処理
   public static function Insert(array $list) {
-    $list['live']     = UserLive::LIVE;
-    $list['password'] = Text::Crypt($list['password']);
+    $list['objection'] = 0;
+    $list['live']      = UserLive::LIVE;
+    $list['password']  = Text::Crypt($list['password']);
     if ($list['uname'] != GM::DUMMY_BOY) {
       $list['session_id']      = Session::GetUniqID();
       $list['ip_address']      = Security::GetIP();
