@@ -25,7 +25,7 @@ class RoleUser {
       $id = $target->GetMainRoleTarget();
       if (null !== $id) {
 	$target = $reparse ? DB::$USER->ByID($id)->GetReparse() : DB::$USER->ByID($id);
-	if ($target->GetMainCamp(true) == Camp::MANIA) { //神話マニア陣営なら元に戻す
+	if ($target->IsRoleGroup('mania', 'copied')) { //神話マニア陣営なら元に戻す
 	  $target = $user;
 	}
       }
