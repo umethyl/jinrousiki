@@ -484,7 +484,7 @@ abstract class GamePlayView extends stdClass {
     $count = 0;
     if (DB::$ROOM->IsDay()) {
       foreach (DB::$USER->Get() as $user) {
-	if ($user->IsLive() && count($user->target_no) < 1) {
+	if ($user->IsLive() && false === isset($user->target_no)) {
 	  $count++;
 	}
       }

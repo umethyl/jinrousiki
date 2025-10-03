@@ -8,17 +8,14 @@ class RoleTalkMessage {
 
   /* 遠吠え・囁き (発言) */
   const WOLF_HOWL   = 'アオォーン・・・'; //人狼の遠吠え
-  //const COMMON_TALK = 'ヒソヒソ・・・'; //共有者の囁き
-  const COMMON_TALK = 'あーうー・・・あーうー・・・';
+  const COMMON_TALK = 'ヒソヒソ・・・'; //共有者の囁き
   const LOVERS_TALK = 'うふふ・・・うふふ・・・'; //恋人の囁き
   const HOWLING     = 'キィーーン・・・'; //スピーカーの音割れ効果音
 
   /* 発言置換能力者 */
   const CUTE_WOLF = ''; //不審者・萌系 (空なら人狼の遠吠えになる)
-  //public static $gentleman = "お待ち下さい。\n%sさん、ハンケチーフを落としておりますぞ。"; //紳士
-  //public static $lady      = "お待ちなさい！\n%s、タイが曲がっていてよ。"; //淑女
-  public static $gentleman = "お待ち下さい。\nあぁ……%s様の残り湯、美味にございます……。";
-  public static $lady      = "こんなのがいいの！？\n%s！　そこに直って！　わたくしの足をなめなさい！！";
+  public static $gentleman = "お待ち下さい。\n%sさん、ハンケチーフを落としておりますぞ。"; //紳士
+  public static $lady      = "お待ちなさい！\n%s、タイが曲がっていてよ。"; //淑女
 
   /* 妖精 */
   const SPRING_FAIRY = '春ですよー';

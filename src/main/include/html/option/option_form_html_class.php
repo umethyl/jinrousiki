@@ -51,14 +51,17 @@ class OptionFormHTML {
     $size = sprintf('%s_input', $filter->name);
     $str  = $filter->GetExplain();
     if (RoomOptionManager::IsChange()) {
-      $name  = Text::CutPop($filter->name);
-      $value = DB::$ROOM->$name;
+      $name        = Text::CutPop($filter->name);
+      $placeholder = '';
+      $value       = DB::$ROOM->$name;
     } else {
-      $value = null;
+      $placeholder = $filter->GetPlaceholder();
+      $value       = null;
     }
 
     return sprintf(self::GetTextbox(),
-      $filter->type, $filter->name, $filter->name, RoomConfig::$$size, $value,
+      $filter->type, $filter->name, $filter->name, RoomConfig::$$size,
+      $placeholder, $value,
       isset($str) ? HTML::GenerateSpan($str, 'explain') : ''
     );
   }
@@ -119,7 +122,7 @@ EOF;
 
   //テキストボックスタグ
   private static function GetTextbox() {
-    return '<input type="%s" id="%s" name="%s" size="%d" value="%s">%s';
+    return '<input type="%s" id="%s" name="%s" size="%d" placeholder="%s" value="%s">%s';
   }
 
   //セレクタタグ

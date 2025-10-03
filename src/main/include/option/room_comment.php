@@ -10,4 +10,8 @@ class Option_room_comment extends OptionText {
   public function GetExplain() {
     return null;
   }
+
+  public function GetPlaceholder() {
+    return RoomManagerMessage::PLACEHOLDER_ROOM_COMMENT;
+  }
 }

@@ -237,13 +237,14 @@ final class DB {
     return true;
   }
 
-  //最適化
+  //最適化 (暗黙のコミットが入る想定)
   public static function Optimize($name = null) {
     $table = (null === $name) ? ArrayFilter::ToCSV(self::GetTableList()) : $name;
     $query = Query::Init()->Optimize()->Table($table);
-
     self::Prepare($query->Build());
-    return self::FetchBool() && self::Commit();
+    //暗黙のコミットが入るようなので、ここでトランザクションはOFFにしておく
+    self::$transaction = false;
+    return self::FetchBool();
   }
 
   //村情報ロード

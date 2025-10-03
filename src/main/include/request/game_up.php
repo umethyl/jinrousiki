@@ -11,7 +11,7 @@ class Request_game_up extends RequestGamePlay {
     $this->ParseGetOn(RequestDataRoom::DEAD, RequestDataRoom::HEAVEN);
 
     $url = $this->GetURL(true);
-    foreach (array(RequestDataRoom::DEAD, RequestDataRoom::HEAVEN) as $key) {
+    foreach ([RequestDataRoom::DEAD, RequestDataRoom::HEAVEN] as $key) {
       $url .= $this->ToURL($key);
     }
     $this->url = $url;
