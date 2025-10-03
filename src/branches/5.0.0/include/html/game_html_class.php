@@ -78,10 +78,15 @@ class GameHTML {
   //プレイ中ログリンク一覧生成
   public static function GenerateGameLogLinkList($url) {
     $str = self::GenerateGameLogLink($url, RoomScene::BEFORE, 0);
-    if (DB::$ROOM->date > 1) {
-      if (DB::$ROOM->IsOption('open_day')) {
+
+    //オープニングあり対応
+    if (DB::$ROOM->IsOption('open_day')) {
+      if (DB::$ROOM->date > 1 || DB::$ROOM->IsNight()) {
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, 1);
       }
+    }
+
+    if (DB::$ROOM->date > 1) {
       $str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, 1);
       for ($i = 2; $i < DB::$ROOM->date; $i++) {
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, $i);
@@ -92,6 +97,7 @@ class GameHTML {
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, DB::$ROOM->date);
       }
     }
+
     return $str;
   }
 
@@ -287,8 +293,11 @@ class GameHTML {
       $room_status = '{'. ArrayFilter::ToCSV($room_status) . '}';
       //非同期処理の起動
       $on_load .= sprintf("game_async(%s, %s);", $params, $room_status);
-    } elseif (RQ::Get()->auto_reload != 0) { //自動リロードをセット
-      self::OutputAutoReloadHeader();
+    } else {
+      self::OutputNoCacheHeader();
+      if (RQ::Get()->auto_reload != 0) { //自動リロードをセット
+	self::OutputAutoReloadHeader();
+      }
     }
 
     //ゲーム中、リアルタイム制なら経過時間を Javascript でリアルタイム表示
@@ -339,6 +348,11 @@ class GameHTML {
   //ゲームトップアンカー出力
   public static function OutputGameTop() {
     Text::Output(self::GetGameTop());
+  }
+
+  //キャッシュ抑制ヘッダ出力
+  public static function OutputNoCacheHeader() {
+    Text::Output(self::GetNoCache());
   }
 
   //自動更新ヘッダ出力
@@ -502,7 +516,7 @@ class GameHTML {
       $url .= RQ::Get()->ToURL(RequestDataGame::RELOAD, true);
     }
 
-    $stack = array(RequestDataGame::SOUND, RequestDataGame::DOWN);
+    $stack = [RequestDataGame::SOUND, RequestDataGame::DOWN];
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;
     }
@@ -523,8 +537,8 @@ class GameHTML {
     $stack->Set('image',  self::GetPlayerImage());
 
     if ($stack->open) {
-      $stack->Set('trip_from', array(Message::TRIP, Message::TRIP_CONVERT));
-      $stack->Set('trip_to',   array(Message::TRIP . Text::BR, Message::TRIP_CONVERT . Text::BR));
+      $stack->Set('trip_from', [Message::TRIP, Message::TRIP_CONVERT]);
+      $stack->Set('trip_to',   [Message::TRIP . Text::BR, Message::TRIP_CONVERT . Text::BR]);
       $stack->Set('sex', DB::$ROOM->IsFinished() && RQ::Get()->sex);
       if ($stack->sex) {
 	$stack->Set('sex_list', Sex::GetList());
@@ -814,6 +828,15 @@ class GameHTML {
   //ヘッダリンクタグ
   private static function GetHeaderLink() {
     return '%s">%s</a>';
+  }
+
+  //キャッシュ抑制タグ
+  private static function GetNoCache() {
+    return <<<EOF
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+EOF;
   }
 
   //自動更新タグ

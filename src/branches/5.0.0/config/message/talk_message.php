@@ -3,11 +3,10 @@
 //-- ◆文字化け抑制◆ --//
 class TalkMessage {
   /* ユーザ登録 */
-  //const ENTRY_USER = '%s が村の集会場にやってきました'; //入村メッセージ
-  const ENTRY_USER = '%s が幻想入りしました';
+  const ENTRY_USER = '%s が村の集会場にやってきました';		//入村メッセージ
 
   /* 投票 */
-  const KICK_OUT = 'は席をあけわたし、村から去りました'; //Kick 処理
+  const KICK_OUT = 'は席をあけわたし、村から去りました';	//Kick 処理
 
   /* シーン切り替え */
   const MORNING    = '朝日が昇り、%s 日目の朝がやってきました';	//朝

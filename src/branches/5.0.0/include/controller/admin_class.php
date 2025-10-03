@@ -13,7 +13,7 @@ class JinrouAdmin {
     DB::Connect();
     if (true === DB::Lock('room') && DB::DeleteRoom(RQ::Get()->room_no)) {
       DB::Commit();
-      //DB::Optimize(); //遅いのでオフにしておく
+      //DB::Optimize(); //遅いのでオフにしておく (オンにする場合は Commit() と差し替え)
       $str = RQ::Get()->room_no . AdminMessage::DELETE_ROOM_SUCCESS;
       HTML::OutputResult(AdminMessage::DELETE_ROOM, $str, '../');
     } else {

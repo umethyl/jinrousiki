@@ -19,7 +19,7 @@ class Role_side_reverse extends Role {
 	$line[] = $str;
       }
     }
- 
+
    if (count($line) > 0) {
       $result .= ArrayFilter::ConcatReverse($line, '');
     }
