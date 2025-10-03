@@ -583,6 +583,9 @@ abstract class OptionText extends Option {
 
     RQ::Get()->ParsePost('Escape', $this->name);
   }
+
+  //プレースホルダ表示メッセージ取得
+  abstract public function GetPlaceholder();
 }
 
 //-- セレクタ型 --//

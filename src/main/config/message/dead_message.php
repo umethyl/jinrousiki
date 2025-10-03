@@ -2,12 +2,10 @@
 //-- 死亡メッセージ --//
 class DeadMessage {
   /* 基本 */
-  //public static $vote_killed        = 'は投票の結果処刑されました';			//処刑
-  public static $vote_killed        = 'を弾幕ごっこ (投票) の結果ぴちゅーん (処刑) しました';
+  public static $vote_killed        = 'は投票の結果処刑されました';			//処刑
   public static $vote_cancelled     = 'の処刑は無かったことにされました';		//処刑キャンセル
   public static $blind_vote         = '傘化けの能力で投票結果が隠されました';		//傘化け
-  //public static $deadman            = 'は無残な姿で発見されました';			//共通死亡メッセージ
-  public static $deadman            = 'は無残な負け犬の姿で発見されました';
+  public static $deadman            = 'は無残な姿で発見されました';			//共通死亡メッセージ
   public static $wolf_killed        = 'は人狼の餌食になったようです';			//人狼襲撃
   public static $hungry_wolf_killed = 'は餓狼の餌食になったようです';			//餓狼襲撃
   public static $possessed          = 'は誰かに憑依したようです';			//憑依
@@ -69,8 +67,7 @@ class DeadMessage {
   public static $wolf_failed_action   = '人狼は襲撃を回避したようです';		//人狼能力
 
   /* 特殊 */
-  //public static $novoted              = 'は突然お亡くなりになられました';		//未投票突然死
-  public static $novoted               = 'はスキマ送りされました';
+  public static $novoted               = 'は突然お亡くなりになられました';		//未投票突然死
   public static $silence               = 'は沈黙していたようです';			//未発言突然死
   public static $sudden_death          = 'はショック死しました';			//投票系ショック死
   public static $lovers_followed       = 'は恋人の後を追い自殺しました';		//恋人後追い

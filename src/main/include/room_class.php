@@ -4,7 +4,7 @@ final class Room extends StackManager {
    public $game_option;
    public $option_role;
    public $scene;
- 
+
   //-- 初期化・基本関数 --//
   public function __construct($request = null, $lock = false) {
     if (null === $request) {

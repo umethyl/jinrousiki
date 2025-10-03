@@ -12,6 +12,11 @@ class RoomManagerMessage {
   const SUBMIT_CREATE = '作成';
   const SUBMIT_CHANGE = '変更';
 
+  /* 村作成画面(プレースホルダ) */
+  const PLACEHOLDER_ROOM_NAME = '';
+  const PLACEHOLDER_ROOM_COMMENT = '';
+  const PLACEHOLDER_GM_PASSWORD  = '';
+
   /* 作成メッセージ */
   const ENTRY  = '%s 村を作成しました。トップページに飛びます。';
   const CHANGE = '村のオプションを変更しました。';

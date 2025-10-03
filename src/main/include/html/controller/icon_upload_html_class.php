@@ -36,10 +36,10 @@ class IconUploadHTML {
       sprintf(IconUploadMessage::CAUTION,     UserIcon::GetSizeLimit()), UserIcon::GetCaution(),
       sprintf(IconUploadMessage::ICON_FORMAT, UserIcon::GetFileLimit()),
       IconUploadMessage::FILE_SELECT, UserIconConfig::FILE, IconUploadMessage::SUBMIT,
-      IconMessage::NAME,	$length,
-      IconMessage::APPEARANCE,	$length,
-      IconMessage::CATEGORY,	$length,
-      IconMessage::AUTHOR,	$length,
+      IconMessage::NAME,	IconUploadMessage::PLACEHOLDER_NAME,		$length,
+      IconMessage::APPEARANCE,	IconUploadMessage::PLACEHOLDER_APPEARANCE,	$length,
+      IconMessage::CATEGORY,	IconUploadMessage::PLACEHOLDER_CATEGORY,	$length,
+      IconMessage::AUTHOR,	IconUploadMessage::PLACEHOLDER_AUTHOR,		$length,
       IconMessage::COLOR,
       IconUploadMessage::FIX_COLOR, IconMessage::EXAMPLE
     );
@@ -102,13 +102,13 @@ EOF;
 <input type="submit" value="%s">
 </td></tr>
 <tr><td><label>%s</label></td>
-<td><input type="text" name="icon_name" %s</td></tr>
+<td><input type="text" name="icon_name" placeholder="%s" %s</td></tr>
 <tr><td><label>%s</label></td>
-<td><input type="text" name="appearance" %s</td></tr>
+<td><input type="text" name="appearance" placeholder="%s" %s</td></tr>
 <tr><td><label>%s</label></td>
-<td><input type="text" name="category" %s</td></tr>
+<td><input type="text" name="category" placeholder="%s" %s</td></tr>
 <tr><td><label>%s</label></td>
-<td><input type="text" name="author" %s</td></tr>
+<td><input type="text" name="author" placeholder="%s" %s</td></tr>
 <tr><td><label>%s</label></td>
 <td>
 <input id="fix_color" type="radio" name="color"><label for="fix_color">%s</label>
