@@ -27,10 +27,8 @@ class GamePlayMessage {
   const SUDDEN_DEATH = '　突然死：<span>%s</span>';
 
   /* 未投票突然死 */
-  //const SUDDEN_DEATH_ALERT = 'あと%sで投票完了されない方は死して地獄へ堕ちてしまいます';
-  //const SUDDEN_DEATH_TIME  = '突然死になるまで後：';
-  const SUDDEN_DEATH_ALERT = 'あと%sで投票完了されない方はスキマ送りされてしまいます';
-  const SUDDEN_DEATH_TIME  = 'スキマ送りされるまで後：';
+  const SUDDEN_DEATH_ALERT = 'あと%sで投票完了されない方は死して地獄へ堕ちてしまいます';
+  const SUDDEN_DEATH_TIME  = '突然死になるまで後：';
   const NOVOTED_COUNT      = '未投票：%d人';
 
   /* 異議あり */

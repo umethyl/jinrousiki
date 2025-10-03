@@ -21,4 +21,8 @@ class Option_gm_password extends OptionText {
     return '(仮想GMモード・クイズ村モード時のGMのパスワードです)' . Text::BR .
       '※ ログインユーザ名は「dummy_boy」です。GMは入村直後に必ず名乗ってください。';
   }
+
+  public function GetPlaceholder() {
+    return RoomManagerMessage::PLACEHOLDER_GM_PASSWORD;
+  }
 }

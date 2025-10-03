@@ -29,6 +29,7 @@ body { /* AA 用 */
   padding: 3px 0;
   margin-left: 1px;
   width: 1000px;
+  line-break: anywhere;
   /* 草対策：ブラウザ依存があるので採用様子見 */
   /*
   word-wrap:  break-word;

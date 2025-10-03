@@ -10,4 +10,8 @@ class Option_room_name extends OptionText {
   public function GetExplain() {
     return '村';
   }
+
+  public function GetPlaceholder() {
+    return RoomManagerMessage::PLACEHOLDER_ROOM_NAME;
+  }
 }

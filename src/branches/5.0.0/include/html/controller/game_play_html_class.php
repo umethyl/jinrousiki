@@ -113,7 +113,7 @@ class GamePlayHTML {
     $header = sprintf(self::GetQuizVoteHeader(),
       GamePlayMessage::QUIZ_VOTED_NAME, GamePlayMessage::QUIZ_VOTED_COUNT
     );
-    $table_stack = array(TableHTML::GenerateHeader('vote-list'), $header);
+    $table_stack = [TableHTML::GenerateHeader('vote-list'), $header];
 
     $format = self::GetQuizVote();
     foreach ($stack as $id => $list) {
