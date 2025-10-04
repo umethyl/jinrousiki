@@ -1,27 +1,6 @@
 <?php
 //-- 管理用クラス --//
 class JinrouAdmin {
-  //村削除
-  public static function DeleteRoom() {
-    if (true !== ServerConfig::DEBUG_MODE) {
-      HTML::OutputUnusableError();
-    }
-
-    RQ::LoadRequest();
-    RQ::Get()->ParseGetRoomNo();
-
-    DB::Connect();
-    if (true === DB::Lock('room') && DB::DeleteRoom(RQ::Get()->room_no)) {
-      DB::Commit();
-      //DB::Optimize(); //遅いのでオフにしておく (オンにする場合は Commit() と差し替え)
-      $str = RQ::Get()->room_no . AdminMessage::DELETE_ROOM_SUCCESS;
-      HTML::OutputResult(AdminMessage::DELETE_ROOM, $str, '../');
-    } else {
-      $title = AdminMessage::DELETE_ROOM . ' ' . Message::ERROR_TITLE;
-      HTML::OutputResult($title, RQ::Get()->room_no . AdminMessage::DELETE_ROOM_FAILED);
-    }
-  }
-
   //アイコン削除
   public static function DeleteIcon() {
     if (true !== ServerConfig::DEBUG_MODE) {

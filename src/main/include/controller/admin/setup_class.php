@@ -1,6 +1,6 @@
 <?php
 //-- データベース初期セットアップコントローラー --//
-final class JinrouSetupController extends JinrouController {
+final class JinrouAdminSetupController extends JinrouController {
   private static $table_list = []; //テーブルリスト
 
   protected static function Output() {
