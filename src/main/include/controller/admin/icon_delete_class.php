@@ -1,10 +1,8 @@
 <?php
 //--  アイコン削除(管理用)コントローラー --//
-final class JinrouAdminIconDeleteController extends JinrouController {
-  protected static function Start() {
-    if (true !== ServerConfig::DEBUG_MODE) {
-      HTML::OutputUnusableError();
-    }
+final class JinrouAdminIconDeleteController extends JinrouAdminController {
+  protected static function GetAdminType() {
+    return 'icon_delete';
   }
 
   protected static function LoadRequest() {
@@ -39,14 +37,14 @@ final class JinrouAdminIconDeleteController extends JinrouController {
 
     $file = IconDB::GetFile($icon_no); //存在判定
     if (false === $file || null === $file) {
-      self::OutputError(AdminMessage::DELETE_ICON_NOT_EXISTS);
+      self::OutputError(IconDeleteMessage::NOT_EXISTS);
     }
 
     //-- Execute --//
     if (IconDB::Delete($icon_no, $file)) {
       $url = '../icon_upload.php';
-      $str = Text::Join(AdminMessage::DELETE_ICON_SUCCESS, URL::GetJump($url));
-      HTML::OutputResult(AdminMessage::DELETE_ICON, $str, $url);
+      $str = Text::Join(IconDeleteMessage::SUCCESS, URL::GetJump($url));
+      HTML::OutputResult(IconDeleteMessage::TITLE, $str, $url);
     } else {
       self::OutputError(Message::DB_ERROR_LOAD);
     }
@@ -54,6 +52,6 @@ final class JinrouAdminIconDeleteController extends JinrouController {
 
   //エラー出力
   private static function OutputError(string $str) {
-    HTML::OutputResult(AdminMessage::DELETE_ICON . ' ' . Message::ERROR_TITLE, $str);
+    HTML::OutputResult(IconDeleteMessage::TITLE . ' ' . Message::ERROR_TITLE, $str);
   }
 }

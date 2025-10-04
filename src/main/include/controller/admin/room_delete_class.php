@@ -1,10 +1,8 @@
 <?php
 //--  村削除(管理用)コントローラー --//
-final class JinrouAdminRoomDeleteController extends JinrouController {
-  protected static function Start() {
-    if (true !== ServerConfig::DEBUG_MODE) {
-      HTML::OutputUnusableError();
-    }
+final class JinrouAdminRoomDeleteController extends JinrouAdminController {
+  protected static function GetAdminType() {
+    return 'room_delete';
   }
 
   protected static function LoadRequest() {
@@ -25,11 +23,11 @@ final class JinrouAdminRoomDeleteController extends JinrouController {
       DB::Commit();
       //DB::Optimize(); //遅いのでオフにしておく (オンにする場合は Commit() と差し替え)
 
-      $str = RQ::Get()->room_no . AdminMessage::DELETE_ROOM_SUCCESS;
-      HTML::OutputResult(AdminMessage::DELETE_ROOM, $str, '../');
+      $str = RQ::Get()->room_no . RoomDeleteMessage::SUCCESS;
+      HTML::OutputResult(RoomDeleteMessage::TITLE, $str, '../');
     } else {
-      $title = AdminMessage::DELETE_ROOM . ' ' . Message::ERROR_TITLE;
-      HTML::OutputResult($title, RQ::Get()->room_no . AdminMessage::DELETE_ROOM_FAILED);
+      $title = RoomDeleteMessage::TITLE . ' ' . Message::ERROR_TITLE;
+      HTML::OutputResult($title, RQ::Get()->room_no . RoomDeleteMessage::FAILED);
     }
   }
 }

@@ -39,7 +39,7 @@ class RoomManagerHTML {
     $ROOM = new Room();
     $ROOM->LoadData($stack);
     RoomOption::Load($stack);
-    if (ServerConfig::DEBUG_MODE) {
+    if (AdminConfig::$room_delete_enable) {
       $url    = URL::GetRoom('admin/room_delete', $ROOM->id);
       $delete = Text::QuoteBracket(HTML::GenerateLink($url, RoomManagerMessage::DELETE));
     } else {

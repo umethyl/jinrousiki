@@ -1,6 +1,10 @@
 <?php
 //-- オプション配役テストコントローラー --//
-final class RoleTestController extends JinrouController {
+final class RoleTestController extends JinrouAdminController {
+  protected static function GetAdminType() {
+    return 'role_test';
+  }
+
   protected static function Output() {
     DevHTML::OutputRoleTestHeader(RoleTestMessage::TITLE, 'role_test.php');
     self::OutputForm();
