@@ -1,43 +1,6 @@
 <?php
 //-- 管理用クラス --//
 class JinrouAdmin {
-  //アイコン削除
-  public static function DeleteIcon() {
-    if (true !== ServerConfig::DEBUG_MODE) {
-      HTML::OutputUnusableError();
-    }
-
-    RQ::LoadRequest();
-    RQ::Get()->ParseGetInt(RequestDataIcon::ID);
-    $icon_no = RQ::Get()->icon_no;
-    $title   = AdminMessage::DELETE_ICON . ' ' . Message::ERROR_TITLE;
-    if ($icon_no < 1) {
-      HTML::OutputResult($title, sprintf(IconMessage::NOT_EXISTS, $icon_no));
-    }
-
-    DB::Connect();
-    if (false === DB::Lock('icon')) {
-      HTML::OutputResult($title, Message::DB_ERROR_LOAD);
-    }
-
-    if (IconDB::Using($icon_no)) { //使用中判定
-      HTML::OutputResult($title, IconMessage::USING);
-    }
-
-    $file = IconDB::GetFile($icon_no); //存在判定
-    if (false === $file || null === $file) {
-      HTML::OutputResult($title, AdminMessage::DELETE_ICON_NOT_EXISTS);
-    }
-
-    if (IconDB::Delete($icon_no, $file)) {
-      $url = '../icon_upload.php';
-      $str = Text::Join(AdminMessage::DELETE_ICON_SUCCESS, URL::GetJump($url));
-      HTML::OutputResult(AdminMessage::DELETE_ICON, $str, $url);
-    } else {
-      HTML::OutputResult($title, Message::DB_ERROR_LOAD);
-    }
-  }
-
   //ログ生成
   public static function GenerateLog() {
     $format = sprintf('../log_test/%s', RQ::Get()->prefix) . '%d%s.html';
