@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-  人狼式 ～汝は人狼なりや？式神エディション Version 5.0.0 α2 README 2025/10/03
+  人狼式 ～汝は人狼なりや？式神エディション Version 5.0.0 README 2025/10/05
 --------------------------------------------------------------------------------
 
 人狼式 ～汝は人狼なりや？式神エディション (以下本スクリプト) は、
@@ -24,7 +24,7 @@ http://f45.aaa.livedoor.jp/~netfilms/
 ├─javascript : JavaScript ファイル
 ├─log        : HTML 化ログ置き場 (変換していない場合は不要です)
 ├─module     : 外部モジュールファイル
-├─swf        : 音声ファイル
+├─sound      : 音声ファイル
 ├─top        : TOP ページ表示用 HTML ファイル
 └─user_icon  : アイコン画像ファイル
 
@@ -43,16 +43,18 @@ Ver. 5.0 以降は PHP8.2 環境が必要です。
 ------------
   設置方法
 ------------
-1. MySQL サーバ内に専用データベースとアカウントを作成
-   文字コード、照合順序は utf8_unicode_ci (注) を使用すること
-2. config/server/database_config.php を編集し、データベースを設定
-3. config/server/server_config.php を編集し、サーバを設定
-4. パッケージをサーバにアップロード (コード無変換、またはバイナリモード)
-5. サーバ上の user_icon/、rss/ ディレクトリに書き込み属性を付与
-6. admin/ ディレクトリにアクセス制限を設定
-7. 初期セットアップ作業 (自動) のために admin/setup.php にアクセス
-8. index.php にアクセスし、動作を確認
-9. 必要に応じてデザイン編集 (その他の情報一覧 → 管理者向け情報)
+ 1. MySQL サーバ内に専用データベースとアカウントを作成
+    文字コード、照合順序は utf8_unicode_ci (注) を使用すること
+ 2. config/server/database_config.php を編集し、データベースを設定
+ 3. config/server/server_config.php を編集し、サーバを設定
+ 4. config/admin/admin_config.php を編集し、全体設定と初期設定管理ツールを有効に設定
+ 5. パッケージをサーバにアップロード (コード無変換、またはバイナリモード)
+ 6. サーバ上の user_icon/、rss/ ディレクトリに書き込み属性を付与
+ 7. admin/ ディレクトリにアクセス制限を設定
+ 8. 初期セットアップ作業 (自動) のために admin/setup.php にアクセス
+ 9. index.php にアクセスし、動作を確認
+10. 必要に応じてデザイン編集 (その他の情報一覧 → 管理者向け情報)
+11. 4. で設定した内容を無効化して再度アップロード
 注：
 Ver. 1.4.0 β16 より、文字コードを ujis_japanese_ci から utf8_unicode_ci に変更しています
 
@@ -61,21 +63,23 @@ Ver. 1.4.0 β16 より、文字コードを ujis_japanese_ci から utf8_unicode
 ------------------------
 本スクリプトの設定ファイルは以下の通りです。
 全て config/ ディレクトリ内に存在します。
+1. admin/   : 主に管理用スクリプトの設定ファイル置き場
 1. server/  : 主にサーバ側の設定ファイル置き場
 2. game/    : 主にゲーム内の設定ファイル置き場
 3. system/  : 主にシステム関連の設定ファイル置き場
 4. message/ : 主にゲーム内のメッセージ設定ファイル置き場
 
 主な設定ファイルは以下になります
-1-1. server/database_config.php : データベース関連の設定ファイル
-1-2. server/server_config.php   : 本スクリプトをサーバ上で動作させるための設定ファイル
-1-3. server/room_config.php     : 村作成時の制限設定ファイル
-2-1. game/game_config.php       : ゲーム内の設定ファイル
-2-2. game/cast_config.php       : 配役設定ファイル
-2-3. game/message.php           : ゲーム中で表示されるシステムメッセージの設定ファイル
-3-1. system/version.php         : トップページで表示されるバージョン情報の設定ファイル
+1-1. admin/admin_config.php     : 管理ツールの設定ファイル
+2-1. server/database_config.php : データベース関連の設定ファイル
+2-2. server/server_config.php   : 本スクリプトをサーバ上で動作させるための設定ファイル
+2-3. server/room_config.php     : 村作成時の制限設定ファイル
+3-1. game/game_config.php       : ゲーム内の設定ファイル
+3-2. game/cast_config.php       : 配役設定ファイル
+3-3. game/message.php           : ゲーム中で表示されるシステムメッセージの設定ファイル
+4-1. system/version.php         : トップページで表示されるバージョン情報の設定ファイル
 
-このうち、必ず設定が必要になるのは database_config, server_config.php のみです。
+このうち、必ず設定が必要になるのは admin_config.php, database_config, server_config.php のみです。
 他のファイルについては必要に応じて変更してください。
 詳細は各ファイルのコメントを参照してください。
 
@@ -141,4 +145,5 @@ kinari
 じゅげ
 
 ◆Special Thanks
+レタリム (レアケ脳向け人狼wiki管理人)
 多数のテストプレイヤー、協力していただいた方々
