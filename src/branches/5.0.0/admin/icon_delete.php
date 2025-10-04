@@ -1,4 +1,4 @@
 <?php
 require_once('init.php');
-Loader::LoadFile('admin_class');
-JinrouAdmin::DeleteIcon();
+Loader::LoadFile('icon_delete_class');
+JinrouAdminIconDeleteController::Execute();

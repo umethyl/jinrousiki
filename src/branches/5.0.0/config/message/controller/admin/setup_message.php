@@ -1,5 +1,5 @@
 <?php
-//-- Setup 専用メッセージ --//
+//-- JinrouAdminSetup 専用メッセージ --//
 class SetupMessage {
   /* タイトル */
   const TITLE = ' [初期設定]';

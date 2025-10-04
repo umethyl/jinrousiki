@@ -84,7 +84,7 @@ final class Text {
   public static function Parse($str, $delimiter = ' ', $limit = null) {
     if (null === $str) {
       return [];
-    }	     
+    }
     return self::Exists($limit) ? explode($delimiter, $str, $limit) : explode($delimiter, $str);
   }
 
@@ -241,8 +241,16 @@ final class Text {
   //POST されたデータの文字コードを統一する
   public static function EncodePost() {
     foreach ($_POST as $key => $value) {
-      $encode = @mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
-      $_POST[$key] = self::Encode($value, $encode);
+      //多段配列対応(例: アイコンのカテゴリ)
+      if (is_array($value)) {
+	foreach ($value as $v_key => $v_value) {
+          $encode = @mb_detect_encoding($v_value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
+	  $_POST[$key][$v_key] = self::Encode($v_value, $encode);
+	}
+      } else {
+        $encode = @mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
+        $_POST[$key] = self::Encode($value, $encode);
+      }
     }
   }
 
