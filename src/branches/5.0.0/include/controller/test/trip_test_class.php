@@ -1,6 +1,6 @@
 <?php
 //-- トリップテストコントローラー --//
-final class TripTestController extends JinrouController {
+final class TripTestController extends JinrouTestController {
   protected static function LoadRequest() {
     DevHTML::LoadRequest();
   }

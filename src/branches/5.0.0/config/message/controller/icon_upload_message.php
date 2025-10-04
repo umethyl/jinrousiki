@@ -13,6 +13,12 @@ class IconUploadMessage {
   const SUBMIT      = '登録';
   const FIX_COLOR   = '手入力';
 
+  /* フォーム(プレースホルダ) */
+  const PLACEHOLDER_NAME       = '';
+  const PLACEHOLDER_APPEARANCE = '';
+  const PLACEHOLDER_CATEGORY   = '';
+  const PLACEHOLDER_AUTHOR     = '';
+
   /* アップロード処理 */
   const COMMAND     = '無効なコマンドです';
   const RETRY       = '再度実行してください。';

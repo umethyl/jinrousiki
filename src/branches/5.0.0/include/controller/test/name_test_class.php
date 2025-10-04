@@ -1,6 +1,6 @@
 <?php
 //-- 役職名表示コントローラー --//
-final class NameTestController extends JinrouController {
+final class NameTestController extends JinrouTestController {
   protected static function LoadRequest() {
     DevHTML::LoadRequest();
   }

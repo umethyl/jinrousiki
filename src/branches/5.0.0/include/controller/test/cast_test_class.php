@@ -1,6 +1,6 @@
 <?php
 //-- 村配役テストコントローラー --//
-final class CastTestController extends JinrouController {
+final class CastTestController extends JinrouTestController {
   protected static function GetLoadRequest() {
     return 'game_view';
   }

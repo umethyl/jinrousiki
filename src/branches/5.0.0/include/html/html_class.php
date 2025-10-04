@@ -50,6 +50,11 @@ class HTML {
     return $str;
   }
 
+  //共通 HTML フッタ生成
+  public static function GenerateFooter() {
+    return self::GetFooter();
+  }
+
   //JavaScript ヘッダ生成
   public static function GenerateJavaScriptHeader() {
     return Text::LineFeed(self::GetJavaScriptHeader());
@@ -179,7 +184,7 @@ class HTML {
   //HTML フッタ出力
   public static function OutputFooter($exit = false) {
     DB::Disconnect();
-    echo self::GetFooter();
+    echo self::GenerateFooter();
     if (true === $exit) {
       exit;
     }

@@ -144,9 +144,12 @@ class OldLogHTML {
 
       $vanish = DB::$ROOM->IsDate(0) ? ' vanish' : ''; //廃村判定
       if (RQ::Get()->generate_index) {
-	$base_url = DB::$ROOM->id . '.html';
+	$base_url = RQ::Get()->prefix . DB::$ROOM->id . '.html';
+	$view_url = '';
 	$login    = '';
-	$log_link = sprintf('(<a href="%dr.html">%s</a>)', DB::$ROOM->id, Message::LOG_REVERSE);
+	$log_link = sprintf('(<a href="%s%dr.html">%s</a>)',
+	  RQ::Get()->prefix, DB::$ROOM->id, Message::LOG_REVERSE
+	);
       } else {
 	$base_url = URL::GetRoom('old_log');;
 	if (URL::ExistsDB()) {
@@ -206,23 +209,6 @@ class OldLogHTML {
       JinrouCacheManager::Store($str);
     }
     return $str;
-  }
-
-  //過去ログ一覧のHTML化処理
-  public static function GenerateIndex() {
-    RQ::Set('reverse', Switcher::OFF);
-    if (RQ::Get()->max_room_no < 1) {
-      return false;
-    }
-
-    $header = sprintf('../log/%sindex', RQ::Get()->prefix);
-    $footer = Text::LineFeed('</body></html>');
-    $end_page = ceil((RQ::Get()->max_room_no - RQ::Get()->min_room_no + 1) / OldLogConfig::VIEW);
-    for ($i = 1; $i <= $end_page; $i++) {
-      RQ::Set('page', $i);
-      $index = RQ::Get()->index_no - $i + 1;
-      file_put_contents($header. $index . '.html', self::GenerateList($i) . $footer);
-    }
   }
 
   //指定の部屋番号のログを出力する

@@ -186,6 +186,7 @@ final class Loader extends LoadManager {
 
     switch ($type) {
     case 'controller':
+    case 'controller/admin':
     case 'controller/info':
     case 'controller/info/new_role':
     case 'controller/test':
@@ -209,11 +210,13 @@ final class Loader extends LoadManager {
       $path = JINROU_INC . '/' . $type;
       break;
 
+    case 'admin':
     case 'server':
     case 'game':
     case 'system':
     case 'message':
     case 'message/controller':
+    case 'message/controller/admin':
     case 'message/controller/info':
     case 'message/controller/test':
       $path = JINROU_CONF . '/' . $type;
@@ -253,6 +256,10 @@ final class LoaderData {
 
   //クラス => ファイル対応表
   public static $file = [
+    //config/admin
+    'AdminConfig'		=> 'admin_config',
+    'SetupConfig'		=> 'setup_config',
+    'GenerateHTMLLogConfig'	=> 'generate_html_log_config',
     //config/server
     'ServerConfig'		=> 'server_config',
     'DatabaseConfig'		=> 'database_config',
@@ -266,7 +273,6 @@ final class LoaderData {
     'BBSConfig'			=> 'bbs_config',
     'SharedServerConfig'	=> 'shared_server_config',
     'TwitterConfig'		=> 'twitter_config',
-    'SetupConfig'		=> 'setup_config',
     //config/game
     'GameConfig'	=> 'game_config',
     'CastConfig'	=> 'cast_config',
@@ -339,6 +345,9 @@ final class LoaderData {
     'VoteCSS'		=> 'vote_data_class',
     'VoteActionGroup'	=> 'vote_group_data_class',
     //system
+    'JinrouAdmin'		=> 'admin_class',
+    'JinrouAdminController'	=> 'admin_class',
+    'JinrouTestController'	=> 'admin_class',
     'Cast'			=> 'cast_class',
     'PageLinkBuilder'		=> 'old_log_functions',
     'JinrouCacheManager'	=> 'cache_class',
@@ -424,6 +433,10 @@ final class LoaderData {
     'OldLogMessage'		=> 'old_log_message',
     'IconEditMessage'		=> 'icon_edit_message',
     'IconUploadMessage'		=> 'icon_upload_message',
+    //controller/info/admin
+    'RoomDeleteMessage'		=> 'room_delete_message',
+    'IconDeleteMessage'		=> 'icon_delete_message',
+    'GenerateHTMLLogMessage'	=> 'generate_html_log_message',
     'SetupMessage'		=> 'setup_message',
     //controller/info/message
     'ScriptInfoMessage'		=> 'script_info_message',
@@ -496,6 +509,9 @@ final class LoaderData {
   public static $path = [
     /* include */
     //config
+    'admin_config'		=> 'admin',
+    'setup_config'		=> 'admin',
+    'generate_html_log_config'	=> 'admin',
     'server_config'		=> 'server',
     'database_config'		=> 'server',
     'room_config'		=> 'server',
@@ -508,7 +524,6 @@ final class LoaderData {
     'bbs_config'		=> 'server',
     'shared_server_config'	=> 'server',
     'twitter_config'		=> 'server',
-    'setup_config'		=> 'server',
     'game_config'		=> 'game',
     'cast_config'		=> 'game',
     'chaos_config'		=> 'game',
@@ -517,6 +532,7 @@ final class LoaderData {
     'sound_config'		=> 'game',
     'copyright_config'		=> 'system',
     'version'			=> 'system',
+    'admin_message'		=> 'message',
     'message'			=> 'message',
     'game_message'		=> 'message',
     'dead_message'		=> 'message',
@@ -533,7 +549,6 @@ final class LoaderData {
     'cache_message'		=> 'message',
     'twitter_message'		=> 'message',
     'test_message'		=> 'message',
-    'admin_message'		=> 'message/controller',
     'top_page_message'		=> 'message/controller',
     'room_manager_message'	=> 'message/controller',
     'login_message'		=> 'message/controller',
@@ -545,7 +560,12 @@ final class LoaderData {
     'old_log_message'		=> 'message/controller',
     'icon_edit_message'		=> 'message/controller',
     'icon_upload_message'	=> 'message/controller',
-    'setup_message'		=> 'message/controller',
+    //config/message/admin
+    'room_delete_message'	=> 'message/controller/admin',
+    'icon_delete_message'	=> 'message/controller/admin',
+    'generate_html_log_message'	=> 'message/controller/admin',
+    'setup_message'		=> 'message/controller/admin',
+    //config/message/info
     'script_info_message'	=> 'message/controller/info',
     'rule_info_message'		=> 'message/controller/info',
     'cast_info_message'		=> 'message/controller/info',
@@ -637,8 +657,12 @@ final class LoaderData {
     'icon_edit_class'		=> 'controller',
     'icon_upload_class'		=> 'controller',
     'old_log_class'		=> 'controller',
-    'admin_class'		=> 'controller',
-    'setup_class'		=> 'controller',
+    //controller/admin
+    'setup_class'		=> 'controller/admin',
+    'room_delete_class'		=> 'controller/admin',
+    'icon_delete_class'		=> 'controller/admin',
+    'log_delete_class'		=> 'controller/admin',
+    'generate_html_log_class'	=> 'controller/admin',
     //controller/info
     'script_info_class'		=> 'controller/info',
     'rule_info_class'		=> 'controller/info',
