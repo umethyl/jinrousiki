@@ -346,6 +346,7 @@ final class LoaderData {
     //system
     'JinrouAdmin'		=> 'admin_class',
     'JinrouAdminController'	=> 'admin_class',
+    'JinrouTestController'	=> 'admin_class',
     'Cast'			=> 'cast_class',
     'PageLinkBuilder'		=> 'old_log_functions',
     'JinrouCacheManager'	=> 'cache_class',

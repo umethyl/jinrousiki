@@ -1,6 +1,6 @@
 <?php
 //投票テストコントローラー
-final class VoteTestController extends JinrouController {
+final class VoteTestController extends JinrouTestController {
   protected static function GetLoadRequest() {
     return 'game_view';
   }

@@ -5,6 +5,9 @@ final class AdminConfig {
   const ENABLE = false;	//有効設定 (true:有効にする / false:しない)
 
   /* 個別設定 */
+  //-- デバッグモード (ServerConfig::DEBUG_MODE) --//
+  public static $notice_debug= true;	//有効時の警告メッセージ (true:表示する / false:しない)
+
   //-- 初期設定 (setup) --//
   public static $setup_enable = false;	//有効設定 (true:有効にする / false:しない)
   public static $notice_setup = true;	//有効時の警告メッセージ (true:表示する / false:しない)
@@ -25,4 +28,8 @@ final class AdminConfig {
   //-- ログのHTML化 (generate_html_log) --//
   public static $generate_html_log_enable = false;	//有効設定 (true:有効にする / false:しない)
   public static $notice_generate_html_log = true;	//有効時の警告メッセージ (true:表示する / false:しない)
+
+  //-- 配役テストツール (role_test) --//
+  public static $role_test_enable = false;	//有効設定 (true:有効にする / false:しない)
+  public static $notice_role_test = true;	//有効時の警告メッセージ (true:表示する / false:しない)
 }

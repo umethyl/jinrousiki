@@ -28,8 +28,16 @@ final class JinrouAdmin {
     $stack->display = false;
     $stack->Init('type');
 
+    //デバッグモード判定
+    if (true === ServerConfig::DEBUG_MODE) {
+      $stack->display = true;
+      $stack->Add('type', 'debug');
+    }
+
     //個別の管理機能有効判定
-    $admin_list = ['setup', 'room_delete', 'icon_delete', 'log_delete', 'generate_html_log'];
+    $admin_list = [
+      'setup', 'room_delete', 'icon_delete', 'log_delete', 'generate_html_log', 'role_test'
+    ];
     foreach ($admin_list as $type) {
       //有効判定
       $name = $type . '_' . 'enable';
@@ -71,4 +79,13 @@ abstract class JinrouAdminController extends JinrouController {
 
   //管理ツール名取得
   abstract protected static function GetAdminType();
+}
+
+//-- 開発テスト用コントローラー基底クラス --//
+abstract class JinrouTestController extends JinrouController {
+  protected static function Start() {
+    if (true !== ServerConfig::DEBUG_MODE) {
+      HTML::OutputUnusableError();
+    }
+  }
 }
