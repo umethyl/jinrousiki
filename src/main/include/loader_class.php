@@ -643,6 +643,7 @@ final class LoaderData {
     'setup_class'		=> 'controller/admin',
     'room_delete_class'		=> 'controller/admin',
     'icon_delete_class'		=> 'controller/admin',
+    'log_delete_class'		=> 'controller/admin',
     //controller/info
     'script_info_class'		=> 'controller/info',
     'rule_info_class'		=> 'controller/info',
