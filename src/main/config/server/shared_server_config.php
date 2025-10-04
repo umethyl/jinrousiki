@@ -5,11 +5,13 @@ class SharedServerConfig {
 
   //表示する他のサーバのリスト
   static public $server_list = [
-    'cirno' => ['name' => '真・チルノ鯖',
-		'url' => 'https://jinrousiki.osdn.jp/cirno/',
+    /*
+    '名前' => ['name' => 'サーバ名',
+		'url' => 'URL',
 		'encode' => 'UTF-8',
-		'separator' => '<!-- atpages banner tag -->',
-		'footer' => '</a><br>',
-		'disable' => false],
+		'separator' => '',
+		'footer' => '',
+		'disable' => false]
+    */
   ];
 }
