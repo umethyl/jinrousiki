@@ -186,6 +186,7 @@ final class Loader extends LoadManager {
 
     switch ($type) {
     case 'controller':
+    case 'controller/admin':
     case 'controller/info':
     case 'controller/info/new_role':
     case 'controller/test':
@@ -638,7 +639,8 @@ final class LoaderData {
     'icon_upload_class'		=> 'controller',
     'old_log_class'		=> 'controller',
     'admin_class'		=> 'controller',
-    'setup_class'		=> 'controller',
+    //controller/info
+    'setup_class'		=> 'controller/admin',
     //controller/info
     'script_info_class'		=> 'controller/info',
     'rule_info_class'		=> 'controller/info',
