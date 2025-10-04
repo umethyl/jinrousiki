@@ -6,11 +6,11 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
   }
 
   protected static function LoadRequest() {
-    RQ::LoadRequest('RequestOldLog'); //引数を取得
-    RQ::Set('prefix', ''); //各ページの先頭につける文字列 (テスト / 上書き回避用)
-    RQ::Set('index_no', 8); //インデックスページの開始番号
-    RQ::Set('min_room_no', 351); //インデックス化する村の開始番号
-    RQ::Set('max_room_no', 383); //インデックス化する村の終了番号
+    RQ::LoadRequest('old_log');
+    RQ::Set('prefix',		GenerateHTMLLogConfig::PREFIX);
+    RQ::Set('index_no',		GenerateHTMLLogConfig::INDEX_START);
+    RQ::Set('min_room_no',	GenerateHTMLLogConfig::ROOM_START);
+    RQ::Set('max_room_no',	GenerateHTMLLogConfig::ROOM_END);
     RQ::Set(RequestDataLogRoom::ROLE,   true);
     RQ::Set(RequestDataLogRoom::HEAVEN, true);
     RQ::Set('generate_index', true);
@@ -29,13 +29,40 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
   }
 
   protected static function RunCommand() {
-    //self::DeleteLog(RQ::Get()->min_room_no, RQ::Get()->max_room_no); //部屋削除
+    //-- Validate --//
+    if (RQ::Get()->min_room_no < 1) {
+      $str = sprintf(GenerateHTMLLogMessage::INVALIDE_ROOM_START, RQ::Get()->min_room_no);
+      return self::OutputResult($str);
+    }
 
-    //OldLogHTML::GenerateIndex(); //インデックスページ生成
-    //HTML::OutputFooter(true);
+    if (RQ::Get()->max_room_no < 1 || RQ::Get()->min_room_no > RQ::Get()->max_room_no) {
+      $str = sprintf(
+	GenerateHTMLLogMessage::INVALIDE_ROOM_END,
+	RQ::Get()->min_room_no, RQ::Get()->max_room_no
+      );
+      return self::OutputResult($str);
+    }
 
-    $format = sprintf('../log_test/%s', RQ::Get()->prefix) . '%d%s.html';
-    $footer = Text::LineFeed(HTML::FOOTER);
+    //-- モード判定 --//
+    switch (GenerateHTMLLogConfig::MODE) {
+    case 'room':
+      return self::GenerateRoom();
+
+    case 'index':
+      return self::GenerateIndex();
+
+    case 'delete':
+      return self::DeleteRoom();
+
+    default: //ここに来たらロジックエラー
+      return self::OutputResult(GenerateHTMLLogMessage::INVALIDE_MODE);
+    }
+  }
+
+  //個別の部屋のHTML化処理
+  private static function GenerateRoom() {
+    $format = sprintf('../%s/%s', GenerateHTMLLogConfig::DIR, RQ::Get()->prefix) . '%d%s.html';
+    $footer = Text::LineFeed(HTML::GenerateFooter());
     for ($i = RQ::Get()->min_room_no; $i <= RQ::Get()->max_room_no; $i++) {
       RQ::Set(RequestDataGame::ID, $i);
       foreach ([false, true] as $flag) {
@@ -53,20 +80,39 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
       }
     }
 
-    $title  = GenerateHTMLLogMessage::TITLE;
     $format = GenerateHTMLLogMessage::FORMAT;
-    HTML::OutputResult($title, sprintf($format, RQ::Get()->min_room_no, RQ::Get()->max_room_no));
+    self::OutputResult(sprintf($format, RQ::Get()->min_room_no, RQ::Get()->max_room_no));
+  }
+
+  //過去ログ一覧のHTML化処理
+  private static function GenerateIndex() {
+    RQ::Set('reverse', Switcher::OFF);
+    $header = sprintf('../%s/%sindex', GenerateHTMLLogConfig::DIR, RQ::Get()->prefix);
+    $footer = Text::LineFeed(HTML::GenerateFooter());
+    $end_page = ceil((RQ::Get()->max_room_no - RQ::Get()->min_room_no + 1) / OldLogConfig::VIEW);
+    for ($i = 1; $i <= $end_page; $i++) {
+      RQ::Set('page', $i);
+      $index = RQ::Get()->index_no - $i + 1;
+      file_put_contents($header. $index . '.html', OldLogHTML::GenerateList($i) . $footer);
+    }
+
+    $format = GenerateHTMLLogMessage::FORMAT;
+    self::OutputResult(sprintf($format, RQ::Get()->min_room_no, RQ::Get()->max_room_no));
   }
 
   //部屋削除
-  private static function DeleteLog($from, $to) {
-    DB::Connect(RQ::Get()->db_no);
+  private static function DeleteRoom() {
     HTML::OutputHeader(GenerateHTMLLogMessage::DELETE_TITLE, null, true);
-    for ($i = $from; $i <= $to; $i++) {
+    for ($i = RQ::Get()->min_room_no; $i <= RQ::Get()->max_room_no; $i++) {
       DB::DeleteRoom($i);
       printf(GenerateHTMLLogMessage::DELETE_FORMAT . Text::BR, $i);
     }
     DB::Optimize();
     HTML::OutputFooter(true);
+  }
+
+  //結果出力
+  private static function OutputResult(string $str) {
+    HTML::OutputResult(GenerateHTMLLogMessage::TITLE, $str);
   }
 }

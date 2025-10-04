@@ -26,6 +26,7 @@ final class AdminConfig {
   public static $notice_log_delete = true;	//有効時の警告メッセージ (true:表示する / false:しない)
 
   //-- ログのHTML化 (generate_html_log) --//
+  /* 詳細設定は generate_html_log_config.php で行ってください */
   public static $generate_html_log_enable = false;	//有効設定 (true:有効にする / false:しない)
   public static $notice_generate_html_log = true;	//有効時の警告メッセージ (true:表示する / false:しない)
 
