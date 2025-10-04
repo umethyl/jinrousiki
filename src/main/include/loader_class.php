@@ -259,6 +259,7 @@ final class LoaderData {
     //config/admin
     'AdminConfig'		=> 'admin_config',
     'SetupConfig'		=> 'setup_config',
+    'GenerateHTMLLogConfig'	=> 'generate_html_log_config',
     //config/server
     'ServerConfig'		=> 'server_config',
     'DatabaseConfig'		=> 'database_config',
@@ -510,6 +511,7 @@ final class LoaderData {
     //config
     'admin_config'		=> 'admin',
     'setup_config'		=> 'admin',
+    'generate_html_log_config'	=> 'admin',
     'server_config'		=> 'server',
     'database_config'		=> 'server',
     'room_config'		=> 'server',
