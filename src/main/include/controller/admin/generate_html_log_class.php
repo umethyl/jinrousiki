@@ -1,11 +1,8 @@
 <?php
 //--  ログのHTML化(管理用)コントローラー --//
-final class JinrouAdminGenerateHTMLLogController extends JinrouController {
-  protected static function Start() {
-    HTML::OutputUnusableError();
-    if (true !== ServerConfig::DEBUG_MODE) {
-      HTML::OutputUnusableError();
-    }
+final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
+  protected static function GetAdminType() {
+    return 'generate_html_log';
   }
 
   protected static function LoadRequest() {
@@ -56,18 +53,18 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouController {
       }
     }
 
-    $title  = AdminMessage::GENERATE_LOG;
-    $format = AdminMessage::GENERATE_LOG_FORMAT;
+    $title  = GenerateHTMLLogMessage::TITLE;
+    $format = GenerateHTMLLogMessage::FORMAT;
     HTML::OutputResult($title, sprintf($format, RQ::Get()->min_room_no, RQ::Get()->max_room_no));
   }
 
   //部屋削除
   private static function DeleteLog($from, $to) {
     DB::Connect(RQ::Get()->db_no);
-    HTML::OutputHeader(AdminMessage::DELETE_LOG, null, true);
+    HTML::OutputHeader(GenerateHTMLLogMessage::DELETE_TITLE, null, true);
     for ($i = $from; $i <= $to; $i++) {
       DB::DeleteRoom($i);
-      printf(AdminMessage::DELETE_LOG_FORMAT . Text::BR, $i);
+      printf(GenerateHTMLLogMessage::DELETE_FORMAT . Text::BR, $i);
     }
     DB::Optimize();
     HTML::OutputFooter(true);

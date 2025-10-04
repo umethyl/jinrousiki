@@ -210,6 +210,7 @@ final class Loader extends LoadManager {
       $path = JINROU_INC . '/' . $type;
       break;
 
+    case 'admin':
     case 'server':
     case 'game':
     case 'system':
@@ -256,6 +257,7 @@ final class LoaderData {
   //クラス => ファイル対応表
   public static $file = [
     //config/admin
+    'AdminConfig'		=> 'admin_config',
     'SetupConfig'		=> 'setup_config',
     //config/server
     'ServerConfig'		=> 'server_config',
@@ -342,6 +344,8 @@ final class LoaderData {
     'VoteCSS'		=> 'vote_data_class',
     'VoteActionGroup'	=> 'vote_group_data_class',
     //system
+    'JinrouAdmin'		=> 'admin_class',
+    'JinrouAdminController'	=> 'admin_class',
     'Cast'			=> 'cast_class',
     'PageLinkBuilder'		=> 'old_log_functions',
     'JinrouCacheManager'	=> 'cache_class',
@@ -415,6 +419,7 @@ final class LoaderData {
     //controller/test
     'VoteTestController' => 'vote_test_class',
     //controller/message
+    'AdminMessage'		=> 'admin_message',
     'TopPageMessage'		=> 'top_page_message',
     'RoomManagerMessage'	=> 'room_manager_message',
     'LoginMessage'		=> 'login_message',
@@ -427,7 +432,9 @@ final class LoaderData {
     'IconEditMessage'		=> 'icon_edit_message',
     'IconUploadMessage'		=> 'icon_upload_message',
     //controller/info/admin
-    'AdminMessage'		=> 'admin_message',
+    'RoomDeleteMessage'		=> 'room_delete_message',
+    'IconDeleteMessage'		=> 'icon_delete_message',
+    'GenerateHTMLLogMessage'	=> 'generate_html_log_message',
     'SetupMessage'		=> 'setup_message',
     //controller/info/message
     'ScriptInfoMessage'		=> 'script_info_message',
@@ -500,6 +507,7 @@ final class LoaderData {
   public static $path = [
     /* include */
     //config
+    'admin_config'		=> 'admin',
     'setup_config'		=> 'admin',
     'server_config'		=> 'server',
     'database_config'		=> 'server',
@@ -521,6 +529,7 @@ final class LoaderData {
     'sound_config'		=> 'game',
     'copyright_config'		=> 'system',
     'version'			=> 'system',
+    'admin_message'		=> 'message',
     'message'			=> 'message',
     'game_message'		=> 'message',
     'dead_message'		=> 'message',
@@ -549,7 +558,9 @@ final class LoaderData {
     'icon_edit_message'		=> 'message/controller',
     'icon_upload_message'	=> 'message/controller',
     //config/message/admin
-    'admin_message'		=> 'message/controller/admin',
+    'room_delete_message'	=> 'message/controller/admin',
+    'icon_delete_message'	=> 'message/controller/admin',
+    'generate_html_log_message'	=> 'message/controller/admin',
     'setup_message'		=> 'message/controller/admin',
     //config/message/info
     'script_info_message'	=> 'message/controller/info',

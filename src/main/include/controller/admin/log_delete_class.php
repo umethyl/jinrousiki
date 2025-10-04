@@ -1,13 +1,8 @@
 <?php
 //--  ログ削除(管理用)コントローラー --//
-final class JinrouAdminLogDeleteController extends JinrouController {
-  protected static function Start() {
-    //未完成に付き使用しないこと
-    HTML::OutputUnusableError();
-
-    if (true !== ServerConfig::DEBUG_MODE) {
-      HTML::OutputUnusableError();
-    }
+final class JinrouAdminLogDeleteController extends JinrouAdminController {
+  protected static function GetAdminType() {
+    return 'log_delete';
   }
 
   protected static function EnableLoadDatabase() {
@@ -19,6 +14,7 @@ final class JinrouAdminLogDeleteController extends JinrouController {
   }
 
   protected static function RunCommand() {
+    HTML::OutputResult('ログ削除', '未完成につき、使用できません');
     self::OutputHeader();
     Old_LogListOutput();
     self::DeleteRoom();
