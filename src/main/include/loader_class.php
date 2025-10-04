@@ -215,6 +215,7 @@ final class Loader extends LoadManager {
     case 'system':
     case 'message':
     case 'message/controller':
+    case 'message/controller/admin':
     case 'message/controller/info':
     case 'message/controller/test':
       $path = JINROU_CONF . '/' . $type;
@@ -254,6 +255,8 @@ final class LoaderData {
 
   //クラス => ファイル対応表
   public static $file = [
+    //config/admin
+    'SetupConfig'		=> 'setup_config',
     //config/server
     'ServerConfig'		=> 'server_config',
     'DatabaseConfig'		=> 'database_config',
@@ -267,7 +270,6 @@ final class LoaderData {
     'BBSConfig'			=> 'bbs_config',
     'SharedServerConfig'	=> 'shared_server_config',
     'TwitterConfig'		=> 'twitter_config',
-    'SetupConfig'		=> 'setup_config',
     //config/game
     'GameConfig'	=> 'game_config',
     'CastConfig'	=> 'cast_config',
@@ -413,7 +415,6 @@ final class LoaderData {
     //controller/test
     'VoteTestController' => 'vote_test_class',
     //controller/message
-    'AdminMessage'		=> 'admin_message',
     'TopPageMessage'		=> 'top_page_message',
     'RoomManagerMessage'	=> 'room_manager_message',
     'LoginMessage'		=> 'login_message',
@@ -425,6 +426,8 @@ final class LoaderData {
     'OldLogMessage'		=> 'old_log_message',
     'IconEditMessage'		=> 'icon_edit_message',
     'IconUploadMessage'		=> 'icon_upload_message',
+    //controller/info/admin
+    'AdminMessage'		=> 'admin_message',
     'SetupMessage'		=> 'setup_message',
     //controller/info/message
     'ScriptInfoMessage'		=> 'script_info_message',
@@ -497,6 +500,7 @@ final class LoaderData {
   public static $path = [
     /* include */
     //config
+    'setup_config'		=> 'admin',
     'server_config'		=> 'server',
     'database_config'		=> 'server',
     'room_config'		=> 'server',
@@ -509,7 +513,6 @@ final class LoaderData {
     'bbs_config'		=> 'server',
     'shared_server_config'	=> 'server',
     'twitter_config'		=> 'server',
-    'setup_config'		=> 'server',
     'game_config'		=> 'game',
     'cast_config'		=> 'game',
     'chaos_config'		=> 'game',
@@ -534,7 +537,6 @@ final class LoaderData {
     'cache_message'		=> 'message',
     'twitter_message'		=> 'message',
     'test_message'		=> 'message',
-    'admin_message'		=> 'message/controller',
     'top_page_message'		=> 'message/controller',
     'room_manager_message'	=> 'message/controller',
     'login_message'		=> 'message/controller',
@@ -546,7 +548,10 @@ final class LoaderData {
     'old_log_message'		=> 'message/controller',
     'icon_edit_message'		=> 'message/controller',
     'icon_upload_message'	=> 'message/controller',
-    'setup_message'		=> 'message/controller',
+    //config/message/admin
+    'admin_message'		=> 'message/controller/admin',
+    'setup_message'		=> 'message/controller/admin',
+    //config/message/info
     'script_info_message'	=> 'message/controller/info',
     'rule_info_message'		=> 'message/controller/info',
     'cast_info_message'		=> 'message/controller/info',
