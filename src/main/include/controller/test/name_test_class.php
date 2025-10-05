@@ -5,13 +5,9 @@ final class NameTestController extends JinrouTestController {
     DevHTML::LoadRequest();
   }
 
-  protected static function Output() {
+  protected static function OutputHeader() {
     HTML::OutputHeader(NameTestMessage::TITLE, 'test/name', true);
     self::OutputForm();
-    if (DevHTML::IsExecute()) {
-      self::RunTest();
-    }
-    HTML::OutputFooter();
   }
 
   //フォーム出力
@@ -36,8 +32,11 @@ final class NameTestController extends JinrouTestController {
     DevHTML::OutputRadio($id, 'type', $id, HTML::GenerateChecked(true), $label);
   }
 
-  //テスト実行
-  private static function RunTest() {
+  protected static function IsExecute() {
+    return DevHTML::IsExecute();
+  }
+
+  protected static function RunTest() {
     RQ::Get()->ParsePostData('type');
     list($role, $type) = Text::Parse(RQ::Get()->type, '-');
     switch ($type) {

@@ -5,17 +5,16 @@ final class TripTestController extends JinrouTestController {
     DevHTML::LoadRequest();
   }
 
-  protected static function Output() {
+  protected static function OutputHeader() {
     HTML::OutputHeader(TripTestMessage::TITLE, null, true);
     TripTestHTML::OutputForm();
-    if (DevHTML::IsExecute()) {
-      self::RunTest();
-    }
-    HTML::OutputFooter();
   }
 
-  //テスト実行
-  private static function RunTest() {
+  protected static function IsExecute() {
+    return DevHTML::IsExecute();
+  }
+
+  protected static function RunTest() {
     $key = 'trip';
     RQ::Get()->ParsePost('Trip', $key);
     Text::p(RQ::Get()->$key, TripTestMessage::RESULT);

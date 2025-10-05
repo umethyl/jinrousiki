@@ -5,17 +5,16 @@ final class ObjectionTestController extends JinrouTestController {
     DevHTML::LoadRequest();
   }
 
-  protected static function Output() {
+  protected static function OutputHeader() {
     HTML::OutputHeader(ObjectionTestMessage::TITLE, null, true);
     ObjectionTestHTML::OutputForm(self::GetList());
-    if (DevHTML::IsExecute()) {
-      self::RunTest();
-    }
-    HTML::OutputFooter();
   }
 
-  //テスト実行
-  private static function RunTest() {
+  protected static function IsExecute() {
+    return DevHTML::IsExecute();
+  }
+
+  protected static function RunTest() {
     $id  = RequestDataTalk::OBJECTION;
     RQ::Get()->ParsePostData($id);
     $key = RQ::Get()->$id;

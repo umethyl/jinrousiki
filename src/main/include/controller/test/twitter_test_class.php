@@ -5,17 +5,16 @@ final class TwitterTestController extends JinrouTestController {
     DevHTML::LoadRequest();
   }
 
-  protected static function Output() {
+  protected static function OutputHeader() {
     HTML::OutputHeader(TwitterMessage::TITLE, null, true);
     TwitterTestHTML::OutputForm();
-    if (DevHTML::IsExecute()) {
-      self::RunTest();
-    }
-    HTML::OutputFooter();
   }
 
-  //テスト実行
-  private static function RunTest() {
+  protected static function IsExecute() {
+    return DevHTML::IsExecute();
+  }
+
+  protected static function RunTest() {
     RQ::Get()->ParsePostInt('number');
     RQ::Get()->ParsePostData('name', 'comment');
     if (JinrouTwitter::Send(RQ::Get()->number, RQ::Get()->name, RQ::Get()->comment)) {
