@@ -1,6 +1,6 @@
 <?php
 //-- Info 情報生成クラス --//
-class Info {
+final class Info {
   //リアルタイム制のアイコン出力
   public static function OutputRealTime() {
     $format = 'リアルタイム制　昼：%d分　夜： %d分';
@@ -10,7 +10,7 @@ class Info {
 }
 
 //-- 日時関連 (Info 拡張) --//
-class InfoTime {
+final class InfoTime {
   public static $spend_day;     //非リアルタイム制の発言で消費される時間 (昼)
   public static $spend_night;   //非リアルタイム制の発言で消費される時間 (夜)
   public static $silence_day;   //非リアルタイム制の沈黙で経過する時間 (昼)

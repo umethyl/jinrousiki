@@ -1,6 +1,6 @@
 <?php
 //-- システムユーザクラス --//
-class GM {
+final class GM {
   const ID        = 1;			//ユーザ ID
   const SYSTEM    = 'system';		//システムユーザ
   const DUMMY_BOY = 'dummy_boy';	//身代わり君
