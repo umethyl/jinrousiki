@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (ChaosInfo 拡張) --//
-class ChaosInfoHTML {
+final class ChaosInfoHTML {
   //オプション出力
   public static function Output($option, $name, $version) {
     Text::Printf(self::Get(),

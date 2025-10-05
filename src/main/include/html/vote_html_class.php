@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (投票拡張) --//
-class VoteHTML {
+final class VoteHTML {
   //結果出力
   public static function OutputResult($str, $reset = false) {
     if (true === $reset) {

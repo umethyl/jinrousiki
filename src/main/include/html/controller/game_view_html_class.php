@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (GameView 拡張) --//
-class GameViewHTML {
+final class GameViewHTML {
   //出力
   public static function Output() {
     self::OutputHeader();

@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (OldLog 拡張) --//
-class OldLogHTML {
+final class OldLogHTML {
   //指定の部屋番号のログを生成する
   public static function Generate() {
     $base_title = ServerConfig::TITLE . OldLogMessage::TITLE;

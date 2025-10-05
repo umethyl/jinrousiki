@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (Info 拡張) --//
-class InfoHTML {
+final class InfoHTML {
   //HTMLファイルロード
   public static function Load($name, $path = '') {
     include(sprintf('%s/info/%s%s.html', JINROU_INC, $path, $name));

@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス --//
-class HTML {
+final class HTML {
   //共通タグ生成
   public static function GenerateTag($name, $str, $class = null, $id = null, $align = null) {
     $header = self::GenerateTagHeader($name, $class, $id, $align);

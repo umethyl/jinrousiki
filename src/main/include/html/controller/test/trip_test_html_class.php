@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (トリップテスト拡張) --//
-class TripTestHTML {
+final class TripTestHTML {
   //フォーム出力
   public static function OutputForm() {
     Text::Printf(self::GetForm(), TripTestMessage::KEY . Message::COLON);

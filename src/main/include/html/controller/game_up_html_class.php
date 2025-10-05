@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (GameUp 拡張) --//
-class GameUpHTML {
+final class GameUpHTML {
   //出力
   public static function Output() {
     HTML::OutputHeader(ServerConfig::TITLE . GameUpMessage::TITLE, 'game_up');

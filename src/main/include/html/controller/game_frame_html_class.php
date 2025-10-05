@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (GameFrame 拡張) --//
-class GameFrameHTML {
+final class GameFrameHTML {
   //出力
   public static function Output() {
     HTML::OutputFrameHeader(ServerConfig::TITLE . GameMessage::TITLE);

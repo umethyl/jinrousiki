@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (テスト拡張) --//
-class DevHTML {
+final class DevHTML {
   //共通リクエストロード
   public static function LoadRequest() {
     RQ::LoadRequest();

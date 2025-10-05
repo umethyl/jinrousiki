@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (音源処理拡張) --//
-class SoundHTML {
+final class SoundHTML {
   //生成 (JavaScript 用)
   public static function Generate($type) {
     return self::Format(self::GetGenerate(), $type);

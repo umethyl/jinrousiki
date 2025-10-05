@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (index 拡張) --//
-class IndexHTML {
+final class IndexHTML {
   //出力
   public static function Output() {
     self::OutputHeader();

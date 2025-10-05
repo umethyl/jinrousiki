@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (Role 拡張) --//
-class RoleHTML {
+final class RoleHTML {
   //能力の種類とその説明を出力
   public static function OutputAbility() {
     if (false === DB::$ROOM->IsPlaying()) { //ゲーム中のみ表示する

@@ -1,7 +1,7 @@
 <?php
 //-- HTML 生成クラス (RoleData 拡張) --//
 //-- ◆文字化け抑制◆ --//
-class RoleDataHTML {
+final class RoleDataHTML {
   const TAG  = '<%s class="%s">%s</%s>';
   const SPAN = '<span class="%s">[%s]</span>';
   const LINK = '<a href="new_role/%s.php#%s">%s</a>';

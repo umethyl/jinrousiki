@@ -1,7 +1,7 @@
 <?php
 //◆文字化け抑制◆//
 //-- HTML 生成クラス (room 拡張) --//
-class RoomHTML {
+final class RoomHTML {
   //タイトル生成
   public static function GenerateTitle() {
     return TableHTML::GenerateTd(self::GenerateTitleBase(), 'room');
