@@ -1,6 +1,6 @@
 <?php
 //-- 日時関連 (Game 拡張) --//
-class GameTime {
+final class GameTime {
   /* 取得系 */
   //経過時間取得
   public static function GetPass() {
@@ -75,7 +75,7 @@ class GameTime {
 }
 
 //-- 位置関連クラス --//
-class Position {
+final class Position {
   const BASE = 5; //一列の基数
 
   //東
@@ -200,7 +200,7 @@ class Position {
 }
 
 //-- 「異議」あり関連クラス --//
-class Objection {
+final class Objection {
   //クッキー用情報取得
   public static function GetCookie() {
     //KICK も含めたユーザ総数から配列をセット (index は 0 から)
@@ -277,7 +277,7 @@ class Objection {
 }
 
 //-- 勝敗判定処理クラス --//
-class Winner {
+final class Winner {
   const WIN	= 'win';
   const LOSE	= 'lose';
   const DRAW	= 'draw';

@@ -28,6 +28,17 @@ class InfoHTML {
     HTML::OutputFooter();
   }
 
+  //新役職情報移動出力
+  public static function OutputMoveRole() {
+    $title = sprintf('%s %s', ServerConfig::TITLE, Text::QuoteBracket(InfoMessage::TITLE_ROLE));
+    $str   = '※「新役職について」は移動しました → ';
+
+    HTML::OutputHeader($title, 'index', true);
+    HTML::OutputLink('../', '← TOP', true);
+    HTML::OutputP($str . HTML::GenerateLink('new_role/', InfoMessage::TITLE_ROLE));
+    HTML::OutputFooter();
+  }
+
   //新役職情報出力
   public static function OutputRole($title, $name) {
     self::OutputRoleHeader($title);
