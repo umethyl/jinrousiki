@@ -20,20 +20,21 @@ final class IconEditController extends JinrouController {
   protected static function RunCommand() {
     //入力データチェック
     extract(RQ::ToArray()); //引数を展開
-    $url = sprintf('<a href="%s?icon_no=%d">%s</a>', self::URL, $icon_no, Message::BACK);
+    $url  = self::URL . URL::GetHeaderInt('icon_no', $icon_no);
+    $link = HTML::GenerateLink($url, Message::BACK);
 
     if ($password != UserIconConfig::PASSWORD) { //パスワード照合
-      self::OutputError(IconEditMessage::PASSWORD, $url);
+      self::OutputError(IconEditMessage::PASSWORD, $link);
     }
 
     if (false === Text::Exists($icon_name)) { //空文字チェック
-      self::OutputError(IconEditMessage::NAME, $url);
+      self::OutputError(IconEditMessage::NAME, $link);
     }
 
     //アイコン名の文字列長チェック
     $query = IconDB::GetQueryUpdate();
     $stack = [];
-    foreach (UserIcon::ValidateText(IconEditMessage::TITLE, $url) as $key => $value) {
+    foreach (UserIcon::ValidateText(IconEditMessage::TITLE, $link) as $key => $value) {
       if (null === $value) {
 	$query->SetNull($key);
       } else {
@@ -42,25 +43,25 @@ final class IconEditController extends JinrouController {
     }
 
     if (true === Text::Exists($color)) { //色指定チェック
-      $stack['color'] = UserIcon::ValidateColor($color, IconEditMessage::TITLE, $url);
+      $stack['color'] = UserIcon::ValidateColor($color, IconEditMessage::TITLE, $link);
     }
 
     //トランザクション開始
     DB::Connect();
     if (false === DB::Lock('icon')) {
-      self::OutputError(IconEditMessage::LOCK . Message::DB_ERROR_LOAD, $url);
+      self::OutputError(IconEditMessage::LOCK . Message::DB_ERROR_LOAD, $link);
     }
 
     if (false === IconDB::Exists($icon_no)) { //存在チェック
-      self::OutputError(sprintf(IconEditMessage::NOT_EXISTS, $icon_no), $url);
+      self::OutputError(sprintf(IconEditMessage::NOT_EXISTS, $icon_no), $link);
     }
 
     if (true === IconDB::Duplicate($icon_no, $icon_name)) { //アイコン名重複チェック
-      self::OutputError(sprintf(IconEditMessage::DUPLICATE, $icon_name), $url);
+      self::OutputError(sprintf(IconEditMessage::DUPLICATE, $icon_name), $link);
     }
 
     if (true === IconDB::Using($icon_no)) { //編集制限チェック
-      self::OutputError(IconMessage::USING, $url);
+      self::OutputError(IconMessage::USING, $link);
     }
 
     //非表示フラグチェック
@@ -78,23 +79,22 @@ final class IconEditController extends JinrouController {
 
     if (count($stack) < 1) { //変更が無いなら終了
       //現状はここに入ることは事実上無い。精度を上げる場合はDBから引いて比較すること
-      self::OutputError(IconEditMessage::NO_CHANGE, $url);
+      self::OutputError(IconEditMessage::NO_CHANGE, $link);
     }
     $list = array_merge(array_values($stack), [$icon_no]);
-    //self::OutputError($query->p() . print_r($list, true), $url); //テスト用
+    //self::OutputError($query->p() . print_r($list, true), $link); //テスト用
 
     if (IconDB::Update($query, $list) && DB::Commit()) {
-      $str = sprintf('%s?icon_no=%d', self::URL, $icon_no);
-      HTML::OutputResult(IconEditMessage::TITLE, IconEditMessage::SUCCESS, $str);
+      HTML::OutputResult(IconEditMessage::TITLE, IconEditMessage::SUCCESS, $url);
     } else {
-      self::OutputError(IconEditMessage::UPDATE . Message::DB_ERROR_LOAD, $url);
+      self::OutputError(IconEditMessage::UPDATE . Message::DB_ERROR_LOAD, $link);
     }
   }
 
   //エラー出力
-  private static function OutputError($str, $url = null) {
-    if (null !== $url) {
-      $str = Text::Join($str, $url);
+  private static function OutputError($str, $link = null) {
+    if (null !== $link) {
+      $str = Text::Join($str, $link);
     }
     HTML::OutputResult(IconEditMessage::TITLE, $str);
   }

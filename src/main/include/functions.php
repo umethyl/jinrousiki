@@ -402,6 +402,11 @@ final class URL {
     return sprintf('%s[]=%s', $key, $value);
   }
 
+  //取得 (ヘッダー/数値型)
+  public static function GetHeaderInt($key, $value) {
+    return self::HEAD . self::GetInt($key, $value);
+  }
+
   //取得 (追加/数値型)
   public static function GetAddInt($key, $value) {
     return self::GetAdd(self::GetInt($key, $value));
@@ -1042,7 +1047,7 @@ final class Security {
 }
 
 //-- 外部リンク生成の基底クラス --//
-class ExternalLinkBuilder {
+final class ExternalLinkBuilder {
   const TIME = 5; //タイムアウト時間 (秒)
 
   //サーバ通信状態チェック
