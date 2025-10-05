@@ -1,5 +1,5 @@
 <?php
-//◆文字化け抑制◆//
+//-- ◆文字化け抑制◆ --//
 //-- GamePlay コントローラー --//
 final class GamePlayController extends JinrouController {
   private static $view;
@@ -14,6 +14,10 @@ final class GamePlayController extends JinrouController {
 
   protected static function LoadSession() {
     Session::LoginGamePlay();
+  }
+
+  protected static function EnableLoadRoom() {
+    return true;
   }
 
   protected static function LoadRoom() {

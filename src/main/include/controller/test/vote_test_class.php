@@ -36,6 +36,10 @@ final class VoteTestController extends JinrouTestController {
     include('data/vote_say.php');
   }
 
+  protected static function EnableLoadRoom() {
+    return true;
+  }
+
   protected static function LoadRoom() {
     DevRoom::Load();
     DB::$ROOM->SetDate(VoteTestRoom::DATE);

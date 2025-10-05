@@ -26,6 +26,10 @@ final class UserEntryTestController extends JinrouTestController {
     include('data/cast_load.php');
   }
 
+  protected static function EnableLoadRoom() {
+    return true;
+  }
+
   protected static function LoadRoom() {
     DevRoom::Load();
   }

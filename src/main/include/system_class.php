@@ -77,7 +77,7 @@ abstract class JinrouController {
 
   //村情報ロード有効判定
   protected static function EnableLoadRoom() {
-    return true;
+    return false;
   }
 
   //村情報ロード

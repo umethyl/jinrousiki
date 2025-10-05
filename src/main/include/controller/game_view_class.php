@@ -1,5 +1,5 @@
 <?php
-//◆文字化け抑制◆//
+//-- ◆文字化け抑制◆ --//
 //-- 観戦画面コントローラー --//
 final class GameViewController extends JinrouController {
   protected static function GetLoadRequest() {
@@ -12,6 +12,10 @@ final class GameViewController extends JinrouController {
 
   protected static function GetLoadDatabaseID() {
     return RQ::Get()->db_no;
+  }
+
+  protected static function EnableLoadRoom() {
+    return true;
   }
 
   protected static function LoadRoom() {

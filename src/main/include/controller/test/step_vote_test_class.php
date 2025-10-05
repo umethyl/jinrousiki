@@ -28,6 +28,10 @@ final class StepVoteTestController extends JinrouTestController {
     include('data/vote_event.php');
   }
 
+  protected static function EnableLoadRoom() {
+    return true;
+  }
+
   protected static function LoadRoom() {
     $date = 6;
     DevRoom::Load();

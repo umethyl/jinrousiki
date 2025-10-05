@@ -1,5 +1,5 @@
 <?php
-//◆文字化け抑制◆//
+//-- ◆文字化け抑制◆ --//
 //-- GameVote コントローラー --//
 final class GameVoteController extends JinrouController {
   protected static function GetLoadRequest() {
@@ -12,6 +12,10 @@ final class GameVoteController extends JinrouController {
 
   protected static function LoadSession() {
     Session::Login();
+  }
+
+  protected static function EnableLoadRoom() {
+    return true;
   }
 
   protected static function LoadRoom() {
