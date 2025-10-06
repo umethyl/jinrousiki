@@ -29,6 +29,9 @@ class VoteMessage {
   const REVIVE_REFUSE = '蘇生を辞退する';	//投票ボタン
   const REVIVE_REFUSE_SUCCESS = 'システム：%sさんは蘇生を辞退しました。';
 
+  //突然死処理(管理者用)
+  const FORCE_SUDDEN_DEATH = '対象を即座に突然死させる';	//投票ボタン
+
   //超過時間リセット(管理者用)
   const RESET_TIME = '超過時間リセット';	//投票ボタン
   const RESET_TIME_SUCCESS = 'システム：投票制限時間をリセットしました。';
@@ -95,6 +98,11 @@ class VoteMessage {
   const ALREAY_VOTE_NIGHT  = '夜：投票済み';
   const VOTE_NIGHT_EMPTY   = '夜：投票イベントが空です';
   const INVALID_VOTE_NIGHT = '夜：投票イベントが一致しません';
+
+  //強制突然死
+  const FORCE_SUDDEN_DEATH_TITLE = '強制突然死：';
+  const FORCE_SUDDEN_DEATH_DEAD  = '死者には投票できません';
+  const FORCE_SUDDEN_DEATH_DUMMY_BOY = '身代わり君には投票できません';
 
   //蘇生辞退
   const ALREADY_DROP = '蘇生辞退：投票済み';

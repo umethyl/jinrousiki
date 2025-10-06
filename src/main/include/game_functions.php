@@ -74,6 +74,26 @@ final class GameTime {
   }
 }
 
+//-- ゲーム内処理クラス --//
+final class GameAction {
+  //突然死
+  public static function SuddenDeath(array $target_list, string $reason) {
+    foreach ($target_list as $id) {
+      DB::$USER->SuddenDeath($id, $reason);
+    }
+    RoleLoader::Load('lovers')->Followed(true);
+    RoleLoader::Load('medium')->InsertMediumResult();
+
+    RoomTalk::StoreSystem(GameMessage::VOTE_RESET); //投票リセットメッセージ
+    RoomDB::ResetVote(); //投票リセット
+    if (Winner::Judge()) { //勝敗判定
+      if (DB::$ROOM->IsOption('joker')) { //ジョーカー再配布
+	RoleLoader::Load('joker')->ResetJoker();
+      }
+    }
+  }
+}
+
 //-- 位置関連クラス --//
 final class Position {
   const BASE = 5; //一列の基数

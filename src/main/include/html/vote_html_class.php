@@ -65,29 +65,10 @@ final class VoteHTML {
     } else {
       $user_stack = DB::$USER->Get();
     }
-    $virtual_self = DB::$SELF->GetVirtual(); //仮想投票者を取得
 
     self::OutputHeader();
     Text::Printf(self::GetDayHeader(), VoteAction::VOTE_KILL, DB::$ROOM->revote_count);
-
-    $format    = self::GetCheckbox();
-    $count     = 0;
-    $base_path = Icon::GetPath();
-    $dead_icon = Icon::GetDead();
-    foreach ($user_stack as $id => $user) {
-      TableHTML::OutputFold($count++);
-      $is_live = DB::$USER->IsVirtualLive($id);
-
-      //生きていればユーザアイコン、死んでれば死亡アイコン
-      $path = (true === $is_live) ? $base_path . $user->icon_filename : $dead_icon;
-      if (true === $is_live && false === $user->IsSame($virtual_self)) {
-	$checkbox = sprintf($format, $id, $id);
-      } else {
-	$checkbox = '';
-      }
-      ImageHTML::OutputVoteIcon($user, $path, $checkbox);
-    }
-
+    self::OutputLiveUserVoteList($user_stack, DB::$SELF->GetVirtual());
     Text::Printf(self::GetDayFooter(),
       VoteMessage::CAUTION, RQ::Get()->back_url, VoteMessage::VOTE_DO
     );
@@ -172,8 +153,17 @@ final class VoteHTML {
   //身代わり君 (霊界) の投票ページ出力
   public static function OutputDummyBoy() {
     self::OutputHeader();
-    Text::Printf(self::GetDummyBoy(),
-      VoteMessage::CAUTION, RQ::Get()->back_url, VoteAction::RESET_TIME, VoteMessage::RESET_TIME
+
+    //強制突然死ボタン表示
+    Text::Printf(self::GetDummyBoyHeader(), VoteAction::FORCE_SUDDEN_DEATH);
+    self::OutputLiveUserVoteList(DB::$USER->Get(), DB::$SELF);
+    Text::Printf(self::GetDummyBoyFooter(), VoteMessage::CAUTION, VoteMessage::FORCE_SUDDEN_DEATH);
+
+    //超過時間リセットボタン表示
+    Text::Printf(self::GetDummyBoyReset(),
+      RQ::Get()->back_url,
+      RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id),
+      VoteAction::RESET_TIME, VoteMessage::RESET_TIME
     );
 
     //蘇生辞退ボタン表示判定
@@ -214,6 +204,27 @@ final class VoteHTML {
     HTML::OutputBodyHeader($css);
     GameHTML::OutputGameTop();
     Text::Printf(self::GetHeader(), RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id));
+  }
+
+  //生存者の投票リスト表示 (処刑/突然死用)
+  private static function OutputLiveUserVoteList(array $user_list, User $virtual_self) {
+    $format    = self::GetCheckbox();
+    $count     = 0;
+    $base_path = Icon::GetPath();
+    $dead_icon = Icon::GetDead();
+    foreach ($user_list as $id => $user) {
+      TableHTML::OutputFold($count++);
+      $is_live = DB::$USER->IsVirtualLive($id);
+
+      //生きていればユーザアイコン、死んでれば死亡アイコン
+      $path = (true === $is_live) ? $base_path . $user->icon_filename : $dead_icon;
+      if (true === $is_live && false === $user->IsSame($virtual_self)) {
+	$checkbox = sprintf($format, $id, $id);
+      } else {
+	$checkbox = '';
+      }
+      ImageHTML::OutputVoteIcon($user, $path, $checkbox);
+    }
   }
 
   //夜の投票ボタンメッセージ取得
@@ -348,13 +359,35 @@ EOF;
 EOF;
   }
 
-  //身代わり君 (霊界) の投票画面タグ
-  private static function GetDummyBoy() {
+  //身代わり君 (霊界) の投票画面ヘッダタグ
+  private static function GetDummyBoyHeader() {
     return <<<EOF
+<input type="hidden" name="situation" value="%s">
+<table class="vote-page"><tr>
+EOF;
+  }
+
+  //身代わり君 (霊界) の投票画面フッタタグ
+  private static function GetDummyBoyFooter() {
+    return <<<EOF
+</tr></table>
 <span class="vote-message">%s</span>
+<table><tr>
+<td><input type="submit" value="%s"></td>
+</tr></table>
+</form>
+EOF;
+  }
+
+  //身代わり君 (霊界) の超過時間リセット投票画面タグ
+  private static function GetDummyBoyReset() {
+    return <<<EOF
 <div class="vote-page-link" align="right"><table><tr>
 <td>%s</td>
 <td>
+<form method="post" action="%s">
+<input type="hidden" name="vote" value="on">
+<input type="hidden" name="token" value="%s">
 <input type="hidden" name="situation" value="%s">
 <input type="submit" value="%s">
 </form>

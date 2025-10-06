@@ -339,11 +339,12 @@ final class LoaderData {
     'EventFilterData'	=> 'event_filter_data_class',
     'WeatherData'	=> 'weather_data_class',
     //date/vote
-    'VoteAction'	=> 'vote_data_class',
-    'VoteKickElement'	=> 'vote_data_class',
-    'VoteDayElement'	=> 'vote_data_class',
-    'VoteCSS'		=> 'vote_data_class',
-    'VoteActionGroup'	=> 'vote_group_data_class',
+    'VoteAction'			=> 'vote_data_class',
+    'VoteKickElement'			=> 'vote_data_class',
+    'VoteDayElement'			=> 'vote_data_class',
+    'VoteForceSuddenDeathElement'	=> 'vote_data_class',
+    'VoteCSS'				=> 'vote_data_class',
+    'VoteActionGroup'			=> 'vote_group_data_class',
     //system
     'JinrouAdmin'		=> 'admin_class',
     'JinrouAdminController'	=> 'admin_class',
@@ -352,10 +353,11 @@ final class LoaderData {
     'PageLinkBuilder'		=> 'old_log_functions',
     'JinrouCacheManager'	=> 'cache_class',
     //system/game
-    'GameTime'	=> 'game_functions',
-    'Position'	=> 'game_functions',
-    'Objection'	=> 'game_functions',
-    'Winner'	=> 'game_functions',
+    'GameTime'		=> 'game_functions',
+    'GameAction'	=> 'game_functions',
+    'Position'		=> 'game_functions',
+    'Objection'		=> 'game_functions',
+    'Winner'		=> 'game_functions',
     //system/room
     'Room'		=> 'room_class',
     //system/user
@@ -412,12 +414,13 @@ final class LoaderData {
     'EventManager'	=> 'event_class',
     'WeatherManager'	=> 'weather_class',
     //vote
-    'VoteKick'		=> 'game_vote_functions',
-    'VoteGameStart'	=> 'game_vote_functions',
-    'VoteDay'		=> 'game_vote_functions',
-    'VoteNight'		=> 'game_vote_functions',
-    'VoteHeaven'	=> 'game_vote_functions',
-    'VoteDummyBoy'	=> 'game_vote_functions',
+    'VoteKick'			=> 'game_vote_functions',
+    'VoteGameStart'		=> 'game_vote_functions',
+    'VoteDay'			=> 'game_vote_functions',
+    'VoteNight'			=> 'game_vote_functions',
+    'VoteHeaven'		=> 'game_vote_functions',
+    'VoteForceSuddenDeath'	=> 'game_vote_functions',
+    'VoteResetTime'		=> 'game_vote_functions',
     //controller/test
     'VoteTestController' => 'vote_test_class',
     //controller/message

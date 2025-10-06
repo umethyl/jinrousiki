@@ -55,8 +55,17 @@ final class GameVoteController extends JinrouController {
 	return VoteHTML::OutputError(VoteMessage::INVALID_COMMAND);
       }
     } elseif (DB::$SELF->IsDead()) { //死者の霊界投票処理
-      if (RQ::Get()->situation == VoteAction::RESET_TIME && DB::$SELF->IsDummyBoy()) {
-	VoteDummyBoy::Execute();
+      if (DB::$SELF->IsDummyBoy()) { //身代わり君機能
+	switch (RQ::Get()->situation) {
+	case VoteAction::FORCE_SUDDEN_DEATH:
+	  return VoteForceSuddenDeath::Execute();
+
+	case VoteAction::RESET_TIME:
+	  return VoteResetTime::Execute();
+
+	default:
+	  return VoteHeaven::Execute();
+	}
       } else {
 	VoteHeaven::Execute();
       }
