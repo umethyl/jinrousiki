@@ -1,6 +1,6 @@
 <?php
 //-- 個別ユーザクラス --//
-class User extends StackManager {
+final class User extends StackManager {
   public $id;
   public $uname;
   public $role;
@@ -762,7 +762,7 @@ class User extends StackManager {
 }
 
 //-- ユーザ情報ローダー --//
-class UserLoader extends stdClass {
+final class UserLoader extends stdClass {
   public $room_no;
   protected $rows = [];
   protected $kick = [];

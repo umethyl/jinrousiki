@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (GamePlay 拡張) --//
-class GamePlayHTML {
+final class GamePlayHTML {
   //更新ボタン出力
   public static function OutputReloadButton($url) {
     Text::Printf(self::GetReloadButton(), $url, GamePlayMessage::RELOAD);

@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (RoomManager 拡張) --//
-class RoomManagerHTML {
+final class RoomManagerHTML {
   //村作成画面表示
   public static function OutputCreate() {
     //パラメータセット

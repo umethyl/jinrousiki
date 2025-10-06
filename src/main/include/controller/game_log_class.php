@@ -1,5 +1,5 @@
 <?php
-//◆文字化け抑制◆//
+//-- ◆文字化け抑制◆ --//
 //-- GameLog コントローラー --//
 final class GameLogController extends JinrouController {
   protected static function GetLoadRequest() {
@@ -12,6 +12,10 @@ final class GameLogController extends JinrouController {
 
   protected static function LoadSession() {
     Session::Certify();
+  }
+
+  protected static function EnableLoadRoom() {
+    return true;
   }
 
   protected static function LoadRoom() {

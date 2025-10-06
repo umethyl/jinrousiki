@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (UserManager 拡張) --//
-class UserManagerHTML {
+final class UserManagerHTML {
   const PATH = 'img/entry_user';
 
   //出力

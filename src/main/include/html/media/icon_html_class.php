@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (アイコン拡張) --//
-class IconHTML {
+final class IconHTML {
   //アイコン情報出力
   public static function Output($url = 'icon_view') {
     /*

@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (Info 拡張) --//
-class InfoHTML {
+final class InfoHTML {
   //HTMLファイルロード
   public static function Load($name, $path = '') {
     include(sprintf('%s/info/%s%s.html', JINROU_INC, $path, $name));
@@ -25,6 +25,17 @@ class InfoHTML {
     HTML::OutputHeader(self::GenerateTitle($title, InfoMessage::TITLE_MENU), 'info/menu', true);
     HTML::OutputDiv($title, 'menu');
     self::Load('menu', $path);
+    HTML::OutputFooter();
+  }
+
+  //新役職情報移動出力
+  public static function OutputMoveRole() {
+    $title = sprintf('%s %s', ServerConfig::TITLE, Text::QuoteBracket(InfoMessage::TITLE_ROLE));
+    $str   = '※「新役職について」は移動しました → ';
+
+    HTML::OutputHeader($title, 'index', true);
+    HTML::OutputLink('../', '← TOP', true);
+    HTML::OutputP($str . HTML::GenerateLink('new_role/', InfoMessage::TITLE_ROLE));
     HTML::OutputFooter();
   }
 

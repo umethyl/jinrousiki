@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (IconUpload 拡張) --//
-class IconUploadHTML {
+final class IconUploadHTML {
   //出力
   public static function Output() {
     self::OutputHeader();

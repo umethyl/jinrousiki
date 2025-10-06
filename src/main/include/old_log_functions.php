@@ -1,6 +1,6 @@
 <?php
 //-- ページ送りリンク生成クラス --//
-class PageLinkBuilder extends stdClass {
+final class PageLinkBuilder extends stdClass {
   public function __construct($file, $page, $count, $title = 'Page', $type = 'page') {
     $this->view_total = $count;
     $this->view_page  = OldLogConfig::PAGE;
@@ -25,7 +25,7 @@ class PageLinkBuilder extends stdClass {
   public function Generate() {
     $url_stack = [Text::QuoteBracket($this->title)];
     if ($this->file == 'index') {
-      $url_stack[] = '[<a href="index.html">new</a>]';
+      $url_stack[] = Text::QuoteBracket(HTML::GenerateLink('index.html', 'new'));
     }
 
     //表示ページ数調整 (先頭側)

@@ -1,7 +1,7 @@
 <?php
 //-- HTML 生成クラス (投票テスト拡張) --//
 //-- ◆文字化け抑制◆ --//
-class VoteTestHTML {
+final class VoteTestHTML {
   //配役情報出力
   public static function OutputCast() {
     HTML::OutputHeader(VoteTestMessage::TITLE, 'game_play', true);

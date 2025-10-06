@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (画像拡張) --//
-class ImageHTML {
+final class ImageHTML {
   //画像生成
   public static function Generate($path, $title, $css) {
     return sprintf(self::Get(), $path, $title, $css);

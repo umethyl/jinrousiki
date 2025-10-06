@@ -18,6 +18,10 @@ final class CastTestController extends JinrouTestController {
     include('data/cast_load.php');
   }
 
+  protected static function EnableLoadRoom() {
+    return true;
+  }
+
   protected static function LoadRoom() {
     DevRoom::Load();
   }
@@ -26,21 +30,25 @@ final class CastTestController extends JinrouTestController {
     DevUser::Load();
   }
 
-  protected static function Output() {
+  protected static function OutputHeader() {
     HTML::OutputHeader(CastTestMessage::TITLE, 'game_play', true);
     GameHTML::OutputPlayer();
-    self::RunTest();
-    GameHTML::OutputPlayer();
-    HTML::OutputFooter();
   }
 
-  //テスト実行
-  private static function RunTest() {
+  protected static function IsExecute() {
+    return true;
+  }
+
+  protected static function RunTest() {
     VoteGameStart::Aggregate();
     DB::$ROOM->date++;
     DB::$ROOM->SetScene(RoomScene::NIGHT);
     foreach (DB::$USER->Get() as $user) {
       $user->Reparse();
     }
+  }
+
+  protected static function OutputFooter() {
+    GameHTML::OutputPlayer();
   }
 }

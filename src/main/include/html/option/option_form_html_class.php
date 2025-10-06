@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (OptionForm 拡張) --//
-class OptionFormHTML {
+final class OptionFormHTML {
   //村作成オプションフォーム出力
   public static function Output(Option $filter, $class, $str) {
     Text::Printf(self::Get(), $class, $filter->name, $filter->GetCaption(), Message::COLON, $str);

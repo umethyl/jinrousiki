@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (Talk 拡張) --//
-class TalkHTML {
+final class TalkHTML {
   /* 発言データ */
   //発言生成
   public static function Generate(array $list) {

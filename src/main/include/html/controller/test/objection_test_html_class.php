@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (異議ありテスト拡張) --//
-class ObjectionTestHTML {
+final class ObjectionTestHTML {
   //フォーム出力
   public static function OutputForm(array $stack) {
     $url   = 'objection_test.php';

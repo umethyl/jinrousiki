@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (CopyrightInfo 拡張) --//
-class CopyrightInfoHTML {
+final class CopyrightInfoHTML {
   //出力
   public static function Output() {
     InfoHTML::OutputHeader(CopyrightInfoMessage::TITLE, 0, 'copyright');

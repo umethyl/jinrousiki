@@ -1,6 +1,6 @@
 <?php
 //-- システムユーザクラス --//
-class GM {
+final class GM {
   const ID        = 1;			//ユーザ ID
   const SYSTEM    = 'system';		//システムユーザ
   const DUMMY_BOY = 'dummy_boy';	//身代わり君
@@ -77,7 +77,7 @@ abstract class JinrouController {
 
   //村情報ロード有効判定
   protected static function EnableLoadRoom() {
-    return true;
+    return false;
   }
 
   //村情報ロード

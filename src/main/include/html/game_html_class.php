@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (Game 拡張) --//
-class GameHTML {
+final class GameHTML {
   //投票データを整形する
   public static function ParseVote(array $raw_list, $date) {
     if (count($raw_list) < 1) { //投票総数

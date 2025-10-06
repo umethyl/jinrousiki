@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (Option 拡張) --//
-class OptionHTML {
+final class OptionHTML {
   //ゲームオプション画像出力
   public static function OutputImage($str) {
     HTML::OutputDiv(OptionMessage::GAME_OPTION . Message::COLON . $str, 'game-option');

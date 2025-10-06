@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (Twitterテスト拡張) --//
-class TwitterTestHTML {
+final class TwitterTestHTML {
   //フォーム出力
   public static function OutputForm() {
     Text::Printf(self::GetForm(),

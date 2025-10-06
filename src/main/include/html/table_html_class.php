@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (Table 拡張) --//
-class TableHTML {
+final class TableHTML {
   //ヘッダ生成
   public static function GenerateHeader($class = null, $tr = true, $id = null) {
     $str = HTML::GenerateTagHeader('table', $class, $id);

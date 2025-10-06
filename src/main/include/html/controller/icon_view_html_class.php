@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (IconView 拡張) --//
-class IconViewHTML {
+final class IconViewHTML {
   //出力
   public static function Output() {
     self::OutputHeader();

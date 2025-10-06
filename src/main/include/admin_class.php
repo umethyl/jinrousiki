@@ -88,4 +88,27 @@ abstract class JinrouTestController extends JinrouController {
       HTML::OutputUnusableError();
     }
   }
+
+  protected static function Output() {
+    static::OutputHeader();
+    if (true === static::IsExecute()) {
+      static::RunTest();
+    }
+    static::OutputFooter();
+    HTML::OutputFooter();
+  }
+
+  //テスト用ヘッダ出力
+  protected static function OutputHeader() {}
+
+  //テスト実行判定
+  protected static function IsExecute() {
+    return false;
+  }
+
+  //テスト実行
+  protected static function RunTest() {}
+
+  //テスト用フッタ出力
+  protected static function OutputFooter() {}
 }

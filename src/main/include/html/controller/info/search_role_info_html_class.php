@@ -1,6 +1,6 @@
 <?php
 //-- HTML 生成クラス (SearchRoleInfo 拡張) --//
-class SearchRoleInfoHTML {
+final class SearchRoleInfoHTML {
   //フォーム出力
   public static function OutputForm() {
     HTML::OutputFormHeader('search.php');
