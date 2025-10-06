@@ -1,4 +1,5 @@
 <?php
+//-- ◆文字化け抑制◆ --//
 //-- Twitter 投稿テストコントローラー --//
 final class TwitterTestController extends JinrouTestController {
   protected static function LoadRequest() {
