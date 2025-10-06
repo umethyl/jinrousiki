@@ -1,4 +1,5 @@
 <?php
+//-- ◆文字化け抑制◆ --//
 //-- トリップテストコントローラー --//
 final class TripTestController extends JinrouTestController {
   protected static function LoadRequest() {

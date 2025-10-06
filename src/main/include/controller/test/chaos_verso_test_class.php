@@ -1,4 +1,5 @@
 <?php
+//-- ◆文字化け抑制◆ --//
 //-- 裏・闇鍋モードテストコントローラー --//
 final class ChaosVersoTestController extends JinrouTestController {
   protected static function OutputHeader() {
