@@ -1611,8 +1611,49 @@ final class VoteHeaven extends VoteBase {
   }
 }
 
-//-- 投票処理クラス (身代わり君) --//
-final class VoteDummyBoy extends VoteBase {
+//-- 投票処理クラス (強制突然死/GM機能) --//
+final class VoteForceSuddenDeath extends VoteBase {
+  const SITUATION = VoteAction::FORCE_SUDDEN_DEATH;
+
+  protected static function Load() {
+    $target = DB::$USER->ByID(RQ::Get()->target_no); //投票先ユーザ
+    self::ValidateTarget($target);
+
+    //処理は実ユーザーに対して行う
+    RoleManager::Stack()->Set(VoteForceSuddenDeathElement::TARGET, $target->GetReal());
+  }
+
+  protected static function Vote() {
+    $target = RoleManager::Stack()->Get(VoteForceSuddenDeathElement::TARGET);
+    GameAction::SuddenDeath([$target->id], DeadReason::FORCE_SUDDEN_DEATH);
+    if (DB::$ROOM->IsTest()) {
+      return;
+    }
+    DB::Commit();
+    VoteHTML::OutputResult(VoteMessage::SUCCESS);
+  }
+
+  //投票先チェック
+  private static function ValidateTarget(User $target) {
+    if (null === $target->id) {
+      self::Output(VoteMessage::NO_TARGET);
+    } elseif (false === DB::$USER->IsVirtualLive($target->id)) { //投票画面は仮想ユーザー
+      self::Output(VoteMessage::FORCE_SUDDEN_DEATH_DEAD);
+    } elseif ($target->GetReal()->IsDead()) { //実ユーザーも一応生死判定を行っておく
+      self::Output(VoteMessage::INVALID_SITUATION);
+    } elseif ($target->IsDummyBoy()) {
+      self::Output(VoteMessage::FORCE_SUDDEN_DEATH_DUMMY_BOY);
+    }
+  }
+
+  //結果出力
+  private static function Output($str) {
+    VoteHTML::OutputResult(VoteMessage::FORCE_SUDDEN_DEATH_TITLE . $str);
+  }
+}
+
+//-- 投票処理クラス (超過時間リセット/GM機能) --//
+final class VoteResetTime extends VoteBase {
   const SITUATION = VoteAction::RESET_TIME;
 
   protected static function Vote() {

@@ -1070,6 +1070,7 @@ final class UserLoader extends stdClass {
     switch ($reason) {
     case DeadReason::NOVOTED:
     case DeadReason::SILENCE:
+    case DeadReason::FORCE_SUDDEN_DEATH:
       $str = strtolower($reason);
       break;
 

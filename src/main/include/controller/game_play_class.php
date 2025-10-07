@@ -225,19 +225,7 @@ final class GamePlayController extends JinrouController {
     }
 
     //未投票突然死処理
-    foreach ($novote_list as $id) {
-      DB::$USER->SuddenDeath($id, DeadReason::NOVOTED);
-    }
-    RoleLoader::Load('lovers')->Followed(true);
-    RoleLoader::Load('medium')->InsertMediumResult();
-
-    RoomTalk::StoreSystem(GameMessage::VOTE_RESET); //投票リセットメッセージ
-    RoomDB::ResetVote(); //投票リセット
-    if (Winner::Judge()) { //勝敗判定
-      if (DB::$ROOM->IsOption('joker')) { //ジョーカー再配布
-	RoleLoader::Load('joker')->ResetJoker();
-      }
-    }
+    GameAction::SuddenDeath($novote_list, DeadReason::NOVOTED);
     return DB::Commit(); //ロック解除
   }
 

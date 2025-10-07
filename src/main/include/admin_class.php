@@ -30,8 +30,10 @@ final class JinrouAdmin {
 
     //デバッグモード判定
     if (true === ServerConfig::DEBUG_MODE) {
-      $stack->display = true;
-      $stack->Add('type', 'debug');
+      if (AdminConfig::$notice_debug) {
+	$stack->display = true;
+	$stack->Add('type', 'debug');
+      }
     }
 
     //個別の管理機能有効判定

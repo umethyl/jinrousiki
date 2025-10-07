@@ -69,6 +69,7 @@ class DeadMessage {
   /* 特殊 */
   public static $novoted               = 'は突然お亡くなりになられました';		//未投票突然死
   public static $silence               = 'は沈黙していたようです';			//未発言突然死
+  public static $force_sudden_death    = 'は強制的に突然死させられました';		//強制突然死
   public static $sudden_death          = 'はショック死しました';			//投票系ショック死
   public static $lovers_followed       = 'は恋人の後を追い自殺しました';		//恋人後追い
   public static $fox_followed          = 'は妖狐の後を追い自殺しました';		//背徳者後追い

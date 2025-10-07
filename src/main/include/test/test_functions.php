@@ -268,8 +268,17 @@ class DevVote {
   private static function Execute() {
     if (DB::$SELF->IsDead()) { //死者の霊界投票処理
       HTML::OutputHeader(VoteTestMessage::TITLE, 'game_play', true);
-      if (RQ::Get()->situation == VoteAction::RESET_TIME && DB::$SELF->IsDummyBoy()) {
-	VoteDummyBoy::Execute();
+      if (DB::$SELF->IsDummyBoy()) {
+	switch (RQ::Get()->situation) {
+	case VoteAction::FORCE_SUDDEN_DEATH:
+	  return VoteForceSuddenDeath::Execute();
+
+	case VoteAction::RESET_TIME:
+	  return VoteResetTime::Execute();
+
+	default:
+	  return VoteHeaven::Execute();
+	}
       } else {
 	VoteHeaven::Execute();
       }
