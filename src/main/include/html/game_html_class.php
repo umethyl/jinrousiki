@@ -678,6 +678,7 @@ final class GameHTML {
 
     case DeadReason::NOVOTED:
     case DeadReason::SILENCE:
+    case DeadReason::FORCE_SUDDEN_DEATH:
       $base  = false;
       $class = 'sudden-death';
       break;

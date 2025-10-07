@@ -1626,13 +1626,6 @@ final class VoteForceSuddenDeath extends VoteBase {
   protected static function Vote() {
     $target = RoleManager::Stack()->Get(VoteForceSuddenDeathElement::TARGET);
     GameAction::SuddenDeath([$target->id], DeadReason::FORCE_SUDDEN_DEATH);
-
-    //システムメッセージ
-    $talk = new RoomTalkStruct(VoteMessage::RESET_TIME_SUCCESS);
-    $talk->Set(TalkStruct::LOCATION, GM::DUMMY_BOY);
-    $talk->Set(TalkStruct::UNAME,    DB::$SELF->uname);
-    DB::$ROOM->Talk($talk);
-
     if (DB::$ROOM->IsTest()) {
       return;
     }
