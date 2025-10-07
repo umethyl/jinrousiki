@@ -36,7 +36,7 @@ RQ::GetTest()->test_users[11]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[12]->role = 'weather_priest death_selected[9]';
 RQ::GetTest()->test_users[12]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[13]->role = 'nephila_cupid lady lovers[13] mind_receiver[9] mind_receiver[19]';
+RQ::GetTest()->test_users[13]->role = 'sacrifice_cupid lady lovers[13]';
 RQ::GetTest()->test_users[13]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[14]->role = 'letter_cupid lovers[14] letter_exchange[1]';
@@ -72,7 +72,7 @@ RQ::GetTest()->test_users[23]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[24]->role = 'esper_wizard mind_friend[27]';
 RQ::GetTest()->test_users[24]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[25]->role = 'collector_ogre disfavor';
+RQ::GetTest()->test_users[25]->role = 'sacrifice_ogre disfavor';
 RQ::GetTest()->test_users[25]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[25]->profile = "あーうー\nうーあー";
 
