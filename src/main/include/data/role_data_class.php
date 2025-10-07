@@ -264,6 +264,7 @@ final class RoleData {
     'self_cupid'		=> '求愛者',
     'moon_cupid'		=> 'かぐや姫',
     'altair_cupid'		=> '彦星',
+    'sacrifice_cupid'		=> '花魁',
     'mind_cupid'		=> '女神',
     'sweet_cupid'		=> '弁財天',
     'letter_cupid'		=> '文車妖妃',

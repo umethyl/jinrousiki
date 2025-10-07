@@ -128,8 +128,8 @@ final class RoleFilterData {
     'thunder_brownie', 'harvest_brownie', 'maple_brownie', 'cursed_brownie',  'disguise_wolf',
     'purple_wolf', 'snow_wolf', 'corpse_courier_mad', 'amaze_mad', 'agitate_mad', 'miasma_mad',
     'critical_mad', 'fire_mad', 'follow_mad', 'purple_fox', 'snow_fox', 'critical_fox',
-    'fire_depraver', 'sweet_cupid', 'snow_cupid', 'quiz', 'step_vampire', 'cowboy_duelist',
-    'sea_duelist', 'cursed_avenger', 'critical_avenger'
+    'fire_depraver', 'sacrifice_cupid', 'sweet_cupid', 'snow_cupid', 'quiz', 'step_vampire',
+    'cowboy_duelist', 'sea_duelist', 'cursed_avenger', 'critical_avenger'
   ];
 
   //処刑投票能力者 (サブ)
@@ -169,8 +169,8 @@ final class RoleFilterData {
     'seal_medium', 'bacchus_medium', 'cowboy_duelist', 'sea_duelist', 'centaurus_pharmacist',
     'spell_common', 'miasma_jealousy', 'critical_jealousy', 'corpse_courier_mad', 'amaze_mad',
     'miasma_mad', 'fire_mad', 'fire_depraver', 'critical_mad', 'critical_fox', 'critical_avenger',
-    'purple_wolf', 'purple_fox', 'cursed_avenger', 'sweet_cupid', 'snow_cupid', 'step_vampire',
-    'disguise_wolf'
+    'purple_wolf', 'purple_fox', 'cursed_avenger', 'sacrifice_cupid', 'sweet_cupid', 'snow_cupid',
+    'step_vampire', 'disguise_wolf'
   ];
 
   //霊能
@@ -221,7 +221,7 @@ final class RoleFilterData {
 
   //人狼襲撃耐性 (順番依存あり)
   public static $wolf_eat_resist = [
-    'challenge_lovers', 'vega_lovers', 'protected', 'sacrifice_angel', 'doom_vampire',
+    'challenge_lovers', 'vega_lovers', 'protected', 'sacrifice_cupid', 'doom_vampire',
     'sacrifice_patron', 'sacrifice_mania', 'tough', 'fend_guard', 'awake_wizard',
     'ascetic_assassin'
   ];
@@ -229,8 +229,8 @@ final class RoleFilterData {
   //人狼襲撃得票カウンター (+ 身代わり能力者)
   public static $wolf_eat_reaction = [
     'therian_mad', 'immolate_mad', 'sacrifice_common', 'doll_master', 'toy_doll_master',
-    'revive_doll_master', 'serve_doll_master', 'sacrifice_fox', 'sacrifice_vampire',
-    'boss_chiroptera', 'sacrifice_ogre'
+    'revive_doll_master', 'serve_doll_master', 'sacrifice_fox', 'sacrifice_angel',
+    'sacrifice_vampire', 'boss_chiroptera', 'sacrifice_ogre'
   ];
 
   //人狼襲撃カウンター

@@ -16,8 +16,8 @@ class Role_sacrifice_ogre extends Role_ogre {
   public $mix_in = ['protected'];
 
   protected function IgnorePartner() {
-    /* 2日目の時点で洗脳者が発生する特殊イベントを実装したら対応すること */
-    return DB::$ROOM->date < 2;
+    /* 1日目の時点で洗脳者が発生する特殊イベントを実装したら対応すること */
+    return DB::$ROOM->date < 1;
   }
 
   protected function GetPartner() {

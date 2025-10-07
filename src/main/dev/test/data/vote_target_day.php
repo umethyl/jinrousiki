@@ -45,7 +45,7 @@ if (VoteTestRoom::DUEL) {
     ['id' => 10, RequestDataVote::TARGET => 20],
     ['id' => 11, RequestDataVote::TARGET => 22],
     ['id' => 12, RequestDataVote::TARGET =>  9],
-    ['id' => 13, RequestDataVote::TARGET =>  4],
+    ['id' => 13, RequestDataVote::TARGET =>  8],
     ['id' => 14, RequestDataVote::TARGET => 23],
     ['id' => 15, RequestDataVote::TARGET =>  7],
     ['id' => 16, RequestDataVote::TARGET => 20],

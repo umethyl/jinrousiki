@@ -263,6 +263,7 @@ final class RoleShortData {
     'self_cupid'		=> '求',
     'moon_cupid'		=> '姫',
     'altair_cupid'		=> '彦星',
+    'sacrifice_cupid'		=> '魁',
     'mind_cupid'		=> '女神',
     'sweet_cupid'		=> '弁',
     'letter_cupid'		=> '文車',
