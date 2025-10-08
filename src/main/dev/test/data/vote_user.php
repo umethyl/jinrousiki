@@ -85,7 +85,7 @@ RQ::GetTest()->test_users[27]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[28]->role = 'doom_cat bad_luck';
 RQ::GetTest()->test_users[28]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[29]->role = 'tengu mind_friend[29]';
+RQ::GetTest()->test_users[29]->role = 'flower_jealousy mind_friend[29]';
 RQ::GetTest()->test_users[29]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[30]->role = 'gender_fairy';

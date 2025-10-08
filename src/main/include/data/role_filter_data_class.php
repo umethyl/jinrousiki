@@ -221,7 +221,7 @@ final class RoleFilterData {
 
   //人狼襲撃耐性 (順番依存あり)
   public static $wolf_eat_resist = [
-    'challenge_lovers', 'vega_lovers', 'protected', 'sacrifice_cupid', 'doom_vampire',
+    'challenge_lovers', 'vega_lovers', 'protected', 'sacrifice_angel', 'doom_vampire',
     'sacrifice_patron', 'sacrifice_mania', 'tough', 'fend_guard', 'awake_wizard',
     'ascetic_assassin'
   ];
@@ -229,7 +229,7 @@ final class RoleFilterData {
   //人狼襲撃得票カウンター (+ 身代わり能力者)
   public static $wolf_eat_reaction = [
     'therian_mad', 'immolate_mad', 'sacrifice_common', 'doll_master', 'toy_doll_master',
-    'revive_doll_master', 'serve_doll_master', 'sacrifice_fox', 'sacrifice_angel',
+    'revive_doll_master', 'serve_doll_master', 'sacrifice_fox', 'sacrifice_cupid',
     'sacrifice_vampire', 'boss_chiroptera', 'sacrifice_ogre'
   ];
 

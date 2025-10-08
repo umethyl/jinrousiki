@@ -112,6 +112,7 @@ final class RoleShortData {
     'dummy_scanner'		=> '幻視',
     'jealousy'			=> '橋',
     'divorce_jealousy'		=> '縁',
+    'flower_jealousy'		=> '花占',
     'priest_jealousy'		=> '恋司',
     'poison_jealousy'		=> '毒橋',
     'miasma_jealousy'		=> '蛇姫',

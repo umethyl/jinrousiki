@@ -113,6 +113,7 @@ final class RoleData {
     'dummy_scanner'		=> '幻視者',
     'jealousy'			=> '橋姫',
     'divorce_jealousy'		=> '縁切地蔵',
+    'flower_jealousy'		=> '花占い師',
     'priest_jealousy'		=> '恋司祭',
     'poison_jealousy'		=> '毒橋姫',
     'miasma_jealousy'		=> '蛇姫',
