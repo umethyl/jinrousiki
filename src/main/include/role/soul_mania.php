@@ -67,7 +67,7 @@ class Role_soul_mania extends Role_mania {
       CampGroup::PHARMACIST	=> 'alchemy_pharmacist',
       CampGroup::ASSASSIN	=> 'soul_assassin',
       CampGroup::MIND_SCANNER	=> 'clairvoyance_scanner',
-      CampGroup::JEALOUSY	=> 'miasma_jealousy',
+      CampGroup::JEALOUSY	=> 'flower_jealousy',
       CampGroup::BROWNIE	=> 'barrier_brownie',
       CampGroup::WIZARD		=> 'soul_wizard',
       CampGroup::DOLL		=> 'serve_doll_master',
