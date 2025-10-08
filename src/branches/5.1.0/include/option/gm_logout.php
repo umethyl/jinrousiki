@@ -1,0 +1,25 @@
+<?php
+/*
+  ◆GMログアウト
+*/
+class Option_gm_logout extends OptionCheckbox {
+  public $group = OptionGroup::GAME;
+  public $type  = OptionFormType::RADIO;
+
+  protected function FilterEnable() {
+    if (true === $this->enable && RoomOptionManager::IsChange()) {
+      $this->enable = (DB::$ROOM->IsOption('gm_login') && false === DB::$ROOM->IsQuiz());
+    } else {
+      $this->enable = false;
+    }
+  }
+
+  public function GetCaption() {
+    return 'GMログアウト';
+  }
+
+  public function GetExplain() {
+    return '仮想GMをログアウトし、身代わり君に戻ります。 [村オプション変更専用]' . Text::BR .
+      '　　　 <span class="warning">一度ログアウトするとGMに戻れません</span>';
+  }
+}
