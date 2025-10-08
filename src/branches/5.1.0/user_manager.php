@@ -1,0 +1,4 @@
+<?php
+require_once('init.php');
+Loader::LoadFile('user_manager_class');
+UserManagerController::Execute();
