@@ -98,6 +98,23 @@ final class GameAction {
 final class Position {
   const BASE = 5; //一列の基数
 
+  //X座標
+  public static function GetX($id) {
+    return (true === self::IsBase($id) ? self::BASE : $id % self::BASE);
+  }
+
+  //Y座標
+  public static function GetY($id) {
+    return floor($id / self::BASE) + (true === self::IsBase($id) ? 0 : 1);
+  }
+
+  //経路距離取得
+  public static function GetRouteDistance($id, $viewer) {
+    $x = abs(self::GetX($id) - self::GetX($viewer));
+    $y = abs(self::GetY($id) - self::GetY($viewer));
+    return $x + $y;
+  }
+
   //東
   public static function GetEast($id) {
     $max   = DB::$USER->Count();
@@ -151,7 +168,7 @@ final class Position {
   //横軸
   public static function GetHorizontal($id) {
     $max   = DB::$USER->Count();
-    $start = $id - ($id % self::BASE == 0 ? self::BASE : $id % self::BASE) + 1;
+    $start = $id - self::GetX($id) + 1;
     $stack = [];
     for ($i = $start; $i < $start + self::BASE && $i <= $max; $i++) {
       $stack[] = $i;
@@ -206,6 +223,11 @@ final class Position {
     return abs($id - $viewer) == self::BASE ||
       $id == $viewer - 1 && ($id     % self::BASE) != 0 ||
       $id == $viewer + 1 && ($viewer % self::BASE) != 0;
+  }
+
+  //基数倍判定
+  private static function IsBase($id) {
+    return ($id % self::BASE) == 0;
   }
 
   //東存在

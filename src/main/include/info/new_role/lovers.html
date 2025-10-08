@@ -65,14 +65,15 @@
 <a href="#self_cupid">求愛者</a>
 <a href="#moon_cupid">かぐや姫</a>
 <a href="#altair_cupid">彦星</a>
+<a href="#sacrifice_cupid">花魁</a>
 <a href="#mind_cupid">女神</a>
 <a href="#sweet_cupid">弁財天</a>
 <a href="#letter_cupid">文車妖妃</a>
 <a href="#minstrel_cupid">吟遊詩人</a>
 <a href="#triangle_cupid">小悪魔</a>
-<a href="#nephila_cupid">絡新婦</a>
 </p>
 <p>
+<a href="#nephila_cupid">絡新婦</a>
 <a href="#revive_cupid">邪仙</a>
 <a href="#snow_cupid">寒戸婆</a>
 </p>
@@ -149,6 +150,40 @@
 <pre>
 <a href="sub_role.php#vega_lovers">織姫</a>の実装用に作成された役職です。
 <a href="sub_role.php#vega_lovers">織姫</a>は実質無敵なので、彦星の生存力が勝利の鍵となります。
+</pre>
+
+<h3 id="sacrifice_cupid">花魁 (占い結果：村人 / 霊能結果：村人) [Ver. 5.1.0 α1～]</h3>
+<h4>[耐性] 人狼襲撃：身代わり</h4>
+<h4>[身代わり能力] 洗脳者</h4>
+<h4>[恋人作成能力] 自分撃ち固定：有り</h4>
+<pre>
+自分撃ち固定のキューピッド。
+処刑投票先を<a href="sub_role.php#psycho_infected">洗脳者</a>にすることができる。
+<a href="wolf.php#wolf_group">人狼</a>に襲撃された時に、<a href="sub_role.php#psycho_infected">洗脳者</a>を身代わりにして生き延びる事ができる。
+</pre>
+<h4>処刑投票洗脳能力</h4>
+<ol>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後で、自分が毒やショック死で死亡した場合でも有効。</li>
+<li>対象が死亡していた場合は無効 (例：処刑・毒死)。
+<li>自分が処刑された場合は無効。
+<li>吸血鬼系、吸血鬼をコピーした<a href="mania.php#soul_mania">覚醒者</a>・<a href="mania.php#dummy_mania">夢語部</a>には無効。
+</ol>
+<h4>身代わり能力</h4>
+<ol>
+<li>身代わりが発生した場合、<a href="wolf.php#wolf_group">人狼</a>の襲撃は失敗扱い。</li>
+<li>代わりに死んだ人の死因は「誰かの犠牲となって死亡したようです」。</li>
+<li>本人は身代わりが発生しても分からない。</li>
+<li>逃亡失敗・人狼に遭遇して死亡した<a href="human.php#escaper_group">逃亡者系</a>を身代わりにすることはできない。</li>
+<li>身代わり君か、襲撃者が<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) だった場合は無効。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#sacrifice">身代わり能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="sub_role.php#psycho_infected">洗脳者</a>を作る存在を増やそうと考えてデザインしました。
+はたから見ると他陣営を勝手に自分の身代わりにしてしまうので非常に迷惑度の高い存在ですね。
 </pre>
 
 <h3 id="mind_cupid">女神 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α23～]</h3>

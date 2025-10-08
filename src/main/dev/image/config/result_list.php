@@ -109,6 +109,7 @@ class ResultList extends RoleMessageList {
   public $result_dummy_scanner = ['message' => "さんは|幻視者|でした", 'type' => 'result_mind_scanner'];
   public $result_jealousy = ['message' => "さんは|橋姫|でした", 'delimiter' => ['|' => 'jealousy']];
   public $result_divorce_jealousy = ['message' => "さんは|縁切地蔵|でした", 'type' => 'result_jealousy'];
+  public $result_flower_jealousy = ['message' => "さんは|花占い師|でした", 'type' => 'result_jealousy'];
   public $result_priest_jealousy = ['message' => "さんは|恋司祭|でした", 'type' => 'result_jealousy'];
   public $result_poison_jealousy = ['message' => "さんは|毒橋姫|でした", 'type' => 'result_jealousy'];
   public $result_miasma_jealousy = ['message' => "さんは|蛇姫|でした", 'type' => 'result_jealousy'];
@@ -260,6 +261,7 @@ class ResultList extends RoleMessageList {
   public $result_self_cupid = ['message' => "さんは|求愛者|でした", 'type' => 'result_cupid'];
   public $result_moon_cupid = ['message' => "さんは|かぐや姫|でした", 'type' => 'result_cupid'];
   public $result_altair_cupid = ['message' => "さんは|彦星|でした", 'type' => 'result_cupid'];
+  public $result_sacrifice_cupid = ['message' => "さんは|花魁|でした", 'type' => 'result_cupid'];
   public $result_mind_cupid = ['message' => "さんは|女神|でした", 'type' => 'result_cupid'];
   public $result_sweet_cupid = ['message' => "さんは|弁財天|でした", 'type' => 'result_cupid'];
   public $result_letter_cupid = ['message' => "さんは|文車妖妃|でした", 'type' => 'result_cupid'];
@@ -397,6 +399,17 @@ class ResultList extends RoleMessageList {
   public $result_psycho_mage_liar = ['message' => "さんは|嘘|をついています", 'type' => 'result_wolf'];
   public $result_stargazer_mage_ability = ['message' => "さんは|投票能力|を持っています", 'type' => 'result_wolf'];
   public $result_stargazer_mage_nothing = ['message' => "さんは投票能力を持っていません"];
+  public $result_flower_mage_like = ['message' => "さんはあなたのことが|好き|みたいです", 'type' => 'result_cupid'];
+  public $result_flower_mage_dislike = ['message' => "さんはあなたのことが|嫌い|みたいです", 'delimiter' => ['|' => 'sex_male']];
+  public $result_flower_mage_cupid = ['message' => "さんは誰かの|恋|を応援しているようです", 'type' => 'result_cupid'];
+  public $result_flower_mage_lovers = ['message' => "さんは|恋|をしているようです", 'type' => 'result_cupid'];
+  public $result_flower_mage_challenge = ['message' => "さんは|月に恋をされている|ようです", 'type' => 'result_cupid'];
+  public $result_flower_mage_vega = ['message' => "さんは|彦星|を待ち焦がれているようです", 'type' => 'result_cupid'];
+  public $result_flower_mage_fake = ['message' => "さんは|大人な恋|をしているようです", 'type' => 'result_cupid'];
+  public $result_flower_mage_letter = ['message' => "さんは誰かと内緒の|日記を交換|しているようです", 'type' => 'result_cupid'];
+  public $result_flower_mage_possessed = ['message' => "さんの魂は誰かと|入れ替わって|いるようです", 'type' => 'result_cupid'];
+  public $result_flower_mage_sweet = ['message' => "さんは|悲しい恋|をしていたようです", 'type' => 'result_chiroptera'];
+
   public $result_stolen = ['message' => "さんの死体が盗まれました！"];
   public $result_psycho_necromancer_human = ['message' => "さんの前世は|村人|でした", 'type' => 'result_human'];
   public $result_psycho_necromancer_wolf = ['message' => "さんの前世は|人狼|でした", 'type' => 'result_wolf'];

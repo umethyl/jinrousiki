@@ -16,7 +16,7 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'role_tengu';
+//$role = 'result_flower_mage_cupid';
 //$role = 'prediction_weather_no_escape';
 //$role = 'collector_ogre';
 $role = 'sacrifice_cupid';

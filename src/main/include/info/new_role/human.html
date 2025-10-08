@@ -297,7 +297,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#mage_wolf">特殊占い判定能力者</a>・<a href="ability.php#talk_convert">発言変換能力者</a>
+<a href="mania.php#dummy_mania">夢語部</a>・<a href="ability.php#result_mage_wolf">特殊占い判定能力者</a>・<a href="ability.php#talk_convert">発言変換能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -360,7 +360,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>同一表示役職</h4>
 <pre>
-<a href="#cute_mage">萌占い師</a>・<a href="#dummy_mage">夢見人</a>
+<a href="#cute_mage">萌占い師</a>・<a href="#dummy_mage">夢見人</a>・<a href="#flower_jealousy">花占い師</a>
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -682,7 +682,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#mage_wolf">特殊占い判定能力者</a>・<a href="ability.php#talk_convert_cute">発言変換能力者</a>
+<a href="ability.php#result_mage_wolf">特殊占い判定能力者</a>・<a href="ability.php#talk_convert_cute">発言変換能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2015,7 +2015,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#mage_spell">特殊占い判定能力者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#talk_convert">発言変換能力者</a>
+<a href="ability.php#result_mage_spell">特殊占い判定能力者</a>・<a href="ability.php#vote_action">処刑投票能力者</a>・<a href="ability.php#talk_convert">発言変換能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -3088,6 +3088,7 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 <p>
 <a href="#jealousy">橋姫</a>
 <a href="#divorce_jealousy">縁切地蔵</a>
+<a href="#flower_jealousy">花占い師</a>
 <a href="#priest_jealousy">恋司祭</a>
 <a href="#poison_jealousy">毒橋姫</a>
 <a href="#miasma_jealousy">蛇姫</a>
@@ -3150,6 +3151,108 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 発動機会が増えた代りに効果や発動率が<a href="#jealousy">橋姫</a>よりもかなり抑えられています。
 <a href="sub_role.php#passion">恋色迷彩</a>は発動しても気付きにくいので発言を注視する必要があります。
 → 発動しても全く脅威にならないようなので付加役職を強化しました。
+</pre>
+
+<h3 id="flower_jealousy">花占い師 (占い結果：村人 / 霊能結果：村人) [Ver. 5.1.0 α1～]</h3>
+<h4>[役職表示] <a href="#mage">占い師</a></h4>
+<h4>[占い能力] 呪殺：無し / 憑依妨害：無し / 占い妨害：有効 / 呪い：有効</h4>
+<pre>
+対<a href="sub_role.php#lovers">恋人</a>専門の特殊な占い師。本人表記は「<a href="#mage">占い師</a>」。
+占い結果は「～さんは [専用メッセージ]」と表示される。
+<a href="#jealousy">橋姫</a>の能力は持っていない。
+</pre>
+<h4>判定法則</h4>
+<table>
+<tr><th>判定順</th><th>判定条件</th><th>判定結果</th><th>設定変更</th></tr>
+<tr>
+  <td>1</td>
+  <td><a href="sub_role.php#possessed_exchange">交換憑依</a></td>
+  <td>誰かと入れ替わっている</td>
+  <td></td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><a href="sub_role.php#letter_exchange">交換日記</a></td>
+  <td>日記を交換している</td>
+  <td></td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><a href="sub_role.php#challenge_lovers">難題</a></td>
+  <td>月に恋をされている</td>
+  <td></td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><a href="sub_role.php#vega_lovers">織姫</a></td>
+  <td>彦星を待ち焦がれている</td>
+  <td></td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><a href="sub_role.php#lovers">恋人</a></td>
+  <td>恋をしている</td>
+  <td></td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><a href="sub_role.php#fake_lovers">愛人</a></td>
+  <td>大人な恋をしている</td>
+  <td></td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><a href="sub_role.php#sweet_status">悲恋</a></td>
+  <td>悲しい恋をしていた</td>
+  <td></td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><a href="lovers.php">恋人陣営</a> (メイン役職)</td>
+  <td>誰かの恋を応援している</td>
+  <td></td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>それ以外</td>
+  <td>あなたのことが好き / 嫌い (位置占い)</td>
+  <td></td>
+</tr>
+</table>
+<h4>位置占い能力</h4>
+<ol>
+<li>自分と投票先の「通り道」の移動距離が奇数なら「好き」、偶数なら「嫌い」と判定する。</li>
+<li>「通り道」とは参加者の位置で、生死は無関係。</li>
+<li>通り道を斜めに進むことはできない。</li>
+<li>投票先が憑依されていた場合は憑依元の位置で判定する。</li>
+</ol>
+<h5>判定例</h5>
+<pre>
+ 1(死)  2(生)  3(生)  4(死)  5(生)
+ 6(死)  7(死)  8(生)  9(生) 10(死)
+11(生) 12(生) 13(生) 14(生) 15(生)
+16(死) 17(生)
+
+例1) 3 が 14 に投票
+→ 距離は「3」で奇数(好き)
+
+例2) 17 が 9 に投票
+→ 距離は「4」で偶数(嫌い)
+
+例3) 5 が 11 に投票
+→ 距離は「6」で偶数(嫌い)
+
+例4) 5 が 9 に投票 (10 は 9 に憑依されている)
+→ 距離は「1」で奇数(好き)
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#mage">占い能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#priest">司祭</a>の対<a href="sub_role.php#lovers">恋人</a>バージョンで、所属は橋姫系になります。
+判定法則が全然違うので他の司祭表示役職と区別しやすいですが、騙りやすいですね。
 </pre>
 
 <h3 id="priest_jealousy">恋司祭 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β17～]</h3>
