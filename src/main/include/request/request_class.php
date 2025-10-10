@@ -114,7 +114,6 @@ class Request extends stdClass {
   }
 
   public function ParseGetOn(...$stack) {
-
     $this->Parse('get', 'IsOn', $stack);
   }
 

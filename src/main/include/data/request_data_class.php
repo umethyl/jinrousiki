@@ -7,6 +7,7 @@ final class RequestDataGame {
   const SOUND  = 'play_sound';
   const ICON   = 'icon';
   const NAME   = 'name';
+  const WORDS  = 'last_words_up';
   const DOWN   = 'list_down';
   const ASYNC  = 'async';
 }
