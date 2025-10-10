@@ -68,11 +68,13 @@ final class RequestDataLogRoom {
 //-- 定数リスト (Request/Icon) --//
 final class RequestDataIcon {
   const ID         = 'icon_no';
+  const NUMBER     = 'number_list';
   const NAME       = 'icon_name';
   const CATEGORY   = 'category';
   const APPEARANCE = 'appearance';
   const AUTHOR     = 'author';
   const COLOR      = 'color';
   const KEYWORD    = 'keyword';
+  const MULTI      = 'multi_edit';
   const PASSWORD   = 'password';
 }

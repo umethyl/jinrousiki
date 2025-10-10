@@ -114,6 +114,7 @@ class Request extends stdClass {
   }
 
   public function ParseGetOn(...$stack) {
+
     $this->Parse('get', 'IsOn', $stack);
   }
 
@@ -137,6 +138,17 @@ class Request extends stdClass {
     $this->ParseGet('IsRoomNo', RequestDataGame::ID);
   }
 
+  //-- 判定用 --//
+  //有効
+  public function Enable(string $key) {
+    return true === $this->$key;
+  }
+
+  //無効
+  public function Disable(string $key) {
+    return true !== $this->$key;
+  }
+
   //-- データ展開用 --//
   //全データ展開
   public function ToArray() {
@@ -150,9 +162,9 @@ class Request extends stdClass {
   //URLパラメータ展開
   public function ToURL($key, $int = false) {
     if ($int) {
-      return $this->$key ? URL::GetAddInt($key, $this->$key) : '';
+      return $this->$key ? URL::AddInt($key, $this->$key) : '';
     } else {
-      return $this->$key ? URL::GetSwitch($key) : '';
+      return $this->$key ? URL::AddSwitch($key) : '';
     }
   }
 

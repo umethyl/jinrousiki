@@ -19,7 +19,7 @@ final class GamePlayHTML {
     if (RQ::Get()->$type) {
       $switch = Switcher::ON;
     } else {
-      $url   .= URL::GetSwitch($type);
+      $url   .= URL::AddSwitch($type);
       $switch = Switcher::OFF;
     }
     Text::Printf(self::GetHeaderSwitchLink(), $url, $switch, self::GetHeaderStr($type));
@@ -30,7 +30,7 @@ final class GamePlayHTML {
     if (RQ::Get()->$type) {
       $switch = Switcher::OFF;
     } else {
-      $url   .= URL::GetSwitch($type);
+      $url   .= URL::AddSwitch($type);
       $switch = Switcher::ON;
     }
     GameHTML::OutputHeaderLink($url, self::GetHeaderStr($type . '_' . $switch));

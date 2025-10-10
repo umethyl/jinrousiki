@@ -335,7 +335,7 @@ abstract class GamePlayView extends stdClass {
     //中央フレーム内の下界発言更新ボタン (死亡者用)
     if (DB::$ROOM->IsOn(RoomMode::DEAD) && DB::$SELF->IsDead()) {
       $url = $this->GetURL([RequestDataRoom::DEAD, RequestDataRoom::HEAVEN], 'game_play.php');
-      GamePlayHTML::OutputReloadButton($url . URL::GetSwitch(RequestDataRoom::DEAD));
+      GamePlayHTML::OutputReloadButton($url . URL::AddSwitch(RequestDataRoom::DEAD));
     }
 
     GameHTML::OutputAutoReloadLink($this->GetURL([RequestDataGame::RELOAD]));
@@ -350,7 +350,7 @@ abstract class GamePlayView extends stdClass {
       RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::DOWN
     );
 
-    $url = $this->SelectURL([]) . URL::GetSwitch('describe_room');
+    $url = $this->SelectURL([]) . URL::AddSwitch('describe_room');
     GamePlayHTML::OutputHeaderLink('room_manager', $url, 'describe_room');
 
     //別ページリンク
