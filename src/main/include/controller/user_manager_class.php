@@ -21,7 +21,7 @@ final class UserManagerController extends JinrouController {
     extract(RQ::ToArray()); //引数を展開
     $url = URL::GetRoom('user_manager', $room_no); //ベースバックリンク
     if ($user_no > 0) {
-      $url .= URL::GetAddInt(RequestDataUser::ID, $user_no); //登録情報変更モード
+      $url .= URL::AddInt(RequestDataUser::ID, $user_no); //登録情報変更モード
     }
     $back_url = Text::BRLF . UserManagerHTML::GenerateError($url); //バックリンク
     if (GameConfig::TRIP && $trip != '') {

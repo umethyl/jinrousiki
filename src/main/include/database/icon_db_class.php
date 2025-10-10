@@ -191,6 +191,11 @@ final class IconDB {
     return self::GetQueryBase()->Update()->Where(['icon_no']);
   }
 
+  //共通 Query 取得 (一括編集用)
+  public static function GetQueryMultiUpdate(array $list) {
+    return self::GetQueryBase()->Update()->WhereIn('icon_no', count($list));
+  }
+
   //共通 Query 取得
   private static function GetQuery(array $column) {
     return self::GetQuerySelect($column)->Where(['icon_no']);
