@@ -1,5 +1,6 @@
 @charset "utf-8";
 @import url(talk_vote.css);
+@import url(talk_voice.css);
 /* talk_class */
 body { /* AA 用 */
   font-family: "ＭＳ Ｐゴシック", "ＭＳＰゴシック", "MSPゴシック", "MS Pゴシック";
@@ -9,22 +10,7 @@ body { /* AA 用 */
   border: 0;
   border-collapse: collapse;
 }
-/* 基本発言*/
-.normal { /* 通常の発言 */
-  font-size: 12pt;
-}
-.strong {  /* 大声 */
-  font-size: 20pt;
-  font-weight: bold;
-}
-.weak { /* 小声 */
-  /* 青文字 */
-  /*
-  color: #1E90FF;
-  */
-  font-size: 8pt;
-  font-weight: lighter;
-}
+/* 基本発言 */
 .say { /* 発言の中身 */
   padding: 3px 0;
   margin-left: 1px;

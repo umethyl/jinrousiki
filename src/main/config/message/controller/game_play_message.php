@@ -42,6 +42,9 @@ class GamePlayMessage {
   const SILENCE    = '・・・・・・・・・・ %s ほどの沈黙が続いた'; //沈黙判定 (会話で時間経過制)
   const TALK_COUNT = '発言数制限';
 
+  /* 個別発言 (身代わり君専用) */
+  const INDIVIDUAL_TALK_EXPLAIN = '個別発言用';
+
   /* 投票情報 (クイズ村GM専用) */
   const QUIZ_VOTED_NAME  = '名前';
   const QUIZ_VOTED_COUNT = '得票数';

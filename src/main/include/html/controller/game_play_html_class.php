@@ -129,6 +129,23 @@ final class GamePlayHTML {
     Text::Printf(self::GetSelfLastWords(), GamePlayMessage::LAST_WORDS, $str);
   }
 
+  //フォーム出力 (身代わり君用)
+  public static function OutputForm($url) {
+    Text::Printf(self::GetFormHeader(),
+      $url, RQ::Get()->heaven_mode ? 'reload_middle_frame();' : '',
+      GamePlayMessage::INDIVIDUAL_TALK_EXPLAIN,
+      Security::GetToken(DB::$ROOM->id),
+      RequestDataTalk::INDIVIDUAL, Switcher::ON,
+      RequestDataTalk::SENTENCE, GameMessage::SUBMIT,
+      RequestDataTalk::TARGET
+    );
+
+    foreach (DB::$USER->Get() as $id => $user) {
+      Text::Printf(self::GetSelector(), $id, $user->handle_name);
+    }
+    Text::Output(self::GetFormFooter());
+  }
+
   //シーン情報出力 (非同期用)
   public static function OutputSceneAsync() {
     Text::Printf(self::GetSceneAsync(), DB::$ROOM->date, DB::$ROOM->scene, GameTime::GetPass());
@@ -209,6 +226,36 @@ EOF;
 <td class="lastwords-title">%s</td>
 <td class="lastwords-body">%s</td>
 </tr></table>
+EOF;
+  }
+
+  //フォームタグヘッダ (身代わり君用)
+  private static function GetFormHeader() {
+    return <<<EOF
+<form method="post" action="%s" target="bottom" class="input-say" name="send" onSubmit="%sset_focus();">
+<span class="input-say-explain">%s</span>
+<input type="hidden" name="token" value="%s">
+<input type="hidden" name="%s" value="%s">
+<table><tr>
+<td><textarea name="%s" rows="3" cols="70" wrap="soft"></textarea></td>
+<td>
+<input type="submit" onClick="setTimeout(&quot;auto_clear()&quot;, 10)" value="%s"><br>
+<select name="%s">
+EOF;
+  }
+
+  //セレクタータグ (身代わり君用)
+  private static function GetSelector() {
+    return '<option value="%s">%s</option>';
+  }
+
+  //フォームタグフッタ (身代わり君用)
+  private static function GetFormFooter() {
+    return <<<EOF
+</select>
+</td>
+</tr></table>
+</form>
 EOF;
   }
 

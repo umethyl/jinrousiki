@@ -18,20 +18,32 @@ final class GamePlayTalk {
 
   //発言登録
   public static function Store($say) {
-    //-- 秘密発言判定 --//
-    if (RQ::Get()->font_type == TalkVoice::SECRET) {
+    //-- 特殊発言判定 --//
+    RQ::Set('individual_talk', false);
+    RQ::Set('secret_talk',     false);
+    if (self::IsIndividual()) {
+      //-- 個別発言 --//
+      RQ::Set('individual_talk', true);
+      RQ::Set(RequestDataTalk::VOICE, TalkVoice::NORMAL); //声の大きさは普通で固定
+    } elseif (RQ::Get()->font_type == TalkVoice::SECRET) {
+      //-- 秘密発言判定 --//
       RQ::Set('secret_talk', true);
       RQ::Set(RequestDataTalk::VOICE, TalkVoice::NORMAL); //声の大きさは普通で固定
-    } else {
-      RQ::Set('secret_talk', false);
     }
 
     //-- タイマー更新判定 --//
     Talk::Stack()->Set(Talk::UPDATE, true);
 
-    //-- 無条件登録 (ゲーム開始前後 > 身代わり君のシステムメッセージ (遺言) > 死者の霊話) --//
+    /*
+      無条件登録判定
+      身代わり君の個別発言 > ゲーム開始前後 > 身代わり君のシステムメッセージ (遺言) > 死者の霊話
+    */
     $talk = new RoleTalkStruct($say);
-    if (false === DB::$ROOM->IsPlaying()) {
+    if (true === RQ::Get()->individual_talk) {
+      $location = TalkLocation::INDIVIDUAL . ':' . RQ::Get()->{RequestDataTalk::TARGET};
+      $talk->Set(TalkStruct::LOCATION, $location);
+      return RoleTalk::Store($talk, true);
+    } elseif (false === DB::$ROOM->IsPlaying()) {
       return RoleTalk::Store($talk, true);
     } elseif (RQ::Get()->last_words && DB::$SELF->IsDummyBoy()) {
       $talk->Set(TalkStruct::LOCATION, TalkLocation::DUMMY_BOY);
@@ -110,6 +122,35 @@ final class GamePlayTalk {
 
     //-- タイマー更新判定 --//
     Talk::Stack()->Set(Talk::UPDATE, DB::$SELF->IsDummyBoy());
+  }
+
+  //特殊発言判定 (個別発言)
+  private static function IsIndividual() {
+    //身代わり君限定
+    if (false === DB::$SELF->IsDummyBoy()) {
+      return false;
+    }
+
+    //プレイ中限定
+    if (false === DB::$ROOM->IsPlaying()) {
+      return false;
+    }
+
+    //フラグ判定
+    RQ::Get()->ParsePostOn(RequestDataTalk::INDIVIDUAL);
+    if (RQ::Get()->Disable(RequestDataTalk::INDIVIDUAL)) {
+      return false;
+    }
+
+    //対象者
+    RQ::Get()->ParsePostInt(RequestDataTalk::TARGET);
+    $target_id = RQ::Get()->{RequestDataTalk::TARGET};
+    $user      = DB::$USER->ByID($target_id);
+    if ($target_id != $user->id) {
+      return false;
+    }
+
+    return true;
   }
 
   //発言数更新 (発言数制限制用)
