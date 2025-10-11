@@ -1,15 +1,16 @@
 <?php
 //-- 定数リスト (Request/Game) --//
 final class RequestDataGame {
-  const DB     = 'db_no';
-  const ID     = 'room_no';
-  const RELOAD = 'auto_reload';
-  const SOUND  = 'play_sound';
-  const ICON   = 'icon';
-  const NAME   = 'name';
-  const LIST   = 'list_down';
-  const WORDS  = 'last_words_up';
-  const ASYNC  = 'async';
+  const DB         = 'db_no';
+  const ID         = 'room_no';
+  const RELOAD     = 'auto_reload';
+  const SOUND      = 'play_sound';
+  const ICON       = 'icon';
+  const NAME       = 'name';
+  const LIST       = 'list_down';
+  const WORDS      = 'last_words_up';
+  const INDIVIDUAL = 'individual_up';
+  const ASYNC      = 'async';
 }
 
 //-- 定数リスト (Request/Game/Log) --//
