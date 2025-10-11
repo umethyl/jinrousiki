@@ -4,9 +4,6 @@ class GameUpMessage {
   /* タイトル */
   const TITLE = '[発言]';
 
-  /* 投票ボタン */
-  const SUBMIT = '送信/リロード';
-
   /* セレクタ */
   const STRONG     = '強く発言';
   const NORMAL     = '通常の発言';

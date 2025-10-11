@@ -1,14 +1,16 @@
 <?php
 //-- 定数リスト (Request/Game) --//
 final class RequestDataGame {
-  const DB     = 'db_no';
-  const ID     = 'room_no';
-  const RELOAD = 'auto_reload';
-  const SOUND  = 'play_sound';
-  const ICON   = 'icon';
-  const NAME   = 'name';
-  const DOWN   = 'list_down';
-  const ASYNC  = 'async';
+  const DB         = 'db_no';
+  const ID         = 'room_no';
+  const RELOAD     = 'auto_reload';
+  const SOUND      = 'play_sound';
+  const ICON       = 'icon';
+  const NAME       = 'name';
+  const LIST       = 'list_down';
+  const WORDS      = 'last_words_up';
+  const INDIVIDUAL = 'individual_up';
+  const ASYNC      = 'async';
 }
 
 //-- 定数リスト (Request/Game/Log) --//
@@ -38,9 +40,11 @@ final class RequestDataUser {
 
 //-- 定数リスト (Request/Talk) --//
 final class RequestDataTalk {
-  const SENTENCE  = 'say';
-  const VOICE     = 'font_type';
-  const OBJECTION = 'set_objection';
+  const SENTENCE   = 'say';
+  const VOICE      = 'font_type';
+  const OBJECTION  = 'set_objection';
+  const INDIVIDUAL = 'individual';
+  const TARGET     = 'individual_target';
 }
 
 //-- 定数リスト (Request/Vote) --//
@@ -68,11 +72,13 @@ final class RequestDataLogRoom {
 //-- 定数リスト (Request/Icon) --//
 final class RequestDataIcon {
   const ID         = 'icon_no';
+  const NUMBER     = 'number_list';
   const NAME       = 'icon_name';
   const CATEGORY   = 'category';
   const APPEARANCE = 'appearance';
   const AUTHOR     = 'author';
   const COLOR      = 'color';
   const KEYWORD    = 'keyword';
+  const MULTI      = 'multi_edit';
   const PASSWORD   = 'password';
 }

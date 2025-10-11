@@ -5,9 +5,11 @@ class IconEditMessage {
   const TITLE = 'ユーザアイコン編集';
 
   /* 入力情報チェック */
-  const REFERER  = '無効なアクセスです';
-  const PASSWORD = 'パスワードが違います';
-  const NAME     = 'アイコン名が空欄になっています';
+  const REFERER       = '無効なアクセスです';
+  const PASSWORD      = 'パスワードが違います';
+  const NAME          = 'アイコン名が空欄になっています';
+  const NUMBER        = '無効なアイコン番号です: "%s"';
+  const NUMBER_FORMAT = 'アイコン番号は数字のみのカンマ区切りで入力してください: "%s"';
 
   /* 更新処理 */
   const SUCCESS   = '編集完了';

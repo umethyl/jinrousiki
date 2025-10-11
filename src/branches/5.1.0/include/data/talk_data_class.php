@@ -1,14 +1,15 @@
 <?php
 //-- 定数リスト (Talk/Location) --//
 final class TalkLocation {
-  const SYSTEM    = 'system';
-  const DUMMY_BOY = 'dummy_boy';
-  const COMMON    = 'common';
-  const WOLF      = 'wolf';
-  const MAD       = 'mad';
-  const FOX       = 'fox';
-  const MONOLOGUE = 'self_talk';
-  const SECRET    = 'secret';
+  const SYSTEM     = 'system';
+  const DUMMY_BOY  = 'dummy_boy';
+  const INDIVIDUAL = 'individual';
+  const COMMON     = 'common';
+  const WOLF       = 'wolf';
+  const MAD        = 'mad';
+  const FOX        = 'fox';
+  const MONOLOGUE  = 'self_talk';
+  const SECRET     = 'secret';
 }
 
 //-- 定数リスト (Talk/Action) --//

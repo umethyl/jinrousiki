@@ -20,18 +20,21 @@ class IconMessage {
   const KEYWORD_INPUT  = 'キーワード：';
   const SEARCH         = '検索';
   const SEARCH_EXPLAIN = 'アイコンをクリックすると編集できます (要パスワード)';
+  const MULTI_EDIT     = '一括編集';
 
   /* カテゴリ表示欄 */
   const NOTHING = 'データ無し';
   const SPACE   = '空欄';
 
   /* フォーム */
-  const NAME     = 'アイコンの名前';
-  const COLOR    = 'アイコン枠の色';
-  const EXAMPLE  = '例：#6699CC';
-  const DISABLE  = '非表示';
-  const PASSWORD = '編集パスワード';
-  const SUBMIT   = '変更';
+  const NUMBER_FORMAT = 'アイコン番号はカンマ区切りで入力してください';
+  const NUMBER        = 'アイコン番号';
+  const NAME          = 'アイコンの名前';
+  const COLOR         = 'アイコン枠の色';
+  const EXAMPLE       = '例：#6699CC';
+  const DISABLE       = '非表示';
+  const PASSWORD      = '編集パスワード';
+  const SUBMIT        = '変更';
 
   /* エラー処理 */
   const LENGTH_LIMIT  = '半角で%d文字、全角で%d文字まで';

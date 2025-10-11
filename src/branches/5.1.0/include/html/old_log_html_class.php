@@ -159,7 +159,7 @@ final class OldLogHTML {
 	  $view_url  = '';
 	}
 	if (RQ::Get()->watch) {
-	  $base_url .= URL::GetSwitch(RequestDataLogRoom::WATCH);
+	  $base_url .= URL::AddSwitch(RequestDataLogRoom::WATCH);
 	}
 
 	if ($current_time - strtotime(DB::$ROOM->finish_datetime) > RoomConfig::KEEP_SESSION) {
@@ -173,7 +173,7 @@ final class OldLogHTML {
 	} else {
 	  $log_link  = HTML::GenerateLogLink($base_url, true, '(', '', ' )');
 
-	  $url       = $base_url . URL::GetSwitch(RequestDataLogRoom::ROLE);
+	  $url       = $base_url . URL::AddSwitch(RequestDataLogRoom::ROLE);
 	  $header    = Text::LF . OldLogMessage::ADD_ROLE . ' (';
 	  $log_link .= HTML::GenerateLogLink($url, false, $header, $vanish, ' )');
 	}

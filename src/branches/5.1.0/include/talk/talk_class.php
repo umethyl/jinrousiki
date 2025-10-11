@@ -530,9 +530,19 @@ final class TalkBuilder {
     case TalkLocation::MONOLOGUE: //独り言
       return $mind_read || $this->flag->dummy_boy || $this->actor->IsSameName($talk->uname);
 
-    default: //ここに来たらロジックエラー
-      $this->TalkDebug('Error: Location Error', '◆Location Check');
-      return false;
+    default:
+      if (null === $location) { //ここに来たらロジックエラー
+	$this->TalkDebug('Error: Location Error: ' . $location, '◆Location Check');
+	return false;
+      }
+
+      //個別発言判定
+      list($parse_location, $location_id) = Text::Parse($location, ':');
+      if ($parse_location != TalkLocation::INDIVIDUAL) { //ここに来たらロジックエラー
+	$this->TalkDebug('Error: Location Error: ' . $location, '◆Location Check');
+	return false;
+      }
+      return $mind_read || $location_id == $this->actor->id;
     }
   }
 
@@ -578,6 +588,12 @@ final class TalkBuilder {
 	(($talk->location == TalkLocation::MONOLOGUE && ! $user->IsRole('dummy_common')) ||
 	 $user->IsRole('leader_common', 'mind_read', 'mind_open'))) {
       $name .= TalkHTML::GenerateSelfTalk();
+    } elseif ($talk->uname == GM::DUMMY_BOY && null !== $talk->location) {
+      //個別発言判定
+      list($parse_location, $location_id) = Text::Parse($talk->location, ':');
+      if ($parse_location == TalkLocation::INDIVIDUAL) {
+	$name .= Text::BRLF . ' -> ' . DB::$USER->ByID($location_id)->GetName();
+      }
     }
 
     $voice    = $talk->font_type;
@@ -654,6 +670,17 @@ final class TalkBuilder {
 	$talk->sentence = RoleTalkMessage::COMMON_TALK;
       }
     }
+
+    //個別発言判定
+    if ($talk->uname == GM::DUMMY_BOY && null !== $talk->location && ! $this->flag->open_talk) {
+      list($parse_location, $location_id) = Text::Parse($talk->location, ':');
+      if ($parse_location == TalkLocation::INDIVIDUAL) {
+	if ($location_id != $this->actor->id) {
+	  return false;
+	}
+      }
+    }
+
     return $this->Talk($talk, $actor, $real);
   }
 
@@ -764,6 +791,16 @@ final class TalkBuilder {
     case TalkLocation::MONOLOGUE:
       $css    = TalkCSS::NIGHT_SELF;
       $name  .= TalkHTML::GenerateSelfTalk();
+      break;
+
+    default:
+      //個別発言判定
+      if (null !== $talk->location) {
+	list($parse_location, $location_id) = Text::Parse($talk->location, ':');
+	if ($parse_location == TalkLocation::INDIVIDUAL) {
+	  $name .= Text::BRLF . ' -> ' . DB::$USER->ByID($location_id)->GetName();
+	}
+      }
       break;
     }
 

@@ -2,7 +2,7 @@
 //-- HTML 生成クラス (アイコン拡張) --//
 final class IconHTML {
   //アイコン情報出力
-  public static function Output($url = 'icon_view') {
+  public static function Output(string $url) {
     /*
       初回表示前に検索条件をリセットする
       TODO: リファラーをチェックすることで GET リクエストによる取得にも対処できる
@@ -12,52 +12,11 @@ final class IconHTML {
     if (null === RQ::Get()->page) {
       Session::Clear('icon_view');
     }
-
-    //編集フォームの表示
-    if ($url == 'icon_view') {
-      if (RQ::Get()->icon_no > 0) {
-	self::OutputLink();
-	HTML::OutputFieldsetHeader(IconMessage::EDIT);
-	self::OutputEdit(RQ::Get()->icon_no);
-      } else {
-	HTML::OutputFieldsetHeader(IconMessage::TITLE);
-	self::OutputConcrete($url);
-      }
-      HTML::OutputFieldsetFooter();
-    } else {
-      self::OutputConcrete($url);
-    }
-  }
-
-  //バックリンク出力
-  private static function OutputLink() {
-    HTML::OutputDiv(HTML::GenerateLink('icon_view.php', IconMessage::BACK), 'link');
-  }
-
-  //アイコン編集フォーム出力
-  private static function OutputEdit($icon_no) {
-    $stack = IconDB::Get($icon_no);
-    if (count($stack) < 1) {
-      return;
-    }
-
-    extract($stack);
-    $size = UserIcon::GetMaxLength();
-    Text::Printf(self::GetEdit(),
-      $icon_no, Icon::GetFile($icon_filename), $icon_name, $color,
-      IconMessage::NAME,	$icon_name,	$size,
-      IconMessage::APPEARANCE,	$appearance,	$size,
-      IconMessage::CATEGORY,	$category,	$size,
-      IconMessage::AUTHOR,	$author,	$size,
-      IconMessage::COLOR,	$color,		IconMessage::EXAMPLE,
-      IconMessage::DISABLE, HTML::GenerateChecked($disable > 0),
-      IconMessage::PASSWORD,
-      IconMessage::SUBMIT
-    );
+    self::OutputConcrete($url);
   }
 
   //アイコン情報を収集して表示する
-  private static function OutputConcrete($base_url = 'icon_view') {
+  private static function OutputConcrete(string $base_url) {
     //-- 検索フォームヘッダ出力 --//
     Text::Output(self::GetSearchHeader());
 
@@ -79,7 +38,7 @@ final class IconHTML {
       $stack = self::OutputSelector($request, $message);
       if (0 < count($stack)) {
 	foreach ($stack as $data) {
-	  $url_option[] = URL::GetList($request, $data);
+	  $url_option[] = URL::ConvertList($request, $data);
 	}
 	ArrayFilter::AddMerge($list, IconDB::SetQueryIn($query, $request, $stack));
       }
@@ -103,9 +62,10 @@ final class IconHTML {
     //検索結果の表示
     if (empty(RQ::Get()->room_no)) {
       $method = 'OutputDetailForIconView';
+      $edit_url = URL::GenerateSwitch('icon_view', RequestDataIcon::MULTI);
       Text::Printf(self::GetCaption(),
 	IconMessage::APPEARANCE, IconMessage::CATEGORY, IconMessage::AUTHOR,
-	IconMessage::SEARCH_EXPLAIN
+	IconMessage::SEARCH_EXPLAIN, HTML::GenerateLink($edit_url, IconMessage::MULTI_EDIT)
       );
     } elseif (isset(RQ::Get()->room_no)) {
       $method = 'OutputDetailForUserEntry';
@@ -124,10 +84,10 @@ final class IconHTML {
     $CONF->option     = $url_option;
     $CONF->attributes = ['onClick' => 'return "return submit_icon_search(\'$page\');";'];
     if (RQ::Get()->room_no > 0) {
-      $CONF->option[] = URL::GetInt(RequestDataGame::ID, RQ::Get()->room_no);
+      $CONF->option[] = URL::ConvertInt(RequestDataGame::ID, RQ::Get()->room_no);
     }
     if (RQ::Get()->icon_no > 0) {
-      $CONF->option[] = URL::GetInt(RequestDataIcon::ID, RQ::Get()->icon_no);
+      $CONF->option[] = URL::ConvertInt(RequestDataIcon::ID, RQ::Get()->icon_no);
     }
     printf('<td colspan="%d" class="page-link">', UserIconConfig::COLUMN * 2);
     self::OutputPageLink($CONF);
@@ -170,7 +130,7 @@ final class IconHTML {
   //アイコン詳細画面 (IconView 用)
   private static function OutputDetailForIconView(array $icon_list, $cell_width) {
     extract($icon_list);
-    $edit_url = URL::GetHeaderLink('icon_view', RequestDataIcon::ID, $icon_no);
+    $edit_url = URL::GenerateInt('icon_view', RequestDataIcon::ID, $icon_no);
     if ($disable > 0) {
       $icon_name = HTML::GenerateTag('s', $icon_name);
     }
@@ -262,49 +222,6 @@ final class IconHTML {
     return sprintf('<a href="%s" %s>%s</a>', $url, ArrayFilter::Concat($attributes), $title);
   }
 
-  //アイコン編集フォームタグ
-  private static function GetEdit() {
-    return <<<EOF
-<form method="post" action="icon_edit.php">
-<input type="hidden" name="icon_no" value="%d">
-<table cellpadding="3">
-<tr>
-  <td rowspan="7"><img src="%s" alt="%s" style="border:3px solid %s;"></td>
-  <td><label for="name">%s</label></td>
-  <td><input type="text" id="name" name="icon_name" value="%s" %s></td>
-</tr>
-<tr>
-  <td><label for="appearance">%s</label></td>
-  <td><input type="text" id="appearance" name="appearance" value="%s" %s></td>
-</tr>
-<tr>
-  <td><label for="category">%s</label></td>
-  <td><input type="text" id="category" name="category" value="%s" %s></td>
-</tr>
-<tr>
-  <td><label for="author">%s</label></td>
-  <td><input type="text" id="author" name="author" value="%s" %s></td>
-</tr>
-<tr>
-  <td><label for="color">%s</label></td>
-  <td><input type="text" id="color" name="color" size="10px" maxlength="7" value="%s"> (%s)</td>
-</tr>
-<tr>
-  <td><label for="disable">%s</label></td>
-  <td><input type="checkbox" id="disable" name="disable" value="on"%s></td>
-</tr>
-<tr>
-  <td><label for="password">%s</label></td>
-  <td><input type="password" id="password" name="password" size="20" value=""></td>
-</tr>
-<tr>
-  <td colspan="3"><input type="submit" value="%s"></td>
-</tr>
-</table>
-</form>
-EOF;
-  }
-
   //検索フォームヘッダタグ
   private static function GetSearchHeader() {
     return <<<EOF
@@ -351,7 +268,7 @@ EOF;
 <table>
 <caption>
 [S] %s / [C] %s / [A] %s<br>
-%s
+%s / %s
 </caption>
 <thead><tr>
 EOF;
