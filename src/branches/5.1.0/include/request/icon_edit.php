@@ -11,5 +11,9 @@ class Request_icon_edit extends RequestIcon {
     parent::__construct();
     $this->ParsePostOn('disable');
     $this->ParsePostStr(RequestDataIcon::PASSWORD);
+    $this->ParsePostOn(RequestDataIcon::MULTI);
+    if ($this->Enable(RequestDataIcon::MULTI)) {
+      $this->ParsePostStr(RequestDataIcon::NUMBER);
+    }
   }
 }

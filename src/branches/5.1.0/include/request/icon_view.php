@@ -8,6 +8,7 @@ RQ::LoadFile('request_icon');
 class Request_icon_view extends RequestIcon {
   public function __construct() {
     $this->GetIconData();
+    $this->ParseGetOn(RequestDataIcon::MULTI);
     $this->ParseGetInt(RequestDataIcon::ID);
     $this->ParseGetData(
       RequestDataIcon::CATEGORY, RequestDataIcon::APPEARANCE, RequestDataIcon::AUTHOR

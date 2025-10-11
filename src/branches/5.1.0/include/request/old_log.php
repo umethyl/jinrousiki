@@ -45,7 +45,7 @@ class Request_old_log extends Request {
 	}
 	$base_url .= $this->ToURL($j);
       }
-      $base_url .= ($this->$i ? '' : URL::GetSwitch($i)) . URL::GetAddDB();
+      $base_url .= ($this->$i ? '' : URL::AddSwitch($i)) . URL::AddDB();
       $link_url  = OldLogHTML::GenerateSwitchLink($base_url, $name, Switcher::Get($this->$i));
       $url .= Text::LineFeed($link_url);
     }

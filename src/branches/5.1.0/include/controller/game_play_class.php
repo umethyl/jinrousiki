@@ -63,11 +63,16 @@ final class GamePlayController extends JinrouController {
     RQ::Get()->StackIntParam(RequestDataGame::RELOAD);
 
     $stack = [
-      RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::DOWN
+      RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::LIST,
+      RequestDataGame::WORDS
     ];
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $stack[] = RequestDataGame::INDIVIDUAL;
+    }
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;
     }
+
     foreach ($stack as $name) {
       RQ::Get()->StackOnParam($name);
     }
@@ -283,29 +288,53 @@ abstract class GamePlayView extends stdClass {
 
   //出力
   public function Output() {
+    if ($this->IgnoreOutput()) {
+      return;
+    }
+
     GameHTML::OutputHeader('game_play');
     $this->OutputHeader();
-    $this->OutputTimeTable();
+    if ($this->EnableGamePlay()) {
+      $this->OutputTimeTable();
+    }
     $this->OutputLimitSay();
-    if (false === RQ::Get()->list_down) {
-      GameHTML::OutputPlayer();
+    if ($this->EnableGamePlay()) {
+      if (RQ::Get()->Disable(RequestDataGame::LIST)) {
+	GameHTML::OutputPlayer();
+      }
+      GamePlayHTML::OutputAbility();
+      GamePlayHTML::OutputVote();
+      if (DB::$ROOM->IsOff(RoomMode::DEAD) && RQ::Get()->Enable(RequestDataGame::WORDS)) {
+	$this->OutputSelfLastWords();
+      }
+      if ($this->EnableForm() && RQ::Get()->Enable(RequestDataGame::INDIVIDUAL)) {
+	$this->OutputForm();
+      }
     }
-    GamePlayHTML::OutputAbility();
-    GamePlayHTML::OutputVote();
     $this->OutputTalk();
-    GameHTML::OutputLastWords();
-    GameHTML::OutputDead();
-    GameHTML::OutputVote();
-    if (DB::$ROOM->IsOff(RoomMode::DEAD)) {
-      $this->OutputSelfLastWords();
-    }
-    if (true === RQ::Get()->list_down) {
-      GameHTML::OutputPlayer();
-    }
-    if (true === RQ::Get()->play_sound) {
-      $this->OutputSound();
+    if ($this->EnableGamePlay()) {
+      GameHTML::OutputLastWords();
+      GameHTML::OutputDead();
+      GameHTML::OutputVote();
+      if (DB::$ROOM->IsOff(RoomMode::DEAD) && RQ::Get()->Disable(RequestDataGame::WORDS)) {
+	$this->OutputSelfLastWords();
+      }
+      if (RQ::Get()->Enable(RequestDataGame::LIST)) {
+	GameHTML::OutputPlayer();
+      }
+      if (RQ::Get()->Enable(RequestDataGame::SOUND)) {
+	$this->OutputSound();
+      }
+      if ($this->EnableForm() && RQ::Get()->Disable(RequestDataGame::INDIVIDUAL)) {
+	$this->OutputForm();
+      }
     }
     HTML::OutputFooter();
+  }
+
+  //出力スキップ判定
+  protected function IgnoreOutput() {
+    return false;
   }
 
   //ヘッダ出力
@@ -335,7 +364,7 @@ abstract class GamePlayView extends stdClass {
     //中央フレーム内の下界発言更新ボタン (死亡者用)
     if (DB::$ROOM->IsOn(RoomMode::DEAD) && DB::$SELF->IsDead()) {
       $url = $this->GetURL([RequestDataRoom::DEAD, RequestDataRoom::HEAVEN], 'game_play.php');
-      GamePlayHTML::OutputReloadButton($url . URL::GetSwitch(RequestDataRoom::DEAD));
+      GamePlayHTML::OutputReloadButton($url . URL::AddSwitch(RequestDataRoom::DEAD));
     }
 
     GameHTML::OutputAutoReloadLink($this->GetURL([RequestDataGame::RELOAD]));
@@ -344,17 +373,30 @@ abstract class GamePlayView extends stdClass {
   //リンク出力
   protected function OutputHeaderLink() {
     if (GameConfig::ASYNC) {
-      $this->OutputHeaderSwitchLink(RequestDataGame::ASYNC);
+      $this->OutputHeaderSwitchLink([RequestDataGame::ASYNC]);
     }
-    $this->OutputHeaderSwitchLink(
-      RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::DOWN
-    );
 
-    $url = $this->SelectURL([]) . URL::GetSwitch('describe_room');
+    $stack = [RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::LIST];
+    if (DB::$ROOM->IsOff(RoomMode::DEAD)) { //死者は自分の遺言は表示されない
+      $stack[] = RequestDataGame::WORDS;
+    }
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $stack[] = RequestDataGame::INDIVIDUAL;
+    }
+    $this->OutputHeaderSwitchLink($stack);
+
+    $url = $this->SelectURL([]) . URL::AddSwitch('describe_room');
     GamePlayHTML::OutputHeaderLink('room_manager', $url, 'describe_room');
 
     //別ページリンク
-    GamePlayHTML::OutputHeaderLink('game_play', $this->SelectURL([RequestDataGame::DOWN]));
+    $list = [RequestDataGame::LIST];
+    if (DB::$ROOM->IsOff(RoomMode::DEAD)) {
+      $list[] = RequestDataGame::WORDS;
+    }
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $list[] = RequestDataGame::INDIVIDUAL;
+    }
+    GamePlayHTML::OutputHeaderLink('game_play', $this->SelectURL($list));
     if (ServerConfig::DEBUG_MODE) { //観戦モードリンク
       GamePlayHTML::OutputHeaderLink('game_view', $this->SelectURL([]));
     }
@@ -384,21 +426,33 @@ abstract class GamePlayView extends stdClass {
   }
 
   //ヘッダーリンク出力 (スイッチ型)
-  final protected function OutputHeaderSwitchLink(...$type_list) {
+  final protected function OutputHeaderSwitchLink(array $type_list) {
     foreach ($type_list as $type) {
       $url = $this->GetURL([$type]);
-      if (RequestDataGame::DOWN == $type) {
+      switch ($type) {
+      case RequestDataGame::LIST:
+      case RequestDataGame::WORDS:
+      case RequestDataGame::INDIVIDUAL:
 	GamePlayHTML::OutputHeaderListLink($url, $type);
-      } else {
+	break;
+
+      default:
 	GamePlayHTML::OutputHeaderSwitchLink($url, $type);
+	break;
       }
     }
+  }
+
+  //ゲームプレイ状況出力有効判定
+  protected function EnableGamePlay() {
+    return true;
   }
 
   //タイムテーブル出力
   protected function OutputTimeTable() {
     $this->OutputTimeTableHeader();
     GameHTML::OutputTimeTable();
+
     $left_time = 0;
     if (DB::$ROOM->IsBeforeGame()) {
       GamePlayHTML::OutputTimeSetting();
@@ -424,11 +478,16 @@ abstract class GamePlayView extends stdClass {
     }
 
     $stack = [
-      RequestDataGame::RELOAD, RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::DOWN
+      RequestDataGame::RELOAD, RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::LIST,
+      RequestDataGame::WORDS
     ];
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $stack[] = RequestDataGame::INDIVIDUAL;
+    }
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;
     }
+
     GamePlayHTML::OutputObjection($this->SelectURL($stack, 'game_play.php'));
   }
 
@@ -531,6 +590,7 @@ abstract class GamePlayView extends stdClass {
     if ($str == '') {
       return false;
     }
+
     GamePlayHTML::OutputSelfLastWords($str);
   }
 
@@ -573,6 +633,27 @@ abstract class GamePlayView extends stdClass {
   //音声スキップ判定 (「異議」あり)
   protected function IgnoreSoundObjection() {
     return false;
+  }
+
+  //フォーム出力有効判定
+  protected function EnableForm() {
+    return DB::$SELF->IsDummyBoy();
+  }
+
+  //フォーム出力
+  final protected function OutputForm() {
+    $stack = [
+      RequestDataGame::RELOAD, RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::LIST,
+      RequestDataGame::WORDS
+    ];
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $stack[] = RequestDataGame::INDIVIDUAL;
+    }
+    if (GameConfig::ASYNC) {
+      $stack[] = RequestDataGame::ASYNC;
+    }
+
+    GamePlayHTML::OutputForm($this->SelectURL($stack, 'game_play.php'));
   }
 
   //発言出力 (非同期用)
@@ -639,6 +720,10 @@ class GamePlayView_Before extends GamePlayView {
     }
   }
 
+  protected function EnableForm() {
+    return false;
+  }
+
   public function OutputAsync() {
     GamePlayHTML::OutputSceneAsync();
     GameHTML::OutputPlayer();
@@ -702,12 +787,11 @@ class GamePlayView_After extends GamePlayView {
   }
 
   protected function OutputHeaderLink() {
-    $this->OutputHeaderSwitchLink(
-      RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::DOWN
-    );
+    $stack = [RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::LIST];
+    $this->OutputHeaderSwitchLink($stack);
 
     //別ページリンク
-    GamePlayHTML::OutputHeaderLink('game_play', $this->SelectURL([RequestDataGame::DOWN]));
+    GamePlayHTML::OutputHeaderLink('game_play', $this->SelectURL([RequestDataGame::LIST]));
     if (ServerConfig::DEBUG_MODE) { //観戦モードリンク
       GamePlayHTML::OutputHeaderLink('game_view', $this->SelectURL([]));
     }
@@ -740,6 +824,10 @@ class GamePlayView_After extends GamePlayView {
     return true;
   }
 
+  protected function EnableForm() {
+    return false;
+  }
+
   public function OutputAsync() {
     GamePlayHTML::OutputSceneAsync();
     $this->OutputTalk();
@@ -748,16 +836,12 @@ class GamePlayView_After extends GamePlayView {
 
 //-- GamePlay 出力クラス (霊界) --//
 class GamePlayView_Heaven extends GamePlayView {
-  public function Output() {
-    if (false === DB::$SELF->IsDead()) {
-      return;
-    }
+  protected function IgnoreOutput() {
+    return false === DB::$SELF->IsDead();
+  }
 
-    GameHTML::OutputHeader('game_play');
-    $this->OutputHeader();
-    $this->OutputLimitSay();
-    $this->OutputTalk();
-    HTML::OutputFooter();
+  protected function EnableGamePlay() {
+    return false;
   }
 
   protected function OutputHeaderTitle() {
@@ -791,6 +875,10 @@ class GamePlayView_Heaven extends GamePlayView {
 
   protected function IgnoreSound() {
     return true;
+  }
+
+  protected function EnableForm() {
+    return false;
   }
 
   public function OutputAsync() {

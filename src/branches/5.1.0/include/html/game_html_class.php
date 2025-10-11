@@ -66,7 +66,7 @@ final class GameHTML {
     $str    = HTML::GenerateLogLink($url, true, Text::BRLF . $header);
 
     $header = GameMessage::LOG_LINK_ROLE;
-    $url   .= URL::GetSwitch(RequestDataLogRoom::ROLE);
+    $url   .= URL::AddSwitch(RequestDataLogRoom::ROLE);
     return $str . HTML::GenerateLogLink($url, false, Text::BRLF . $header);
   }
 
@@ -105,12 +105,12 @@ final class GameHTML {
   public static function GenerateGameLogLink($url, $scene, $date = null) {
     $caption = self::GetGameLogLinkCaption($scene);
     if (true === isset($date)) {
-      $url .= URL::GetAddInt(RequestDataGameLog::DATE, $date);
+      $url .= URL::AddInt(RequestDataGameLog::DATE, $date);
       $str = $date . Text::Quote($caption);
     } else {
       $str = $caption;
     }
-    $url .= URL::GetAddString(RequestDataGameLog::SCENE, $scene);
+    $url .= URL::AddString(RequestDataGameLog::SCENE, $scene);
     return Text::Format(self::GetGameLogLink(), $url, $str);
   }
 
@@ -243,7 +243,7 @@ final class GameHTML {
 	   DB::$ROOM->IsOn(RoomMode::HEAVEN) ||
 	   DB::$ROOM->IsOn(RoomMode::LOG))
 	) {
-      $jump = self::GenerateJump() . URL::GetSwitch(RequestDataRoom::DEAD);
+      $jump = self::GenerateJump() . URL::AddSwitch(RequestDataRoom::DEAD);
       $str  = GameMessage::JUMP_HEAVEN;
     } elseif (DB::$ROOM->IsAfterGame() && DB::$ROOM->IsOn(RoomMode::DEAD)) {
       $jump = self::GenerateJump();
@@ -516,7 +516,7 @@ final class GameHTML {
       $url .= RQ::Get()->ToURL(RequestDataGame::RELOAD, true);
     }
 
-    $stack = [RequestDataGame::SOUND, RequestDataGame::DOWN];
+    $stack = [RequestDataGame::SOUND, RequestDataGame::LIST];
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;
     }

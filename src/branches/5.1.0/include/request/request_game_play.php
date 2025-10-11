@@ -10,7 +10,8 @@ class RequestGamePlay extends RequestGame {
   public function __construct() {
     parent::__construct();
     $this->ParseGetOn(
-      RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::DOWN
+      RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::LIST,
+      RequestDataGame::WORDS, RequestDataGame::INDIVIDUAL
     );
     $this->ParsePostData('token');
     if (GameConfig::ASYNC) {
@@ -27,7 +28,8 @@ class RequestGamePlay extends RequestGame {
     }
 
     $stack = [
-      RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::DOWN
+      RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::LIST,
+      RequestDataGame::WORDS, RequestDataGame::INDIVIDUAL
     ];
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;

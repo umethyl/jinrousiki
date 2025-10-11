@@ -55,6 +55,9 @@ class GameMessage {
   /* 特殊ステータス */
   const TEMPORARY_GM = '仮GM';
 
+  /* 投票ボタン */
+  const SUBMIT = '送信/リロード';
+
   /* 投票 */
   const VOTE_RESET = '＜投票がリセットされました　再度投票してください＞'; //投票リセット
 
