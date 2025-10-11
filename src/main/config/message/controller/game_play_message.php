@@ -10,6 +10,8 @@ class GamePlayMessage {
   public static $header_list_down_off     = '↑リスト';
   public static $header_last_words_up_on  = '↑遺言';
   public static $header_last_words_up_off = '↓遺言';
+  public static $header_individual_up_on  = '↑個別';
+  public static $header_individual_up_off = '↓個別';
   public static $header_describe_room     = 'OP';
   public static $header_game_play         = '別';
   public static $header_game_view         = '観戦';

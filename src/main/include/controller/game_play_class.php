@@ -66,9 +66,13 @@ final class GamePlayController extends JinrouController {
       RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::LIST,
       RequestDataGame::WORDS
     ];
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $stack[] = RequestDataGame::INDIVIDUAL;
+    }
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;
     }
+
     foreach ($stack as $name) {
       RQ::Get()->StackOnParam($name);
     }
@@ -303,6 +307,9 @@ abstract class GamePlayView extends stdClass {
       if (DB::$ROOM->IsOff(RoomMode::DEAD) && RQ::Get()->Enable(RequestDataGame::WORDS)) {
 	$this->OutputSelfLastWords();
       }
+      if ($this->EnableForm() && RQ::Get()->Enable(RequestDataGame::INDIVIDUAL)) {
+	$this->OutputForm();
+      }
     }
     $this->OutputTalk();
     if ($this->EnableGamePlay()) {
@@ -318,7 +325,7 @@ abstract class GamePlayView extends stdClass {
       if (RQ::Get()->Enable(RequestDataGame::SOUND)) {
 	$this->OutputSound();
       }
-      if ($this->EnableForm()) {
+      if ($this->EnableForm() && RQ::Get()->Disable(RequestDataGame::INDIVIDUAL)) {
 	$this->OutputForm();
       }
     }
@@ -366,18 +373,17 @@ abstract class GamePlayView extends stdClass {
   //リンク出力
   protected function OutputHeaderLink() {
     if (GameConfig::ASYNC) {
-      $this->OutputHeaderSwitchLink(RequestDataGame::ASYNC);
+      $this->OutputHeaderSwitchLink([RequestDataGame::ASYNC]);
     }
 
-    if (DB::$ROOM->IsOn(RoomMode::DEAD)) { //死者は自分の遺言は表示されない
-      $this->OutputHeaderSwitchLink(
-        RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::LIST
-      );
-    } else {
-      $this->OutputHeaderSwitchLink(
-        RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::LIST, RequestDataGame::WORDS
-      );
+    $stack = [RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::LIST];
+    if (DB::$ROOM->IsOff(RoomMode::DEAD)) { //死者は自分の遺言は表示されない
+      $stack[] = RequestDataGame::WORDS;
     }
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $stack[] = RequestDataGame::INDIVIDUAL;
+    }
+    $this->OutputHeaderSwitchLink($stack);
 
     $url = $this->SelectURL([]) . URL::AddSwitch('describe_room');
     GamePlayHTML::OutputHeaderLink('room_manager', $url, 'describe_room');
@@ -386,6 +392,9 @@ abstract class GamePlayView extends stdClass {
     $list = [RequestDataGame::LIST];
     if (DB::$ROOM->IsOff(RoomMode::DEAD)) {
       $list[] = RequestDataGame::WORDS;
+    }
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $list[] = RequestDataGame::INDIVIDUAL;
     }
     GamePlayHTML::OutputHeaderLink('game_play', $this->SelectURL($list));
     if (ServerConfig::DEBUG_MODE) { //観戦モードリンク
@@ -417,12 +426,13 @@ abstract class GamePlayView extends stdClass {
   }
 
   //ヘッダーリンク出力 (スイッチ型)
-  final protected function OutputHeaderSwitchLink(...$type_list) {
+  final protected function OutputHeaderSwitchLink(array $type_list) {
     foreach ($type_list as $type) {
       $url = $this->GetURL([$type]);
       switch ($type) {
       case RequestDataGame::LIST:
       case RequestDataGame::WORDS:
+      case RequestDataGame::INDIVIDUAL:
 	GamePlayHTML::OutputHeaderListLink($url, $type);
 	break;
 
@@ -471,9 +481,13 @@ abstract class GamePlayView extends stdClass {
       RequestDataGame::RELOAD, RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::LIST,
       RequestDataGame::WORDS
     ];
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $stack[] = RequestDataGame::INDIVIDUAL;
+    }
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;
     }
+
     GamePlayHTML::OutputObjection($this->SelectURL($stack, 'game_play.php'));
   }
 
@@ -632,9 +646,13 @@ abstract class GamePlayView extends stdClass {
       RequestDataGame::RELOAD, RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::LIST,
       RequestDataGame::WORDS
     ];
+    if (DB::$ROOM->IsPlaying() && DB::$SELF->IsDummyBoy()) {
+      $stack[] = RequestDataGame::INDIVIDUAL;
+    }
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;
     }
+
     GamePlayHTML::OutputForm($this->SelectURL($stack, 'game_play.php'));
   }
 
@@ -769,9 +787,8 @@ class GamePlayView_After extends GamePlayView {
   }
 
   protected function OutputHeaderLink() {
-    $this->OutputHeaderSwitchLink(
-      RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::LIST
-    );
+    $stack = [RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::LIST];
+    $this->OutputHeaderSwitchLink($stack);
 
     //別ページリンク
     GamePlayHTML::OutputHeaderLink('game_play', $this->SelectURL([RequestDataGame::LIST]));

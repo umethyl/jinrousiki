@@ -531,10 +531,14 @@ final class TalkBuilder {
       return $mind_read || $this->flag->dummy_boy || $this->actor->IsSameName($talk->uname);
 
     default:
+      if (null === $location) { //ここに来たらロジックエラー
+	$this->TalkDebug('Error: Location Error: ' . $location, '◆Location Check');
+	return false;
+      }
+
       //個別発言判定
       list($parse_location, $location_id) = Text::Parse($location, ':');
-      if ($parse_location != TalkLocation::INDIVIDUAL) {
-	//ここに来たらロジックエラー
+      if ($parse_location != TalkLocation::INDIVIDUAL) { //ここに来たらロジックエラー
 	$this->TalkDebug('Error: Location Error: ' . $location, '◆Location Check');
 	return false;
       }
@@ -584,7 +588,7 @@ final class TalkBuilder {
 	(($talk->location == TalkLocation::MONOLOGUE && ! $user->IsRole('dummy_common')) ||
 	 $user->IsRole('leader_common', 'mind_read', 'mind_open'))) {
       $name .= TalkHTML::GenerateSelfTalk();
-    } elseif ($talk->uname == GM::DUMMY_BOY) {
+    } elseif ($talk->uname == GM::DUMMY_BOY && null !== $talk->location) {
       //個別発言判定
       list($parse_location, $location_id) = Text::Parse($talk->location, ':');
       if ($parse_location == TalkLocation::INDIVIDUAL) {
@@ -668,7 +672,7 @@ final class TalkBuilder {
     }
 
     //個別発言判定
-    if ($talk->uname == GM::DUMMY_BOY && ! $this->flag->open_talk) {
+    if ($talk->uname == GM::DUMMY_BOY && null !== $talk->location && ! $this->flag->open_talk) {
       list($parse_location, $location_id) = Text::Parse($talk->location, ':');
       if ($parse_location == TalkLocation::INDIVIDUAL) {
 	if ($location_id != $this->actor->id) {
@@ -791,9 +795,11 @@ final class TalkBuilder {
 
     default:
       //個別発言判定
-      list($parse_location, $location_id) = Text::Parse($talk->location, ':');
-      if ($parse_location == TalkLocation::INDIVIDUAL) {
-	$name .= Text::BRLF . ' -> ' . DB::$USER->ByID($location_id)->GetName();
+      if (null !== $talk->location) {
+	list($parse_location, $location_id) = Text::Parse($talk->location, ':');
+	if ($parse_location == TalkLocation::INDIVIDUAL) {
+	  $name .= Text::BRLF . ' -> ' . DB::$USER->ByID($location_id)->GetName();
+	}
       }
       break;
     }
