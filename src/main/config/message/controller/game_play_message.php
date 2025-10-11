@@ -3,7 +3,7 @@
 class GamePlayMessage {
   /* ヘッダーリンク */
   public static $header_play_sound        = '音';
-  public static $header_icon              = 'アイコン';
+  public static $header_icon              = '顔';
   public static $header_name              = '名前';
   public static $header_async             = '非同期';
   public static $header_list_down_on      = '↓リスト';
@@ -11,7 +11,7 @@ class GamePlayMessage {
   public static $header_last_words_up_on  = '↑遺言';
   public static $header_last_words_up_off = '↓遺言';
   public static $header_describe_room     = 'OP';
-  public static $header_game_play         = '別ページ';
+  public static $header_game_play         = '別';
   public static $header_game_view         = '観戦';
   public static $header_user_manager      = '登録情報変更';
   public static $header_room_manager      = '村オプション変更';

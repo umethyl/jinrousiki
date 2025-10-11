@@ -38,7 +38,7 @@ final class IconEditController extends JinrouController {
       $icon_no_list = [];
       foreach (Text::Parse($number_list, ',') as $value) {
 	if (true === is_numeric($value)) {
-	  $number = intval($value); //小数はパースされるがそこまではケアしない
+	  $number = intval($value); //小数は変換されるがそこまではケアしない
 	  if ($number < 1) {
 	    self::OutputError(sprintf(IconEditMessage::NUMBER, $number), $link);
 	  }
