@@ -1,0 +1,19 @@
+<?php
+/*
+  ◆決闘者 (duelist)
+  ○仕様
+  ・自分撃ち：固定
+  ・追加役職：受信者 (自分→相手)
+*/
+RoleLoader::LoadFile('valkyrja_duelist');
+class Role_duelist extends Role_valkyrja_duelist {
+  protected function FixSelfShoot() {
+    return true;
+  }
+
+  protected function AddDuelistRole(User $user) {
+    if (! $this->IsActor($user)) {
+      $user->AddRole($this->GetActor()->GetID('mind_receiver'));
+    }
+  }
+}

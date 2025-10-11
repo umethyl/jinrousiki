@@ -1,0 +1,22 @@
+@charset "utf-8";
+/* 発言入力フォーム */
+.input-say table {
+  border: 0;
+  border-collapse: collapse;
+}
+.input-say td {
+  vertical-align: top;
+}
+.input-say input {
+  width: 100px;
+  border: 1px solid #C0C0C0;
+}
+.input-say select {
+  width: 100px;
+}
+/* 個別発言 (身代わり君用) */
+.input-say-explain {
+  color: #A52A2A;
+  font-weight: bold;
+  line-height: 2;
+}
