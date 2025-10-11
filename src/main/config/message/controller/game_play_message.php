@@ -3,7 +3,7 @@
 class GamePlayMessage {
   /* ヘッダーリンク */
   public static $header_play_sound        = '音';
-  public static $header_icon              = 'アイコン';
+  public static $header_icon              = '顔';
   public static $header_name              = '名前';
   public static $header_async             = '非同期';
   public static $header_list_down_on      = '↓リスト';
@@ -11,7 +11,7 @@ class GamePlayMessage {
   public static $header_last_words_up_on  = '↑遺言';
   public static $header_last_words_up_off = '↓遺言';
   public static $header_describe_room     = 'OP';
-  public static $header_game_play         = '別ページ';
+  public static $header_game_play         = '別';
   public static $header_game_view         = '観戦';
   public static $header_user_manager      = '登録情報変更';
   public static $header_room_manager      = '村オプション変更';
@@ -41,6 +41,9 @@ class GamePlayMessage {
   const LIMIT_TALK = '今日の発言数制限に達したので発言できませんでした'; //発言数制限制
   const SILENCE    = '・・・・・・・・・・ %s ほどの沈黙が続いた'; //沈黙判定 (会話で時間経過制)
   const TALK_COUNT = '発言数制限';
+
+  /* 個別発言 (身代わり君専用) */
+  const INDIVIDUAL_TALK_EXPLAIN = '個別発言用';
 
   /* 投票情報 (クイズ村GM専用) */
   const QUIZ_VOTED_NAME  = '名前';

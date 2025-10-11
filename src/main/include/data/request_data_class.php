@@ -7,8 +7,8 @@ final class RequestDataGame {
   const SOUND  = 'play_sound';
   const ICON   = 'icon';
   const NAME   = 'name';
+  const LIST   = 'list_down';
   const WORDS  = 'last_words_up';
-  const DOWN   = 'list_down';
   const ASYNC  = 'async';
 }
 
@@ -39,9 +39,11 @@ final class RequestDataUser {
 
 //-- 定数リスト (Request/Talk) --//
 final class RequestDataTalk {
-  const SENTENCE  = 'say';
-  const VOICE     = 'font_type';
-  const OBJECTION = 'set_objection';
+  const SENTENCE   = 'say';
+  const VOICE      = 'font_type';
+  const OBJECTION  = 'set_objection';
+  const INDIVIDUAL = 'individual';
+  const TARGET     = 'individual_target';
 }
 
 //-- 定数リスト (Request/Vote) --//

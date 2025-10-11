@@ -17,7 +17,7 @@ final class GameUpHTML {
     Text::Printf(self::GetForm(),
       RQ::Get()->url, RQ::Get()->url, RQ::Get()->heaven_mode ? 'reload_middle_frame();' : '',
       Security::GetToken(RQ::Get()->room_no),
-      RequestDataTalk::SENTENCE, GameUpMessage::SUBMIT,
+      RequestDataTalk::SENTENCE, GameMessage::SUBMIT,
       RequestDataTalk::VOICE,
       TalkVoice::STRONG, GameUpMessage::STRONG,
       TalkVoice::NORMAL, HTML::GenerateSelected(true), GameUpMessage::NORMAL,

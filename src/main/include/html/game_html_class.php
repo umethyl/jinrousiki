@@ -516,7 +516,7 @@ final class GameHTML {
       $url .= RQ::Get()->ToURL(RequestDataGame::RELOAD, true);
     }
 
-    $stack = [RequestDataGame::SOUND, RequestDataGame::DOWN];
+    $stack = [RequestDataGame::SOUND, RequestDataGame::LIST];
     if (GameConfig::ASYNC) {
       $stack[] = RequestDataGame::ASYNC;
     }
