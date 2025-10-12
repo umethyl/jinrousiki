@@ -18,7 +18,7 @@
 //-- add_sub_role --//
 #RQ::AddTestRoom('option_role', 'decide');
 #RQ::AddTestRoom('option_role', 'gentleman');
-RQ::AddTestRoom('option_role', 'sudden_death');
+#RQ::AddTestRoom('option_role', 'sudden_death');
 #RQ::AddTestRoom('game_option', 'blinder');
 RQ::AddTestRoom('option_role', 'joker');
 
@@ -37,6 +37,7 @@ RQ::AddTestRoom('option_role', 'joker');
 
 //-- duel --//
 #RQ::AddTestRoom('game_option', 'duel');
+#RQ::AddTestRoom('option_role', 'duel_selector:d');
 #RQ::AddTestRoom('game_option', 'not_open_cast');
 #RQ::AddTestRoom('game_option', 'auto_open_cast');
 
@@ -48,7 +49,7 @@ RQ::AddTestRoom('game_option', 'chaos_hyper');
 #RQ::AddTestRoom('option_role', 'chaos_open_cast_role');
 RQ::AddTestRoom('option_role', 'chaos_open_cast_camp');
 #RQ::AddTestRoom('option_role', 'chaos_open_cast_full');
-#RQ::AddTestRoom('option_role', 'sub_role_limit_easy');
+RQ::AddTestRoom('option_role', 'sub_role_limit_easy');
 #RQ::AddTestRoom('option_role', 'sub_role_limit_normal');
 #RQ::AddTestRoom('option_role', 'sub_role_limit_hard');
 #RQ::AddTestRoom('option_role', 'topping:k');
