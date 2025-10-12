@@ -7,7 +7,7 @@
 class Option_special_role extends OptionSelector {
   public $group = OptionGroup::GAME;
   public $on_change  = ' onChange="change_special_role()"';
-  public $javascript = "change_option_display('chaos', 'none');";
+  public $javascript = "change_option_display('chaos', 'none');\nchange_option_display('duel', 'none');";
 
   protected function LoadFormList() {
     $this->form_list = GameOptionConfig::${$this->source};
