@@ -25,7 +25,9 @@ class OptionForm {
     'special_cast' => null,
     'special_role',
     'chaos' => null,
-    'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit', 'secret_sub_role'
+    'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit', 'secret_sub_role',
+    'duel' => null,
+    'duel_selector'
   ];
 
   private static $javascript = [];
@@ -37,7 +39,14 @@ class OptionForm {
       if (false === is_int($group)) {
 	$class = sprintf(' class="%s"', $group); //class 切り替え
       }
-      (null === $name) ? self::OutputSeparator($group) : self::OutputForm($name, $class);
+
+      if (null === $name) {
+	if ('duel' !== $group) {
+	  self::OutputSeparator($group);
+	}
+      } else {
+	self::OutputForm($name, $class);
+      }
     }
 
     if (count(self::$javascript) > 0) {
@@ -145,7 +154,7 @@ class OptionForm {
     $str = '';
     foreach ($filter->GetItem() as $code => $child) {
       $label = $child instanceof Option ? $child->GetCaption() : $child;
-      if (! is_string($code)) {
+      if (false === is_string($code)) {
 	$code = $label;
       }
       $selected = HTML::GenerateSelected($code == $filter->value);

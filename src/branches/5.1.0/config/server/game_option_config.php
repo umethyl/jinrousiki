@@ -236,6 +236,23 @@ class GameOptionConfig {
     'step', 'quiz'
   ];
 
+  //-- 決闘村種別設定 --//
+  public static $duel_selector_list = [
+    ''  => 'なし',
+    'a' => 'A：暗殺村',
+    'b' => 'B：毒村',
+    'c' => 'C：恋人村',
+    'd' => 'D：呪術村',
+    'e' => 'E：鬼村',
+    'f' => 'F：死神村',
+    'g' => 'G：吸血村',
+    'h' => 'H：狩村',
+    'i' => 'I：夢村',
+    'j' => 'J：恋逃村',
+    'k' => 'K：道連村',
+    'l' => 'L：蘇生村',
+  ];
+
   //-- 闇鍋モード専用設定 --//
   public static $topping_enable = true; //固定配役追加モード
   public static $topping_list = [
@@ -278,7 +295,8 @@ class GameOptionConfig {
     'j' => 'J：封呪村',
     'k' => 'K：封夢村',
     'l' => 'L：結束村',
-    'm' => 'M：天道村'
+    'm' => 'M：天道村',
+    'n' => 'N：封マ村'
   ];
 
   //配役通知設定

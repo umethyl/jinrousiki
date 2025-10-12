@@ -80,10 +80,6 @@ class CastConfig {
     22 => ['human' => 8, 'mage' => 1, 'necromancer' => 1, 'mad' => 1, 'guard' => 1, 'common' => 2, 'poison_cat' => 1, 'wolf' => 4, 'boss_wolf' => 1, 'fox' => 1, 'child_fox' => 1]
   ];
 
-  //決闘村配役テーブル (実際は InitializeDuel() で初期化する)
-  public static $duel_fix_list  = []; //固定配役
-  public static $duel_rate_list = ['assassin' => 11, 'wolf' => 4, 'trap_mad' => 5]; //配役比率
-
   /* 役職出現人数 */
   //各役職の出現に必要な人数を設定する
   public static $poison         = 20; //埋毒者		[村人2 → 埋毒者1、人狼1]
@@ -116,79 +112,4 @@ class CastConfig {
     'change_mad'    => 'jammer_mad',
     'change_cupid'  => 'altair_cupid'
   ];
-
-  /* 関数 */
-  //決闘村の配役初期化処理
-  public static function InitializeDuel($user_count) {
-    //配列初期化
-    $duel_fix_list  = [];
-    $duel_rate_list = [];
-
-    //-- 霊界自動公開オプションによる配役設定分岐 --//
-    if (DB::$ROOM->IsOption('not_open_cast')) { //非公開
-      //-- 埋毒決闘 --//
-      if ($user_count >= 20) {
-	$duel_fix_list['poison_jealousy'] = 1;
-	$duel_fix_list['moon_cupid']      = 1;
-      }
-      if ($user_count >= 25) {
-	$duel_fix_list['quiz'] = 1;
-      }
-
-      $duel_rate_list = [
-	'poison' => 5, 'chain_poison' => 10, 'poison_wolf' => 5, 'triangle_cupid' => 2
-      ];
-    } elseif (DB::$ROOM->IsOption('auto_open_cast')) { //自動公開
-      //-- 恋色決闘 --//
-      if ($user_count >= 15) {
-	$duel_fix_list['sweet_fairy'] = 1;
-      }
-      if ($user_count >= 20) {
-	$duel_fix_list['enchant_mad'] = 1;
-      }
-      if ($user_count >= 25) {
-	$duel_fix_list['sirius_wolf'] = 1;
-	$duel_fix_list['moon_cupid']  = 1;
-      }
-      if ($user_count >= 30) {
-	$duel_fix_list['quiz'] = 1;
-      }
-
-      $duel_rate_list = [
-	'select_assassin' => 5, 'wolf' => 3, 'self_cupid' => 1, 'mind_cupid' => 4,
-	'triangle_cupid' => 1
-      ];
-    } else { //常時公開
-      //-- 暗殺決闘 --//
-      $duel_rate_list = ['assassin' => 11, 'wolf' => 4, 'trap_mad' => 5];
-    }
-
-    //結果を登録
-    self::$duel_fix_list  = $duel_fix_list;
-    self::$duel_rate_list = $duel_rate_list;
-  }
-
-  //決闘村の配役最終処理
-  public static function FinalizeDuel($user_count, &$role_list) {
-    if (DB::$ROOM->IsOption('not_open_cast')) { //非公開
-    } elseif (DB::$ROOM->IsOption('auto_open_cast')) { //自動公開
-      if (@$role_list['self_cupid'] > 1) {
-	$role_list['self_cupid']--;
-	@$role_list['dummy_chiroptera']++;
-      }
-      if (@$role_list['mind_cupid'] > 3) {
-	$role_list['mind_cupid']--;
-	@$role_list['exchange_angel']++;
-      }
-      if (@$role_list['mind_cupid'] > 3) {
-	$role_list['mind_cupid']--;
-	@$role_list['sweet_cupid']++;
-      }
-      if (@$role_list['wolf'] > 2) {
-	$role_list['wolf']--;
-	@$role_list['silver_wolf']++;
-      }
-    } else { //常時公開
-    }
-  }
 }

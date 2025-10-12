@@ -18,8 +18,8 @@ final class RoleTestController extends JinrouAdminController {
   private static function OutputForm() {
     $id    = 'game_option';
     $stack = [
-      'normal', 'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'duel', 'duel_auto_open_cast',
-      'duel_not_open_cast', 'gray_random', 'step', 'quiz'
+      'normal', 'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'duel', 'gray_random',
+      'step', 'quiz'
     ];
     RQ::Get()->ParsePostData($id);
     $checked_key = in_array(RQ::Get()->$id, $stack) ? RQ::Get()->$id : 'chaos_hyper';
@@ -50,7 +50,7 @@ final class RoleTestController extends JinrouAdminController {
       Text::d();
     }
 
-    foreach (['topping', 'boost_rate'] as $option) {
+    foreach (['topping', 'boost_rate', 'duel_selector'] as $option) {
       $count = -1;
       RQ::Get()->ParsePostData($option);
       foreach (GameOptionConfig::${$option.'_list'} as $key => $mode) {
@@ -107,16 +107,6 @@ final class RoleTestController extends JinrouAdminController {
     case 'quiz':
       $stack->game_option[] = RQ::Get()->game_option;
       break;
-
-    case 'duel_auto_open_cast':
-      $stack->game_option[] = 'duel';
-      $stack->option_role[] = 'auto_open_cast';
-      break;
-
-    case 'duel_not_open_cast':
-      $stack->game_option[] = 'duel';
-      $stack->option_role[] = 'not_open_cast';
-      break;
     }
 
     //置換系
@@ -132,8 +122,8 @@ final class RoleTestController extends JinrouAdminController {
       }
     }
 
-    //闇鍋用オプション
-    foreach (['topping', 'boost_rate'] as $option) {
+    //闇鍋/決闘用オプション
+    foreach (['topping', 'boost_rate', 'duel_selector'] as $option) {
       RQ::Get()->ParsePostData($option);
       if (empty(RQ::Get()->$option)) {
 	continue;
