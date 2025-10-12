@@ -95,10 +95,17 @@ function change_special_role() {
   case 'chaos_hyper':
   case 'chaos_verso':
     change_option_display('chaos', '');
+    change_option_display('duel', 'none');
+    break;
+
+  case 'duel':
+    change_option_display('chaos', 'none');
+    change_option_display('duel', '');
     break;
 
   default:
     change_option_display('chaos', 'none');
+    change_option_display('duel', 'none');
     break;
   }
 }

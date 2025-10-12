@@ -22,7 +22,11 @@ class Option_duel extends OptionCastCheckbox {
     //-- 設定取得 --//
     $config = DB::$ROOM->GetDuelOptionList('duel_selector');
     if (count($config) < 1) {
-      return [];
+      //未設定の場合は TypeA を入れておく
+      $config = DuelConfig::$cast_list['a'];
+      if (count($config) < 1) {
+	return [];
+      }
     }
     //Text::p($config, '◆Duel');
 
