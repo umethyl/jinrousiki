@@ -81,6 +81,15 @@ final class Room extends StackManager {
     }
   }
 
+  //決闘村用オプション配役データ取得
+  public function GetDuelOptionList($option) {
+    if ($this->IsOption($option)) {
+      return DuelConfig::$cast_list[$this->option_role->list[$option][0]];
+    } else {
+      return [];
+    }
+  }
+
   //オプション判定
   public function IsOption($option) {
     return in_array($option, $this->option_list);

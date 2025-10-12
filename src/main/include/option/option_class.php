@@ -365,16 +365,32 @@ abstract class Option {
 
   //村用画像生成
   public function GenerateImage() {
+    if ($this->IgnoreImage()) {
+      return '';
+    }
     return ImageManager::Room()->Generate($this->name, $this->GetRoomCaption());
+  }
+
+  //村用画像生成スキップ判定
+  protected function IgnoreImage() {
+    return false;
   }
 
   //村用オプション説明メッセージ生成
   public function GenerateRoomCaption() {
+    if ($this->IgnoreRoomCaption()) {
+      return '';
+    }
     $image   = $this->GenerateImage();
     $url     = $this->GetURL();
     $caption = $this->GetRoomCaption();
     $explain = $this->GetExplain();
     return OptionHTML::GenerateRoomCaption($image, $url, $caption, $explain);
+  }
+
+  //村用オプション説明メッセージ生成スキップ判定
+  protected function IgnoreRoomCaption() {
+    return false;
   }
 
   //ユーザーサブ役職配役処理

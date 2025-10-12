@@ -18,8 +18,8 @@ $font = 'azuki.ttf';
 //$role = 'poison'; //128
 //$role = 'result_flower_mage_cupid';
 //$role = 'prediction_weather_no_escape';
-//$role = 'homogeneous_vampire';
-$role = 'heterologous_vampire';
+$role = 'homogeneous_vampire';
+//$role = 'heterologous_vampire';
 
 $calib_list = [0,0,0,0];
 $calib_list = [0.5,0,0,0]; //wolf, vampire
