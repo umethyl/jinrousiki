@@ -19,14 +19,12 @@ $font = 'azuki.ttf';
 //$role = 'result_flower_mage_cupid';
 //$role = 'prediction_weather_no_escape';
 //$role = 'homogeneous_vampire';
-//$role = 'heterologous_vampire';
-//$role = 'gender_fairy';
-$role = 'collector_ogre';
+$role = 'heterologous_vampire';
 
 $calib_list = [0,0,0,0];
-//$calib_list = [0.5,0,0,0]; //wolf, vampire
+$calib_list = [0.5,0,0,0]; //wolf, vampire
 //$calib_list = [0.3,0,0,0]; //duelist
-$calib_list = [0.7,0,0.7]; //collector_ogre
+//$calib_list = [0.8,0,0.7]; //collector_ogre
 
 $test_mode   = false;
 $save_mode   = false;
