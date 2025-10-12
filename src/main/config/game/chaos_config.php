@@ -1405,7 +1405,22 @@ class ChaosConfig {
 	    'scarlet_angel'      => 0,
 	    'scarlet_vampire'    => 0,
 	    'scarlet_chiroptera' => 0,
-	    'scarlet_mania'      => 0]
+	    'scarlet_mania'      => 0],
+    'n' => ['mania'            => 0,
+	    'trick_mania'      => 0,
+	    'basic_mania'      => 0,
+	    'scarlet_mania'    => 0,
+	    'soul_mania'       => 0,
+	    'dummy_mania'      => 0,
+	    'unknown_mania'    => 0,
+	    'wirepuller_mania' => 0,
+	    'fire_mania'       => 0,
+	    'sacrifice_mania'  => 0,
+	    'resurrect_mania'  => 0,
+	    'revive_mania'     => 0,
+	    'lute_mania'       => 0,
+	    'harp_mania'       => 0,
+	    'mask_mania'       => 0]
   ];
 
   //サブ役職制限：EASYモード

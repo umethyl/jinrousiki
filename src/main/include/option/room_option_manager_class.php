@@ -27,7 +27,9 @@ final class RoomOptionManager extends StackStaticManager {
       if (RQ::Get()->chaos || RQ::Get()->chaosfull || RQ::Get()->chaos_hyper ||
 	  RQ::Get()->chaos_verso) { //闇鍋モード
 	self::LoadPostChaos();
-      } elseif (RQ::Get()->duel || RQ::Get()->gray_random || RQ::Get()->step) { //特殊配役
+      } elseif (RQ::Get()->duel) {
+	self::LoadPostDuel();
+      } elseif (RQ::Get()->gray_random || RQ::Get()->step) { //特殊配役
 	self::LoadPostSpecial();
       } else { //通常村
 	self::LoadPostNormal();
@@ -138,6 +140,11 @@ final class RoomOptionManager extends StackStaticManager {
     RoomOption::LoadPost(
       'secret_sub_role', 'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit'
     );
+  }
+
+  //村作成オプション入力情報ロード (決闘村)
+  private static function LoadPostDuel() {
+    RoomOption::LoadPost('duel_selector');
   }
 
   //村作成オプション入力情報ロード (特殊村)
