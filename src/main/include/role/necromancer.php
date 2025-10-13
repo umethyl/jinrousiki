@@ -26,7 +26,7 @@ class Role_necromancer extends Role {
         'boss_wolf', 'mist_wolf', 'tiger_wolf', 'phantom_wolf', 'cursed_wolf', 'possessed_wolf'
       ];
       if ($user->IsRole($stack)) {
-	return $user->main_role;
+	return 'wolf_special';
       }
       break;
 
