@@ -13,7 +13,7 @@ class Role_snow_cupid extends Role_cupid {
   }
 
   protected function IgnoreVoteKillAction(User $user) {
-    return RoleUser::IsAvoidLovers($user, true);
+    return RoleUser::AvoidLovers($user, true);
   }
 
   protected function IsVoteKillActionTarget(User $user) {

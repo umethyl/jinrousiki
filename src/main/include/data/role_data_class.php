@@ -188,6 +188,7 @@ final class RoleData {
     'honey_wolf'		=> '蜜狼',
     'sharp_wolf'		=> '鋭狼',
     'hungry_wolf'		=> '餓狼',
+    'spell_wolf'		=> '怨狼',
     'tongue_wolf'		=> '舌禍狼',
     'possessed_wolf'		=> '憑狼',
     'sirius_wolf'		=> '天狼',

@@ -5,7 +5,7 @@
   ・仲間襲撃：可能
   ・襲撃無効判定：なし
   ・襲撃：人外カウントのみ
-  ・人狼襲撃死因：餓狼襲撃
+  ・襲撃死因：餓狼襲撃
 */
 RoleLoader::LoadFile('wolf');
 class Role_hungry_wolf extends Role_wolf {

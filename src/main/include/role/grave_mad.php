@@ -50,7 +50,7 @@ class Role_grave_mad extends Role {
 
   //死者妨害
   public function Grave(User $user) {
-    if (false === RoleUser::IsAvoid($user) && Lottery::Percent(70)) {
+    if (false === RoleUser::Avoid($user) && Lottery::Percent(70)) {
       $user->AddDoom(2);
     }
   }

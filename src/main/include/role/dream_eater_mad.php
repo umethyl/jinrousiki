@@ -30,7 +30,7 @@ class Role_dream_eater_mad extends Role {
     }
 
     //夢食い判定 (夢系能力者・妖精系)
-    if (RoleUser::IsDream($user) && false === RoleUser::IsAvoidLovers($user, true)) {
+    if (RoleUser::IsDream($user) && false === RoleUser::AvoidLovers($user, true)) {
       DB::$USER->Kill($user->id, DeadReason::DREAM_KILLED);
     }
   }

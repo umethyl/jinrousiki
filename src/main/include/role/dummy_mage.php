@@ -3,7 +3,10 @@
   ◆夢見人 (dummy_mage)
   ○仕様
   ・役職表示：占い師
-  ・占い：反転
+  ・占い無効：天候 (熱帯夜)
+  ・占い妨害：無効
+  ・呪返し：無効
+  ・占い結果：反転
 */
 RoleLoader::LoadFile('mage');
 class Role_dummy_mage extends Role_mage {

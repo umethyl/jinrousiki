@@ -27,6 +27,7 @@
 
 /* 役職判定情報 */
 //self::OutputDistinguishMage();
+//self::OutputDistinguishNecromancer();
 //foreach (RoleData::$list as $role => $v) RoleLoader::LoadMain(new User($role))->OutputAbility();
 
 /* 配役情報 */

@@ -17,7 +17,7 @@ class Role_doom_vampire extends Role_vampire {
   }
 
   protected function InfectAction(User $user) {
-    if (false === RoleUser::IsAvoidLovers($user, true)) {
+    if (false === RoleUser::AvoidLovers($user, true)) {
       $user->AddDoom(4);
     }
   }

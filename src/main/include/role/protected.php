@@ -57,7 +57,7 @@ class Role_protected extends Role {
 
   //身代わり無効対象判定
   private function IgnoreSacrificeTarget(User $user) {
-    return $user->IsDead(true) || RoleUser::IsAvoidLovers($user, true);
+    return $user->IsDead(true) || RoleUser::AvoidLovers($user, true);
   }
 
   //身代わり処理

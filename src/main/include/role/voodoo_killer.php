@@ -19,9 +19,8 @@ class Role_voodoo_killer extends Role {
 
   //解呪
   final public function MageVoodoo(User $user) {
-    //-- 呪殺判定 (呪い所持者・憑依能力者) --//
-    if ($user->IsLive(true) && false === RoleUser::IsAvoidLovers($user, true) &&
-	($user->IsRoleGroup('cursed') || RoleUser::IsPossessed($user))) {
+    //-- 呪殺判定 --//
+    if ($this->IsMageVoodooKill($user)) {
       DB::$USER->Kill($user->id, DeadReason::CURSED);
       $this->AddSuccess($user->id, RoleVoteSuccess::VOODOO_KILLER);
     }
@@ -37,6 +36,17 @@ class Role_voodoo_killer extends Role {
 
     //-- 解呪対象リスト追加 --//
     $this->AddStack($user->id);
+  }
+
+  //呪殺判定 (呪い所持者・憑依能力者・特殊対象役職)
+  private function IsMageVoodooKill(User $user) {
+    //回避判定
+    if (false === $user->IsLive(true) || true === RoleUser::AvoidLovers($user, true)) {
+      return false;
+    }
+
+    return $user->IsRoleGroup('cursed') || RoleUser::IsPossessed($user) ||
+      $user->IsRole('spell_wolf');
   }
 
   //成功結果登録

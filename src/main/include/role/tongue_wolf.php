@@ -3,7 +3,7 @@
   ◆舌禍狼 (tongue_wolf)
   ○仕様
   ・能力結果：襲撃
-  ・襲撃：役職鑑定
+  ・襲撃追加：役職鑑定
 */
 RoleLoader::LoadFile('wolf');
 class Role_tongue_wolf extends Role_wolf {

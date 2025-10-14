@@ -2,7 +2,7 @@
 /*
   ◆ひよこ鑑定士 (sex_mage)
   ○仕様
-  ・占い：性別鑑定
+  ・占い結果：性別鑑定
 */
 RoleLoader::LoadFile('psycho_mage');
 class Role_sex_mage extends Role_psycho_mage {

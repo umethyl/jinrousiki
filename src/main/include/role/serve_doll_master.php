@@ -57,7 +57,7 @@ class Role_serve_doll_master extends Role_doll_master {
     $stack = [];
     foreach (DB::$USER->Get() as $user) {
       if ($user->IsLive(true) && $this->IsDoll($user) &&
-	  false === RoleUser::IsAvoidLovers($user, true)) {
+	  false === RoleUser::AvoidLovers($user, true)) {
 	$stack[] = $user->id;
       }
     }

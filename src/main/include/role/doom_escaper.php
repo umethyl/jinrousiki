@@ -12,7 +12,7 @@ class Role_doom_escaper extends Role_escaper {
   }
 
   protected function EscapeAction(User $user) {
-    if (false === RoleUser::IsAvoidLovers($user, true)) {
+    if (false === RoleUser::AvoidLovers($user, true)) {
       $user->AddDoom(4);
     }
   }
