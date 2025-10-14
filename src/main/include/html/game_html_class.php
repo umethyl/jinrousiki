@@ -18,7 +18,7 @@ final class GameHTML {
       );
       $table_stack[$count][] = $vote_base;
     }
-    if (false === RQ::Get()->reverse_log) { //正順なら逆転させる
+    if (true !== RQ::Get()->reverse_log) { //正順なら逆転させる
       krsort($table_stack);
     }
 
