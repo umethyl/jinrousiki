@@ -23,7 +23,7 @@ class Role_chain_poison extends Role_poison {
     $aspirator = [];
     foreach (DB::$USER->SearchLive(true) as $id => $uname) { //生存者から常時対象外の役職を除く
       $target = DB::$USER->ByReal($id);
-      if (RoleUser::IsAvoid($target, true)) {
+      if (RoleUser::Avoid($target, true)) {
 	continue;
       }
 

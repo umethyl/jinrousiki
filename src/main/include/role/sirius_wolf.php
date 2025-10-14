@@ -3,6 +3,9 @@
   ◆天狼 (sirius_wolf)
   ○仕様
   ・能力結果：耐性通知
+  ・罠：無効 (覚醒)
+  ・護衛：無効 (完全覚醒)
+  ・襲撃毒発動：無効 (完全覚醒)
 */
 RoleLoader::LoadFile('wolf');
 class Role_sirius_wolf extends Role_wolf {
@@ -32,5 +35,17 @@ class Role_sirius_wolf extends Role_wolf {
     $this->SetStack($stack);
 
     return $stack;
+  }
+
+  public function EnableTrap(User $user) {
+    return false === RoleUser::IsSiriusWolf($user, false);
+  }
+
+  public function EnableGuard(User $user) {
+    return false === RoleUser::IsSiriusWolf($user);
+  }
+
+  public function EnablePoisonEat(User $user) {
+    return false === RoleUser::IsSiriusWolf($user);
   }
 }

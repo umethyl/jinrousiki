@@ -655,14 +655,14 @@ PP ラインの計算を複雑にするために作成してみました。
 <h4>[占い能力] 呪殺：無し / 憑依妨害：特殊 / 占い妨害：無効 / 呪い：解呪</h4>
 <pre>
 対呪い専門の特殊な占い師。
-占った人が<a href="ability.php#cursed">呪い所持者</a>や<a href="ability.php#possessed_direct">憑依能力者(直接型)</a>の場合は呪殺し(死因は「呪返し」)、
+占った人が<a href="ability.php#cursed">呪い所持者</a>や<a href="ability.php#possessed_direct">憑依能力者(直接型)</a>・<a href="wolf.php#spell_wolf">怨狼</a>の場合は呪殺し(死因は「呪返し」)、
 <a href="ability.php#voodoo">呪術能力者</a>に呪いをかけられていた場合は解呪(呪返しが発動しない)する。
 呪殺か解呪が成功した場合のみ、次の日に専用のシステムメッセージが表示される。
 <a href="sub_role.php#vega_lovers">織姫</a>には呪殺無効。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#anti_voodoo">厄神</a>
+<a href="#anti_voodoo">厄神</a>・<a href="wolf.php#spell_wolf">怨狼</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2008,7 +2008,7 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 
 <h3 id="spell_common">葛の葉 (占い結果：村人(呪殺) / 霊能結果：村人) [Ver. 1.5.0 β14～]</h3>
-<h4>[耐性] 護衛制限：有り</h4>
+<h4>[耐性] 護衛制限：有り / 占い：呪殺</h4>
 <pre>
 <a href="#mage_group">占い師</a>に占われると呪殺される特殊な共有者。
 処刑投票先が<a href="wolf.php#wolf_group">人狼系</a>・<a href="fox.php">妖狐</a>・<a href="sub_role.php#lovers">恋人</a>なら<a href="sub_role.php#cute_camouflage">魔が言</a>を付加する。
@@ -3501,7 +3501,7 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 騙り易い上に、処刑すると村人陣営に大きなリスクを与えるので扱いに困る存在です。
 </pre>
 
-<h3 id="cursed_brownie">祟神 (占い結果：村人(呪返し) / 霊能結果：村人) [Ver. 1.4.0 β20～]</h3>
+<h3 id="cursed_brownie">祟神 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β20～]</h3>
 <h4>[耐性] 人狼襲撃：死亡 + 死の宣告 (2日後) / 暗殺：反射 (30%) / 占い：呪返し / 陰陽師：死亡</h4>
 <pre>
 呪いと<a href="#assassin_spec">暗殺反射</a> (30%) を持った座敷童子の亜種。

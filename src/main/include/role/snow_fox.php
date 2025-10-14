@@ -17,7 +17,7 @@ class Role_snow_fox extends Role_fox {
       }
 
       $user = DB::$USER->ByRealUname($uname);
-      if (RoleUser::IsAvoidLovers($user, true)) {
+      if (RoleUser::AvoidLovers($user, true)) {
 	continue;
       }
 

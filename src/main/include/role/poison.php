@@ -16,7 +16,7 @@ class Role_poison extends Role {
     $aspirator = [];
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if ($user->IsDead(true) || $this->IsAvoidPoison($user)) {
+      if ($user->IsDead(true) || $this->AvoidPoison($user)) {
 	continue;
       }
 
@@ -32,8 +32,8 @@ class Role_poison extends Role {
   }
 
   //毒回避判定
-  private function IsAvoidPoison(User $user) {
-    return $user->IsRole(RoleFilterData::$avoid_poison) || RoleUser::IsAvoid($user, true);
+  private function AvoidPoison(User $user) {
+    return $user->IsRole(RoleFilterData::$avoid_poison) || RoleUser::Avoid($user, true);
   }
 
   //毒対象者判定

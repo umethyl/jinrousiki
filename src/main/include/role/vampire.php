@@ -83,7 +83,7 @@ class Role_vampire extends Role {
 
   //吸血死対象登録
   final protected function DelayInfectKill(User $user) {
-    if (false === RoleUser::IsAvoid($user)) {
+    if (false === RoleUser::Avoid($user)) {
       $this->AddSuccess($user->id, RoleVoteSuccess::VAMPIRE_KILL);
     }
   }

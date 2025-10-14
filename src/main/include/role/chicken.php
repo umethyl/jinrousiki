@@ -24,7 +24,7 @@ class Role_chicken extends Role {
 
   //ショック死判定対象外判定 (憑依/回避)
   final protected function IgnoreSuddenDeathAvoid() {
-    return false === $this->IsRealActor() || RoleUser::IsAvoidLovers($this->GetActor(), true);
+    return false === $this->IsRealActor() || RoleUser::AvoidLovers($this->GetActor(), true);
   }
 
   //ショック死セット判定

@@ -10,7 +10,7 @@ class Role_doom_doll extends Role_doll {
     $stack = [];
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if (false === $this->IsDoll($user) && false === RoleUser::IsAvoid($user)) {
+      if (false === $this->IsDoll($user) && false === RoleUser::Avoid($user)) {
 	$stack[] = $user->id;
       }
     }

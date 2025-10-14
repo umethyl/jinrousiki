@@ -257,6 +257,16 @@ final class VoteTestController extends JinrouTestController {
     }
   }
 
+  //役職判定情報 (霊能)
+  private static function OutputDistinguishNecromancer() {
+    $user   = new User();
+    $filter = RoleLoader::Load('necromancer');
+    foreach (RoleDataManager::Get() as $role => $name) {
+      $user->Parse($role);
+      Text::p($role, $filter->Necromancer($user, false));
+    }
+  }
+
   //闇鍋配役 (系列合計)
   private static function OutputChaosSumGroup() {
     $stack = [];

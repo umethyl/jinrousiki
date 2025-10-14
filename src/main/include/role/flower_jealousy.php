@@ -3,6 +3,7 @@
   ◆花占い師 (flower_jealousy)
   ○仕様
   ・占い：恋占い
+  ・占い結果：恋占い
 */
 RoleLoader::LoadFile('jealousy');
 class Role_flower_jealousy extends Role_jealousy {
@@ -22,6 +23,7 @@ class Role_flower_jealousy extends Role_jealousy {
     RoleHTML::OutputVoteNight(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
   }
 
+  //占い(恋占い) (妨害 > 呪返し > 占い判定)
   public function Mage(User $user) {
     if ($this->IsJammer($user)) {
       return $this->SaveMageResult($user, $this->GetMageFailed(), $this->result);

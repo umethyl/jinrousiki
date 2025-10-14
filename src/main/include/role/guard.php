@@ -209,6 +209,6 @@ class Role_guard extends Role {
   private function IgnoreHuntTarget(User $user) {
     //対象が身代わり死していた場合はスキップ
     return RoleManager::Stack()->ExistsKey(RoleVoteTarget::SACRIFICE, $user->id) ||
-      RoleUser::IsAvoidLovers($user, true);
+      RoleUser::AvoidLovers($user, true);
   }
 }

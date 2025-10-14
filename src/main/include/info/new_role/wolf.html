@@ -166,6 +166,7 @@
 <a href="#hungry_wolf">餓狼</a>
 </p>
 <p>
+<a href="#spell_wolf">怨狼</a>
 <a href="#tongue_wolf">舌禍狼</a>
 <a href="#possessed_wolf">憑狼</a>
 <a href="#sirius_wolf">天狼</a>
@@ -280,7 +281,7 @@
 「どこかに<a href="#jammer_mad">月兎</a>がいる」と思わせるのが狙いです。
 </pre>
 
-<h3 id="cursed_wolf">呪狼 (占い結果：人狼(呪返し) / 霊能結果：特殊な人狼) [Ver. 1.4.0 α17～]</h3>
+<h3 id="cursed_wolf">呪狼 (占い結果：人狼 / 霊能結果：特殊な人狼) [Ver. 1.4.0 α17～]</h3>
 <h4>[耐性] 占い：呪返し / 陰陽師：死亡</h4>
 <pre>
 呪いを持った人狼。
@@ -765,10 +766,15 @@ Ver. 2.1.0 α4 からは貴重な対護衛能力者として生まれ変わり�
 </pre>
 <h4>襲撃能力</h4>
 <ol>
-  <li>仲間と分かっている狼も襲撃可能。</li>
-  <li>襲撃が成功した場合の死因は「餓狼の餌食になった」。</li>
-  <li>人狼と妖狐以外を襲撃した場合は失敗扱い。</li>
+  <li>身代わり君襲撃時は無効(死因も含めて通常の人狼襲撃相当になる)</li>
+  <li>仲間と分かっている狼も襲撃可能</li>
+  <li>襲撃が成功した場合の死因は「餓狼の餌食になった」</li>
+  <li>人狼と妖狐以外を襲撃した場合は失敗扱い</li>
 </ol>
+<h5>Ver. 5.1.0 α4～</h5>
+<pre>
+身代わり君襲撃時の死因を通常の人狼相当に変更
+</pre>
 <h5>Ver. 2.3.0 α5～</h5>
 <pre>
 襲撃可能対象：「妖狐陣営」→「妖狐カウント」(表記のみの変更、対象は変化なし)
@@ -787,6 +793,69 @@ Ver. 2.1.0 α4 からは貴重な対護衛能力者として生まれ変わり�
 狼飽和状態の妖狐勝利を仲間や村人確定の人を襲撃することで防ぐことができます。
 死因が違うので<a href="human.php#yama_necromancer">閻魔</a>が天敵になります。
 <a href="#sex_wolf">雛狼</a>同様、LW にしないように戦略を練りましょう。
+</pre>
+
+<h3 id="spell_wolf">怨狼 (占い結果：人狼(呪殺) / 霊能結果：特殊な人狼) [Ver. 5.1.0 α4～]</h3>
+<h4>[耐性] 占い：呪殺・解呪</h4>
+<pre>
+護衛の影響を受けずに襲撃することができる人狼。
+通常の<a href="human.php#mage_group">占い</a>に加え、<a href="human.php#voodoo_killer">陰陽師</a>から占われても死亡する。
+</pre>
+<h4>襲撃能力</h4>
+<ol>
+<li>身代わり君襲撃時は無効(死因も含めて通常の人狼襲撃相当になる)</li>
+<li><a href="ability.php#trap_night">罠(夜投票型)</a> 無効</li>
+<li><a href="ability.php#guard">護衛能力者</a>の能力無効</li>
+<li><a href="ability.php#poison">毒</a>の能力無効</li>
+<li>襲撃が成功した場合の死因は「<a href="../spec.php#dead_night">呪殺</a>」</li>
+<li>襲撃が成功した場合、対象者が<a href="human.php#mage_group">占い師系</a>だった場合は自身が死亡する</li>
+<ul>
+  <li>自身が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効</li>
+  <li>死因は「<a href="../spec.php#dead_night">呪返し</a>」</li>
+</ul>
+</ol>
+<h4>能力発動例</h4>
+<pre>
+例1) A[怨狼] → B[村人] ← C[罠師]
+死体：B が無残な死体で発見されました (死因：「呪殺された」)
+→ 罠の設置状況の影響を受けません
+
+例2) A[怨狼] → B[共有者] ← C[狩人]
+護衛結果：B さん護衛成功
+死体：B が無残な死体で発見されました (死因：「呪殺された」)
+→ 護衛の成否判定は入りますが、能力は無効化されます
+
+例3) A[怨狼] → B[埋毒者]
+死体：B が無残な死体で発見されました (死因：「呪殺された」)
+→ 襲撃時の毒は無効化されます (処刑時は通常)
+
+例4) A[怨狼] → B[村人] / C[占い師] →  A[怨狼]
+占い結果：A さんは人狼でした
+死体：A が無残な死体で発見されました (死因：「呪殺された」)
+死体：B が無残な死体で発見されました (死因：「呪殺された」)
+→ C視点ではAへの暗殺と重なった場合と区別がつかなくなります
+
+例5) A[怨狼] → B[占い師] / C[占い師] →  A[怨狼]
+占い結果：A さんは人狼でした
+死体：A が無残な死体で発見されました (死因：「呪詛に呪い殺された」)
+死体：B が無残な死体で発見されました (死因：「呪殺された」)
+→ 処理順の関係でAの死因は自身の死亡起因となります
+
+例6) A[怨狼] → B[妖狐] ← C[狩人]
+B：人狼に狙われたようです
+護衛結果：B さん護衛成功
+→ 護衛は突破できても対象の耐性の影響は受けます
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="#sirius_wolf">天狼</a>・<a href="ability.php#result_mage">特殊占い判定能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+対<a href="ability.php#guard">護衛能力者</a>として「通常と違う死因で村人を殺せる人狼」を起点としてデザインしました。
+占い師を襲撃すると自身が死亡するのは「最期の抵抗で呪い返しに遭った」というイメージです。
+処理順の関係で<a href="human.php#anti_voodoo">厄神</a>の干渉は受けません。
+仲間と連携して騙ると非常に複雑な状況を作り上げることができます。
 </pre>
 
 <h3 id="tongue_wolf">舌禍狼 (占い結果：人狼 / 霊能結果：人狼) [Ver. 1.4.0 α13～]</h3>
@@ -1240,7 +1309,7 @@ C に「受託結果：B は A に襲撃されました。」と表示される�
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#anti_assassin">暗殺耐性能力者</a>・<a href="ability.php#result_mage_human">特殊占い判定能力者</a>・<a href="ability.php#special_resist">特殊耐性能力者</a>・<a href="ability.php#resist_poison">毒耐性能力者</a>
+<a href="#spell_wolf">怨狼</a>・<a href="mania.php#soul_mania">覚醒者</a>・<a href="ability.php#anti_assassin">暗殺耐性能力者</a>・<a href="ability.php#result_mage_human">特殊占い判定能力者</a>・<a href="ability.php#special_resist">特殊耐性能力者</a>・<a href="ability.php#resist_poison">毒耐性能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

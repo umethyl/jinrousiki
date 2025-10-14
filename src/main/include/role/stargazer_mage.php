@@ -2,7 +2,7 @@
 /*
   ◆占星術師 (stargazer_mage)
   ○仕様
-  ・占い：投票能力鑑定
+  ・占い結果：投票能力鑑定
 */
 RoleLoader::LoadFile('psycho_mage');
 class Role_stargazer_mage extends Role_psycho_mage {
