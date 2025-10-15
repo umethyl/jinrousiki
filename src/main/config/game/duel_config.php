@@ -34,10 +34,10 @@ class DuelConfig {
            ],
     'd' => ['fix'   => [],
 	    'count' => [16 => ['voodoo_fox' => 1],
-			20 => ['cursed_angel' => 1],
+			20 => ['voodoo_killer' => 1, 'cursed_wolf' => 1, 'cursed_angel' => 1],
 			25 => ['cursed_fox' => 1]],
-	    'rate'  => ['mage' => 8, 'voodoo_killer' => 2, 'cursed_wolf' => 4,
-			'voodoo_mad' => 5, 'cursed_chiroptera' => 1],
+	    'rate'  => ['mage' => 8, 'spell_wolf' => 4, 'voodoo_mad' => 5,
+			'cursed_chiroptera' => 1],
 	    'calib' => []
            ],
     'e' => ['fix'   => [],

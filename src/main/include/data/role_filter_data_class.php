@@ -126,10 +126,10 @@ final class RoleFilterData {
     'pharmacist', 'cure_pharmacist', 'revive_pharmacist', 'alchemy_pharmacist',
     'centaurus_pharmacist', 'jealousy', 'divorce_jealousy', 'miasma_jealousy', 'critical_jealousy',
     'thunder_brownie', 'harvest_brownie', 'maple_brownie', 'cursed_brownie',  'disguise_wolf',
-    'purple_wolf', 'snow_wolf', 'corpse_courier_mad', 'amaze_mad', 'agitate_mad', 'miasma_mad',
-    'critical_mad', 'fire_mad', 'follow_mad', 'purple_fox', 'snow_fox', 'critical_fox',
-    'fire_depraver', 'sacrifice_cupid', 'sweet_cupid', 'snow_cupid', 'quiz', 'step_vampire',
-    'cowboy_duelist', 'sea_duelist', 'cursed_avenger', 'critical_avenger'
+    'purple_wolf', 'snow_wolf', 'miasma_wolf', 'corpse_courier_mad', 'amaze_mad', 'agitate_mad',
+    'miasma_mad', 'critical_mad', 'fire_mad', 'follow_mad', 'purple_fox', 'snow_fox',
+    'critical_fox', 'fire_depraver', 'sacrifice_cupid', 'sweet_cupid', 'snow_cupid', 'quiz',
+    'step_vampire', 'cowboy_duelist', 'sea_duelist', 'cursed_avenger', 'critical_avenger'
   ];
 
   //処刑投票能力者 (サブ)
@@ -207,7 +207,7 @@ final class RoleFilterData {
   //処刑後得票カウンター
   public static $vote_kill_reaction = [
     'divorce_jealousy', 'harvest_brownie', 'maple_brownie', 'cursed_brownie', 'snow_wolf',
-    'snow_fox'
+    'miasma_wolf', 'snow_fox'
   ];
 
   //処刑キャンセル

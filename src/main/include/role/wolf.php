@@ -334,7 +334,7 @@ class Role_wolf extends Role {
     if ($user->IsDummyBoy()) {
       $reason = DeadReason::WOLF_KILLED;
     } else {
-      $this->GetWolfKillReason();
+      $reason = $this->GetWolfKillReason();
     }
     DB::$USER->Kill($user->id, $reason);
     $this->WolfKillAction($user);
