@@ -16,9 +16,10 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'result_grudge_wolf';
+//$role = 'result_miasma_wolf';
 //$role = 'prediction_weather_no_escape';
-$role = 'grudge_wolf';
+//$role = 'grudge_wolf';
+$role = 'miasma_wolf';
 //$role = 'homogeneous_vampire';
 //$role = 'heterologous_vampire';
 
@@ -43,7 +44,7 @@ if (true === $wish_role) {
   require_once('config/ability_list.php');
   require_once('config/weather_list.php');
   $builder = new MessageImageBuilder('RoleMessageList', $font);
-  $builder = new MessageImageBuilder('ResultList', $font);
+  #$builder = new MessageImageBuilder('ResultList', $font);
   #$builder = new MessageImageBuilder('WeatherList', $font);
 }
 

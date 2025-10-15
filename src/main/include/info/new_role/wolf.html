@@ -145,15 +145,16 @@
 <a href="#disguise_wolf">朔狼</a>
 <a href="#purple_wolf">紫狼</a>
 <a href="#snow_wolf">雪狼</a>
+<a href="#miasma_wolf">戯狼</a>
 <a href="#ascetic_wolf">印狼</a>
 <a href="#fortitude_wolf">剛狼</a>
 <a href="#poison_wolf">毒狼</a>
 <a href="#resist_wolf">抗毒狼</a>
 <a href="#revive_wolf">仙狼</a>
 <a href="#trap_wolf">狡狼</a>
-<a href="#fire_wolf">火狼</a>
 </p>
 <p>
+<a href="#fire_wolf">火狼</a>
 <a href="#thorn_wolf">荊狼</a>
 <a href="#step_wolf">響狼</a>
 <a href="#blue_wolf">蒼狼</a>
@@ -163,9 +164,9 @@
 <a href="#sex_wolf">雛狼</a>
 <a href="#honey_wolf">蜜狼</a>
 <a href="#sharp_wolf">鋭狼</a>
-<a href="#hungry_wolf">餓狼</a>
 </p>
 <p>
+<a href="#hungry_wolf">餓狼</a>
 <a href="#spell_wolf">怨狼</a>
 <a href="#tongue_wolf">舌禍狼</a>
 <a href="#possessed_wolf">憑狼</a>
@@ -402,7 +403,7 @@
 <pre>
 自分に処刑投票してきた人が<a href="fox.php#child_fox_group">子狐系</a>だった場合は自分に<a href="sub_role.php#frostbite">凍傷</a>を付加してしまう人狼。
 </pre>
-<h4>処刑投票能力</h4>
+<h4>処刑得票能力</h4>
 <ol>
 <li><a href="sub_role.php#frostbite">凍傷</a>の発動日は投票された翌日の昼。</li>
 <li><a href="../spec.php#vote_day">判定</a>は処刑者決定後。</li>
@@ -418,6 +419,38 @@
 ローゼンメイデンの雪華綺晶がモチーフです。
 最も見つけ難い敵対勢力を比較的低リスクで探す事ができます。
 <a href="human.php#jealousy_group">橋姫系</a>や<a href="human.php#brownie_group">座敷童子系</a>を騙ると得票を操作し易いのでお勧めです。
+</pre>
+
+<h3 id="miasma_wolf">戯狼 (占い結果：人狼 / 霊能結果：人狼) [Ver. 5.1.0 α4～]</h3>
+<pre>
+自分に処刑投票してきた人が<a href="sub_role.php#bad_status">悪戯</a>されていた場合は<a href="sub_role.php#febris">熱病</a>を付加する人狼。
+自身が<a href="sub_role.php#bad_status">悪戯</a>されていた場合はさらに、自身にも<a href="sub_role.php#febris">熱病</a>を付加してしまう。
+</pre>
+<h4>処刑得票能力 (他者)</h4>
+<ol>
+<li><a href="sub_role.php#febris">熱病</a>の発動日は投票された翌日の昼</li>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後</li>
+<li>当日有効になっている<a href="sub_role.php#bad_status">悪戯</a>を所持している場合のみ有効</li>
+<li>自分が処刑された場合でも有効</li>
+<li>対象者が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効</li>
+</ol>
+<h4>処刑得票能力 (自身)</h4>
+<ol>
+<li><a href="sub_role.php#febris">熱病</a>の発動日は投票された翌日の昼</li>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後</li>
+<li>当日有効になっている<a href="sub_role.php#bad_status">悪戯</a>を所持している場合のみ有効</li>
+<li>自分の投票・得票状況とは関係なく有効</li>
+<li>自分が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="sub_role.php#bad_status">悪戯</a>・<a href="ability.php#vote_reaction">処刑得票能力者</a>・<a href="ability.php#febris">熱病能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+「<a href="sub_role.php#bad_status">悪戯</a>」を「現実の死へ」昇華させる人狼です。
+今までただ苦笑いするだけで済んでいた悪戯被害者に死亡フラグが発生することで
+ちょっとした緊張感と妖精へのヘイト増加を与えることを狙っています。
 </pre>
 
 <h3 id="ascetic_wolf">印狼 (占い結果：人狼 / 霊能結果：人狼) [Ver. 2.1.0 α6～]</h3>

@@ -170,6 +170,7 @@ final class RoleShortData {
     'disguise_wolf'		=> '朔狼',
     'purple_wolf'		=> '紫狼',
     'snow_wolf'			=> '雪狼',
+    'miasma_wolf'		=> '戯狼',
     'ascetic_wolf'		=> '印',
     'fortitude_wolf'		=> '剛狼',
     'poison_wolf'		=> '毒狼',
