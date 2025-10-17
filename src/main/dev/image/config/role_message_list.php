@@ -1061,7 +1061,7 @@ class RoleMessageList {
     'type' => 'incubus_vampire'];
 
   public $homogeneous_vampire = [
-    'message' => "[役割] [|吸血鬼|陣営] [|吸血鬼|系]\n　あなたは|夢馬|です。|吸血|した人の性別を知ることができ、異性を|吸血|した場合は_性転換_させてしまいます。",
+    'message' => "[役割] [|吸血鬼|陣営] [|吸血鬼|系]\n　あなたは|夢馬|です。|吸血|した人の性別を知ることができ、異性を|吸血|した場合は_性転換_させてしまいます。\n　異性の困惑する表情は、何よりあなたを愉悦させる。さあ、今夜は誰に不思議な悪夢をプレゼントしよう？",
     'type' => 'vampire', 'delimiter' => ['#' => 'sex_male', '_' => 'chiroptera']];
 
   public $heterologous_vampire = [

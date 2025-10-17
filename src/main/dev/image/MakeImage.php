@@ -19,8 +19,7 @@ $font = 'azuki.ttf';
 //$role = 'result_miasma_wolf';
 //$role = 'prediction_weather_no_escape';
 //$role = 'spell_wolf';
-$role = 'miasma_wolf';
-//$role = 'homogeneous_vampire';
+//$role = 'miasma_wolf';
 //$role = 'heterologous_vampire';
 
 //$calib_list = [0,0,0,0];
