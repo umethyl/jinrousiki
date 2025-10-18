@@ -151,8 +151,17 @@ final class WinnerImage extends Image {
     case WinCamp::VAMPIRE:
       break;
 
+    case WinCamp::HUMAN_QUIZ:
+      $name = WinCamp::HUMAN;
+      break;
+
+    case WinCamp::WOLF_QUIZ:
+      $name = WinCamp::WOLF;
+      break;
+
     case WinCamp::FOX_HUMAN:
     case WinCamp::FOX_WOLF:
+    case WinCamp::FOX_QUIZ:
       $name = WinCamp::FOX;
       break;
 

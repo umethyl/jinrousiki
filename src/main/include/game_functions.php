@@ -338,18 +338,30 @@ final class Winner {
     $quiz   = UserLoaderDB::CountCamp(Camp::QUIZ);   //出題者
 
     //勝利陣営判定
-    if ($human == $quiz && $wolf == 0 && $fox == 0) { //全滅
+    if (DB::$ROOM->IsQuiz() && $quiz == 0) { //クイズ村GM死亡
+      if (true === UserDB::IsQuizFold()) { //降参判定
+	if ($fox > 0) {
+	  $winner = WinCamp::FOX_QUIZ;
+	} elseif ($wolf > 0) {
+	  $winner = WinCamp::WOLF_QUIZ;
+	} elseif ($human > 0) {
+	  $winner = WinCamp::HUMAN_QUIZ;
+	} else {
+	  $winner = WinCamp::VANISH;
+	}
+      } else {
+	$winner = WinCamp::QUIZ_DEAD;
+      }
+    } elseif ($human == $quiz && $wolf == 0 && $fox == 0) { //全滅
       $winner = $quiz > 0 ? WinCamp::QUIZ : WinCamp::VANISH;
     } elseif (RoleLoader::Load('vampire')->CheckWin()) { //吸血鬼支配
       $winner = $lovers > 1 ? WinCamp::LOVERS : WinCamp::VAMPIRE;
-    } elseif ($wolf == 0) { //狼全滅
+    } elseif ($wolf == 0) { //人狼全滅
       $winner = $lovers > 1 ? WinCamp::LOVERS : ($fox > 0 ? WinCamp::FOX_HUMAN : WinCamp::HUMAN);
-    } elseif ($wolf >= $human) { //村全滅
+    } elseif ($wolf >= $human) { //人狼支配
       $winner = $lovers > 1 ? WinCamp::LOVERS : ($fox > 0 ? WinCamp::FOX_WOLF  : WinCamp::WOLF);
     } elseif ($lovers >= $human + $wolf + $fox) { //恋人支配
       $winner = WinCamp::LOVERS;
-    } elseif (DB::$ROOM->IsQuiz() && $quiz == 0) { //クイズ村GM死亡
-      $winner = WinCamp::QUIZ_DEAD;
     } elseif (true === $draw && DB::$ROOM->revote_count >= GameConfig::DRAW) { //引き分け
       $winner = WinCamp::DRAW;
     } else {
@@ -368,8 +380,19 @@ final class Winner {
     $text   = $winner;
 
     switch ($winner) { //特殊ケース対応
+    case WinCamp::HUMAN_QUIZ:	//村人勝利
+      $winner = WinCamp::HUMAN;
+      $class  = $winner;
+      break;
+
+    case WinCamp::WOLF_QUIZ:	//人狼勝利
+      $winner = WinCamp::WOLF;
+      $class  = $winner;
+      break;
+
     case WinCamp::FOX_HUMAN:	//妖狐勝利
     case WinCamp::FOX_WOLF:
+    case WinCamp::FOX_QUIZ:
       $winner = WinCamp::FOX;
       $class  = $winner;
       break;

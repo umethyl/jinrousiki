@@ -7,5 +7,5 @@ class VoteTestRoom {
   #const SCENE = RoomScene::AFTER;
   const TIME = false;
   const DUEL = false;
-  const WINNER = 'wolf';
+  const WINNER = WinCamp::WOLF;
 }

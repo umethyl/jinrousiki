@@ -34,17 +34,20 @@ final class GameLogController extends JinrouController {
   protected static function LoadExtra() {
     //シーンチェック
     switch (RQ::Get()->scene) {
-    case RoomScene::AFTER:
     case RoomScene::HEAVEN:
-      if (false === DB::$ROOM->IsFinished()) { //霊界・ゲーム終了後はゲーム終了後のみ
+      if (false === self::EnableHeaven()) {
+	self::OutputError(GameLogMessage::PLAYING);
+      }
+      break;
+
+    case RoomScene::AFTER:
+      if (false === DB::$ROOM->IsFinished()) { //ゲーム終了後判定
 	self::OutputError(GameLogMessage::PLAYING);
       }
       break;
 
     default:
-      if (DB::$ROOM->date < RQ::Get()->date ||
-	  (DB::$ROOM->IsDate(RQ::Get()->date) &&
-	   (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Get()->scene))) { //未来判定
+      if (true === self::IsFuture()) { //未来判定
 	self::OutputError(GameLogMessage::FUTURE);
       }
       DB::$ROOM->SetLastDate();
@@ -53,6 +56,23 @@ final class GameLogController extends JinrouController {
       DB::$USER->SetEvent(true);
       break;
     }
+  }
+
+  //霊界閲覧有効判定 (身代わり君生存中 or ゲーム終了後)
+  private static function EnableHeaven() {
+    return (DB::$SELF->IsDummyBoy() && DB::$SELF->IsLive()) || DB::$ROOM->IsFinished();
+  }
+
+  //未来判定
+  private static function IsFuture() {
+    if (DB::$ROOM->date < RQ::Get()->date) {
+      return true;
+    }
+
+    if (DB::$ROOM->IsDate(RQ::Get()->date)) {
+      return (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Get()->scene);
+    }
+    return false;
   }
 
   protected static function Output() {

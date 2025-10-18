@@ -610,6 +610,17 @@ final class User extends StackManager {
     return true;
   }
 
+  //降参処理
+  public function Fold() {
+    if ($this->IsLive(true)) { //事前に死亡処理を実施しておく
+      return false;
+    }
+
+    $this->UpdateLive(UserLive::FOLD);
+    $this->Flag()->On(UserMode::FOLD);
+    return true;
+  }
+
   //役職更新処理
   public function ChangeRole($role) {
     $this->Update('role', $role);
@@ -745,11 +756,13 @@ final class User extends StackManager {
   }
 
   //-- private --//
-  //仮想的な生死判定 (仮想なし > 突然死 > 蘇生 > 死亡 > 変動なし)
+  //仮想的な生死判定 (仮想なし > 突然死 > 降参 > 蘇生 > 死亡 > 変動なし)
   private function IsDeadFlag($strict = false) {
     if (false === $strict) {
       return null;
     } elseif ($this->IsOn(UserMode::SUICIDE)) {
+      return true;
+    } elseif ($this->IsOn(UserMode::FOLD)) {
       return true;
     } elseif ($this->IsOn(UserMode::REVIVE)) {
       return false;
