@@ -50,8 +50,11 @@ final class CampGroup extends Camp {
 
 //-- 勝利陣営リスト (Camp/Win) --//
 final class WinCamp extends BaseCamp {
+  const HUMAN_QUIZ	= 'human_quiz';
+  const WOLF_QUIZ	= 'wolf_quiz';
   const FOX_HUMAN	= 'fox1';
   const FOX_WOLF	= 'fox2';
+  const FOX_QUIZ	= 'fox_quiz';
   const DRAW		= 'draw';
   const QUIZ_DEAD	= 'quiz_dead';
   const VANISH		= 'vanish';

@@ -469,6 +469,25 @@ abstract class Role extends stdClass {
     return false;
   }
 
+  //処刑投票のチェックボックス有効判定
+  final public function IsVoteDayCheckBox(User $user, User $virtual_self, bool $is_live) {
+    if (true !== $is_live) {
+      return false;
+    }
+
+    //自己投票有効判定
+    if ($this->IsVoteDayCheckBoxSelf()) {
+      return true;
+    } else {
+      return false === $user->IsSame($virtual_self);
+    }
+  }
+
+  //自己投票有効判定
+  public function IsVoteDayCheckBoxSelf() {
+    return false;
+  }
+
   //-- 処刑集計処理 --//
   //処刑投票情報収集
   final public function SetStackVoteKill($uname) {
@@ -518,6 +537,9 @@ abstract class Role extends stdClass {
   final protected function IsVoteKill($uname = null) {
     return $this->GetVoteKill() == $this->GetUname($uname);
   }
+
+  //自己処刑処理
+  public function VoteKillSelfAction() {}
 
   //処刑得票ユーザー名リスト取得
   final protected function GetVotePollList($uname = null) {

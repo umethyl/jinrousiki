@@ -96,6 +96,10 @@ final class GameHTML {
 	//プレイ中の夜は当日の昼も表示する
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, DB::$ROOM->date);
       }
+      if (DB::$SELF->IsDummyBoy() && DB::$SELF->IsLive()) {
+	//身代わり君生存中(実質クイズ村GM)は霊界も表示する
+	$str .= self::GenerateGameLogLink($url, RoomScene::HEAVEN);
+      }
     }
 
     return $str;
