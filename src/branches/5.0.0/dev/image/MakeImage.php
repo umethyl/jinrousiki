@@ -1,4 +1,9 @@
 <?php
+require_once('init.php');
+if (true !== ServerConfig::DEBUG_MODE) {
+  HTML::OutputUnusableError();
+}
+
 #define('IMAGE_FONT_PATH', "C:\\WINDOWS\\Fonts\\");
 define('IMAGE_FONT_PATH', "./");
 //define('IMAGE_FONT_PATH', '/Library/Fonts');
