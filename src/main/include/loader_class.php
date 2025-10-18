@@ -323,6 +323,7 @@ final class LoaderData {
     //data/option
     'OptionGroup'	=> 'option_data_class',
     'OptionFormType'	=> 'option_data_class',
+    'OptionFormData'	=> 'option_form_data_class',
     'OptionFilterData'	=> 'option_filter_data_class',
     //data/event
     'EventType'		=> 'event_data_class',
@@ -603,6 +604,7 @@ final class LoaderData {
     'dead_reason_data_class'	=> 'data',
     //data/option
     'option_data_class'		=> 'data/option',
+    'option_form_data_class'	=> 'data/option',
     'option_filter_data_class'	=> 'data/option',
     //data/event
     'event_data_class'		=> 'data/event',
