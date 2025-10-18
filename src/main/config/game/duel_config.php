@@ -57,7 +57,7 @@ class DuelConfig {
 	    'count' => [],
 	    'rate'  => ['escaper' => 4, 'chiroptera' => 4, 'mist_wolf' => 4, 'miasma_mad' => 3,
 			'follow_vampire' => 4, 'sacrifice_cupid' => 2],
-	    'calib' => ['vampire' => ['soul_vampire' => 3]]
+	    'calib' => []
            ],
     'h' => ['fix'   => [],
 	    'count' => [],
@@ -67,7 +67,7 @@ class DuelConfig {
            ],
     'i' => ['fix'   => [],
 	    'count' => [],
-	    'rate'  => ['dummy_guard' => 3, 'psycho_escaper' => 1, 'wolf' => 4,
+	    'rate'  => ['dummy_guard' => 3, 'psycho_escaper' => 1, 'miasma_wolf' => 4,
 			'dream_eater_mad' => 4, 'fairy' => 6],
 	    'calib' => ['fairy' => ['spring_fairy' => 1, 'summer_fairy' => 1, 'autumn_fairy' => 1,
 				    'winter_fairy' => 1, 'greater_fairy' => 1, 'grass_fairy' => 1]]

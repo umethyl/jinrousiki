@@ -452,6 +452,7 @@ final class LoaderData {
     'CastInfoMessage'		=> 'cast_info_message',
     'GameOptionInfoMessage'	=> 'game_option_info_message',
     'ChaosInfoMessage'		=> 'chaos_info_message',
+    'DuelInfoMessage'		=> 'duel_info_message',
     'WeatherInfoMessage'	=> 'weather_info_message',
     'SpecInfoMessage'		=> 'spec_info_message',
     'SharedRoomInfoMessage'	=> 'shared_room_info_message',
@@ -495,7 +496,7 @@ final class LoaderData {
     'IconViewHTML'	=> 'icon_view_html_class',
     'IconUploadHTML'	=> 'icon_upload_html_class',
     //html/controller/info
-    'ChaosInfoHTML'		=> 'chaos_info_html_class',
+    'DuelInfoHTML'		=> 'duel_info_html_class',
     'CopyrightInfoHTML'		=> 'copyright_info_html_class',
     'SearchRoleInfoHTML'	=> 'search_role_info_html_class',
     //html/controller/test
@@ -580,6 +581,7 @@ final class LoaderData {
     'cast_info_message'		=> 'message/controller/info',
     'game_option_info_message'	=> 'message/controller/info',
     'chaos_info_message'	=> 'message/controller/info',
+    'duel_info_message'		=> 'message/controller/info',
     'weather_info_message'	=> 'message/controller/info',
     'spec_info_message'		=> 'message/controller/info',
     'shared_room_info_message'	=> 'message/controller/info',
@@ -682,6 +684,7 @@ final class LoaderData {
     'cast_info_class'		=> 'controller/info',
     'game_option_info_class'	=> 'controller/info',
     'chaos_info_class'		=> 'controller/info',
+    'duel_info_class'		=> 'controller/info',
     'weather_info_class'	=> 'controller/info',
     'spec_info_class'		=> 'controller/info',
     'shared_room_info_class'	=> 'controller/info',
@@ -728,7 +731,6 @@ final class LoaderData {
     'icon_view_html_class'	=> 'html/controller',
     'icon_upload_html_class'	=> 'html/controller',
     //html/controller/info
-    'chaos_info_html_class'		=> 'html/controller/info',
     'copyright_info_html_class'		=> 'html/controller/info',
     'search_role_info_html_class'	=> 'html/controller/info',
     //html/controller/test

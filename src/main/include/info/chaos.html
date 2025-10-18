@@ -17,7 +17,7 @@
 <ol>
   <li>バージョンアップで仕様が変わる可能性があります。</li>
   <li>ゲーム開始直後に勝敗が決まる可能性があります。</li>
-  <li>設定ファイルで変更できるので具体的な数値はサーバ毎に違います。</li>
+  <li>設定ファイルで変更できるので具体的な数値はサーバ毎に異なる可能性があります。</li>
 </ol>
 <p>
 <a href="#decide_role_fix">固定出現枠</a>
@@ -607,16 +607,16 @@
 <li>内容は設定ファイルで変更できます。</li>
 </ol>
 <p>
-<?php ChaosInfoHTML::OutputList('topping', range('a', 'h')); ?>
+<?php InfoHTML::OutputOptionList('topping', range('a', 'h')); ?>
 </p>
 <p>
-<?php ChaosInfoHTML::OutputList('topping', range('i', 'p')); ?>
+<?php InfoHTML::OutputOptionList('topping', range('i', 'p')); ?>
 </p>
 <p>
-<?php ChaosInfoHTML::OutputList('topping', range('q', 'u')); ?>
+<?php InfoHTML::OutputOptionList('topping', range('q', 'u')); ?>
 </p>
 
-<?php ChaosInfoHTML::Output('topping', 'a', 'Ver. 1.4.0 β19'); ?>
+<?php InfoHTML::OutputOption('topping', 'a', 'Ver. 1.4.0 β19'); ?>
 <pre>
 <a href="new_role/human.php#doll_group">上海人形系</a>2 (<a href="new_role/human.php#doll_rule_doll_master">人形遣い系</a>1・それ以外1)　<a href="new_role/human.php#doll_rule_partner">人形遣い枠</a>1 (<a href="new_role/human.php#doll_rule_doll_master">人形遣い系</a>以外)
 </pre>
@@ -636,12 +636,12 @@
 上海人形1 → 上海人形系1 (人形遣い以外)
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'b', 'Ver. 1.4.0 β19'); ?>
+<?php InfoHTML::OutputOption('topping', 'b', 'Ver. 1.4.0 β19'); ?>
 <pre>
 <a href="new_role/quiz.php#quiz">出題者</a>1　<a href="new_role/ogre.php#poison_ogre">榊鬼</a>1
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'c', 'Ver. 1.4.0 β19'); ?>
+<?php InfoHTML::OutputOption('topping', 'c', 'Ver. 1.4.0 β19'); ?>
 <pre>
 <a href="new_role/vampire.php">吸血鬼陣営</a>1　霧系1 (<a href="new_role/wolf.php#mist_wolf">霧狼</a>・<a href="new_role/fox.php#mist_fox">霧狐</a>・<a href="new_role/chiroptera.php#boss_chiroptera">大蝙蝠</a>)
 </pre>
@@ -654,7 +654,7 @@
 吸血鬼1 → 吸血鬼陣営1
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'd', 'Ver. 1.4.0 β19'); ?>
+<?php InfoHTML::OutputOption('topping', 'd', 'Ver. 1.4.0 β19'); ?>
 <pre>
 <a href="new_role/human.php#poison_cat_group">猫又系</a>1　<a href="new_role/wolf.php#grave_mad">墓荒らし</a>1
 </pre>
@@ -667,17 +667,17 @@
 猫又1 → 猫又系1
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'e', 'Ver. 1.4.0 β19'); ?>
+<?php InfoHTML::OutputOption('topping', 'e', 'Ver. 1.4.0 β19'); ?>
 <pre>
 <a href="new_role/human.php#anti_voodoo">厄神</a>1　<a href="new_role/wolf.php#possessed_wolf">憑狼</a>1
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'f', 'Ver. 1.4.0 RC1'); ?>
+<?php InfoHTML::OutputOption('topping', 'f', 'Ver. 1.4.0 RC1'); ?>
 <pre>
 <a href="new_role/ogre.php">鬼陣営</a>2
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'g', 'Ver. 1.5.0 α7'); ?>
+<?php InfoHTML::OutputOption('topping', 'g', 'Ver. 1.5.0 α7'); ?>
 <pre>
 <a href="new_role/wolf.php#mad_group">狂人系</a>1　夢系1　精神系1
 
@@ -685,22 +685,22 @@
 精神系：(<a href="new_role/human.php#psycho_mage">精神鑑定士</a>・<a href="new_role/human.php#psycho_necromancer">精神感応者</a>・<a href="new_role/human.php#psycho_escaper">迷い人</a>・<a href="new_role/wolf.php#dream_eater_mad">獏</a>・<a href="new_role/ogre.php#revive_ogre">茨木童子</a>)
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'h', '1.5.0 α7'); ?>
+<?php InfoHTML::OutputOption('topping', 'h', '1.5.0 α7'); ?>
 <pre>
 <a href="new_role/human.php#human">村人</a>2
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'i', 'Ver. 1.5.0 β1'); ?>
+<?php InfoHTML::OutputOption('topping', 'i', 'Ver. 1.5.0 β1'); ?>
 <pre>
 <a href="new_role/human.php#jealousy_group">橋姫系</a>1　<a href="new_role/lovers.php">恋人陣営</a>2
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'j', 'Ver. 1.5.0 β1'); ?>
+<?php InfoHTML::OutputOption('topping', 'j', 'Ver. 1.5.0 β1'); ?>
 <pre>
 <a href="new_role/duelist.php">決闘者陣営</a>1
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'k', 'Ver. 1.5.0 β2'); ?>
+<?php InfoHTML::OutputOption('topping', 'k', 'Ver. 1.5.0 β2'); ?>
 <pre>
 上位種3 (村人陣営1・人狼陣営1・他陣営1)
 
@@ -759,12 +759,12 @@
 他：<a href="new_role/duelist.php#avenger">復讐者</a>・<a href="new_role/duelist.php#patron">後援者</a>・<a href="new_role/mania.php#sacrifice_mania">影武者</a>追加
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'l', 'Ver. 1.5.0 β8'); ?>
+<?php InfoHTML::OutputOption('topping', 'l', 'Ver. 1.5.0 β8'); ?>
 <pre>
 <a href="new_role/human.php#ghost_common">亡霊嬢</a>1　<a href="new_role/wolf.php#boss_wolf">白狼</a>1　<a href="new_role/wolf.php#silver_wolf">銀狼</a>1　<a href="new_role/fox.php#howl_fox">化狐</a>1
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'm', 'Ver. 2.1.0 α6'); ?>
+<?php InfoHTML::OutputOption('topping', 'm', 'Ver. 2.1.0 α6'); ?>
 <pre>
 暗殺枠2 (<a href="new_role/human.php#step_assassin">風神</a>・<a href="new_role/human.php#sweep_assassin">掃除屋</a>)　<a href="new_role/wolf.php#trap_wolf">狡狼</a>1　<a href="new_role/fox.php#doom_fox">冥狐</a>1
 </pre>
@@ -773,22 +773,22 @@
 掃除屋2 → 暗殺枠2
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'n', 'Ver. 2.1.0 β3'); ?>
+<?php InfoHTML::OutputOption('topping', 'n', 'Ver. 2.1.0 β3'); ?>
 <pre>
 <a href="new_role/human.php#guard">狩人</a>1　<a href="new_role/wolf.php#trap_wolf">狡狼</a>1　<a href="new_role/wolf.php#trap_mad">罠師</a>1
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'o', 'Ver. 2.1.0 RC2'); ?>
+<?php InfoHTML::OutputOption('topping', 'o', 'Ver. 2.1.0 RC2'); ?>
 <pre>
 <a href="new_role/human.php#voodoo_killer">陰陽師</a>1　<a href="new_role/human.php#wizard_group">魔法使い系</a>1　<a href="new_role/ogre.php#cursed_yaksa">滝夜叉姫</a>1　<a href="new_role/duelist.php#cursed_avenger">がしゃどくろ</a>1
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'p', 'Ver. 2.2.0 α3'); ?>
+<?php InfoHTML::OutputOption('topping', 'p', 'Ver. 2.2.0 α3'); ?>
 <pre>
 <a href="new_role/wolf.php#step_wolf">響狼</a>1　<a href="new_role/ability.php#step">足音能力者</a>2 (<a href="new_role/wolf.php#step_wolf">響狼</a>を除く)
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'q', 'Ver. 2.2.0 α6'); ?>
+<?php InfoHTML::OutputOption('topping', 'q', 'Ver. 2.2.0 α6'); ?>
 <pre>
 <a href="new_role/ability.php#sex_mage">性別鑑定能力者</a>1 (<a href="new_role/human.php#wizard_group">魔法使い系</a>・<a href="new_role/vampire.php">吸血鬼陣営</a>を除く)　性別能力者枠1
 
@@ -800,22 +800,22 @@
 <a href="new_role/ability.php#sex_only">性別限定能力者</a> → 性別能力者枠</a>
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'r', 'Ver. 2.2.0 α8'); ?>
+<?php InfoHTML::OutputOption('topping', 'r', 'Ver. 2.2.0 α8'); ?>
 <pre>
 <a href="new_role/chiroptera.php#fairy_group">妖精系</a>1　対妖精枠1 (<a href="new_role/human.php#dummy_guard">夢守人</a>・<a href="new_role/human.php#dummy_poison">夢毒者</a>・<a href="new_role/wolf.php#dream_eater_mad">獏</a>)
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 's', 'Ver. 2.3.0 β1'); ?>
+<?php InfoHTML::OutputOption('topping', 's', 'Ver. 2.3.0 β1'); ?>
 <pre>
 霊能枠1 (<a href="new_role/human.php#necromancer">霊能者</a>・<a href="new_role/human.php#soul_necromancer">雲外鏡</a>・<a href="new_role/human.php#dummy_necromancer">夢枕人</a>)　<a href="new_role/wolf.php#boss_wolf">白狼</a>1　特殊霊能判定枠1 (<a href="new_role/fox.php#white_fox">白狐</a>・<a href="new_role/fox.php#black_fox">黒狐</a>・<a href="new_role/chiroptera.php#cute_chiroptera">萌蝙蝠</a>)
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 't', 'Ver. 3.0.0 β1'); ?>
+<?php InfoHTML::OutputOption('topping', 't', 'Ver. 3.0.0 β1'); ?>
 <pre>
 <a href="new_role/tengu.php">天狗陣営</a>1
 </pre>
 
-<?php ChaosInfoHTML::Output('topping', 'u', 'Ver. 3.0.0 RC1'); ?>
+<?php InfoHTML::OutputOption('topping', 'u', 'Ver. 3.0.0 RC1'); ?>
 <pre>
 <a href="new_role/wolf.php#fanatic_mad">狂信者</a>1　<a href="new_role/fox.php#depraver_group">背徳者系</a>1
 </pre>
@@ -828,30 +828,30 @@
 <li>内容は設定ファイルで変更できます。</li>
 </ol>
 <p>
-<?php ChaosInfoHTML::OutputList('boost_rate', range('a', 'h')); ?>
+<?php InfoHTML::OutputOptionList('boost_rate', range('a', 'h')); ?>
 </p>
 <p>
-<?php ChaosInfoHTML::OutputList('boost_rate', range('i', 'n')); ?>
+<?php InfoHTML::OutputOptionList('boost_rate', range('i', 'n')); ?>
 </p>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'a', 'Ver. 1.5.0 β7'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'a', 'Ver. 1.5.0 β7'); ?>
 <pre>
 該当バージョンで新しく実装された役職の出現率が上がります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'b', 'Ver. 1.5.0 β7'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'b', 'Ver. 1.5.0 β7'); ?>
 <pre>
 <a href="new_role/ability.php#authority">投票数変化能力者</a>・<a href="new_role/ability.php#luck">得票数変化能力者</a>に属するメイン役職の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'c', 'Ver. 1.5.0 β8'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'c', 'Ver. 1.5.0 β8'); ?>
 <pre>
 各系統の基本職の出現率が 0 になります。
 役職グループの<a href="#decide_role_random">上限補正</a>の振り替えで<a href="new_role/human.php#human">村人</a>が出現する可能性があります。
 村人の<a href="#decide_role_random">上限補正</a>の振り替えでは基本職は出現しません。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'd', 'Ver. 1.5.0 β9'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'd', 'Ver. 1.5.0 β9'); ?>
 <pre>
 <a href="new_role/ability.php#revive_other">蘇生能力者 (他者蘇生型)</a>・<a href="new_role/ability.php#psuedo_revive">擬似蘇生能力者</a>・<a href="new_role/ability.php#anti_revive">蘇生妨害能力者</a>の出現率が 0 になります。
 </pre>
@@ -864,53 +864,53 @@
 <a href="new_role/wolf.php#possessed_mad">犬神</a>・<a href="new_role/fox.php#possessed_fox">憑狐</a> (<a href="new_role/ability.php#psuedo_revive">擬似蘇生能力者</a>) 追加
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'e', 'Ver. 1.5.0 β9'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'e', 'Ver. 1.5.0 β9'); ?>
 <pre>
 <a href="new_role/ability.php#possessed">憑依能力者</a>の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'f', 'Ver. 1.5.0 β12'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'f', 'Ver. 1.5.0 β12'); ?>
 <pre>
 <a href="new_role/fox.php#depraver">背徳者系</a>・<a href="new_role/chiroptera.php">蝙蝠陣営</a>・<a href="new_role/ogre.php">鬼陣営</a>・<a href="new_role/duelist.php">決闘者陣営</a>の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'g', 'Ver. 2.0.0'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'g', 'Ver. 2.0.0'); ?>
 <pre>
 <a href="new_role/human.php#jealousy">橋姫系</a>・<a href="new_role/lovers.php">恋人陣営</a>の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'h', 'Ver. 2.1.0 α5'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'h', 'Ver. 2.1.0 α5'); ?>
 <pre>
 <a href="new_role/wolf.php#resist_wolf">抗毒狼</a>・<a href="new_role/ogre.php#horse_ogre">馬頭鬼</a>・<a href="new_role/duelist.php#plumage_patron">鬼車鳥</a>・<a href="new_role/human.php#pharmacist">薬師系</a>・<a href="new_role/ability.php#poison">毒能力者</a>の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'i', 'Ver. 2.3.0 β2'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'i', 'Ver. 2.3.0 β2'); ?>
 <pre>
 <a href="new_role/human.php#medium_group">巫女系</a>・<a href="new_role/ability.php#sudden_death">ショック死能力者</a>・<a href="new_role/ability.php#resist_sudden_death">ショック死耐性能力者</a>
 <a href="new_role/ability.php#anti_sudden_death">ショック死抑制能力者</a>に属するメイン役職の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'j', 'Ver. 2.3.0 β2'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'j', 'Ver. 2.3.0 β2'); ?>
 <pre>
 <a href="new_role/human.php#voodoo_killer">陰陽師</a>・<a href="new_role/human.php#anti_voodoo">厄神</a>・<a href="new_role/ability.php#cursed_group">呪い能力者</a>の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'k', 'Ver. 2.3.0 β2'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'k', 'Ver. 2.3.0 β2'); ?>
 <pre>
 <a href="new_role/wolf.php#dream_eater_mad">獏</a>・<a href="new_role/mania.php#dummy_mania">夢語部</a>・<a href="new_role/mania.php#dummy_mania">夢語部</a>のコピー先 (<a href="new_role/human.php#human">村人</a>以外) の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'l', 'Ver. 3.0.0 RC1'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'l', 'Ver. 3.0.0 RC1'); ?>
 <pre>
 <a href="new_role/ability.php#win">勝利条件限定能力者</a>の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'm', 'Ver. 3.0.0 RC1'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'm', 'Ver. 3.0.0 RC1'); ?>
 <pre>
 <a href="new_role/ability.php#partner_jammer">仲間情報妨害能力者</a>の出現率が 0 になります。
 </pre>
 
-<?php ChaosInfoHTML::Output('boost_rate', 'n', 'Ver. 5.1.0 α3'); ?>
+<?php InfoHTML::OutputOption('boost_rate', 'n', 'Ver. 5.1.0 α3'); ?>
 <pre>
 <a href="new_role/mania.php">神話マニア陣営</a>の出現率が 0 になります。
 </pre>
