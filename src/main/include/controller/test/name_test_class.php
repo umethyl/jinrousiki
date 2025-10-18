@@ -3,6 +3,7 @@
 final class NameTestController extends JinrouTestController {
   protected static function LoadRequest() {
     DevHTML::LoadRequest();
+    RQ::Get()->ParsePostData('type');
   }
 
   protected static function OutputHeader() {
@@ -14,22 +15,29 @@ final class NameTestController extends JinrouTestController {
   private static function OutputForm() {
     HTML::OutputFormHeader('name_test.php');
     Text::d();
-    self::OutputRadio('all-all', Message::FORM_ALL);
-    $count     = 0;
-    $role_data = self::GetList();
-    $stack     = ['camp' => VoteMessage::CAMP_FOOTER, 'group' => VoteMessage::GROUP_FOOTER];
-    foreach ($stack as $type => $name) {
-      foreach (array_keys($role_data->$type) as $role) {
-	Text::OutputFold(++$count, Text::BR, 9);
-	self::OutputRadio($role . '-' . $type, RoleDataManager::GetName($role) . $name);
-      }
-    }
+    self::OutputFormList();
     HTML::OutputFormFooter();
   }
 
+  //フォームリスト出力
+  private static function OutputFormList() {
+    $id        = RQ::Get()->type ?? 'all-all' ;
+    $count     = 0;
+    $role_data = self::GetList();
+    $stack     = ['camp' => VoteMessage::CAMP_FOOTER, 'group' => VoteMessage::GROUP_FOOTER];
+
+    self::OutputRadio('all-all', Message::FORM_ALL, $id);
+    foreach ($stack as $type => $name) {
+      foreach (array_keys($role_data->$type) as $role) {
+	Text::OutputFold(++$count, Text::BR, 9);
+	self::OutputRadio($role . '-' . $type, RoleDataManager::GetName($role) . $name, $id);
+      }
+    }
+  }
+
   //ラジオボタン出力
-  private static function OutputRadio($id, $label) {
-    DevHTML::OutputRadio($id, 'type', $id, HTML::GenerateChecked(true), $label);
+  private static function OutputRadio($id, $label, $checked_id) {
+    DevHTML::OutputRadio($id, 'type', $id, HTML::GenerateChecked($id === $checked_id), $label);
   }
 
   protected static function IsExecute() {
@@ -37,7 +45,6 @@ final class NameTestController extends JinrouTestController {
   }
 
   protected static function RunTest() {
-    RQ::Get()->ParsePostData('type');
     list($role, $type) = Text::Parse(RQ::Get()->type, '-');
     switch ($type) {
     case 'all':
