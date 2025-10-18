@@ -62,6 +62,7 @@ class IndexHTML {
   private static function OutputBody() {
     TableHTML::OutputTdHeader();
     self::OutputField(TopPageMessage::INFORMATION, 'information', 'top/information.html');
+    self::OutputNotice();
     self::OutputField(TopPageMessage::GAME_LIST,   'game-list',   'room_manager.php');
     if (false === TopPageConfig::DISABLE_SHARED_SERVER) {
       InfoHTML::OutputSharedRoomList(true);
@@ -79,6 +80,11 @@ class IndexHTML {
     include($file);
     HTML::OutputDivFooter();
     HTML::OutputFieldsetFooter();
+  }
+
+  //警告メッセージ出力
+  private static function OutputNotice() {
+    JinrouAdmin::OutputNoticeMessage();
   }
 
   //掲示板情報出力

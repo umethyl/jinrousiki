@@ -11,6 +11,7 @@ class TopPageMessage {
 
   /* メイン情報 */
   const INFORMATION = 'Information <a href="info/history/top.php">～過去のinformationはこちら～</a>';
+  const NOTICE      = '管理機能設定';
   const GAME_LIST   = 'ゲーム一覧';
   const BBS_TITLE   = '<a href="%s%sl50">告知スレッド情報</a>';
   const CREATE_ROOM = '村の作成';

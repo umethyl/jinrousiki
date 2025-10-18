@@ -1,6 +1,6 @@
 <?php
 //-- Twitter 投稿テストコントローラー --//
-final class TwitterTestController extends JinrouController {
+final class TwitterTestController extends JinrouTestController {
   protected static function LoadRequest() {
     DevHTML::LoadRequest();
   }
