@@ -14,11 +14,10 @@ class DuelConfig {
 	    'rate'  => ['assassin' => 11, 'wolf' => 4, 'trap_mad' => 5],
 	    'calib' => []
            ],
-    'b' => ['fix'   => [],
+    'b' => ['fix'   => ['triangle_cupid' => 1],
 	    'count' => [20 => ['poison_jealousy' => 1, 'moon_cupid' => 1],
 			25 => ['quiz' => 1]],
-	    'rate'  => ['poison' => 5, 'chain_poison' => 10,
-		       'poison_wolf' => 5, 'triangle_cupid' => 2],
+	    'rate'  => ['poison' => 5, 'chain_poison' => 10, 'poison_wolf' => 5, 'poison_fox' => 1],
 	    'calib' => []
            ],
     'c' => ['fix'   => [],

@@ -94,7 +94,6 @@ class DevRoom {
     $format     = '%0' . strlen($try_count) . 'd回目: ';
     for ($i = 1; $i <= $try_count; $i++) {
       if (RQ::Get()->increment) {
-	$user_count++;
 	printf($format . '%0' . strlen($try_count) . 'd人: ', $i, $user_count);
       } else {
 	printf($format, $i);
@@ -104,6 +103,9 @@ class DevRoom {
 	break;
       }
       Text::p(Cast::GenerateMessage(array_count_values($role_list), true));
+      if (RQ::Get()->increment) {
+	$user_count++;
+      }
     }
   }
 }
