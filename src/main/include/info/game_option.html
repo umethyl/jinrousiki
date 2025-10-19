@@ -472,8 +472,15 @@
 <ul>
 <li><?php OptionManager::OutputExplain('death_note'); ?></li>
 <li>毎日、夜→昼の処理終了時の生存者からランダムで一人に<a href="new_role/sub_role.php#death_note">デスノート</a>が配布されます</li>
+<ul>
+  <li>身代わり君には配布されません</li>
+</ul>
 <li>配布状況は配役公開状態の霊界からのみ見ることができます</li>
 </ul>
+<h5>Ver. 5.1.0 α4～</h5>
+<pre>
+身代わり君には配布されない仕様に変更
+</pre>
 
 <h3 id="weather"><?php OptionManager::OutputCaption('weather'); ?> [Ver. 1.5.0 α2～]</h3>
 <ul>
@@ -653,26 +660,54 @@
 <ul>
   <li>配役が基本職のみになります。初期設定は以下です</li>
   <ol>
-    <li>人狼系 → 人狼</li>
-    <li>狂人系 → 狂人</li>
-    <li>妖狐陣営 → 妖狐</li>
-    <li>上記以外 → 村人</li>
+    <li><a href="new_role/wolf.php#wolf_group">人狼系</a> → <a href="new_role/wolf.php#wolf">人狼</a></li>
+    <li><a href="new_role/wolf.php#mad_group">狂人系</a> → <a href="new_role/wolf.php#mad">狂人</a></li>
+    <li><a href="new_role/fox.php">妖狐陣営</a>(<a href="new_role/fox.php#depraver_group">背徳者系</a>以外) → <a href="new_role/fox.php#fox">妖狐</a></li>
+    <li><a href="new_role/fox.php#depraver_group">背徳者系</a> → <a href="new_role/fox.php#depraver">背徳者</a></li>
+    <li>上記以外 → <a href="new_role/human.php#human">村人</a></li>
   </ol>
+  <li>以下のオプションと併用することができます(適用後に配役が変換されます)</li>
+  <ul>
+    <li><?php InfoHTML::OutputCategory(['wolf']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['mad']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['no_fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['depraver']); ?></li>
+  </ul>
 </ul>
+<h5>Ver. 5.1.0 α4～</h5>
+<pre>
+配役に背徳者を追加
+一部のオプションとの併用を実装
+</pre>
 
 <h4 id="step"><?php OptionManager::OutputCaption('step'); ?> [Ver. 2.2.0 α3～]</h4>
 <ul>
   <li>配役が<a href="new_role/ability.php#step">足音能力者</a>ベースになります。初期設定は以下です</li>
   <ol>
-    <li>占い師系 → <a href="new_role/human.php#step_mage">審神者</a></li>
-    <li>霊能者系 → 霊能者</li>
-    <li>狩人系 → <a href="new_role/human.php#step_guard">山立</a></li>
-    <li>人狼系 → <a href="new_role/wolf.php#step_wolf">響狼</a></li>
-    <li>狂人系 → <a href="new_role/wolf.php#step_mad">家鳴</a></li>
-    <li>妖狐陣営 → <a href="new_role/fox.php#step_fox">響狐</a></li>
-    <li>上記以外 → 村人</li>
+    <li><a href="new_role/human.php#mage_group">占い師系</a> → <a href="new_role/human.php#step_mage">審神者</a></li>
+    <li><a href="new_role/human.php#necromancer_group">霊能者系</a> → <a href="new_role/human.php#necromancer">霊能者</a></li>
+    <li><a href="new_role/human.php#guard_group">狩人系</a> → <a href="new_role/human.php#step_guard">山立</a></li>
+    <li><a href="new_role/wolf.php#wolf_group">人狼系</a> → <a href="new_role/wolf.php#step_wolf">響狼</a></li>
+    <li><a href="new_role/wolf.php#mad_group">狂人系</a> → <a href="new_role/wolf.php#step_mad">家鳴</a></li>
+    <li><a href="new_role/fox.php">妖狐陣営</a>(<a href="new_role/fox.php#depraver_group">背徳者系</a>以外) → <a href="new_role/fox.php#step_fox">響狐</a></li>
+    <li><a href="new_role/fox.php#depraver_group">背徳者系</a> → <a href="new_role/fox.php#depraver">背徳者</a></li>
+    <li>上記以外 → <a href="new_role/human.php#human">村人</a></li>
   </ol>
+  <li>以下のオプションと併用することができます(適用後に配役が変換されます)</li>
+  <ul>
+    <li><?php InfoHTML::OutputCategory(['wolf']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['mad']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['no_fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['depraver']); ?></li>
+  </ul>
 </ul>
+<h5>Ver. 5.1.0 α4～</h5>
+<pre>
+配役に背徳者を追加
+一部のオプションとの併用を実装
+</pre>
 <h5>Ver. 3.1.0 α7～</h5>
 <pre>
 <a href="#wish_role"><?php OptionManager::OutputCaption('wish_role'); ?></a>が一部機能していないバグ修正
@@ -683,7 +718,17 @@
   <li>GMが<a href="new_role/quiz.php#quiz">出題者</a>になります</li>
   <li>村を作成する際にGMログインパスワードの入力が必要です</li>
   <li>GMもゲーム開始投票をする必要があります</li>
-  <li>出現役職は村人・共有者・人狼・狂人・妖狐です</li>
+  <li>出現役職は村人・共有者・人狼・狂人・妖狐・背徳者です</li>
+  <li>以下のオプションと併用することができます(適用後に配役が変換されます)</li>
+  <ul>
+    <li><?php InfoHTML::OutputCategory(['wolf']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['mad']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['no_fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['depraver']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['joker']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['death_note']); ?></li>
+  </ul>
   <li>GM以外の全員に<a href="new_role/sub_role.php#panelist">解答者</a>がつきます</li>
   <li>人狼は常時GMしか狙えません</li>
   <li>GMは人狼に襲撃されても死亡しません</li>
@@ -710,6 +755,8 @@
 <pre>
 GMのみ、自分自身に処刑投票することができます
 GMのみ、ゲーム中でも霊界のログを閲覧することができます(発言はできません)
+配役に背徳者を追加
+一部のオプションとの併用を実装
 </pre>
 <h5>Ver. 2.2.0 α4～</h5>
 <pre>
