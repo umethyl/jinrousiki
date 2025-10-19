@@ -77,8 +77,8 @@ class OptionManager {
   }
 
   //追加配役 (普通村)
-  public static function FilterCastAddRole(array &$list, $count) {
-    foreach (OptionFilterData::$cast_add_role as $option) {
+  public static function FilterCastAddRole(array &$list, $count, array $filter) {
+    foreach ($filter as $option) {
       if (self::CanLoad($option)) {
 	OptionLoader::Load($option)->FilterCastAddRole($list, $count);
       }
@@ -427,7 +427,6 @@ abstract class Option {
     $list = Cast::Stack()->Get(Cast::CAST);
 
     $list[array_pop($rand)] .= ' ' . $this->name . $str;
-
     Cast::Stack()->Set(Cast::RAND, $rand);
     Cast::Stack()->Set(Cast::CAST, $list);
     return $this->GetResultCastUserSubRoleList();
@@ -563,7 +562,11 @@ abstract class OptionCastCheckbox extends OptionCheckbox {
   //配役フィルタリング処理
   final protected function FilterCast($count, array $filter) {
     $stack = [];
-    foreach (CastConfig::$role_list[$count] as $key => $value) {
+    $role_list = CastConfig::$role_list[$count];
+    if (true === $this->EnableFilterCastAddRoleSpecial()) {
+      $this->FilterCastAddRoleSpecial($role_list, $count);
+    }
+    foreach ($role_list as $key => $value) {
       $role = 'human';
       foreach ($filter as $set_role => $target_role) {
 	if (Text::Search($key, $target_role)) {
@@ -574,6 +577,17 @@ abstract class OptionCastCheckbox extends OptionCheckbox {
       ArrayFilter::Add($stack, $role, $value);
     }
     return $this->ReplaceFilterCast($stack);
+  }
+
+  //追加配役 (特殊配役村) 置換有効判定
+  protected function EnableFilterCastAddRoleSpecial() {
+    return false;
+  }
+
+  //追加配役 (特殊配役村)
+  final protected function FilterCastAddRoleSpecial(array &$list, $count) {
+    $filter = OptionFilterData::$cast_add_role_special;
+    OptionManager::FilterCastAddRole($list, $count, $filter);
   }
 
   //配役フィルタリング置換処理
