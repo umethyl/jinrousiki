@@ -252,6 +252,12 @@ final class VoteDay extends VoteBase {
     VoteHTML::OutputResult(VoteMessage::SUCCESS);
   }
 
+  //役職クラス取得
+  public static function GetFilter() {
+    //処刑に複合投票イベントが発生したら実装する
+    return RoleLoader::LoadMain(DB::$SELF);
+  }
+
   //集計処理
   public static function Aggregate() {
     //-- 沈黙禁止処理 --//
@@ -319,9 +325,10 @@ final class VoteDay extends VoteBase {
   //投票先チェック
   private static function ValidateTarget() {
     $target = RoleManager::Stack()->Get(VoteDayElement::TARGET);
+    $filter = VoteDay::GetFilter();
     if (null === $target->id) {
       VoteHTML::OutputResult(VoteMessage::INVALID_VOTE);
-    } elseif ($target->IsSelf()) {
+    } elseif (false === $filter->IsVoteDayCheckBoxSelf() && $target->IsSelf()) {
       VoteHTML::OutputResult(VoteMessage::VOTE_SELF);
     } elseif ($target->IsDead()) {
       VoteHTML::OutputResult(VoteMessage::VOTE_DEAD);
@@ -514,6 +521,9 @@ final class VoteDay extends VoteBase {
     $target = DB::$USER->ByRealUname($uname);
     DB::$USER->Kill($target->id, DeadReason::VOTE_KILLED); //処刑処理
     RoleManager::Stack()->Set(VoteDayElement::VOTED_USER, $target);
+
+    //自己処刑処理
+    RoleLoader::LoadMain($target)->VoteKillSelfAction();
 
     //処刑者を生存者リストから除く
     $stack = RoleManager::Stack()->Get(VoteDayElement::LIVE_LIST);

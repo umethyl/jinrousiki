@@ -15,7 +15,7 @@ class Role_miasma_fox extends Role_child_fox {
     $stack = [];
     foreach ($list as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if (false === RoleUser::IsFoxCount($user) && false === RoleUser::IsAvoid($user)) {
+      if (false === RoleUser::IsFoxCount($user) && false === RoleUser::Avoid($user)) {
 	$stack[] = $user->id;
       }
     }

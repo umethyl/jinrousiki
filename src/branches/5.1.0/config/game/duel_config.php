@@ -14,11 +14,10 @@ class DuelConfig {
 	    'rate'  => ['assassin' => 11, 'wolf' => 4, 'trap_mad' => 5],
 	    'calib' => []
            ],
-    'b' => ['fix'   => [],
+    'b' => ['fix'   => ['triangle_cupid' => 1],
 	    'count' => [20 => ['poison_jealousy' => 1, 'moon_cupid' => 1],
 			25 => ['quiz' => 1]],
-	    'rate'  => ['poison' => 5, 'chain_poison' => 10,
-		       'poison_wolf' => 5, 'triangle_cupid' => 2],
+	    'rate'  => ['poison' => 5, 'chain_poison' => 10, 'poison_wolf' => 5, 'poison_fox' => 1],
 	    'calib' => []
            ],
     'c' => ['fix'   => [],
@@ -34,10 +33,10 @@ class DuelConfig {
            ],
     'd' => ['fix'   => [],
 	    'count' => [16 => ['voodoo_fox' => 1],
-			20 => ['cursed_angel' => 1],
+			20 => ['voodoo_killer' => 1, 'cursed_wolf' => 1, 'cursed_angel' => 1],
 			25 => ['cursed_fox' => 1]],
-	    'rate'  => ['mage' => 8, 'voodoo_killer' => 2, 'cursed_wolf' => 4,
-			'voodoo_mad' => 5, 'cursed_chiroptera' => 1],
+	    'rate'  => ['mage' => 8, 'spell_wolf' => 4, 'voodoo_mad' => 5,
+			'cursed_chiroptera' => 1],
 	    'calib' => []
            ],
     'e' => ['fix'   => [],
@@ -57,7 +56,7 @@ class DuelConfig {
 	    'count' => [],
 	    'rate'  => ['escaper' => 4, 'chiroptera' => 4, 'mist_wolf' => 4, 'miasma_mad' => 3,
 			'follow_vampire' => 4, 'sacrifice_cupid' => 2],
-	    'calib' => ['vampire' => ['soul_vampire' => 3]]
+	    'calib' => []
            ],
     'h' => ['fix'   => [],
 	    'count' => [],
@@ -67,7 +66,7 @@ class DuelConfig {
            ],
     'i' => ['fix'   => [],
 	    'count' => [],
-	    'rate'  => ['dummy_guard' => 3, 'psycho_escaper' => 1, 'wolf' => 4,
+	    'rate'  => ['dummy_guard' => 3, 'psycho_escaper' => 1, 'miasma_wolf' => 4,
 			'dream_eater_mad' => 4, 'fairy' => 6],
 	    'calib' => ['fairy' => ['spring_fairy' => 1, 'summer_fairy' => 1, 'autumn_fairy' => 1,
 				    'winter_fairy' => 1, 'greater_fairy' => 1, 'grass_fairy' => 1]]

@@ -37,7 +37,7 @@ final class OldLogHTML {
       'option_role' => DB::$ROOM->option_role->row,
       'max_user'    => 0
     ];
-    RoomOption::Load($list);
+    RoomOptionLoader::Load($list);
 
     $title = sprintf('[%d%s] %s - %s',
       DB::$ROOM->id, GameMessage::ROOM_NUMBER_FOOTER, DB::$ROOM->name, $base_title
@@ -52,7 +52,7 @@ final class OldLogHTML {
     }
     $str .= Text::Join(
       HTML::GenerateLink(URL::GetHeaderDB('old_log'), Message::BACK),
-      RoomHTML::GenerateLogTitle(), RoomOption::GenerateImage(),
+      RoomHTML::GenerateLogTitle(), RoomOptionLoader::GenerateImage(),
       Text::LineFeed(HTML::GenerateLink('#beforegame', OldLogMessage::BEFORE))
     );
     for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
@@ -190,8 +190,8 @@ final class OldLogHTML {
 	'option_role' => DB::$ROOM->option_role,
 	'max_user'    => DB::$ROOM->max_user
       ];
-      RoomOption::Load($list);
-      RoomOption::SetStack();
+      RoomOptionLoader::Load($list);
+      RoomOptionLoader::SetStack();
 
       $str .= Text::Format($format,
 	URL::GetRoom('game_view'), $view_url,
@@ -200,7 +200,7 @@ final class OldLogHTML {
 	DB::$ROOM->date,
 	RQ::Get()->watch ? '-' : ImageManager::Winner()->Generate(DB::$ROOM->winner),
 	DB::$ROOM->GenerateComment(), $establish, $vanish,
-	$login, $log_link, RoomOption::GenerateImage()
+	$login, $log_link, RoomOptionLoader::GenerateImage()
       );
     }
 

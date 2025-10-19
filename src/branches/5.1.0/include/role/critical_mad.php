@@ -28,7 +28,7 @@ class Role_critical_mad extends Role {
 
   //処刑投票能力スキップ判定
   protected function IgnoreVoteKillAction(User $user) {
-    return RoleUser::IsAvoid($user);
+    return RoleUser::Avoid($user);
   }
 
   //処刑投票能力対象者判定

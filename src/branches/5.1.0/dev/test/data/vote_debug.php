@@ -25,8 +25,7 @@
 //RoleLoader::OutputFile();
 //Text::p(array_keys(RoleLoader::$class), '◆Role [class]');
 
-/* 役職判定情報 */
-//self::OutputDistinguishMage();
+/* 役職情報 */
 //foreach (RoleData::$list as $role => $v) RoleLoader::LoadMain(new User($role))->OutputAbility();
 
 /* 配役情報 */

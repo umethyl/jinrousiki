@@ -2,8 +2,9 @@
 /*
   ◆妖精 (fairy)
   ○仕様
-  ・悪戯：発言妨害 (共有者の囁き)
   ・発言変換：悪戯
+  ・占い：悪戯
+  ・悪戯：発言妨害 (共有者の囁き)
 */
 class Role_fairy extends Role {
   public $mix_in = ['mage'];
@@ -41,7 +42,7 @@ class Role_fairy extends Role {
     return RoleTalkMessage::COMMON_TALK;
   }
 
-  //占い (悪戯)
+  //占い(悪戯) (妨害 > 呪返し > 悪戯)
   public function Mage(User $user) {
     if ($this->IsJammer($user) || $this->IsCursed($user)) {
       return false;

@@ -472,8 +472,15 @@
 <ul>
 <li><?php OptionManager::OutputExplain('death_note'); ?></li>
 <li>毎日、夜→昼の処理終了時の生存者からランダムで一人に<a href="new_role/sub_role.php#death_note">デスノート</a>が配布されます</li>
+<ul>
+  <li>身代わり君には配布されません</li>
+</ul>
 <li>配布状況は配役公開状態の霊界からのみ見ることができます</li>
 </ul>
+<h5>Ver. 5.1.0 α4～</h5>
+<pre>
+身代わり君には配布されない仕様に変更
+</pre>
 
 <h3 id="weather"><?php OptionManager::OutputCaption('weather'); ?> [Ver. 1.5.0 α2～]</h3>
 <ul>
@@ -646,92 +653,61 @@
 
 <h4 id="duel"><?php OptionManager::OutputCaption('duel'); ?> [Ver. 1.4.0 α19～]</h4>
 <ul>
-  <li>独自の設定によって配役が変わります。</li>
-  <li>内容は設定ファイルで変更できます。</li>
-</ul>
-<h5>A：暗殺村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-暗殺者ベース (旧常時公開設定相当)
-</pre>
-<h5>B：毒村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-埋毒者ベース (旧非公開設定相当)
-</pre>
-<h5>C：恋村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-キューピッドベース (旧自動公開設定相当)
-</pre>
-<h5>D：呪術村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-呪い能力者ベース
-</pre>
-<h5>E：鬼村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-鬼ベース
-</pre>
-<h5>F：死神村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-死の宣告能力者ベース
-</pre>
-<h5>G：吸血村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-吸血鬼ベース
-</pre>
-<h5>H：狩村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-狩人・特殊狂人ベース
-</pre>
-<h5>I：夢村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-獏・妖精ベース
-</pre>
-<h5>J：恋逃村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-性別能力者ベース
-</pre>
-<h5>K：道連村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-船幽霊ベース
-</pre>
-<h5>L：道連村 [Ver. 5.1.0 α3～]</h5>
-<pre>
-蘇生能力者ベース
-</pre>
-<h5>Ver. 5.1.0 α3～</h5>
-<pre>配役設定を変更。以下旧仕様</pre>
-<ul>
-  <li><a href="#open_cast_option">霊界公開設定オプション</a>の設定によって配役が変わります。初期設定は以下です</li>
-  <ol>
-    <li><a href="#open_cast">常時公開</a>：暗殺者ベース</li>
-    <li><a href="#not_open_cast">非公開</a>：埋毒者ベース</li>
-    <li><a href="#auto_open_cast">自動公開</a>：キューピッドベース</li>
-  </ol>
+<li>専用ページを参照して下さい → <a href="duel.php"><?php OptionManager::OutputCaption('duel'); ?></a></li>
 </ul>
 
 <h4 id="gray_random"><?php OptionManager::OutputCaption('gray_random'); ?> [Ver. 1.4.0 β17～]</h4>
 <ul>
   <li>配役が基本職のみになります。初期設定は以下です</li>
   <ol>
-    <li>人狼系 → 人狼</li>
-    <li>狂人系 → 狂人</li>
-    <li>妖狐陣営 → 妖狐</li>
-    <li>上記以外 → 村人</li>
+    <li><a href="new_role/wolf.php#wolf_group">人狼系</a> → <a href="new_role/wolf.php#wolf">人狼</a></li>
+    <li><a href="new_role/wolf.php#mad_group">狂人系</a> → <a href="new_role/wolf.php#mad">狂人</a></li>
+    <li><a href="new_role/fox.php">妖狐陣営</a>(<a href="new_role/fox.php#depraver_group">背徳者系</a>以外) → <a href="new_role/fox.php#fox">妖狐</a></li>
+    <li><a href="new_role/fox.php#depraver_group">背徳者系</a> → <a href="new_role/fox.php#depraver">背徳者</a></li>
+    <li>上記以外 → <a href="new_role/human.php#human">村人</a></li>
   </ol>
+  <li>以下のオプションと併用することができます(適用後に配役が変換されます)</li>
+  <ul>
+    <li><?php InfoHTML::OutputCategory(['wolf']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['mad']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['no_fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['depraver']); ?></li>
+  </ul>
 </ul>
+<h5>Ver. 5.1.0 α4～</h5>
+<pre>
+配役に背徳者を追加
+一部のオプションとの併用を実装
+</pre>
 
 <h4 id="step"><?php OptionManager::OutputCaption('step'); ?> [Ver. 2.2.0 α3～]</h4>
 <ul>
   <li>配役が<a href="new_role/ability.php#step">足音能力者</a>ベースになります。初期設定は以下です</li>
   <ol>
-    <li>占い師系 → <a href="new_role/human.php#step_mage">審神者</a></li>
-    <li>霊能者系 → 霊能者</li>
-    <li>狩人系 → <a href="new_role/human.php#step_guard">山立</a></li>
-    <li>人狼系 → <a href="new_role/wolf.php#step_wolf">響狼</a></li>
-    <li>狂人系 → <a href="new_role/wolf.php#step_mad">家鳴</a></li>
-    <li>妖狐陣営 → <a href="new_role/fox.php#step_fox">響狐</a></li>
-    <li>上記以外 → 村人</li>
+    <li><a href="new_role/human.php#mage_group">占い師系</a> → <a href="new_role/human.php#step_mage">審神者</a></li>
+    <li><a href="new_role/human.php#necromancer_group">霊能者系</a> → <a href="new_role/human.php#necromancer">霊能者</a></li>
+    <li><a href="new_role/human.php#guard_group">狩人系</a> → <a href="new_role/human.php#step_guard">山立</a></li>
+    <li><a href="new_role/wolf.php#wolf_group">人狼系</a> → <a href="new_role/wolf.php#step_wolf">響狼</a></li>
+    <li><a href="new_role/wolf.php#mad_group">狂人系</a> → <a href="new_role/wolf.php#step_mad">家鳴</a></li>
+    <li><a href="new_role/fox.php">妖狐陣営</a>(<a href="new_role/fox.php#depraver_group">背徳者系</a>以外) → <a href="new_role/fox.php#step_fox">響狐</a></li>
+    <li><a href="new_role/fox.php#depraver_group">背徳者系</a> → <a href="new_role/fox.php#depraver">背徳者</a></li>
+    <li>上記以外 → <a href="new_role/human.php#human">村人</a></li>
   </ol>
+  <li>以下のオプションと併用することができます(適用後に配役が変換されます)</li>
+  <ul>
+    <li><?php InfoHTML::OutputCategory(['wolf']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['mad']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['no_fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['depraver']); ?></li>
+  </ul>
 </ul>
+<h5>Ver. 5.1.0 α4～</h5>
+<pre>
+配役に背徳者を追加
+一部のオプションとの併用を実装
+</pre>
 <h5>Ver. 3.1.0 α7～</h5>
 <pre>
 <a href="#wish_role"><?php OptionManager::OutputCaption('wish_role'); ?></a>が一部機能していないバグ修正
@@ -742,11 +718,27 @@
   <li>GMが<a href="new_role/quiz.php#quiz">出題者</a>になります</li>
   <li>村を作成する際にGMログインパスワードの入力が必要です</li>
   <li>GMもゲーム開始投票をする必要があります</li>
-  <li>出現役職は村人・共有者・人狼・狂人・妖狐です</li>
+  <li>出現役職は村人・共有者・人狼・狂人・妖狐・背徳者です</li>
+  <li>以下のオプションと併用することができます(適用後に配役が変換されます)</li>
+  <ul>
+    <li><?php InfoHTML::OutputCategory(['wolf']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['mad']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['no_fox']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['depraver']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['joker']); ?></li>
+    <li><?php InfoHTML::OutputCategory(['death_note']); ?></li>
+  </ul>
   <li>GM以外の全員に<a href="new_role/sub_role.php#panelist">解答者</a>がつきます</li>
   <li>人狼は常時GMしか狙えません</li>
   <li>GMは人狼に襲撃されても死亡しません</li>
   <li>GMのみ、処刑投票の集計状況が見えます</li>
+  <li>GMのみ、自分自身に処刑投票することができます</li>
+  <ol>
+     <li>実質的にGMが自身を処刑することになり、その時点でゲームは終了します</li>
+     <li><a href="spec.php#win">勝敗</a>はその時点の生存者の状況によって決定されます</li>
+  </ol>
+  <li>GMのみ、ゲーム中でも霊界のログを閲覧することができます(発言はできません)</li>
   <li>以下のような使い方を想定しています</li>
   <ol>
     <li>GMがクイズを出題してゲーム開始</li>
@@ -759,6 +751,13 @@
     <li>以下、勝敗が決まるまで繰り返す</li>
   </ol>
 </ul>
+<h5>Ver. 5.1.0 α4～</h5>
+<pre>
+GMのみ、自分自身に処刑投票することができます
+GMのみ、ゲーム中でも霊界のログを閲覧することができます(発言はできません)
+配役に背徳者を追加
+一部のオプションとの併用を実装
+</pre>
 <h5>Ver. 2.2.0 α4～</h5>
 <pre>
 GMのみ、処刑投票の集計状況が見えます

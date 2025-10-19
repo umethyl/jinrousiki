@@ -4,6 +4,14 @@
   ○仕様
   ・能力結果：占い
   ・占い：通常
+  ・占い無効：なし
+  ・占い妨害：有効
+  ・占い失敗固定：なし
+  ・占い失敗：失敗結果表示
+  ・占い失敗結果：通常
+  ・呪返し：有効
+  ・占い追加処理：なし
+  ・占い結果：通常
 */
 class Role_mage extends Role {
   public $action = VoteAction::MAGE;
@@ -17,7 +25,7 @@ class Role_mage extends Role {
     RoleHTML::OutputVoteNight(VoteCSS::MAGE, RoleAbilityMessage::MAGE, $this->action);
   }
 
-  //占い (無効 > 失敗 > 失敗固定 > 呪返し > 通常)
+  //占い (無効 > 妨害 > 失敗固定 > 呪返し > 占い判定)
   public function Mage(User $user) {
     if ($this->IgnoreMage()) {
       return false;
@@ -36,7 +44,7 @@ class Role_mage extends Role {
     return false;
   }
 
-  //占い失敗判定 (無効 → 厄払い > 占い妨害 > 幻系 → なし)
+  //占い妨害判定 (無効 → 厄払い > 占い妨害 > 幻系 → なし)
   final public function IsJammer(User $user) {
     if ($this->IgnoreJammer()) { //無効判定
       return false;
@@ -46,7 +54,7 @@ class Role_mage extends Role {
     $half    = DB::$ROOM->IsEvent('half_moon') && Lottery::Bool(); //半月
     $phantom = $user->IsLiveRoleGroup('phantom') && $user->IsActive(); //幻系
 
-    if (true === $half || true === $phantom) { //厄払いスキップ判定
+    if (true === $half || true === $phantom) { //厄払い発動判定
       if (RoleUser::GuardCurse($this->GetActor(), false)) {
 	return false;
       }
@@ -62,7 +70,7 @@ class Role_mage extends Role {
     }
   }
 
-  //占い失敗無効判定
+  //占い妨害無効判定
   protected function IgnoreJammer() {
     return false;
   }
@@ -77,14 +85,14 @@ class Role_mage extends Role {
     return $this->SaveMageResult($user, $this->GetMageFailed(), $this->result);
   }
 
-  //占い失敗結果
-  protected function GetMageFailed() {
-    return 'failed';
-  }
-
   //占い結果登録
   final public function SaveMageResult(User $user, $result, $action) {
     return DB::$ROOM->StoreAbility($action, $result, $user->GetName(), $this->GetID());
+  }
+
+  //占い失敗結果
+  protected function GetMageFailed() {
+    return 'failed';
   }
 
   //呪返し判定 (無効 → 厄払い > 対象判定 → なし)
@@ -131,7 +139,7 @@ class Role_mage extends Role {
   final protected function IsMageKill(User $user) {
     if (DB::$ROOM->IsEvent('no_fox_dead')) {
       return false;
-    } elseif ($user->IsDead(true) || RoleUser::IsAvoidLovers($user, true)) {
+    } elseif ($user->IsDead(true) || RoleUser::AvoidLovers($user, true)) {
       return false;
     } elseif ($user->IsRoleGroup('spell')) {
       return true;
@@ -213,7 +221,7 @@ class Role_mage extends Role {
     $stack = [];
     foreach (RoleFilterData::$sacrifice_mage as $role) {
       foreach (DB::$USER->GetRoleUser($role) as $target) {
-	if ($target->IsLive(true) && false === RoleUser::IsAvoidLovers($target, true)) {
+	if ($target->IsLive(true) && false === RoleUser::AvoidLovers($target, true)) {
 	  $stack[] = $target->id;
 	}
       }

@@ -30,7 +30,7 @@ class Role_thunder_brownie extends Role {
     $stack = [];
     foreach (RoleManager::Stack()->Get(VoteDayElement::USER_LIST) as $uname) {
       $user = DB::$USER->ByRealUname($uname);
-      if ($user->IsLive(true) && false === RoleUser::IsAvoid($user, true)) {
+      if ($user->IsLive(true) && false === RoleUser::Avoid($user, true)) {
 	$stack[] = $user->id;
       }
     }

@@ -24,12 +24,12 @@ if (VoteTestRoom::DATE == 1) {
   ];
 } else {
   RQ::GetTest()->vote->night = [
-    ['user_no' => 2,	RequestDataVote::TARGET => 22,	'type' => VoteAction::WOLF],
+    ['user_no' => 2,	RequestDataVote::TARGET => 30,	'type' => VoteAction::WOLF],
     //['user_no' => 3,	RequestDataVote::TARGET => 22,	'type' => VoteAction::WOLF],
     ['user_no' => 4, 	RequestDataVote::TARGET => 29,	'type' => VoteAction::MAGE],
     //['user_no' => 4, 	RequestDataVote::TARGET => '9 14 19 18 3',	'type' => VoteAction::STEP_MAGE],
-    ['user_no' => 5,	RequestDataVote::TARGET => 7,	'type' => VoteAction::MAGE],
-    //['user_no' => 7,	RequestDataVote::TARGET => 8,	'type' => VoteAction::GUARD],
+    ['user_no' => 5,	RequestDataVote::TARGET => 8,	'type' => VoteAction::MAGE],
+    ['user_no' => 7,	RequestDataVote::TARGET => 30,	'type' => VoteAction::GUARD],
     //['user_no' => 7,	RequestDataVote::TARGET => '8 9 10',	'type' => VoteAction::STEP_GUARD],
     //['user_no' => 8,	RequestDataVote::TARGET => 16,	'type' => VoteAction::GUARD],
     ['user_no' => 8,	RequestDataVote::TARGET =>  3,	'type' => VoteAction::ANTI_VOODOO],
@@ -44,7 +44,7 @@ if (VoteTestRoom::DATE == 1) {
     //['user_no' => 11,	RequestDataVote::TARGET => 12,	'type' => VoteAction::VOODOO_MAD],
     //['user_no' => 11,	RequestDataVote::TARGET =>  4,	'type' => VoteAction::VOODOO_FOX],
     //['user_no' => 11,	RequestDataVote::TARGET =>  8,	'type' => VoteAction::DREAM],
-    //['user_no' => 12,	RequestDataVote::TARGET => 12,	'type' => VoteAction::TRAP],
+    ['user_no' => 12,	RequestDataVote::TARGET => 12,	'type' => VoteAction::TRAP],
     //['user_no' => 12,	RequestDataVote::TARGET => null,	'type' => VoteAction::NOT_TRAP],
     //['user_no' => 12,	RequestDataVote::TARGET => 18,	'type' => VoteAction::POSSESSED],
     //['user_no' => 12,	RequestDataVote::TARGET => null,	'type' => VoteAction::NOT_POSSESSED],
@@ -108,7 +108,7 @@ if (VoteTestRoom::DATE == 1) {
     //['user_no' => 30,	RequestDataVote::TARGET => '12 13 14',	'type' => VoteAction::STEP_SCAN],
     //['user_no' => 30,	RequestDataVote::TARGET => null,	'type' => VoteAction::NOT_TRAP],
     //['user_no' => 30,	RequestDataVote::TARGET =>  5,	'type' => VoteAction::JAMMER],
-    //['user_no' => 30,	RequestDataVote::TARGET => 13,	'type' => VoteAction::VOODOO_KILLER],
-    ['user_no' => 30,	RequestDataVote::TARGET => 28,	'type' => VoteAction::FAIRY]
+    ['user_no' => 30,	RequestDataVote::TARGET =>  8,	'type' => VoteAction::VOODOO_KILLER],
+    //['user_no' => 30,	RequestDataVote::TARGET => 28,	'type' => VoteAction::FAIRY]
   ];
 }

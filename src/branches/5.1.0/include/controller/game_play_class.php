@@ -691,7 +691,7 @@ class GamePlayView_Before extends GamePlayView {
 
   protected function OutputTimeTableHeader() {
     GamePlayHTML::OutputHeaderCaution();
-    RoomOption::Output();
+    RoomOptionLoader::Output();
   }
 
   protected function IgnoreObjection($left_time) {

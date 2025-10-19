@@ -177,7 +177,7 @@ class RoleUser {
 
     //常時反射
     if ($user->IsRole(RoleFilterData::$reflect_assassin) ||
-	self::IsSiriusWolf($user, false) || self::IsAvoidLovers($user)) {
+	self::IsSiriusWolf($user, false) || self::AvoidLovers($user)) {
       return true;
     }
 
@@ -237,18 +237,18 @@ class RoleUser {
     return Number::InRange(DB::$ROOM->date, 1, 5) && $user->IsRole('challenge_lovers');
   }
 
-  //特殊恋人
-  public static function IsAvoidLovers(User $user, $strict = false) {
-    return (false === $strict && self::IsChallengeLovers($user)) || $user->IsRole('vega_lovers');
-  }
-
   //特殊耐性
-  public static function IsAvoid(User $user, $quiz = false) {
+  public static function Avoid(User $user, $quiz = false) {
     $stack = ['detective_common'];
     if ($quiz) {
       $stack[] = 'quiz';
     }
-    return $user->IsRole($stack) || self::IsSiriusWolf($user) || self::IsAvoidLovers($user);
+    return $user->IsRole($stack) || self::IsSiriusWolf($user) || self::AvoidLovers($user);
+  }
+
+  //特殊恋人耐性
+  public static function AvoidLovers(User $user, $strict = false) {
+    return (false === $strict && self::IsChallengeLovers($user)) || $user->IsRole('vega_lovers');
   }
 
   //-- 制限判定 --//

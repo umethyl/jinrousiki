@@ -76,7 +76,7 @@ final class RoleTestController extends JinrouAdminController {
     $stack = [
       'gerd', 'disable_gerd', 'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf',
       'tongue_wolf', 'possessed_wolf', 'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox',
-      'depraver', 'cupid', 'medium', 'mania', 'detective', 'festival', 'limit_off'
+      'depraver', 'cupid', 'medium', 'mania', 'detective', 'festival', 'limit_off', 'increment'
     ];
 
     $count = 0;

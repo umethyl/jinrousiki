@@ -191,6 +191,10 @@ final class Loader extends LoadManager {
     case 'controller/info/new_role':
     case 'controller/test':
     case 'data':
+    case 'data/option':
+    case 'data/event':
+    case 'data/role':
+    case 'data/vote':
     case 'database':
     case 'html':
     case 'html/media':
@@ -316,29 +320,29 @@ final class LoaderData {
     'TalkVoice'		=> 'talk_data_class',
     'TalkElement'	=> 'talk_data_class',
     'TalkCSS'		=> 'talk_data_class',
-    //data/camp
-    'BaseCamp'	=> 'camp_data_class',
-    'Camp'	=> 'camp_data_class',
-    'CampGroup'	=> 'camp_data_class',
-    'WinCamp'	=> 'camp_data_class',
+    //data/option
+    'OptionGroup'		=> 'option_data_class',
+    'OptionFormType'		=> 'option_data_class',
+    'OptionFormData'		=> 'option_form_data_class',
+    'OptionFilterData'		=> 'option_filter_data_class',
+    'RoomOptionOrderData'	=> 'room_option_order_data_class',
+    'RoomOptionFilterData'	=> 'room_option_filter_data_class',
+    //data/event
+    'EventType'		=> 'event_data_class',
+    'EventFilterData'	=> 'event_filter_data_class',
+    'WeatherData'	=> 'weather_data_class',
     //data/role
     'RoleData'		=> 'role_data_class',
     'RoleSubData'	=> 'role_sub_data_class',
     'RoleShortData'	=> 'role_short_data_class',
     'RoleGroupData'	=> 'role_group_data_class',
     'RoleGroupSubData'	=> 'role_group_sub_data_class',
-    'RoleActionDate'	=> 'role_vote_data_class',
-    'RoleAbility'	=> 'role_vote_data_class',
-    'RoleStackVoteKill'	=> 'role_vote_data_class',
     'RoleFilterData'	=> 'role_filter_data_class',
-    //data/option
-    'OptionGroup'	=> 'option_data_class',
-    'OptionFormType'	=> 'option_data_class',
-    'OptionFilterData'	=> 'option_filter_data_class',
-    //data/event
-    'EventType'		=> 'event_data_class',
-    'EventFilterData'	=> 'event_filter_data_class',
-    'WeatherData'	=> 'weather_data_class',
+    //data/camp
+    'BaseCamp'	=> 'camp_data_class',
+    'Camp'	=> 'camp_data_class',
+    'CampGroup'	=> 'camp_data_class',
+    'WinCamp'	=> 'camp_data_class',
     //date/vote
     'VoteAction'			=> 'vote_data_class',
     'VoteKickElement'			=> 'vote_data_class',
@@ -346,6 +350,9 @@ final class LoaderData {
     'VoteForceSuddenDeathElement'	=> 'vote_data_class',
     'VoteCSS'				=> 'vote_data_class',
     'VoteActionGroup'			=> 'vote_group_data_class',
+    'RoleActionDate'			=> 'role_vote_data_class',
+    'RoleAbility'			=> 'role_vote_data_class',
+    'RoleStackVoteKill'			=> 'role_vote_data_class',
     //system
     'JinrouAdmin'		=> 'admin_class',
     'JinrouAdminController'	=> 'admin_class',
@@ -389,7 +396,7 @@ final class LoaderData {
     'OptionLoader'	=> 'option_class',
     'OptionParser'	=> 'option_class',
     'OptionForm'	=> 'option_form_class',
-    'RoomOption'	=> 'room_option_class',
+    'RoomOptionLoader'	=> 'room_option_loader_class',
     'RoomOptionManager'	=> 'room_option_manager_class',
     //talk
     'Talk'		=> 'talk_class',
@@ -448,6 +455,7 @@ final class LoaderData {
     'CastInfoMessage'		=> 'cast_info_message',
     'GameOptionInfoMessage'	=> 'game_option_info_message',
     'ChaosInfoMessage'		=> 'chaos_info_message',
+    'DuelInfoMessage'		=> 'duel_info_message',
     'WeatherInfoMessage'	=> 'weather_info_message',
     'SpecInfoMessage'		=> 'spec_info_message',
     'SharedRoomInfoMessage'	=> 'shared_room_info_message',
@@ -491,7 +499,7 @@ final class LoaderData {
     'IconViewHTML'	=> 'icon_view_html_class',
     'IconUploadHTML'	=> 'icon_upload_html_class',
     //html/controller/info
-    'ChaosInfoHTML'		=> 'chaos_info_html_class',
+    'DuelInfoHTML'		=> 'duel_info_html_class',
     'CopyrightInfoHTML'		=> 'copyright_info_html_class',
     'SearchRoleInfoHTML'	=> 'search_role_info_html_class',
     //html/controller/test
@@ -576,6 +584,7 @@ final class LoaderData {
     'cast_info_message'		=> 'message/controller/info',
     'game_option_info_message'	=> 'message/controller/info',
     'chaos_info_message'	=> 'message/controller/info',
+    'duel_info_message'		=> 'message/controller/info',
     'weather_info_message'	=> 'message/controller/info',
     'spec_info_message'		=> 'message/controller/info',
     'shared_room_info_message'	=> 'message/controller/info',
@@ -593,23 +602,30 @@ final class LoaderData {
     'room_data_class'		=> 'data',
     'user_data_class'		=> 'data',
     'request_data_class'	=> 'data',
-    'option_data_class'		=> 'data',
-    'option_filter_data_class'	=> 'data',
     'talk_data_class'		=> 'data',
-    'camp_data_class'		=> 'data',
-    'role_data_class'		=> 'data',
-    'role_sub_data_class'	=> 'data',
-    'role_group_data_class'	=> 'data',
-    'role_group_sub_data_class'	=> 'data',
-    'role_short_data_class'	=> 'data',
-    'role_vote_data_class'	=> 'data',
-    'role_filter_data_class'	=> 'data',
-    'event_data_class'		=> 'data',
-    'event_filter_data_class'	=> 'data',
-    'weather_data_class'	=> 'data',
     'dead_reason_data_class'	=> 'data',
-    'vote_data_class'		=> 'data',
-    'vote_group_data_class'	=> 'data',
+    //data/option
+    'option_data_class'			=> 'data/option',
+    'option_form_data_class'		=> 'data/option',
+    'option_filter_data_class'		=> 'data/option',
+    'room_option_order_data_class'	=> 'data/option',
+    'room_option_filter_data_class'	=> 'data/option',
+    //data/event
+    'event_data_class'		=> 'data/event',
+    'event_filter_data_class'	=> 'data/event',
+    'weather_data_class'	=> 'data/event',
+    //data/role
+    'role_data_class'		=> 'data/role',
+    'role_sub_data_class'	=> 'data/role',
+    'role_short_data_class'	=> 'data/role',
+    'camp_data_class'		=> 'data/role',
+    'role_group_data_class'	=> 'data/role',
+    'role_group_sub_data_class'	=> 'data/role',
+    'role_filter_data_class'	=> 'data/role',
+    //data/vote
+    'vote_data_class'		=> 'data/vote',
+    'vote_group_data_class'	=> 'data/vote',
+    'role_vote_data_class'	=> 'data/vote',
     //database
     'db_class'			=> 'database',
     'room_db_class'		=> 'database',
@@ -628,7 +644,7 @@ final class LoaderData {
     //option
     'option_class'		=> 'option',
     'option_form_class'		=> 'option',
-    'room_option_class'		=> 'option',
+    'room_option_loader_class'	=> 'option',
     'room_option_manager_class'	=> 'option',
     //talk
     'talk_class'		=> 'talk',
@@ -674,6 +690,7 @@ final class LoaderData {
     'cast_info_class'		=> 'controller/info',
     'game_option_info_class'	=> 'controller/info',
     'chaos_info_class'		=> 'controller/info',
+    'duel_info_class'		=> 'controller/info',
     'weather_info_class'	=> 'controller/info',
     'spec_info_class'		=> 'controller/info',
     'shared_room_info_class'	=> 'controller/info',
@@ -720,7 +737,6 @@ final class LoaderData {
     'icon_view_html_class'	=> 'html/controller',
     'icon_upload_html_class'	=> 'html/controller',
     //html/controller/info
-    'chaos_info_html_class'		=> 'html/controller/info',
     'copyright_info_html_class'		=> 'html/controller/info',
     'search_role_info_html_class'	=> 'html/controller/info',
     //html/controller/test

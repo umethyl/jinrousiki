@@ -19,7 +19,7 @@ class Option_gm_login extends OptionCheckbox {
 	return;
       }
     }
-    RoomOption::Set($this->group, $this->name);
+    RoomOptionLoader::Set($this->group, $this->name);
   }
 
   public function GetCaption() {

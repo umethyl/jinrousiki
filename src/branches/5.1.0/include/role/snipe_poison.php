@@ -9,6 +9,6 @@ class Role_snipe_poison extends Role_poison {
   protected function IsPoisonTarget(User $user) {
     $target = $this->GetVoteKillUser();
     $camp   = $target->GetWinCamp();
-    return $user->IsWinCamp($camp) && false === RoleUser::IsAvoidLovers($target, true);
+    return $user->IsWinCamp($camp) && false === RoleUser::AvoidLovers($target, true);
   }
 }

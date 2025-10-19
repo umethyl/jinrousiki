@@ -22,7 +22,7 @@ class Option_topping extends OptionSelector {
     $post = RQ::Get()->{$this->name};
     $flag = (false === empty($post)) && isset($this->form_list[$post]);
     if (true === $flag) {
-      array_push(RoomOption::${$this->group}, sprintf('%s:%s', $this->name, $post));
+      array_push(RoomOptionLoader::${$this->group}, sprintf('%s:%s', $this->name, $post));
     }
     RQ::Set($this->name, $flag);
   }

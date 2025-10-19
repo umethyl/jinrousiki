@@ -43,7 +43,7 @@ class Role_follow_mad extends Role {
     $target_stack = []; //対象者リスト
     foreach (RoleManager::Stack()->Get(VoteDayElement::USER_LIST) as $uname) { //情報収集
       $user = DB::$USER->ByRealUname($uname);
-      if ($user->IsLive(true) && false === RoleUser::IsAvoid($user, true)) {
+      if ($user->IsLive(true) && false === RoleUser::Avoid($user, true)) {
 	$target_stack[] = $user->id;
       }
     }

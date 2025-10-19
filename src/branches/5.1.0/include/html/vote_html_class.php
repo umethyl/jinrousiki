@@ -212,13 +212,14 @@ final class VoteHTML {
     $count     = 0;
     $base_path = Icon::GetPath();
     $dead_icon = Icon::GetDead();
+    $filter    = VoteDay::GetFilter();
     foreach ($user_list as $id => $user) {
       TableHTML::OutputFold($count++);
       $is_live = DB::$USER->IsVirtualLive($id);
 
       //生きていればユーザアイコン、死んでれば死亡アイコン
       $path = (true === $is_live) ? $base_path . $user->icon_filename : $dead_icon;
-      if (true === $is_live && false === $user->IsSame($virtual_self)) {
+      if (true === $filter->IsVoteDayCheckBox($user, $virtual_self, $is_live)) {
 	$checkbox = sprintf($format, $id, $id);
       } else {
 	$checkbox = '';

@@ -47,7 +47,7 @@ class Role_dummy_guard extends Role_guard {
       $target = DB::$USER->ByID($target_id);
       //狩り判定
       if ($target->IsLive(true) && $this->IsHunt($target) &&
-	  false === RoleUser::IsAvoidLovers($target, true)) {
+	  false === RoleUser::AvoidLovers($target, true)) {
 	$list[$user->id] = $target;
       }
 

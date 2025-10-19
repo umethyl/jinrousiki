@@ -38,7 +38,7 @@ final class RoomManagerHTML {
   public static function OutputRoom(array $stack) {
     $ROOM = new Room();
     $ROOM->LoadData($stack);
-    RoomOption::Load($stack);
+    RoomOptionLoader::Load($stack);
     if (AdminConfig::$room_delete_enable) {
       $url    = URL::GetRoom('admin/room_delete', $ROOM->id);
       $delete = Text::QuoteBracket(HTML::GenerateLink($url, RoomManagerMessage::DELETE));
@@ -64,7 +64,7 @@ final class RoomManagerHTML {
       $delete, URL::GetRoom('login', $ROOM->id),
       ImageManager::Room()->Generate($ROOM->status, $status),
       $ROOM->GenerateNumber(),  $ROOM->GenerateName(),  Text::BR,
-      $ROOM->GenerateComment(), RoomOption::Generate(), Text::BR
+      $ROOM->GenerateComment(), RoomOptionLoader::Generate(), Text::BR
     );
   }
 
@@ -76,14 +76,14 @@ final class RoomManagerHTML {
       'option_role' => DB::$ROOM->option_role,
       'max_user'    => DB::$ROOM->max_user
     ];
-    RoomOption::Load($stack);
+    RoomOptionLoader::Load($stack);
 
     HTML::OutputHeader(RoomManagerMessage::TITLE_DESCRIBE, 'info/info', true);
     Text::Printf(self::GetDescribe(),
       DB::$ROOM->GenerateNumber(), DB::$ROOM->GenerateName(), Text::BR,
-      DB::$ROOM->GenerateComment(), RoomOption::Generate()
+      DB::$ROOM->GenerateComment(), RoomOptionLoader::Generate()
     );
-    RoomOption::OutputCaption();
+    RoomOptionLoader::OutputCaption();
     HTML::OutputFooter();
   }
 

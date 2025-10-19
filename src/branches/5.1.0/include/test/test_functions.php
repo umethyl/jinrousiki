@@ -93,12 +93,19 @@ class DevRoom {
     $try_count  = RQ::Get()->try_count;
     $format     = '%0' . strlen($try_count) . 'd回目: ';
     for ($i = 1; $i <= $try_count; $i++) {
-      printf($format, $i);
+      if (RQ::Get()->increment) {
+	printf($format . '%0' . strlen($try_count) . 'd人: ', $i, $user_count);
+      } else {
+	printf($format, $i);
+      }
       $role_list = Cast::Get($user_count);
       if ($role_list == '') {
 	break;
       }
       Text::p(Cast::GenerateMessage(array_count_values($role_list), true));
+      if (RQ::Get()->increment) {
+	$user_count++;
+      }
     }
   }
 }

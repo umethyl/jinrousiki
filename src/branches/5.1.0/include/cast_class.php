@@ -42,7 +42,7 @@ final class Cast extends StackStaticManager {
     //基礎配役オプション取得 (適用されなかった場合は通常村用オプションを適用する)
     $filter = OptionManager::GetCastBase($user_count);
     if (null === $filter) {
-      OptionManager::FilterCastAddRole($role_list, $user_count);
+      OptionManager::FilterCastAddRole($role_list, $user_count, OptionFilterData::$cast_add_role);
     } else {
       $role_list = $filter->GetCastRole($user_count);
     }

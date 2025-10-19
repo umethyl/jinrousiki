@@ -8,7 +8,7 @@ final class GameViewHTML {
     self::OutputLoginForm();
 
     if (false === DB::$ROOM->IsFinished()) {
-      RoomOption::Output();
+      RoomOptionLoader::Output();
     }
     self::OutputTimeTable();
 
