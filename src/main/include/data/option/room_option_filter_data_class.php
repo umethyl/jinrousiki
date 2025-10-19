@@ -58,7 +58,6 @@ final class RoomOptionFilterData {
   //決闘村併用
   public static $add_duel = ['duel_selector'];
 
-
   //-- RoomOptionManager::LoadPostNormal() --//
   //普通村併用
   public static $add_normal = [

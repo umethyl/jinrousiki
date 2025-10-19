@@ -2,6 +2,7 @@
 /*
   ◆足音村 (step)
   ○仕様
+  ・追加配役(特殊配役村)： 有効
   ・配役フィルタリング：足音能力者
 */
 class Option_step extends OptionCastCheckbox {
@@ -9,10 +10,14 @@ class Option_step extends OptionCastCheckbox {
     return '足音村';
   }
 
+  protected function EnableFilterCastAddRoleSpecial() {
+    return true;
+  }
+
   protected function GetFilterCastRoleList() {
     $stack = [
       'step_mage' => 'mage', 'necromancer', 'step_guard' => 'guard',
-      'step_wolf' => 'wolf', 'step_mad' => 'mad', 'step_fox' => 'fox'
+      'step_wolf' => 'wolf', 'step_mad' => 'mad', 'step_fox' => 'fox', 'depraver'
     ];
     return $stack;
   }

@@ -35,6 +35,9 @@ final class OptionFilterData {
     'medium', 'mania'
   ];
 
+  //追加配役/特殊配役村
+  public static $cast_add_role_special = ['wolf', 'mad', 'fox', 'no_fox', 'depraver'];
+
   //追加配役/闇鍋固定枠
   public static $cast_chaos_fix_role = ['topping', 'gerd', 'detective'];
 
