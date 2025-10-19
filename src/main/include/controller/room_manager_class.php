@@ -210,7 +210,7 @@ final class RoomManagerController extends JinrouController {
   //村作成入力値チェック
   private static function ValidateCreateInput() {
     foreach (['room_name', 'room_comment'] as $type) { //村の名前・説明
-      RoomOption::LoadPost($type);
+      RoomOptionLoader::LoadPost($type);
       if (RQ::Get()->$type == '') { //未入力チェック
 	RoomManagerHTML::OutputResult('empty', OptionManager::GenerateCaption($type));
       }
@@ -221,7 +221,7 @@ final class RoomManagerController extends JinrouController {
       }
     }
 
-    RoomOption::LoadPost('max_user'); //最大人数
+    RoomOptionLoader::LoadPost('max_user'); //最大人数
     if (false === in_array(RQ::Get()->max_user, RoomConfig::$max_user_list)) {
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_INPUT);
       HTML::OutputResult($title, RoomManagerMessage::ERROR_INPUT_MAX_USER);
@@ -283,7 +283,7 @@ final class RoomManagerController extends JinrouController {
 
   //村作成情報登録 (オプション変更時)
   private static function StoreInChange() {
-    RoomOption::LoadPost('close_room');
+    RoomOptionLoader::LoadPost('close_room');
     if (RQ::Get()->gm_logout) { //GMログアウト処理
       if (DB::$ROOM->IsClosing() || RQ::Get()->close_room == RoomStatus::CLOSING) {
 	RoomManagerHTML::OutputResult('gm_logout');
@@ -292,8 +292,8 @@ final class RoomManagerController extends JinrouController {
       }
     }
 
-    $game_option = RoomOption::Get(OptionGroup::GAME);
-    $option_role = RoomOption::Get(OptionGroup::ROLE);
+    $game_option = RoomOptionLoader::Get(OptionGroup::GAME);
+    $option_role = RoomOptionLoader::Get(OptionGroup::ROLE);
     $list = [
       'name'		=> RQ::Get()->room_name,
       'comment'		=> RQ::Get()->room_comment,
@@ -325,8 +325,8 @@ final class RoomManagerController extends JinrouController {
   private static function Store() {
     $room_no = RoomManagerDB::GetNext(); //村番号を取得
     if (false === ServerConfig::DRY_RUN) {
-      $game_option = RoomOption::Get(OptionGroup::GAME);
-      $option_role = RoomOption::Get(OptionGroup::ROLE);
+      $game_option = RoomOptionLoader::Get(OptionGroup::GAME);
+      $option_role = RoomOptionLoader::Get(OptionGroup::ROLE);
       if (false === RoomManagerDB::Insert($room_no, $game_option, $option_role)) { //村作成
 	RoomManagerHTML::OutputResult('busy');
       }
@@ -384,8 +384,8 @@ final class RoomManagerController extends JinrouController {
 
     HTML::OutputHeader(RoomManagerMessage::TITLE);
     Text::p($_POST, '◆Post');
-    Text::p(RoomOption::Get(OptionGroup::GAME), '◆GameOption');
-    Text::p(RoomOption::Get(OptionGroup::ROLE), '◆OptionRole');
+    Text::p(RoomOptionLoader::Get(OptionGroup::GAME), '◆GameOption');
+    Text::p(RoomOptionLoader::Get(OptionGroup::ROLE), '◆OptionRole');
     if (RoomOptionManager::IsChange()) {
       Text::p(DB::$ROOM->game_option, '◆ROOM/game_option');
       Text::p(DB::$ROOM->option_role, '◆ROOM/role_option');

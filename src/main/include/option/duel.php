@@ -11,7 +11,7 @@ class Option_duel extends OptionCastCheckbox {
 
   protected function IgnoreImage() {
     //決闘種別が取れる場合は移譲する
-    return ArrayFilter::Exists(RoomOption::$stack, 'duel_selector');
+    return ArrayFilter::Exists(RoomOptionLoader::$stack, 'duel_selector');
   }
 
   protected function IgnoreRoomCaption() {

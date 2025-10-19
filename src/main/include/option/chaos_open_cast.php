@@ -31,7 +31,7 @@ class Option_chaos_open_cast extends OptionSelector {
     foreach ($this->form_list as $option => $value) {
       if ($value == $post) {
 	RQ::Set($option, true);
-	array_push(RoomOption::${$this->group}, $option);
+	array_push(RoomOptionLoader::${$this->group}, $option);
 	break;
       }
     }

@@ -321,7 +321,7 @@ abstract class Option {
 
   //スタックからデータ取得
   final protected function GetStack() {
-    return RoomOption::$stack[$this->name];
+    return RoomOptionLoader::$stack[$this->name];
   }
 
   //オプション名取得
@@ -360,7 +360,7 @@ abstract class Option {
 
   //オプション登録
   final protected function Set($name) {
-    RoomOption::Set($this->group, $name);
+    RoomOptionLoader::Set($this->group, $name);
   }
 
   //村用画像生成

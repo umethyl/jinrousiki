@@ -394,7 +394,7 @@ final class LoaderData {
     'OptionLoader'	=> 'option_class',
     'OptionParser'	=> 'option_class',
     'OptionForm'	=> 'option_form_class',
-    'RoomOption'	=> 'room_option_class',
+    'RoomOptionLoader'	=> 'room_option_loader_class',
     'RoomOptionManager'	=> 'room_option_manager_class',
     //talk
     'Talk'		=> 'talk_class',
@@ -640,7 +640,7 @@ final class LoaderData {
     //option
     'option_class'		=> 'option',
     'option_form_class'		=> 'option',
-    'room_option_class'		=> 'option',
+    'room_option_loader_class'	=> 'option',
     'room_option_manager_class'	=> 'option',
     //talk
     'talk_class'		=> 'talk',

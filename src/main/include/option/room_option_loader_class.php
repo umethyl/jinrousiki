@@ -1,6 +1,6 @@
 <?php
-//-- 村作成オプションクラス --//
-class RoomOption {
+//-- 村作成用オプションローダー --//
+class RoomOptionLoader {
   public static $stack       = [];
   public static $game_option = [];
   public static $role_option = [];
