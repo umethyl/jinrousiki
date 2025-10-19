@@ -2,8 +2,8 @@
 /*
   ◆星狐 (stargazer_fox)
   ○仕様
-  ・占い：投票能力鑑定
-  ・呪い：無効
+  ・呪返し：無効
+  ・占い結果：投票能力鑑定
 */
 RoleLoader::LoadFile('child_fox');
 class Role_stargazer_fox extends Role_child_fox {

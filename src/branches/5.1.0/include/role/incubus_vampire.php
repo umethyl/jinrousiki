@@ -11,7 +11,7 @@ class Role_incubus_vampire extends Role_vampire {
   }
 
   protected function InfectFailedAction(User $user) {
-    if (false === RoleUser::IsAvoid($user)) {
+    if (false === RoleUser::Avoid($user)) {
       DB::$USER->Kill($user->id, DeadReason::VAMPIRE_KILLED);
     }
   }

@@ -13,7 +13,7 @@ class Option_dummy_boy extends OptionCheckbox {
   }
 
   public function LoadPost() {
-    RoomOption::Set($this->group, $this->name);
+    RoomOptionLoader::Set($this->group, $this->name);
   }
 
   public function GetCaption() {

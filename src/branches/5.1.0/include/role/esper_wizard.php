@@ -2,7 +2,7 @@
 /*
   ◆超能力者 (esper_wizard)
   ○仕様
-  ・魔法：妖精(特殊)
+  ・魔法：悪戯 (特殊)
   ・天候：霧雨(死の宣告), 木枯らし(空中浮遊)
   ・悪戯：サブ役職付加 (死の宣告(4日後)・会心・痛恨・恋耳鳴・爆睡者・狐火・空中浮遊)
 */
@@ -26,7 +26,7 @@ class Role_esper_wizard extends Role_wizard {
     $role = $this->GetWizard($this->GetFairyActionWizardList());
     switch ($role) {
     case 'death_warrant':
-      if (RoleUser::IsAvoid($user)) {
+      if (RoleUser::Avoid($user)) {
 	return;
       }
       $user->AddDoom(4, $role);
@@ -34,7 +34,7 @@ class Role_esper_wizard extends Role_wizard {
 
     case 'critical_luck':
     case 'spell_wisp':
-      if (RoleUser::IsAvoid($user)) {
+      if (RoleUser::Avoid($user)) {
 	return;
       }
       $user->AddRole($role);

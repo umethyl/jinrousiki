@@ -3,6 +3,7 @@
   ◆魂の占い師 (soul_mage)
   ○仕様
   ・占い：役職判定 (憑依キャンセルあり)
+  ・占い結果：役職
 */
 RoleLoader::LoadFile('mage');
 class Role_soul_mage extends Role_mage {

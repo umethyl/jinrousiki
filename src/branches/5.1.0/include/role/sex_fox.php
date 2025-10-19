@@ -2,8 +2,9 @@
 /*
   ◆雛狐 (sex_fox)
   ○仕様
-  ・占い：性別鑑定
-  ・呪い：無効
+  ・占い失敗結果：鑑定失敗
+  ・呪返し：無効
+  ・占い結果：性別鑑定
 */
 RoleLoader::LoadFile('child_fox');
 class Role_sex_fox extends Role_child_fox {

@@ -17,7 +17,7 @@ class Role_snow_wolf extends Role_wolf {
       }
 
       $user = DB::$USER->ByRealUname($uname);
-      if (RoleUser::IsAvoidLovers($user, true)) {
+      if (RoleUser::AvoidLovers($user, true)) {
 	continue;
       }
 

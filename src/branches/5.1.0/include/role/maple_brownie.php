@@ -14,7 +14,7 @@ class Role_maple_brownie extends Role {
       $flag = $this->IsVoteKill($uname);
       foreach ($this->GetVotePollList($uname) as $target_uname) {
 	$user = DB::$USER->ByRealUname($target_uname);
-	if ($user->IsDead(true) || RoleUser::IsAvoid($user)) {
+	if ($user->IsDead(true) || RoleUser::Avoid($user)) {
 	  continue;
 	}
 

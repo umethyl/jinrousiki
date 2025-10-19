@@ -39,6 +39,14 @@ final class UserDB {
     return DB::Exists();
   }
 
+  //クイズ村GM降参判定
+  public static function IsQuizFold() {
+    $query = self::GetQueryExists()->Where(['live', 'user_no']);
+
+    DB::Prepare($query->Build(), [DB::$ROOM->id, UserLive::FOLD, GM::ID]);
+    return DB::Exists();
+  }
+
   //重複ユーザ判定
   public static function Duplicate($uname, $handle_name) {
     $query = self::GetQueryExists()

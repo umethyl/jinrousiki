@@ -53,16 +53,11 @@ final class RoomOptionManager extends StackStaticManager {
 
   //村作成オプション入力情報ロード (基本オプション)
   private static function LoadPostBase() {
-    RoomOption::LoadPost('wish_role', 'real_time');
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$base_core);
     if (RQ::Get()->real_time) {
-      RoomOption::LoadPost('wait_morning');
+      RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_real_time);
     }
-
-    RoomOption::LoadPost(
-      'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
-      'limit_last_words', 'limit_talk', 'secret_talk', 'dummy_boy_selector',
-      'not_open_cast_selector', 'perverseness', 'replace_human_selector', 'special_role'
-    );
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$base);
   }
 
   //村作成オプション入力情報ロード (オプション変更用)
@@ -72,7 +67,7 @@ final class RoomOptionManager extends StackStaticManager {
     }
 
     //変更できないオプションを自動セット
-    foreach (['gm_login', 'dummy_boy'] as $option) {
+    foreach (RoomOptionFilterData::$fix_in_change as $option) {
       if (DB::$ROOM->IsOption($option)) {
 	OptionLoader::Load($option)->LoadPost();
 	if (RQ::Get()->$option) {
@@ -83,7 +78,7 @@ final class RoomOptionManager extends StackStaticManager {
 
     $option = 'temporary_gm';
     if (DB::$ROOM->IsOption($option)) {
-      RoomOption::Set(OptionGroup::GAME, $option);
+      RoomOptionLoader::Set(OptionGroup::GAME, $option);
     }
   }
 
@@ -94,8 +89,9 @@ final class RoomOptionManager extends StackStaticManager {
       self::Stack()->Set('gm_name', Message::GM);
       self::Stack()->Set('gm_password', RQ::Get()->gm_password);
     }
-    RoomOption::Set(OptionGroup::GAME, 'dummy_boy');
-    RoomOption::Set(OptionGroup::GAME, 'gm_login');
+    RoomOptionLoader::Set(OptionGroup::GAME, 'dummy_boy');
+    RoomOptionLoader::Set(OptionGroup::GAME, 'gm_login');
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_special);
   }
 
   //村作成オプション入力情報ロード (GMログインパスワード)
@@ -114,80 +110,70 @@ final class RoomOptionManager extends StackStaticManager {
 	self::Stack()->Set('gm_name', Message::GM);
 	self::Stack()->Set('gm_password', RQ::Get()->gm_password);
       }
-      RoomOption::Set(OptionGroup::GAME, 'dummy_boy');
-      RoomOption::LoadPost('gerd', 'dummy_boy_cast_limit');
+      RoomOptionLoader::Set(OptionGroup::GAME, 'dummy_boy');
+      RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_gm_login);
     } else {
       if (false === RQ::Get()->change_room) {
-	RoomOption::LoadPost('temporary_gm'); //「身代わり君はGM」が OFF なら仮GMモードを設定可能
+	//「身代わり君はGM」が OFF なら仮GMモードを設定可能
+	RoomOptionLoader::LoadPost(RoomOptionFilterData::$enable_temporary_gm);
       }
       if (RQ::Get()->dummy_boy) {
 	if (false === RQ::Get()->change_room) {
 	  self::Stack()->Set('gm_name', Message::DUMMY_BOY);
 	  self::Stack()->Set('gm_password', ServerConfig::PASSWORD);
 	}
-	RoomOption::LoadPost('gerd', 'dummy_boy_cast_limit');
+	RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_dummy_boy);
       }
     }
 
     //ゲルト君モード無効はゲルト君モードと連動させる
     if (true === RQ::Get()->gerd) {
-      RoomOption::LoadPost('disable_gerd');
+      RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_gerd);
     }
   }
 
   //村作成オプション入力情報ロード (闇鍋モード)
   private static function LoadPostChaos() {
-    RoomOption::LoadPost(
-      'secret_sub_role', 'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit'
-    );
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_chaos);
   }
 
   //村作成オプション入力情報ロード (決闘村)
   private static function LoadPostDuel() {
-    RoomOption::LoadPost('duel_selector');
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_duel);
   }
 
   //村作成オプション入力情報ロード (特殊村)
   private static function LoadPostSpecial() {
-    //現在は専用オプションなし
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_special);
   }
 
   //村作成オプション入力情報ロード (通常村)
   private static function LoadPostNormal() {
-    RoomOption::LoadPost(
-      'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf', 'possessed_wolf',
-      'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'medium'
-    );
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_normal);
     if (false === RQ::Get()->full_cupid) {
-      RoomOption::LoadPost('cupid');
+      RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_full_cupid);
     }
     if (false === RQ::Get()->full_mania) {
-      RoomOption::LoadPost('mania');
+      RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_full_mania);
     }
     if (false === RQ::Get()->perverseness) {
-      RoomOption::LoadPost('decide', 'authority');
+      RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_perverseness);
     }
   }
 
   //村作成オプション入力情報ロード (クイズ村以外共通)
   private static function LoadPostCommonWithoutQuiz() {
     if (false === RQ::Get()->perverseness) {
-      RoomOption::LoadPost('sudden_death');
+      RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_perverseness_without_quiz);
     }
-    RoomOption::LoadPost(
-      'joker', 'death_note', 'detective', 'full_weather', 'festival', 'change_common_selector',
-      'change_mad_selector', 'change_cupid_selector'
-    );
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_without_quiz);
     if (false === RQ::Get()->full_weather) {
-      RoomOption::LoadPost('weather');
+      RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_full_weather);
     }
   }
 
   //村作成オプション入力情報ロード (共通サブ役職関連)
   private static function LoadPostCommonSubRole() {
-    RoomOption::LoadPost(
-      'no_silence', 'liar', 'gentleman', 'passion', 'deep_sleep', 'mind_open', 'blinder',
-      'critical', 'notice_critical'
-    );
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_sub_role);
   }
 }

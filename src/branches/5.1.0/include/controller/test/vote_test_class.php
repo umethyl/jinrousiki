@@ -70,19 +70,41 @@ final class VoteTestController extends JinrouTestController {
   }
 
   protected static function EnableCommand() {
-    return VoteTestFlag::VOTE || VoteTestFlag::CAST || VoteTestFlag::TALK || VoteTestFlag::ROLE;
+    switch (true) {
+    case VoteTestFlag::VOTE:
+    case VoteTestFlag::CAST:
+    case VoteTestFlag::TALK:
+    case VoteTestFlag::ROLE:
+    case VoteTestFlag::MAGE:
+    case VoteTestFlag::NECROMANCER:
+      return true;
+
+    default:
+      return false;
+    }
   }
 
   protected static function RunCommand() {
-    if (VoteTestFlag::VOTE) { //投票表示モード
-      self::OutputVote();
-    } elseif (VoteTestFlag::CAST) { //配役情報表示モード
-      self::OutputCast();
-    } elseif (VoteTestFlag::TALK) { //発言表示モード
-      self::OutputTalk();
-    } elseif (VoteTestFlag::ROLE) { //画像表示モード
-      self::OutputImage();
-    } else { //ここに来たらロジックエラー
+    switch (true) {
+    case VoteTestFlag::VOTE:
+      return self::OutputVote();
+
+    case VoteTestFlag::CAST:
+      return self::OutputCast();
+
+    case VoteTestFlag::TALK:
+      return self::OutputTalk();
+
+    case VoteTestFlag::ROLE:
+      return self::OutputImage();
+
+    case VoteTestFlag::MAGE:
+      return self::OutputDistinguishMage();
+
+    case VoteTestFlag::NECROMANCER:
+      return self::OutputDistinguishNecromancer();
+
+    default: //ここに来たらロジックエラー
       HTML::OutputResult(VoteTestMessage::TITLE, VoteMessage::INVALID_COMMAND);
     }
   }
@@ -254,6 +276,16 @@ final class VoteTestController extends JinrouTestController {
     foreach (RoleDataManager::Get() as $role => $name) {
       $user->Parse($role);
       Text::p($role, $filter->DistinguishMage($user));
+    }
+  }
+
+  //役職判定情報 (霊能)
+  private static function OutputDistinguishNecromancer() {
+    $user   = new User();
+    $filter = RoleLoader::Load('necromancer');
+    foreach (RoleDataManager::Get() as $role => $name) {
+      $user->Parse($role);
+      Text::p($role, $filter->Necromancer($user, false));
     }
   }
 

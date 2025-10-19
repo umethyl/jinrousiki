@@ -5,13 +5,16 @@
   ・遠吠え：通常
   ・仲間表示：人狼枠(憑依追跡)・囁き狂人・無意識枠
   ・仲間襲撃：不可
+  ・罠：有効
+  ・護衛：有効
   ・護衛カウンター：なし
   ・襲撃失敗判定：人狼系・妖狐 (天啓封印あり)
   ・襲撃失敗：なし
   ・妖狐襲撃：なし
-  ・人狼襲撃死因：人狼襲撃
+  ・襲撃死因：人狼襲撃
   ・襲撃追加：なし
-  ・毒対象選出 (襲撃)：通常
+  ・襲撃毒発動：有効
+  ・襲撃毒対象選出：通常
   ・毒死：通常
 */
 class Role_wolf extends Role {
@@ -59,7 +62,7 @@ class Role_wolf extends Role {
 
   //遠吠え
   public function Howl(TalkBuilder $builder, TalkParser $talk) {
-    if (! $builder->flag->wolf_howl) { //スキップ判定
+    if (false === $builder->flag->wolf_howl) { //スキップ判定
       return false;
     }
 
@@ -163,7 +166,8 @@ class Role_wolf extends Role {
     }
 
     $actor = $this->GetWolfVoter();
-    if (false === RoleUser::IsSiriusWolf($actor, false)) { //罠判定 (覚醒天狼は無効)
+    $wolf_filter = RoleLoader::LoadMain($actor);
+    if ($wolf_filter->EnableTrap($actor)) { //罠有効判定
       foreach (RoleLoader::LoadFilter('trap') as $filter) {
 	if ($filter->TrapComposite($actor, $target->id)) {
 	  return $this->WolfEatFailed('TRAP');
@@ -177,9 +181,8 @@ class Role_wolf extends Role {
       DB::$USER->Kill($id, DeadReason::WOLF_KILLED); //死亡処理
     }
 
-    //護衛判定 (護衛能力判定 > 天狼判定)
-    $is_sirius = RoleUser::IsSiriusWolf($actor);
-    if (DB::$ROOM->date > 1 && RoleUser::Guard($target) && false === $is_sirius) {
+    //護衛判定 (護衛能力判定 > 護衛有効判定)
+    if (DB::$ROOM->date > 1 && RoleUser::Guard($target) && $wolf_filter->EnableGuard($actor)) {
       //RoleManager::Stack()->p(RoleVoteSuccess::GUARD, '◆GuardSuccess');
       RoleLoader::LoadMain($actor)->GuardCounter();
       return $this->WolfEatFailed('GUARD');
@@ -189,13 +192,12 @@ class Role_wolf extends Role {
     }
 
     //襲撃処理
-    $wolf_filter = RoleLoader::LoadMain($actor);
     $wolf_filter->WolfKill($target);
     $target->wolf_eat    = true;
     $target->wolf_killed = true;
-    if (RoleUser::IsPoison($target) && false === $is_sirius) { //毒死判定 (天狼は無効)
+    if (RoleUser::IsPoison($target) && $wolf_filter->EnablePoisonEat($actor)) {
       $poison_target = $wolf_filter->GetPoisonEatTarget(); //対象選出
-      if (RoleUser::IsAvoidLovers($poison_target)) { //特殊耐性恋人なら無効
+      if (RoleUser::AvoidLovers($poison_target)) { //特殊耐性恋人なら無効
 	return;
       }
 
@@ -207,6 +209,16 @@ class Role_wolf extends Role {
       }
       RoleLoader::LoadMain($poison_target)->PoisonDead(); //毒死処理
     }
+  }
+
+  //罠有効判定
+  public function EnableTrap(User $user) {
+    return true;
+  }
+
+  //護衛有効判定
+  public function EnableGuard(User $user) {
+    return true;
   }
 
   //護衛カウンター
@@ -317,7 +329,14 @@ class Role_wolf extends Role {
     if ($this->IgnoreWolfKill($user)) {
       return;
     }
-    DB::$USER->Kill($user->id, $this->GetWolfKillReason());
+
+    //死因取得 (身代わり君襲撃時は固定)
+    if ($user->IsDummyBoy()) {
+      $reason = DeadReason::WOLF_KILLED;
+    } else {
+      $reason = $this->GetWolfKillReason();
+    }
+    DB::$USER->Kill($user->id, $reason);
     $this->WolfKillAction($user);
   }
 
@@ -334,7 +353,12 @@ class Role_wolf extends Role {
   //人狼襲撃追加処理
   protected function WolfKillAction(User $user) {}
 
-  //毒対象者選出 (襲撃)
+  //人狼襲撃毒有効判定
+  public function EnablePoisonEat(User $user) {
+    return true;
+  }
+
+  //人狼襲撃毒対象者選出
   public function GetPoisonEatTarget() {
     if (GameConfig::POISON_ONLY_EATER) {
       return $this->GetWolfVoter();

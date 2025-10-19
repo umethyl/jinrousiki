@@ -14,7 +14,7 @@ class Role_cursed_brownie extends Role {
     foreach ($this->GetStackKey() as $uname) {
       foreach ($this->GetVotePollList($uname) as $target_uname) {
 	$user = DB::$USER->ByRealUname($target_uname);
-	if ($user->IsLive(true) && false === RoleUser::IsAvoid($user) && Lottery::Percent(30)) {
+	if ($user->IsLive(true) && false === RoleUser::Avoid($user) && Lottery::Percent(30)) {
 	  $user->AddDoom(2);
 	}
       }

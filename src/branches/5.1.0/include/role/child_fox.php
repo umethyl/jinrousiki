@@ -3,7 +3,9 @@
   ◆子狐 (child_fox)
   ○仕様
   ・人狼襲撃耐性：無し
-  ・占い：通常
+  ・占い：通常 (成功率 70%)
+  ・占い失敗結果：通常
+  ・占い結果：通常
 */
 RoleLoader::LoadFile('fox');
 class Role_child_fox extends Role_fox {
@@ -27,6 +29,7 @@ class Role_child_fox extends Role_fox {
     return false;
   }
 
+  //占い (妨害 > 呪返し > 占い判定)
   public function Mage(User $user) {
     if ($this->IsJammer($user)) {
       return $this->SaveMageResult($user, $this->GetMageFailed(), $this->result);

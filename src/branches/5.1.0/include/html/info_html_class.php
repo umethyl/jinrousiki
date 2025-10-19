@@ -58,6 +58,20 @@ final class InfoHTML {
     );
   }
 
+  //オプション出力
+  public static function OutputOption($option, $name, $version) {
+    Text::Printf(self::GetOption(),
+      $option, $name, GameOptionConfig::${$option.'_list'}[$name], $version, Message::RANGE
+    );
+  }
+
+  //オプションリスト出力
+  public static function OutputOptionList($option, array $list) {
+    foreach ($list as $name) {
+      HTML::OutputLink('#' . $option . '_' . $name, GameOptionConfig::${$option.'_list'}[$name]);
+    }
+  }
+
   //履歴ページ出力
   public static function OutputHistory($title, $css, $name) {
     InfoHTML::OutputHeader($title, 1, $css);
@@ -261,6 +275,10 @@ EOF;
 EOF;
   }
 
+  //オプションタグ
+  private static function GetOption() {
+    return '<h3 id="%s_%s">%s [%s%s]</h3>';
+  }
 
   //役職情報ヘッダタグ
   private static function GetRoleHeader() {

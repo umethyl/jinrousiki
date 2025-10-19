@@ -14,7 +14,7 @@ class Role_harvest_brownie extends Role {
       $flag = $this->IsVoteKill($uname);
       foreach ($this->GetVotePollList($uname) as $target_uname) {
 	$user = DB::$USER->ByRealUname($target_uname);
-	if ($user->IsDead(true) || RoleUser::IsAvoid($user) || false === Lottery::Percent(30)) {
+	if ($user->IsDead(true) || RoleUser::Avoid($user) || false === Lottery::Percent(30)) {
 	  continue;
 	}
 

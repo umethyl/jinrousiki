@@ -3,6 +3,7 @@
   ◆翠狐 (emerald_fox)
   ○仕様
   ・占い：共鳴者付加 (念話できない妖狐カウント)
+  ・占い失敗：表示なし
 */
 RoleLoader::LoadFile('fox');
 class Role_emerald_fox extends Role_fox {

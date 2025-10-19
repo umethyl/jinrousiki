@@ -5,8 +5,10 @@
   ・勝利：村人・人狼のうち人数が少ない陣営の勝利
   ・能力結果：所属陣営
   ・ショック死：同陣営得票 + 確率
-  ・神通力：天狗倒し
+  ・占い：神通力
+  ・占い結果：神通力(神隠し)
   ・神通力対象：狩人系・暗殺者系・人狼系・子狐系
+  ・神隠し：天狗倒し
 */
 class Role_tengu extends Role {
   public $mix_in = ['mage', 'chicken'];
@@ -91,6 +93,7 @@ class Role_tengu extends Role {
     return 'TENGU_ESCAPE';
   }
 
+  //占い(神通力) (妨害 > 呪返し > 神通力発動)
   public function Mage(User $user) {
     if ($this->IsJammer($user) || $this->IsCursed($user)) {
       return false;

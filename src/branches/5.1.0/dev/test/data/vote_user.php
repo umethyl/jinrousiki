@@ -3,7 +3,7 @@
 RQ::GetTest()->test_users[1]->role = 'harp_mania';
 RQ::GetTest()->test_users[1]->live = UserLive::DEAD;
 
-RQ::GetTest()->test_users[2]->role = 'thorn_wolf authority';
+RQ::GetTest()->test_users[2]->role = 'spell_wolf authority';
 RQ::GetTest()->test_users[2]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[3]->role = 'possessed_wolf possessed_target[3-17]';
@@ -18,7 +18,7 @@ RQ::GetTest()->test_users[5]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[6]->role = 'eclipse_medium possessed[4-15] frostbite[7]';
 RQ::GetTest()->test_users[6]->live = UserLive::DEAD;
 
-RQ::GetTest()->test_users[7]->role = 'doll lovers[13] vega_lovers male_status[2] gender_status[3] female_status[4] male_status[6]';
+RQ::GetTest()->test_users[7]->role = 'guard lovers[13] vega_lovers male_status[2] gender_status[3] female_status[4] male_status[6]';
 RQ::GetTest()->test_users[7]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[8]->role = 'anti_voodoo male_status[3] gender_status[5]';
@@ -30,10 +30,10 @@ RQ::GetTest()->test_users[9]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[10]->role = 'step_assassin death_note[5] speaker';
 RQ::GetTest()->test_users[10]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[11]->role = 'sacrifice_depraver downer_luck';
+RQ::GetTest()->test_users[11]->role = 'poison downer_luck';
 RQ::GetTest()->test_users[11]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[12]->role = 'weather_priest death_selected[9]';
+RQ::GetTest()->test_users[12]->role = 'trap_mad death_selected[9]';
 RQ::GetTest()->test_users[12]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[13]->role = 'sacrifice_cupid lady lovers[13]';
@@ -88,5 +88,5 @@ RQ::GetTest()->test_users[28]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[29]->role = 'flower_jealousy mind_friend[29]';
 RQ::GetTest()->test_users[29]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[30]->role = 'gender_fairy';
+RQ::GetTest()->test_users[30]->role = 'voodoo_killer';
 RQ::GetTest()->test_users[30]->live = UserLive::LIVE;

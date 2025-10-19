@@ -18,7 +18,7 @@ final class GameHTML {
       );
       $table_stack[$count][] = $vote_base;
     }
-    if (false === RQ::Get()->reverse_log) { //正順なら逆転させる
+    if (true !== RQ::Get()->reverse_log) { //正順なら逆転させる
       krsort($table_stack);
     }
 
@@ -95,6 +95,10 @@ final class GameHTML {
       if (DB::$ROOM->IsPlaying() && DB::$ROOM->IsNight()) {
 	//プレイ中の夜は当日の昼も表示する
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, DB::$ROOM->date);
+      }
+      if (DB::$SELF->IsDummyBoy() && DB::$SELF->IsLive()) {
+	//身代わり君生存中(実質クイズ村GM)は霊界も表示する
+	$str .= self::GenerateGameLogLink($url, RoomScene::HEAVEN);
       }
     }
 

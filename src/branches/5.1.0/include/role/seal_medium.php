@@ -13,7 +13,7 @@ class Role_seal_medium extends Role_medium {
   }
 
   protected function IgnoreVoteKillAction(User $user) {
-    return RoleUser::IsAvoidLovers($user, true);
+    return RoleUser::AvoidLovers($user, true);
   }
 
   protected function IsVoteKillActionTarget(User $user) {

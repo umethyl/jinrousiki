@@ -2,8 +2,9 @@
 /*
   ◆精神鑑定士 (psycho_mage)
   ○仕様
-  ・占い：精神鑑定
-  ・呪い：無効
+  ・占い失敗結果：鑑定失敗
+  ・呪返し：無効
+  ・占い結果：精神鑑定
 */
 RoleLoader::LoadFile('mage');
 class Role_psycho_mage extends Role_mage {

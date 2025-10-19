@@ -167,6 +167,7 @@ class ResultList extends RoleMessageList {
   public $result_disguise_wolf = ['message' => "さんは|朔狼|でした", 'type' => 'result_wolf'];
   public $result_purple_wolf = ['message' => "さんは|紫狼|でした", 'type' => 'result_wolf'];
   public $result_snow_wolf = ['message' => "さんは|雪狼|でした", 'type' => 'result_wolf'];
+  public $result_miasma_wolf = ['message' => "さんは|戯狼|でした", 'type' => 'result_wolf'];
   public $result_ascetic_wolf = ['message' => "さんは|印狼|でした", 'type' => 'result_wolf'];
   public $result_fortitude_wolf = ['message' => "さんは|剛狼|でした", 'type' => 'result_wolf'];
   public $result_poison_wolf = ['message' => "さんは|毒狼|でした", 'type' => 'result_wolf'];
@@ -184,6 +185,7 @@ class ResultList extends RoleMessageList {
   public $result_honey_wolf = ['message' => "さんは|蜜狼|でした", 'type' => 'result_wolf'];
   public $result_sharp_wolf = ['message' => "さんは|鋭狼|でした", 'type' => 'result_wolf'];
   public $result_hungry_wolf = ['message' => "さんは|餓狼|でした", 'type' => 'result_wolf'];
+  public $result_grudge_wolf = ['message' => "さんは|怨狼|でした", 'type' => 'result_wolf'];
   public $result_tongue_wolf = ['message' => "さんは|舌禍狼|でした", 'type' => 'result_wolf'];
   public $result_possessed_wolf = ['message' => "さんは|憑狼|でした", 'type' => 'result_wolf'];
   public $result_sirius_wolf = ['message' => "さんは|天狼|でした", 'type' => 'result_wolf'];
@@ -410,6 +412,7 @@ class ResultList extends RoleMessageList {
   public $result_flower_mage_possessed = ['message' => "さんの魂は誰かと|入れ替わって|いるようです", 'type' => 'result_cupid'];
   public $result_flower_mage_sweet = ['message' => "さんは|悲しい恋|をしていたようです", 'type' => 'result_chiroptera'];
 
+  public $result_wolf_special = ['message' => "さんは|特殊な人狼|でした", 'type' => 'result_wolf'];
   public $result_stolen = ['message' => "さんの死体が盗まれました！"];
   public $result_psycho_necromancer_human = ['message' => "さんの前世は|村人|でした", 'type' => 'result_human'];
   public $result_psycho_necromancer_wolf = ['message' => "さんの前世は|人狼|でした", 'type' => 'result_wolf'];

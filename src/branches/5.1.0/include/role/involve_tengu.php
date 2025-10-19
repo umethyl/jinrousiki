@@ -54,7 +54,7 @@ class Role_involve_tengu extends Role_meteor_tengu {
     $stack = [];
     foreach ($camp_list[$camp] as $id) {
       $user = DB::$USER->ByID($id);
-      if ($user->IsRole('lovers') || RoleUser::IsAvoid($user)) { //対象外判定
+      if ($user->IsRole('lovers') || RoleUser::Avoid($user)) { //対象外判定
 	continue;
       }
       $stack[] = $id;
