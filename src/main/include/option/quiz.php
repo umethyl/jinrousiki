@@ -2,7 +2,8 @@
 /*
   ◆クイズ村 (quiz)
   ○仕様
-  ・配役フィルタリング： 村人, 共有者, 人狼, 狂人, 妖狐
+  ・追加配役(特殊配役村)： 有効
+  ・配役フィルタリング： 村人, 共有者, 人狼, 狂人, 妖狐, 背徳者
   ・配役フィルタリング置換：村人 -> 出題者
   ・配役：解答者付加 (出題者以外)
 */
@@ -15,8 +16,12 @@ class Option_quiz extends OptionCastCheckbox {
     return 'GMが出題者になり、プレイヤー全員に回答者がつきます。';
   }
 
+  protected function EnableFilterCastAddRoleSpecial() {
+    return true;
+  }
+
   protected function GetFilterCastRoleList() {
-    return ['common', 'wolf', 'mad', 'fox'];
+    return ['common', 'wolf', 'mad', 'fox', 'depraver'];
   }
 
   protected function ReplaceFilterCast(array $role_list) {
@@ -42,6 +47,6 @@ class Option_quiz extends OptionCastCheckbox {
   }
 
   public function GetWishRole() {
-    return ['mad', 'common', 'fox'];
+    return ['mad', 'common', 'fox', 'depraver'];
   }
 }
