@@ -25,6 +25,10 @@ class Role_death_note extends Role {
     RoleHTML::OutputVoteNight(VoteCSS::DEATH_NOTE, $str, $this->action, $this->not_action);
   }
 
+  protected function DisableVoteNightCheckboxDummyBoy() {
+    return true;
+  }
+
   //投票判定処理
   public function IsVoteDeathNote() {
     /*
@@ -49,6 +53,11 @@ class Role_death_note extends Role {
   public function ResetDeathNote() {
     $stack = [];
     foreach (DB::$USER->Get() as $user) {
+      //クイズ村のGMには配布しない
+      if (DB::$ROOM->IsQuiz() && $user->IsDummyBoy()) {
+	continue;
+      }
+
       if ($user->IsLive(true)) {
 	$stack[] = $user->id;
       }
