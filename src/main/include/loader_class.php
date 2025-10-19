@@ -321,10 +321,11 @@ final class LoaderData {
     'TalkElement'	=> 'talk_data_class',
     'TalkCSS'		=> 'talk_data_class',
     //data/option
-    'OptionGroup'	=> 'option_data_class',
-    'OptionFormType'	=> 'option_data_class',
-    'OptionFormData'	=> 'option_form_data_class',
-    'OptionFilterData'	=> 'option_filter_data_class',
+    'OptionGroup'		=> 'option_data_class',
+    'OptionFormType'		=> 'option_data_class',
+    'OptionFormData'		=> 'option_form_data_class',
+    'OptionFilterData'		=> 'option_filter_data_class',
+    'RoomOptionOrderData'	=> 'room_option_order_data_class',
     //data/event
     'EventType'		=> 'event_data_class',
     'EventFilterData'	=> 'event_filter_data_class',
@@ -603,9 +604,10 @@ final class LoaderData {
     'talk_data_class'		=> 'data',
     'dead_reason_data_class'	=> 'data',
     //data/option
-    'option_data_class'		=> 'data/option',
-    'option_form_data_class'	=> 'data/option',
-    'option_filter_data_class'	=> 'data/option',
+    'option_data_class'			=> 'data/option',
+    'option_form_data_class'		=> 'data/option',
+    'option_filter_data_class'		=> 'data/option',
+    'room_option_order_data_class'	=> 'data/option',
     //data/event
     'event_data_class'		=> 'data/event',
     'event_filter_data_class'	=> 'data/event',
