@@ -13,13 +13,13 @@ final class RoomOptionFilterData {
   public static $store_in_change = ['close_room'];
 
   //-- RoomOptionManager::LoadPostBase() --//
-  //基幹(併用判定用)
+  //標準(併用判定用)
   public static $base_core = ['wish_role', 'real_time'];
 
   //real_time 併用
   public static $add_real_time = ['wait_morning'];
 
-  //基幹
+  //標準
   public static $base = [
     'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
     'limit_last_words', 'limit_talk', 'secret_talk', 'dummy_boy_selector',
@@ -29,6 +29,11 @@ final class RoomOptionFilterData {
   //-- RoomOptionManager::LoadPostInChange() --//
   //変更時固定
   public static $fix_in_change = ['gm_login', 'dummy_boy'];
+
+  //-- RoomOptionManager::LoadPostQuiz() --//
+  //-- RoomOptionManager::LoadPostSpecial() --//
+  //特殊配役村併用
+  public static $add_special = ['wolf', 'mad', 'fox', 'no_fox', 'depraver'];
 
   //-- RoomOptionManager::LoadPostDummyBoy() --//
   //身代わり君はGM有効時
@@ -53,6 +58,7 @@ final class RoomOptionFilterData {
   //決闘村併用
   public static $add_duel = ['duel_selector'];
 
+
   //-- RoomOptionManager::LoadPostNormal() --//
   //普通村併用
   public static $add_normal = [
@@ -75,7 +81,7 @@ final class RoomOptionFilterData {
 
   //クイズ村以外併用
   public static $add_without_quiz = [
-    'joker', 'death_note', 'detective', 'full_weather', 'festival', 'change_common_selector',
+    'detective', 'full_weather', 'festival', 'change_common_selector',
     'change_mad_selector', 'change_cupid_selector'
   ];
 
@@ -83,8 +89,9 @@ final class RoomOptionFilterData {
   public static $not_full_weather = ['weather'];
 
   //-- RoomOptionManager::LoadPostCommonSubRole() --//
+  //標準サブ役職
   public static $add_sub_role = [
     'no_silence', 'liar', 'gentleman', 'passion', 'deep_sleep', 'mind_open', 'blinder',
-    'critical', 'notice_critical'
+    'critical', 'notice_critical', 'joker', 'death_note'
   ];
 }

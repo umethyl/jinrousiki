@@ -91,6 +91,7 @@ final class RoomOptionManager extends StackStaticManager {
     }
     RoomOptionLoader::Set(OptionGroup::GAME, 'dummy_boy');
     RoomOptionLoader::Set(OptionGroup::GAME, 'gm_login');
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_special);
   }
 
   //村作成オプション入力情報ロード (GMログインパスワード)
@@ -143,7 +144,7 @@ final class RoomOptionManager extends StackStaticManager {
 
   //村作成オプション入力情報ロード (特殊村)
   private static function LoadPostSpecial() {
-    //現在は専用オプションなし
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_special);
   }
 
   //村作成オプション入力情報ロード (通常村)
