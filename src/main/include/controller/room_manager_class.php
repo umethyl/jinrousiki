@@ -209,8 +209,8 @@ final class RoomManagerController extends JinrouController {
 
   //村作成入力値チェック
   private static function ValidateCreateInput() {
-    foreach (['room_name', 'room_comment'] as $type) { //村の名前・説明
-      RoomOptionLoader::LoadPost($type);
+    foreach (RoomOptionFilterData::$validate_create_name as $type) { //村の名前・説明
+      RoomOptionLoader::LoadPost([$type]);
       if (RQ::Get()->$type == '') { //未入力チェック
 	RoomManagerHTML::OutputResult('empty', OptionManager::GenerateCaption($type));
       }
@@ -221,7 +221,7 @@ final class RoomManagerController extends JinrouController {
       }
     }
 
-    RoomOptionLoader::LoadPost('max_user'); //最大人数
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$validate_create_user); //最大人数
     if (false === in_array(RQ::Get()->max_user, RoomConfig::$max_user_list)) {
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_INPUT);
       HTML::OutputResult($title, RoomManagerMessage::ERROR_INPUT_MAX_USER);
@@ -283,7 +283,7 @@ final class RoomManagerController extends JinrouController {
 
   //村作成情報登録 (オプション変更時)
   private static function StoreInChange() {
-    RoomOptionLoader::LoadPost('close_room');
+    RoomOptionLoader::LoadPost(RoomOptionFilterData::$store_in_change);
     if (RQ::Get()->gm_logout) { //GMログアウト処理
       if (DB::$ROOM->IsClosing() || RQ::Get()->close_room == RoomStatus::CLOSING) {
 	RoomManagerHTML::OutputResult('gm_logout');

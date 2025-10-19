@@ -19,7 +19,7 @@ class RoomOptionLoader {
   }
 
   //フォーム入力値取得
-  public static function LoadPost(...$option_list) {
+  public static function LoadPost(array $option_list) {
     foreach ($option_list as $option) {
       $filter = OptionLoader::Load($option);
       if (true === isset($filter)) {

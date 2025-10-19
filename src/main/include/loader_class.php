@@ -326,6 +326,7 @@ final class LoaderData {
     'OptionFormData'		=> 'option_form_data_class',
     'OptionFilterData'		=> 'option_filter_data_class',
     'RoomOptionOrderData'	=> 'room_option_order_data_class',
+    'RoomOptionFilterData'	=> 'room_option_filter_data_class',
     //data/event
     'EventType'		=> 'event_data_class',
     'EventFilterData'	=> 'event_filter_data_class',
@@ -608,6 +609,7 @@ final class LoaderData {
     'option_form_data_class'		=> 'data/option',
     'option_filter_data_class'		=> 'data/option',
     'room_option_order_data_class'	=> 'data/option',
+    'room_option_filter_data_class'	=> 'data/option',
     //data/event
     'event_data_class'		=> 'data/event',
     'event_filter_data_class'	=> 'data/event',
