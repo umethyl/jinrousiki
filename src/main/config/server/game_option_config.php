@@ -159,6 +159,9 @@ class GameOptionConfig {
   public static $notice_critical_enable  = true; //急所通知
   public static $default_notice_critical = false;
 
+  public static $critical_chicken_enable  = true; //腰痛村
+  public static $default_critical_chicken = false;
+
   public static $sudden_death_enable  = true; //虚弱体質村
   public static $default_sudden_death = false;
 
