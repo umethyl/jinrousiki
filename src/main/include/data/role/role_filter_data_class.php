@@ -194,8 +194,8 @@ final class RoleFilterData {
   //ショック死 (サブ / 順番依存あり)
   public static $sudden_death_sub = [
     'challenge_lovers', 'febris', 'chill_febris', 'frostbite', 'death_warrant', 'panelist',
-    'thorn_cross', 'chicken', 'rabbit', 'perverseness', 'flattery', 'celibacy', 'nervy',
-    'androphobia', 'gynophobia', 'impatience'
+    'thorn_cross', 'chicken', 'critical_chicken', 'rabbit', 'perverseness', 'flattery',
+    'celibacy', 'nervy', 'androphobia', 'gynophobia', 'impatience'
   ];
 
   //ショック死抑制

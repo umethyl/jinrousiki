@@ -395,6 +395,7 @@ final class RoleShortData {
     'harp_mania'		=> '琴',
     'mask_mania'		=> '面',
     'chicken'			=> '酉',
+    'critical_chicken'		=> '魔撃',
     'rabbit'			=> '卯',
     'perverseness'		=> '邪',
     'flattery'			=> '胡麻',
