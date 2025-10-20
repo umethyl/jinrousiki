@@ -362,7 +362,6 @@ final class LoaderData {
     'PageLinkBuilder'		=> 'old_log_functions',
     'JinrouCacheManager'	=> 'cache_class',
     //system/game
-    'GameTime'		=> 'game_functions',
     'GameAction'	=> 'game_functions',
     'Position'		=> 'game_functions',
     'Objection'		=> 'game_functions',
@@ -401,6 +400,7 @@ final class LoaderData {
     'RoomOptionManager'	=> 'room_option_manager_class',
     //time
     'Time'		=> 'time_class',
+    'GameTime'		=> 'game_time_class',
     //talk
     'Talk'		=> 'talk_class',
     'TalkParser'	=> 'talk_class',
@@ -646,6 +646,7 @@ final class LoaderData {
     'cookie_class'	=> 'request',
     //time
     'time_class'		=> 'time',
+    'game_time_class'		=> 'time',
     //option
     'option_class'		=> 'option',
     'option_form_class'		=> 'option',
