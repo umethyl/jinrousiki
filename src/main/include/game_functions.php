@@ -330,7 +330,7 @@ final class Winner {
 
     case null: //廃村
       $class = WinCamp::NONE;
-      $text  = DB::$ROOM->date > 0 ? WinCamp::UNFINISHED : WinCamp::NONE;
+      $text  = DateBorder::First() ? WinCamp::UNFINISHED : WinCamp::NONE;
       break;
     }
     $str = GameHTML::GenerateWinner($class, $text);

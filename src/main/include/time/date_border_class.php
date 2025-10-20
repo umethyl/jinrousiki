@@ -17,4 +17,12 @@ final class DateBorder {
   }
 
   //-- 以降 --//
+  public static function Over($date) {
+    return DB::$ROOM->date > $date;
+  }
+
+  //1日目以降
+  public static function First() {
+    return self::Over(0);
+  }
 }

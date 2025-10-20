@@ -800,7 +800,7 @@ class GamePlayView_After extends GamePlayView {
   }
 
   protected function OutputGameLogLinkListFooter() {
-    if (DB::$ROOM->date > 0) {
+    if (DateBorder::First()) {
       $this->OutputGameLogLink(RoomScene::DAY, DB::$ROOM->date);
     }
 
