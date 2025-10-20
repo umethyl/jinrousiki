@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('priest');
 class Role_high_priest extends Role_priest {
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 5;
+    return DateBorder::PreFive();
   }
 
   protected function GetPriestResultRole() {
@@ -15,7 +15,7 @@ class Role_high_priest extends Role_priest {
   }
 
   protected function IgnoreSetPriest() {
-    return DB::$ROOM->date < 4;
+    return DateBorder::PreFour();
   }
 
   protected function GetPriestType() {

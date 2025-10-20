@@ -93,7 +93,7 @@ class Role_wolf extends Role {
 
   //身代わり君襲撃固定判定
   final protected function FixDummyBoy() {
-    return DB::$ROOM->IsQuiz() || (DB::$ROOM->IsDummyBoy() && DB::$ROOM->IsDate(1));
+    return DB::$ROOM->IsQuiz() || (DB::$ROOM->IsDummyBoy() && DateBorder::One());
   }
 
   protected function GetPartnerVoteNightIconPath(User $user) {
@@ -182,7 +182,7 @@ class Role_wolf extends Role {
     }
 
     //護衛判定 (護衛能力判定 > 護衛有効判定)
-    if (DB::$ROOM->date > 1 && RoleUser::Guard($target) && $wolf_filter->EnableGuard($actor)) {
+    if (DateBorder::Second() && RoleUser::Guard($target) && $wolf_filter->EnableGuard($actor)) {
       //RoleManager::Stack()->p(RoleVoteSuccess::GUARD, '◆GuardSuccess');
       RoleLoader::LoadMain($actor)->GuardCounter();
       return $this->WolfEatFailed('GUARD');
@@ -251,7 +251,7 @@ class Role_wolf extends Role {
       }
     }
 
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       if (RoleUser::IsExit($target)) { //離脱判定
 	return $this->WolfEatFailed('EXIT', true);
       }

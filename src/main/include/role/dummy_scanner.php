@@ -12,7 +12,7 @@ class Role_dummy_scanner extends Role_mind_scanner {
   public $action       = null;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2 || $this->GetActor()->IsRole('mind_read');
+    return DateBorder::PreTwo() || $this->GetActor()->IsRole('mind_read');
   }
 
   protected function OutputAddResult() {

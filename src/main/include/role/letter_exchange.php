@@ -7,7 +7,7 @@
 */
 class Role_letter_exchange extends Role {
   protected function IgnoreAbility() {
-    return DB::$ROOM->date > 2 && false === $this->IsDoom();
+    return DateBorder::Third() && false === $this->IsDoom();
   }
 
   protected function GetImage() {

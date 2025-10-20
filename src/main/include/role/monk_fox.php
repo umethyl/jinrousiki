@@ -12,7 +12,7 @@ class Role_monk_fox extends Role_child_fox {
   public $result = RoleAbility::MONK_FOX;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   public function Necromancer(User $user, $flag) {

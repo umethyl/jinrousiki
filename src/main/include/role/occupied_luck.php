@@ -8,7 +8,7 @@
 RoleLoader::LoadFile('upper_luck');
 class Role_occupied_luck extends Role_upper_luck {
   protected function IgnoreAbility() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   protected function GetVotePollCount() {

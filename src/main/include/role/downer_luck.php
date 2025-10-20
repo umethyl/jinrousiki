@@ -7,6 +7,6 @@
 RoleLoader::LoadFile('upper_luck');
 class Role_downer_luck extends Role_upper_luck {
   protected function GetVotePollCount() {
-    return DB::$ROOM->IsDate(2) ? -4 : 2;
+    return DateBorder::Two() ? -4 : 2;
   }
 }

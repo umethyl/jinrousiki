@@ -17,7 +17,7 @@ class Role_sacrifice_ogre extends Role_ogre {
 
   protected function IgnorePartner() {
     /* 1日目の時点で洗脳者が発生する特殊イベントを実装したら対応すること */
-    return DB::$ROOM->date < 1;
+    return DateBorder::PreOne();
   }
 
   protected function GetPartner() {

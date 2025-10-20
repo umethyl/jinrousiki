@@ -18,7 +18,7 @@ class Role_guard extends Role {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   protected function OutputAddResult() {

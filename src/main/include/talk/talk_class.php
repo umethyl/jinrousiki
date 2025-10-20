@@ -349,7 +349,7 @@ final class TalkBuilder {
       break;
 
     case RoomScene::DAY: //OP の昼限定
-      if (false === DB::$ROOM->IsDate(1)) {
+      if (false === DateBorder::One()) {
 	return false;
       }
       $type     = 'start_datetime'; //ゲーム開始時刻
@@ -357,7 +357,7 @@ final class TalkBuilder {
       break;
 
     case RoomScene::NIGHT:
-      if (false === DB::$ROOM->IsDate(1)) {
+      if (false === DateBorder::One()) {
 	return false;
       }
       $type     = 'start_datetime'; //ゲーム開始時刻
@@ -468,7 +468,7 @@ final class TalkBuilder {
     $stack = new stdClass();
 
     /* 共通フラグ */
-    $is_date = DB::$ROOM->date > 1;
+    $is_date = DateBorder::Second();
 
     /* 基本情報 */
     $stack->dummy_boy = DB::$SELF->IsDummyBoy();

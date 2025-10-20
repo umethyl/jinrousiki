@@ -9,7 +9,7 @@ class Role_sweet_status extends Role {
   public $mix_in = ['lovers'];
 
   protected function IgnoreImage() {
-    return false === DB::$ROOM->IsDate(2);
+    return false === DateBorder::Two();
   }
 
   protected function GetPartner() {
@@ -22,7 +22,7 @@ class Role_sweet_status extends Role {
 
   protected function IsLoversPartner(User $user) {
     return $this->GetActor()->IsPartner('dummy_chiroptera', $user->id) ||
-      (DB::$ROOM->IsDate(1) && $user->IsPartner($this->role, $this->GetStack()));
+      (DateBorder::One() && $user->IsPartner($this->role, $this->GetStack()));
   }
 
   protected function OutputPartnerByType(array $list, $type) {

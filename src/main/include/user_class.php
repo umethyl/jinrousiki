@@ -200,7 +200,7 @@ final class User extends StackManager {
   public function GetTalkCount($lock = false) {
     if (false === isset($this->talk_count) || true === $lock) {
       $stack = TalkDB::GetUserTalkCount($lock);
-      $this->talk_count = (DB::$ROOM->IsDate($stack['date']) ? $stack['talk_count'] : 0);
+      $this->talk_count = (DateBorder::On($stack['date']) ? $stack['talk_count'] : 0);
     }
     return $this->talk_count;
   }
@@ -347,7 +347,7 @@ final class User extends StackManager {
 
   //期間限定表示役職
   public function IsDoomRole($role) {
-    return $this->IsRole($role) && DB::$ROOM->IsDate($this->GetDoomDate($role));
+    return $this->IsRole($role) && DateBorder::On($this->GetDoomDate($role));
   }
 
   //所属陣営判別 (ラッパー)
@@ -860,7 +860,7 @@ final class UserLoader extends stdClass {
     }
 
     $stack = $user->GetPartner($role);
-    return (is_array($stack) && DB::$ROOM->date > 2) ? $this->ByID(array_shift($stack)) : $user;
+    return (is_array($stack) && DateBorder::Third()) ? $this->ByID(array_shift($stack)) : $user;
   }
 
   //HN 取得
@@ -1005,14 +1005,14 @@ final class UserLoader extends stdClass {
 	}
       } elseif ($user->IsRole('evoke_scanner')) {
 	if ($user->IsLive()) {
-	  if (DB::$ROOM->IsDate(1)) {
+	  if (DateBorder::One()) {
 	    return false;
 	  }
 	  $evoke_scanner[] = $user->id;
 	}
       } elseif (RoleUser::IsDelayCopy($user)) {
 	//厳密には1日目の投票前に死亡した場合は公開可となるがレアケースなので対応しない
-	if (DB::$ROOM->IsDate(1) || null !== $user->GetMainRoleTarget()) {
+	if (DateBorder::One() || null !== $user->GetMainRoleTarget()) {
 	  return false;
 	}
       } elseif (RoleUser::IsRevive($user) || $user->IsRole('revive_mania')) {

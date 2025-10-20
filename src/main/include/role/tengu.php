@@ -20,7 +20,7 @@ class Role_tengu extends Role {
   }
 
   protected function IgnoreResult() {
-    return false === DB::$ROOM->IsDate(2);
+    return false === DateBorder::Two();
   }
 
   public function OutputAction() {

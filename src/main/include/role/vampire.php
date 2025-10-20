@@ -14,7 +14,7 @@ class Role_vampire extends Role {
 
   protected function IgnorePartner() {
     /* 1日目の時点で感染者・洗脳者が発生する特殊イベントを実装したら対応すること */
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   protected function GetPartner() {

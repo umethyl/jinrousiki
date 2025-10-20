@@ -142,7 +142,7 @@ final class OldLogHTML {
     foreach (RoomLoaderDB::GetFinished($is_reverse) as $room_no) {
       DB::SetRoom(RoomLoaderDB::LoadFinished($room_no));
 
-      $vanish = DB::$ROOM->IsDate(0) ? ' vanish' : ''; //廃村判定
+      $vanish = DateBorder::On(0) ? ' vanish' : ''; //廃村判定
       if (RQ::Get()->generate_index) {
 	$base_url = RQ::Get()->prefix . DB::$ROOM->id . '.html';
 	$view_url = '';

@@ -16,7 +16,7 @@ class Role_incubate_poison extends Role_poison {
   }
 
   public function IsPoison() {
-    return DB::$ROOM->date > 4;
+    return DateBorder::Fifth();
   }
 
   protected function IsPoisonTarget(User $user) {

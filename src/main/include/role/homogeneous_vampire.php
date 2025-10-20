@@ -9,7 +9,7 @@ class Role_homogeneous_vampire extends Role_vampire {
   public $result = RoleAbility::VAMPIRE;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   protected function InfectAction(User $user) {

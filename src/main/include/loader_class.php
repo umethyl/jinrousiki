@@ -402,6 +402,7 @@ final class LoaderData {
     'Time'		=> 'time_class',
     'GameTime'		=> 'game_time_class',
     'InfoTime'		=> 'info_time_class',
+    'DateBorder'	=> 'date_border_class',
     //talk
     'Talk'		=> 'talk_class',
     'TalkParser'	=> 'talk_class',
@@ -648,6 +649,7 @@ final class LoaderData {
     'time_class'		=> 'time',
     'game_time_class'		=> 'time',
     'info_time_class'		=> 'time',
+    'date_border_class'		=> 'time',
     //option
     'option_class'		=> 'option',
     'option_form_class'		=> 'option',

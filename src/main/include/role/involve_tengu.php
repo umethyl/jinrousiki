@@ -13,7 +13,7 @@ class Role_involve_tengu extends Role_meteor_tengu {
   }
 
   public function WolfEatCounter(User $user) {
-    $this->InvolveTenguKill(DB::$ROOM->IsDate(1));
+    $this->InvolveTenguKill(DateBorder::One());
   }
 
   protected function GetTenguMageRateBase() {

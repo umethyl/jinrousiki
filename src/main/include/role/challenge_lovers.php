@@ -12,11 +12,11 @@ class Role_challenge_lovers extends Role {
   public $mix_in = ['chicken'];
 
   protected function IgnoreAbility() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   protected function IgnoreSuddenDeath() {
-    return DB::$ROOM->date < 5;
+    return DateBorder::PreFive();
   }
 
   protected function IsSuddenDeath() {

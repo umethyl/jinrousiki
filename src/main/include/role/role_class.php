@@ -326,10 +326,10 @@ abstract class Role extends stdClass {
   final protected function IsVoteDate() {
     switch ($this->GetActionDate()) {
     case RoleActionDate::FIRST:
-      return DB::$ROOM->IsDate(1);
+      return DateBorder::One();
 
     case RoleActionDate::AFTER:
-      return DB::$ROOM->date > 1;
+      return DateBorder::Second();
 
     default:
       return true;
@@ -929,7 +929,7 @@ class RoleTalk {
     } while (false);
 
     foreach ($virtual->GetPartner('bad_status', true) as $id => $date) { //妖精の処理
-      if (false === DB::$ROOM->IsDate($date)) {
+      if (false === DateBorder::On($date)) {
 	continue;
       }
 
