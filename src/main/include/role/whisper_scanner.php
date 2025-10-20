@@ -15,7 +15,7 @@ class Role_whisper_scanner extends Role_mind_scanner {
   }
 
   public function IsMindRead() {
-    return DB::$ROOM->date > 1 && $this->GetTalkFlag($this->GetMindReadTargetRole());
+    return DateBorder::Second() && $this->GetTalkFlag($this->GetMindReadTargetRole());
   }
 
   //発言公開対象役職取得

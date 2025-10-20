@@ -763,7 +763,7 @@ final class VoteNight extends VoteBase {
 
     //-- 接触レイヤー --//
     self::LoadWolf();
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       self::LoadTrap();
       self::LoadGuard();
       self::LoadExit();
@@ -771,7 +771,7 @@ final class VoteNight extends VoteBase {
     }
 
     self::FilterWolfEat();
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       self::FilterDeathNote();
       self::FilterHunt();
       self::FilterDelayTrapKill();
@@ -824,7 +824,7 @@ final class VoteNight extends VoteBase {
     //-- 反魂レイヤー --//
     self::FilterResurrect();
 
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       self::FilterReverseResurrect();
 
       //-- 蘇生レイヤー --//
@@ -856,7 +856,7 @@ final class VoteNight extends VoteBase {
     self::FilterLastWords();
 
     //-- 司祭レイヤー --//
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       self::FilterNecromancerNight();
     }
     self::FilterPriest();
@@ -1015,7 +1015,7 @@ final class VoteNight extends VoteBase {
     }
 
     $stack = VoteActionGroup::$step;
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       ArrayFilter::AddMerge($stack, VoteActionGroup::$step_after);
     }
 
@@ -1340,7 +1340,7 @@ final class VoteNight extends VoteBase {
   private static function FilterMindScan() {
     $vote_data = RoleManager::GetVoteData();
     RoleVote::FilterNight($vote_data[VoteAction::SCAN], 'MindScan');
-    if (DB::$ROOM->date > 1) { //雷神は二日目以降
+    if (DateBorder::Second()) { //雷神は二日目以降
       RoleVote::FilterNight($vote_data[VoteAction::STEP_SCAN], 'StepMindScan', null, 'multi');
       self::FilterDelayTrapKill(); //遅行罠死処理 (凍傷型は無効)
     }

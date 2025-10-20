@@ -81,12 +81,12 @@ final class GameHTML {
 
     //オープニングあり対応
     if (DB::$ROOM->IsOption('open_day')) {
-      if (DB::$ROOM->date > 1 || DB::$ROOM->IsNight()) {
+      if (DateBorder::Second() || DB::$ROOM->IsNight()) {
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, 1);
       }
     }
 
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       $str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, 1);
       for ($i = 2; $i < DB::$ROOM->date; $i++) {
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, $i);

@@ -329,7 +329,7 @@ abstract class Role extends stdClass {
       return DateBorder::One();
 
     case RoleActionDate::AFTER:
-      return DB::$ROOM->date > 1;
+      return DateBorder::Second();
 
     default:
       return true;

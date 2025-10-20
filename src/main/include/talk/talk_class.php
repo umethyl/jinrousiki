@@ -468,7 +468,7 @@ final class TalkBuilder {
     $stack = new stdClass();
 
     /* 共通フラグ */
-    $is_date = DB::$ROOM->date > 1;
+    $is_date = DateBorder::Second();
 
     /* 基本情報 */
     $stack->dummy_boy = DB::$SELF->IsDummyBoy();
