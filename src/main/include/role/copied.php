@@ -13,7 +13,7 @@ class Role_copied extends Role {
   }
 
   protected function IgnoreResult() {
-    return false === DB::$ROOM->IsDate($this->GetCopiedResultDate());
+    return false === DateBorder::On($this->GetCopiedResultDate());
   }
 
   //結果表示日取得

@@ -27,7 +27,7 @@ class Role_revive_priest extends Role_priest {
   protected function IgnorePriest() {
     //蘇生判定 (人外勝利前日 / 5日目 / 村の人口が半分 / 生存人狼が1人
     $data = $this->GetStack('priest');
-    if (DB::$ROOM->IsDate(4) || isset($data->crisis) || $data->count['wolf'] == 1 ||
+    if (DateBorder::On(4) || isset($data->crisis) || $data->count['wolf'] == 1 ||
 	DB::$USER->Count() >= $data->count['total'] * 2) {
       return false;
     } else {

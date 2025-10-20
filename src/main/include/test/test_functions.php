@@ -42,7 +42,7 @@ class DevRoom {
     $stack = [];
     foreach (RQ::GetTest()->system_message as $date => $date_list) {
       //Text::p($date_list, "◆Event [{$date}]");
-      if (false === DB::$ROOM->IsDate($date)) {
+      if (false === DateBorder::On($date)) {
 	continue;
       }
 

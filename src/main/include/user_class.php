@@ -200,7 +200,7 @@ final class User extends StackManager {
   public function GetTalkCount($lock = false) {
     if (false === isset($this->talk_count) || true === $lock) {
       $stack = TalkDB::GetUserTalkCount($lock);
-      $this->talk_count = (DB::$ROOM->IsDate($stack['date']) ? $stack['talk_count'] : 0);
+      $this->talk_count = (DateBorder::On($stack['date']) ? $stack['talk_count'] : 0);
     }
     return $this->talk_count;
   }
@@ -347,7 +347,7 @@ final class User extends StackManager {
 
   //期間限定表示役職
   public function IsDoomRole($role) {
-    return $this->IsRole($role) && DB::$ROOM->IsDate($this->GetDoomDate($role));
+    return $this->IsRole($role) && DateBorder::On($this->GetDoomDate($role));
   }
 
   //所属陣営判別 (ラッパー)

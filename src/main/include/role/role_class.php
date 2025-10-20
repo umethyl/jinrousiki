@@ -929,7 +929,7 @@ class RoleTalk {
     } while (false);
 
     foreach ($virtual->GetPartner('bad_status', true) as $id => $date) { //妖精の処理
-      if (false === DB::$ROOM->IsDate($date)) {
+      if (false === DateBorder::On($date)) {
 	continue;
       }
 
