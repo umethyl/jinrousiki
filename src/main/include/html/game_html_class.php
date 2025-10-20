@@ -183,7 +183,7 @@ final class GameHTML {
 
     //ログ閲覧モード以外なら前のシーンの死亡メッセージを追加
     if (DB::$ROOM->IsOn(RoomMode::LOG) || DB::$ROOM->IsTest() || DB::$ROOM->date < 2 ||
-	(DB::$ROOM->IsDate(2) && DB::$ROOM->Isday())) {
+	(DateBorder::Two() && DB::$ROOM->Isday())) {
       return $str;
     }
 

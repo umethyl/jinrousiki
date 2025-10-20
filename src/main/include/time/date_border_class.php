@@ -11,5 +11,10 @@ final class DateBorder {
     return self::Number(1);
   }
 
+  //2日目
+  public static function Two() {
+    return self::Number(2);
+  }
+
   //-- 以降 --//
 }
