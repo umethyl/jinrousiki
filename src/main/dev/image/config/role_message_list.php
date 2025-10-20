@@ -654,7 +654,7 @@ class RoleMessageList {
     'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|餓狼|です。仲間の|狼|や#妖狐#すら噛み殺せますが、村人は殺せません。強者のみがあなたの獲物なのです。",
     'type' => 'wise_wolf'];
 
-  public $grudge_wolf = [
+  public $spell_wolf = [
     'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|怨狼|です。襲撃した人への#護衛#の影響を受けずに呪い殺すことができますが、占われると_呪殺_されてしまいます。",
     'type' => 'wolf', 'delimiter' => ['#' => 'guard', '_' => 'mage']];
 
@@ -1476,6 +1476,10 @@ class RoleMessageList {
   public $chicken = [
     'message' => "　あなたは|小心者|です。#処刑#投票時に一票でも貰うと|ショック死|してしまいます。",
     'delimiter' => ['|' => 'chicken', '#' => 'vote']];
+
+  public $critical_chicken = [
+    'message' => "　あなたは|魔女の一撃|を恐れています。#処刑#投票時に100票以上貰うと|ショック死|してしまいます。",
+    'type' => 'chicken'];
 
   public $rabbit = [
     'message' => "　あなたは|ウサギ|です。#処刑#投票時に一票も貰えないと|ショック死|してしまいます。",
