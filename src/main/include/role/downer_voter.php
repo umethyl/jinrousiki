@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('authority');
 class Role_downer_voter extends Role_authority {
   protected function IgnoreFilterVoteDo() {
-    return DB::$ROOM->date < 5;
+    return DateBorder::PreFive();
   }
 
   protected function GetVoteDoCount() {

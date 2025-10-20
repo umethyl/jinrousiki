@@ -25,7 +25,7 @@ class Role_mimic_wizard extends Role_wizard {
   }
 
   public function NecromancerWizard(User $user, $flag) {
-    if (DB::$ROOM->date < 3) {
+    if (DateBorder::PreThree()) {
       return;
     }
 

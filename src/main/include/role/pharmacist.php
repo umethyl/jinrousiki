@@ -9,7 +9,7 @@ class Role_pharmacist extends Role {
   public $result = RoleAbility::PHARMACIST;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   protected function GetStackVoteKillType() {

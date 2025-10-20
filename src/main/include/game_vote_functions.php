@@ -990,7 +990,7 @@ final class VoteNight extends VoteBase {
 
   //魔法使い系の振り替え処理
   private static function FilterWizard() {
-    if (DB::$ROOM->date < 2) {
+    if (DateBorder::PreTwo()) {
       return;
     }
 

@@ -15,7 +15,7 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   protected function GetMindRole() {

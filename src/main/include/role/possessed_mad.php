@@ -20,7 +20,7 @@ class Role_possessed_mad extends Role {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3 || $this->IsAddVote();
+    return DateBorder::PreThree() || $this->IsAddVote();
   }
 
   protected function OutputAddResult() {
@@ -51,7 +51,7 @@ class Role_possessed_mad extends Role {
 
   protected function IgnoreFilterVoteDo() {
     $list = $this->GetActor()->GetPartner('possessed_target', true);
-    return count($list) < 1 || DB::$ROOM->date < ArrayFilter::GetMin($list) + 2;
+    return count($list) < 1 || DateBorder::Lower(ArrayFilter::GetMin($list) + 2);
   }
 
   protected function GetDisabledAddVoteNightMessage() {

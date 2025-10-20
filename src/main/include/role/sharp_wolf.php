@@ -10,7 +10,7 @@ class Role_sharp_wolf extends Role_wolf {
   public $result = RoleAbility::SHARP_WOLF;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   public function WolfEatAction(User $user) {

@@ -17,7 +17,7 @@ class Role_grave_mad extends Role {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3 || false === $this->IsAddVote();
+    return DateBorder::PreThree() || false === $this->IsAddVote();
   }
 
   public function OutputAction() {
