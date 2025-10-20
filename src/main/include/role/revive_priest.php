@@ -41,7 +41,7 @@ class Role_revive_priest extends Role_priest {
 	continue;
       }
 
-      if (RoleUser::IsContainLovers($user) || (DB::$ROOM->date > 3 && $user->IsLive(true))) {
+      if (RoleUser::IsContainLovers($user) || (DateBorder::Fourth() && $user->IsLive(true))) {
 	$user->LostAbility();
       } elseif ($user->IsDead(true)) {
 	$user->Revive();
