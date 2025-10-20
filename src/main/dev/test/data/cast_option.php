@@ -21,6 +21,8 @@
 #RQ::AddTestRoom('option_role', 'sudden_death');
 #RQ::AddTestRoom('game_option', 'blinder');
 RQ::AddTestRoom('option_role', 'joker');
+#RQ::AddTestRoom('option_role', 'critical');
+#RQ::AddTestRoom('option_role', 'critical_chicken');
 
 //-- special --//
 #RQ::AddTestRoom('game_option', 'festival');

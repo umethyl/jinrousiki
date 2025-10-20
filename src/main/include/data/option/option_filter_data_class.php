@@ -54,7 +54,7 @@ final class OptionFilterData {
   //ユーザーサブ役職配役
   public static $cast_user_sub_role = [
     'decide', 'authority', 'joker', 'deep_sleep', 'blinder', 'mind_open', 'perverseness',
-    'liar', 'gentleman', 'passion', 'critical', 'sudden_death', 'quiz'
+    'liar', 'gentleman', 'passion', 'critical', 'critical_chicken', 'sudden_death', 'quiz'
   ];
 
   //ユーザーサブ役職配役 (闇鍋モード)
