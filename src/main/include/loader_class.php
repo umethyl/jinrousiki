@@ -196,6 +196,13 @@ final class Loader extends LoadManager {
     case 'data/role':
     case 'data/vote':
     case 'database':
+    case 'request':
+    case 'time':
+    case 'option':
+    case 'event':
+    case 'role':
+    case 'talk':
+    case 'media':
     case 'html':
     case 'html/media':
     case 'html/option':
@@ -203,12 +210,6 @@ final class Loader extends LoadManager {
     case 'html/controller':
     case 'html/controller/info':
     case 'html/controller/test':
-    case 'media':
-    case 'talk':
-    case 'request':
-    case 'option':
-    case 'event':
-    case 'role':
     case 'test':
     case 'paparazzi':
       $path = JINROU_INC . '/' . $type;
@@ -398,6 +399,8 @@ final class LoaderData {
     'OptionForm'	=> 'option_form_class',
     'RoomOptionLoader'	=> 'room_option_loader_class',
     'RoomOptionManager'	=> 'room_option_manager_class',
+    //time
+    'Time'		=> 'time_class',
     //talk
     'Talk'		=> 'talk_class',
     'TalkParser'	=> 'talk_class',
@@ -641,6 +644,8 @@ final class LoaderData {
     'request_class'	=> 'request',
     'session_class'	=> 'request',
     'cookie_class'	=> 'request',
+    //time
+    'time_class'		=> 'time',
     //option
     'option_class'		=> 'option',
     'option_form_class'		=> 'option',
