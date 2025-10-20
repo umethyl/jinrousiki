@@ -93,7 +93,7 @@ class Role_wolf extends Role {
 
   //身代わり君襲撃固定判定
   final protected function FixDummyBoy() {
-    return DB::$ROOM->IsQuiz() || (DB::$ROOM->IsDummyBoy() && DB::$ROOM->IsDate(1));
+    return DB::$ROOM->IsQuiz() || (DB::$ROOM->IsDummyBoy() && DateBorder::First());
   }
 
   protected function GetPartnerVoteNightIconPath(User $user) {

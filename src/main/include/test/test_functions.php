@@ -237,7 +237,7 @@ class DevUser {
       }
     }
 
-    if (DB::$ROOM->IsDate(1)) { //初日は死亡者ゼロ
+    if (DateBorder::First()) { //初日は死亡者ゼロ
       foreach (DB::$USER->Get() as $user) {
 	if ($user->IsDead()) {
 	  $user->live = UserLive::LIVE;

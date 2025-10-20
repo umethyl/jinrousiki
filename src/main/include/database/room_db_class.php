@@ -163,7 +163,7 @@ final class RoomDB {
     }
 
     //即処理されるタイプの投票イベントはリセット対象外なので投票回数をスライドさせておく
-    if (false === DB::$ROOM->IsDate(1)) { //即処理型は1日目のみ
+    if (false === DateBorder::First()) { //即処理型は1日目のみ
       return true;
     }
 
@@ -190,7 +190,7 @@ final class RoomDB {
       break;
 
     case RoomScene::NIGHT:
-      if (DB::$ROOM->IsDate(1)) {
+      if (DateBorder::First()) {
 	$query->WhereNotIn('type', 2);
 	array_push($list, VoteAction::CUPID, VoteAction::DUELIST);
       } else {

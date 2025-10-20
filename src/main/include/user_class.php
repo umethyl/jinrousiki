@@ -1005,14 +1005,14 @@ final class UserLoader extends stdClass {
 	}
       } elseif ($user->IsRole('evoke_scanner')) {
 	if ($user->IsLive()) {
-	  if (DB::$ROOM->IsDate(1)) {
+	  if (DateBorder::First()) {
 	    return false;
 	  }
 	  $evoke_scanner[] = $user->id;
 	}
       } elseif (RoleUser::IsDelayCopy($user)) {
 	//厳密には1日目の投票前に死亡した場合は公開可となるがレアケースなので対応しない
-	if (DB::$ROOM->IsDate(1) || null !== $user->GetMainRoleTarget()) {
+	if (DateBorder::First() || null !== $user->GetMainRoleTarget()) {
 	  return false;
 	}
       } elseif (RoleUser::IsRevive($user) || $user->IsRole('revive_mania')) {

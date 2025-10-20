@@ -801,7 +801,7 @@ final class VoteNight extends VoteBase {
     //-- 透視レイヤー --//
     self::FilterMindScan();
 
-    if (DB::$ROOM->IsDate(1)) {
+    if (DateBorder::First()) {
       //-- コピーレイヤー --//
       self::FilterCopy();
 
@@ -938,7 +938,7 @@ final class VoteNight extends VoteBase {
   private static function InitVote() {
     //処理対象コマンドチェック
     $stack = VoteActionGroup::$init;
-    if (DB::$ROOM->IsDate(1)) {
+    if (DateBorder::First()) {
       ArrayFilter::AddMerge($stack, VoteActionGroup::$init_first);
     } else {
       ArrayFilter::AddMerge($stack, VoteActionGroup::$init_after);
@@ -1024,7 +1024,7 @@ final class VoteNight extends VoteBase {
       RoleVote::FilterNight($vote_data[$action], 'Step', 'none', 'multi');
     }
 
-    if (DB::$ROOM->IsDate(1)) {
+    if (DateBorder::First()) {
       foreach (RoleFilterData::$step_copy as $role) { //コピー型の処理
 	foreach (DB::$USER->GetRoleUser($role) as $user) {
 	  if (false === $user->IsDummyBoy()) {
