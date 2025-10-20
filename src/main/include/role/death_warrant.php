@@ -8,7 +8,7 @@
 RoleLoader::LoadFile('febris');
 class Role_death_warrant extends Role_febris {
   protected function IgnoreAbility() {
-    return DateBorder::Up($this->GetDoomDate());
+    return DateBorder::Upper($this->GetDoomDate());
   }
 
   protected function GetDoomDate() {

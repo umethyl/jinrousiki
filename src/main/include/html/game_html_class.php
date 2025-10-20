@@ -88,7 +88,7 @@ final class GameHTML {
 
     if (DateBorder::Second()) {
       $str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, 1);
-      for ($i = 2; DateBorder::Up($i); $i++) {
+      for ($i = 2; DateBorder::Upper($i); $i++) {
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, $i);
 	$str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, $i);
       }
