@@ -91,6 +91,6 @@ final class RoomOptionFilterData {
   //標準サブ役職
   public static $add_sub_role = [
     'no_silence', 'liar', 'gentleman', 'passion', 'deep_sleep', 'mind_open', 'blinder',
-    'critical', 'notice_critical', 'joker', 'death_note'
+    'critical', 'notice_critical', 'critical_chicken', 'joker', 'death_note'
   ];
 }
