@@ -36,7 +36,7 @@ class Role_pharmacist extends Role {
     } elseif ($user->IsRole('strong_poison')) {
       return 'strong';
     } elseif ($user->IsRole('incubate_poison')) {
-      return DB::$ROOM->date > 4 ? 'strong' : 'nothing';
+      return DateBorder::Fifth() ? 'strong' : 'nothing';
     } elseif ($user->IsRole('poison_guard', 'guide_poison', 'chain_poison', 'poison_jealousy')) {
       return 'limited';
     } else {

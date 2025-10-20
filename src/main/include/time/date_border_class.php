@@ -40,4 +40,9 @@ final class DateBorder {
   public static function Fourth() {
     return self::Up(3);
   }
+
+  //5日目以降
+  public static function Fifth() {
+    return self::Up(4);
+  }
 }
