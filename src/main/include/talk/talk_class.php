@@ -487,14 +487,15 @@ final class TalkBuilder {
     }
 
     /* 耳鳴り関連 */
+    //憑依追跡対応のため、SELF と actor を使い分けて判定する
     $stack->deep_sleep = $this->actor->IsRole('deep_sleep');
     $not_sleep = ! $stack->deep_sleep;
 
-    $stack->whisper_ringing = $not_sleep && $this->actor->IsRole('whisper_ringing');
-    $stack->howl_ringing    = $not_sleep && $this->actor->IsRole('howl_ringing');
-    $stack->sweet_ringing   = $not_sleep && $this->actor->IsRole('sweet_ringing') && $is_date;
-    $stack->common_whisper  = $not_sleep && ! DB::$SELF->IsRole('dummy_common');
-    $stack->wolf_howl       = $not_sleep && ! DB::$SELF->IsRole('mind_scanner');
+    $stack->common_whisper  = $not_sleep && RoleUser::CommonWhisper($this->actor);
+    $stack->wolf_howl       = $not_sleep && RoleUser::WolfHowl($this->actor);
+    $stack->whisper_ringing = $not_sleep && RoleUser::WhisperRinging($this->actor);
+    $stack->howl_ringing    = $not_sleep && RoleUser::HowlRinging($this->actor);
+    $stack->sweet_ringing   = $not_sleep && RoleUser::SweetRinging($this->actor) && $is_date;
 
     $this->flag = $stack;
   }
