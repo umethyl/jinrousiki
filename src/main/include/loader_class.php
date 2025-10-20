@@ -401,6 +401,7 @@ final class LoaderData {
     //time
     'Time'		=> 'time_class',
     'GameTime'		=> 'game_time_class',
+    'InfoTime'		=> 'info_time_class',
     //talk
     'Talk'		=> 'talk_class',
     'TalkParser'	=> 'talk_class',
@@ -513,7 +514,6 @@ final class LoaderData {
     'TwitterTestHTML'	=> 'twitter_test_html_class',
     //info
     'Info'	=> 'info_functions',
-    'InfoTime'	=> 'info_functions',
     //module
     'OAuthException'	=> 'twitter',
     //test
@@ -647,6 +647,7 @@ final class LoaderData {
     //time
     'time_class'		=> 'time',
     'game_time_class'		=> 'time',
+    'info_time_class'		=> 'time',
     //option
     'option_class'		=> 'option',
     'option_form_class'		=> 'option',
