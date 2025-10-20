@@ -46,6 +46,9 @@ final class RoleFilterData {
   //発言表示 (耳鳴)
   public static $talk_ringing = ['whisper_ringing', 'howl_ringing'];
 
+  //発言表示 (恋耳鳴)/メイン役職
+  public static $talk_sweet_ringing = ['sweet_wolf', 'sweet_fox'];
+
   //閲覧判定
   public static $mind_read = [
     'leader_common', 'whisper_scanner', 'howl_scanner', 'telepath_scanner', 'minstrel_cupid',
