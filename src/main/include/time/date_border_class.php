@@ -30,4 +30,9 @@ final class DateBorder {
   public static function Second() {
     return self::Up(1);
   }
+
+  //3日目以降
+  public static function Third() {
+    return self::Up(2);
+  }
 }

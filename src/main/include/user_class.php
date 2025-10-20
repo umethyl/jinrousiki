@@ -860,7 +860,7 @@ final class UserLoader extends stdClass {
     }
 
     $stack = $user->GetPartner($role);
-    return (is_array($stack) && DB::$ROOM->date > 2) ? $this->ByID(array_shift($stack)) : $user;
+    return (is_array($stack) && DateBorder::Third()) ? $this->ByID(array_shift($stack)) : $user;
   }
 
   //HN 取得

@@ -1063,7 +1063,7 @@ final class VoteNight extends VoteBase {
     RoleVote::FilterNightSet($vote_data[VoteAction::TRAP], 'SetTrap'); //設置処理
 
     $role = 'trap_wolf'; //狡狼の自動設置処理 (無効天候あり)
-    if (DB::$ROOM->date > 2 && EventManager::EnableTrap() && DB::$USER->IsAppear($role)) {
+    if (DateBorder::Third() && EventManager::EnableTrap() && DB::$USER->IsAppear($role)) {
       foreach (DB::$USER->GetRoleUser($role) as $user) {
 	if ($user->IsLive()) {
 	  RoleLoader::LoadMain($user)->SetAutoTrap();

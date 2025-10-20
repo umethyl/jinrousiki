@@ -8,7 +8,7 @@
 RoleLoader::LoadFile('escaper');
 class Role_agent_escaper extends Role_escaper {
   protected function IsAddVote() {
-    return DB::$ROOM->date > 2 && Number::MultipleThree(DB::$ROOM->date);
+    return DateBorder::Third() && Number::MultipleThree(DB::$ROOM->date);
   }
 
   protected function GetDisabledAddVoteNightMessage() {
