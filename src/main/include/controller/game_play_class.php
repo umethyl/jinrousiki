@@ -160,7 +160,7 @@ final class GamePlayController extends JinrouController {
     }
 
     //オープニングなら即座に夜に移行する
-    if (DateBorder::First() && DB::$ROOM->IsDay() && DB::$ROOM->IsOption('open_day')) {
+    if (DateBorder::One() && DB::$ROOM->IsDay() && DB::$ROOM->IsOption('open_day')) {
       if (DB::$ROOM->IsRealTime()) { //リアルタイム制はここでロック開始
 	if (false === self::LockScene()) { //シーン再判定
 	  return false;

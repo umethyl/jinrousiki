@@ -326,7 +326,7 @@ abstract class Role extends stdClass {
   final protected function IsVoteDate() {
     switch ($this->GetActionDate()) {
     case RoleActionDate::FIRST:
-      return DateBorder::First();
+      return DateBorder::One();
 
     case RoleActionDate::AFTER:
       return DB::$ROOM->date > 1;

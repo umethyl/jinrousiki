@@ -349,7 +349,7 @@ final class TalkBuilder {
       break;
 
     case RoomScene::DAY: //OP の昼限定
-      if (false === DateBorder::First()) {
+      if (false === DateBorder::One()) {
 	return false;
       }
       $type     = 'start_datetime'; //ゲーム開始時刻
@@ -357,7 +357,7 @@ final class TalkBuilder {
       break;
 
     case RoomScene::NIGHT:
-      if (false === DateBorder::First()) {
+      if (false === DateBorder::One()) {
 	return false;
       }
       $type     = 'start_datetime'; //ゲーム開始時刻

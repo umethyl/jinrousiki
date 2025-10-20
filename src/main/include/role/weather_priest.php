@@ -35,7 +35,7 @@ class Role_weather_priest extends Role_priest {
     //$stack = []; for ($i = 0; $i < 20; $i++) @$stack[Lottery::Draw($list)]++;
     //ksort($stack); Text::p($stack, "◆{$this->role}");
 
-    if (DB::$ROOM->IsOption('full_weather') && DateBorder::First()) { //天変地異対応
+    if (DB::$ROOM->IsOption('full_weather') && DateBorder::One()) { //天変地異対応
       DB::$ROOM->StoreWeather(Lottery::Draw($list), 1);
     }
 
