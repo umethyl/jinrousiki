@@ -133,6 +133,7 @@ final class RoleShortData {
     'esper_wizard'		=> '超',
     'awake_wizard'		=> '尼',
     'mimic_wizard'		=> '物',
+    'plural_wizard'		=> '魔習',
     'spiritism_wizard'		=> '交',
     'barrier_wizard'		=> '結',
     'philosophy_wizard'		=> '賢',

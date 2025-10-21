@@ -178,6 +178,7 @@ final class TalkParser extends stdClass {
       $this->class = VoteCSS::SCAN;
       break;
 
+    case VoteAction::PLURAL_WIZARD:
     case VoteAction::SPREAD_WIZARD:
       $action      = VoteAction::WIZARD;
       $this->class = VoteCSS::WIZARD;
