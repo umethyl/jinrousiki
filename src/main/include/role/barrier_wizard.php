@@ -5,6 +5,7 @@
   ・天候：霧雨(護衛成功率 +25%), 木枯らし(護衛成功率 -25%)
   ・護衛失敗：特殊 (別判定)
   ・護衛処理：なし
+  ・夜投票所要人数：4人
 */
 RoleLoader::LoadFile('wizard');
 class Role_barrier_wizard extends Role_wizard {
@@ -21,26 +22,15 @@ class Role_barrier_wizard extends Role_wizard {
   }
 
   protected function ValidateVoteNightTargetList(array $list) {
-    if (Number::OutRange(count($list), 1, 4)) {
-      throw new UnexpectedValueException(VoteRoleMessage::INVALID_TARGET_RANGE);
-    }
+    $this->ValidateVoteNightTargetListRange($list);
+  }
+
+  protected function GetVoteNightTargetListRangeMax() {
+    return 4;
   }
 
   public function SetVoteNightTargetList(array $list) {
-    $target_stack = [];
-    $handle_stack = [];
-    foreach ($list as $id) {
-      $user = DB::$USER->ByID($id);
-      $live = DB::$USER->IsVirtualLive($user->id); //生死判定は仮想を使う
-      $this->ValidateVoteNightTarget($user, $live);
-      $target_stack[$id] = DB::$USER->ByReal($id)->id;
-      $handle_stack[$id] = $user->handle_name;
-    }
-
-    sort($target_stack);
-    ksort($handle_stack);
-    $this->SetStack(ArrayFilter::Concat($target_stack), RequestDataVote::TARGET);
-    $this->SetStack(ArrayFilter::Concat($handle_stack), 'target_handle');
+    $this->SetVoteNightTargetListRange($list);
   }
 
   protected function GetWizardList() {

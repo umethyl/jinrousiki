@@ -134,6 +134,7 @@ final class RoleData {
     'esper_wizard'		=> '超能力者',
     'awake_wizard'		=> '比丘尼',
     'mimic_wizard'		=> '物真似師',
+    'plural_wizard'		=> '魔女見習い',
     'spiritism_wizard'		=> '交霊術師',
     'philosophy_wizard'		=> '賢者',
     'barrier_wizard'		=> '結界師',

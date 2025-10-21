@@ -30,7 +30,7 @@ RQ::GetTest()->test_users[9]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[10]->role = 'step_assassin death_note[5] speaker';
 RQ::GetTest()->test_users[10]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[11]->role = 'poison downer_luck';
+RQ::GetTest()->test_users[11]->role = 'sweet_fox downer_luck';
 RQ::GetTest()->test_users[11]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[12]->role = 'trap_mad death_selected[9]';
@@ -69,7 +69,7 @@ RQ::GetTest()->test_users[22]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[23]->role = 'meteor_tengu earplug death_selected[8]';
 RQ::GetTest()->test_users[23]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[24]->role = 'esper_wizard mind_friend[27]';
+RQ::GetTest()->test_users[24]->role = 'plural_wizard mind_friend[27]';
 RQ::GetTest()->test_users[24]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[25]->role = 'sacrifice_ogre disfavor';

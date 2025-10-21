@@ -16,17 +16,19 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'result_sweet_fox';
+//$role = 'result_plural_wizard';
 //$role = 'prediction_weather_no_escape';
+$role = 'plural_wizard';
 //$role = 'sweet_wolf';
 //$role = 'spell_wolf';
 //$role = 'miasma_wolf';
-$role = 'sweet_fox';
+//$role = 'sweet_fox';
 
-$calib_list = [0,0,0,0];
+//$calib_list = [0,0,0,0];
+$calib_list = [0,0,0,0,0,-1]; //plural_wizard
 //$calib_list = [0.5,0,0,0]; //wolf, vampire
-//$calib_list = [0.3,0,0,0]; //duelist
 //$calib_list = [0.8,0,0.7]; //collector_ogre
+//$calib_list = [0.3,0,0,0]; //duelist
 
 $test_mode   = false;
 $save_mode   = false;

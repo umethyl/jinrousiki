@@ -426,6 +426,7 @@ final class RoleHTML {
     case VoteAction::STEP_GUARD:
     case VoteAction::STEP_ASSASSIN:
     case VoteAction::STEP_SCAN:
+    case VoteAction::PLURAL_WIZARD:
     case VoteAction::SPREAD_WIZARD:
     case VoteAction::STEP_VAMPIRE:
       return self::GetMultiVoteNightVotedMessage($stack);
