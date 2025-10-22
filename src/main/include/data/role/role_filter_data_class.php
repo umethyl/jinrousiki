@@ -274,6 +274,15 @@ final class RoleFilterData {
     'sheep_wisp', 'wisp', 'tengu_spell_wisp', 'foughten_wisp', 'black_wisp'
   ];
 
+  //透視/範囲投票
+  public static $scan_plural = ['plural_wizard', 'barrier_wizard'];
+
+  //透視/足音 (本人起点型)
+  public static $scan_step_chain = ['step_mage', 'step_guard', 'step_wolf', 'step_vampire'];
+
+  //透視/足音 (直線型)
+  public static $scan_step_line = ['step_assassin', 'step_scanner', 'step_mad', 'step_fox'];
+
   //復活
   public static $resurrect = [
     'revive_pharmacist', 'revive_brownie', 'revive_doll', 'revive_mad', 'revive_cupid',
