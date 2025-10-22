@@ -810,7 +810,7 @@ abstract class Role extends stdClass {
   //複合投票型夜投票無効判定(範囲型)
   final protected function ValidateVoteNightTargetListRange(array $list) {
     $min = $this->GetVoteNightTargetListRangeMin();
-    $max = $this->GetVoteNightTargetListRangeMax();
+    $max = $this->CallParent('GetVoteNightTargetListRangeMax');
 
     if (Number::OutRange(count($list), $min, $max)) {
       $str = sprintf(VoteRoleMessage::INVALID_TARGET_RANGE, $min, $max);

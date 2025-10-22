@@ -275,7 +275,7 @@ final class RoleFilterData {
   ];
 
   //透視/範囲投票
-  public static $scan_plural = ['plural_wizard', 'barrier_wizard'];
+  public static $scan_plural = ['plural_wizard', 'barrier_wizard', 'plural_mad'];
 
   //透視/足音 (本人起点型)
   public static $scan_step_chain = ['step_mage', 'step_guard', 'step_wolf', 'step_vampire'];
