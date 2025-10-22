@@ -200,6 +200,7 @@ class ResultList extends RoleMessageList {
   public $result_fanatic_mad = ['message' => "さんは|狂信者|でした", 'type' => 'result_mad'];
   public $result_whisper_mad = ['message' => "さんは|囁き狂人|でした", 'type' => 'result_mad'];
   public $result_swindle_mad = ['message' => "さんは|因幡兎|でした", 'type' => 'result_mad'];
+  public $result_plural_mad = ['message' => "さんは|魔女|でした", 'type' => 'result_mad'];
   public $result_jammer_mad = ['message' => "さんは|月兎|でした", 'type' => 'result_mad'];
   public $result_voodoo_mad = ['message' => "さんは|呪術師|でした", 'type' => 'result_mad'];
   public $result_enchant_mad = ['message' => "さんは|狢|でした", 'type' => 'result_mad'];

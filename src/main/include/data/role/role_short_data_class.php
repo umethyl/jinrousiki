@@ -203,6 +203,7 @@ final class RoleShortData {
     'fanatic_mad'		=> '狂信',
     'whisper_mad'		=> '囁',
     'swindle_mad'		=> '幡',
+    'plural_mad'		=> '魔女',
     'jammer_mad'		=> '兎',
     'voodoo_mad'		=> '呪',
     'enchant_mad'		=> '狢',

@@ -204,6 +204,7 @@ final class RoleData {
     'fanatic_mad'		=> '狂信者',
     'whisper_mad'		=> '囁き狂人',
     'swindle_mad'		=> '因幡兎',
+    'plural_mad'		=> '魔女',
     'jammer_mad'		=> '月兎',
     'voodoo_mad'		=> '呪術師',
     'enchant_mad'		=> '狢',
