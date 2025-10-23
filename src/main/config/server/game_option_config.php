@@ -192,10 +192,11 @@ class GameOptionConfig {
   public static $full_chiroptera_patron    = true; //後援者村
   public static $full_mania_enable         = true; //神話マニア村
   public static $full_unknown_mania_enable = true; //鵺村
+  public static $shuffle_human_enable      = true; //村人振替村
   //村人置換モードの内訳
   public static $replace_human_selector_list = [
     '' => 'なし', 'replace_human', 'full_mad', 'full_cupid', 'full_quiz', 'full_vampire',
-    'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania'
+    'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania', 'shuffle_human'
   ];
 
   public static $change_common_enable        = true; //共有者置換村 (管理人カスタムモード)

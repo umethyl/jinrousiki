@@ -1,6 +1,6 @@
 <?php
 //-- オプションローダー --//
-class OptionLoader extends LoadManager {
+final class OptionLoader extends LoadManager {
   const PATH = '%s/option/instance/%s.php';
   const CLASS_PREFIX = 'Option_';
   protected static $file  = [];
@@ -8,7 +8,7 @@ class OptionLoader extends LoadManager {
 }
 
 //-- オプションマネージャ --//
-class OptionManager {
+final class OptionManager {
   //オプションクラスロード
   public static function GetFilter($type) {
     foreach (OptionFilterData::$$type as $option) {
