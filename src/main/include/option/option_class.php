@@ -1,7 +1,7 @@
 <?php
 //-- オプションローダー --//
 class OptionLoader extends LoadManager {
-  const PATH = '%s/option/%s.php';
+  const PATH = '%s/option/instance/%s.php';
   const CLASS_PREFIX = 'Option_';
   protected static $file  = [];
   protected static $class = [];
