@@ -510,7 +510,8 @@ abstract class OptionTextCheckbox extends OptionCheckbox {
 
     RQ::Get()->ParsePostStr($this->input);
     $post = RQ::Get()->{$this->input};
-    if (false === empty($post)) {
+
+    if (true === empty($post)) {
       $flag = false;
     } else {
       $post = strtolower($post); //小文字で正規化する
