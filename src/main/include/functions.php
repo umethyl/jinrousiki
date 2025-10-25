@@ -874,6 +874,21 @@ final class Lottery {
     return $stack;
   }
 
+  //「福引き」を一定回数行ってリストに追加する(減算ピック型)
+  public static function Pick(array &$list, array $random_list, $count) {
+    $stack = []; //抽選結果
+    $pick_list = self::GetList($random_list);
+    for (; $count > 0; $count--) {
+      if (count($pick_list) < 1) {
+	break;
+      }
+      $data = array_pop($pick_list);
+      ArrayFilter::Add($list, $data);
+      $stack[] = $data;
+    }
+    return $stack;
+  }
+
   //「比」から「確率」に変換する (テスト用)
   public static function ToProbability(array $list) {
     $stack = [];

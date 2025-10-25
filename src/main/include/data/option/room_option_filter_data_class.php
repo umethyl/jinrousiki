@@ -51,7 +51,8 @@ final class RoomOptionFilterData {
   //-- RoomOptionManager::LoadPostChaos() --//
   //闇鍋モード併用
   public static $add_chaos = [
-    'secret_sub_role', 'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit'
+    'secret_sub_role', 'topping', 'boost_rate', 'museum_topping', 'chaos_open_cast',
+    'sub_role_limit'
   ];
 
   //-- RoomOptionManager::LoadPostDuel() --//

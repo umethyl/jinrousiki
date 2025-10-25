@@ -86,10 +86,10 @@ final class OptionManager {
   }
 
   //追加配役 (闇鍋固定枠)
-  public static function FilterCastChaosFixRole(array &$list) {
+  public static function FilterCastChaosFixRole(array &$list, int $count) {
     foreach (OptionFilterData::$cast_chaos_fix_role as $option) {
       if (self::CanLoad($option)) {
-	OptionLoader::Load($option)->FilterCastChaosFixRole($list);
+	OptionLoader::Load($option)->FilterCastChaosFixRole($list, $count);
       }
     }
   }
@@ -276,6 +276,7 @@ abstract class Option {
     if (RoomOptionManager::IsChange()) {
       switch ($this->type) {
       case OptionFormType::CHECKBOX:
+      case OptionFormType::TEXT_CHECKBOX:
       case OptionFormType::LIMITED_CHECKBOX:
       case OptionFormType::REALTIME:
 	$this->value = DB::$ROOM->IsOption($this->name);
@@ -438,6 +439,23 @@ abstract class Option {
   }
 }
 
+//-- テキスト入力型 --//
+abstract class OptionText extends Option {
+  public $group = OptionGroup::NONE;
+  public $type  = OptionFormType::TEXT;
+
+  public function LoadPost() {
+    if (true === $this->IgnorePost()) {
+      return false;
+    }
+
+    RQ::Get()->ParsePost('Escape', $this->name);
+  }
+
+  //プレースホルダ表示メッセージ取得
+  abstract public function GetPlaceholder();
+}
+
 //-- チェックボックス型 --//
 abstract class OptionCheckbox extends Option {
   public $group = OptionGroup::ROLE;
@@ -461,6 +479,56 @@ abstract class OptionCheckbox extends Option {
     } else {
       return '';
     }
+  }
+}
+
+//-- チェックボックス型(テキスト入力付き) --//
+abstract class OptionTextCheckbox extends OptionCheckbox {
+  use OptionChaosRole;
+
+  public $type = OptionFormType::TEXT_CHECKBOX;
+  public $source;
+  public $input;
+  public $input_value;
+
+  protected function LoadSource() {
+    $this->source = sprintf('%s_list',  $this->name);
+    $this->input  = sprintf('%s_input', $this->name);
+  }
+
+  protected function LoadValue() {
+    if (RoomOptionManager::IsChange() && DB::$ROOM->IsOption($this->name)) {
+      $this->input_value = DB::$ROOM->option_role->list[$this->name][0];
+    }
+  }
+
+  public function LoadPost() {
+    RQ::Get()->ParsePostData($this->name);
+    if (null === RQ::Get()->{$this->name}) {
+      return false;
+    }
+
+    RQ::Get()->ParsePostStr($this->input);
+    $post = RQ::Get()->{$this->input};
+    if (false === empty($post)) {
+      $flag = false;
+    } else {
+      $post = strtolower($post); //小文字で正規化する
+      $flag = isset(ChaosConfig::${$this->source}[$post]);
+    }
+    if (true === $flag) {
+      array_push(RoomOptionLoader::${$this->group}, sprintf('%s:%s', $this->name, $post));
+    }
+    RQ::Set($this->name, $flag);
+  }
+
+  abstract public function GetPlaceholder();
+
+  //入力欄の文字数
+  abstract public function GetTextSize();
+
+  protected function GetRoomCaptionFooter() {
+    return $this->GetRoomCaptionConfig('Type:%s', strtoupper($this->GetRoomType()));
   }
 }
 
@@ -601,23 +669,6 @@ abstract class OptionCastCheckbox extends OptionCheckbox {
   }
 }
 
-//-- テキスト入力型 --//
-abstract class OptionText extends Option {
-  public $group = OptionGroup::NONE;
-  public $type  = OptionFormType::TEXT;
-
-  public function LoadPost() {
-    if (true === $this->IgnorePost()) {
-      return false;
-    }
-
-    RQ::Get()->ParsePost('Escape', $this->name);
-  }
-
-  //プレースホルダ表示メッセージ取得
-  abstract public function GetPlaceholder();
-}
-
 //-- セレクタ型 --//
 abstract class OptionSelector extends Option {
   public $group = OptionGroup::ROLE;
@@ -696,5 +747,73 @@ abstract class OptionSelector extends Option {
   private function IsEnable($name) {
     $enable = sprintf('%s_enable', $name);
     return isset(GameOptionConfig::$$enable) ? GameOptionConfig::$$enable : true;
+  }
+}
+
+//-- 闇鍋配役 --//
+trait OptionChaosRole {
+  protected function GetURL() {
+    return 'chaos.php#' . $this->name;
+  }
+
+  public function GenerateImage() {
+    $str = $this->GetRoomImageFooter();
+    return ImageManager::Room()->Generate($this->name, $this->GetRoomCaption()) . $str;
+  }
+
+  public function GenerateRoomCaption() {
+    $image   = $this->GenerateImage();
+    $url     = sprintf('%s_%s', $this->GetURL(), $this->GetRoomType());
+    $caption = $this->GetCaption() . $this->GetRoomImageFooter();
+    $explain = $this->GetExplain() . $this->GetRoomCaptionFooter();
+    return OptionHTML::GenerateRoomCaption($image, $url, $caption, $explain);
+  }
+
+  //村用個別オプション取得
+  protected function GetRoomType() {
+    return ArrayFilter::Pick($this->GetStack());
+  }
+
+  //村用画像追加メッセージ取得
+  protected function GetRoomImageFooter() {
+    return Text::QuoteBracket(strtoupper($this->GetRoomType()));
+  }
+}
+
+//-- 闇鍋配役(固定追加) --//
+trait OptionChaosTopping {
+  //配役 (闇鍋固定枠追加)
+  public function FilterCastChaosFixRole(array &$list, int $user_count) {
+    $stack = DB::$ROOM->GetChaosOptionList($this->name);
+    if (count($stack) < 1) {
+      return;
+    }
+    //Text::p($stack, "◆{$this->name}");
+
+    if (ArrayFilter::IsAssoc($stack, 'fix')) { //固定枠
+      foreach ($stack['fix'] as $role => $count) {
+	$add_count = min($user_count - array_sum($list), $count);
+	ArrayFilter::Add($list, $role, $add_count);
+	OptionManager::StoreDummyBoyCastLimit([$role]);
+      }
+    }
+
+    if (ArrayFilter::IsAssoc($stack, 'pick')) { //ピック枠
+      foreach ($stack['pick'] as $count_list) {
+	$add_count = min($user_count - array_sum($list), $count_list['count']);
+	$result_list = Lottery::Pick($list, $count_list['list'], $add_count);
+	OptionManager::StoreDummyBoyCastLimit($result_list);
+      }
+    }
+    //Text::p($list, sprintf('◆%s(%d)', $this->name, array_sum($list)));
+
+    if (ArrayFilter::IsAssoc($stack, 'random')) { //ランダム枠
+      foreach ($stack['random'] as $key => $rate) {
+	$add_count = min($user_count - array_sum($list), $stack['count'][$key]);
+	$result_list = Lottery::Add($list, Lottery::Generate($rate), $add_count);
+	OptionManager::StoreDummyBoyCastLimit($result_list);
+      }
+    }
+    //Text::p($list, sprintf('◆%s(%d)', $this->name, array_sum($list)));
   }
 }

@@ -27,7 +27,8 @@ final class OptionFormData {
     'special_cast' => null,
     'special_role',
     'chaos' => null,
-    'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit', 'secret_sub_role',
+    'topping', 'boost_rate', 'museum_topping', 'chaos_open_cast', 'sub_role_limit',
+    'secret_sub_role',
     'duel' => null,
     'duel_selector'
   ];

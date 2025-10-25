@@ -303,6 +303,8 @@ class GameOptionConfig {
     'n' => 'N：封マ村'
   ];
 
+  public static $museum_topping_enable = true; //博物館追加モード
+
   //配役通知設定
   public static $chaos_open_cast_enable      = true; //配役内訳を表示する
   public static $chaos_open_cast_camp_enable = true; //陣営通知

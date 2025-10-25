@@ -18,7 +18,7 @@ class Option_chaos extends OptionCastCheckbox {
 
     //-- 固定枠設定 --//
     $fix_role_list = ChaosConfig::${$this->name . '_fix_role_list'}; //個別設定
-    OptionManager::FilterCastChaosFixRole($fix_role_list);
+    OptionManager::FilterCastChaosFixRole($fix_role_list, $user_count);
     //Text::p($fix_role_list, sprintf('◆Fix(%d)', array_sum($fix_role_list)));
 
     //-- ランダム枠決定 --//
