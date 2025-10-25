@@ -267,10 +267,7 @@ abstract class Role extends stdClass {
   //データ初期化
   final protected function InitStack($name = null) {
     $data  = (null === $name) ? $this->role : $name;
-    $stack = RoleManager::Stack()->Get($data);
-    if (false === isset($stack)) {
-      RoleManager::Stack()->Init($data);
-    }
+    RoleManager::Stack()->Init($data);
   }
 
   //データ追加
@@ -326,10 +323,10 @@ abstract class Role extends stdClass {
   final protected function IsVoteDate() {
     switch ($this->GetActionDate()) {
     case RoleActionDate::FIRST:
-      return DB::$ROOM->IsDate(1);
+      return DateBorder::One();
 
     case RoleActionDate::AFTER:
-      return DB::$ROOM->date > 1;
+      return DateBorder::Second();
 
     default:
       return true;
@@ -778,6 +775,24 @@ abstract class Role extends stdClass {
     }
   }
 
+  //夜投票対象者データセット(複合投票/範囲型)
+  final public function SetVoteNightTargetListRange(array $list) {
+    $target_stack = [];
+    $handle_stack = [];
+    foreach ($list as $id) {
+      $user = DB::$USER->ByID($id);
+      $live = DB::$USER->IsVirtualLive($user->id); //生死判定は仮想を使う
+      $this->ValidateVoteNightTarget($user, $live);
+      $target_stack[$id] = DB::$USER->ByReal($id)->id;
+      $handle_stack[$id] = $user->handle_name;
+    }
+
+    sort($target_stack);
+    ksort($handle_stack);
+    $this->SetStack(ArrayFilter::Concat($target_stack), RequestDataVote::TARGET);
+    $this->SetStack(ArrayFilter::Concat($handle_stack), 'target_handle');
+  }
+
   //複合投票型夜投票無効判定
   protected function ValidateVoteNightTargetList(array $list) {
     $count = $this->GetVoteNightNeedCount();
@@ -789,6 +804,27 @@ abstract class Role extends stdClass {
 
   //夜投票所要人数取得
   protected function GetVoteNightNeedCount() {
+    return 2;
+  }
+
+  //複合投票型夜投票無効判定(範囲型)
+  final protected function ValidateVoteNightTargetListRange(array $list) {
+    $min = $this->GetVoteNightTargetListRangeMin();
+    $max = $this->CallParent('GetVoteNightTargetListRangeMax');
+
+    if (Number::OutRange(count($list), $min, $max)) {
+      $str = sprintf(VoteRoleMessage::INVALID_TARGET_RANGE, $min, $max);
+      throw new UnexpectedValueException($str);
+    }
+  }
+
+  //夜投票所要人数取得(範囲型/最小)
+  protected function GetVoteNightTargetListRangeMin() {
+    return 1;
+  }
+
+  //夜投票所要人数取得(範囲型/最大)
+  protected function GetVoteNightTargetListRangeMax() {
     return 2;
   }
 
@@ -929,7 +965,7 @@ class RoleTalk {
     } while (false);
 
     foreach ($virtual->GetPartner('bad_status', true) as $id => $date) { //妖精の処理
-      if (false === DB::$ROOM->IsDate($date)) {
+      if (false === DateBorder::On($date)) {
 	continue;
       }
 

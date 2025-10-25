@@ -373,7 +373,7 @@
 <h2 id="special_option">特殊村設定</h2>
 <p>
 <?php InfoHTML::OutputCategory(['detective', 'liar', 'gentleman', 'passion', 'deep_sleep',
-'blinder', 'mind_open', 'critical', 'notice_critical']); ?>
+'blinder', 'mind_open', 'critical', 'notice_critical', 'critical_chicken']); ?>
 </p>
 <p>
 <?php InfoHTML::OutputCategory(['sudden_death', 'perverseness', 'joker', 'death_note',
@@ -381,7 +381,8 @@
 </p>
 <p>
 <?php InfoHTML::OutputCategory(['replace_human', 'full_mad', 'full_cupid', 'full_quiz',
-'full_vampire', 'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania']); ?>
+'full_vampire', 'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania',
+'shuffle_human']); ?>
 <p>
 <?php InfoHTML::OutputCategory(['change_common', 'change_hermit_common', 'change_mad',
 'change_fanatic_mad','change_whisper_mad','change_immolate_mad']); ?>
@@ -446,6 +447,11 @@
 <h3 id="notice_critical"><?php OptionManager::OutputCaption('notice_critical'); ?> [Ver. 3.1.0 α8～]</h3>
 <ul>
 <li><?php OptionManager::OutputExplain('notice_critical'); ?></li>
+</ul>
+
+<h3 id="critical_chicken"><?php OptionManager::OutputCaption('critical_chicken'); ?> [Ver. 5.1.0 β1～]</h3>
+<ul>
+<li><?php OptionManager::OutputExplain('critical_chicken'); ?></li>
 </ul>
 
 <h3 id="sudden_death"><?php OptionManager::OutputCaption('sudden_death'); ?> [Ver. 1.4.0 α14～]</h3>
@@ -569,6 +575,14 @@
 <h4 id="full_unknown_mania"><?php OptionManager::OutputCaption('full_unknown_mania'); ?> [Ver. 1.5.0 β10～]</h4>
 <ul>
 <li>村人が全員<a href="new_role/mania.php#unknown_mania">鵺</a>になります</li>
+</ul>
+
+<h4 id="shuffle_human"><?php OptionManager::OutputCaption('shuffle_human'); ?> [Ver. 5.1.0 β1～]</h4>
+<ul>
+<li>村人が全員<a href="new_role/human.php#human">村人</a>以外の村人表記役職になります</li>
+<li>対象は「<a href="#saint">聖女</a>・<a href="#executor">執行者</a>・<a href="#suspect">不審者</a>・<a href="#unconscious">無意識</a>・<a href="#crisis_priest">預言者</a>・<a href="#widow_priest">未亡人</a>・<a href="#chain_poison">連毒者</a>・<a href="#dummy_scanner">幻視者</a>」からランダムです</li>
+<li>変換される人数分だけ、対象役職のリストからランダムで1つずつ選出されます</li>
+<li>変換人数が対象役職のリストより多い(リスト使い切り)場合は、リストを再セットします</li>
 </ul>
 
 <h3 id="change_common"><?php OptionManager::OutputCaption('change_common'); ?> [Ver. 1.5.0 β10～]</h3>

@@ -7,11 +7,11 @@
 RoleLoader::LoadFile('priest');
 class Role_weather_priest extends Role_priest {
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   protected function IgnoreSetPriest() {
-    if (DB::$ROOM->date < 3 || false === Number::MultipleThree(DB::$ROOM->date)) {
+    if (DateBorder::PreThree() || false === Number::MultipleThree(DB::$ROOM->date)) {
       return true;
     }
     return false === DB::$USER->IsLiveRole($this->role);
@@ -35,7 +35,7 @@ class Role_weather_priest extends Role_priest {
     //$stack = []; for ($i = 0; $i < 20; $i++) @$stack[Lottery::Draw($list)]++;
     //ksort($stack); Text::p($stack, "◆{$this->role}");
 
-    if (DB::$ROOM->IsOption('full_weather') && DB::$ROOM->IsDate(1)) { //天変地異対応
+    if (DB::$ROOM->IsOption('full_weather') && DateBorder::One()) { //天変地異対応
       DB::$ROOM->StoreWeather(Lottery::Draw($list), 1);
     }
 

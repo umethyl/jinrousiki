@@ -730,83 +730,6 @@ final class ArrayFilter {
   }
 }
 
-//-- 日時関連 --//
-final class Time {
-  //TZ 補正をかけた時刻を返す (環境変数 TZ を変更できない環境想定？)
-  public static function Get() {
-    $time = time();
-    if (ServerConfig::ADJUST_TIME) {
-      $time += ServerConfig::OFFSET_SECONDS;
-    }
-    return $time;
-    /*
-    // ミリ秒対応のコード(案) 2009-08-08 enogu
-    $preg = '/([0-9]+)( [0-9]+)?/i';
-    return preg_replace($preg, '$$2.$$1', microtime()) + ServerConfig::OFFSET_SECONDS; // ミリ秒
-    */
-  }
-
-  //TZ 補正をかけた日時を返す
-  public static function GetDate($format, $time) {
-    return ServerConfig::ADJUST_TIME ? gmdate($format, $time) : date($format, $time);
-  }
-
-  //DATETIME 形式の日時を返す
-  public static function GetDateTime($time) {
-    return self::GetDate('Y-m-d H:i:s', $time);
-  }
-
-  //TIMESPAMP 形式の日時を返す
-  public static function GetTimeStamp($time) {
-    return self::GetDate('Y/m/d (D) H:i:s', $time);
-  }
-
-  //分 -> 秒
-  public static function ByMinute($minute) {
-    return $minute * 60;
-  }
-
-  //時間 -> 秒
-  public static function ByHour($hour) {
-    return self::ByMinute($hour * 60);
-  }
-
-  //時間 (秒) を変換する
-  public static function Convert($second) {
-    $hour   = 0;
-    $minute = 0;
-    if ($second >= 60) {
-      $minute = floor($second / 60);
-      $second %= 60;
-    }
-    if ($minute >= 60) {
-      $hour = floor($minute / 60);
-      $minute %= 60;
-    }
-
-    $str = '';
-    if ($hour > 0) {
-      $str .= $hour . Message::HOUR;
-    }
-    if ($minute > 0) {
-      $str .= $minute . Message::MINUTE;
-    }
-    if ($second > 0) {
-      $str .= $second . Message::SECOND;
-    }
-    return $str;
-  }
-
-  //TIMESTAMP 形式の時刻を変換する
-  public static function ConvertTimeStamp($time_stamp, $date = true) {
-    $time = strtotime($time_stamp);
-    if (ServerConfig::ADJUST_TIME) {
-      $time += ServerConfig::OFFSET_SECONDS;
-    }
-    return $date ? self::GetTimeStamp($time) : $time;
-  }
-}
-
 //-- 性別関連クラス --//
 final class Sex {
   const MALE   = 'male';
@@ -945,6 +868,21 @@ final class Lottery {
     $stack = []; //抽選結果
     for (; $count > 0; $count--) {
       $data = self::Get($random_list);
+      ArrayFilter::Add($list, $data);
+      $stack[] = $data;
+    }
+    return $stack;
+  }
+
+  //「福引き」を一定回数行ってリストに追加する(減算ピック型)
+  public static function Pick(array &$list, array $random_list, $count) {
+    $stack = []; //抽選結果
+    $pick_list = self::GetList($random_list);
+    for (; $count > 0; $count--) {
+      if (count($pick_list) < 1) {
+	break;
+      }
+      $data = array_pop($pick_list);
       ArrayFilter::Add($list, $data);
       $stack[] = $data;
     }

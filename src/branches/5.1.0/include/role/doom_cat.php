@@ -19,12 +19,12 @@ class Role_doom_cat extends Role_poison_cat {
   protected function ReviveAction() {
     $actor = $this->GetActor();
     $role  = 'death_warrant';
-    if (! $actor->IsRole($role)) {
+    if (false === $actor->IsRole($role)) {
       return;
     }
 
     $date = $actor->GetDoomDate($role); //未達の宣告があれば延長する
-    if (DB::$ROOM->date < $date) {
+    if (DateBorder::Lower($date)) {
       $actor->AddDoom($date - DB::$ROOM->date + 2);
     }
   }
@@ -32,7 +32,7 @@ class Role_doom_cat extends Role_poison_cat {
   //蘇生キャンセル後処理
   public function ReviveCancelAction() {
     $actor = $this->GetActor();
-    if (! $actor->IsRole('death_warrant')) {
+    if (false === $actor->IsRole('death_warrant')) {
       $actor->AddDoom(3);
     }
   }

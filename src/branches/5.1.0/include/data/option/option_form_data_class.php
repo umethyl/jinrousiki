@@ -21,13 +21,14 @@ final class OptionFormData {
     'decide', 'authority',
     'special' => null,
     'liar', 'gentleman', 'passion', 'sudden_death', 'perverseness', 'deep_sleep', 'mind_open',
-    'blinder', 'critical', 'notice_critical', 'joker', 'death_note', 'detective', 'weather',
-    'full_weather', 'festival', 'replace_human_selector', 'change_common_selector',
-    'change_mad_selector', 'change_cupid_selector',
+    'blinder', 'critical', 'notice_critical', 'critical_chicken', 'joker', 'death_note',
+    'detective', 'weather', 'full_weather', 'festival', 'replace_human_selector',
+    'change_common_selector', 'change_mad_selector', 'change_cupid_selector',
     'special_cast' => null,
     'special_role',
     'chaos' => null,
-    'topping', 'boost_rate', 'chaos_open_cast', 'sub_role_limit', 'secret_sub_role',
+    'topping', 'boost_rate', 'museum_topping', 'chaos_open_cast', 'sub_role_limit',
+    'secret_sub_role',
     'duel' => null,
     'duel_selector'
   ];

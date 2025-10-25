@@ -3609,9 +3609,12 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 <a href="#esper_wizard">超能力者</a>
 <a href="#awake_wizard">比丘尼</a>
 <a href="#mimic_wizard">物真似師</a>
+<a href="#plural_wizard">魔女見習い</a>
 <a href="#spiritism_wizard">交霊術師</a>
 <a href="#philosophy_wizard">賢者</a>
 <a href="#barrier_wizard">結界師</a>
+</p>
+<p>
 <a href="#astray_wizard">左道使い</a>
 </p>
 
@@ -3785,6 +3788,39 @@ MVP の賞品としてプレゼントしたものです。
 <h4>[作成者からのコメント]</h4>
 <pre>
 占い師-霊能者のギドラやスライド CO がテーマです。
+</pre>
+
+<h3 id="plural_wizard">魔女見習い (占い結果：村人 / 霊能結果：村人) [Ver. 5.1.0 β1～]</h3>
+<h4>[占い能力] 呪殺：無し / 憑依妨害：無し / 占い妨害：有効 / 呪い：有効</h4>
+<pre>
+魔法使いの一種で、魔法の効果は複数 (最大 3 箇所) の<a href="ability.php#mage">占い</a>能力。
+</pre>
+<h4>占い能力</h4>
+<ol>
+<li>成功率は 35% で、個別に判定される</li>
+<li>成功率は選択した人数と関係なく一定</li>
+<li>発動に失敗した場合、結果表示は<a href="wolf.php#jammer_mad">月兎</a>の能力発動時と同じになる</li>
+<li><a href="ability.php#phantom_active">占い妨害能力者(能動型)</a> に妨害された場合は全て失敗となる</li>
+<li><a href="ability.php#cursed_group">呪い能力</a>に遭遇した場合は全ての判定を実行後に死亡する</li>
+<li>全ての判定を実行後に生存していた場合のみ、結果が登録される</li>
+</ol>
+<h4>天候：<a href="../weather.php#weather_full_wizard">霧雨</a></h4>
+<pre>
+成功率 100%
+</pre>
+<h4>天候：<a href="../weather.php#weather_debilitate_wizard">木枯らし</a></h4>
+<pre>
+成功率 0%
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#mage">占い能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#barrier_wizard">結界師</a>の占いバージョンです。
+3箇所占った場合、1つ以上成功する確率が 70% 程度となります。
+安定性には欠けますが非常に高い情報収集力を秘めています。
 </pre>
 
 <h3 id="spiritism_wizard">交霊術師 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 α6～]</h3>

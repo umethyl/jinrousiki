@@ -7,7 +7,7 @@
 <a href="#chaos_old"><?php OptionManager::OutputCaption('chaos'); ?> (旧設定)</a>
 </p>
 <p>
-<?php InfoHTML::OutputCategory(['topping', 'boost_rate', 'chaos_open_cast']); ?>
+<?php InfoHTML::OutputCategory(['topping', 'boost_rate', 'museum_topping', 'chaos_open_cast']); ?>
 </p>
 <p>
 <?php InfoHTML::OutputCategory(['sub_role_limit', 'secret_sub_role']); ?>
@@ -30,7 +30,7 @@
 <pre>
 初期設定は「<a href="new_role/human.php#mage">占い師</a>1・<a href="new_role/wolf.php#wolf">人狼</a>1」で、各モード毎に個別に設定できます。
 ただし、身代わり君が占い師になる可能性もあるので CO した占い師が真であるとは限りません。
-<a href="#topping"><?php OptionManager::OutputCaption('topping'); ?></a>で追加できます。
+<a href="#topping"><?php OptionManager::OutputCaption('topping'); ?></a>・<a href="#museum_topping"><?php OptionManager::OutputCaption('museum_topping'); ?></a>で追加できます。
 </pre>
 
 <h3 id="decide_role_random">ランダム出現枠</h3>
@@ -914,6 +914,556 @@
 <pre>
 <a href="new_role/mania.php">神話マニア陣営</a>の出現率が 0 になります。
 </pre>
+
+<h2 id="museum_topping"><?php OptionManager::OutputCaption('museum_topping'); ?> [Ver. 5.1.0 β1～]</h2>
+<ol>
+<li>旧バージョンの新規実装から固定枠を追加します。</li>
+<li>内容は設定ファイルで変更できます。</li>
+</ol>
+
+<p>
+<a href="#museum_topping_explain">配役パターン</a>
+</p>
+<p>
+<a href="#museum_topping_a">Type:A</a>
+<a href="#museum_topping_b">Type:B</a>
+<a href="#museum_topping_c">Type:C</a>
+<a href="#museum_topping_d">Type:D</a>
+<a href="#museum_topping_e">Type:E</a>
+<a href="#museum_topping_f">Type:F</a>
+<a href="#museum_topping_g">Type:G</a>
+<a href="#museum_topping_h">Type:H</a>
+<a href="#museum_topping_i">Type:I</a>
+<a href="#museum_topping_j">Type:J</a>
+</p>
+
+<h3 id="museum_topping_explain">配役パターン説明</h3>
+<ol>
+<li>部屋番号</li>
+  <ul>
+    <li>フォームに入力する編成パターン名です</li>
+    <li>アルファベットは大文字・小文字どちらを入力しても有効です</li>
+  </ul>
+<li>固定枠</li>
+  <ul>
+    <li>固定で1つずつ追加されます</li>
+  </ul>
+<li>選択枠</li>
+  <ul>
+    <li>設定されている人数分だけ、対象役職のリストからランダムで1つずつ選出されます</li>
+  </ul>
+<li>バージョン</li>
+  <ul>
+    <li>実装されたバージョンです</li>
+  </ul>
+</ol>
+
+
+<h3 id="museum_topping_a">Type:A (管理者設定用) [Ver. 5.1.0 β1～]</h3>
+<pre>
+管理者設定用グループで工場出荷設定では空欄となっています
+</pre>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_b1">
+  <td>A1</td>
+  <td></td>
+  <td colspan="2"></td>
+  <td></td>
+</tr>
+</table>
+
+<h3 id="museum_topping_b">Type:B (Ver. 1.4.0) [Ver. 5.1.0 β1～]</h3>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">バージョン</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_b1">
+  <td>B1</td>
+  <td><a href="new_role/quiz.php#quiz">出題者</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140a2">Ver. 1.4.0 α2</td>
+  <td rowspan="60"></td>
+</tr>
+<tr id="museum_topping_b2">
+  <td rowspan="2">B2</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#soul_mage">魂の占い師</a>・<a href="new_role/human.php#medium">巫女</a>・<a href="new_role/human.php#poison_guard">騎士</a></td>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140a3">Ver. 1.4.0 α3-7</td>
+</tr>
+<tr>
+  <td><a href="new_role/wolf.php#boss_wolf">白狼</a>・<a href="new_role/wolf.php#fanatic_mad">狂信者</a>・<a href="new_role/fox.php#child_fox">子狐</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b3">
+  <td>B3</td>
+  <td><a href="new_role/human.php#suspect">不審者</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140a9">Ver. 1.4.0 α9</td>
+</tr>
+<tr id="museum_topping_b4">
+  <td>B4</td>
+  <td><a href="new_role/mania.php#mania">神話マニア</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140a11">Ver. 1.4.0 α11</td>
+</tr>
+<tr id="museum_topping_b5">
+  <td>B5</td>
+  <td><a href="new_role/human.php#pharmacist">薬師</a>・<a href="new_role/wolf.php#poison_wolf">毒狼</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140a12">Ver. 1.4.0 α12</td>
+</tr>
+<tr id="museum_topping_b6">
+  <td>B6</td>
+  <td><a href="new_role/human.php#unconscious">無意識</a>・<a href="new_role/wolf.php#tongue_wolf">舌禍狼</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140a13">Ver. 1.4.0 α13</td>
+</tr>
+<tr id="museum_topping_b7">
+  <td>B7</td>
+  <td><a href="new_role/human.php#dummy_mage">夢見人</a>・<a href="new_role/human.php#reporter">ブン屋</a>・<a href="new_role/wolf.php#cute_wolf">萌狼</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140a14">Ver. 1.4.0 α14</td>
+</tr>
+<tr id="museum_topping_b8">
+  <td rowspan="3">B8</td>
+  <td rowspan="3"></td>
+  <td><a href="new_role/human.php#dummy_necromancer">夢枕人</a>・<a href="new_role/human.php#dummy_guard">夢守人</a>・<a href="new_role/human.php#dummy_common">夢共有者</a>・<a href="new_role/human.php#dummy_poison">夢毒者</a><br>
+      <a href="new_role/human.php#soul_necromancer">雲外鏡</a>・<a href="new_role/human.php#strong_poison">強毒者</a>・<a href="new_role/human.php#incubate_poison">潜毒者</a></td>
+  <td>1</td>
+  <td rowspan="3"><a href="new_role/summary.php#ver140a17">Ver. 1.4.0 α17</td>
+</tr>
+<tr>
+  <td><a href="new_role/wolf.php#resist_wolf">抗毒狼</a>・<a href="new_role/wolf.php#cursed_wolf">呪狼</a>・<a href="new_role/wolf.php#whisper_mad">囁き狂人</a></td>
+  <td>1</td>
+</tr>
+<tr>
+  <td><a href="new_role/fox.php#cursed_fox">天狐</a>・<a href="new_role/fox.php#poison_fox">管狐</a>・<a href="new_role/fox.php#white_fox">白狐</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b9">
+  <td>B9</td>
+  <td></td>
+  <td><a href="new_role/human.php#poison_cat">猫又</a>・<a href="new_role/human.php#assassin">暗殺者</a>・<a href="new_role/human.php#psycho_mage">精神鑑定士</a>・<a href="new_role/wolf.php#trap_mad">罠師</a></td>
+  <td>3</td>
+  <td><a href="new_role/summary.php#ver140a18">Ver. 1.4.0 α18</td>
+</tr>
+<tr id="museum_topping_b10">
+  <td>B10</td>
+  <td><a href="new_role/human.php#sex_mage">ひよこ鑑定士</a>・<a href="new_role/wolf.php#jammer_mad">月兎</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140a19">Ver. 1.4.0 α19</td>
+</tr>
+<tr id="museum_topping_b11">
+  <td rowspan="2">B11</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#voodoo_killer">陰陽師</a>・<a href="new_role/human.php#yama_necromancer">閻魔</a>・<a href="new_role/human.php#anti_voodoo">厄神</a></td>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140a20">Ver. 1.4.0 α20</td>
+</tr>
+<tr>
+  <td><a href="new_role/wolf.php#voodoo_mad">呪術師</a>・<a href="new_role/fox.php#voodoo_fox">九尾</a>・<a href="new_role/fox.php#silver_fox">銀狐</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b12">
+  <td rowspan="2">B12</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#mind_scanner">さとり</a>・<a href="new_role/wolf.php#corpse_courier_mad">火車</a>・<a href="new_role/wolf.php#dream_eater_mad">獏</a>・<a href="new_role/lovers.php#self_cupid">求愛者</a></td>
+  <td>2</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140a21">Ver. 1.4.0 α21</td>
+</tr>
+<tr>
+  <td><a href="new_role/chiroptera.php#chiroptera">蝙蝠</a>・<a href="new_role/chiroptera.php#poison_chiroptera">毒蝙蝠</a>・<a href="new_role/chiroptera.php#cursed_chiroptera">呪蝙蝠</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b13">
+  <td>B13</td>
+  <td><a href="new_role/human.php#jealousy">橋姫</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140a22">Ver. 1.4.0 α22</td>
+</tr>
+<tr id="museum_topping_b14">
+  <td>B14</td>
+  <td><a href="new_role/lovers.php#mind_cupid">女神</a>・<a href="new_role/mania.php#unknown_mania">鵺</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140a23">Ver. 1.4.0 α23</td>
+</tr>
+<tr id="museum_topping_b15">
+  <td rowspan="3">B15</td>
+  <td rowspan="3"></td>
+  <td><a href="new_role/human.php#priest">司祭</a>・<a href="new_role/chiroptera.php#dummy_chiroptera">夢求愛者</a></td>
+  <td>1</td>
+  <td rowspan="3"><a href="new_role/summary.php#ver140a24">Ver. 1.4.0 α24</td>
+</tr>
+<tr>
+  <td><a href="new_role/wolf.php#wise_wolf">賢狼</a>・<a href="new_role/wolf.php#possessed_wolf">憑狼</a>・<a href="new_role/wolf.php#scarlet_wolf">紅狼</a></td>
+  <td>1</td>
+</tr>
+<tr>
+  <td><a href="new_role/fox.php#black_fox">黒狐</a>・<a href="new_role/fox.php#scarlet_fox">紅狐</a>・<a href="new_role/fox.php#cute_fox">萌狐</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b16">
+  <td rowspan="2">B16</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#crisis_priest">預言者</a>・<a href="new_role/human.php#revive_priest">天人</a>・<a href="new_role/human.php#evoke_scanner">イタコ</a>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140b2">Ver. 1.4.0 β2</td>
+</tr>
+<tr>
+  <td><a href="new_role/human.php#revive_cat">仙狸</a>・<a href="new_role/fox.php#revive_fox">仙狐</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b17">
+  <td>B17</td>
+  <td></td>
+  <td><a href="new_role/human.php#elder">長老</a>・<a href="new_role/wolf.php#elder_wolf">古狼</a>・<a href="new_role/fox.php#elder_fox">古狐</a>・<a href="new_role/chiroptera.php#elder_chiroptera">古蝙蝠</a>・<a href="new_role/human.php#fend_guard">忍者</a></td>
+  <td>3</td>
+  <td><a href="new_role/summary.php#ver140b5">Ver. 1.4.0 β5</td>
+</tr>
+<tr id="museum_topping_b18">
+  <td rowspan="2">B18</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#trap_common">策士</a>・<a href="new_role/human.php#ghost_common">亡霊嬢</a>・<a href="new_role/human.php#poison_jealousy">毒橋姫</a>・<a href="new_role/human.php#chain_poison">連毒者</a>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140b6">Ver. 1.4.0 β6</td>
+</tr>
+<tr>
+  <td><a href="new_role/chiroptera.php#fairy">妖精</a>・<a href="new_role/chiroptera.php#spring_fairy">春妖精</a>・<a href="new_role/chiroptera.php#summer_fairy">夏妖精</a>・<a href="new_role/chiroptera.php#autumn_fairy">秋妖精</a>・<a href="new_role/chiroptera.php#winter_fairy">冬妖精</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b19">
+  <td rowspan="2">B19</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#saint">聖女</a>・<a href="new_role/wolf.php#agitate_mad">扇動者</a>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140b7">Ver. 1.4.0 β7</td>
+</tr>
+<tr>
+  <td><a href="new_role/chiroptera.php#light_fairy">光妖精</a>・<a href="new_role/chiroptera.php#dark_fairy">闇妖精</a>・<a href="new_role/chiroptera.php#grass_fairy">草妖精</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b20">
+  <td rowspan="3">B20</td>
+  <td rowspan="3"></td>
+  <td><a href="new_role/wolf.php#emerald_wolf">翠狼</a>・<a href="new_role/wolf.php#blue_wolf">蒼狼</a>・<a href="new_role/wolf.php#gold_wolf">金狼</a>・<a href="new_role/wolf.php#sex_wolf">雛狼</a></td>
+  <td>1</td>
+  <td rowspan="3"><a href="new_role/summary.php#ver140b8">Ver. 1.4.0 β8</td>
+</tr>
+<tr>
+  <td><a href="new_role/fox.php#emerald_fox">翠狐</a>・<a href="new_role/fox.php#blue_fox">蒼狐</a>・<a href="new_role/fox.php#gold_fox">金狐</a>・<a href="new_role/fox.php#sex_fox">雛狐</a></td>
+  <td>1</td>
+</tr>
+<tr>
+  <td><a href="new_role/lovers.php#angel">天使</a>・<a href="new_role/lovers.php#rose_angel">薔薇天使</a>・<a href="new_role/lovers.php#lily_angel">百合天使</a>・<a href="new_role/lovers.php#ark_angel">大天使</a>・<a href="new_role/lovers.php#triangle_cupid">小悪魔</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b21">
+  <td rowspan="3">B21</td>
+  <td rowspan="3"></td>
+  <td><a href="new_role/human.php#executor">執行者</a>・<a href="new_role/human.php#cure_pharmacist">河童</a>・<a href="new_role/human.php#sacrifice_cat">猫神</a>・<a href="new_role/human.php#reverse_assassin">反魂師</a>・<a href="new_role/human.php#eclipse_assassin">蝕暗殺者</a></td>
+  <td>1</td>
+  <td rowspan="3"><a href="new_role/summary.php#ver140b9">Ver. 1.4.0 β9</td>
+</tr>
+<tr>
+  <td><a href="new_role/wolf.php#serius_wolf">天狼</a>・<a href="new_role/wolf.php#miasma_mad">土蜘蛛</a>・<a href="new_role/wolf.php#possessed_mad">犬神</a>・<a href="new_role/fox.php#possessed_fox">憑狐</a></td>
+  <td>1</td>
+</tr>
+<tr>
+  <td><a href="new_role/chiroptera.php#boss_chiroptera">大蝙蝠</a>・<a href="new_role/mania.php#trick_mania">奇術師</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b22">
+  <td>B22</td>
+  <td></td>
+  <td><a href="new_role/human.php#doll">上海人形</a>・<a href="new_role/human.php#poison_doll">鈴蘭人形</a>・<a href="new_role/human.php#friend_doll">仏蘭西人形</a>・<a href="new_role/human.php#doll_master">人形遣い</a><br><a href="new_role/human.php#bishop_priest">司教</a>・<a href="new_role/human.php#detective_common">探偵</a>・<a href="new_role/human.php#doom_assassin">死神</a></td>
+  <td>2</td>
+  <td><a href="new_role/summary.php#ver140b10">Ver. 1.4.0 β10</td>
+</tr>
+<tr id="museum_topping_b23">
+  <td rowspan="3">B23</td>
+  <td rowspan="3"></td>
+  <td><a href="new_role/human.php#guide_poison">誘毒者</a>・<a href="new_role/human.php#escaper">逃亡者</a>・<a href="new_role/human.php#whisper_scanner">囁騒霊</a>・<a href="new_role/human.php#howl_scanner">吠騒霊</a>・<a href="new_role/human.php#telepath_scanner">念騒霊</a></td>
+  <td>1</td>
+  <td rowspan="3"><a href="new_role/summary.php#ver140b11">Ver. 1.4.0 β11</td>
+</tr>
+<tr>
+  <td><a href="new_role/wolf.php#phantom_wolf">幻狼</a>・<a href="new_role/fox.php#phantom_fox">幻狐</a>・<a href="new_role/lovers.php#moon_cupid">かぐや姫</a>・<a href="new_role/lovers.php#exchange_angel">魂移使</a></td>
+  <td>1</td>
+</tr>
+<tr>
+  <td><a href="new_role/mania.php#soul_mania">覚醒者</a>・<a href="new_role/mania.php#dummy_mania">夢語部</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b24">
+  <td>B24</td>
+  <td></td>
+  <td><a href="new_role/human.php#stargazer_mage">占星術師</a>・<a href="new_role/human.php#border_priest">境界師</a>・<a href="new_role/wolf.php#hungry_wolf">餓狼</a>・<a href="new_role/chiroptera.php#flower_fairy">花妖精</a></td>
+  <td>2</td>
+  <td><a href="new_role/summary.php#ver140b12">Ver. 1.4.0 β12</td>
+</tr>
+<tr id="museum_topping_b25">
+  <td rowspan="3">B25</td>
+  <td rowspan="3"></td>
+  <td><a href="new_role/human.php#doom_doll">蓬莱人形</a>・<a href="new_role/human.php#hunter_guard">猟師</a>・<a href="new_role/human.php#soul_assassin">辻斬り</a>・<a href="new_role/human.php#seal_medium">封印師</a>・<a href="new_role/human.php#revive_medium">風祝</a></td>
+  <td>1</td>
+  <td rowspan="3"><a href="new_role/summary.php#ver140b13">Ver. 1.4.0 β13</td>
+</tr>
+<tr>
+  <td><a href="new_role/fox.php#miasma_fox">蟲狐</a>・<a href="new_role/fox.php#jammer_fox">月狐</a>・<a href="new_role/fox.php#stargazer_fox">星狐</a></td>
+  <td>1</td>
+</tr>
+<tr>
+  <td><a href="new_role/chiroptera.php#sun_fairy">日妖精</a>・<a href="new_role/chiroptera.php#moon_fairy">月妖精</a>・<a href="new_role/chiroptera.php#star_fairy">星妖精</a>・<a href="new_role/chiroptera.php#grass_fairy">草妖精</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b26">
+  <td>B26</td>
+  <td><a href="new_role/human.php#blind_guard">夜雀</a>・<a href="new_role/vampire.php#vampire">吸血鬼</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140b14">Ver. 1.4.0 β14</td>
+</tr>
+<tr id="museum_topping_b27">
+  <td rowspan="2">B27</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#brownie">座敷童子</a>・<a href="new_role/human.php#dowser_priest">探知師</a>・<a href="new_role/human.php#dummy_priest">夢司祭</a>・<a href="new_role/human.php#revive_pharmacist">仙人</a></td>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140b15">Ver. 1.4.0 β15</td>
+</tr>
+<tr>
+  <td><a href="new_role/wolf.php#doom_wolf">冥狼</a>・<a href="new_role/wolf.php#therian_mad">獣人</a>・<a href="new_role/fox.php#doom_fox">冥狐</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b28">
+  <td>B28</td>
+  <td><a href="new_role/human.php#history_brownie">白澤</a>・<a href="new_role/wolf.php#snow_trap_mad">雪女</a>・<a href="new_role/chiroptera.php#ice_fairy">氷妖精</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver140b16">Ver. 1.4.0 β16</td>
+</tr>
+<tr id="museum_topping_b29">
+  <td>B29</td>
+  <td></td>
+  <td><a href="new_role/human.php#priest_jealousy">恋司祭</a>・<a href="new_role/human.php#eclipse_cat">蝕仙狸</a>・<a href="new_role/wolf.php#enchant_mad">狢</a>・<a href="new_role/fox.php#howl_fox">化狐</a>・<a href="new_role/vampire.php#sacrifice_vampire">吸血公</a></td>
+  <td>2</td>
+  <td><a href="new_role/summary.php#ver140b17">Ver. 1.4.0 β17</td>
+</tr>
+<tr id="museum_topping_b30">
+  <td rowspan="3">B30</td>
+  <td rowspan="3"></td>
+  <td><a href="new_role/human.php#presage_scanner">件</a>・<a href="new_role/lovers.php#sacrifice_angel">守護天使</a>・<a href="new_role/mania.php#sacrifice_mania">影武者</a></td>
+  <td>1</td>
+  <td rowspan="3"><a href="new_role/summary.php#ver140b18">Ver. 1.4.0 β18</td>
+</tr>
+<tr>
+  <td><a href="new_role/vampire.php#incubus_vampire">青髭公</a>・<a href="new_role/vampire.php#succubus_vampire">飛縁魔</a></td>
+  <td>1</td>
+</tr>
+<tr>
+  <td><a href="new_role/ogre.php#ogre">鬼</a>・<a href="new_role/ogre.php#orange_ogre">前鬼</a>・<a href="new_role/ogre.php#indigo_ogre">後鬼</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b31">
+  <td rowspan="3">B31</td>
+  <td rowspan="3"></td>
+  <td><a href="new_role/human.php#divorce_jealousy">縁切地蔵</a>・<a href="new_role/wolf.php#amaze_mad">傘化け</a></td>
+  <td>1</td>
+  <td rowspan="3"><a href="new_role/summary.php#ver140b19">Ver. 1.4.0 β19</td>
+</tr>
+<tr>
+  <td><a href="new_role/vampire.php#doom_vampire">冥血鬼</a>・<a href="new_role/vampire.php#soul_vampire">吸血姫</a></td>
+  <td>1</td>
+</tr>
+<tr>
+  <td><a href="new_role/ogre.php#poison_ogre">榊鬼</a>・<a href="new_role/ogre.php#west_ogre">金鬼</a>・<a href="new_role/ogre.php#east_ogre">風鬼</a>・<a href="new_role/ogre.php#north_ogre">水鬼</a>・<a href="new_role/ogre.php#south_ogre">隠形鬼</a><br><a href="new_role/ogre.php#yaksa">夜叉</a>・<a href="new_role/ogre.php#incubus_ogre">般若</a>・<a href="new_role/ogre.php#succubus_yaksa">荼枳尼天</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b32">
+  <td rowspan="2">B32</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#attempt_necromancer">蟲姫</a>・<a href="new_role/human.php#cursed_brownie">祟神</a>・<a href="new_role/human.php#revive_brownie">蛇神</a>・<a href="new_role/human.php#phantom_doll">倫敦人形</a>・<a href="new_role/human.php#revive_doll">西蔵人形</a></td>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140b20">Ver. 1.4.0 β20</td>
+</tr>
+<tr>
+  <td><a href="new_role/chiroptera.php#shadow_fairy">影妖精</a>・<a href="new_role/ogre.php#sacrifice_ogre">酒呑童子</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b33">
+  <td rowspan="2">B33</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#high_priest">大司祭</a>・<a href="new_role/human.php#bacchus_medium">神主</a>・<a href="new_role/human.php#scarlet_doll">和蘭人形</a>・<a href="new_role/human.php#silver_doll">露西亜人形</a></td>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140b21">Ver. 1.4.0 β21</td>
+</tr>
+<tr>
+  <td><a href="new_role/chiroptera.php#scarlet_chiroptera">紅蝙蝠</a>・<a href="new_role/ogre.php#power_ogre">星熊童子</a>・<a href="new_role/ogre.php#dowser_yaksa">毘沙門天</a></td>
+  <td>1</td>
+</tr>
+<tr id="museum_topping_b34">
+  <td rowspan="2">B34</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#scripter">執筆者</a>・<a href="new_role/human.php#reflect_guard">侍</a>・<a href="new_role/human.php#clairvoyance_scanner">猩々</a>・<a href="new_role/human.php#alchemy_pharmacist">錬金術師</a>・<a href="new_role/human.php#incubus_escaper">一角獣</a></td>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver140b22">Ver. 1.4.0 β22</td>
+</tr>
+<tr>
+  <td><a href="new_role/lovers.php#sweet_cupid">弁財天</a>・<a href="new_role/ogre.php#revive_ogre">茨木童子</a></td>
+  <td>1</td>
+</tr>
+</table>
+
+<h3 id="museum_topping_c">Type:C (Ver. 1.5.0) [Ver. 5.1.0 β1～]</h3>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">バージョン</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_c1">
+  <td>C1</td>
+  <td><a href="new_role/human.php#wizard">魔法使い</a>・<a href="new_role/human.php#soul_wizard">八卦見</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver150a1">Ver. 1.5.0 α1</td>
+  <td></td>
+</tr>
+</table>
+
+<h3 id="museum_topping_d">Type:D (Ver. 2.1.0) [Ver. 5.1.0 β1～]</h3>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">バージョン</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_d1">
+  <td>D1</td>
+  <td><a href="new_role/wolf.php#swindle_mad">因幡兎</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver152">Ver. 2.1.0 α1</td>
+  <td></td>
+</tr>
+</table>
+
+<h3 id="museum_topping_e">Type:E (Ver. 2.2.0) [Ver. 5.1.0 β1～]</h3>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">バージョン</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_e1">
+  <td rowspan="2">E1</td>
+  <td rowspan="2"></td>
+  <td><a href="new_role/human.php#step_mage">審神者</a>・<a href="new_role/human.php#step_guard">山立</a></td>
+  <td>1</td>
+  <td rowspan="2"><a href="new_role/summary.php#ver220a3">Ver. 2.2.0 α3</td>
+</tr>
+<tr>
+  <td><a href="new_role/wolf.php#step_wolf">響狼</a>・<a href="new_role/wolf.php#step_mad">家鳴</a>・<a href="new_role/fox.php#step_fox">響狐</a></td>
+  <td>1</td>
+</tr>
+</table>
+
+<h3 id="museum_topping_f">Type:F (Ver. 2.3.0) [Ver. 5.1.0 β1～]</h3>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">バージョン</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_f1">
+  <td>F1</td>
+  <td><a href="new_role/lovers.php#altair_cupid">彦星</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver230a2">Ver. 2.3.0 α2</td>
+  <td></td>
+</tr>
+</table>
+
+<h3 id="museum_topping_g">Type:G (Ver. 3.0.0) [Ver. 5.1.0 β1～]</h3>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">バージョン</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_g1">
+  <td>G1</td>
+  <td></td>
+  <td><a href="new_role/tengu.php#tengu">天狗</a>・<a href="new_role/tengu.php#soul_tengu">大天狗</a>・<a href="new_role/tengu.php#eclipse_tengu">木っ端天狗</a></td>
+  <td>2</td>
+  <td><a href="new_role/summary.php#ver300a2">Ver. 3.0.0 α2</td>
+</tr>
+</table>
+
+<h3 id="museum_topping_h">Type:H (Ver. 3.1.0) [Ver. 5.1.0 β1～]</h3>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">バージョン</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_h1">
+  <td>H1</td>
+  <td><a href="new_role/mania.php#mask_mania">面霊気</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver310a1">Ver. 3.1.0 α1</td>
+  <td></td>
+</tr>
+</table>
+
+<h3 id="museum_topping_i">Type:I (Ver. 4.1.0) [Ver. 5.1.0 β1～]</h3>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">バージョン</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_i1">
+  <td>I1</td>
+  <td><a href="new_role/chiroptera.php#gender_fairy">転妖精</a></td>
+  <td><a href="new_role/vampire.php#homogeneous_vampire">夢馬</a>・<a href="new_role/vampire.php#heterologous_vampire">夜魔</a></td>
+  <td>1</td>
+  <td><a href="new_role/summary.php#ver410a1">Ver. 4.1.0 α1</td>
+</tr>
+</table>
+
+<h3 id="museum_topping_j">Type:J (Ver. 5.1.0) [Ver. 5.1.0 β1～]</h3>
+<table>
+<tr><th rowspan="2">部屋番号</th><th rowspan="2">固定枠</th><th colspan="2">選択枠</th><th rowspan="2">バージョン</th><th rowspan="2">設定変更</th></tr>
+<tr>
+  <td>役職</td>
+  <td>配役数</td>
+</tr>
+<tr id="museum_topping_j1">
+  <td>J1</td>
+  <td><a href="new_role/human.php#flower_jealousy">花占い師</a>・<a href="new_role/lovers.php#sacrifice_cupid">花魁</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver510a1">Ver. 5.1.0 α1</td>
+  <td></td>
+</tr>
+<tr id="museum_topping_j2">
+  <td>J2</td>
+  <td><a href="new_role/wolf.php#spell_wolf">怨狼</a>・<a href="new_role/wolf.php#miasma_wolf">戯狼</a></td>
+  <td colspan="2"></td>
+  <td><a href="new_role/summary.php#ver510a4">Ver. 5.1.0 α4</td>
+  <td></td>
+</tr>
+<tr id="museum_topping_j3">
+  <td>J3</td>
+  <td><a href="new_role/human.php#plural_wizard">魔女見習い</a>・<a href="new_role/wolf.php#plural_mad">魔女</a></td>
+  <td><a href="new_role/wolf.php#sweet_wolf">局狼</a>・<a href="new_role/fox.php#sweet_fox">局狐</a></td>
+  <td>1</td>
+  <td><a href="new_role/summary.php#ver510b1">Ver. 5.1.0 β1</td>
+</tr>
+</table>
 
 <h2 id="chaos_open_cast"><?php OptionManager::OutputCaption('chaos_open_cast'); ?> [Ver. 1.4.0 α14～]</h2>
 <pre>

@@ -9,7 +9,7 @@ class Role_necromancer extends Role {
   public $result = RoleAbility::NECROMANCER;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   //霊能

@@ -27,7 +27,7 @@ class Role_poison_cat extends Role {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3 || DB::$ROOM->IsOpenCast();
+    return DateBorder::PreThree() || DB::$ROOM->IsOpenCast();
   }
 
   //蘇生結果表示 (Mixin 用)

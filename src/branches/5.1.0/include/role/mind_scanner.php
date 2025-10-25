@@ -15,7 +15,7 @@ class Role_mind_scanner extends Role {
   }
 
   protected function IgnorePartner() {
-    return DB::$ROOM->date < 2 || (null === $this->GetMindRole());
+    return DateBorder::PreTwo() || (null === $this->GetMindRole());
   }
 
   //透視対象役職取得

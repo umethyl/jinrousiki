@@ -5,6 +5,7 @@ final class RoleSubData {
   //サブ役職のリスト (コード名 => 表示名)
   public static $list = [
     'chicken'			=> '小心者',
+    'critical_chicken'		=> '魔女の一撃',
     'rabbit'			=> 'ウサギ',
     'perverseness'		=> '天邪鬼',
     'flattery'			=> 'ゴマすり',

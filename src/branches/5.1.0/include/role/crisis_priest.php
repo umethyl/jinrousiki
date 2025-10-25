@@ -10,7 +10,7 @@ class Role_crisis_priest extends Role_priest {
   public $display_role = 'human';
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   protected function IgnoreSetPriest() {

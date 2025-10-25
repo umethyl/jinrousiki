@@ -49,7 +49,7 @@ final class VoteHTML {
   //昼の投票ページを出力する
   public static function OutputDay() {
     self::ValidateScene(); //投票シーンチェック
-    if (DB::$ROOM->IsDate(1)) {
+    if (DateBorder::One()) {
       self::OutputResult(VoteMessage::NEEDLESS_VOTE);
     }
     if (false === DB::$ROOM->IsTest() && UserDB::IsVoteKill()) { //投票済みチェック

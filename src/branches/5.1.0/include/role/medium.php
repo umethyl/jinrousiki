@@ -8,7 +8,7 @@ class Role_medium extends Role {
   public $result = RoleAbility::MEDIUM;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   //判定結果登録 (システムメッセージ)

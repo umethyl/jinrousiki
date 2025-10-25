@@ -178,6 +178,7 @@ final class TalkParser extends stdClass {
       $this->class = VoteCSS::SCAN;
       break;
 
+    case VoteAction::PLURAL_WIZARD:
     case VoteAction::SPREAD_WIZARD:
       $action      = VoteAction::WIZARD;
       $this->class = VoteCSS::WIZARD;
@@ -349,7 +350,7 @@ final class TalkBuilder {
       break;
 
     case RoomScene::DAY: //OP の昼限定
-      if (false === DB::$ROOM->IsDate(1)) {
+      if (false === DateBorder::One()) {
 	return false;
       }
       $type     = 'start_datetime'; //ゲーム開始時刻
@@ -357,7 +358,7 @@ final class TalkBuilder {
       break;
 
     case RoomScene::NIGHT:
-      if (false === DB::$ROOM->IsDate(1)) {
+      if (false === DateBorder::One()) {
 	return false;
       }
       $type     = 'start_datetime'; //ゲーム開始時刻
@@ -468,7 +469,7 @@ final class TalkBuilder {
     $stack = new stdClass();
 
     /* 共通フラグ */
-    $is_date = DB::$ROOM->date > 1;
+    $is_date = DateBorder::Second();
 
     /* 基本情報 */
     $stack->dummy_boy = DB::$SELF->IsDummyBoy();
@@ -487,14 +488,15 @@ final class TalkBuilder {
     }
 
     /* 耳鳴り関連 */
+    //憑依追跡対応のため、SELF と actor を使い分けて判定する
     $stack->deep_sleep = $this->actor->IsRole('deep_sleep');
     $not_sleep = ! $stack->deep_sleep;
 
-    $stack->whisper_ringing = $not_sleep && $this->actor->IsRole('whisper_ringing');
-    $stack->howl_ringing    = $not_sleep && $this->actor->IsRole('howl_ringing');
-    $stack->sweet_ringing   = $not_sleep && $this->actor->IsRole('sweet_ringing') && $is_date;
-    $stack->common_whisper  = $not_sleep && ! DB::$SELF->IsRole('dummy_common');
-    $stack->wolf_howl       = $not_sleep && ! DB::$SELF->IsRole('mind_scanner');
+    $stack->common_whisper  = $not_sleep && RoleUser::CommonWhisper($this->actor);
+    $stack->wolf_howl       = $not_sleep && RoleUser::WolfHowl($this->actor);
+    $stack->whisper_ringing = $not_sleep && RoleUser::WhisperRinging($this->actor);
+    $stack->howl_ringing    = $not_sleep && RoleUser::HowlRinging($this->actor);
+    $stack->sweet_ringing   = $not_sleep && RoleUser::SweetRinging($this->actor) && $is_date;
 
     $this->flag = $stack;
   }

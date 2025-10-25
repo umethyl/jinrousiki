@@ -8,7 +8,7 @@
 RoleLoader::LoadFile('wolf');
 class Role_possessed_wolf extends Role_wolf {
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   protected function OutputAddResult() {

@@ -45,7 +45,7 @@ class Role_lovers extends Role {
     return $user->IsPartner($this->role, $target) ||
       $this->GetActor()->IsPartner('fake_lovers',      $user->id) ||
       $this->GetActor()->IsPartner('dummy_chiroptera', $user->id) ||
-      (DB::$ROOM->IsDate(1) && $user->IsPartner('sweet_status', $target));
+      (DateBorder::One() && $user->IsPartner('sweet_status', $target));
   }
 
   protected function OutputPartnerByType(array $list, $type) {

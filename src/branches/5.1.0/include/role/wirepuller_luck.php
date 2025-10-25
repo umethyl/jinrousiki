@@ -11,7 +11,7 @@ class Role_wirepuller_luck extends Role_authority {
   public $mix_in = ['disfavor'];
 
   protected function IgnoreAbility() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   protected function IgnoreFilterVoteDo() {

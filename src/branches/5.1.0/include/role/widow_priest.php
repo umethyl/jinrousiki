@@ -14,7 +14,7 @@ class Role_widow_priest extends Role_priest {
   }
 
   protected function IgnoreSetPriest() {
-    return false === DB::$ROOM->IsDate(1) || false === DB::$ROOM->IsDummyBoy();
+    return false === DB::$ROOM->IsDummyBoy() || false === DateBorder::One();
   }
 
   protected function IsAggregatePriestCamp() {

@@ -7,11 +7,11 @@
 RoleLoader::LoadFile('priest');
 class Role_holy_priest extends Role_priest {
   protected function IgnoreResult() {
-    return false === DB::$ROOM->IsDate(5);
+    return false === DateBorder::On(5);
   }
 
   protected function IgnoreSetPriest() {
-    return false === DB::$ROOM->IsDate(4);
+    return false === DateBorder::On(4);
   }
 
   protected function IsAggregatePriestCamp() {

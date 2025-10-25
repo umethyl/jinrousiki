@@ -7,6 +7,6 @@
 RoleLoader::LoadFile('authority');
 class Role_upper_voter extends Role_authority {
   protected function IgnoreFilterVoteDo() {
-    return DB::$ROOM->date < 5;
+    return DateBorder::PreFive();
   }
 }

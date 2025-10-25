@@ -7,7 +7,7 @@
 */
 class Role_mind_read extends Role {
   protected function IgnoreAbility() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   public function IsMindRead() {

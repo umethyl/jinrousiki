@@ -62,6 +62,20 @@ final class RoleTestController extends JinrouAdminController {
       Text::d();
     }
 
+    foreach (['museum_topping'] as $option) {
+      RQ::Get()->ParsePostData($option);
+      if (RQ::Get()->$option) {
+	RQ::Get()->ParsePostStr($option . '_input');
+	$value = strtolower(RQ::Get()->{$option . '_input'});
+      } else {
+	$value = '';
+      }
+      $checked = Switcher::IsOn(RQ::Get()->$option);
+      DevHTML::OutputCheckbox('option_' . $option, $option, RoleTestMessage::$$option, $checked);
+      DevHTML::OutputText('option_' . $option . '_input', $option . '_input', $value);
+    }
+    Text::d();
+
     $id = 'open_cast';
     $stack = ['chaos_open_cast_camp', 'chaos_open_cast_role', 'chaos_open_cast_full'];
     RQ::Get()->ParsePostData($id);
@@ -131,6 +145,24 @@ final class RoleTestController extends JinrouAdminController {
 
       if (array_key_exists(RQ::Get()->$option, GameOptionConfig::${$option.'_list'})) {
 	$stack->option_role[] = $option . ':' . RQ::Get()->$option;
+      }
+    }
+
+    //闇鍋用オプション(テキスト型)
+    foreach (['museum_topping'] as $option) {
+      RQ::Get()->ParsePostData($option);
+      if (empty(RQ::Get()->$option)) {
+	continue;
+      }
+
+      $input = $option . '_input';
+      RQ::Get()->ParsePostStr($input);
+      if (empty(RQ::Get()->$input)) {
+	continue;
+      }
+      RQ::Get()->$input = strtolower(RQ::Get()->$input);
+      if (array_key_exists(RQ::Get()->$input, ChaosConfig::${$option.'_list'})) {
+	$stack->option_role[] = $option . ':' . RQ::Get()->$input;
       }
     }
 

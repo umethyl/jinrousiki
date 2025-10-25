@@ -12,7 +12,7 @@ class Role_silver_wolf extends Role_wolf {
 
   //囁き (遠吠え変換)
   final public function WolfWhisper(TalkBuilder $builder, TalkParser $talk) {
-    return DB::$ROOM->date > 1 && $this->Howl($builder, $talk);
+    return DateBorder::Second() && $this->Howl($builder, $talk);
   }
 
   protected function IsWolfPartner($id) {

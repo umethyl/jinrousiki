@@ -13,7 +13,7 @@ class Role_flower_jealousy extends Role_jealousy {
   public $display_role = 'mage';
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   public function OutputAction() {

@@ -13,7 +13,7 @@ class Role_reporter extends Role {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   public function OutputAction() {

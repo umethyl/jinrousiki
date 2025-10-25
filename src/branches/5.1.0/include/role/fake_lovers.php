@@ -13,7 +13,7 @@ class Role_fake_lovers extends Role_lovers {
   protected function IsLoversPartner(User $user) {
     return $this->GetActor()->IsPartner($this->role, $user->id) ||
       $this->GetActor()->IsPartner('dummy_chiroptera', $user->id) ||
-      (DB::$ROOM->IsDate(1) && $user->IsPartner('sweet_status', $this->GetStack()));
+      (DateBorder::One() && $user->IsPartner('sweet_status', $this->GetStack()));
   }
 
   protected function OutputAddPartner() {

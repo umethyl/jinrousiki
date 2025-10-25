@@ -10,7 +10,7 @@ class Role_mind_presage extends Role_mind_read {
   public $result = RoleAbility::PRESAGE;
 
   protected function IgnoreAbility() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   protected function IgnoreImage() {

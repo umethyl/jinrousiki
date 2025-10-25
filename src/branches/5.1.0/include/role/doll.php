@@ -37,7 +37,7 @@ class Role_doll extends Role {
   //人形遣い枠表示判定
   final protected function IsDisplayDollMaster(User $user) {
     if ($this->IsDollMaster($user)) { //人形遣い
-      return false === $user->IsRole('toy_doll_master') || DB::$ROOM->date > 3;
+      return false === $user->IsRole('toy_doll_master') || DateBorder::Fourth();
     }
     return $user->IsRole('puppet_mage') || $user->IsRoleGroup('scarlet'); //特殊・紅系
   }

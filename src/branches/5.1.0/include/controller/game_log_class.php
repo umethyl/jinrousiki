@@ -65,11 +65,11 @@ final class GameLogController extends JinrouController {
 
   //未来判定
   private static function IsFuture() {
-    if (DB::$ROOM->date < RQ::Get()->date) {
+    if (DateBorder::Lower(RQ::Get()->date)) {
       return true;
     }
 
-    if (DB::$ROOM->IsDate(RQ::Get()->date)) {
+    if (DateBorder::On(RQ::Get()->date)) {
       return (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Get()->scene);
     }
     return false;

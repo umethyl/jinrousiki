@@ -456,7 +456,7 @@ final class Cast extends StackStaticManager {
   private static function ReplaceRole(array &$list) {
     $stack = [];
     foreach (array_keys(DB::$ROOM->option_role->list) as $option) { //処理順にオプションを登録
-      if ($option == 'replace_human' || Text::IsPrefix($option, 'full_')) {
+      if (self::IsReplaceHuman($option)) {
 	$stack[0][] = $option;
       } elseif (Text::IsPrefix($option, 'change_')) {
 	$stack[1][] = $option;
@@ -467,6 +467,9 @@ final class Cast extends StackStaticManager {
       foreach ($option_list as $option) {
 	if (isset(CastConfig::$replace_role_list[$option])) { //サーバ設定
 	  $target = CastConfig::$replace_role_list[$option];
+	  $role   = Text::CutPop($option);
+	} elseif (isset(CastConfig::$shuffle_role_list[$option])) { //振替
+	  $target = CastConfig::$shuffle_role_list[$option];
 	  $role   = Text::CutPop($option);
 	} elseif ($order == 0) { //村人置換
 	  $target = Text::CutPop($option, '_', 2);
@@ -482,11 +485,34 @@ final class Cast extends StackStaticManager {
 	  $count--;
 	}
 
-	if ($count > 0) {
+	if ($count < 1) {
+	  continue;
+	}
+
+	if (is_array($target)) { //振替型
+	  $base = Lottery::GetList($target);
+	  for ($i = $count; $i > 0; $i--) {
+	    if (count($base) < 1) { //全部割り振ったら再セット
+	      $base = Lottery::GetList($target);
+	    }
+	    $target_role = array_pop($base);
+	    //Text::p($i, sprintf('◆ReplaceRole [%s -> %s]', $role, $target_role));
+	    ArrayFilter::Replace($list, $role, $target_role, 1); //置換処理
+	  }
+	} else {
 	  //Text::p($count, sprintf('◆ReplaceRole [%s -> %s]', $role, $target));
 	  ArrayFilter::Replace($list, $role, $target, $count); //置換処理
 	}
       }
+    }
+  }
+
+  //村人置換グループ判定 (完全一致 -> 先頭一致)
+  private static function IsReplaceHuman(string $option) {
+    if ($option == 'replace_human') {
+      return true;
+    } else {
+      return Text::IsPrefix($option, 'full_') || Text::IsPrefix($option, 'shuffle_');
     }
   }
 

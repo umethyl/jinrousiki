@@ -15,7 +15,7 @@ class Role_revive_fox extends Role_fox {
   }
 
   protected function OutputAddResult() {
-    if (DB::$ROOM->date < 3) {
+    if (DateBorder::PreThree()) {
       return;
     }
     RoleHTML::OutputResult(RoleAbility::REVIVE);

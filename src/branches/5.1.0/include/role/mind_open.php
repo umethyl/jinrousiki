@@ -12,6 +12,6 @@ class Role_mind_open extends Role_mind_read {
   }
 
   public function IsMindRead() {
-    return DB::$ROOM->date > 1;
+    return DateBorder::Second();
   }
 }

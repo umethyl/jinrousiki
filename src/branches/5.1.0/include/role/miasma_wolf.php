@@ -36,7 +36,7 @@ class Role_miasma_wolf extends Role_wolf {
     //悪戯(サブ)は仮想ユーザーで判定する (自身は憑依追跡不要)
     $target = (true === $virtual) ? $user->GetVirtual() : $user;
     foreach ($target->GetPartner('bad_status', true) as $id => $date) { //悪戯有効判定
-      if (true === DB::$ROOM->IsDate($date)) {
+      if (true === DateBorder::On($date)) {
 	$target->AddDoom(1, 'febris');
 	break;
       }
