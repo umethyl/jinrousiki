@@ -1315,8 +1315,10 @@ final class VoteNight extends VoteBase {
     //足音占い(審神者)の処理
     RoleVote::FilterNightStep($vote_data[VoteAction::STEP_MAGE], 'Mage');
 
-    //範囲占い(魔女見習い)の処理
-    RoleVote::FilterNight($vote_data[VoteAction::PLURAL_WIZARD], 'PluralMage', null, 'multi');
+    if (DateBorder::Second()) {
+      //範囲占い(魔女見習い)の処理
+      RoleVote::FilterNight($vote_data[VoteAction::PLURAL_WIZARD], 'PluralMage', null, 'multi');
+    }
 
     //幻系の能力失効処理
     //RoleManager::Stack()->p($name, "◆Target [{$name}]");

@@ -1577,6 +1577,32 @@ class ChaosConfig {
 			  'count' => 1],
 			 ['list' => ['sweet_cupid', 'revive_ogre'],
 			  'count' => 1]]],
+    //TypeC: Ver. 1.5.0
+    'c1' => ['fix' => ['wizard' => 1, 'soul_wizard' => 1]],
+    //TypeD: Ver. 2.1.0
+    'd1' => ['fix' => ['swindle_mad' => 1]],
+    //TypeE: Ver. 2.2.0
+    'e1' => ['pick' => [['list' => ['step_mage', 'step_guard'],
+			  'count' => 1],
+			 ['list' => ['step_wolf', 'step_mad', 'step_fox'],
+			  'count' => 1]]],
+    //TypeF: Ver. 2.3.0
+    'f1' => ['fix' => ['altair_cupid' => 1]],
+    //TypeG: Ver. 3.0.0
+    'g1' => ['pick' => [['list' => ['tengu', 'soul_tengu', 'eclipse_tengu'],
+			  'count' => 2]]],
+    //TypeH: Ver. 3.1.0
+    'h1' => ['fix' => ['mask_mania' => 1]],
+    //TypeI: Ver. 4.1.0
+    'i1' => ['fix' => ['gender_fairy' => 1],
+	     'pick' => [['list' => ['homogeneous_vampire', 'heterologous_vampire'],
+			  'count' => 1]]],
+    //TypeJ: Ver. 5.1.0
+    'j1' => ['fix' => ['sacrifice_cupid' => 1, 'flower_jealousy' => 1]],
+    'j2' => ['fix' => ['spell_wolf' => 1, 'miasma_wolf' => 1]],
+    'j3' => ['fix' => ['plural_wizard' => 1, 'plural_mad' => 1],
+	     'pick' => [['list' => ['sweet_wolf', 'sweet_fox'],
+			  'count' => 1]]],
   ];
 
   //サブ役職制限：EASYモード

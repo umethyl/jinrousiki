@@ -832,7 +832,7 @@ class RoleMessageList {
     'type' => 'fox', 'delimiter' => ['_' => 'mage']];
 
   public $sweet_fox = [
-    'message' => "[役割] [|妖狐|陣営] [|妖狐|系]\n　あなたは|局狐|です。#恋人#の発言を感知することができます。",
+    'message' => "[役割] [|妖狐|陣営] [|妖狐|系]\n　あなたは|局狐|です。#恋人#の発言を感知することができます。騙り、盗み聞き、なんでもござれ。狡賢い？こういう奴が最後に笑うのさ。",
     'type' => 'fox', 'delimiter' => ['#' => 'lovers']];
 
   public $purple_fox = [
