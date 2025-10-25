@@ -18,7 +18,6 @@ $font = 'azuki.ttf';
 //$role = 'poison'; //128
 //$role = 'result_plural_mad';
 //$role = 'prediction_weather_no_escape';
-//$role = 'spell_wolf';
 $role = 'sweet_fox';
 
 $calib_list = [0,0,0,0];
