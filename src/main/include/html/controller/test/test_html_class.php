@@ -46,6 +46,13 @@ final class DevHTML {
     );
   }
 
+  //テキスト型フォーム出力
+  public static function OutputText($id, $name, $value) {
+    Text::Printf(self::GetTextForm(),
+      OptionFormType::TEXT, $id, $name, $value
+    );
+  }
+
   //配役テストヘッダタグ
   private static function GetRoleTestHeader() {
     return <<<EOF
@@ -58,5 +65,10 @@ EOF;
   //フォームタグ
   private static function GetInputForm() {
     return '<input type="%s" id="%s" name="%s" value="%s"%s><label for="%s">%s</label>';
+  }
+
+  //テキストフォームタグ
+  private static function GetTextForm() {
+    return '<input type="%s" id="%s" name="%s" value="%s" size="4">';
   }
 }
