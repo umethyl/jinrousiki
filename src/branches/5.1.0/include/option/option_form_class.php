@@ -33,9 +33,18 @@ class OptionForm {
     }
 
     switch ($filter->type) {
+    case OptionFormType::TEXT:
+    case OptionFormType::PASSWORD:
+      $str = self::GenerateTextbox($filter);
+      break;
+
     case OptionFormType::CHECKBOX:
     case OptionFormType::RADIO:
       $str = self::GenerateCheckbox($filter);
+      break;
+
+    case OptionFormType::TEXT_CHECKBOX:
+      $str = self::GenerateTextCheckbox($filter);
       break;
 
     case OptionFormType::LIMITED_CHECKBOX:
@@ -44,11 +53,6 @@ class OptionForm {
 
     case OptionFormType::REALTIME:
       $str = self::GenerateRealtime($filter);
-      break;
-
-    case OptionFormType::TEXT:
-    case OptionFormType::PASSWORD:
-      $str = self::GenerateTextbox($filter);
       break;
 
     case OptionFormType::SELECTOR:
@@ -89,19 +93,30 @@ class OptionForm {
     OptionFormHTML::OutputToggle($group, OptionMessage::${'category_' . $group});
   }
 
-  //チェックボックス生成
-  private static function GenerateCheckbox(OptionCheckbox $filter) {
-    $footer = isset($filter->footer) ? $filter->footer : $filter->GetExplain();
-    return OptionFormHTML::GenerateCheckbox($filter, $filter->type, Text::ConvertLine($footer));
+  //テキストボックス生成
+  private static function GenerateTextbox(OptionText $filter) {
+    return OptionFormHTML::GenerateTextbox($filter);
   }
 
-  //チェックボックス生成 (制限付き用)
+  //チェックボックス生成
+  private static function GenerateCheckbox(OptionCheckbox $filter) {
+    $footer = Text::ConvertLine($filter->GetExplain());
+    return OptionFormHTML::GenerateCheckbox($filter, $filter->type, $footer);
+  }
+
+  //チェックボックス生成 (テキスト付き)
+  private static function GenerateTextCheckbox(OptionTextCheckbox $filter) {
+    $footer = OptionFormHTML::GenerateTextCheckbox($filter);
+    return OptionFormHTML::GenerateCheckbox($filter, OptionFormType::CHECKBOX, $footer);
+  }
+
+  //チェックボックス生成 (制限付き)
   private static function GenerateLimitedCheckbox(OptionLimitedCheckbox $filter) {
     $footer = OptionFormHTML::GenerateLimitedCheckbox($filter);
     return OptionFormHTML::GenerateCheckbox($filter, OptionFormType::CHECKBOX, $footer);
   }
 
-  //チェックボックス生成 (リアルタイム制専用)
+  //チェックボックス生成 (リアルタイム制用)
   private static function GenerateRealtime(Option_real_time $filter) {
     if (RoomOptionManager::IsChange()) {
       $day   = DB::$ROOM->game_option->list[$filter->name][0];
@@ -113,11 +128,6 @@ class OptionForm {
     $footer = OptionFormHTML::GenerateRealtime($filter, $day, $night);
 
     return OptionFormHTML::GenerateCheckbox($filter, OptionFormType::CHECKBOX, $footer);
-  }
-
-  //テキストボックス生成
-  private static function GenerateTextbox(OptionText $filter) {
-    return OptionFormHTML::GenerateTextbox($filter);
   }
 
   //セレクタ生成

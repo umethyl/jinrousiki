@@ -62,7 +62,7 @@ class VoteRoleMessage {
   const TARGET_INCLUDE_MYSELF = '必ず自分を対象に含めてください';
   const TARGET_MYSELF_COUNT   = '少人数村の場合は、必ず自分を対象に含めてください';
   const INVALID_TARGET_COUNT  = '指定人数は %d 人にしてください';
-  const INVALID_TARGET_RANGE  = '指定人数は1～4人にしてください';
+  const INVALID_TARGET_RANGE  = '指定人数は%d～%d人にしてください';
   const INVALID_VECTOR        = '方向転換は一回まで';
   const INVALID_ROUTE         = '通り道は直線にしてください';
   const UNCHAINED_ROUTE       = '通り道が一本に繋がっていません';

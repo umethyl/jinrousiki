@@ -9,7 +9,7 @@
 RoleLoader::LoadFile('mania');
 class Role_soul_mania extends Role_mania {
   protected function IgnoreResult() {
-    return false === DB::$ROOM->IsDate(2);
+    return false === DateBorder::Two();
   }
 
   protected function OutputAddResult() {

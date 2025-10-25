@@ -81,14 +81,14 @@ final class GameHTML {
 
     //オープニングあり対応
     if (DB::$ROOM->IsOption('open_day')) {
-      if (DB::$ROOM->date > 1 || DB::$ROOM->IsNight()) {
+      if (DateBorder::Second() || DB::$ROOM->IsNight()) {
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, 1);
       }
     }
 
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       $str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, 1);
-      for ($i = 2; $i < DB::$ROOM->date; $i++) {
+      for ($i = 2; DateBorder::Upper($i); $i++) {
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, $i);
 	$str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, $i);
       }
@@ -182,8 +182,8 @@ final class GameHTML {
     $str = self::GenerateWeather() . self::LoadDead(); //天候メッセージも表示する
 
     //ログ閲覧モード以外なら前のシーンの死亡メッセージを追加
-    if (DB::$ROOM->IsOn(RoomMode::LOG) || DB::$ROOM->IsTest() || DB::$ROOM->date < 2 ||
-	(DB::$ROOM->IsDate(2) && DB::$ROOM->Isday())) {
+    if (DB::$ROOM->IsOn(RoomMode::LOG) || DB::$ROOM->IsTest() || DateBorder::PreTwo() ||
+	(DateBorder::Two() && DB::$ROOM->Isday())) {
       return $str;
     }
 

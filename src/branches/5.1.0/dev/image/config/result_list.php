@@ -130,6 +130,7 @@ class ResultList extends RoleMessageList {
   public $result_esper_wizard = ['message' => "さんは|超能力者|でした", 'type' => 'result_wizard'];
   public $result_awake_wizard = ['message' => "さんは|比丘尼|でした", 'type' => 'result_wizard'];
   public $result_mimic_wizard = ['message' => "さんは|物真似師|でした", 'type' => 'result_wizard'];
+  public $result_plural_wizard = ['message' => "さんは|魔女見習い|でした", 'type' => 'result_wizard'];
   public $result_spiritism_wizard = ['message' => "さんは|交霊術師|でした", 'type' => 'result_wizard'];
   public $result_barrier_wizard = ['message' => "さんは|結界師|でした", 'type' => 'result_wizard'];
   public $result_philosophy_wizard = ['message' => "さんは|賢者|でした", 'type' => 'result_wizard'];
@@ -163,6 +164,7 @@ class ResultList extends RoleMessageList {
   public $result_cursed_wolf = ['message' => "さんは|呪狼|でした", 'type' => 'result_wolf'];
   public $result_quiet_wolf = ['message' => "さんは|静狼|でした", 'type' => 'result_wolf'];
   public $result_wise_wolf = ['message' => "さんは|賢狼|でした", 'type' => 'result_wolf'];
+  public $result_sweet_wolf = ['message' => "さんは|局狼|でした", 'type' => 'result_wolf'];
   public $result_eye_wolf = ['message' => "さんは|瞳狼|でした", 'type' => 'result_wolf'];
   public $result_disguise_wolf = ['message' => "さんは|朔狼|でした", 'type' => 'result_wolf'];
   public $result_purple_wolf = ['message' => "さんは|紫狼|でした", 'type' => 'result_wolf'];
@@ -198,6 +200,7 @@ class ResultList extends RoleMessageList {
   public $result_fanatic_mad = ['message' => "さんは|狂信者|でした", 'type' => 'result_mad'];
   public $result_whisper_mad = ['message' => "さんは|囁き狂人|でした", 'type' => 'result_mad'];
   public $result_swindle_mad = ['message' => "さんは|因幡兎|でした", 'type' => 'result_mad'];
+  public $result_plural_mad = ['message' => "さんは|魔女|でした", 'type' => 'result_mad'];
   public $result_jammer_mad = ['message' => "さんは|月兎|でした", 'type' => 'result_mad'];
   public $result_voodoo_mad = ['message' => "さんは|呪術師|でした", 'type' => 'result_mad'];
   public $result_enchant_mad = ['message' => "さんは|狢|でした", 'type' => 'result_mad'];
@@ -226,6 +229,7 @@ class ResultList extends RoleMessageList {
   public $result_tiger_fox = ['message' => "さんは|虎狐|でした", 'type' => 'result_fox'];
   public $result_gold_fox = ['message' => "さんは|金狐|でした", 'type' => 'result_fox'];
   public $result_phantom_fox = ['message' => "さんは|幻狐|でした", 'type' => 'result_fox'];
+  public $result_sweet_fox = ['message' => "さんは|局狐|でした", 'type' => 'result_fox'];
   public $result_purple_fox = ['message' => "さんは|紫狐|でした", 'type' => 'result_fox'];
   public $result_snow_fox = ['message' => "さんは|雪狐|でした", 'type' => 'result_fox'];
   public $result_fortitude_fox = ['message' => "さんは|剛狐|でした", 'type' => 'result_fox'];

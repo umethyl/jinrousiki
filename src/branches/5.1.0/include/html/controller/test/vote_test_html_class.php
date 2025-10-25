@@ -41,6 +41,7 @@ final class VoteTestHTML {
       case VoteAction::STEP_MAGE:
       case VoteAction::STEP_GUARD:
       case VoteAction::STEP_ASSASSIN:
+      case VoteAction::PLURAL_WIZARD:
       case VoteAction::SPREAD_WIZARD:
       case VoteAction::STEP_WOLF:
       case VoteAction::SILENT_WOLF:
@@ -100,6 +101,7 @@ final class VoteTestHTML {
 	echo VoteRoleMessage::$POISON_CAT_NOT_DO;
 	break;
 
+      case VoteAction::PLURAL_WIZARD:
       case VoteAction::SPREAD_WIZARD:
 	echo VoteRoleMessage::$WIZARD_DO;
 	break;

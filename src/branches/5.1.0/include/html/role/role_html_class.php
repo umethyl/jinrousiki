@@ -78,7 +78,7 @@ final class RoleHTML {
   //処刑投票メッセージ出力
   public static function OutputVoteKill() {
     //スキップ判定 (2日目以降/昼/生存者)
-    if (DB::$ROOM->date < 2 || false === DB::$ROOM->IsDay() || DB::$SELF->IsDead()) {
+    if (DateBorder::PreTwo() || false === DB::$ROOM->IsDay() || DB::$SELF->IsDead()) {
       return;
     }
 
@@ -426,6 +426,7 @@ final class RoleHTML {
     case VoteAction::STEP_GUARD:
     case VoteAction::STEP_ASSASSIN:
     case VoteAction::STEP_SCAN:
+    case VoteAction::PLURAL_WIZARD:
     case VoteAction::SPREAD_WIZARD:
     case VoteAction::STEP_VAMPIRE:
       return self::GetMultiVoteNightVotedMessage($stack);

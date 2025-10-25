@@ -11,13 +11,12 @@ class RoleTestMessage {
   public static $chaos_hyper		= '超・闇鍋';
   public static $chaos_verso		= '裏・闇鍋';
   public static $duel			= '決闘';
-  public static $duel_auto_open_cast	= '自動公開決闘';
-  public static $duel_not_open_cast	= '非公開決闘';
   public static $gray_random		= 'グレラン';
   public static $step			= '足音';
   public static $quiz			= 'クイズ';
 
   /* 追加オプション */
+  public static $museum_topping		= '博物館(追加)';
   public static $gerd			= 'ゲルト君';
   public static $disable_gerd		= 'ゲルト君無効';
   public static $poison			= '毒';

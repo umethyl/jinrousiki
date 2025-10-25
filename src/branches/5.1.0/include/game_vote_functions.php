@@ -763,7 +763,7 @@ final class VoteNight extends VoteBase {
 
     //-- 接触レイヤー --//
     self::LoadWolf();
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       self::LoadTrap();
       self::LoadGuard();
       self::LoadExit();
@@ -771,7 +771,7 @@ final class VoteNight extends VoteBase {
     }
 
     self::FilterWolfEat();
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       self::FilterDeathNote();
       self::FilterHunt();
       self::FilterDelayTrapKill();
@@ -801,7 +801,7 @@ final class VoteNight extends VoteBase {
     //-- 透視レイヤー --//
     self::FilterMindScan();
 
-    if (DB::$ROOM->IsDate(1)) {
+    if (DateBorder::One()) {
       //-- コピーレイヤー --//
       self::FilterCopy();
 
@@ -824,7 +824,7 @@ final class VoteNight extends VoteBase {
     //-- 反魂レイヤー --//
     self::FilterResurrect();
 
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       self::FilterReverseResurrect();
 
       //-- 蘇生レイヤー --//
@@ -856,7 +856,7 @@ final class VoteNight extends VoteBase {
     self::FilterLastWords();
 
     //-- 司祭レイヤー --//
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       self::FilterNecromancerNight();
     }
     self::FilterPriest();
@@ -938,7 +938,7 @@ final class VoteNight extends VoteBase {
   private static function InitVote() {
     //処理対象コマンドチェック
     $stack = VoteActionGroup::$init;
-    if (DB::$ROOM->IsDate(1)) {
+    if (DateBorder::One()) {
       ArrayFilter::AddMerge($stack, VoteActionGroup::$init_first);
     } else {
       ArrayFilter::AddMerge($stack, VoteActionGroup::$init_after);
@@ -990,7 +990,7 @@ final class VoteNight extends VoteBase {
 
   //魔法使い系の振り替え処理
   private static function FilterWizard() {
-    if (DB::$ROOM->date < 2) {
+    if (DateBorder::PreTwo()) {
       return;
     }
 
@@ -1015,7 +1015,7 @@ final class VoteNight extends VoteBase {
     }
 
     $stack = VoteActionGroup::$step;
-    if (DB::$ROOM->date > 1) {
+    if (DateBorder::Second()) {
       ArrayFilter::AddMerge($stack, VoteActionGroup::$step_after);
     }
 
@@ -1024,7 +1024,7 @@ final class VoteNight extends VoteBase {
       RoleVote::FilterNight($vote_data[$action], 'Step', 'none', 'multi');
     }
 
-    if (DB::$ROOM->IsDate(1)) {
+    if (DateBorder::One()) {
       foreach (RoleFilterData::$step_copy as $role) { //コピー型の処理
 	foreach (DB::$USER->GetRoleUser($role) as $user) {
 	  if (false === $user->IsDummyBoy()) {
@@ -1063,7 +1063,7 @@ final class VoteNight extends VoteBase {
     RoleVote::FilterNightSet($vote_data[VoteAction::TRAP], 'SetTrap'); //設置処理
 
     $role = 'trap_wolf'; //狡狼の自動設置処理 (無効天候あり)
-    if (DB::$ROOM->date > 2 && EventManager::EnableTrap() && DB::$USER->IsAppear($role)) {
+    if (DateBorder::Third() && EventManager::EnableTrap() && DB::$USER->IsAppear($role)) {
       foreach (DB::$USER->GetRoleUser($role) as $user) {
 	if ($user->IsLive()) {
 	  RoleLoader::LoadMain($user)->SetAutoTrap();
@@ -1312,7 +1312,13 @@ final class VoteNight extends VoteBase {
     foreach (VoteActionGroup::$mage as $action) {
       RoleVote::FilterNight($vote_data[$action], 'Mage');
     }
-    RoleVote::FilterNightStep($vote_data[VoteAction::STEP_MAGE], 'Mage'); //審神者の処理
+    //足音占い(審神者)の処理
+    RoleVote::FilterNightStep($vote_data[VoteAction::STEP_MAGE], 'Mage');
+
+    if (DateBorder::Second()) {
+      //範囲占い(魔女見習い)の処理
+      RoleVote::FilterNight($vote_data[VoteAction::PLURAL_WIZARD], 'PluralMage', null, 'multi');
+    }
 
     //幻系の能力失効処理
     //RoleManager::Stack()->p($name, "◆Target [{$name}]");
@@ -1340,7 +1346,7 @@ final class VoteNight extends VoteBase {
   private static function FilterMindScan() {
     $vote_data = RoleManager::GetVoteData();
     RoleVote::FilterNight($vote_data[VoteAction::SCAN], 'MindScan');
-    if (DB::$ROOM->date > 1) { //雷神は二日目以降
+    if (DateBorder::Second()) { //雷神は二日目以降
       RoleVote::FilterNight($vote_data[VoteAction::STEP_SCAN], 'StepMindScan', null, 'multi');
       self::FilterDelayTrapKill(); //遅行罠死処理 (凍傷型は無効)
     }

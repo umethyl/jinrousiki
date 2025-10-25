@@ -10,7 +10,7 @@ class Role_soul_assassin extends Role_assassin {
   public $result = RoleAbility::ASSASSIN;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   protected function AssassinAction(User $user) {

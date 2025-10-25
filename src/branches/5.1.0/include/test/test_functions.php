@@ -42,7 +42,7 @@ class DevRoom {
     $stack = [];
     foreach (RQ::GetTest()->system_message as $date => $date_list) {
       //Text::p($date_list, "◆Event [{$date}]");
-      if (false === DB::$ROOM->IsDate($date)) {
+      if (false === DateBorder::On($date)) {
 	continue;
       }
 
@@ -237,7 +237,7 @@ class DevUser {
       }
     }
 
-    if (DB::$ROOM->IsDate(1)) { //初日は死亡者ゼロ
+    if (DateBorder::One()) { //初日は死亡者ゼロ
       foreach (DB::$USER->Get() as $user) {
 	if ($user->IsDead()) {
 	  $user->live = UserLive::LIVE;

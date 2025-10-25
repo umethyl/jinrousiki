@@ -17,7 +17,7 @@ class Role_doom_chiroptera extends Role {
   }
 
   protected function IsSuddenDeath() {
-    return DB::$ROOM->IsDate(7);
+    return DateBorder::On(7);
   }
 
   protected function GetSuddenDeathType() {

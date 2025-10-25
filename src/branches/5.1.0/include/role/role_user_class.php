@@ -126,6 +126,36 @@ class RoleUser {
     return $user->IsRole('mind_lonely') || $user->IsRoleGroup('silver');
   }
 
+  //-- 独り言変換判定 --//
+  //共有者の囁き
+  public static function CommonWhisper(User $user) {
+    return false === DB::$SELF->IsRole('dummy_common');
+  }
+
+  //人狼の遠吠え
+  public static function WolfHowl(User $user) {
+    return false === DB::$SELF->IsRole('mind_scanner');
+  }
+
+  //囁耳鳴
+  public static function WhisperRinging(User $user) {
+    return $user->IsRole('whisper_ringing');
+  }
+
+  //吠耳鳴
+  public static function HowlRinging(User $user) {
+    return $user->IsRole('howl_ringing');
+  }
+
+  //恋耳鳴
+  public static function SweetRinging(User $user) {
+    //メイン役職判定
+    if (DB::$SELF->IsRole(RoleFilterData::$talk_sweet_ringing)) {
+      return true;
+    }
+    return $user->IsRole('sweet_ringing');
+  }
+
   //-- 能力判定 --//
   //時間差コピー能力者
   public static function IsDelayCopy(User $user) {

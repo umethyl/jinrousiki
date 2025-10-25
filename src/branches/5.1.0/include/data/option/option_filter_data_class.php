@@ -39,7 +39,7 @@ final class OptionFilterData {
   public static $cast_add_role_special = ['wolf', 'mad', 'fox', 'no_fox', 'depraver'];
 
   //追加配役/闇鍋固定枠
-  public static $cast_chaos_fix_role = ['topping', 'gerd', 'detective'];
+  public static $cast_chaos_fix_role = ['topping', 'museum_topping', 'gerd', 'detective'];
 
   //-- Cast::Execute() --//
   //身代わり君固定配役 (順番依存あり)
@@ -54,7 +54,7 @@ final class OptionFilterData {
   //ユーザーサブ役職配役
   public static $cast_user_sub_role = [
     'decide', 'authority', 'joker', 'deep_sleep', 'blinder', 'mind_open', 'perverseness',
-    'liar', 'gentleman', 'passion', 'critical', 'sudden_death', 'quiz'
+    'liar', 'gentleman', 'passion', 'critical', 'critical_chicken', 'sudden_death', 'quiz'
   ];
 
   //ユーザーサブ役職配役 (闇鍋モード)

@@ -15,7 +15,7 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   protected function GetMindRole() {
@@ -41,21 +41,21 @@ class Role_clairvoyance_scanner extends Role_mind_scanner {
       $target_name  = $user->GetName();
       $target_stack = $vote_stack[$user->id];
 
-      //結界師 > 足音能力者/本人起点型 > 足音能力者/直線型 > その他
-      if ($user->IsRole('barrier_wizard')) {
+      //範囲投票型 > 足音能力者(本人起点型) > 足音能力者(直線型) > その他
+      if ($user->IsRole(RoleFilterData::$scan_plural)) {
 	$result_stack = [];
 	foreach (Text::Parse($target_stack) as $id) { //憑依を追跡する
 	  $target = DB::$USER->ByVirtual($id);
 	  $result_stack[$target->id] = $target->handle_name;
 	}
-      } elseif ($user->IsRole('step_mage', 'step_guard', 'step_wolf', 'step_vampire')) {
+      } elseif ($user->IsRole(RoleFilterData::$scan_step_chain)) {
 	$id_stack = Text::Parse($target_stack);
 	$target   = DB::$USER->ByVirtual(array_pop($id_stack)); //最終到達点は憑依を追跡する
 	$result_stack = [$target->id => $target->handle_name];
 	foreach ($id_stack as $id) {
 	  $result_stack[$id] = DB::$USER->ByID($id)->handle_name;
 	}
-      } elseif ($user->IsRole('step_assassin', 'step_scanner', 'step_mad', 'step_fox')) {
+      } elseif ($user->IsRole(RoleFilterData::$scan_step_line)) {
 	$result_stack = [];
 	foreach (Text::Parse($target_stack) as $id) { //憑依を追跡しない
 	  $result_stack[$id] = DB::$USER->ByID($id)->handle_name;

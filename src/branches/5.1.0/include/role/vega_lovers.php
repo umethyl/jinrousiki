@@ -12,7 +12,7 @@ class Role_vega_lovers extends Role {
   public $mix_in = ['decide', 'watcher', 'upper_luck'];
 
   protected function IgnoreAbility() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   protected function GetStackVoteKillType() {

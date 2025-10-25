@@ -17,6 +17,6 @@ class Role_eccentricer extends Role {
   }
 
   protected function IgnoreFilterVoteDo() {
-    return DB::$ROOM->date > 4;
+    return DateBorder::Fifth();
   }
 }

@@ -7,6 +7,6 @@
 RoleLoader::LoadFile('common');
 class Role_leader_common extends Role_common {
   public function IsMindRead() {
-    return DB::$ROOM->date > 1;
+    return DateBorder::Second();
   }
 }

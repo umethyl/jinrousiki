@@ -159,6 +159,9 @@ class GameOptionConfig {
   public static $notice_critical_enable  = true; //急所通知
   public static $default_notice_critical = false;
 
+  public static $critical_chicken_enable  = true; //腰痛村
+  public static $default_critical_chicken = false;
+
   public static $sudden_death_enable  = true; //虚弱体質村
   public static $default_sudden_death = false;
 
@@ -189,10 +192,11 @@ class GameOptionConfig {
   public static $full_chiroptera_patron    = true; //後援者村
   public static $full_mania_enable         = true; //神話マニア村
   public static $full_unknown_mania_enable = true; //鵺村
+  public static $shuffle_human_enable      = true; //村人振替村
   //村人置換モードの内訳
   public static $replace_human_selector_list = [
     '' => 'なし', 'replace_human', 'full_mad', 'full_cupid', 'full_quiz', 'full_vampire',
-    'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania'
+    'full_chiroptera', 'full_patron', 'full_mania', 'full_unknown_mania', 'shuffle_human'
   ];
 
   public static $change_common_enable        = true; //共有者置換村 (管理人カスタムモード)
@@ -298,6 +302,8 @@ class GameOptionConfig {
     'm' => 'M：天道村',
     'n' => 'N：封マ村'
   ];
+
+  public static $museum_topping_enable = true; //博物館追加モード
 
   //配役通知設定
   public static $chaos_open_cast_enable      = true; //配役内訳を表示する

@@ -21,7 +21,7 @@ class Role_possessed_exchange extends Role {
       return;
     }
 
-    if (DB::$ROOM->date < 3) {
+    if (DateBorder::PreThree()) {
       $header = 'exchange_header';
       $footer = 'exchange_footer';
     } else {

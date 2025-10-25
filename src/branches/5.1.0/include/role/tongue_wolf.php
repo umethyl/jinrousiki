@@ -10,7 +10,7 @@ class Role_tongue_wolf extends Role_wolf {
   public $result = RoleAbility::TONGUE_WOLF;
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 2;
+    return DateBorder::PreTwo();
   }
 
   protected function WolfKillAction(User $user) {

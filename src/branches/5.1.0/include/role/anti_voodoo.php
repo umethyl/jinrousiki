@@ -13,7 +13,7 @@ class Role_anti_voodoo extends Role {
   }
 
   protected function IgnoreResult() {
-    return DB::$ROOM->date < 3;
+    return DateBorder::PreThree();
   }
 
   public function OutputAction() {

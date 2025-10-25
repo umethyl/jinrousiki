@@ -46,6 +46,9 @@ final class RoleFilterData {
   //発言表示 (耳鳴)
   public static $talk_ringing = ['whisper_ringing', 'howl_ringing'];
 
+  //発言表示 (恋耳鳴)/メイン役職
+  public static $talk_sweet_ringing = ['sweet_wolf', 'sweet_fox'];
+
   //閲覧判定
   public static $mind_read = [
     'leader_common', 'whisper_scanner', 'howl_scanner', 'telepath_scanner', 'minstrel_cupid',
@@ -194,8 +197,8 @@ final class RoleFilterData {
   //ショック死 (サブ / 順番依存あり)
   public static $sudden_death_sub = [
     'challenge_lovers', 'febris', 'chill_febris', 'frostbite', 'death_warrant', 'panelist',
-    'thorn_cross', 'chicken', 'rabbit', 'perverseness', 'flattery', 'celibacy', 'nervy',
-    'androphobia', 'gynophobia', 'impatience'
+    'thorn_cross', 'chicken', 'critical_chicken', 'rabbit', 'perverseness', 'flattery',
+    'celibacy', 'nervy', 'androphobia', 'gynophobia', 'impatience'
   ];
 
   //ショック死抑制
@@ -270,6 +273,15 @@ final class RoleFilterData {
   public static $jammer_mage_result = [
     'sheep_wisp', 'wisp', 'tengu_spell_wisp', 'foughten_wisp', 'black_wisp'
   ];
+
+  //透視/範囲投票
+  public static $scan_plural = ['plural_wizard', 'barrier_wizard', 'plural_mad'];
+
+  //透視/足音 (本人起点型)
+  public static $scan_step_chain = ['step_mage', 'step_guard', 'step_wolf', 'step_vampire'];
+
+  //透視/足音 (直線型)
+  public static $scan_step_line = ['step_assassin', 'step_scanner', 'step_mad', 'step_fox'];
 
   //復活
   public static $resurrect = [

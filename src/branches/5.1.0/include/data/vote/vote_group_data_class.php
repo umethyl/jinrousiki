@@ -36,6 +36,7 @@ final class VoteActionGroup {
     VoteAction::ASSASSIN,
     VoteAction::STEP_ASSASSIN,
     VoteAction::WIZARD,
+    VoteAction::PLURAL_WIZARD,
     VoteAction::SPREAD_WIZARD,
     VoteAction::ESCAPE,
     VoteAction::DREAM,
