@@ -288,7 +288,7 @@ final class Encoder {
   }
 
   //BOM 消去
-  public static function BOM($str) {
+  public static function BOM(string $str) {
     if (ord($str[0]) == '0xef' && ord($str[1]) == '0xbb' && ord($str[2]) == '0xbf') {
       $str = substr($str, 3);
     }
@@ -297,18 +297,60 @@ final class Encoder {
 
   //POST されたデータの文字コードを統一する
   public static function Post() {
-    foreach ($_POST as $key => $value) {
+    self::Filter($_POST);
+  }
+
+  //配列データフィルタリング (POST 変換用)
+  private static function Filter(array &$list) {
+    foreach ($list as $key => $value) {
       //多段配列対応(例: アイコンのカテゴリ)
       if (is_array($value)) {
-	foreach ($value as $v_key => $v_value) {
-          $encode = @mb_detect_encoding($v_value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS', true);
-	  $_POST[$key][$v_key] = self::Convert($v_value, $encode);
-	}
+	self::Filter($value);
       } else {
-        $encode = @mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS', true);
-        $_POST[$key] = self::Convert($value, $encode);
+	$list[$key] = self::Convert($value, self::Detect($value));
       }
     }
+  }
+
+  //文字コード判定
+  private static function Detect(string $str) {
+    if (self::UTF($str)) {
+      return 'UTF-8';
+    } else {
+      return @mb_detect_encoding($str, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
+    }
+  }
+
+  //UTF-8判定
+  private static function UTF(string $str) {
+    $len = strlen($str);
+    for ($i = 0; $i < $len; $i++) {
+      $c = ord($str[$i]);
+      if ($c > 128) {
+	if ($c > 247) {
+	  return false;
+	} elseif ($c > 239) {
+	  $bytes = 4;
+	} elseif ($c > 223) {
+	  $bytes = 3;
+	} elseif ($c > 191) {
+	  $bytes = 2;
+	} else {
+	  return false;
+	}
+	if (($i + $bytes) > $len) {
+	  return false;
+	}
+	while ($bytes > 1) {
+	  $i++;
+	  if (Number::OutRange(ord($str[$i]), 128, 191)) {
+	    return false;
+	  }
+	  $bytes--;
+	}
+      }
+    }
+    return true;
   }
 }
 
