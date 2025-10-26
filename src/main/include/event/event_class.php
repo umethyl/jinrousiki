@@ -1,7 +1,7 @@
 <?php
 //-- イベントローダー --//
 final class EventLoader extends LoadManager {
-  const PATH = '%s/event/%s.php';
+  const PATH = '%s/event/instance/%s.php';
   const CLASS_PREFIX = 'Event_';
   protected static $file  = [];
   protected static $class = [];
