@@ -58,6 +58,17 @@ final class GamePlayController extends JinrouController {
       JinrouCookie::Set(); //クッキー情報セット
     }
 
+    //-- 身代わり君の個別発言投稿時調整 --//
+    RQ::Set('individual_talk', false);
+    if (GameAction::IsIndividual()) {
+      RQ::Set('individual_talk', true);
+      if (DB::$SELF->IsDead()) {
+	//霊界からの投稿時は死亡フラグを立てて後続の処理を通す
+	RQ::Get()->dead_mode = true;
+	DB::$ROOM->Flag()->Set(RoomMode::DEAD, RQ::Get()->dead_mode);
+      }
+    }
+
     //-- リンク情報収集 --//
     RQ::Get()->StackIntParam(RequestDataGame::ID, false);
     RQ::Get()->StackIntParam(RequestDataGame::RELOAD);
@@ -99,7 +110,8 @@ final class GamePlayController extends JinrouController {
     GamePlayTalk::InitStack(); //判定用変数初期化
 
     //発言送信フレーム (bottom) 判定 > 霊界GM判定
-    if (DB::$ROOM->IsOff(RoomMode::DEAD) || DB::$ROOM->IsOn(RoomMode::HEAVEN)) {
+    if (true === RQ::Get()->individual_talk ||
+	DB::$ROOM->IsOff(RoomMode::DEAD) || DB::$ROOM->IsOn(RoomMode::HEAVEN)) {
       GamePlayTalk::Convert(); //発言変換処理
 
       /*

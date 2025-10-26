@@ -586,6 +586,7 @@ final class TalkBuilder {
       $name .= $user->GenerateShortRoleName();
     }
 
+    $talk->individual = false;
     if (DB::$ROOM->IsNight() &&
 	(($talk->location == TalkLocation::MONOLOGUE && ! $user->IsRole('dummy_common')) ||
 	 $user->IsRole('leader_common', 'mind_read', 'mind_open'))) {
@@ -595,6 +596,7 @@ final class TalkBuilder {
       list($parse_location, $location_id) = Text::Parse($talk->location, ':');
       if ($parse_location == TalkLocation::INDIVIDUAL) {
 	$name .= Text::BRLF . ' -> ' . DB::$USER->ByID($location_id)->GetName();
+	$talk->individual = true;
       }
     }
 
@@ -614,6 +616,9 @@ final class TalkBuilder {
     if ($talk->location == TalkLocation::SECRET) {
       $stack[TalkElement::CSS_ROW] = TalkVoice::SECRET;
       $stack[TalkElement::SYMBOL] .= TalkMessage::SECRET_SYMBOL;
+    }
+    if (true === $talk->individual) {
+      $stack[TalkElement::CSS_ROW] = TalkVoice::INDIVIDUAL;
     }
 
     return $this->Register($stack);
@@ -765,6 +770,7 @@ final class TalkBuilder {
   private function TalkOpenNight(TalkParser $talk, User $user, $symbol, $name) {
     $css   = '';
     $voice = $talk->font_type;
+    $talk->individual = false;
     switch ($talk->location) {
     case TalkLocation::COMMON:
       $css    = TalkCSS::NIGHT_COMMON;
@@ -801,6 +807,7 @@ final class TalkBuilder {
 	list($parse_location, $location_id) = Text::Parse($talk->location, ':');
 	if ($parse_location == TalkLocation::INDIVIDUAL) {
 	  $name .= Text::BRLF . ' -> ' . DB::$USER->ByID($location_id)->GetName();
+	  $talk->individual = true;
 	}
       }
       break;
@@ -814,6 +821,10 @@ final class TalkBuilder {
       TalkElement::SENTENCE => $talk->sentence,
       TalkElement::CSS_USER => $css
     ];
+    if (true === $talk->individual) {
+      $stack[TalkElement::CSS_ROW] = TalkVoice::INDIVIDUAL;
+    }
+
     return $this->Register($stack);
   }
 
