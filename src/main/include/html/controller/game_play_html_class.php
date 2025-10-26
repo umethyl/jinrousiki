@@ -132,7 +132,9 @@ final class GamePlayHTML {
   //フォーム出力 (身代わり君用)
   public static function OutputForm($url) {
     Text::Printf(self::GetFormHeader(),
-      $url, RQ::Get()->heaven_mode ? 'reload_middle_frame();' : '',
+      $url,
+      DB::$SELF->IsLive() ? 'bottom' : 'middle',
+      DB::$SELF->IsLive() ? 'reload_middle_frame();' : 'set_focus();',
       GamePlayMessage::INDIVIDUAL_TALK_EXPLAIN,
       Security::GetToken(DB::$ROOM->id),
       RequestDataTalk::INDIVIDUAL, Switcher::ON,
@@ -232,7 +234,7 @@ EOF;
   //フォームタグヘッダ (身代わり君用)
   private static function GetFormHeader() {
     return <<<EOF
-<form method="post" action="%s" target="bottom" class="input-say" name="send" onSubmit="%sset_focus();">
+<form method="post" action="%s" target="%s" class="input-say" name="send" onSubmit="%s">
 <span class="input-say-explain">%s</span>
 <input type="hidden" name="token" value="%s">
 <input type="hidden" name="%s" value="%s">

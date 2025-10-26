@@ -17,6 +17,35 @@ final class GameAction {
       }
     }
   }
+
+  //身代わり君の個別発言投稿判定
+  public static function IsIndividual() {
+    //身代わり君限定
+    if (false === DB::$SELF->IsDummyBoy()) {
+      return false;
+    }
+
+    //プレイ中限定
+    if (false === DB::$ROOM->IsPlaying()) {
+      return false;
+    }
+
+    //フラグ判定
+    RQ::Get()->ParsePostOn(RequestDataTalk::INDIVIDUAL);
+    if (RQ::Get()->Disable(RequestDataTalk::INDIVIDUAL)) {
+      return false;
+    }
+
+    //対象者
+    RQ::Get()->ParsePostInt(RequestDataTalk::TARGET);
+    $target_id = RQ::Get()->{RequestDataTalk::TARGET};
+    $user      = DB::$USER->ByID($target_id);
+    if ($target_id != $user->id) {
+      return false;
+    }
+
+    return true;
+  }
 }
 
 //-- 位置関連クラス --//

@@ -19,11 +19,9 @@ final class GamePlayTalk {
   //発言登録
   public static function Store($say) {
     //-- 特殊発言判定 --//
-    RQ::Set('individual_talk', false);
-    RQ::Set('secret_talk',     false);
-    if (self::IsIndividual()) {
+    RQ::Set('secret_talk', false);
+    if (GameAction::IsIndividual()) {
       //-- 個別発言 --//
-      RQ::Set('individual_talk', true);
       RQ::Set(RequestDataTalk::VOICE, TalkVoice::NORMAL); //声の大きさは普通で固定
     } elseif (RQ::Get()->font_type == TalkVoice::SECRET) {
       //-- 秘密発言判定 --//
@@ -122,35 +120,6 @@ final class GamePlayTalk {
 
     //-- タイマー更新判定 --//
     Talk::Stack()->Set(Talk::UPDATE, DB::$SELF->IsDummyBoy());
-  }
-
-  //特殊発言判定 (個別発言)
-  private static function IsIndividual() {
-    //身代わり君限定
-    if (false === DB::$SELF->IsDummyBoy()) {
-      return false;
-    }
-
-    //プレイ中限定
-    if (false === DB::$ROOM->IsPlaying()) {
-      return false;
-    }
-
-    //フラグ判定
-    RQ::Get()->ParsePostOn(RequestDataTalk::INDIVIDUAL);
-    if (RQ::Get()->Disable(RequestDataTalk::INDIVIDUAL)) {
-      return false;
-    }
-
-    //対象者
-    RQ::Get()->ParsePostInt(RequestDataTalk::TARGET);
-    $target_id = RQ::Get()->{RequestDataTalk::TARGET};
-    $user      = DB::$USER->ByID($target_id);
-    if ($target_id != $user->id) {
-      return false;
-    }
-
-    return true;
   }
 
   //発言数更新 (発言数制限制用)
