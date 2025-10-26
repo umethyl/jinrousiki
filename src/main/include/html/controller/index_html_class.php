@@ -107,7 +107,7 @@ final class IndexHTML {
 
     $format = self::GetBBS();
     $str = '';
-    $str_stack = Text::Parse(Text::Encode($data, BBSConfig::ENCODE), Text::LF);
+    $str_stack = Text::Parse(Encoder::Convert($data, BBSConfig::ENCODE), Text::LF);
     array_pop($str_stack);
     foreach ($str_stack as $res_stack) {
       $res = Text::Parse($res_stack, '<>');
