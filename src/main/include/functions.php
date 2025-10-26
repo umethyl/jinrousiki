@@ -113,26 +113,9 @@ final class Text {
     return mb_substr($str, 0, $limit);
   }
 
-  //BOM 消去
-  public static function RemoveBOM($str) {
-    if (ord($str[0]) == '0xef' && ord($str[1]) == '0xbb' && ord($str[2]) == '0xbf') {
-      $str = substr($str, 3);
-    }
-    return $str;
-  }
-
   //暗号化
   public static function Crypt($str) {
     return sha1(ServerConfig::SALT . $str);
-  }
-
-  //文字コード変換
-  public static function Encode($str, $encode, $convert = ServerConfig::ENCODE) {
-    if ($encode == '' || $encode == 'ASCII' || $encode == $convert) {
-      return $str;
-    } else {
-      return mb_convert_encoding($str, $convert, $encode);
-    }
   }
 
   //トリップ変換
@@ -158,7 +141,7 @@ final class Text {
 	$name = self::Shrink($str, $trip_start);
 	$key  = mb_substr($str, $trip_start + 1);
 	//self::p(sprintf('%s, name: %s, key: %s', $trip_start, $name, $key), '◆Trip Start');
-	$key  = self::Encode($key, ServerConfig::ENCODE, 'SJIS'); //文字コードを変換
+	$key  = Encoder::Convert($key, ServerConfig::ENCODE, 'SJIS'); //文字コードを変換
 
 	if (GameConfig::TRIP_2ch && self::Over($key, 12 - 1)) {
 	  $trip = self::ConvertTrip2ch($key);
@@ -238,22 +221,6 @@ final class Text {
   }
 
   /* 更新系 */
-  //POST されたデータの文字コードを統一する
-  public static function EncodePost() {
-    foreach ($_POST as $key => $value) {
-      //多段配列対応(例: アイコンのカテゴリ)
-      if (is_array($value)) {
-	foreach ($value as $v_key => $v_value) {
-          $encode = @mb_detect_encoding($v_value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
-	  $_POST[$key][$v_key] = self::Encode($v_value, $encode);
-	}
-      } else {
-        $encode = @mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
-        $_POST[$key] = self::Encode($value, $encode);
-      }
-    }
-  }
-
   //特殊文字のエスケープ処理
   //htmlentities() を使うと文字化けを起こしてしまうようなので敢えてべたに処理
   public static function Escape(&$str, $trim = true) {
@@ -306,6 +273,42 @@ final class Text {
   public static function t($data, $name = null) {
     $builder = class_exists('Talk') ? Talk::GetBuilder() : null;
     return (null === $builder) ? self::p($data, $name) : $builder->TalkDebug($data, $name);
+  }
+}
+
+//-- 文字コード関連 --//
+final class Encoder {
+  //変換
+  public static function Convert($str, $encode, $convert = ServerConfig::ENCODE) {
+    if ($encode == '' || $encode == 'ASCII' || $encode == $convert) {
+      return $str;
+    } else {
+      return mb_convert_encoding($str, $convert, $encode);
+    }
+  }
+
+  //BOM 消去
+  public static function BOM($str) {
+    if (ord($str[0]) == '0xef' && ord($str[1]) == '0xbb' && ord($str[2]) == '0xbf') {
+      $str = substr($str, 3);
+    }
+    return $str;
+  }
+
+  //POST されたデータの文字コードを統一する
+  public static function Post() {
+    foreach ($_POST as $key => $value) {
+      //多段配列対応(例: アイコンのカテゴリ)
+      if (is_array($value)) {
+	foreach ($value as $v_key => $v_value) {
+          $encode = @mb_detect_encoding($v_value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS', true);
+	  $_POST[$key][$v_key] = self::Convert($v_value, $encode);
+	}
+      } else {
+        $encode = @mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS', true);
+        $_POST[$key] = self::Convert($value, $encode);
+      }
+    }
   }
 }
 

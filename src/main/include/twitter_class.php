@@ -13,7 +13,7 @@ final class JinrouTwitter {
     }
 
     $str = TwitterConfig::GenerateMessage($id, $name, $comment);
-    $str = Text::Encode($str, self::ENCODE, ServerConfig::ENCODE);
+    $str = Encoder::Convert($str, self::ENCODE, ServerConfig::ENCODE);
     if (self::Over($str)) {
       $str = Text::Shrink($str, self::LIMIT - 1);
     }

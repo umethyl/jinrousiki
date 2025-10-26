@@ -229,7 +229,7 @@ final class InfoHTML {
       return false;
     }
 
-    $data = Text::RemoveBOM(Text::Encode($data, $encode));
+    $data = Encoder::BOM(Encoder::Convert($data, $encode));
     if ($separator != '') {
       $split_list = mb_split($separator, $data);
       $data = array_pop($split_list);

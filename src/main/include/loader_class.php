@@ -142,7 +142,6 @@ final class Loader extends LoadManager {
       mb_language('ja');
       mb_internal_encoding(ServerConfig::ENCODE);
       mb_http_input();
-      //mb_http_input('auto');
       mb_http_output(ServerConfig::ENCODE);
     }
 
