@@ -1,6 +1,6 @@
 <?php
 //-- セッション管理クラス --//
-class Session {
+final class Session {
   private static $id      = null;
   private static $user_no = null;
 

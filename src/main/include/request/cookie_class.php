@@ -1,6 +1,6 @@
 <?php
 //-- クッキー処理クラス --//
-class JinrouCookie {
+final class JinrouCookie {
   const TIME = 3600; //保持時間
   public static $scene;		//夜明け
   public static $objection;	//「異議」あり情報
