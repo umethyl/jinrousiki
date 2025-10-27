@@ -49,6 +49,7 @@ class ResultList extends RoleMessageList {
   public $result_hunter_guard = ['message' => "さんは|猟師|でした", 'type' => 'result_guard'];
   public $result_blind_guard = ['message' => "さんは|夜雀|でした", 'type' => 'result_guard'];
   public $result_gatekeeper_guard = ['message' => "さんは|門番|でした", 'type' => 'result_guard'];
+  public $result_finder_guard = ['message' => "さんは|狛犬|でした", 'type' => 'result_guard'];
   public $result_step_guard = ['message' => "さんは|山立|でした", 'type' => 'result_guard'];
   public $result_grave_guard = ['message' => "さんは|墓守|でした", 'type' => 'result_guard'];
   public $result_wanderer_guard = ['message' => "さんは|一寸法師|でした", 'type' => 'result_guard'];
@@ -465,6 +466,7 @@ class ResultList extends RoleMessageList {
     'message' => "|神託|結果： 現在、生存している#村人陣営#・_人狼陣営_の合計は",
     'type' => 'priest_header', 'delimiter' => ['_' => 'wolf']];
   public $guard_hunted = ['message' => "さんを|狩る|ことに成功しました！", 'type' => 'result_guard'];
+  public $guard_found = ['message' => "さんは|強い力|を持っているようです", 'type' => 'result_mania'];
   public $guard_success = ['message' => "さん|護衛|成功！", 'type' => 'result_guard'];
   public $guard_penetration = ['message' => "さんに|護衛貫通|を付加しました", 'type' => 'result_guard'];
   public $reporter_result_header = ['message' => "|張り込み|結果： ", 'type' => 'result_guard'];

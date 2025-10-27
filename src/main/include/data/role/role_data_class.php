@@ -53,6 +53,7 @@ final class RoleData {
     'hunter_guard'		=> '猟師',
     'blind_guard'		=> '夜雀',
     'gatekeeper_guard'		=> '門番',
+    'finder_guard'		=> '狛犬',
     'step_guard'		=> '山立',
     'grave_guard'		=> '墓守',
     'wanderer_guard'		=> '一寸法師',

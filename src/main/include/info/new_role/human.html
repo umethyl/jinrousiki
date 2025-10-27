@@ -1474,14 +1474,15 @@ PP ラインの計算を複雑にするために作成してみました。
 <a href="#hunter_guard">猟師</a>
 <a href="#blind_guard">夜雀</a>
 <a href="#gatekeeper_guard">門番</a>
+<a href="#finder_guard">狛犬</a>
 <a href="#step_guard">山立</a>
 <a href="#grave_guard">墓守</a>
 <a href="#wanderer_guard">一寸法師</a>
 <a href="#reflect_guard">侍</a>
 <a href="#poison_guard">騎士</a>
-<a href="#fend_guard">忍者</a>
 </p>
 <p>
+<a href="#fend_guard">忍者</a>
 <a href="#reporter">ブン屋</a>
 <a href="#anti_voodoo">厄神</a>
 <a href="#elder_guard">老兵</a>
@@ -1493,7 +1494,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <li>制限対象は、<a href="#prince">ろくろ首</a>・<a href="#step_mage">審神者</a>・<a href="#emissary_necromancer">密偵</a>・<a href="#priest_group">司祭系</a> (<a href="#crisis_priest">預言者</a>・<a href="#widow_priest">未亡人</a>・<a href="#revive_priest">天人</a>を除く)・<a href="#reporter">ブン屋</a>・<a href="#detective_common">探偵</a>・<a href="#sacrifice_common">首領</a>・<a href="#spell_common">葛の葉</a><br>
   <a href="#assassin_group">暗殺者系</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#priest_jealousy">恋司祭</a>・<a href="#barrier_brownie">産土神</a>・<a href="#soul_wizard">八卦見</a>・<a href="human.php#esper_wizard">超能力者</a>・<a href="#pierrot_wizard">道化師</a>・<a href="#barrier_wizard">結界師</a>・<a href="#doll_rule_doll_master">人形遣い系</a>・<a href="tengu.php#priest_tengu">鼻高天狗</a>。</li>
 <li>対象を護衛して襲撃された場合、狩人に「護衛成功」のメッセージは出るが、護衛先は死亡する。</li>
-<li>影響を受けるのは<a href="ability.php#guard">護衛能力者</a>のみで、<a href="#blind_guard">夜雀</a>・<a href="#step_guard">山立</a>・<a href="#poison_guard">騎士</a>・<a href="#elder_guard">老兵</a>には適用されない。</li>
+<li>影響を受けるのは<a href="ability.php#guard">護衛能力者</a>のみで、<a href="#blind_guard">夜雀</a>・<a href="#finder_guard">狛犬</a>・<a href="#step_guard">山立</a>・<a href="#poison_guard">騎士</a>・<a href="#elder_guard">老兵</a>には適用されない。</li>
 <li>対象に<a href="sub_role.php#penetration">護衛貫通</a>がついている場合はあらゆる護衛が無効化される。</a>
 </ol>
 <h5>Ver. 2.2.0 α4～</h5>
@@ -1518,7 +1519,7 @@ PP ラインの計算を複雑にするために作成してみました。
 
 <h3 id="guard_hunt">狩りの仕様</h3>
 <pre>
-1. 狩り能力があるのは<a href="#guard">狩人</a>・<a href="#hunter_guard">猟師</a>・<a href="#step_guard">山立</a>・<a href="#wanderer_guard">一寸法師</a>・<a href="#reflect_guard">侍</a>・<a href="#poison_guard">騎士</a>・<a href="#fend_guard">忍者</a>。
+1. 狩り能力があるのは<a href="#guard">狩人</a>・<a href="#hunter_guard">猟師</a>・<a href="#finder_guard">狛犬</a>・<a href="#step_guard">山立</a>・<a href="#wanderer_guard">一寸法師</a>・<a href="#reflect_guard">侍</a>・<a href="#poison_guard">騎士</a>・<a href="#fend_guard">忍者</a>。
 2. 対象は特殊狂人・特殊妖狐・特殊天使・特殊吸血鬼・特殊蝙蝠・特殊復讐者・特殊天狗。
 2-1. 特殊狂人 (<a href="wolf.php#mad">狂人</a>・<a href="wolf.php#fanatic_mad">狂信者</a>・<a href="wolf.php#whisper_mad">囁き狂人</a>・<a href="wolf.php#swindle_mad">因幡兎</a>・<a href="wolf.php#step_mad">家鳴</a>・<a href="wolf.php#therian_mad">獣人</a>・<a href="wolf.php#revive_mad">尸解仙</a>・<a href="wolf.php#immolate_mad">殉教者</a>以外の<a href="wolf.php#mad_group">狂人系</a>)
 2-2. 特殊妖狐 (<a href="fox.php#phantom_fox">幻狐</a>・<a href="fox.php#voodoo_fox">九尾</a>・<a href="fox.php#revive_fox">仙狐</a>・<a href="fox.php#possessed_fox">憑狐</a>・<a href="fox.php#doom_fox">冥狐</a>・<a href="fox.php#trap_fox">狡狐</a>・<a href="fox.php#cursed_fox">天狐</a>)
@@ -1531,9 +1532,10 @@ PP ラインの計算を複雑にするために作成してみました。
 4. <a href="#reflect_guard">侍</a>はさらに<a href="ogre.php">鬼陣営</a>を狩ることができる。
 5. <a href="#dummy_guard">夢守人</a>は<a href="chiroptera.php#fairy_group">妖精系</a>を狩ることができる (<a href="wolf.php#dream_eater_mad">獏</a>との関係は<a href="wolf.php#dream_eater_mad">獏</a>を参照)。
 6. <a href="#grave_guard">墓守</a>は死者を対象に狩り能力が発動する。
-7. <a href="ability.php#trap">罠</a>との関係は<a href="wolf.php#trap_mad">罠師</a>を参照。
-8. 対象が身代わり死していた場合は狩りが発生しない (<a href="chiroptera.php#boss_chiroptera">大蝙蝠</a>など)。
-9. <a href="sub_role.php#vega_lovers">織姫</a>には無効。
+7. <a href="#finder_guard">狛犬</a>は「強さ」を判定する能力が発動する(対象を死亡させない)。
+8. <a href="ability.php#trap">罠</a>との関係は<a href="wolf.php#trap_mad">罠師</a>を参照。
+9. 対象が身代わり死していた場合は狩りが発生しない (<a href="chiroptera.php#boss_chiroptera">大蝙蝠</a>など)。
+10. <a href="sub_role.php#vega_lovers">織姫</a>には無効。
 </pre>
 <h5>Ver. 3.1.0 RC2～</h5>
 <pre>
@@ -1603,6 +1605,33 @@ PP ラインの計算を複雑にするために作成してみました。
 <a href="#hunter_guard">猟師</a>とは対照的に護衛に特化した特殊狩人で「よすずめ」と読みます。
 死体の状況を見ることで<a href="chiroptera.php#dark_fairy">闇妖精</a>と区別することができるので、
 襲撃役の人狼はうっかり<a href="sub_role.php#blinder">目隠し</a> CO しないように気をつけましょう。
+</pre>
+
+<h3 id="finder_guard">狛犬 (占い結果：村人 / 霊能結果：村人) [Ver. 5.1.0 β2～]</h3>
+<h4>[狩人能力] 護衛：通常 (45%) / 護衛制限：無し / 狩り：能力判定 / 罠：有効</h4>
+<pre>
+護衛先の「強さ」を判定する<a href="#guard_hunt">狩り能力</a>を持ち、<a href="#guard_probability">護衛成功率</a>が低い特殊な狩人。
+</pre>
+<h4>護衛能力</h4>
+<ol>
+<li>護衛先が「強い力を持っている」場合、<a href="#guard_probability">護衛成功率</a>は 90% になる</li>
+<ul>
+  <li>天候「<a href="../weather.php#weather_no_hunt">川霧</a>」だった場合は護衛先の「強さ」を判定できない</li>
+</ul>
+<li>護衛先に関わらず、常に<a href="#guard_limit">護衛制限</a>の影響を受けない</li>
+</ol>
+<h4>狩り能力</h4>
+<ol>
+<li>護衛先の「強さ」を判定する</li>
+<li><a href="mania.php#soul_mania">覚醒者</a>のコピー先役職だった場合に「強い力を持っている」と判定する</a>
+<li>「強い力を持っている」と判定された場合のみ、システムメッセージが出力される</li>
+<li>通常の<a href="#guard_hunt">狩り能力</a>とは異なり、対象は死亡しない</li>
+<li><a href="sub_role.php#vega_lovers">織姫</a>の場合でも判定は有効</li>
+</ol>
+<h4>[作成者からのコメント]</h4>
+<pre>
+東方 Project の高麗野あうんがモチーフです。
+<a href="mania.php#soul_mania">覚醒者</a>のコピー先役職は出現率が低いので活躍の機会を得るのは難しいと思います。
 </pre>
 
 <h3 id="gatekeeper_guard">門番 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 α7～]</h3>

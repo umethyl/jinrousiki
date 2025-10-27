@@ -11,14 +11,15 @@ define('IMAGE_FONT_PATH', "./");
 require_once('include/message_image_generator.php');
 require_once('include/message_image_builder.php');
 
+
 $font = 'azuki.ttf';
 //$font = 'aquafont.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'result_plural_mad';
+//$role = 'result_finder_guard';
 //$role = 'prediction_weather_no_escape';
-$role = 'sweet_fox';
+$role = 'finder_guard';
 
 $calib_list = [0,0,0,0];
 //$calib_list = [0.5,0,0,0]; //wolf, vampire

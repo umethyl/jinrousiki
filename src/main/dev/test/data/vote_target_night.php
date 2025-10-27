@@ -29,7 +29,7 @@ if (VoteTestRoom::DATE == 1) {
     ['user_no' => 4, 	RequestDataVote::TARGET => 29,	'type' => VoteAction::MAGE],
     //['user_no' => 4, 	RequestDataVote::TARGET => '9 14 19 18 3',	'type' => VoteAction::STEP_MAGE],
     ['user_no' => 5,	RequestDataVote::TARGET => 8,	'type' => VoteAction::MAGE],
-    ['user_no' => 7,	RequestDataVote::TARGET => 11,	'type' => VoteAction::GUARD],
+    ['user_no' => 7,	RequestDataVote::TARGET => 29,	'type' => VoteAction::GUARD],
     //['user_no' => 7,	RequestDataVote::TARGET => '8 9 10',	'type' => VoteAction::STEP_GUARD],
     //['user_no' => 8,	RequestDataVote::TARGET => 16,	'type' => VoteAction::GUARD],
     ['user_no' => 8,	RequestDataVote::TARGET =>  3,	'type' => VoteAction::ANTI_VOODOO],

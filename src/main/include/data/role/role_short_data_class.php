@@ -52,6 +52,7 @@ final class RoleShortData {
     'hunter_guard'		=> '猟',
     'blind_guard'		=> '雀',
     'gatekeeper_guard'		=> '門',
+    'finder_guard'		=> '狛',
     'step_guard'		=> '立',
     'grave_guard'		=> '墓守',
     'wanderer_guard'		=> '寸',

@@ -18,7 +18,7 @@ RQ::GetTest()->test_users[5]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[6]->role = 'eclipse_medium possessed[4-15] frostbite[7]';
 RQ::GetTest()->test_users[6]->live = UserLive::DEAD;
 
-RQ::GetTest()->test_users[7]->role = 'guard lovers[13] vega_lovers male_status[2] gender_status[3] female_status[4] male_status[6]';
+RQ::GetTest()->test_users[7]->role = 'finder_guard lovers[13] vega_lovers male_status[2] gender_status[3] female_status[4] male_status[6]';
 RQ::GetTest()->test_users[7]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[8]->role = 'anti_voodoo male_status[3] gender_status[5]';
