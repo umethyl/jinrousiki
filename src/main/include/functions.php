@@ -427,6 +427,7 @@ final class URL {
   const HEAD      = '?';
   const ADD       = '&';
   const DELIMITER = '/';
+  const PAGE      = '#';
 
   /* 判定 */
   //存在判定 (db_no)
@@ -473,9 +474,26 @@ final class URL {
     return self::AddInt(RequestDataGame::RELOAD, $time);
   }
 
-  //取得 (アイコン一覧移動用)
+  //取得 (アイコン一覧)
   public static function GetIcon($url, $icon_no) {
     return $url . self::HEAD . self::ConvertInt('icon_no', $icon_no);
+  }
+
+  //取得 (ログ検索)
+  public static function GetLogSearch($role) {
+    $url = 'old_log';
+    if (self::ExistsDB()) {
+      return self::GetHeaderDB($url) . self::AddString('role', $role);
+    } else {
+      return $url . self::GetExt() . self::ConvertString('role', $role);
+    }
+  }
+
+  //取得 (新役職情報)
+  public static function GetRole($role) {
+    $camp = RoleDataManager::GetCamp($role);
+    $page = ArrayFilter::Concat(['info', 'new_role', $camp], self::DELIMITER);
+    return $page . self::EXT . self::PAGE . $role;
   }
 
   /* ヘッダーリンク生成 */
