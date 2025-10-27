@@ -11,7 +11,6 @@ define('IMAGE_FONT_PATH', "./");
 require_once('include/message_image_generator.php');
 require_once('include/message_image_builder.php');
 
-
 $font = 'azuki.ttf';
 //$font = 'aquafont.ttf';
 //$font = 'Osaka.ttc';
