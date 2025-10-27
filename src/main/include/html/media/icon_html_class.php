@@ -171,11 +171,17 @@ final class IconHTML {
   //ページ送り用のリンクタグを出力する (PageLinkBuilder と統合できるかも)
   private static function OutputPageLink(stdClass $CONFIG) {
     $page_count = ceil($CONFIG->count / $CONFIG->view);
-    $start_page = $CONFIG->current== 'all' ? 1 : $CONFIG->current;
-    if ($page_count - $CONFIG->current < $CONFIG->page) {
+    if ($CONFIG->current == 'all') {
+      $current    = 1;
+      $start_page = 1;
+    } else {
+      $current    = $CONFIG->current;
+      $start_page = $CONFIG->current;
+    }
+    if ($page_count - $current < $CONFIG->page) {
       $start_page = max(1, $page_count - $CONFIG->page + 1);
     }
-    $end_page = min($page_count, $CONFIG->current + $CONFIG->page - 1);
+    $end_page = min($page_count, $current + $CONFIG->page - 1);
 
     $url_stack = [Text::QuoteBracket(isset($CONFIG->title) ? $CONFIG->title : 'Page')];
     //表示ページ数調整 (先頭側)
