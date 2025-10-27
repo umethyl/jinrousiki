@@ -313,7 +313,7 @@ final class Encoder {
   }
 
   //文字コード判定
-  private static function Detect(string $str) {
+  public static function Detect(string $str) {
     if (self::UTF($str)) {
       return 'UTF-8';
     } else {
