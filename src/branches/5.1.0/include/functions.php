@@ -113,26 +113,9 @@ final class Text {
     return mb_substr($str, 0, $limit);
   }
 
-  //BOM 消去
-  public static function RemoveBOM($str) {
-    if (ord($str[0]) == '0xef' && ord($str[1]) == '0xbb' && ord($str[2]) == '0xbf') {
-      $str = substr($str, 3);
-    }
-    return $str;
-  }
-
   //暗号化
   public static function Crypt($str) {
     return sha1(ServerConfig::SALT . $str);
-  }
-
-  //文字コード変換
-  public static function Encode($str, $encode, $convert = ServerConfig::ENCODE) {
-    if ($encode == '' || $encode == 'ASCII' || $encode == $convert) {
-      return $str;
-    } else {
-      return mb_convert_encoding($str, $convert, $encode);
-    }
   }
 
   //トリップ変換
@@ -158,7 +141,7 @@ final class Text {
 	$name = self::Shrink($str, $trip_start);
 	$key  = mb_substr($str, $trip_start + 1);
 	//self::p(sprintf('%s, name: %s, key: %s', $trip_start, $name, $key), '◆Trip Start');
-	$key  = self::Encode($key, ServerConfig::ENCODE, 'SJIS'); //文字コードを変換
+	$key  = Encoder::Convert($key, ServerConfig::ENCODE, 'SJIS'); //文字コードを変換
 
 	if (GameConfig::TRIP_2ch && self::Over($key, 12 - 1)) {
 	  $trip = self::ConvertTrip2ch($key);
@@ -238,22 +221,6 @@ final class Text {
   }
 
   /* 更新系 */
-  //POST されたデータの文字コードを統一する
-  public static function EncodePost() {
-    foreach ($_POST as $key => $value) {
-      //多段配列対応(例: アイコンのカテゴリ)
-      if (is_array($value)) {
-	foreach ($value as $v_key => $v_value) {
-          $encode = @mb_detect_encoding($v_value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
-	  $_POST[$key][$v_key] = self::Encode($v_value, $encode);
-	}
-      } else {
-        $encode = @mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
-        $_POST[$key] = self::Encode($value, $encode);
-      }
-    }
-  }
-
   //特殊文字のエスケープ処理
   //htmlentities() を使うと文字化けを起こしてしまうようなので敢えてべたに処理
   public static function Escape(&$str, $trim = true) {
@@ -306,6 +273,84 @@ final class Text {
   public static function t($data, $name = null) {
     $builder = class_exists('Talk') ? Talk::GetBuilder() : null;
     return (null === $builder) ? self::p($data, $name) : $builder->TalkDebug($data, $name);
+  }
+}
+
+//-- 文字コード関連 --//
+final class Encoder {
+  //変換
+  public static function Convert($str, $encode, $convert = ServerConfig::ENCODE) {
+    if ($encode == '' || $encode == 'ASCII' || $encode == $convert) {
+      return $str;
+    } else {
+      return mb_convert_encoding($str, $convert, $encode);
+    }
+  }
+
+  //BOM 消去
+  public static function BOM(string $str) {
+    if (ord($str[0]) == '0xef' && ord($str[1]) == '0xbb' && ord($str[2]) == '0xbf') {
+      $str = substr($str, 3);
+    }
+    return $str;
+  }
+
+  //POST されたデータの文字コードを統一する
+  public static function Post() {
+    self::Filter($_POST);
+  }
+
+  //配列データフィルタリング (POST 変換用)
+  private static function Filter(array &$list) {
+    foreach ($list as $key => $value) {
+      //多段配列対応(例: アイコンのカテゴリ)
+      if (is_array($value)) {
+	self::Filter($value);
+      } else {
+	$list[$key] = self::Convert($value, self::Detect($value));
+      }
+    }
+  }
+
+  //文字コード判定
+  public static function Detect(string $str) {
+    if (self::UTF($str)) {
+      return 'UTF-8';
+    } else {
+      return @mb_detect_encoding($str, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
+    }
+  }
+
+  //UTF-8判定
+  private static function UTF(string $str) {
+    $len = strlen($str);
+    for ($i = 0; $i < $len; $i++) {
+      $c = ord($str[$i]);
+      if ($c > 128) {
+	if ($c > 247) {
+	  return false;
+	} elseif ($c > 239) {
+	  $bytes = 4;
+	} elseif ($c > 223) {
+	  $bytes = 3;
+	} elseif ($c > 191) {
+	  $bytes = 2;
+	} else {
+	  return false;
+	}
+	if (($i + $bytes) > $len) {
+	  return false;
+	}
+	while ($bytes > 1) {
+	  $i++;
+	  if (Number::OutRange(ord($str[$i]), 128, 191)) {
+	    return false;
+	  }
+	  $bytes--;
+	}
+      }
+    }
+    return true;
   }
 }
 
@@ -382,6 +427,7 @@ final class URL {
   const HEAD      = '?';
   const ADD       = '&';
   const DELIMITER = '/';
+  const PAGE      = '#';
 
   /* 判定 */
   //存在判定 (db_no)
@@ -428,9 +474,34 @@ final class URL {
     return self::AddInt(RequestDataGame::RELOAD, $time);
   }
 
-  //取得 (アイコン一覧移動用)
+  //取得 (アイコン一覧)
   public static function GetIcon($url, $icon_no) {
     return $url . self::HEAD . self::ConvertInt('icon_no', $icon_no);
+  }
+
+  //取得 (検索リンク)
+  public static function GetSearch($url, array $list) {
+    $head = false;
+    foreach ($list as $key => $value) {
+      if (false === $head) {
+	if (self::ExistsDB()) {
+	  $str = self::GetHeaderDB($url) . self::AddString($key, $value);
+	} else {
+	  $str = $url . self::GetExt() . self::ConvertString($key, $value);
+	}
+	$head = true;
+      } else {
+	$str .= self::AddString($key, $value);
+      }
+    }
+    return $str;
+  }
+
+  //取得 (新役職情報)
+  public static function GetRole($role) {
+    $camp = RoleDataManager::GetCamp($role);
+    $page = ArrayFilter::Concat(['info', 'new_role', $camp], self::DELIMITER);
+    return $page . self::EXT . self::PAGE . $role;
   }
 
   /* ヘッダーリンク生成 */

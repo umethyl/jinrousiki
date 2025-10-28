@@ -54,41 +54,6 @@ class Role_soul_mania extends Role_mania {
 
   //覚醒コピー変換リスト取得
   protected function GetDelayCopyList() {
-    return [
-      CampGroup::HUMAN		=> 'executor',
-      CampGroup::MAGE		=> 'soul_mage',
-      CampGroup::NECROMANCER	=> 'soul_necromancer',
-      CampGroup::MEDIUM		=> 'revive_medium',
-      CampGroup::PRIEST		=> 'high_priest',
-      CampGroup::GUARD		=> 'poison_guard',
-      CampGroup::COMMON		=> 'ghost_common',
-      CampGroup::POISON		=> 'strong_poison',
-      CampGroup::POISON_CAT	=> 'revive_cat',
-      CampGroup::PHARMACIST	=> 'alchemy_pharmacist',
-      CampGroup::ASSASSIN	=> 'soul_assassin',
-      CampGroup::MIND_SCANNER	=> 'clairvoyance_scanner',
-      CampGroup::JEALOUSY	=> 'flower_jealousy',
-      CampGroup::BROWNIE	=> 'barrier_brownie',
-      CampGroup::WIZARD		=> 'soul_wizard',
-      CampGroup::DOLL		=> 'serve_doll_master',
-      CampGroup::ESCAPER	=> 'divine_escaper',
-      CampGroup::WOLF		=> 'sirius_wolf',
-      CampGroup::MAD		=> 'whisper_mad',
-      CampGroup::FOX		=> 'cursed_fox',
-      CampGroup::CHILD_FOX	=> 'jammer_fox',
-      CampGroup::DEPRAVER	=> 'sacrifice_depraver',
-      CampGroup::CUPID		=> 'minstrel_cupid',
-      CampGroup::ANGEL		=> 'sacrifice_angel',
-      CampGroup::QUIZ		=> 'quiz',
-      CampGroup::VAMPIRE	=> 'soul_vampire',
-      CampGroup::CHIROPTERA	=> 'boss_chiroptera',
-      CampGroup::FAIRY		=> 'ice_fairy',
-      CampGroup::OGRE		=> 'sacrifice_ogre',
-      CampGroup::YAKSA		=> 'dowser_yaksa',
-      CampGroup::DUELIST	=> 'critical_duelist',
-      CampGroup::AVENGER	=> 'revive_avenger',
-      CampGroup::PATRON		=> 'sacrifice_patron',
-      CampGroup::TENGU		=> 'soul_tengu'
-    ];
+    return RoleFilterData::$soul_delay_copy;
   }
 }

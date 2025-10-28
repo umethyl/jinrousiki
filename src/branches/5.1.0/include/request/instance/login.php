@@ -7,7 +7,7 @@
 */
 class Request_login extends Request {
   public function __construct() {
-    Text::EncodePost();
+    Encoder::Post();
     $this->ParseGetInt(RequestDataGame::ID);
     $this->ParsePostOn(RequestDataUser::LOGIN);
     $this->ParsePostStr(RequestDataUser::PASSWORD);

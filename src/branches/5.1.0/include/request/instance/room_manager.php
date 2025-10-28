@@ -11,7 +11,7 @@ class Request_room_manager extends Request {
   }
 
   public function __construct() {
-    Text::EncodePost();
+    Encoder::Post();
     $this->ParseGetInt('room_no');
     $this->ParsePostOn('create_room', 'change_room');
     $this->ParseGetOn('describe_room');

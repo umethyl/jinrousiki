@@ -145,7 +145,7 @@ class MessageImageGenerator {
   */
   public function GetMessage($str, $regex) {
     $message = ($regex == '') ? $str : preg_replace($regex, '', $str);
-    return mb_convert_encoding($message, 'UTF-8', 'auto');
+    return Encoder::Convert($message, Encoder::Detect($message));
   }
 
   /*
@@ -198,7 +198,7 @@ class MessageImageGenerator {
       for ($i = 0; $i < $count; $i++) {
 	$str_len = mb_strlen($array_msg[$i][0]);
 	//echo 'str_r: ' . $str_len . ' -> "' . $array_msg[$i][0] . '"<br>';
-	$str = mb_convert_encoding($array_msg[$i][0], 'UTF-8', 'auto');
+	$str = Encoder::Convert($array_msg[$i][0], Encoder::Detect($array_msg[$i][0]));
 	//echo $str.'<br>';
 	$str_total .= $str;
 	$r_str       = imagettfbbox($this->size, 0, $this->font, $str);

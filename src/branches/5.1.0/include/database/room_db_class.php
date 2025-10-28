@@ -410,6 +410,11 @@ final class RoomLoaderDB {
     $query->Table($table)->Select(['room_no'])->Where(['status']);
     $list = [RoomStatus::FINISHED];
 
+    if (isset(RQ::Get()->room_name)) {
+      $query->WhereLike('name');
+      $list[] = Query::GetLike(RQ::Get()->room_name);
+    }
+
     if (isset(RQ::Get()->role)) {
       $query->WhereLike('role');
       $list[] = Query::GetLike(RQ::Get()->role);
@@ -421,14 +426,28 @@ final class RoomLoaderDB {
       array_push($list, $name, $name);
     }
 
-    if (isset(RQ::Get()->room_name)) {
-      $query->WhereLike('name');
-      $list[] = Query::GetLike(RQ::Get()->room_name);
-    }
-
     if (isset(RQ::Get()->winner)) {
       $query->Where(['winner']);
       $list[] = RQ::Get()->winner;
+    }
+
+    if (isset(RQ::Get()->game_type)) {
+      switch (RQ::Get()->game_type) {
+      case 'normal':
+	foreach (['chaos', 'duel', 'gray_random', 'quiz'] as $type) {
+	  $query->WhereNotLike('game_option');
+	  $list[] = Query::GetLike($type);
+	}
+	break;
+
+      case 'chaos':
+      case 'duel':
+      case 'gray_random':
+      case 'quiz':
+	$query->WhereLike('game_option');
+	$list[] = Query::GetLike(RQ::Get()->game_type);
+	break;
+      }
     }
 
     DB::Prepare($query->Build(), $list);

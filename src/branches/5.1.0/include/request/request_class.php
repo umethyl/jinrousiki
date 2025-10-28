@@ -1,7 +1,7 @@
 <?php
 //-- 引数管理クラス --//
-class RQ extends LoadManager {
-  const PATH = '%s/request/%s.php';
+final class RQ extends LoadManager {
+  const PATH = '%s/request/instance/%s.php';
   const CLASS_PREFIX = 'Request_';
   protected static $file = [];
   private static $instance = null; //Request クラス

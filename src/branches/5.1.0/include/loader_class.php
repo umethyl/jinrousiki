@@ -142,7 +142,6 @@ final class Loader extends LoadManager {
       mb_language('ja');
       mb_internal_encoding(ServerConfig::ENCODE);
       mb_http_input();
-      //mb_http_input('auto');
       mb_http_output(ServerConfig::ENCODE);
     }
 
@@ -203,6 +202,7 @@ final class Loader extends LoadManager {
     case 'role':
     case 'talk':
     case 'media':
+    case 'statistics':
     case 'html':
     case 'html/media':
     case 'html/option':
@@ -303,6 +303,7 @@ final class LoaderData {
     'OptionMessage'		=> 'option_message',
     'IconMessage'		=> 'icon_message',
     'InfoMessage'		=> 'info_message',
+    'StatisticsMessage'		=> 'statistics_message',
     'CacheMessage'		=> 'cache_message',
     'TwitterMessage'		=> 'twitter_message',
     'TestMessage'		=> 'test_message',
@@ -434,6 +435,8 @@ final class LoaderData {
     'VoteHeaven'		=> 'game_vote_functions',
     'VoteForceSuddenDeath'	=> 'game_vote_functions',
     'VoteResetTime'		=> 'game_vote_functions',
+    //statistics
+    'JinrouStatistics'		=> 'statistics_manager_class',
     //controller/test
     'VoteTestController' => 'vote_test_class',
     //controller/message
@@ -503,6 +506,7 @@ final class LoaderData {
     'UserManagerHTML'	=> 'user_manager_html_class',
     'IconViewHTML'	=> 'icon_view_html_class',
     'IconUploadHTML'	=> 'icon_upload_html_class',
+    'StatisticsHTML'	=> 'statistics_html_class',
     //html/controller/info
     'DuelInfoHTML'		=> 'duel_info_html_class',
     'CopyrightInfoHTML'		=> 'copyright_info_html_class',
@@ -577,6 +581,7 @@ final class LoaderData {
     'old_log_message'		=> 'message/controller',
     'icon_edit_message'		=> 'message/controller',
     'icon_upload_message'	=> 'message/controller',
+    'statistics_message'	=> 'message/controller',
     //config/message/admin
     'room_delete_message'	=> 'message/controller/admin',
     'icon_delete_message'	=> 'message/controller/admin',
@@ -672,6 +677,8 @@ final class LoaderData {
     //event
     'event_class'	=> 'event',
     'weather_class'	=> 'event',
+    //statistics
+    'statistics_manager_class'	=> 'statistics',
     //controller
     'index_class'		=> 'controller',
     'room_manager_class'	=> 'controller',
@@ -687,6 +694,7 @@ final class LoaderData {
     'icon_edit_class'		=> 'controller',
     'icon_upload_class'		=> 'controller',
     'old_log_class'		=> 'controller',
+    'statistics_class'		=> 'controller',
     //controller/admin
     'setup_class'		=> 'controller/admin',
     'room_delete_class'		=> 'controller/admin',
@@ -745,6 +753,7 @@ final class LoaderData {
     'user_manager_html_class'	=> 'html/controller',
     'icon_view_html_class'	=> 'html/controller',
     'icon_upload_html_class'	=> 'html/controller',
+    'statistics_html_class'	=> 'html/controller',
     //html/controller/info
     'copyright_info_html_class'		=> 'html/controller/info',
     'search_role_info_html_class'	=> 'html/controller/info',
