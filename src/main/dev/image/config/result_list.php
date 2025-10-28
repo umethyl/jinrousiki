@@ -171,6 +171,8 @@ class ResultList extends RoleMessageList {
   public $result_purple_wolf = ['message' => "さんは|紫狼|でした", 'type' => 'result_wolf'];
   public $result_snow_wolf = ['message' => "さんは|雪狼|でした", 'type' => 'result_wolf'];
   public $result_miasma_wolf = ['message' => "さんは|戯狼|でした", 'type' => 'result_wolf'];
+  public $result_homogeneous_wolf = ['message' => "さんは|爵狼|でした", 'type' => 'result_wolf'];
+  public $result_heterologous_wolf = ['message' => "さんは|姫狼|でした", 'type' => 'result_wolf'];
   public $result_ascetic_wolf = ['message' => "さんは|印狼|でした", 'type' => 'result_wolf'];
   public $result_fortitude_wolf = ['message' => "さんは|剛狼|でした", 'type' => 'result_wolf'];
   public $result_poison_wolf = ['message' => "さんは|毒狼|でした", 'type' => 'result_wolf'];

@@ -174,6 +174,8 @@ final class RoleShortData {
     'purple_wolf'		=> '紫狼',
     'snow_wolf'			=> '雪狼',
     'miasma_wolf'		=> '戯狼',
+    'homogeneous_wolf'		=> '爵',
+    'heterologous_wolf'		=> '姫狼',
     'ascetic_wolf'		=> '印',
     'fortitude_wolf'		=> '剛狼',
     'poison_wolf'		=> '毒狼',
