@@ -1,7 +1,7 @@
 <?php
 //-- 役職ローダー --//
 class RoleLoader extends LoadManager {
-  const PATH = '%s/role/%s.php';
+  const PATH = '%s/role/instance/%s.php';
   const CLASS_PREFIX = 'Role_';
   const MAIN = 'main_role';
   protected static $file  = []; //ロード済みファイル

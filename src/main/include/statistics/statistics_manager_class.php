@@ -126,12 +126,9 @@ class JinrouStatistics extends StackStaticManager {
     TableHTML::OutputTrFooter();
     foreach (RoleDataManager::GetDiff($list) as $role => $name) {
       TableHTML::OutputTrHeader();
-      $log_link  = URL::GetSearch('old_log', ['role' => $role, 'game_type' => 'chaos']);
-
       StatisticsHTML::OutputRoleLink($role, $name);
       TableHTML::OutputTd($stack->$role);
-      TableHTML::OutputTd(HTML::GenerateLink($log_link, '検索'));
-
+      StatisticsHTML::OutputSearchRoleLink($role);
       TableHTML::OutputTrFooter();
     }
     TableHTML::OutputFooter();
