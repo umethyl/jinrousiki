@@ -1,4 +1,5 @@
 <?php
+//◆文字化け抑制◆//
 //-- 統計情報コントローラー --//
 final class StatisticsController extends JinrouController {
   protected static function GetLoadRequest() {

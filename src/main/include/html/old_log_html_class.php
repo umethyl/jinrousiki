@@ -123,7 +123,7 @@ final class OldLogHTML {
       $builder->set_reverse = $is_reverse;
       $builder->AddOption('reverse', Switcher::Get($is_reverse));
       $builder->AddOption('watch',   Switcher::Get(RQ::Get()->watch));
-      foreach (['name', 'room_name', 'winner', 'role'] as $option) {
+      foreach (['name', 'room_name', 'winner', 'role', 'game_type'] as $option) {
 	if (RQ::Get()->$option) {
 	  $builder->AddOption($option, RQ::Get()->$option);
 	}
@@ -162,7 +162,7 @@ final class OldLogHTML {
 	  $base_url .= URL::AddSwitch(RequestDataLogRoom::WATCH);
 	}
 
-	if ($current_time - strtotime(DB::$ROOM->finish_datetime) > RoomConfig::KEEP_SESSION) {
+	if ($current_time - strtotime(DB::$ROOM->finish_datetime ?? 0) > RoomConfig::KEEP_SESSION) {
 	  $login = '';
 	} else {
 	  $login = Text::LineFeed(HTML::GenerateLink(URL::GetRoom('login'), OldLogMessage::LOGIN));

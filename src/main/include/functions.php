@@ -479,14 +479,22 @@ final class URL {
     return $url . self::HEAD . self::ConvertInt('icon_no', $icon_no);
   }
 
-  //取得 (ログ検索)
-  public static function GetLogSearch($role) {
-    $url = 'old_log';
-    if (self::ExistsDB()) {
-      return self::GetHeaderDB($url) . self::AddString('role', $role);
-    } else {
-      return $url . self::GetExt() . self::ConvertString('role', $role);
+  //取得 (検索リンク)
+  public static function GetSearch($url, array $list) {
+    $head = false;
+    foreach ($list as $key => $value) {
+      if (false === $head) {
+	if (self::ExistsDB()) {
+	  $str = self::GetHeaderDB($url) . self::AddString($key, $value);
+	} else {
+	  $str = $url . self::GetExt() . self::ConvertString($key, $value);
+	}
+	$head = true;
+      } else {
+	$str .= self::AddString($key, $value);
+      }
     }
+    return $str;
   }
 
   //取得 (新役職情報)

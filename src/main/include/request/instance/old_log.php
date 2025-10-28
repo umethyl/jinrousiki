@@ -17,7 +17,7 @@ class Request_old_log extends Request {
 	'role_list', 'auto_play'
       );
     } else {
-      $this->ParseGetData('reverse', 'name', 'room_name', 'winner', 'role');
+      $this->ParseGetData('reverse', 'name', 'room_name', 'winner', 'role', 'game_type');
       $this->ParseGet('SetPage', 'page');
     }
   }
