@@ -25,6 +25,7 @@ final class TalkVoice {
   const NORMAL     = 'normal';
   const WEAK       = 'weak';
   const SECRET     = 'secret';
+  const INDIVIDUAL = 'individual';
   const LAST_WORDS = 'last_words';
 }
 

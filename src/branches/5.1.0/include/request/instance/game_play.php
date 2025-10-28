@@ -9,7 +9,7 @@
 RQ::LoadFile('request_game_play');
 class Request_game_play extends RequestGamePlay {
   public function __construct() {
-    Text::EncodePost();
+    Encoder::Post();
     parent::__construct();
     $this->ParseGetOn(RequestDataRoom::DEAD, RequestDataRoom::HEAVEN);
     $this->ParsePostOn(RequestDataTalk::OBJECTION);

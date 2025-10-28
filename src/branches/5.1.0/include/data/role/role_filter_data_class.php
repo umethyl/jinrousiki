@@ -129,10 +129,11 @@ final class RoleFilterData {
     'pharmacist', 'cure_pharmacist', 'revive_pharmacist', 'alchemy_pharmacist',
     'centaurus_pharmacist', 'jealousy', 'divorce_jealousy', 'miasma_jealousy', 'critical_jealousy',
     'thunder_brownie', 'harvest_brownie', 'maple_brownie', 'cursed_brownie',  'disguise_wolf',
-    'purple_wolf', 'snow_wolf', 'miasma_wolf', 'corpse_courier_mad', 'amaze_mad', 'agitate_mad',
-    'miasma_mad', 'critical_mad', 'fire_mad', 'follow_mad', 'purple_fox', 'snow_fox',
-    'critical_fox', 'fire_depraver', 'sacrifice_cupid', 'sweet_cupid', 'snow_cupid', 'quiz',
-    'step_vampire', 'cowboy_duelist', 'sea_duelist', 'cursed_avenger', 'critical_avenger'
+    'purple_wolf', 'snow_wolf', 'miasma_wolf', 'homogeneous_wolf', 'heterologous_wolf',
+    'corpse_courier_mad', 'amaze_mad', 'agitate_mad', 'miasma_mad', 'critical_mad', 'fire_mad',
+    'follow_mad', 'purple_fox', 'snow_fox', 'critical_fox', 'fire_depraver', 'sacrifice_cupid',
+    'sweet_cupid', 'snow_cupid', 'quiz', 'step_vampire', 'cowboy_duelist', 'sea_duelist',
+    'cursed_avenger', 'critical_avenger'
   ];
 
   //処刑投票能力者 (サブ)
@@ -210,7 +211,7 @@ final class RoleFilterData {
   //処刑後得票カウンター
   public static $vote_kill_reaction = [
     'divorce_jealousy', 'harvest_brownie', 'maple_brownie', 'cursed_brownie', 'snow_wolf',
-    'miasma_wolf', 'snow_fox'
+    'miasma_wolf', 'homogeneous_wolf', 'heterologous_wolf', 'snow_fox'
   ];
 
   //処刑キャンセル
@@ -347,4 +348,42 @@ final class RoleFilterData {
 
   //性別判定 (順番依存あり)
   public static $gender_status = ['male_status', 'female_status', 'gender_status'];
+
+  //覚醒コピー変換リスト
+  public static $soul_delay_copy = [
+      CampGroup::HUMAN		=> 'executor',
+      CampGroup::MAGE		=> 'soul_mage',
+      CampGroup::NECROMANCER	=> 'soul_necromancer',
+      CampGroup::MEDIUM		=> 'revive_medium',
+      CampGroup::PRIEST		=> 'high_priest',
+      CampGroup::GUARD		=> 'poison_guard',
+      CampGroup::COMMON		=> 'ghost_common',
+      CampGroup::POISON		=> 'strong_poison',
+      CampGroup::POISON_CAT	=> 'revive_cat',
+      CampGroup::PHARMACIST	=> 'alchemy_pharmacist',
+      CampGroup::ASSASSIN	=> 'soul_assassin',
+      CampGroup::MIND_SCANNER	=> 'clairvoyance_scanner',
+      CampGroup::JEALOUSY	=> 'flower_jealousy',
+      CampGroup::BROWNIE	=> 'barrier_brownie',
+      CampGroup::WIZARD		=> 'soul_wizard',
+      CampGroup::DOLL		=> 'serve_doll_master',
+      CampGroup::ESCAPER	=> 'divine_escaper',
+      CampGroup::WOLF		=> 'sirius_wolf',
+      CampGroup::MAD		=> 'whisper_mad',
+      CampGroup::FOX		=> 'cursed_fox',
+      CampGroup::CHILD_FOX	=> 'jammer_fox',
+      CampGroup::DEPRAVER	=> 'sacrifice_depraver',
+      CampGroup::CUPID		=> 'minstrel_cupid',
+      CampGroup::ANGEL		=> 'sacrifice_angel',
+      CampGroup::QUIZ		=> 'quiz',
+      CampGroup::VAMPIRE	=> 'soul_vampire',
+      CampGroup::CHIROPTERA	=> 'boss_chiroptera',
+      CampGroup::FAIRY		=> 'ice_fairy',
+      CampGroup::OGRE		=> 'sacrifice_ogre',
+      CampGroup::YAKSA		=> 'dowser_yaksa',
+      CampGroup::DUELIST	=> 'critical_duelist',
+      CampGroup::AVENGER	=> 'revive_avenger',
+      CampGroup::PATRON		=> 'sacrifice_patron',
+      CampGroup::TENGU		=> 'soul_tengu'
+  ];
 }

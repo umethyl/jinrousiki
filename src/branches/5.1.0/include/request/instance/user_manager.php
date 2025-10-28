@@ -6,7 +6,7 @@
 RQ::LoadFile('request_icon');
 class Request_user_manager extends RequestIcon {
   public function __construct() {
-    Text::EncodePost();
+    Encoder::Post();
     $this->ParseGetRoomNo();
     $this->ParseGetInt(RequestDataUser::ID);
     $this->ParsePostInt(RequestDataIcon::ID);
@@ -42,5 +42,5 @@ class Request_user_manager extends RequestIcon {
         RQ::Set($key, $value);
       }
     }
-  }  
+  }
 }

@@ -8,7 +8,7 @@
 */
 class RequestIcon extends Request {
   public function __construct() {
-    Text::EncodePost();
+    Encoder::Post();
     $this->ParsePostInt(RequestDataIcon::ID);
     $this->ParsePostStr(
       RequestDataIcon::NAME,   RequestDataIcon::CATEGORY, RequestDataIcon::APPEARANCE,

@@ -41,6 +41,13 @@ body { /* AA 用 */
   font-size: 8pt;
   font-weight: lighter;
 }
+.individual { /* 個別発言 */
+  color: #FFFFFF;
+  background-color: #005344;
+}
+.individual td {
+  font-weight: lighter;
+}
 .user-name { /* プレイヤー名 */
   width: 200px;
 }
