@@ -1590,19 +1590,30 @@ class ChaosConfig {
     'f1' => ['fix' => ['altair_cupid' => 1]],
     //TypeG: Ver. 3.0.0
     'g1' => ['pick' => [['list' => ['tengu', 'soul_tengu', 'eclipse_tengu'],
-			  'count' => 2]]],
+			 'count' => 2]]],
     //TypeH: Ver. 3.1.0
     'h1' => ['fix' => ['mask_mania' => 1]],
+    'h2' => ['pick' => [['list' => ['stargazer_escaper', 'involve_tengu', 'grave_mad', 'grave_guard'],
+			 'count' => 2]]],
+    'h3' => ['fix' => ['foughten_avenger' => 1, 'doom_cat' => 1]],
+    'h4' => ['fix' => ['follow_vampire' => 1, 'agent_escaper' => 1]],
+    'h5' => ['pick' => [['list' => ['seiren_mad', 'fortitude_wolf', 'fortitude_fox'],
+			 'count' => 2]]],
+    'h6' => ['fix' => ['collector_ogre' => 1, 'thorn_wolf' => 1]],
+    'h7' => ['fix' => ['spy_mad' => 1]],
+    'h8' => ['fix' => ['esper_wizard' => 1, 'chill_fairy' => 1],
+	     'pick' => [['list' => ['trick_avenger', 'triphase_duelist'],
+			 'count' => 1]]],
     //TypeI: Ver. 4.1.0
     'i1' => ['fix' => ['gender_fairy' => 1],
 	     'pick' => [['list' => ['homogeneous_vampire', 'heterologous_vampire'],
-			  'count' => 1]]],
+			 'count' => 1]]],
     //TypeJ: Ver. 5.1.0
     'j1' => ['fix' => ['sacrifice_cupid' => 1, 'flower_jealousy' => 1]],
     'j2' => ['fix' => ['spell_wolf' => 1, 'miasma_wolf' => 1]],
     'j3' => ['fix' => ['plural_wizard' => 1, 'plural_mad' => 1],
 	     'pick' => [['list' => ['sweet_wolf', 'sweet_fox'],
-			  'count' => 1]]],
+			 'count' => 1]]],
   ];
 
   //サブ役職制限：EASYモード
