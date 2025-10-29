@@ -7,5 +7,6 @@ class Request_statistics extends Request {
   public function __construct() {
     $this->ParseGetInt(RequestDataGame::DB);
     $this->ParseGetData('game_type');
+    $this->page = 'all';
   }
 }

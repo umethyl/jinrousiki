@@ -34,6 +34,32 @@ final class StatisticsHTML {
     }
   }
 
+  //陣営勝利ヘッダ出力
+  public static function OutputWinCampHeader() {
+    TableHTML::OutputHeader('');
+    foreach (['陣営', '出現数', '出現率', '勝利', '勝率', '出現時勝利'] as $str) {
+      TableHTML::OutputTh($str);
+    }
+    TableHTML::OutputTrFooter();
+  }
+
+  //出現役職ヘッダ出力
+  public static function OutputRoleHeader() {
+    Text::Output('<h2>出現役職</h2>');
+    TableHTML::OutputHeader('');
+    foreach (['役職', '出現数', '出現村数', '出現率', '勝利', '勝率', 'ログ検索'] as $str) {
+      TableHTML::OutputTh($str);
+    }
+    TableHTML::OutputTrFooter();
+  }
+
+  //数値データ出力
+  public static function OutputData(array $list) {
+    foreach ($list as $data) {
+      TableHTML::OutputTd($data, 'member');
+    }
+  }
+
   //リンク出力
   public static function OutputLink(string $url, string $game_type, string $name) {
     self::OutputTdLink(URL::GetSearch($url, ['game_type' => $game_type]), $name);
@@ -44,9 +70,9 @@ final class StatisticsHTML {
     self::OutputTdLink(URL::GetRole($role), $name);
   }
 
-  //役職検索リンク出力 (闇鍋用)
+  //役職検索リンク出力
   public static function OutputSearchRoleLink(string $role) {
-    $url = URL::GetSearch('old_log', ['role' => $role, 'game_type' => 'chaos']);
+    $url = URL::GetSearch('old_log', ['role' => $role, 'game_type' => RQ::Get()->game_type]);
     self::OutputTdLink($url, '検索');
   }
 

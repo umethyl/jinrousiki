@@ -1,6 +1,15 @@
 <?php
 //-- 人狼統計情報クラス --//
-class JinrouStatistics extends StackStaticManager {
+final class JinrouStatistics extends StackStaticManager {
+  // stack
+  const CATEGORY    = 'category';
+  const WINNER      = 'winner';
+  const CAMP_APPEAR = 'camp_appear';
+  const ROLE_APPEAR = 'role_appear';
+  const ROLE        = 'role';
+  const WIN_ROLE    = 'win_role';
+
+  //村種別
   public static $category = [
     'normal'		=> '普通',
     'chaos'		=> '闇鍋',
@@ -20,17 +29,12 @@ class JinrouStatistics extends StackStaticManager {
 
   //村情報ロード
   private static function LoadRoom() {
-    DB::Connect();
-    RQ::Get()->page = 'all';
+    //村情報抽出オプションは Request に登録しておく
     foreach (RoomLoaderDB::GetFinished(false) as $room_no) {
       DB::SetRoom(RoomLoaderDB::LoadFinished($room_no));
       DB::$ROOM->ParseOption();
-      $stack = self::GetCategoryStack();
-      if ($stack->category == 'chaos') {
-	self::LoadUser();
-      }
-      self::UpdateRoom($stack);
-      #Text::p($stack);
+      self::LoadUser();
+      self::UpdateRoom();
     }
   }
 
@@ -39,10 +43,57 @@ class JinrouStatistics extends StackStaticManager {
     RQ::Set(RequestDataGame::ID, DB::$ROOM->id);
     DB::LoadUser();
 
-    $stack = self::GetRoleStack();
-    foreach (DB::$USER->GetRole() as $role => $list) {
-      $stack->AddNumber($role, count($list));
+    $role_count  = self::SubStack(self::ROLE);
+    $win_count   = self::SubStack(self::WIN_ROLE);
+    $camp_appear = new Stack();
+    $role_appear = new Stack();
+    foreach (DB::$USER->Get() as $user) {
+      //廃村判定
+      if (count($user->GetRoleList()) < 1 || $user->main_role == 'none') {
+	continue;
+      }
+
+      $role_count->AddNumber($user->main_role, 1);
+      if (Winner::Generate($user->id) == WinnerMessage::$personal_win) { //個人勝利
+	$win_count->AddNumber($user->main_role, 1);
+      }
+      $camp_appear->Set($user->GetWinCamp(), true);
+      $role_appear->Set($user->main_role, true);
     }
+
+    //陣営出現村数
+    $stack = self::SubStack(self::CAMP_APPEAR);
+    foreach ($camp_appear as $role => $flag) {
+      $stack->AddNumber($role, 1);
+    }
+
+    //役職出現村数
+    $stack = self::SubStack(self::ROLE_APPEAR);
+    foreach ($role_appear as $role => $flag) {
+      $stack->AddNumber($role, 1);
+    }
+  }
+
+  //村の統計情報登録
+  private static function UpdateRoom() {
+    $stack = self::GetCategoryStack();
+    $stack->AddNumber('room', 1);
+    $stack->AddNumber('date', DB::$ROOM->date);
+    $stack->AddNumber('user_count', DB::$ROOM->user_count);
+
+    $category = self::WINNER;
+    if ($stack->IsEmpty($category)) {
+      $filter = new Stack();
+      $stack->Set($category, $filter);
+    } else {
+      $filter = $stack->Get($category);
+    }
+
+    $winner = DB::$ROOM->winner;
+    if (null === $winner) {
+      $winner = WinCamp::NONE;
+    }
+    $filter->AddNumber($winner, 1);
   }
 
   //稼働数出力
@@ -63,24 +114,25 @@ class JinrouStatistics extends StackStaticManager {
 	} else {
 	  $number = $filter->Get($data);
 	}
-	TableHTML::OutputTd($number);
+	TableHTML::OutputTd($number, 'member');
       }
       StatisticsHTML::OutputLink('old_log', $category, '検索');
       TableHTML::OutputTrFooter();
     }
-    TableHTML::OutputFooter();
+    TableHTML::OutputFooter(false);
   }
 
   //種別全体統計出力
   private static function OutputTotal() {
     self::OutputWinCamp();
-    if (RQ::Get()->game_type == 'chaos') {
-      self::OutputRole();
-    }
+    self::OutputRole();
   }
 
   //陣営勝利統計出力
   private static function OutputWinCamp() {
+    $room_count  = self::Stack()->Get(RQ::Get()->game_type)->room;
+    $camp_appear = self::SubStack(self::CAMP_APPEAR);
+
     Text::Output('<h2>陣営勝利</h2>');
     foreach (self::$category as $category => $name) {
       if (RQ::Get()->game_type != $category) {
@@ -91,9 +143,58 @@ class JinrouStatistics extends StackStaticManager {
 	continue;
       }
 
-      $filter = $stack->Get('winner');
-      //Text::p($filter);
-      $result_list = self::AggregateWinCamp($filter);
+      StatisticsHTML::OutputWinCampHeader();
+      $result_list = self::AggregateWinCamp($stack->Get(self::WINNER));
+      foreach ($result_list as $camp => $count) {
+	if ($count < 1 && $camp_appear->$camp < 1) {
+	  continue;
+	}
+
+	switch ($camp) {
+	case WinCamp::DRAW:
+	case WinCamp::NONE:
+	  $data_list = [
+	    '',
+	    '',
+	    $count,
+	    Number::Percent($count, $room_count, 2) . '%',
+	    ''
+          ];
+	  break;
+
+	default:
+	  $data_list = [
+	    $camp_appear->$camp,
+	    Number::Percent($camp_appear->$camp, $room_count, 2) . '%',
+	    $count,
+	    Number::Percent($count, $room_count, 2) . '%',
+	    Number::Percent($count, $camp_appear->$camp, 2) . '%'
+	  ];
+	  break;
+	}
+
+	TableHTML::OutputTrHeader();
+	TableHTML::OutputTd(self::GetWinCampName($camp), $camp);
+	StatisticsHTML::OutputData($data_list);
+	TableHTML::OutputTrFooter();
+      }
+      TableHTML::OutputFooter(false);
+    }
+  }
+
+  //陣営勝利統計出力 (旧版)
+  private static function OutputWinCampOld() {
+    Text::Output('<h2>陣営勝利</h2>');
+    foreach (self::$category as $category => $name) {
+      if (RQ::Get()->game_type != $category) {
+	continue;
+      }
+
+      $stack = self::Stack()->Get($category);
+      if (null === $stack) {
+	continue;
+      }
+      $result_list = self::AggregateWinCamp($stack->Get(self::WINNER));
 
       TableHTML::OutputHeader('');
       foreach ($result_list as $camp => $count) {
@@ -113,52 +214,46 @@ class JinrouStatistics extends StackStaticManager {
     }
   }
 
-  //出現役職統計出力 (闇鍋用)
+  //出現役職統計出力
   private static function OutputRole() {
-    $stack = self::GetRoleStack();
-    $list = get_object_vars($stack);
+    $room_count = self::Stack()->Get(RQ::Get()->game_type)->room;
+    $win_count  = self::SubStack(self::WIN_ROLE);
+    $appear     = self::SubStack(self::ROLE_APPEAR);
+    $stack      = self::SubStack(self::ROLE);
+    $list       = get_object_vars($stack);
 
-    Text::Output('<h2>出現役職</h2>');
-    TableHTML::OutputHeader('');
-    foreach (['役職', '出現数', 'ログ検索'] as $name) {
-      TableHTML::OutputTh($name);
-    }
-    TableHTML::OutputTrFooter();
+    StatisticsHTML::OutputRoleHeader();
     foreach (RoleDataManager::GetDiff($list) as $role => $name) {
       TableHTML::OutputTrHeader();
       StatisticsHTML::OutputRoleLink($role, $name);
-      TableHTML::OutputTd($stack->$role);
+      $data_list = [
+	$stack->$role,
+ 	$appear->$role,
+	Number::Percent($appear->$role, $room_count, 2) . '%',
+	$win_count->$role ?? 0,
+	Number::Percent($win_count->$role ?? 0, $stack->$role, 2) . '%'
+      ];
+      StatisticsHTML::OutputData($data_list);
       StatisticsHTML::OutputSearchRoleLink($role);
       TableHTML::OutputTrFooter();
     }
-    TableHTML::OutputFooter();
-  }
-
-  //役職データ専用スタックを取得する
-  private static function GetRoleStack() {
-    $category = 'role';
-    $stack    = self::Stack();
-    if ($stack->IsEmpty($category)) {
-      $stack->Set($category, new Stack());
-    }
-    return $stack->Get($category);
+    TableHTML::OutputFooter(false);
   }
 
   //村の種別を判定して専用スタックを取得する
   private static function GetCategoryStack() {
     $category = self::DecideRoomCategory();
-    $stack    = self::Stack();
-    if ($stack->IsEmpty($category)) {
-      $stack->Set($category, new Stack());
-      $stack->Get($category)->Set('category', $category);
+    $stack    = self::SubStack($category);
+    if ($stack->IsEmpty(self::CATEGORY)) {
+      $stack->Set(self::CATEGORY, $category);
     }
-    return $stack->Get($category);
+    return $stack;
   }
 
   //村の種別判定
   private static function DecideRoomCategory() {
     //特殊村判定
-    foreach (self::GetSpecialCategoryList() as $option) {
+    foreach (['duel', 'gray_random', 'quiz'] as $option) {
       if (DB::$ROOM->IsOption($option)) {
 	return $option;
       }
@@ -172,32 +267,6 @@ class JinrouStatistics extends StackStaticManager {
     }
 
     return 'normal';
-  }
-
-  //特殊村判定オプション一覧取得
-  private static function GetSpecialCategoryList() {
-    //OptionFilterData に登録してもいいかもしれない
-    return ['duel', 'gray_random', 'quiz'];
-  }
-
-  //村の統計情報登録
-  private static function UpdateRoom(Stack $stack) {
-    $stack->AddNumber('room', 1);
-    $stack->AddNumber('date', DB::$ROOM->date);
-    $stack->AddNumber('user_count', DB::$ROOM->user_count);
-
-    $category = 'winner';
-    if ($stack->IsEmpty($category)) {
-      $filter = new Stack();
-      $stack->Set($category, $filter);
-    } else {
-      $filter = $stack->Get($category);
-    }
-    $winner = DB::$ROOM->winner;
-    if (null === $winner) {
-      $winner = WinCamp::NONE;
-    }
-    $filter->AddNumber($winner, 1);
   }
 
   //勝利陣営集計
@@ -215,8 +284,6 @@ class JinrouStatistics extends StackStaticManager {
     ];
     foreach ($camp_list as $camp) {
       switch ($camp) {
-      case WinCamp::HUMAN:
-      case WinCamp::WOLF:
       case WinCamp::LOVERS:
       case WinCamp::QUIZ:
       case WinCamp::VAMPIRE:
@@ -224,9 +291,23 @@ class JinrouStatistics extends StackStaticManager {
 	$result[$camp] = $stack->GetInt($camp);
 	break;
 
+      case WinCamp::HUMAN:
+	$result[$camp] = 0;
+	foreach ([WinCamp::HUMAN, WinCamp::HUMAN_QUIZ] as $win_camp) {
+	  $result[$camp] += $stack->GetInt($win_camp);
+	}
+	break;
+
+      case WinCamp::WOLF:
+	$result[$camp] = 0;
+	foreach ([WinCamp::WOLF, WinCamp::WOLF_QUIZ] as $win_camp) {
+	  $result[$camp] += $stack->GetInt($win_camp);
+	}
+	break;
+
       case WinCamp::FOX:
 	$result[$camp] = 0;
-	foreach ([WinCamp::FOX_HUMAN, WinCamp::FOX_WOLF] as $win_camp) {
+	foreach ([WinCamp::FOX_HUMAN, WinCamp::FOX_WOLF, WinCamp::FOX_QUIZ] as $win_camp) {
 	  $result[$camp] += $stack->GetInt($win_camp);
 	}
 	break;
@@ -257,7 +338,7 @@ class JinrouStatistics extends StackStaticManager {
       return RoleDataManager::GetName($camp, true);
 
     case WinCamp::DRAW:
-      return '引き分け';
+      return '引分';
 
     case WinCamp::NONE:
       return '無し';

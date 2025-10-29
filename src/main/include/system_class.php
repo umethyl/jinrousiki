@@ -360,6 +360,15 @@ abstract class StackStaticManager {
     }
     return $stack;
   }
+
+  //スタックに子スタックを登録して取得
+  public static function SubStack($name) {
+    $stack = self::Stack();
+    if ($stack->IsEmpty($name)) {
+      $stack->Set($name, new Stack());
+    }
+    return $stack->Get($name);
+  }
 }
 
 //-- 構造体基底クラス --//
