@@ -394,6 +394,11 @@ final class Number {
   public static function MultipleThree($number, $limit = null) {
     return self::Multiple($number, 3, 0, $limit);
   }
+
+  //割合
+  public static function Percent(int $number, int $base, int $digit) {
+    return sprintf('%.' . $digit . 'f', $number / $base * 100);
+  }
 }
 
 //-- Switch (bool) 関連 --//
