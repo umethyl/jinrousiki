@@ -416,8 +416,9 @@ final class RoomLoaderDB {
     }
 
     if (isset(RQ::Get()->role)) {
-      $query->WhereLike('role');
-      $list[] = Query::GetLike(RQ::Get()->role);
+      $query->WhereLike('role')->Where(['role'])->WhereOr(['role', 'role']);
+      $role = RQ::Get()->role;
+      array_push($list, $role . ' %', $role);
     }
 
     if (isset(RQ::Get()->name)) {
