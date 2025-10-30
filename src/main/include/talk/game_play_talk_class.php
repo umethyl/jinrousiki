@@ -38,7 +38,7 @@ final class GamePlayTalk {
     */
     $talk = new RoleTalkStruct($say);
     if (true === RQ::Fetch()->individual_talk) {
-      $location = TalkLocation::INDIVIDUAL . ':' . RQ::Fetch()->{RequestDataTalk::TARGET};
+      $location = TalkLocation::INDIVIDUAL . ':' . RQ::Get(RequestDataTalk::TARGET);
       $talk->Set(TalkStruct::LOCATION, $location);
       return RoleTalk::Store($talk, true);
     } elseif (false === DB::$ROOM->IsPlaying()) {

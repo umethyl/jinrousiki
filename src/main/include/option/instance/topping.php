@@ -18,11 +18,11 @@ class Option_topping extends OptionSelector {
 
   public function LoadPost() {
     RQ::Fetch()->ParsePostData($this->name);
-    if (null === RQ::Fetch()->{$this->name}) {
+    if (null === RQ::Get($this->name)) {
       return false;
     }
 
-    $post = RQ::Fetch()->{$this->name};
+    $post = RQ::Get($this->name);
     $flag = (false === empty($post)) && isset($this->form_list[$post]);
     if (true === $flag) {
       array_push(RoomOptionLoader::${$this->group}, sprintf('%s:%s', $this->name, $post));

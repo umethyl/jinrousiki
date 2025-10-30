@@ -23,11 +23,11 @@ class Option_chaos_open_cast extends OptionSelector {
 
   public function LoadPost() {
     RQ::Fetch()->ParsePostData($this->name);
-    if (null === RQ::Fetch()->{$this->name}) {
+    if (null === RQ::Get($this->name)) {
       return false;
     }
 
-    $post = RQ::Fetch()->{$this->name};
+    $post = RQ::Get($this->name);
     foreach ($this->form_list as $option => $value) {
       if ($value == $post) {
 	RQ::Set($option, true);

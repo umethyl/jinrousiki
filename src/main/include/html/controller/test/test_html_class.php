@@ -22,7 +22,7 @@ final class DevHTML {
     $id_t = 'try_count';
     foreach ([$id_u => 20, $id_t => 100] as $key => $value) {
       RQ::Fetch()->ParsePostInt($key);
-      $$key = RQ::Fetch()->$key > 0 ? RQ::Fetch()->$key : $value;
+      $$key = RQ::Get($key) > 0 ? RQ::Get($key) : $value;
     }
 
     Text::Printf(self::GetRoleTestHeader(),
