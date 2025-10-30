@@ -15,8 +15,8 @@ final class GameUpHTML {
   //フォーム出力
   private static function OutputForm() {
     Text::Printf(self::GetForm(),
-      RQ::Get()->url, RQ::Get()->url, RQ::Get()->heaven_mode ? 'reload_middle_frame();' : '',
-      Security::GetToken(RQ::Get()->room_no),
+      RQ::Fetch()->url, RQ::Fetch()->url, RQ::Fetch()->heaven_mode ? 'reload_middle_frame();' : '',
+      Security::GetToken(RQ::Fetch()->room_no),
       RequestDataTalk::SENTENCE, GameMessage::SUBMIT,
       RequestDataTalk::VOICE,
       TalkVoice::STRONG, GameUpMessage::STRONG,
@@ -24,7 +24,7 @@ final class GameUpHTML {
       TalkVoice::WEAK, GameUpMessage::WEAK,
       TalkVoice::SECRET, GameUpMessage::SECRET,
       TalkVoice::LAST_WORDS, GameUpMessage::LAST_WORDS,
-      RQ::Get()->url, GameUpMessage::VOTE, GameUpMessage::TOP
+      RQ::Fetch()->url, GameUpMessage::VOTE, GameUpMessage::TOP
     );
   }
 

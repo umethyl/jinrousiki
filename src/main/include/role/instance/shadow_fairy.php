@@ -9,7 +9,7 @@ class Role_shadow_fairy extends Role_fairy {
   public function BadStatus() {
     $base_date = DB::$ROOM->date; //判定用の日付
     if ((DB::$ROOM->IsOn(RoomMode::WATCH) || DB::$ROOM->IsOn(RoomMode::SINGLE)) &&
-	! RQ::Get()->reverse_log) {
+	! RQ::Fetch()->reverse_log) {
       $base_date--;
     }
 

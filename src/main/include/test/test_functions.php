@@ -8,7 +8,7 @@ class DevRoom {
     RQ::Set('vote_times', 1);
     RQ::Set(RequestDataLogRoom::REVERSE, null);
     $base_list = [
-      'id'		=> RQ::Get()->room_no,
+      'id'		=> RQ::Fetch()->room_no,
       'comment'		=> '',
       'date'		=> 0,
       'scene'		=> RoomScene::BEFORE,
@@ -89,11 +89,11 @@ class DevRoom {
     DB::$ROOM->LoadOption();
     //Text::p(DB::$ROOM, '◆Room');
 
-    $user_count = RQ::Get()->user_count;
-    $try_count  = RQ::Get()->try_count;
+    $user_count = RQ::Fetch()->user_count;
+    $try_count  = RQ::Fetch()->try_count;
     $format     = '%0' . strlen($try_count) . 'd回目: ';
     for ($i = 1; $i <= $try_count; $i++) {
-      if (RQ::Get()->increment) {
+      if (RQ::Fetch()->increment) {
 	printf($format . '%0' . strlen($try_count) . 'd人: ', $i, $user_count);
       } else {
 	printf($format, $i);
@@ -103,7 +103,7 @@ class DevRoom {
 	break;
       }
       Text::p(Cast::GenerateMessage(array_count_values($role_list), true));
-      if (RQ::Get()->increment) {
+      if (RQ::Fetch()->increment) {
 	$user_count++;
       }
     }
@@ -206,7 +206,7 @@ class DevUser {
   //ユーザデータ補完
   public static function Complement($scene = RoomScene::BEFORE) {
     foreach (RQ::GetTest()->test_users as $id => $user) {
-      $user->room_no = RQ::Get()->room_no;
+      $user->room_no = RQ::Fetch()->room_no;
       $user->role_id = $id;
       if (false === isset($user->live)) {
 	$user->live = UserLive::LIVE;
@@ -252,7 +252,7 @@ class DevVote {
   //出力
   public static function Output($url) {
     self::Load($url);
-    RQ::Get()->vote ? self::Execute() : self::OutputForm($url); //投票処理
+    RQ::Fetch()->vote ? self::Execute() : self::OutputForm($url); //投票処理
     DB::LoadDummyBoy();
     GameHTML::OutputPlayer();
     HTML::OutputFooter(true);
@@ -276,7 +276,7 @@ class DevVote {
     if (DB::$SELF->IsDead()) { //死者の霊界投票処理
       HTML::OutputHeader(VoteTestMessage::TITLE, 'game_play', true);
       if (DB::$SELF->IsDummyBoy()) {
-	switch (RQ::Get()->situation) {
+	switch (RQ::Fetch()->situation) {
 	case VoteAction::FORCE_SUDDEN_DEATH:
 	  return VoteForceSuddenDeath::Execute();
 
@@ -289,7 +289,7 @@ class DevVote {
       } else {
 	VoteHeaven::Execute();
       }
-    } elseif (RQ::Get()->target_no == 0) { //空投票検出
+    } elseif (RQ::Fetch()->target_no == 0) { //空投票検出
       VoteHTML::OutputError(VoteMessage::NO_TARGET_TITLE, VoteMessage::NO_TARGET);
     } elseif (DB::$ROOM->IsDay()) { //昼の処刑投票処理
       HTML::OutputHeader(VoteTestMessage::TITLE, 'game_play', true);

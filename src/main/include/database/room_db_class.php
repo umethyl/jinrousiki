@@ -342,9 +342,9 @@ final class RoomLoaderDB {
   //終了した村番地を取得
   public static function GetFinished($reverse) {
     $query = Query::Init()->Group(['room_no'])->Order(['room_no' => false === $reverse]);
-    if (RQ::Get()->page != 'all') {
+    if (RQ::Fetch()->page != 'all') {
       $view = OldLogConfig::VIEW;
-      $query->Limit($view * (RQ::Get()->page - 1), $view);
+      $query->Limit($view * (RQ::Fetch()->page - 1), $view);
     }
 
     self::Prepare($query);
@@ -380,14 +380,14 @@ final class RoomLoaderDB {
   //村クラス取得 (ユーザ登録画面用)
   public static function LoadEntryUserPage() {
     $query = self::GetQuery()->Select(['name', 'comment', 'option_role']);
-    return self::LoadRoom($query, [RQ::Get()->room_no]);
+    return self::LoadRoom($query, [RQ::Fetch()->room_no]);
   }
 
   //村存在判定
   public static function Exists() {
     $query = self::GetQueryBase()->Select(['room_no']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no]);
+    DB::Prepare($query->Build(), [RQ::Fetch()->room_no]);
     return DB::Exists();
   }
 
@@ -404,36 +404,36 @@ final class RoomLoaderDB {
   //Prepare 処理
   private static function Prepare(Query $query) {
     $table = 'room';
-    if (isset(RQ::Get()->role) || isset(RQ::Get()->name)) {
+    if (isset(RQ::Fetch()->role) || isset(RQ::Fetch()->name)) {
       $table .= ' INNER JOIN user_entry USING (room_no)';
     }
     $query->Table($table)->Select(['room_no'])->Where(['status']);
     $list = [RoomStatus::FINISHED];
 
-    if (isset(RQ::Get()->room_name)) {
+    if (isset(RQ::Fetch()->room_name)) {
       $query->WhereLike('name');
-      $list[] = Query::GetLike(RQ::Get()->room_name);
+      $list[] = Query::GetLike(RQ::Fetch()->room_name);
     }
 
-    if (isset(RQ::Get()->role)) {
+    if (isset(RQ::Fetch()->role)) {
       $query->WhereLike('role')->Where(['role'])->WhereOr(['role', 'role']);
-      $role = RQ::Get()->role;
+      $role = RQ::Fetch()->role;
       array_push($list, $role . ' %', $role);
     }
 
-    if (isset(RQ::Get()->name)) {
+    if (isset(RQ::Fetch()->name)) {
       $query->WhereLike('uname')->WhereLike('handle_name')->WhereOr(['uname', 'handle_name']);
-      $name = Query::GetLike(RQ::Get()->name);
+      $name = Query::GetLike(RQ::Fetch()->name);
       array_push($list, $name, $name);
     }
 
-    if (isset(RQ::Get()->winner)) {
+    if (isset(RQ::Fetch()->winner)) {
       $query->Where(['winner']);
-      $list[] = RQ::Get()->winner;
+      $list[] = RQ::Fetch()->winner;
     }
 
-    if (isset(RQ::Get()->game_type)) {
-      switch (RQ::Get()->game_type) {
+    if (isset(RQ::Fetch()->game_type)) {
+      switch (RQ::Fetch()->game_type) {
       case 'normal':
 	foreach (['chaos', 'duel', 'gray_random', 'quiz'] as $type) {
 	  $query->WhereNotLike('game_option');
@@ -446,7 +446,7 @@ final class RoomLoaderDB {
       case 'gray_random':
       case 'quiz':
 	$query->WhereLike('game_option');
-	$list[] = Query::GetLike(RQ::Get()->game_type);
+	$list[] = Query::GetLike(RQ::Fetch()->game_type);
 	break;
       }
     }

@@ -16,7 +16,7 @@ abstract class VoteBase {
       HTML::OutputUnusableError();
     }
 
-    if (static::SITUATION != RQ::Get()->situation) {
+    if (static::SITUATION != RQ::Fetch()->situation) {
       VoteHTML::OutputResult(VoteMessage::INVALID_SITUATION);
     }
   }
@@ -29,7 +29,7 @@ abstract class VoteBase {
 
   //音声用データセット
   protected static function FilterSound() {
-    if (RQ::Get()->play_sound) {
+    if (RQ::Fetch()->play_sound) {
       JinrouCookie::SetVote(DB::$ROOM->scene);
     }
   }
@@ -137,7 +137,7 @@ final class VoteKick extends VoteBase {
   const SITUATION = VoteAction::KICK;
 
   protected static function Load() {
-    $target = DB::$USER->ByID(RQ::Get()->target_no); //投票先ユーザ
+    $target = DB::$USER->ByID(RQ::Fetch()->target_no); //投票先ユーザ
     self::ValidateTarget($target);
 
     DB::$ROOM->LoadVote(true); //投票情報ロード
@@ -213,7 +213,7 @@ final class VoteDay extends VoteBase {
 
   //データロード
   protected static function Load() {
-    RoleManager::Stack()->Set(VoteDayElement::TARGET, DB::$USER->ByReal(RQ::Get()->target_no));
+    RoleManager::Stack()->Set(VoteDayElement::TARGET, DB::$USER->ByReal(RQ::Fetch()->target_no));
     self::ValidateTarget();
     EventManager::VoteDuel();
     self::ValidateVote();
@@ -344,7 +344,7 @@ final class VoteDay extends VoteBase {
       } else {
 	return true;
       }
-    } elseif (DB::$ROOM->revote_count != RQ::Get()->revote_count) {
+    } elseif (DB::$ROOM->revote_count != RQ::Fetch()->revote_count) {
       VoteHTML::OutputResult(VoteMessage::INVALID_COUNT);
     } elseif (UserDB::IsVoteKill()) {
       VoteHTML::OutputResult(VoteMessage::ALREADY_VOTE);
@@ -672,16 +672,16 @@ final class VoteNight extends VoteBase {
 
   protected static function Vote() {
     if (self::Stack()->Get('not_action')) { //投票キャンセルタイプは何もしない
-      if (false === DB::$SELF->Vote(RQ::Get()->situation)) {
+      if (false === DB::$SELF->Vote(RQ::Fetch()->situation)) {
 	VoteHTML::OutputResult(VoteMessage::DB_ERROR);
       }
       $str    = '';
-      $action = RQ::Get()->situation;
+      $action = RQ::Fetch()->situation;
     } else {
       self::Stack()->Get('filter')->SetVoteNightTarget();
       //RoleManager::Stack()->p();
       $target = RoleManager::Stack()->Get(RequestDataVote::TARGET);
-      if (false === DB::$SELF->Vote(RQ::Get()->situation, $target)) {
+      if (false === DB::$SELF->Vote(RQ::Fetch()->situation, $target)) {
 	VoteHTML::OutputResult(VoteMessage::DB_ERROR);
       }
       $str    = RoleManager::Stack()->Get('target_handle');
@@ -887,21 +887,21 @@ final class VoteNight extends VoteBase {
   private static function ValidateTarget() {
     if (Security::IsInvalidToken(DB::$ROOM->id)) { //CSRF対策
       HTML::OutputUnusableError();
-    } elseif (empty(RQ::Get()->situation)) {
+    } elseif (empty(RQ::Fetch()->situation)) {
       VoteHTML::OutputResult(VoteMessage::VOTE_NIGHT_EMPTY);
-    } elseif (RQ::Get()->situation == RoleManager::Stack()->Get('not_action')) {
+    } elseif (RQ::Fetch()->situation == RoleManager::Stack()->Get('not_action')) {
       self::Stack()->Set('not_action', true);
-    } elseif (RQ::Get()->situation != RoleManager::Stack()->Get('action')) {
+    } elseif (RQ::Fetch()->situation != RoleManager::Stack()->Get('action')) {
       VoteHTML::OutputResult(VoteMessage::INVALID_VOTE_NIGHT);
     } else {
       $add_action = RoleManager::Stack()->Get('add_action');
-      if (RQ::Get()->add_action && isset($add_action)) {
+      if (RQ::Fetch()->add_action && isset($add_action)) {
 	RQ::Set(RequestDataVote::SITUATION, $add_action);
       }
     }
 
     if (false === DB::$ROOM->IsTest()) {
-      self::ValidateVoted(RQ::Get()->situation); //投票済みチェック
+      self::ValidateVoted(RQ::Fetch()->situation); //投票済みチェック
     }
   }
 
@@ -1632,7 +1632,7 @@ final class VoteForceSuddenDeath extends VoteBase {
   const SITUATION = VoteAction::FORCE_SUDDEN_DEATH;
 
   protected static function Load() {
-    $target = DB::$USER->ByID(RQ::Get()->target_no); //投票先ユーザ
+    $target = DB::$USER->ByID(RQ::Fetch()->target_no); //投票先ユーザ
     self::ValidateTarget($target);
 
     //処理は実ユーザーに対して行う

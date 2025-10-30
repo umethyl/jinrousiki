@@ -20,9 +20,9 @@ final class IconViewHTML {
 
   //アイコン情報出力
   private static function OutputIcon() {
-    if (RQ::Get()->icon_no > 0) {
+    if (RQ::Fetch()->icon_no > 0) {
       self::OutputSingleEdit();
-    } elseif (RQ::Get()->Enable(RequestDataIcon::MULTI)) {
+    } elseif (RQ::Fetch()->Enable(RequestDataIcon::MULTI)) {
       self::OutputMultiEdit();
     } else {
       HTML::OutputFieldsetHeader(IconMessage::TITLE);
@@ -52,7 +52,7 @@ final class IconViewHTML {
 
   //個別編集フォーム出力
   private static function OutputSingleEditForm() {
-    $icon_no = RQ::Get()->icon_no;
+    $icon_no = RQ::Fetch()->icon_no;
     $stack = IconDB::Get($icon_no);
     if (count($stack) < 1) {
       return;

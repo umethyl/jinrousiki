@@ -3,7 +3,7 @@
 final class NameTestController extends JinrouTestController {
   protected static function LoadRequest() {
     DevHTML::LoadRequest();
-    RQ::Get()->ParsePostData('type');
+    RQ::Fetch()->ParsePostData('type');
   }
 
   protected static function OutputHeader() {
@@ -21,7 +21,7 @@ final class NameTestController extends JinrouTestController {
 
   //フォームリスト出力
   private static function OutputFormList() {
-    $id        = RQ::Get()->type ?? 'all-all' ;
+    $id        = RQ::Fetch()->type ?? 'all-all' ;
     $count     = 0;
     $role_data = self::GetList();
     $stack     = ['camp' => VoteMessage::CAMP_FOOTER, 'group' => VoteMessage::GROUP_FOOTER];
@@ -45,7 +45,7 @@ final class NameTestController extends JinrouTestController {
   }
 
   protected static function RunTest() {
-    list($role, $type) = Text::Parse(RQ::Get()->type, '-');
+    list($role, $type) = Text::Parse(RQ::Fetch()->type, '-');
     switch ($type) {
     case 'all':
       $stack = RoleDataManager::GetList();

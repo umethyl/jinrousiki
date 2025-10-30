@@ -63,7 +63,7 @@ final class AutoPlayTalk extends StackStaticManager {
   public static function GenerateFooter() {
     //self::Stack()->p(null, '◆GenerateFooter');
     $count = 0;
-    $speed = RQ::Get()->scroll_time < 1 ? 1 : RQ::Get()->scroll_time;
+    $speed = RQ::Fetch()->scroll_time < 1 ? 1 : RQ::Fetch()->scroll_time;
     $scene_stack = [];
     $talk_stack  = [];
     foreach (array_reverse(self::Stack()->Get(self::SCENE)) as $scene) {

@@ -7,16 +7,16 @@ class Option_real_time extends OptionLimitedCheckbox {
   public $type  = OptionFormType::REALTIME;
 
   public function LoadPost() {
-    RQ::Get()->ParsePostOn($this->name);
-    if (false === RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostOn($this->name);
+    if (false === RQ::Fetch()->{$this->name}) {
       return false;
     }
 
     $post_day   = sprintf('%s_day',   $this->name);
     $post_night = sprintf('%s_night', $this->name);
-    RQ::Get()->ParsePostInt($post_day, $post_night);
-    $day   = RQ::Get()->$post_day;
-    $night = RQ::Get()->$post_night;
+    RQ::Fetch()->ParsePostInt($post_day, $post_night);
+    $day   = RQ::Fetch()->$post_day;
+    $night = RQ::Fetch()->$post_night;
     if (Number::OutRange($day, 1, 99) || Number::OutRange($night, 1, 99)) {
       RoomManagerHTML::OutputResult('time');
     }

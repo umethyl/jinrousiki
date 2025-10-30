@@ -14,7 +14,7 @@ final class UserManagerController extends JinrouController {
   }
 
   protected static function EnableCommand() {
-    return RQ::Get()->entry;
+    return RQ::Fetch()->entry;
   }
 
   protected static function RunCommand() {
@@ -140,7 +140,7 @@ final class UserManagerController extends JinrouController {
 	if ($target->session_id != Session::GetID()) {
 	  self::OutputError(Message::SESSION_ERROR, UserManagerMessage::SESSION);
 	}
-	$target->room_no = RQ::Get()->room_no;
+	$target->room_no = RQ::Fetch()->room_no;
 
 	if (! $target->IsDummyBoy() && self::IsSystemName($handle_name)) {
 	  $format = UserManagerMessage::CHECK_HANDLE_NAME;
@@ -236,17 +236,17 @@ final class UserManagerController extends JinrouController {
   }
 
   protected static function Output() {
-    if (RQ::Get()->user_no > 0) { //登録情報変更モード
+    if (RQ::Fetch()->user_no > 0) { //登録情報変更モード
       $stack = UserDB::Get();
       if ($stack['session_id'] != Session::GetID()) {
 	self::OutputError(Message::SESSION_ERROR, UserManagerMessage::SESSION);
       }
-      RQ::Get()->StorePost($stack);
+      RQ::Fetch()->StorePost($stack);
     }
 
     DB::SetRoom(RoomLoaderDB::LoadEntryUserPage());
     if (null === DB::$ROOM->id) {
-      $str = sprintf(UserManagerMessage::NOT_EXISTS, RQ::Get()->room_no);
+      $str = sprintf(UserManagerMessage::NOT_EXISTS, RQ::Fetch()->room_no);
       self::OutputError(UserManagerMessage::LOGIN, $str);
     }
     if (DB::$ROOM->IsFinished()) {

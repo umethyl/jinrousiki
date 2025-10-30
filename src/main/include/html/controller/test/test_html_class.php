@@ -4,12 +4,12 @@ final class DevHTML {
   //共通リクエストロード
   public static function LoadRequest() {
     RQ::LoadRequest();
-    RQ::Get()->ParsePostOn('execute');
+    RQ::Fetch()->ParsePostOn('execute');
   }
 
   //実行判定
   public static function IsExecute() {
-    return RQ::Get()->execute;
+    return RQ::Fetch()->execute;
   }
 
   //配役テストヘッダ出力
@@ -21,8 +21,8 @@ final class DevHTML {
     $id_u = 'user_count';
     $id_t = 'try_count';
     foreach ([$id_u => 20, $id_t => 100] as $key => $value) {
-      RQ::Get()->ParsePostInt($key);
-      $$key = RQ::Get()->$key > 0 ? RQ::Get()->$key : $value;
+      RQ::Fetch()->ParsePostInt($key);
+      $$key = RQ::Fetch()->$key > 0 ? RQ::Fetch()->$key : $value;
     }
 
     Text::Printf(self::GetRoleTestHeader(),

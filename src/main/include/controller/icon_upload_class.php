@@ -14,7 +14,7 @@ final class IconUploadController extends JinrouController {
   }
 
   protected static function EnableCommand() {
-    return isset(RQ::Get()->command);
+    return isset(RQ::Fetch()->command);
   }
 
   protected static function RunCommand() {
@@ -22,7 +22,7 @@ final class IconUploadController extends JinrouController {
       HTML::OutputResult(IconUploadMessage::TITLE, IconUploadMessage::REFERER);
     }
 
-    switch (RQ::Get()->command) {
+    switch (RQ::Fetch()->command) {
     case 'upload':
       self::ExecuteUpload();
       break;
@@ -175,7 +175,7 @@ final class IconUploadController extends JinrouController {
 
     //登録管理用セッションデータ削除
     DB::Connect();
-    if (false === IconDB::ClearSession(RQ::Get()->icon_no)) {
+    if (false === IconDB::ClearSession(RQ::Fetch()->icon_no)) {
       $str = Text::Join($str, IconUploadMessage::SESSION_DELETE);
     }
     $str = Text::Join($str, URL::GetJump($url));
@@ -190,7 +190,7 @@ final class IconUploadController extends JinrouController {
     }
 
     //アイコンのファイル名と登録時のセッション ID を取得
-    $stack = IconDB::GetSession(RQ::Get()->icon_no);
+    $stack = IconDB::GetSession(RQ::Fetch()->icon_no);
     if (count($stack) < 1) { //アイコン情報取得エラー
       self::OutputResult(IconUploadMessage::DB_ERROR);
     }
@@ -200,7 +200,7 @@ final class IconUploadController extends JinrouController {
       self::OutputResult(IconUploadMessage::SESSION);
     }
 
-    if (false === IconDB::Delete(RQ::Get()->icon_no, $icon_filename)) { //削除処理
+    if (false === IconDB::Delete(RQ::Fetch()->icon_no, $icon_filename)) { //削除処理
       self::OutputResult(IconUploadMessage::DB_ERROR);
     }
     DB::Disconnect();

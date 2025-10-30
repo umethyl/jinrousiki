@@ -64,7 +64,7 @@ final class PageLinkBuilder extends stdClass {
       }
       $url_stack[] =  $this->GenerateTag($this->page->set, $name, true);
 
-      if (RQ::Get()->watch) {
+      if (RQ::Fetch()->watch) {
 	$this->AddOption('reverse', Switcher::Get($this->set_reverse));
 	$this->AddOption('watch',   Switcher::OFF);
 	$url_stack[] = $this->GenerateTag($this->page->set, OldLogMessage::LINK_WIN, true);

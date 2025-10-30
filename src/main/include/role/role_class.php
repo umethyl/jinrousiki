@@ -752,9 +752,9 @@ abstract class Role extends stdClass {
       return $this->CallVoteMix(__FUNCTION__);
     }
 
-    $this->SetStack(RQ::Get()->situation, 'message');
+    $this->SetStack(RQ::Fetch()->situation, 'message');
     try {
-      $stack = RQ::Get()->target_no;
+      $stack = RQ::Fetch()->target_no;
       if (is_array($stack)) {
 	$this->ValidateVoteNightTargetList($stack);
 	$this->SetVoteNightTargetList($stack);
@@ -985,7 +985,7 @@ class RoleTalk {
   //発言登録 (エスケープ処理済みの発言を渡すこと)
   public static function Store(TalkStruct $talk, $update = false) {
     //声の大きさを決定
-    $voice = RQ::Get()->font_type;
+    $voice = RQ::Fetch()->font_type;
     $say   = $talk->Get(TalkStruct::SENTENCE);
     if (DB::$ROOM->IsPlaying() && DB::$SELF->IsLive()) {
       foreach (RoleLoader::LoadUser(DB::$SELF->GetVirtual(), 'voice') as $filter) {

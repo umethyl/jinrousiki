@@ -11,7 +11,7 @@ final class StatisticsController extends JinrouController {
   }
 
   protected static function GetLoadDatabaseID() {
-    return RQ::Get()->db_no;
+    return RQ::Fetch()->db_no;
   }
 
   protected static function Output() {

@@ -44,7 +44,7 @@ class UserIcon {
       RequestDataIcon::AUTHOR     => IconMessage::AUTHOR
     ];
     foreach ($list as $key => $label) {
-      $str = RQ::Get()->$key;
+      $str = RQ::Fetch()->$key;
       if (Text::Over($str, UserIconConfig::LENGTH)) {
 	$error = Text::Join(Text::AddHeader(self::GetLengthLimit(), $label), $url);
 	HTML::OutputResult($title, $error);

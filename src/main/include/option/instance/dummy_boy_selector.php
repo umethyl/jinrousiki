@@ -12,12 +12,12 @@ class Option_dummy_boy_selector extends OptionSelector {
   }
 
   public function LoadPost() {
-    RQ::Get()->ParsePostData($this->name);
-    if (null === RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostData($this->name);
+    if (null === RQ::Fetch()->{$this->name}) {
       return false;
     }
 
-    $post = RQ::Get()->{$this->name};
+    $post = RQ::Fetch()->{$this->name};
     foreach ($this->form_list as $option => $form_value) {
       if ($post == $form_value) {
 	OptionLoader::Load($option)->LoadPost();

@@ -288,7 +288,7 @@ final class TalkBuilder {
     }
 
     //実ユーザを取得
-    if (RQ::Get()->add_role && $actor->id > 0) { //役職表示モード対応
+    if (RQ::Fetch()->add_role && $actor->id > 0) { //役職表示モード対応
       $real_actor = isset($real) ? $real : $actor;
       $name .= $real_actor->GenerateShortRoleName($talk->scene == RoomScene::HEAVEN);
     } else {
@@ -481,7 +481,7 @@ final class TalkBuilder {
     $stack->mind_read = $is_date && (DB::$ROOM->IsOn(RoomMode::SINGLE) || DB::$SELF->IsLive());
 
     if (DB::$ROOM->IsOn(RoomMode::WATCH)) {
-      $stack->wolf |= RQ::Get()->wolf_sight; //狼視点モード
+      $stack->wolf |= RQ::Fetch()->wolf_sight; //狼視点モード
     }
     foreach (['common', 'wolf', 'fox'] as $type) { //身代わり君の上書き判定
       $stack->$type |= $stack->dummy_boy;
@@ -575,14 +575,14 @@ final class TalkBuilder {
   private function Talk(TalkParser $talk, User $user, $real = null) {
     //表示情報を抽出
     $name = $this->GetHandleName($talk, $user);
-    if (RQ::Get()->add_role && $user->id != 0) { //役職表示モード対応
+    if (RQ::Fetch()->add_role && $user->id != 0) { //役職表示モード対応
       if ($talk->scene == RoomScene::HEAVEN) {
 	$real = $user;
       } elseif (null === $real) {
 	$real = DB::$USER->ByReal($user->id);
       }
       $name .= $real->GenerateShortRoleName();
-    } elseif (RQ::Get()->name && DB::$ROOM->IsFinished()) { //ユーザ名表示モード
+    } elseif (RQ::Fetch()->name && DB::$ROOM->IsFinished()) { //ユーザ名表示モード
       $name .= $user->GenerateShortRoleName();
     }
 
@@ -863,7 +863,7 @@ final class TalkBuilder {
 
   //アイコン追加
   private function AddIcon(User $user, $symbol, $name) {
-    if (RQ::Get()->icon && $name != '') {
+    if (RQ::Fetch()->icon && $name != '') {
       return ImageHTML::GenerateIcon($user) . $symbol;
     } else {
       return $symbol;

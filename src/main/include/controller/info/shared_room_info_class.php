@@ -7,8 +7,8 @@ final class SharedRoomInfoController extends JinrouController {
   }
 
   protected static function Output() {
-    if (Number::Within(RQ::Get()->id, 0, count(SharedServerConfig::$server_list))) {
-      InfoHTML::OutputSharedRoom(RQ::Get()->id);
+    if (Number::Within(RQ::Fetch()->id, 0, count(SharedServerConfig::$server_list))) {
+      InfoHTML::OutputSharedRoom(RQ::Fetch()->id);
     } else {
       InfoHTML::OutputHeader(SharedRoomInfoMessage::TITLE, 0, 'shared_room');
       InfoHTML::OutputSharedRoomList();
