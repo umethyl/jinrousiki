@@ -116,16 +116,6 @@ final class HTML {
     echo self::GenerateBodyHeader($css, $on_load);
   }
 
-  //フレーム HTML ヘッダ出力
-  public static function OutputFrameHeader($title) {
-    Text::Printf(self::GetFrameHeader(), ServerConfig::ENCODE, $title);
-  }
-
-  //フレーム HTML フッタ出力
-  public static function OutputFrameFooter() {
-    printf(self::GetFrameFooter(), Message::NO_FRAME);
-  }
-
   //fieldset ヘッダ出力
   public static function OutputFieldsetHeader($str) {
     Text::Printf(self::GetFieldsetHeader(), $str);
@@ -205,31 +195,6 @@ EOF;
     return <<<EOF
 %s</head>
 <body%s>
-EOF;
-  }
-
-  //フレーム HTML ヘッダタグ
-  private static function GetFrameHeader() {
-    return <<<EOF
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
-<html lang="ja">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=%s">
-<title>%s</title>
-</head>
-EOF;
-  }
-
-  //フレーム HTML ヘッダタグ
-  private static function GetFrameFooter() {
-    return <<<EOF
-<noframes>
-<body>
-%s
-</body>
-</noframes>
-</frameset>
-</html>
 EOF;
   }
 
