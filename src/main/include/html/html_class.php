@@ -84,31 +84,6 @@ final class HTML {
     return self::GenerateTag('span', $str, $class, $id);
   }
 
-  //リンク生成
-  public static function GenerateLink($url, $str) {
-    return sprintf(self::GetLink(), $url, $str);
-  }
-
-  //ログへのリンク生成
-  public static function GenerateLogLink($url, $watch = false, $header = '', $css = '', $footer = '') {
-    $str = sprintf(self::GetLogLink(), $header,
-      $url, $css, Message::LOG_NORMAL,
-      $url, $css, Message::LOG_REVERSE,
-      $url, $css, Message::LOG_DEAD,
-      $url, $css, Message::LOG_DEAD_REVERSE,
-      $url, $css, Message::LOG_HEAVEN,
-      $url, $css, Message::LOG_HEAVEN_REVERSE
-    );
-
-    if (true === $watch) {
-      $str .= sprintf(Text::LF . self::GetWatchLogLink(),
-	$url, $css, Message::LOG_WATCH,
-	$url, $css, Message::LOG_WATCH_REVERSE
-      );
-    }
-    return $str . $footer;
-  }
-
   //共通フォームヘッダ生成
   public static function GenerateFormHeader($url, $str) {
     return Text::Format(self::GetFormHeader(), $url, $str);
@@ -233,11 +208,6 @@ final class HTML {
   //p 出力
   public static function OutputP($str) {
     Text::Output(self::GenerateTag('p', $str));
-  }
-
-  //リンク出力
-  public static function OutputLink($url, $str, $line = false) {
-    Text::Output(self::GenerateLink($url, $str), $line);
   }
 
   //警告メッセージ出力
@@ -367,31 +337,6 @@ EOF;
   //窓を閉じてもらうメッセージタグ
   private static function GetCloseWindow() {
     return '%s%s<span style="color:#0000FF">%s</span>';
-  }
-
-  //リンクタグ
-  private static function GetLink() {
-    return '<a href="%s">%s</a>';
-  }
-
-  //ログへのリンクタグ
-  private static function GetLogLink() {
-    return <<<EOF
-%s <a target="_top" href="%s"%s>%s</a>
-<a target="_top" href="%s&reverse_log=on"%s>%s</a>
-<a target="_top" href="%s&heaven_talk=on"%s>%s</a>
-<a target="_top" href="%s&heaven_talk=on&reverse_log=on"%s>%s</a>
-<a target="_top" href="%s&heaven_only=on"%s >%s</a>
-<a target="_top" href="%s&heaven_only=on&reverse_log=on"%s>%s</a>
-EOF;
-  }
-
-  //ログへのリンクタグ (観戦モード用)
-  private static function GetWatchLogLink() {
-    return <<<EOF
-<a target="_top" href="%s&watch=on"%s>%s</a>
-<a target="_top" href="%s&watch=on&reverse_log=on"%s>%s</a>
-EOF;
   }
 
   //メッセージタグ

@@ -63,11 +63,11 @@ final class GameHTML {
   public static function GenerateLogLink() {
     $url    = URL::GetRoom('old_log');
     $header = DB::$ROOM->IsOn(RoomMode::VIEW) ? GameMessage::LOG_LINK_VIEW : GameMessage::LOG_LINK;
-    $str    = HTML::GenerateLogLink($url, true, Text::BRLF . $header);
+    $str    = LinkHTML::GenerateLog($url, true, Text::BRLF . $header);
 
     $header = GameMessage::LOG_LINK_ROLE;
     $url   .= URL::AddSwitch(RequestDataLogRoom::ROLE);
-    return $str . HTML::GenerateLogLink($url, false, Text::BRLF . $header);
+    return $str . LinkHTML::GenerateLog($url, false, Text::BRLF . $header);
   }
 
   //プレイ中ログリンク一覧ヘッダー生成

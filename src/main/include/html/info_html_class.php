@@ -34,8 +34,8 @@ final class InfoHTML {
     $str   = '※「新役職について」は移動しました → ';
 
     HTML::OutputHeader($title, 'index', true);
-    HTML::OutputLink('../', '← TOP', true);
-    HTML::OutputP($str . HTML::GenerateLink('new_role/', InfoMessage::TITLE_ROLE));
+    LinkHTML::Output('../', '← TOP', true);
+    HTML::OutputP($str . LinkHTML::Generate('new_role/', InfoMessage::TITLE_ROLE));
     HTML::OutputFooter();
   }
 
@@ -68,7 +68,7 @@ final class InfoHTML {
   //オプションリスト出力
   public static function OutputOptionList($option, array $list) {
     foreach ($list as $name) {
-      HTML::OutputLink('#' . $option . '_' . $name, GameOptionConfig::${$option.'_list'}[$name]);
+      LinkHTML::Output('#' . $option . '_' . $name, GameOptionConfig::${$option.'_list'}[$name]);
     }
   }
 
@@ -83,7 +83,7 @@ final class InfoHTML {
   public static function OutputDevelop($title, $css, $name, $version = null, $url = null) {
     self::OutputHeader($title, 1, $css);
     if (isset($version)) {
-      HTML::OutputP(HTML::GenerateLink($url, InfoMessage::TITLE_LATEST));
+      HTML::OutputP(LinkHTML::Generate($url, InfoMessage::TITLE_LATEST));
     }
     self::Load(Text::AddFooter($name, $version), 'develop/');
     HTML::OutputFooter();
@@ -105,7 +105,7 @@ final class InfoHTML {
   //カテゴリ別ページ内リンク出力
   public static function OutputCategory(array $list) {
     foreach ($list as $name) {
-      HTML::OutputLink('#' . $name, OptionManager::GenerateCaption($name));
+      LinkHTML::Output('#' . $name, OptionManager::GenerateCaption($name));
     }
   }
 

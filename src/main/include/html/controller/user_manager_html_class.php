@@ -36,7 +36,7 @@ final class UserManagerHTML {
     }
 
     Text::Printf(self::GetHeader(),
-      HTML::GenerateLink('./', Message::BACK), Text::BR,
+      LinkHTML::Generate('./', Message::BACK), Text::BR,
       $url, self::PATH, UserManagerMessage::ENTRY_TITLE,
       DB::$ROOM->GenerateName(), self::PATH, UserManagerMessage::ENTRY_ROOM,
       DB::$ROOM->GenerateComment(), DB::$ROOM->GenerateNumber()

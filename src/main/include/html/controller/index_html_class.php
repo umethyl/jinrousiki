@@ -16,7 +16,7 @@ final class IndexHTML {
     HTML::OutputJavaScript('room_manager');
     HTML::OutputBodyHeader();
     if (ServerConfig::BACK_PAGE != '') {
-      HTML::OutputLink(ServerConfig::BACK_PAGE, Message::BACK, true);
+      LinkHTML::Output(ServerConfig::BACK_PAGE, Message::BACK, true);
     }
     Text::Printf(self::GetTitle(),
       TopPageMessage::TITLE, TopPageMessage::TITLE,

@@ -65,7 +65,7 @@ final class IconHTML {
       $edit_url = URL::GenerateSwitch('icon_view', RequestDataIcon::MULTI);
       Text::Printf(self::GetCaption(),
 	IconMessage::APPEARANCE, IconMessage::CATEGORY, IconMessage::AUTHOR,
-	IconMessage::SEARCH_EXPLAIN, HTML::GenerateLink($edit_url, IconMessage::MULTI_EDIT)
+	IconMessage::SEARCH_EXPLAIN, LinkHTML::Generate($edit_url, IconMessage::MULTI_EDIT)
       );
     } elseif (isset(RQ::Fetch()->room_no)) {
       $method = 'OutputDetailForUserEntry';

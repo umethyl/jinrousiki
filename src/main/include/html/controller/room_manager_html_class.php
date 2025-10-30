@@ -41,7 +41,7 @@ final class RoomManagerHTML {
     RoomOptionLoader::Load($stack);
     if (AdminConfig::$room_delete_enable) {
       $url    = URL::GetRoom('admin/room_delete', $ROOM->id);
-      $delete = Text::QuoteBracket(HTML::GenerateLink($url, RoomManagerMessage::DELETE));
+      $delete = Text::QuoteBracket(LinkHTML::Generate($url, RoomManagerMessage::DELETE));
     } else {
       $delete = '';
     }

@@ -268,7 +268,7 @@ class DevVote {
     RQ::Set(RequestDataVote::TARGET,     $stack->target_no);
     RQ::Set(RequestDataVote::SITUATION,  $stack->situation);
     RQ::Set(RequestDataVote::ADD_ACTION, $stack->add_action);
-    RQ::Set(RequestDataVote::BACK_URL,   HTML::GenerateLink($url, Message::BACK));
+    RQ::Set(RequestDataVote::BACK_URL,   LinkHTML::Generate($url, Message::BACK));
   }
 
   //実行

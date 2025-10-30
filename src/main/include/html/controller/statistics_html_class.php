@@ -12,9 +12,15 @@ final class StatisticsHTML {
   private static function OutputHeader() {
     HTML::OutputHeader(StatisticsMessage::TITLE, 'statistics');
     HTML::OutputBodyHeader();
-    $str = sprintf('<a href="./">%s</a> <a href="statistics.php">リセット</a>', StatisticsMessage::TOP);
-    DivHTML::Output($str, 'link');
+    self::OutputHeaderLink();
     HeaderHTML::OutputTitle('統計情報');
+  }
+
+  //ヘッダリンク出力
+  private static function OutputHeaderLink() {
+    $top   = LinkHTML::Generate('./', StatisticsMessage::TOP);
+    $reset = LinkHTML::Generate('statistics.php', 'リセット');
+    DivHTML::Output(ArrayFilter::Concat([$top, $reset]), 'link');
   }
 
   //稼働数ヘッダ出力
@@ -70,13 +76,6 @@ final class StatisticsHTML {
 
   //リンク出力 (テーブル)
   private static function OutputTdLink(string $url, string $name) {
-    TableHTML::OutputTd(HTML::GenerateLink($url, $name));
-  }
-
-  //ヘッダタグ
-  private static function GetHeader() {
-    return <<<EOF
-<div class="link"><a href="./">%s</a> <a href="statistics.php">リセット</a></div>
-EOF;
+    TableHTML::OutputTd(LinkHTML::Generate($url, $name));
   }
 }
