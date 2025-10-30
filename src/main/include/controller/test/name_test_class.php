@@ -13,10 +13,10 @@ final class NameTestController extends JinrouTestController {
 
   //フォーム出力
   private static function OutputForm() {
-    HTML::OutputFormHeader('name_test.php');
+    FormHTML::OutputHeader('name_test.php');
     Text::d();
     self::OutputFormList();
-    HTML::OutputFormFooter();
+    FormHTML::OutputFooter();
   }
 
   //フォームリスト出力
@@ -37,7 +37,7 @@ final class NameTestController extends JinrouTestController {
 
   //ラジオボタン出力
   private static function OutputRadio($id, $label, $checked_id) {
-    DevHTML::OutputRadio($id, 'type', $id, HTML::GenerateChecked($id === $checked_id), $label);
+    DevHTML::OutputRadio($id, 'type', $id, FormHTML::Checked($id === $checked_id), $label);
   }
 
   protected static function IsExecute() {

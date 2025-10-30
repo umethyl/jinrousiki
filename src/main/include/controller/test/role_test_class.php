@@ -25,7 +25,7 @@ final class RoleTestController extends JinrouAdminController {
     $checked_key = in_array(RQ::Get($id), $stack) ? RQ::Get($id) : 'chaos_hyper';
     foreach ($stack as $option) {
       $label   = $id . '_' . $option;
-      $checked = HTML::GenerateChecked($checked_key == $option);
+      $checked = FormHTML::Checked($checked_key == $option);
       DevHTML::OutputRadio($label, $id, $option, $checked, RoleTestMessage::$$option);
     }
     Text::d();
@@ -37,11 +37,11 @@ final class RoleTestController extends JinrouAdminController {
 	Text::OutputFold(++$count, Text::BR, 11);
 	if (is_int($key)) {
 	  $value   = $mode;
-	  $checked = HTML::GenerateChecked(RQ::Get($option) == $mode);
+	  $checked = FormHTML::Checked(RQ::Get($option) == $mode);
 	  $name    = OptionManager::GenerateCaption($mode);
 	} else {
 	  $value   = '';
-	  $checked = HTML::GenerateChecked(RQ::Get($option) == '');
+	  $checked = FormHTML::Checked(RQ::Get($option) == '');
 	  $name    = $mode;
 	}
 	$label = $option . (is_int($key) ? '_' . $key : '');
@@ -56,7 +56,7 @@ final class RoleTestController extends JinrouAdminController {
       foreach (GameOptionConfig::${$option.'_list'} as $key => $mode) {
 	Text::OutputFold(++$count, Text::BR, 9);
 	$label   = $option . (is_int($key) ? '_' . $key : '');
-	$checked = HTML::GenerateChecked(RQ::Get($option) == $key);
+	$checked = FormHTML::Checked(RQ::Get($option) == $key);
 	DevHTML::OutputRadio($label, $option, $key, $checked, $mode);
       }
       Text::d();
@@ -82,7 +82,7 @@ final class RoleTestController extends JinrouAdminController {
     $checked_key = in_array(RQ::Get($id), $stack) ? RQ::Get($id) : 'chaos_open_cast_full';
     foreach ($stack as $key => $option) {
       $label   = $id . '_' . $option;
-      $checked = HTML::GenerateChecked($checked_key == $option);
+      $checked = FormHTML::Checked($checked_key == $option);
       DevHTML::OutputRadio($label, $id, $option, $checked, RoleTestMessage::$$option);
     }
     Text::d();
@@ -100,7 +100,7 @@ final class RoleTestController extends JinrouAdminController {
       $checked = Switcher::IsOn(RQ::Get($option));
       DevHTML::OutputCheckbox('option_' . $option, $option, RoleTestMessage::$$option, $checked);
     }
-    HTML::OutputFormFooter();
+    FormHTML::OutputFooter();
   }
 
   //テスト実行

@@ -67,7 +67,7 @@ final class IconViewHTML {
       IconMessage::CATEGORY,	$category,	$size,
       IconMessage::AUTHOR,	$author,	$size,
       IconMessage::COLOR,	$color,		IconMessage::EXAMPLE,
-      IconMessage::DISABLE, HTML::GenerateChecked($disable > 0),
+      IconMessage::DISABLE, FormHTML::Checked($disable > 0),
       IconMessage::PASSWORD,
       IconMessage::SUBMIT
     );

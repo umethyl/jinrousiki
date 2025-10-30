@@ -32,7 +32,7 @@ final class OptionFormHTML {
   public static function GenerateCheckbox(OptionCheckbox $filter, $type, $footer) {
     return sprintf(self::GetCheckbox(),
       $type, $filter->name, $filter->form_name, $filter->form_value,
-      HTML::GenerateChecked($filter->value), $footer
+      FormHTML::Checked($filter->value), $footer
     );
   }
 

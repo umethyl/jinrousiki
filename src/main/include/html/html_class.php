@@ -68,26 +68,6 @@ final class HTML {
     return self::GenerateTag('span', $str, $class, $id);
   }
 
-  //共通フォームヘッダ生成
-  public static function GenerateFormHeader($url, $str) {
-    return Text::Format(self::GetFormHeader(), $url, $str);
-  }
-
-  //共通フォームフッタ生成
-  public static function GenerateFormFooter() {
-    return self::GenerateTagFooter('form');
-  }
-
-  //チェック済み生成
-  public static function GenerateChecked($flag) {
-    return (true === $flag) ? self::GenerateAttribute('checked') : '';
-  }
-
-  //選択済み生成
-  public static function GenerateSelected($flag) {
-    return (true === $flag) ? self::GenerateAttribute('selected') : '';
-  }
-
   //窓を閉じてもらうメッセージを生成
   public static function GenerateCloseWindow($str) {
     return Text::Format(self::GetCloseWindow(), $str, Text::BR, Message::CLOSE_WINDOW);
@@ -154,16 +134,6 @@ final class HTML {
   //fieldset フッタ出力
   public static function OutputFieldsetFooter() {
     Text::Output(self::GenerateTagFooter('fieldset'));
-  }
-
-  //フォームヘッダ出力
-  public static function OutputFormHeader($url) {
-    Text::Output(self::GenerateFormHeader($url, Message::FORM_EXECUTE));
-  }
-
-  //フォームフッタ出力
-  public static function OutputFormFooter() {
-    Text::Output(self::GenerateFormFooter());
   }
 
   //p 出力
@@ -268,15 +238,6 @@ EOF;
     return <<<EOF
 <fieldset>
 <legend>%s</legend>
-EOF;
-  }
-
-  //共通フォームヘッダタグ
-  private static function GetFormHeader() {
-    return <<<EOF
-<form method="post" action="%s">
-<input type="hidden" name="execute" value="on">
-<input type="submit" value="%s">
 EOF;
   }
 

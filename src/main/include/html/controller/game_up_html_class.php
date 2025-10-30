@@ -20,7 +20,7 @@ final class GameUpHTML {
       RequestDataTalk::SENTENCE, GameMessage::SUBMIT,
       RequestDataTalk::VOICE,
       TalkVoice::STRONG, GameUpMessage::STRONG,
-      TalkVoice::NORMAL, HTML::GenerateSelected(true), GameUpMessage::NORMAL,
+      TalkVoice::NORMAL, FormHTML::Selected(true), GameUpMessage::NORMAL,
       TalkVoice::WEAK, GameUpMessage::WEAK,
       TalkVoice::SECRET, GameUpMessage::SECRET,
       TalkVoice::LAST_WORDS, GameUpMessage::LAST_WORDS,

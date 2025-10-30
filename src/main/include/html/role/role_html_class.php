@@ -409,7 +409,7 @@ final class RoleHTML {
       $format = '<input type="checkbox" name="target_no[]" id="%d" value="%d"%s>';
       break;
     }
-    return Text::Format($format, $id, $id, HTML::GenerateChecked($checked));
+    return Text::Format($format, $id, $id, FormHTML::Checked($checked));
   }
 
   //夜の投票済みメッセージを取得

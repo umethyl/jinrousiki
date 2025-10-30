@@ -55,7 +55,7 @@ final class IconHTML {
     //-- 検索フォームフッタ出力 --//
     Text::Printf(self::GetSearchFooter(),
       UserIconConfig::COLUMN * 2,
-      HTML::GenerateChecked(RQ::Fetch()->sort_by_name), IconMessage::SORT_BY_NAME,
+      FormHTML::Checked(RQ::Fetch()->sort_by_name), IconMessage::SORT_BY_NAME,
       IconMessage::KEYWORD_INPUT, $keyword, IconMessage::SEARCH
     );
 
@@ -119,7 +119,7 @@ final class IconHTML {
       } else {
 	$space = IconMessage::SPACE;
       }
-      $selected = HTML::GenerateSelected(in_array($name, $target));
+      $selected = FormHTML::Selected(in_array($name, $target));
       $str .= Text::Format(self::GetSelectorOption(), $name, $selected, $space);
     }
     Text::Printf(self::GetSelector(), $type, $caption, $type, Message::FORM_ALL, $str);
