@@ -515,7 +515,7 @@ abstract class GamePlayView extends stdClass {
       return;
     }
 
-    HTML::OutputDivHeader('timelimit');
+    DivHTML::OutputHeader('timelimit');
     if (DB::$ROOM->IsEvent('wait_morning')) {
       GameHTML::OutputVoteAnnounce(GameMessage::WAIT_MORNING);
     } elseif ($left_time == 0) {
@@ -534,7 +534,7 @@ abstract class GamePlayView extends stdClass {
     if (DB::$SELF->IsDead() && false === DB::$ROOM->IsOpenCast()) {
       GameHTML::OutputVoteAnnounce(GameMessage::CLOSE_CAST);
     }
-    HTML::OutputDivFooter();
+    DivHTML::OutputFooter();
   }
 
   //時間制限通知スキップ判定

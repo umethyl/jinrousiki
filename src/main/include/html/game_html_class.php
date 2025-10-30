@@ -456,7 +456,7 @@ final class GameHTML {
       }
       $str .= GameMessage::VOTE_ANNOUNCE;
     }
-    HTML::OutputDiv($str, 'system-vote');
+    DivHTML::Output($str, 'system-vote');
   }
 
   //プレイヤー一覧出力
@@ -478,7 +478,7 @@ final class GameHTML {
     }
 
     if (false === isset(DB::$SELF->target_no)) { //投票済みチェック
-      $format = HTML::GenerateDiv(GameMessage::REVOTE, 'revote');
+      $format = DivHTML::Generate(GameMessage::REVOTE, 'revote');
       printf($format . Text::BRLF, GameConfig::DRAW);
     }
     echo self::LoadVote(DB::$ROOM->date); //投票結果を出力
@@ -789,7 +789,7 @@ final class GameHTML {
       return '';
     }
 
-    $format  = HTML::GenerateDiv(GameMessage::WEATHER, 'weather');
+    $format  = DivHTML::Generate(GameMessage::WEATHER, 'weather');
     $weather = WeatherManager::Get(DB::$ROOM->Stack()->Get('weather'));
     return sprintf($format, $weather[WeatherData::NAME], $weather[WeatherData::CAPTION]);
   }
@@ -930,7 +930,7 @@ EOF;
 
   //プレイヤー一覧ヘッダタグ
   private static function GetPlayerHeader() {
-    return HTML::GenerateDivHeader('player') . TableHTML::GenerateHeader();
+    return DivHTML::GenerateHeader('player') . TableHTML::GenerateHeader();
   }
 
   //プレイヤーアイコンタグ
@@ -957,7 +957,7 @@ EOF;
 
   //プレイヤー一覧フッタタグ
   private static function GetPlayerFooter() {
-    return TableHTML::GenerateFooter() . HTML::GenerateDivFooter();
+    return TableHTML::GenerateFooter() . DivHTML::GenerateFooter();
   }
 
   //リアルタイム制残り時間表示タグ

@@ -79,21 +79,6 @@ final class HTML {
     );
   }
 
-  //div 生成
-  public static function GenerateDiv($str, $class = null, $id = null) {
-    return self::GenerateDivHeader($class, $id) . $str . self::GenerateDivFooter();
-  }
-
-  //div ヘッダ生成
-  public static function GenerateDivHeader($class = null, $id = null) {
-    return self::GenerateTagHeader('div', $class, $id);
-  }
-
-  //div フッタ生成
-  public static function GenerateDivFooter($return = false) {
-    return self::GenerateTagFooter('div') . (true === $return ? Text::LF : '');
-  }
-
   //span 生成
   public static function GenerateSpan($str, $class = null, $id = null) {
     return self::GenerateTag('span', $str, $class, $id);
@@ -243,21 +228,6 @@ final class HTML {
   //フォームフッタ出力
   public static function OutputFormFooter() {
     Text::Output(self::GenerateFormFooter());
-  }
-
-  //div 出力
-  public static function OutputDiv($str, $class = null, $id = null) {
-    Text::Output(self::GenerateDiv($str, $class, $id));
-  }
-
-  //div ヘッダ出力
-  public static function OutputDivHeader($class = null, $id = null) {
-    Text::Output(self::GenerateDivHeader($class, $id));
-  }
-
-  //div フッタ出力
-  public static function OutputDivFooter($return = false) {
-    Text::Output(self::GenerateDivFooter($return));
   }
 
   //p 出力

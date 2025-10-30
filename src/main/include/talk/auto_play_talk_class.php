@@ -46,8 +46,8 @@ final class AutoPlayTalk extends StackStaticManager {
   //データ隠蔽
   public static function Hide($str, $class) {
     $scene  = self::Stack()->Get(self::DATE);
-    $header = Text::LineFeed(HTML::GenerateDivHeader('hide', $class . '_' . $scene));
-    return $header . $str . HTML::GenerateDivFooter(true);
+    $header = Text::LineFeed(DivHTML::GenerateHeader('hide', $class . '_' . $scene));
+    return $header . $str . DivHTML::GenerateFooter(true);
   }
 
   //ヘッダ生成

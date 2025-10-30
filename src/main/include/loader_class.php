@@ -488,6 +488,7 @@ final class LoaderData {
     'InfoHTML'		=> 'info_html_class',
     //html/markup
     'HeaderHTML'	=> 'header_html_class',
+    'DivHTML'		=> 'div_html_class',
     'TableHTML'		=> 'table_html_class',
     //html/media
     'ImageHTML'		=> 'image_html_class',
@@ -737,6 +738,7 @@ final class LoaderData {
     'info_html_class'		=> 'html',
     //html/markup
     'header_html_class'		=> 'html/markup',
+    'div_html_class'		=> 'html/markup',
     'table_html_class'		=> 'html/markup',
     //html/media
     'image_html_class'		=> 'html/media',

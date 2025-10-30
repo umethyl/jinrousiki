@@ -61,12 +61,12 @@ final class JinrouAdmin {
     }
 
     HTML::OutputFieldsetHeader(TopPageMessage::NOTICE);
-    HTML::OutputDivHeader('information');
+    DivHTML::OutputHeader('information');
     Text::p(AdminMessage::EXPLAIN . Text::BRLF);
     foreach ($stack->Get('type') as $type) {
       Text::p(AdminMessage::$$type . AdminMessage::NOTICE_ENABLE);
     }
-    HTML::OutputDivFooter();
+    DivHTML::OutputFooter();
     HTML::OutputFieldsetFooter();
   }
 }

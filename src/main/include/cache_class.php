@@ -163,7 +163,7 @@ final class JinrouCacheManager {
       $str .= ' ' . Text::Quote(CacheMessage::RELOAD_TALK_PLAY);
       break;
     }
-    HTML::OutputDiv($str, 'talk-cache');
+    DivHTML::Output($str, 'talk-cache');
   }
 
   //時刻出力

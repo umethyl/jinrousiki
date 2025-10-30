@@ -76,9 +76,9 @@ final class IndexHTML {
   //一覧出力
   private static function OutputField($title, $class, $file) {
     HTML::OutputFieldsetHeader($title);
-    HTML::OutputDivHeader($class);
+    DivHTML::OutputHeader($class);
     include($file);
-    HTML::OutputDivFooter();
+    DivHTML::OutputFooter();
     HTML::OutputFieldsetFooter();
   }
 

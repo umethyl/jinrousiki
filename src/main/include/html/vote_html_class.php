@@ -125,7 +125,7 @@ final class VoteHTML {
     }
 
     echo TableHTML::GenerateFooter();
-    HTML::OutputDivFooter();
+    DivHTML::OutputFooter();
     if (false === DB::$ROOM->IsTest()) {
       HTML::OutputFooter(true);
     }
@@ -176,7 +176,7 @@ final class VoteHTML {
     }
 
     echo TableHTML::GenerateFooter();
-    HTML::OutputDivFooter();
+    DivHTML::OutputFooter();
     if (false === DB::$ROOM->IsTest()) {
       HTML::OutputFooter(true);
     }

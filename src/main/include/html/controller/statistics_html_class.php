@@ -12,8 +12,9 @@ final class StatisticsHTML {
   private static function OutputHeader() {
     HTML::OutputHeader(StatisticsMessage::TITLE, 'statistics');
     HTML::OutputBodyHeader();
+    $str = sprintf('<a href="./">%s</a> <a href="statistics.php">リセット</a>', StatisticsMessage::TOP);
+    DivHTML::Output($str, 'link');
     HeaderHTML::OutputTitle('統計情報');
-    Text::Printf(self::GetHeader(), StatisticsMessage::TOP);
   }
 
   //稼働数ヘッダ出力
