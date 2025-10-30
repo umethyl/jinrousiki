@@ -20,13 +20,13 @@ final class RoomManagerController extends JinrouController {
   }
 
   protected static function RunCommand() {
-    if (RQ::Get()->create_room) {
+    if (RQ::Fetch()->create_room) {
       self::Create();
-    } elseif (RQ::Get()->change_room) {
+    } elseif (RQ::Fetch()->change_room) {
       self::Create();
-    } elseif (RQ::Get()->describe_room) {
+    } elseif (RQ::Fetch()->describe_room) {
       self::OutputDescribe();
-    } elseif (RQ::Get()->room_no > 0) {
+    } elseif (RQ::Fetch()->room_no > 0) {
       self::OutputCreate();
     } else {
       self::OutputList();
@@ -44,7 +44,7 @@ final class RoomManagerController extends JinrouController {
       return;
     }
 
-    RoomOptionManager::Stack()->Set('change', RQ::Get()->room_no > 0);
+    RoomOptionManager::Stack()->Set('change', RQ::Fetch()->room_no > 0);
     if (RoomOptionManager::IsChange()) {
       self::LoadOutputCreateInChange();
       HTML::OutputHeader(RoomManagerMessage::TITLE_CHANGE, 'room_manager');
@@ -73,7 +73,7 @@ final class RoomManagerController extends JinrouController {
       RoomManagerHTML::OutputResult('busy');
     }
 
-    if (true === RQ::Get()->change_room) {
+    if (true === RQ::Fetch()->change_room) {
       RoomOptionManager::Stack()->Set('change', true);
       self::LoadCreateInChange();
     } else {
@@ -85,7 +85,7 @@ final class RoomManagerController extends JinrouController {
     //self::p(); //テスト用
 
     //-- 登録処理 --//
-    if (true === RQ::Get()->change_room) { //オプション変更
+    if (true === RQ::Fetch()->change_room) { //オプション変更
       self::StoreInChange();
       $str = HTML::GenerateCloseWindow(RoomManagerMessage::CHANGE);
       HTML::OutputResult(RoomManagerMessage::TITLE_CHANGE, $str);
@@ -93,7 +93,7 @@ final class RoomManagerController extends JinrouController {
       self::Store();
       $url  = ServerConfig::SITE_ROOT;
       $jump = URL::GetJump($url);
-      $str  = Text::Join(sprintf(RoomManagerMessage::ENTRY, RQ::Get()->room_name), $jump);
+      $str  = Text::Join(sprintf(RoomManagerMessage::ENTRY, RQ::Fetch()->room_name), $jump);
       HTML::OutputResult(RoomManagerMessage::TITLE, $str, $url);
     }
   }
@@ -112,7 +112,7 @@ final class RoomManagerController extends JinrouController {
   //部屋説明出力
   private static function OutputDescribe() {
     //リクエストチェック
-    if (RQ::Get()->room_no < 1) {
+    if (RQ::Fetch()->room_no < 1) {
       self::OutputDescribeError(Message::INVALID_ROOM);
     }
 
@@ -158,7 +158,7 @@ final class RoomManagerController extends JinrouController {
 
     //ユーザー情報ロード
     DB::LoadUser();
-    if (RQ::Get()->max_user < DB::$USER->Count()) {
+    if (RQ::Fetch()->max_user < DB::$USER->Count()) {
       $title = sprintf('%s [%s]',
 	RoomManagerMessage::TITLE_CHANGE, RoomManagerMessage::ERROR_INPUT
       );
@@ -211,18 +211,18 @@ final class RoomManagerController extends JinrouController {
   private static function ValidateCreateInput() {
     foreach (RoomOptionFilterData::$validate_create_name as $type) { //村の名前・説明
       RoomOptionLoader::LoadPost([$type]);
-      if (RQ::Get()->$type == '') { //未入力チェック
+      if (RQ::Fetch()->$type == '') { //未入力チェック
 	RoomManagerHTML::OutputResult('empty', OptionManager::GenerateCaption($type));
       }
 
-      if (Text::Over(RQ::Get()->$type, RoomConfig::$$type) ||
-	  preg_match(RoomConfig::NG_WORD, RQ::Get()->$type)) { //文字列チェック
+      if (Text::Over(RQ::Fetch()->$type, RoomConfig::$$type) ||
+	  preg_match(RoomConfig::NG_WORD, RQ::Fetch()->$type)) { //文字列チェック
 	RoomManagerHTML::OutputResult('comment', OptionManager::GenerateCaption($type));
       }
     }
 
     RoomOptionLoader::LoadPost(RoomOptionFilterData::$validate_create_user); //最大人数
-    if (false === in_array(RQ::Get()->max_user, RoomConfig::$max_user_list)) {
+    if (false === in_array(RQ::Fetch()->max_user, RoomConfig::$max_user_list)) {
       $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_INPUT);
       HTML::OutputResult($title, RoomManagerMessage::ERROR_INPUT_MAX_USER);
     }
@@ -244,8 +244,8 @@ final class RoomManagerController extends JinrouController {
     $room_password = ServerConfig::ROOM_PASSWORD;
     if (isset($room_password)) {
       $str = 'room_password';
-      RQ::Get()->ParsePostStr($str);
-      if (RQ::Get()->$str != $room_password) {
+      RQ::Fetch()->ParsePostStr($str);
+      if (RQ::Fetch()->$str != $room_password) {
 	$title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
 	HTML::OutputResult($title, RoomManagerMessage::ERROR_LIMIT_PASSWORD);
       }
@@ -284,8 +284,8 @@ final class RoomManagerController extends JinrouController {
   //村作成情報登録 (オプション変更時)
   private static function StoreInChange() {
     RoomOptionLoader::LoadPost(RoomOptionFilterData::$store_in_change);
-    if (RQ::Get()->gm_logout) { //GMログアウト処理
-      if (DB::$ROOM->IsClosing() || RQ::Get()->close_room == RoomStatus::CLOSING) {
+    if (RQ::Fetch()->gm_logout) { //GMログアウト処理
+      if (DB::$ROOM->IsClosing() || RQ::Fetch()->close_room == RoomStatus::CLOSING) {
 	RoomManagerHTML::OutputResult('gm_logout');
       } elseif (false === UserDB::LogoutGM()) {
 	RoomManagerHTML::OutputResult('busy');
@@ -295,12 +295,12 @@ final class RoomManagerController extends JinrouController {
     $game_option = RoomOptionLoader::Get(OptionGroup::GAME);
     $option_role = RoomOptionLoader::Get(OptionGroup::ROLE);
     $list = [
-      'name'		=> RQ::Get()->room_name,
-      'comment'		=> RQ::Get()->room_comment,
-      'max_user'	=> RQ::Get()->max_user,
+      'name'		=> RQ::Fetch()->room_name,
+      'comment'		=> RQ::Fetch()->room_comment,
+      'max_user'	=> RQ::Fetch()->max_user,
       'game_option'	=> $game_option,
       'option_role'	=> $option_role,
-      'status'		=> RQ::Get()->close_room ? RoomStatus::CLOSING : RoomStatus::WAITING
+      'status'		=> RQ::Fetch()->close_room ? RoomStatus::CLOSING : RoomStatus::WAITING
     ];
     if (false === RoomManagerDB::Update($list)) {
       RoomManagerHTML::OutputResult('busy');
@@ -332,14 +332,14 @@ final class RoomManagerController extends JinrouController {
       }
 
       //身代わり君を入村させる
-      if (RQ::Get()->dummy_boy && RoomManagerDB::CountUser($room_no) == 0) {
+      if (RQ::Fetch()->dummy_boy && RoomManagerDB::CountUser($room_no) == 0) {
 	$list = [
 	  'room_no'	=> $room_no,
 	  'user_no'	=> GM::ID,
 	  'uname'	=> GM::DUMMY_BOY,
 	  'handle_name'	=> RoomOptionManager::Stack()->Get('gm_name'),
 	  'password'	=> RoomOptionManager::Stack()->Get('gm_password'),
-	  'icon_no'	=> RQ::Get()->gerd ? UserIconConfig::GERD : 0,
+	  'icon_no'	=> RQ::Fetch()->gerd ? UserIconConfig::GERD : 0,
 	  'sex'		=> Sex::MALE,
 	  'profile'	=> Message::DUMMY_BOY_PROFILE,
 	  'last_words'	=> Message::DUMMY_BOY_LAST_WORDS
@@ -351,7 +351,7 @@ final class RoomManagerController extends JinrouController {
     }
 
     //Twitter 投稿
-    JinrouTwitter::Send($room_no, RQ::Get()->room_name, RQ::Get()->room_comment);
+    JinrouTwitter::Send($room_no, RQ::Fetch()->room_name, RQ::Fetch()->room_comment);
 
     //コミット
     if (CacheConfig::ENABLE) {

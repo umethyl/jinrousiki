@@ -38,7 +38,7 @@ final class VoteHTML {
 
     Text::Printf(self::GetBeforeFooter(),
       sprintf(VoteMessage::CAUTION_KICK, GameConfig::KICK),
-      RQ::Get()->back_url, VoteMessage::KICK_DO, RQ::Get()->post_url,
+      RQ::Fetch()->back_url, VoteMessage::KICK_DO, RQ::Fetch()->post_url,
       Security::GetToken(DB::$ROOM->id), VoteAction::GAME_START, VoteMessage::GAME_START
     );
     if (false === DB::$ROOM->IsTest()) {
@@ -70,7 +70,7 @@ final class VoteHTML {
     Text::Printf(self::GetDayHeader(), VoteAction::VOTE_KILL, DB::$ROOM->revote_count);
     self::OutputLiveUserVoteList($user_stack, DB::$SELF->GetVirtual());
     Text::Printf(self::GetDayFooter(),
-      VoteMessage::CAUTION, RQ::Get()->back_url, VoteMessage::VOTE_DO
+      VoteMessage::CAUTION, RQ::Fetch()->back_url, VoteMessage::VOTE_DO
     );
     if (false === DB::$ROOM->IsTest()) {
       HTML::OutputFooter(true);
@@ -106,7 +106,7 @@ final class VoteHTML {
     }
 
     Text::Printf(self::GetNightFooter(),
-      VoteMessage::CAUTION, RQ::Get()->back_url,
+      VoteMessage::CAUTION, RQ::Fetch()->back_url,
       RoleManager::Stack()->Get('action'), self::GetSubmit('submit', 'action')
     );
 
@@ -118,7 +118,7 @@ final class VoteHTML {
 
     if (RoleManager::Stack()->Exists('not_action')) {
       Text::Printf(self::GetNightNotAction(),
-	RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id),
+	RQ::Fetch()->post_url, Security::GetToken(DB::$ROOM->id),
 	RoleManager::Stack()->Get('not_action'), DB::$SELF->id,
 	self::GetSubmit('not_submit', 'not_action')
       );
@@ -143,7 +143,7 @@ final class VoteHTML {
 
     self::OutputHeader();
     Text::Printf(self::GetHeaven(),
-      VoteAction::HEAVEN, VoteMessage::CAUTION, RQ::Get()->back_url, VoteMessage::REVIVE_REFUSE
+      VoteAction::HEAVEN, VoteMessage::CAUTION, RQ::Fetch()->back_url, VoteMessage::REVIVE_REFUSE
     );
     if (false === DB::$ROOM->IsTest()) {
       HTML::OutputFooter(true);
@@ -161,8 +161,8 @@ final class VoteHTML {
 
     //超過時間リセットボタン表示
     Text::Printf(self::GetDummyBoyReset(),
-      RQ::Get()->back_url,
-      RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id),
+      RQ::Fetch()->back_url,
+      RQ::Fetch()->post_url, Security::GetToken(DB::$ROOM->id),
       VoteAction::RESET_TIME, VoteMessage::RESET_TIME
     );
 
@@ -170,7 +170,7 @@ final class VoteHTML {
     if (false === DB::$SELF->IsDrop() && DB::$ROOM->IsOption('not_open_cast') &&
 	false === DB::$ROOM->IsOpenCast()) {
       Text::Printf(self::GetDummyBoyReviveRefuse(),
-	RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id),
+	RQ::Fetch()->post_url, Security::GetToken(DB::$ROOM->id),
 	VoteAction::HEAVEN, VoteMessage::REVIVE_REFUSE
       );
     }
@@ -191,7 +191,7 @@ final class VoteHTML {
 
   //結果生成
   private static function GenerateResult($str) {
-    return sprintf(self::GetResult(), $str, Text::BR, RQ::Get()->back_url);
+    return sprintf(self::GetResult(), $str, Text::BR, RQ::Fetch()->back_url);
   }
 
   //ヘッダ出力
@@ -203,7 +203,7 @@ final class VoteHTML {
     GameHTML::OutputSceneCSS();
     HTML::OutputBodyHeader($css);
     GameHTML::OutputGameTop();
-    Text::Printf(self::GetHeader(), RQ::Get()->post_url, Security::GetToken(DB::$ROOM->id));
+    Text::Printf(self::GetHeader(), RQ::Fetch()->post_url, Security::GetToken(DB::$ROOM->id));
   }
 
   //生存者の投票リスト表示 (処刑/突然死用)

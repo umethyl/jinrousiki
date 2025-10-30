@@ -18,7 +18,7 @@ final class GameHTML {
       );
       $table_stack[$count][] = $vote_base;
     }
-    if (true !== RQ::Get()->reverse_log) { //正順なら逆転させる
+    if (true !== RQ::Fetch()->reverse_log) { //正順なら逆転させる
       krsort($table_stack);
     }
 
@@ -36,7 +36,7 @@ final class GameHTML {
   public static function GenerateAutoReloadLink($url) {
     $format = GameMessage::AUTO_RELOAD_HEADER . '%s' . GameMessage::AUTO_RELOAD_FOOTER;
 
-    if (RQ::Get()->auto_reload > 0) {
+    if (RQ::Fetch()->auto_reload > 0) {
       $name = GameMessage::AUTO_RELOAD_MANUAL;
     } else {
       $name = sprintf($format, GameMessage::AUTO_RELOAD_MANUAL);
@@ -45,7 +45,7 @@ final class GameHTML {
 
     foreach (GameConfig::$auto_reload_list as $time) {
       $name  = $time . GameMessage::AUTO_RELOAD_TIME;
-      $value = RQ::Get()->auto_reload == $time ? sprintf($format, $name) : $name;
+      $value = RQ::Fetch()->auto_reload == $time ? sprintf($format, $name) : $name;
       $str .= ' ' . self::GenerateHeaderLink($url . URL::GetReload($time), $value);
     }
 
@@ -278,12 +278,12 @@ final class GameHTML {
 
     if (DB::$ROOM->IsAfterGame()) {
       //ゲーム終了後は自動更新しない
-    } elseif (RQ::Get()->async) {
+    } elseif (RQ::Fetch()->async) {
       HTML::OutputJavaScript('game_async');
       //リクエストパラメータのハッシュ
-      if (method_exists(RQ::Get(), 'GetRawUrlStack')) {
+      if (method_exists(RQ::Fetch(), 'GetRawUrlStack')) {
         $params = [];
-        foreach (RQ::Get()->GetRawUrlStack() as $name => $value) {
+        foreach (RQ::Fetch()->GetRawUrlStack() as $name => $value) {
           $params[] = "'{$name}':'{$value}'";
         }
         $params = '{'. ArrayFilter::ToCSV($params) . '}';
@@ -299,7 +299,7 @@ final class GameHTML {
       $on_load .= sprintf("game_async(%s, %s);", $params, $room_status);
     } else {
       self::OutputNoCacheHeader();
-      if (RQ::Get()->auto_reload != 0) { //自動リロードをセット
+      if (RQ::Fetch()->auto_reload != 0) { //自動リロードをセット
 	self::OutputAutoReloadHeader();
       }
     }
@@ -361,7 +361,7 @@ final class GameHTML {
 
   //自動更新ヘッダ出力
   public static function OutputAutoReloadHeader() {
-    Text::Output(sprintf(self::GetReload(), RQ::Get()->auto_reload));
+    Text::Output(sprintf(self::GetReload(), RQ::Fetch()->auto_reload));
   }
 
   //自動更新リンク出力
@@ -392,7 +392,7 @@ final class GameHTML {
   //タイマー JavaScript コード出力 (リアルタイム用)
   public static function OutputTimer($end_time, $type = null, $flag = false) {
     $end_date   = GameTime::ConvertJavaScriptDate($end_time);
-    $play_sound = (true === isset($type)) && RQ::Get()->play_sound;
+    $play_sound = (true === isset($type)) && RQ::Fetch()->play_sound;
 
     HTML::OutputJavaScript('output_realtime');
     HTML::OutputJavaScriptHeader();
@@ -466,7 +466,7 @@ final class GameHTML {
 
   //再投票メッセージ出力
   public static function OutputRevote() {
-    if (RQ::Get()->play_sound && DB::$ROOM->IsOff(RoomMode::VIEW) &&
+    if (RQ::Fetch()->play_sound && DB::$ROOM->IsOff(RoomMode::VIEW) &&
 	DB::$ROOM->vote_count > 1 &&
 	DB::$ROOM->vote_count > JinrouCookie::$vote_count) {
       SoundHTML::Output('revote'); //音を鳴らす (未投票突然死対応)
@@ -516,8 +516,8 @@ final class GameHTML {
   //移動先 URL 取得
   private static function GenerateJump() {
     $url = URL::GetRoom('game_frame');
-    if (RQ::Get()->auto_reload > 0) {
-      $url .= RQ::Get()->ToURL(RequestDataGame::RELOAD, true);
+    if (RQ::Fetch()->auto_reload > 0) {
+      $url .= RQ::Fetch()->ToURL(RequestDataGame::RELOAD, true);
     }
 
     $stack = [RequestDataGame::SOUND, RequestDataGame::LIST];
@@ -526,7 +526,7 @@ final class GameHTML {
     }
 
     foreach ($stack as $key) {
-      $url .= RQ::Get()->ToURL($key);
+      $url .= RQ::Fetch()->ToURL($key);
     }
     return $url;
   }
@@ -543,7 +543,7 @@ final class GameHTML {
     if ($stack->open) {
       $stack->Set('trip_from', [Message::TRIP, Message::TRIP_CONVERT]);
       $stack->Set('trip_to',   [Message::TRIP . Text::BR, Message::TRIP_CONVERT . Text::BR]);
-      $stack->Set('sex', DB::$ROOM->IsFinished() && RQ::Get()->sex);
+      $stack->Set('sex', DB::$ROOM->IsFinished() && RQ::Fetch()->sex);
       if ($stack->sex) {
 	$stack->Set('sex_list', Sex::GetList());
       }

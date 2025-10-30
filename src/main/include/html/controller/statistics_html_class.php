@@ -72,7 +72,7 @@ final class StatisticsHTML {
 
   //役職検索リンク出力
   public static function OutputSearchRoleLink(string $role) {
-    $url = URL::GetSearch('old_log', ['role' => $role, 'game_type' => RQ::Get()->game_type]);
+    $url = URL::GetSearch('old_log', ['role' => $role, 'game_type' => RQ::Fetch()->game_type]);
     self::OutputTdLink($url, '検索');
   }
 

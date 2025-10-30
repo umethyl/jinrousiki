@@ -11,7 +11,7 @@ final class UserDB {
     ];
     $query  = self::GetQuery()->Table($table)->Select($column)->Where(['user_no']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, $user_no]);
+    DB::Prepare($query->Build(), [RQ::Fetch()->room_no, $user_no]);
     return DB::FetchClass('User', true);
   }
 
@@ -19,7 +19,7 @@ final class UserDB {
   public static function Get() {
     $query = self::GetQuery()->Select()->Where(['user_no']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, RQ::Get()->user_no]);
+    DB::Prepare($query->Build(), [RQ::Fetch()->room_no, RQ::Fetch()->user_no]);
     return DB::FetchAssoc(true);
   }
 
@@ -35,7 +35,7 @@ final class UserDB {
   public static function IsKick($uname) {
     $query = self::GetQueryExists()->Where(['live', 'uname']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, UserLive::KICK, $uname]);
+    DB::Prepare($query->Build(), [RQ::Fetch()->room_no, UserLive::KICK, $uname]);
     return DB::Exists();
   }
 
@@ -52,7 +52,7 @@ final class UserDB {
     $query = self::GetQueryExists()
       ->Where(['live', 'uname', 'handle_name'])->WhereOr(['uname', 'handle_name']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, UserLive::LIVE, $uname, $handle_name]);
+    DB::Prepare($query->Build(), [RQ::Fetch()->room_no, UserLive::LIVE, $uname, $handle_name]);
     return DB::Exists();
   }
 
@@ -60,7 +60,7 @@ final class UserDB {
   public static function DuplicateName($user_no, $handle_name) {
     $query = self::GetQueryExists()->WhereNot('user_no')->Where(['live', 'handle_name']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, $user_no, UserLive::LIVE, $handle_name]);
+    DB::Prepare($query->Build(), [RQ::Fetch()->room_no, $user_no, UserLive::LIVE, $handle_name]);
     return DB::Exists();
   }
 
@@ -68,7 +68,7 @@ final class UserDB {
   public static function DuplicateIP() {
     $query = self::GetQueryExists()->Where(['live', 'ip_address']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, UserLive::LIVE, Security::GetIP()]);
+    DB::Prepare($query->Build(), [RQ::Fetch()->room_no, UserLive::LIVE, Security::GetIP()]);
     return DB::Exists();
   }
 

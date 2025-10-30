@@ -15,7 +15,7 @@ final class SearchRoleInfoHTML {
 
   //フォーム入力欄出力
   private static function OutputTextForm() {
-    Text::Printf(self::GetTextForm(), 'role', 'role', RQ::Get()->role);
+    Text::Printf(self::GetTextForm(), 'role', 'role', RQ::Fetch()->role);
   }
 
   //フォーム入力欄タグ

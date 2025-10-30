@@ -33,7 +33,7 @@ final class GameLogController extends JinrouController {
 
   protected static function LoadExtra() {
     //シーンチェック
-    switch (RQ::Get()->scene) {
+    switch (RQ::Fetch()->scene) {
     case RoomScene::HEAVEN:
       if (false === self::EnableHeaven()) {
 	self::OutputError(GameLogMessage::PLAYING);
@@ -51,8 +51,8 @@ final class GameLogController extends JinrouController {
 	self::OutputError(GameLogMessage::FUTURE);
       }
       DB::$ROOM->SetLastDate();
-      DB::$ROOM->SetDate(RQ::Get()->date);
-      DB::$ROOM->SetScene(RQ::Get()->scene);
+      DB::$ROOM->SetDate(RQ::Fetch()->date);
+      DB::$ROOM->SetScene(RQ::Fetch()->scene);
       DB::$USER->SetEvent(true);
       break;
     }
@@ -65,12 +65,12 @@ final class GameLogController extends JinrouController {
 
   //未来判定
   private static function IsFuture() {
-    if (DateBorder::Lower(RQ::Get()->date)) {
+    if (DateBorder::Lower(RQ::Fetch()->date)) {
       return true;
     }
 
-    if (DateBorder::On(RQ::Get()->date)) {
-      return (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Get()->scene);
+    if (DateBorder::On(RQ::Fetch()->date)) {
+      return (DB::$ROOM->IsDay() || DB::$ROOM->scene == RQ::Fetch()->scene);
     }
     return false;
   }
@@ -78,7 +78,7 @@ final class GameLogController extends JinrouController {
   protected static function Output() {
     GameHTML::OutputHeader('game_log');
     self::OutputHeader();
-    if (RQ::Get()->scene == RoomScene::HEAVEN) {
+    if (RQ::Fetch()->scene == RoomScene::HEAVEN) {
       DB::$ROOM->SetFlag(RoomMode::HEAVEN); //念のためセット
       Talk::OutputHeaven();
     } else {
@@ -101,7 +101,7 @@ final class GameLogController extends JinrouController {
 
   //ヘッダ出力
   private static function OutputHeader() {
-    switch (RQ::Get()->scene) {
+    switch (RQ::Fetch()->scene) {
     case RoomScene::BEFORE:
       $scene = GameLogMessage::BEFOREGAME;
       break;
@@ -127,9 +127,9 @@ final class GameLogController extends JinrouController {
 
   //能力発動ログ出力 (管理者限定)
   private static function OutputAbility() {
-    if (RQ::Get()->user_no > 0 && DB::$SELF->IsDummyBoy() &&
+    if (RQ::Fetch()->user_no > 0 && DB::$SELF->IsDummyBoy() &&
 	false === DB::$ROOM->IsOption('gm_login')) {
-      DB::LoadSelf(RQ::Get()->user_no);
+      DB::LoadSelf(RQ::Fetch()->user_no);
       DB::$SELF->live = UserLive::LIVE;
       RoleHTML::OutputAbility();
     }

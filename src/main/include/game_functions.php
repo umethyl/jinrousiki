@@ -31,14 +31,14 @@ final class GameAction {
     }
 
     //フラグ判定
-    RQ::Get()->ParsePostOn(RequestDataTalk::INDIVIDUAL);
-    if (RQ::Get()->Disable(RequestDataTalk::INDIVIDUAL)) {
+    RQ::Fetch()->ParsePostOn(RequestDataTalk::INDIVIDUAL);
+    if (RQ::Fetch()->Disable(RequestDataTalk::INDIVIDUAL)) {
       return false;
     }
 
     //対象者
-    RQ::Get()->ParsePostInt(RequestDataTalk::TARGET);
-    $target_id = RQ::Get()->{RequestDataTalk::TARGET};
+    RQ::Fetch()->ParsePostInt(RequestDataTalk::TARGET);
+    $target_id = RQ::Fetch()->{RequestDataTalk::TARGET};
     $user      = DB::$USER->ByID($target_id);
     if ($target_id != $user->id) {
       return false;
@@ -262,7 +262,7 @@ final class Objection {
 
   //セット有効判定 (ユーザ)
   private static function IsSetUser(User $user) {
-    return RQ::Get()->set_objection && $user->objection < GameConfig::OBJECTION;
+    return RQ::Fetch()->set_objection && $user->objection < GameConfig::OBJECTION;
   }
 
   //セット有効判定 (シーン)

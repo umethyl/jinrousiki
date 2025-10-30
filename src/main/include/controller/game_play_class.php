@@ -22,8 +22,8 @@ final class GamePlayController extends JinrouController {
 
   protected static function LoadRoom() {
     DB::LoadRoom();
-    DB::$ROOM->Flag()->Set(RoomMode::DEAD,   RQ::Get()->dead_mode);
-    DB::$ROOM->Flag()->Set(RoomMode::HEAVEN, RQ::Get()->heaven_mode);
+    DB::$ROOM->Flag()->Set(RoomMode::DEAD,   RQ::Fetch()->dead_mode);
+    DB::$ROOM->Flag()->Set(RoomMode::HEAVEN, RQ::Fetch()->heaven_mode);
     DB::$ROOM->SetTime();
     DB::$ROOM->InitializeSuddenDeath();
 
@@ -54,7 +54,7 @@ final class GamePlayController extends JinrouController {
   protected static function LoadExtra() {
     //-- 音声情報 --//
     Objection::Set(); //「異議」ありセット判定
-    if (RQ::Get()->play_sound) { //音でお知らせ
+    if (RQ::Fetch()->play_sound) { //音でお知らせ
       JinrouCookie::Set(); //クッキー情報セット
     }
 
@@ -64,14 +64,14 @@ final class GamePlayController extends JinrouController {
       RQ::Set('individual_talk', true);
       if (DB::$SELF->IsDead()) {
 	//霊界からの投稿時は死亡フラグを立てて後続の処理を通す
-	RQ::Get()->dead_mode = true;
-	DB::$ROOM->Flag()->Set(RoomMode::DEAD, RQ::Get()->dead_mode);
+	RQ::Fetch()->dead_mode = true;
+	DB::$ROOM->Flag()->Set(RoomMode::DEAD, RQ::Fetch()->dead_mode);
       }
     }
 
     //-- リンク情報収集 --//
-    RQ::Get()->StackIntParam(RequestDataGame::ID, false);
-    RQ::Get()->StackIntParam(RequestDataGame::RELOAD);
+    RQ::Fetch()->StackIntParam(RequestDataGame::ID, false);
+    RQ::Fetch()->StackIntParam(RequestDataGame::RELOAD);
 
     $stack = [
       RequestDataGame::SOUND, RequestDataGame::ICON, RequestDataGame::NAME, RequestDataGame::LIST,
@@ -85,11 +85,11 @@ final class GamePlayController extends JinrouController {
     }
 
     foreach ($stack as $name) {
-      RQ::Get()->StackOnParam($name);
+      RQ::Fetch()->StackOnParam($name);
     }
 
     foreach ([RoomMode::DEAD, RoomMode::HEAVEN] as $name) {
-      RQ::Get()->StackOnValue($name . '_mode', DB::$ROOM->IsOn($name));
+      RQ::Fetch()->StackOnValue($name . '_mode', DB::$ROOM->IsOn($name));
     }
   }
 
@@ -110,7 +110,7 @@ final class GamePlayController extends JinrouController {
     GamePlayTalk::InitStack(); //判定用変数初期化
 
     //発言送信フレーム (bottom) 判定 > 霊界GM判定
-    if (true === RQ::Get()->individual_talk ||
+    if (true === RQ::Fetch()->individual_talk ||
 	DB::$ROOM->IsOff(RoomMode::DEAD) || DB::$ROOM->IsOn(RoomMode::HEAVEN)) {
       GamePlayTalk::Convert(); //発言変換処理
 
@@ -118,14 +118,14 @@ final class GamePlayController extends JinrouController {
 	空発言 (ゲーム停滞判定) > CSRF対策 > 遺言 (詳細判定は関数内で行う) >
 	発言判定(死者 / 身代わり君 / 同一ゲームシーン) > 発言不可 (ゲーム停滞判定)
       */
-      if (RQ::Get()->say == '') {
+      if (RQ::Fetch()->say == '') {
 	self::FilterSilence();
       } elseif (Security::IsInvalidToken(DB::$ROOM->id)) {
 	HTML::OutputUnusableError();
-      } elseif (RQ::Get()->last_words && (DB::$ROOM->IsBeforeGame() || ! DB::$SELF->IsDummyBoy())) {
-	GamePlayTalk::StoreLastWords(RQ::Get()->say);
+      } elseif (RQ::Fetch()->last_words && (DB::$ROOM->IsBeforeGame() || ! DB::$SELF->IsDummyBoy())) {
+	GamePlayTalk::StoreLastWords(RQ::Fetch()->say);
       } elseif (DB::$SELF->IsDead() || DB::$SELF->IsDummyBoy() || ! DB::$SELF->IsInvalidScene()) {
-	GamePlayTalk::Store(RQ::Get()->say);
+	GamePlayTalk::Store(RQ::Fetch()->say);
       } else {
 	self::FilterSilence();
       }
@@ -287,14 +287,14 @@ abstract class GamePlayView extends stdClass {
   //リンク情報取得 (差分型)
   protected function GetURL(array $except, $header = null) {
     $url    = isset($header) ? $header : GamePlayHTML::GetURLHeader();
-    $params = RQ::Get()->GenerateUrl($except, null);
+    $params = RQ::Fetch()->GenerateUrl($except, null);
     return $url . URL::HEAD . $params;
   }
 
   //リンク情報取得 (抽出型)
   protected function SelectURL(array $list, $header = null) {
     $url    = isset($header) ? $header : '';
-    $params = RQ::Get()->GenerateUrl(null, array_merge($list, [RequestDataGame::ID]));
+    $params = RQ::Fetch()->GenerateUrl(null, array_merge($list, [RequestDataGame::ID]));
     return $url . URL::HEAD . $params;
   }
 
@@ -311,15 +311,15 @@ abstract class GamePlayView extends stdClass {
     }
     $this->OutputLimitSay();
     if ($this->EnableGamePlay()) {
-      if (RQ::Get()->Disable(RequestDataGame::LIST)) {
+      if (RQ::Fetch()->Disable(RequestDataGame::LIST)) {
 	GameHTML::OutputPlayer();
       }
       GamePlayHTML::OutputAbility();
       GamePlayHTML::OutputVote();
-      if (DB::$ROOM->IsOff(RoomMode::DEAD) && RQ::Get()->Enable(RequestDataGame::WORDS)) {
+      if (DB::$ROOM->IsOff(RoomMode::DEAD) && RQ::Fetch()->Enable(RequestDataGame::WORDS)) {
 	$this->OutputSelfLastWords();
       }
-      if ($this->EnableForm() && RQ::Get()->Enable(RequestDataGame::INDIVIDUAL)) {
+      if ($this->EnableForm() && RQ::Fetch()->Enable(RequestDataGame::INDIVIDUAL)) {
 	$this->OutputForm();
       }
     }
@@ -328,16 +328,16 @@ abstract class GamePlayView extends stdClass {
       GameHTML::OutputLastWords();
       GameHTML::OutputDead();
       GameHTML::OutputVote();
-      if (DB::$ROOM->IsOff(RoomMode::DEAD) && RQ::Get()->Disable(RequestDataGame::WORDS)) {
+      if (DB::$ROOM->IsOff(RoomMode::DEAD) && RQ::Fetch()->Disable(RequestDataGame::WORDS)) {
 	$this->OutputSelfLastWords();
       }
-      if (RQ::Get()->Enable(RequestDataGame::LIST)) {
+      if (RQ::Fetch()->Enable(RequestDataGame::LIST)) {
 	GameHTML::OutputPlayer();
       }
-      if (RQ::Get()->Enable(RequestDataGame::SOUND)) {
+      if (RQ::Fetch()->Enable(RequestDataGame::SOUND)) {
 	$this->OutputSound();
       }
-      if ($this->EnableForm() && RQ::Get()->Disable(RequestDataGame::INDIVIDUAL)) {
+      if ($this->EnableForm() && RQ::Fetch()->Disable(RequestDataGame::INDIVIDUAL)) {
 	$this->OutputForm();
       }
     }
@@ -677,7 +677,7 @@ abstract class GamePlayView extends stdClass {
       GamePlayHTML::OutputAbility();
     }
     $this->OutputTalk();
-    if (true === RQ::Get()->play_sound) {
+    if (true === RQ::Fetch()->play_sound) {
       $this->OutputSound();
     }
   }
@@ -740,7 +740,7 @@ class GamePlayView_Before extends GamePlayView {
     GamePlayHTML::OutputSceneAsync();
     GameHTML::OutputPlayer();
     $this->OutputTalk();
-    if (true === RQ::Get()->play_sound) {
+    if (true === RQ::Fetch()->play_sound) {
       $this->OutputSound();
     }
   }

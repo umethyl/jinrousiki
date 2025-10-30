@@ -449,7 +449,7 @@ abstract class OptionText extends Option {
       return false;
     }
 
-    RQ::Get()->ParsePost('Escape', $this->name);
+    RQ::Fetch()->ParsePost('Escape', $this->name);
   }
 
   //プレースホルダ表示メッセージ取得
@@ -467,8 +467,8 @@ abstract class OptionCheckbox extends Option {
       return false;
     }
 
-    RQ::Get()->ParsePostOn($this->name);
-    if (RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostOn($this->name);
+    if (RQ::Fetch()->{$this->name}) {
       $this->Set($this->name);
     }
   }
@@ -503,13 +503,13 @@ abstract class OptionTextCheckbox extends OptionCheckbox {
   }
 
   public function LoadPost() {
-    RQ::Get()->ParsePostData($this->name);
-    if (null === RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostData($this->name);
+    if (null === RQ::Fetch()->{$this->name}) {
       return false;
     }
 
-    RQ::Get()->ParsePostStr($this->input);
-    $post = RQ::Get()->{$this->input};
+    RQ::Fetch()->ParsePostStr($this->input);
+    $post = RQ::Fetch()->{$this->input};
 
     if (true === empty($post)) {
       $flag = false;
@@ -542,14 +542,14 @@ abstract class OptionLimitedCheckbox extends OptionCheckbox {
       return false;
     }
 
-    RQ::Get()->ParsePostOn($this->name);
-    if (false === RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostOn($this->name);
+    if (false === RQ::Fetch()->{$this->name}) {
       return false;
     }
 
     $post = sprintf('%s_count', $this->name);
-    RQ::Get()->ParsePostInt($post);
-    $count = RQ::Get()->$post;
+    RQ::Fetch()->ParsePostInt($post);
+    $count = RQ::Fetch()->$post;
     if (Number::OutRange($count, 1, 99)) {
       RoomManagerHTML::OutputResult('limit_over', $this->GetName());
     }
@@ -690,12 +690,12 @@ abstract class OptionSelector extends Option {
       return false;
     }
 
-    RQ::Get()->ParsePostData($this->name);
-    if (null === RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostData($this->name);
+    if (null === RQ::Fetch()->{$this->name}) {
       return false;
     }
 
-    $post = RQ::Get()->{$this->name};
+    $post = RQ::Fetch()->{$this->name};
     $flag = in_array($post, $this->form_list);
     if (true === $flag) {
       RQ::Set($post, $flag);

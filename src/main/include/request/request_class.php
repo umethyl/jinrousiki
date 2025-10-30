@@ -24,18 +24,23 @@ final class RQ extends LoadManager {
   }
 
   //インスタンス取得
-  public static function Get() {
+  public static function Fetch() {
     return self::$instance;
   }
 
   //テストデータ取得
   public static function GetTest() {
-    return self::Get()->GetTest();
+    return self::Fetch()->GetTest();
   }
 
-  //インスタンス代入
+  //プロパティ取得
+  public static function Get($key) {
+    return self::Fetch()->$key;
+  }
+
+  //プロパティ代入
   public static function Set($key, $value) {
-    self::Get()->$key = $value;
+    self::Fetch()->$key = $value;
   }
 
   //テスト村データセット
@@ -56,12 +61,12 @@ final class RQ extends LoadManager {
 
   //データ展開
   public static function ToArray() {
-    return self::Get()->ToArray();
+    return self::Fetch()->ToArray();
   }
 
   //デバッグ用
   public static function p($data = null, $name = null) {
-    Text::p((null === $data) ? self::Get() : self::Get()->$data, $name);
+    Text::p((null === $data) ? self::Fetch() : self::Fetch()->$data, $name);
   }
 }
 

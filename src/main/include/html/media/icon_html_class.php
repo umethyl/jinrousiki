@@ -9,7 +9,7 @@ final class IconHTML {
       現時点では GET で直接検索を試みたユーザーのセッション情報まで配慮していないが、
       いずれ必要になるかも知れない (enogu)
     */
-    if (null === RQ::Get()->page) {
+    if (null === RQ::Fetch()->page) {
       Session::Clear('icon_view');
     }
     self::OutputConcrete($url);
@@ -55,19 +55,19 @@ final class IconHTML {
     //-- 検索フォームフッタ出力 --//
     Text::Printf(self::GetSearchFooter(),
       UserIconConfig::COLUMN * 2,
-      HTML::GenerateChecked(RQ::Get()->sort_by_name), IconMessage::SORT_BY_NAME,
+      HTML::GenerateChecked(RQ::Fetch()->sort_by_name), IconMessage::SORT_BY_NAME,
       IconMessage::KEYWORD_INPUT, $keyword, IconMessage::SEARCH
     );
 
     //検索結果の表示
-    if (empty(RQ::Get()->room_no)) {
+    if (empty(RQ::Fetch()->room_no)) {
       $method = 'OutputDetailForIconView';
       $edit_url = URL::GenerateSwitch('icon_view', RequestDataIcon::MULTI);
       Text::Printf(self::GetCaption(),
 	IconMessage::APPEARANCE, IconMessage::CATEGORY, IconMessage::AUTHOR,
 	IconMessage::SEARCH_EXPLAIN, HTML::GenerateLink($edit_url, IconMessage::MULTI_EDIT)
       );
-    } elseif (isset(RQ::Get()->room_no)) {
+    } elseif (isset(RQ::Fetch()->room_no)) {
       $method = 'OutputDetailForUserEntry';
       Text::Output(self::GetCaptionForUserEntry());
     } else {
@@ -80,14 +80,14 @@ final class IconHTML {
     $CONF->page       = IconConfig::PAGE;
     $CONF->url        = $base_url;
     $CONF->count      = IconDB::Count($query, $list);
-    $CONF->current    = RQ::Get()->page;
+    $CONF->current    = RQ::Fetch()->page;
     $CONF->option     = $url_option;
     $CONF->attributes = ['onClick' => 'return "return submit_icon_search(\'$page\');";'];
-    if (RQ::Get()->room_no > 0) {
-      $CONF->option[] = URL::ConvertInt(RequestDataGame::ID, RQ::Get()->room_no);
+    if (RQ::Fetch()->room_no > 0) {
+      $CONF->option[] = URL::ConvertInt(RequestDataGame::ID, RQ::Fetch()->room_no);
     }
-    if (RQ::Get()->icon_no > 0) {
-      $CONF->option[] = URL::ConvertInt(RequestDataIcon::ID, RQ::Get()->icon_no);
+    if (RQ::Fetch()->icon_no > 0) {
+      $CONF->option[] = URL::ConvertInt(RequestDataIcon::ID, RQ::Fetch()->icon_no);
     }
     printf('<td colspan="%d" class="page-link">', UserIconConfig::COLUMN * 2);
     self::OutputPageLink($CONF);

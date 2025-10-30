@@ -17,9 +17,9 @@ final class UserManagerHTML {
 
   //エラーバックリンク
   public static function GenerateError($url) {
-    $stack = RQ::Get()->GetIgnoreError();
+    $stack = RQ::Fetch()->GetIgnoreError();
     $str   = HTML::GenerateFormHeader($url, Message::BACK);
-    foreach (RQ::Get() as $key => $value) {
+    foreach (RQ::Fetch() as $key => $value) {
       if (in_array($key, $stack)) {
         continue;
       }
@@ -32,7 +32,7 @@ final class UserManagerHTML {
   private static function OutputHeader() {
     $url = URL::GetRoom('user_manager');
     if (self::IsEditMode()) {
-      $url .= RQ::Get()->ToURL(RequestDataUser::ID, true);
+      $url .= RQ::Fetch()->ToURL(RequestDataUser::ID, true);
     }
 
     Text::Printf(self::GetHeader(),
@@ -68,11 +68,11 @@ final class UserManagerHTML {
       $str  = UserManagerMessage::UNAME_EXPLAIN_HEADER . Text::BR;
       $str .= UserManagerMessage::UNAME_EXPLAIN_FOOTER;
 
-      TableHTML::OutputTd(RQ::Get()->uname);
+      TableHTML::OutputTd(RQ::Fetch()->uname);
       TableHTML::OutputTd($str, 'explain');
     } elseif (GameConfig::TRIP) { //トリップ対応
       Text::Printf(self::GetFormUnameWithTrip(),
-	RQ::Get()->uname, Message::TRIP_KEY, RQ::Get()->trip,
+	RQ::Fetch()->uname, Message::TRIP_KEY, RQ::Fetch()->trip,
 	UserManagerMessage::UNAME_EXPLAIN_HEADER,
 	UserManagerMessage::UNAME_EXPLAIN_FOOTER, Text::BR,
 	Message::TRIP_KEY, UserManagerMessage::TRIP,
@@ -80,7 +80,7 @@ final class UserManagerHTML {
       );
     } else {
       Text::Printf(self::GetFormUnameWithoutTrip(),
-	RQ::Get()->uname,
+	RQ::Fetch()->uname,
 	UserManagerMessage::UNAME_EXPLAIN_HEADER, Text::BR,
 	UserManagerMessage::UNAME_EXPLAIN_FOOTER,
 	UserManagerMessage::DISABLE_TRIP
@@ -93,7 +93,7 @@ final class UserManagerHTML {
   private static function OutputFormHandleName() {
     Text::Printf(self::GetFormHandleName(),
       self::PATH, UserManagerMessage::HANDLE_NAME,
-      RQ::Get()->handle_name, UserManagerMessage::HANDLE_NAME_EXPLAIN
+      RQ::Fetch()->handle_name, UserManagerMessage::HANDLE_NAME_EXPLAIN
     );
   }
 
@@ -113,7 +113,7 @@ final class UserManagerHTML {
   private static function OutputFormSex() {
     $male   = '';
     $female = '';
-    switch (RQ::Get()->sex) {
+    switch (RQ::Fetch()->sex) {
     case Sex::MALE:
       $male = HTML::GenerateChecked(true);
       break;
@@ -134,7 +134,7 @@ final class UserManagerHTML {
   //プロフィールフォーム出力
   private static function OutputFormProfile() {
     Text::Printf(self::GetFormProfile(),
-      self::PATH, UserManagerMessage::PROFILE, RQ::Get()->profile,
+      self::PATH, UserManagerMessage::PROFILE, RQ::Fetch()->profile,
       UserManagerMessage::PROFILE_EXPLAIN
     );
   }
@@ -158,7 +158,7 @@ final class UserManagerHTML {
   //希望役職選択有効フォーム出力
   private static function OutputFormWishRoleEnable() {
     $stack      = OptionManager::GetWishRoleList();
-    $check_role = in_array(RQ::Get()->role, $stack) ? RQ::Get()->role : 'none';
+    $check_role = in_array(RQ::Fetch()->role, $stack) ? RQ::Fetch()->role : 'none';
     $count      = 0;
     foreach ($stack as $role) {
       TableHTML::OutputFold($count++, 4);
@@ -194,9 +194,9 @@ final class UserManagerHTML {
 
   //アイコン選択フォーム出力
   private static function OutputIcon() {
-    if (isset(RQ::Get()->icon_no) && RQ::Get()->icon_no > (RQ::Get()->user_no > 0 ? -1 : 0)) {
+    if (isset(RQ::Fetch()->icon_no) && RQ::Fetch()->icon_no > (RQ::Fetch()->user_no > 0 ? -1 : 0)) {
       $checked = HTML::GenerateChecked(true);
-      $icon_no = RQ::Get()->icon_no;
+      $icon_no = RQ::Fetch()->icon_no;
     } else {
       $checked = HTML::GenerateChecked(false);
       $icon_no = '';
@@ -382,6 +382,6 @@ EOF;
 
   //登録情報変更モード判定
   private static function IsEditMode() {
-    return RQ::Get()->user_no > 0;
+    return RQ::Fetch()->user_no > 0;
   }
 }

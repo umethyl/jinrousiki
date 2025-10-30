@@ -22,7 +22,7 @@ final class JinrouStatistics extends StackStaticManager {
   public static function Output() {
     self::LoadRoom();
     self::OutputOperation();
-    if (RQ::Get()->game_type) {
+    if (RQ::Fetch()->game_type) {
       self::OutputTotal();
     }
   }
@@ -130,12 +130,12 @@ final class JinrouStatistics extends StackStaticManager {
 
   //陣営勝利統計出力
   private static function OutputWinCamp() {
-    $room_count  = self::Stack()->Get(RQ::Get()->game_type)->room;
+    $room_count  = self::Stack()->Get(RQ::Fetch()->game_type)->room;
     $camp_appear = self::SubStack(self::CAMP_APPEAR);
 
     Text::Output('<h2>陣営勝利</h2>');
     foreach (self::$category as $category => $name) {
-      if (RQ::Get()->game_type != $category) {
+      if (RQ::Fetch()->game_type != $category) {
 	continue;
       }
       $stack = self::Stack()->Get($category);
@@ -186,7 +186,7 @@ final class JinrouStatistics extends StackStaticManager {
   private static function OutputWinCampOld() {
     Text::Output('<h2>陣営勝利</h2>');
     foreach (self::$category as $category => $name) {
-      if (RQ::Get()->game_type != $category) {
+      if (RQ::Fetch()->game_type != $category) {
 	continue;
       }
 
@@ -216,7 +216,7 @@ final class JinrouStatistics extends StackStaticManager {
 
   //出現役職統計出力
   private static function OutputRole() {
-    $room_count = self::Stack()->Get(RQ::Get()->game_type)->room;
+    $room_count = self::Stack()->Get(RQ::Fetch()->game_type)->room;
     $win_count  = self::SubStack(self::WIN_ROLE);
     $appear     = self::SubStack(self::ROLE_APPEAR);
     $stack      = self::SubStack(self::ROLE);

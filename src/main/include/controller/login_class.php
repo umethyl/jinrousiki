@@ -11,7 +11,7 @@ final class LoginController extends JinrouController {
   }
 
   protected static function EnableCommand() {
-    return RQ::Get()->login_manually;
+    return RQ::Fetch()->login_manually;
   }
 
   protected static function RunCommand() {
@@ -64,7 +64,7 @@ final class LoginController extends JinrouController {
     if (null === $jump) {
       $url  = '';
     } else {
-      $url  = URL::GetRoom($jump, RQ::Get()->room_no);
+      $url  = URL::GetRoom($jump, RQ::Fetch()->room_no);
       $body = Text::Join($body, URL::GetJump($url));
     }
     HTML::OutputResult($title, $body, $url);

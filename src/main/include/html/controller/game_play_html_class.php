@@ -16,7 +16,7 @@ final class GamePlayHTML {
 
   //ヘッダーリンク出力 (スイッチ)
   public static function OutputHeaderSwitchLink($url, $type) {
-    if (RQ::Get()->$type) {
+    if (RQ::Fetch()->$type) {
       $switch = Switcher::ON;
     } else {
       $url   .= URL::AddSwitch($type);
@@ -27,7 +27,7 @@ final class GamePlayHTML {
 
   //ヘッダーリンク出力 (リスト)
   public static function OutputHeaderListLink($url, $type) {
-    if (RQ::Get()->$type) {
+    if (RQ::Fetch()->$type) {
       $switch = Switcher::OFF;
     } else {
       $url   .= URL::AddSwitch($type);

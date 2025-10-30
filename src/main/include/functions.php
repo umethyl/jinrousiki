@@ -437,7 +437,7 @@ final class URL {
   /* 判定 */
   //存在判定 (db_no)
   public static function ExistsDB() {
-    return is_int(RQ::Get()->db_no) && RQ::Get()->db_no > 0;
+    return is_int(RQ::Fetch()->db_no) && RQ::Fetch()->db_no > 0;
   }
 
   /* パラメータ取得 */
@@ -569,7 +569,7 @@ final class URL {
 
   //取得 (db_no)
   private static function GetDB($str) {
-    return self::ExistsDB() ? ($str . self::ConvertInt(RequestDataGame::DB, RQ::Get()->db_no)) : '';
+    return self::ExistsDB() ? ($str . self::ConvertInt(RequestDataGame::DB, RQ::Fetch()->db_no)) : '';
   }
 }
 
@@ -1043,7 +1043,7 @@ final class Security {
 
   //CSRF対策用トークン検証
   public static function IsInvalidToken($id) {
-    return RQ::Get()->token != self::GetToken($id);
+    return RQ::Fetch()->token != self::GetToken($id);
   }
 
   /* 判定系 */

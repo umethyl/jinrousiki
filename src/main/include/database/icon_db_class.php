@@ -35,14 +35,14 @@ final class IconDB {
 
   //リスト取得
   public static function GetList(Query $query, array $list) {
-    if (RQ::Get()->sort_by_name) {
+    if (RQ::Fetch()->sort_by_name) {
       $query->Order(['icon_name' => true, 'icon_no'   => true]);
     } else {
       $query->Order(['icon_no'   => true, 'icon_name' => true]);
     }
 
-    if (RQ::Get()->page != 'all') {
-      $limit = max(0, IconConfig::VIEW * (RQ::Get()->page - 1));
+    if (RQ::Fetch()->page != 'all') {
+      $limit = max(0, IconConfig::VIEW * (RQ::Fetch()->page - 1));
       $query->Limit($limit, IconConfig::VIEW);
     }
 
@@ -53,7 +53,7 @@ final class IconDB {
   //検索
   public static function Search($type) {
     //選択状態の抽出
-    $data   = RQ::Get()->search ? RQ::Get()->$type : Session::Get('icon_view', $type);
+    $data   = RQ::Fetch()->search ? RQ::Fetch()->$type : Session::Get('icon_view', $type);
     $target = empty($data) ? [] : ArrayFilter::Pack($data);
     Session::Set('icon_view', $type, $target);
     if ($type == 'keyword') {

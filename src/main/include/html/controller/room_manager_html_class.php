@@ -5,7 +5,7 @@ final class RoomManagerHTML {
   public static function OutputCreate() {
     //パラメータセット
     if (RoomOptionManager::IsChange()) {
-      $url     = sprintf('?room_no=%d', RQ::Get()->room_no);
+      $url     = sprintf('?room_no=%d', RQ::Fetch()->room_no);
       $command = 'change_room';
       $submit  = RoomManagerMessage::SUBMIT_CHANGE;
     } else {
