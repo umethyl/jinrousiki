@@ -737,7 +737,7 @@ final class LoaderData {
     'info_html_class'		=> 'html',
     //html/markup
     'header_html_class'		=> 'html/markup',
-    'table_html_class'		=> 'html',
+    'table_html_class'		=> 'html/markup',
     //html/media
     'image_html_class'		=> 'html/media',
     'icon_html_class'		=> 'html/media',
