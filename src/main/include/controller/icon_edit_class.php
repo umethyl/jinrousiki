@@ -26,7 +26,7 @@ final class IconEditController extends JinrouController {
     } else {
       $url = URL::GetIcon(self::URL, $icon_no);
     }
-    $link = HTML::GenerateLink($url, Message::BACK);
+    $link = LinkHTML::Generate($url, Message::BACK);
 
     if ($password != UserIconConfig::PASSWORD) { //パスワード照合
       self::OutputError(IconEditMessage::PASSWORD, $link);

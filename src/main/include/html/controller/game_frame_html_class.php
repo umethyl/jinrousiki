@@ -3,9 +3,9 @@
 final class GameFrameHTML {
   //出力
   public static function Output() {
-    HTML::OutputFrameHeader(ServerConfig::TITLE . GameMessage::TITLE);
+    FrameHTML::OutputHeader(ServerConfig::TITLE . GameMessage::TITLE);
     RQ::Fetch()->dead_mode ? self::OutputHeavenFrame() : self::OutputFrame();
-    HTML::OutputFrameFooter();
+    FrameHTML::OutputFooter();
   }
 
   //フレーム出力

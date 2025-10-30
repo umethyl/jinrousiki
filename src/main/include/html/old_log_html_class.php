@@ -6,7 +6,7 @@ final class OldLogHTML {
     $base_title = ServerConfig::TITLE . OldLogMessage::TITLE;
     if (false === DB::$ROOM->IsFinished() || false === DB::$ROOM->IsAfterGame()) { //閲覧判定
       $url  = RQ::Fetch()->generate_index ? 'index.html' : 'old_log.php';
-      $back = HTML::GenerateLink($url, Message::BACK);
+      $back = LinkHTML::Generate($url, Message::BACK);
       $str  = Text::Join(OldLogMessage::NOT_FINISHED, $back);
       HTML::OutputResult($base_title, $str);
     }
@@ -51,14 +51,14 @@ final class OldLogHTML {
       $str = HTML::GenerateHeader($title, 'old_log', true);
     }
     $str .= Text::Join(
-      HTML::GenerateLink(URL::GetHeaderDB('old_log'), Message::BACK),
+      LinkHTML::Generate(URL::GetHeaderDB('old_log'), Message::BACK),
       RoomHTML::GenerateLogTitle(), RoomOptionLoader::GenerateImage(),
-      Text::LineFeed(HTML::GenerateLink('#beforegame', OldLogMessage::BEFORE))
+      Text::LineFeed(LinkHTML::Generate('#beforegame', OldLogMessage::BEFORE))
     );
     for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
-      $str .= Text::LineFeed(HTML::GenerateLink('#date' . $i, $i));
+      $str .= Text::LineFeed(LinkHTML::Generate('#date' . $i, $i));
     }
-    $str .= HTML::GenerateLink('#aftergame', OldLogMessage::AFTER) . Message::SPACER;
+    $str .= LinkHTML::Generate('#aftergame', OldLogMessage::AFTER) . Message::SPACER;
     $str .= Text::LineFeed(RQ::Fetch()->GetURL());
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $str .= Text::Format('<a href="#game_top" onClick="start_auto_play();">%s</a>', '開始');
@@ -88,7 +88,7 @@ final class OldLogHTML {
     $room_count = RoomLoaderDB::CountFinished();
     if ($room_count < 1) {
       $title = ServerConfig::TITLE . OldLogMessage::TITLE;
-      $back  = HTML::GenerateLink('./', Message::BACK);
+      $back  = LinkHTML::Generate('./', Message::BACK);
       HTML::OutputResult($title, Text::Join(OldLogMessage::NO_LOG, $back));
     }
 
@@ -165,17 +165,17 @@ final class OldLogHTML {
 	if ($current_time - strtotime(DB::$ROOM->finish_datetime ?? 0) > RoomConfig::KEEP_SESSION) {
 	  $login = '';
 	} else {
-	  $login = Text::LineFeed(HTML::GenerateLink(URL::GetRoom('login'), OldLogMessage::LOGIN));
+	  $login = Text::LineFeed(LinkHTML::Generate(URL::GetRoom('login'), OldLogMessage::LOGIN));
 	}
 
 	if (RQ::Fetch()->watch) {
 	  $log_link  = self::GenerateWatchLogLink($base_url, '(', '', ' )');
 	} else {
-	  $log_link  = HTML::GenerateLogLink($base_url, true, '(', '', ' )');
+	  $log_link  = LinkHTML::GenerateLog($base_url, true, '(', '', ' )');
 
 	  $url       = $base_url . URL::AddSwitch(RequestDataLogRoom::ROLE);
 	  $header    = Text::LF . OldLogMessage::ADD_ROLE . ' (';
-	  $log_link .= HTML::GenerateLogLink($url, false, $header, $vanish, ' )');
+	  $log_link .= LinkHTML::GenerateLog($url, false, $header, $vanish, ' )');
 	}
       }
 
@@ -235,10 +235,10 @@ EOF;
       $timeout = 1;
     }
     $str  = HTML::GenerateHeader($title, 'old_log');
-    $str .= HTML::LoadJavaScript('auto_scroll');
-    $str .= HTML::GenerateJavaScriptHeader();
+    $str .= JavaScriptHTML::Load('auto_scroll');
+    $str .= JavaScriptHTML::GenerateHeader();
     $str .= Text::Format($format, RQ::Fetch()->scroll, $timeout);
-    $str .= HTML::GenerateJavaScriptFooter();
+    $str .= JavaScriptHTML::GenerateFooter();
     $str .= HTML::GenerateBodyHeader(null, 'auto_scroll();');
 
     return $str;
@@ -512,10 +512,10 @@ EOF;
   //一覧ヘッダー生成
   private static function GenerateListHeader(PageLinkBuilder $builder) {
     if (RQ::Fetch()->generate_index) {
-      $back = HTML::GenerateLink('../', Message::BACK);
+      $back = LinkHTML::Generate('../', Message::BACK);
       $url  = '../';
     } else {
-      $back = HTML::GenerateLink('./', Message::BACK);
+      $back = LinkHTML::Generate('./', Message::BACK);
       $url  = '';
     }
     $str = Text::Format(self::GetListHeader(),

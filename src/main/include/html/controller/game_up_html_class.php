@@ -5,7 +5,7 @@ final class GameUpHTML {
   public static function Output() {
     HTML::OutputHeader(ServerConfig::TITLE . GameUpMessage::TITLE, 'game_up');
     GameHTML::OutputSceneCSS();
-    HTML::OutputJavaScript('game_up');
+    JavaScriptHTML::Output('game_up');
     HTML::OutputBodyHeader(null, 'set_focus();reload_game();');
     GameHTML::OutputGameTop();
     self::OutputForm();
@@ -20,7 +20,7 @@ final class GameUpHTML {
       RequestDataTalk::SENTENCE, GameMessage::SUBMIT,
       RequestDataTalk::VOICE,
       TalkVoice::STRONG, GameUpMessage::STRONG,
-      TalkVoice::NORMAL, HTML::GenerateSelected(true), GameUpMessage::NORMAL,
+      TalkVoice::NORMAL, FormHTML::Selected(true), GameUpMessage::NORMAL,
       TalkVoice::WEAK, GameUpMessage::WEAK,
       TalkVoice::SECRET, GameUpMessage::SECRET,
       TalkVoice::LAST_WORDS, GameUpMessage::LAST_WORDS,

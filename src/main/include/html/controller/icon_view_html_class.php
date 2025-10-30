@@ -11,7 +11,7 @@ final class IconViewHTML {
   //ヘッダ出力
   private static function OutputHeader() {
     HTML::OutputHeader(IconMessage::TITLE, 'icon_view');
-    HTML::OutputJavaScript('submit_icon_search');
+    JavaScriptHTML::Output('submit_icon_search');
     HTML::OutputBodyHeader();
     Text::Printf(self::GetHeader(),
       IconMessage::TOP, IconMessage::UPLOAD, IconMessage::VIEW, IconMessage::VIEW
@@ -47,7 +47,7 @@ final class IconViewHTML {
 
   //バックリンク出力
   private static function OutputLink() {
-    HTML::OutputDiv(HTML::GenerateLink('icon_view.php', IconMessage::BACK), 'link');
+    DivHTML::Output(LinkHTML::Generate('icon_view.php', IconMessage::BACK), 'link');
   }
 
   //個別編集フォーム出力
@@ -67,7 +67,7 @@ final class IconViewHTML {
       IconMessage::CATEGORY,	$category,	$size,
       IconMessage::AUTHOR,	$author,	$size,
       IconMessage::COLOR,	$color,		IconMessage::EXAMPLE,
-      IconMessage::DISABLE, HTML::GenerateChecked($disable > 0),
+      IconMessage::DISABLE, FormHTML::Checked($disable > 0),
       IconMessage::PASSWORD,
       IconMessage::SUBMIT
     );

@@ -204,6 +204,7 @@ final class Loader extends LoadManager {
     case 'media':
     case 'statistics':
     case 'html':
+    case 'html/markup':
     case 'html/media':
     case 'html/option':
     case 'html/role':
@@ -479,13 +480,20 @@ final class LoaderData {
     'TripTestMessage'		=> 'trip_test_message',
     //html
     'HTML'		=> 'html_class',
-    'TableHTML'		=> 'table_html_class',
     'GameHTML'		=> 'game_html_class',
     'RoomHTML'		=> 'room_html_class',
     'TalkHTML'		=> 'talk_html_class',
     'VoteHTML'		=> 'vote_html_class',
     'OldLogHTML'	=> 'old_log_html_class',
     'InfoHTML'		=> 'info_html_class',
+    //html/markup
+    'HeaderHTML'	=> 'header_html_class',
+    'JavaScriptHTML'	=> 'javascript_html_class',
+    'FrameHTML'		=> 'frame_html_class',
+    'DivHTML'		=> 'div_html_class',
+    'LinkHTML'		=> 'link_html_class',
+    'TableHTML'		=> 'table_html_class',
+    'FormHTML'		=> 'form_html_class',
     //html/media
     'ImageHTML'		=> 'image_html_class',
     'IconHTML'		=> 'icon_html_class',
@@ -726,13 +734,20 @@ final class LoaderData {
     'twitter_test_class'	=> 'controller/test',
     //html
     'html_class'		=> 'html',
-    'table_html_class'		=> 'html',
     'game_html_class'		=> 'html',
     'room_html_class'		=> 'html',
     'talk_html_class'		=> 'html',
     'vote_html_class'		=> 'html',
     'old_log_html_class'	=> 'html',
     'info_html_class'		=> 'html',
+    //html/markup
+    'header_html_class'		=> 'html/markup',
+    'javascript_html_class'	=> 'html/markup',
+    'frame_html_class'		=> 'html/markup',
+    'div_html_class'		=> 'html/markup',
+    'link_html_class'		=> 'html/markup',
+    'table_html_class'		=> 'html/markup',
+    'form_html_class'		=> 'html/markup',
     //html/media
     'image_html_class'		=> 'html/media',
     'icon_html_class'		=> 'html/media',

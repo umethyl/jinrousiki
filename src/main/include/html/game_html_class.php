@@ -63,11 +63,11 @@ final class GameHTML {
   public static function GenerateLogLink() {
     $url    = URL::GetRoom('old_log');
     $header = DB::$ROOM->IsOn(RoomMode::VIEW) ? GameMessage::LOG_LINK_VIEW : GameMessage::LOG_LINK;
-    $str    = HTML::GenerateLogLink($url, true, Text::BRLF . $header);
+    $str    = LinkHTML::GenerateLog($url, true, Text::BRLF . $header);
 
     $header = GameMessage::LOG_LINK_ROLE;
     $url   .= URL::AddSwitch(RequestDataLogRoom::ROLE);
-    return $str . HTML::GenerateLogLink($url, false, Text::BRLF . $header);
+    return $str . LinkHTML::GenerateLog($url, false, Text::BRLF . $header);
   }
 
   //プレイ中ログリンク一覧ヘッダー生成
@@ -261,7 +261,7 @@ final class GameHTML {
     }
 
     if ($jump != '') { //移動先が設定されていたら画面切り替え
-      $str .= Text::Format(Message::JUMP, $jump) . HTML::GenerateSetLocation();
+      $str .= Text::Format(Message::JUMP, $jump) . JavaScriptHTML::GenerateJump();
       HTML::OutputResult(ServerConfig::TITLE . GameMessage::TITLE, $str, $jump);
     }
 
@@ -270,7 +270,7 @@ final class GameHTML {
     HTML::OutputCSS(sprintf('css/game_%s', DB::$ROOM->scene));
 
     if (DB::$ROOM->IsOff(RoomMode::LOG)) { //過去ログ閲覧時は不要
-      HTML::OutputJavaScript('change_css');
+      JavaScriptHTML::Output('change_css');
       $on_load = sprintf("change_css('%s');", DB::$ROOM->scene);
     } else {
       $on_load = '';
@@ -279,7 +279,7 @@ final class GameHTML {
     if (DB::$ROOM->IsAfterGame()) {
       //ゲーム終了後は自動更新しない
     } elseif (RQ::Fetch()->async) {
-      HTML::OutputJavaScript('game_async');
+      JavaScriptHTML::Output('game_async');
       //リクエストパラメータのハッシュ
       if (method_exists(RQ::Fetch(), 'GetRawUrlStack')) {
         $params = [];
@@ -394,8 +394,8 @@ final class GameHTML {
     $end_date   = GameTime::ConvertJavaScriptDate($end_time);
     $play_sound = (true === isset($type)) && RQ::Fetch()->play_sound;
 
-    HTML::OutputJavaScript('output_realtime');
-    HTML::OutputJavaScriptHeader();
+    JavaScriptHTML::Output('output_realtime');
+    JavaScriptHTML::OutputHeader();
     Text::Printf(self::GetTimer(),
       DB::$ROOM->IsDay() ? GameMessage::TIME_LIMIT_DAY : GameMessage::TIME_LIMIT_NIGHT,
       GameTime::ConvertJavaScriptDate(DB::$ROOM->system_time),
@@ -406,7 +406,7 @@ final class GameHTML {
       Switcher::GetBool($flag),
       TimeConfig::ALERT_DISTANCE
     );
-    HTML::OutputJavaScriptFooter();
+    JavaScriptHTML::OutputFooter();
   }
 
   //日付と生存者の人数を出力
@@ -456,7 +456,7 @@ final class GameHTML {
       }
       $str .= GameMessage::VOTE_ANNOUNCE;
     }
-    HTML::OutputDiv($str, 'system-vote');
+    DivHTML::Output($str, 'system-vote');
   }
 
   //プレイヤー一覧出力
@@ -478,7 +478,7 @@ final class GameHTML {
     }
 
     if (false === isset(DB::$SELF->target_no)) { //投票済みチェック
-      $format = HTML::GenerateDiv(GameMessage::REVOTE, 'revote');
+      $format = DivHTML::Generate(GameMessage::REVOTE, 'revote');
       printf($format . Text::BRLF, GameConfig::DRAW);
     }
     echo self::LoadVote(DB::$ROOM->date); //投票結果を出力
@@ -789,7 +789,7 @@ final class GameHTML {
       return '';
     }
 
-    $format  = HTML::GenerateDiv(GameMessage::WEATHER, 'weather');
+    $format  = DivHTML::Generate(GameMessage::WEATHER, 'weather');
     $weather = WeatherManager::Get(DB::$ROOM->Stack()->Get('weather'));
     return sprintf($format, $weather[WeatherData::NAME], $weather[WeatherData::CAPTION]);
   }
@@ -930,7 +930,7 @@ EOF;
 
   //プレイヤー一覧ヘッダタグ
   private static function GetPlayerHeader() {
-    return HTML::GenerateDivHeader('player') . TableHTML::GenerateHeader();
+    return DivHTML::GenerateHeader('player') . TableHTML::GenerateHeader();
   }
 
   //プレイヤーアイコンタグ
@@ -957,7 +957,7 @@ EOF;
 
   //プレイヤー一覧フッタタグ
   private static function GetPlayerFooter() {
-    return TableHTML::GenerateFooter() . HTML::GenerateDivFooter();
+    return TableHTML::GenerateFooter() . DivHTML::GenerateFooter();
   }
 
   //リアルタイム制残り時間表示タグ

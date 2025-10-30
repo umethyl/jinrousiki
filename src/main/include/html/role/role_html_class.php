@@ -85,12 +85,12 @@ final class RoleHTML {
     $vote_count = sprintf(RoleAbilityMessage::VOTE_COUNT, DB::$ROOM->revote_count + 1);
     if (null === DB::$SELF->target_no) {
       $result = HTML::GenerateWarning(RoleAbilityMessage::NOT_VOTED);
-      HTML::OutputDiv($vote_count . $result, 'self-vote');
+      DivHTML::Output($vote_count . $result, 'self-vote');
       echo HTML::GenerateSpan(RoleAbilityMessage::VOTE_KILL, 'ability vote-do') . Text::BRLF;
     } else {
       $user   = DB::$USER->ByVirtual(DB::$SELF->target_no);
       $result = $user->handle_name . RoleAbilityMessage::SETTLE_VOTED;
-      HTML::OutputDiv($vote_count . $result, 'self-vote');
+      DivHTML::Output($vote_count . $result, 'self-vote');
     }
   }
 
@@ -409,7 +409,7 @@ final class RoleHTML {
       $format = '<input type="checkbox" name="target_no[]" id="%d" value="%d"%s>';
       break;
     }
-    return Text::Format($format, $id, $id, HTML::GenerateChecked($checked));
+    return Text::Format($format, $id, $id, FormHTML::Checked($checked));
   }
 
   //夜の投票済みメッセージを取得

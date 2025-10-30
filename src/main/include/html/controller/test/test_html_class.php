@@ -16,7 +16,7 @@ final class DevHTML {
   public static function OutputRoleTestHeader($title, $url) {
     self::LoadRequest();
     HTML::OutputHeader($title, 'test/role', true);
-    HTML::OutputFormHeader($url);
+    FormHTML::OutputHeader($url);
 
     $id_u = 'user_count';
     $id_t = 'try_count';
@@ -42,7 +42,7 @@ final class DevHTML {
   public static function OutputCheckbox($id, $name, $label, $checked = false) {
     Text::Printf(self::GetInputForm(),
       OptionFormType::CHECKBOX, $id, $name, Switcher::ON,
-      HTML::GenerateChecked($checked), $id, $label
+      FormHTML::Checked($checked), $id, $label
     );
   }
 

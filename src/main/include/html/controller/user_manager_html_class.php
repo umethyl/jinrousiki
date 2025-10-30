@@ -6,7 +6,7 @@ final class UserManagerHTML {
   //出力
   public static function Output() {
     HTML::OutputHeader(ServerConfig::TITLE . UserManagerMessage::TITLE, 'entry_user');
-    HTML::OutputJavaScript('submit_icon_search');
+    JavaScriptHTML::Output('submit_icon_search');
     HTML::OutputBodyHeader();
     self::OutputHeader();
     self::OutputForm();
@@ -18,14 +18,14 @@ final class UserManagerHTML {
   //エラーバックリンク
   public static function GenerateError($url) {
     $stack = RQ::Fetch()->GetIgnoreError();
-    $str   = HTML::GenerateFormHeader($url, Message::BACK);
+    $str   = FormHTML::GenerateHeader($url, Message::BACK);
     foreach (RQ::Fetch() as $key => $value) {
       if (in_array($key, $stack)) {
         continue;
       }
       $str .= self::GenerateHidden($key, $value);
     }
-    return $str . HTML::GenerateFormFooter();
+    return $str . FormHTML::GenerateFooter();
   }
 
   //ヘッダ出力
@@ -36,7 +36,7 @@ final class UserManagerHTML {
     }
 
     Text::Printf(self::GetHeader(),
-      HTML::GenerateLink('./', Message::BACK), Text::BR,
+      LinkHTML::Generate('./', Message::BACK), Text::BR,
       $url, self::PATH, UserManagerMessage::ENTRY_TITLE,
       DB::$ROOM->GenerateName(), self::PATH, UserManagerMessage::ENTRY_ROOM,
       DB::$ROOM->GenerateComment(), DB::$ROOM->GenerateNumber()
@@ -115,11 +115,11 @@ final class UserManagerHTML {
     $female = '';
     switch (RQ::Fetch()->sex) {
     case Sex::MALE:
-      $male = HTML::GenerateChecked(true);
+      $male = FormHTML::Checked(true);
       break;
 
     case Sex::FEMALE:
-      $female = HTML::GenerateChecked(true);
+      $female = FormHTML::Checked(true);
       break;
     }
 
@@ -167,7 +167,7 @@ final class UserManagerHTML {
       } else {
 	$alt = UserManagerMessage::WISH_ROLE_ALT . RoleDataManager::GetName($role);
       }
-      $checked = HTML::GenerateChecked($check_role == $role);
+      $checked = FormHTML::Checked($check_role == $role);
       Text::Printf(self::GetFormWishRoleButton(),
 	$role, $role, $role, $checked, self::PATH, $role, $alt
       );
@@ -195,10 +195,10 @@ final class UserManagerHTML {
   //アイコン選択フォーム出力
   private static function OutputIcon() {
     if (isset(RQ::Fetch()->icon_no) && RQ::Fetch()->icon_no > (RQ::Fetch()->user_no > 0 ? -1 : 0)) {
-      $checked = HTML::GenerateChecked(true);
+      $checked = FormHTML::Checked(true);
       $icon_no = RQ::Fetch()->icon_no;
     } else {
-      $checked = HTML::GenerateChecked(false);
+      $checked = FormHTML::Checked(false);
       $icon_no = '';
     }
 

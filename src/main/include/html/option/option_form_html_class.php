@@ -21,18 +21,18 @@ final class OptionFormHTML {
 
   //JavaScript 出力
   public static function OutputJavaScript(array $list) {
-    HTML::OutputJavaScriptHeader();
+    JavaScriptHTML::OutputHeader();
     foreach ($list as $code) {
       Text::Output($code);
     }
-    HTML::OutputJavaScriptFooter();
+    JavaScriptHTML::OutputFooter();
   }
 
   //チェックボックス生成
   public static function GenerateCheckbox(OptionCheckbox $filter, $type, $footer) {
     return sprintf(self::GetCheckbox(),
       $type, $filter->name, $filter->form_name, $filter->form_value,
-      HTML::GenerateChecked($filter->value), $footer
+      FormHTML::Checked($filter->value), $footer
     );
   }
 

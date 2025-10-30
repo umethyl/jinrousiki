@@ -46,15 +46,15 @@ final class AutoPlayTalk extends StackStaticManager {
   //データ隠蔽
   public static function Hide($str, $class) {
     $scene  = self::Stack()->Get(self::DATE);
-    $header = Text::LineFeed(HTML::GenerateDivHeader('hide', $class . '_' . $scene));
-    return $header . $str . HTML::GenerateDivFooter(true);
+    $header = Text::LineFeed(DivHTML::GenerateHeader('hide', $class . '_' . $scene));
+    return $header . $str . DivHTML::GenerateFooter(true);
   }
 
   //ヘッダ生成
   public static function GenerateHeader($title) {
     $str  = HTML::GenerateHeader($title, 'old_log');
     $str .= HTML::LoadCSS(JINROU_CSS . '/old_log_auto_play');
-    $str .= HTML::LoadJavaScript('auto_play');
+    $str .= JavaScriptHTML::Load('auto_play');
     $str .= HTML::GenerateBodyHeader();
     return $str;
   }
@@ -92,12 +92,12 @@ final class AutoPlayTalk extends StackStaticManager {
 	);
       }
     }
-    $str  = HTML::GenerateJavaScriptHeader();
+    $str  = JavaScriptHTML::GenerateHeader();
     $str .= Text::Format(self::GetJavaScriptHeader(),
       ArrayFilter::ConcatReverse($scene_stack, ',')
     );
     $str .= Text::LineFeed(ArrayFilter::Concat($talk_stack, Text::LF));
-    $str .= HTML::GenerateJavaScriptFooter();
+    $str .= JavaScriptHTML::GenerateFooter();
     return $str;
   }
 

@@ -48,7 +48,7 @@ final class RoomManagerController extends JinrouController {
     if (RoomOptionManager::IsChange()) {
       self::LoadOutputCreateInChange();
       HTML::OutputHeader(RoomManagerMessage::TITLE_CHANGE, 'room_manager');
-      HTML::OutputHeaderTitle(RoomManagerMessage::TITLE_CHANGE);
+      HeaderHTML::OutputTitle(RoomManagerMessage::TITLE_CHANGE);
     }
     RoomManagerHTML::OutputCreate();
   }

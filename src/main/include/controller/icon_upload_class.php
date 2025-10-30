@@ -227,7 +227,7 @@ final class IconUploadController extends JinrouController {
 
   //バックリンク取得
   private static function GetURL($return = false) {
-    $url = HTML::GenerateLink(self::URL, Message::BACK);
+    $url = LinkHTML::Generate(self::URL, Message::BACK);
     return $return ? Text::BRLF . $url : $url;
   }
 }
