@@ -12,8 +12,8 @@ final class IndexHTML {
   //ヘッダ出力
   private static function OutputHeader() {
     HTML::OutputHeader(ServerConfig::TITLE . ServerConfig::COMMENT, 'index');
-    HTML::OutputJavaScript('index');
-    HTML::OutputJavaScript('room_manager');
+    JavaScriptHTML::Output('index');
+    JavaScriptHTML::Output('room_manager');
     HTML::OutputBodyHeader();
     if (ServerConfig::BACK_PAGE != '') {
       LinkHTML::Output(ServerConfig::BACK_PAGE, Message::BACK, true);

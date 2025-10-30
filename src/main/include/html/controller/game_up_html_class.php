@@ -5,7 +5,7 @@ final class GameUpHTML {
   public static function Output() {
     HTML::OutputHeader(ServerConfig::TITLE . GameUpMessage::TITLE, 'game_up');
     GameHTML::OutputSceneCSS();
-    HTML::OutputJavaScript('game_up');
+    JavaScriptHTML::Output('game_up');
     HTML::OutputBodyHeader(null, 'set_focus();reload_game();');
     GameHTML::OutputGameTop();
     self::OutputForm();

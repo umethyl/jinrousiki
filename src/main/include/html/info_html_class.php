@@ -172,7 +172,7 @@ final class InfoHTML {
       $arg_url = 'shared_room';
     }
 
-    $str   = HTML::LoadJavaScript('shared_room');
+    $str   = JavaScriptHTML::Load('shared_room');
     $count = 0;
     foreach ($stack as $server => $array) {
       $count++;
@@ -182,8 +182,8 @@ final class InfoHTML {
       }
 
       $str .= Text::Format(self::GetSharedRoom(),
-	$count, HTML::GenerateJavaScriptHeader(), $count, $count, $arg_url,
-	HTML::GenerateJavaScriptFooter()
+	$count, JavaScriptHTML::GenerateHeader(), $count, $count, $arg_url,
+	JavaScriptHTML::GenerateFooter()
       );
     }
     echo $str;

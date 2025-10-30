@@ -11,7 +11,7 @@ final class IconViewHTML {
   //ヘッダ出力
   private static function OutputHeader() {
     HTML::OutputHeader(IconMessage::TITLE, 'icon_view');
-    HTML::OutputJavaScript('submit_icon_search');
+    JavaScriptHTML::Output('submit_icon_search');
     HTML::OutputBodyHeader();
     Text::Printf(self::GetHeader(),
       IconMessage::TOP, IconMessage::UPLOAD, IconMessage::VIEW, IconMessage::VIEW

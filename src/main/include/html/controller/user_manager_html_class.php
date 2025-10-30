@@ -6,7 +6,7 @@ final class UserManagerHTML {
   //出力
   public static function Output() {
     HTML::OutputHeader(ServerConfig::TITLE . UserManagerMessage::TITLE, 'entry_user');
-    HTML::OutputJavaScript('submit_icon_search');
+    JavaScriptHTML::Output('submit_icon_search');
     HTML::OutputBodyHeader();
     self::OutputHeader();
     self::OutputForm();

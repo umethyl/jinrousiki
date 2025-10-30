@@ -55,22 +55,6 @@ final class HTML {
     return self::GetFooter();
   }
 
-  //JavaScript ヘッダ生成
-  public static function GenerateJavaScriptHeader() {
-    return Text::LineFeed(self::GetJavaScriptHeader());
-  }
-
-  //JavaScript フッタ生成
-  public static function GenerateJavaScriptFooter() {
-    return Text::LineFeed(self::GetJavaScriptFooter());
-  }
-
-  //ページジャンプ用 JavaScript 生成
-  public static function GenerateSetLocation() {
-    $str = Text::LineFeed('if (top != self) { top.location.href = self.location.href; }');
-    return self::GenerateJavaScriptHeader() . $str . self::GenerateJavaScriptFooter();
-  }
-
   //BODY ヘッダ生成
   public static function GenerateBodyHeader($css = null, $on_load = null) {
     return Text::Format(self::GetBodyHeader(),
@@ -128,14 +112,6 @@ final class HTML {
     return Text::Format(self::GetCSS(), $path);
   }
 
-  //JavaScript 読み込み
-  public static function LoadJavaScript($file, $path = null) {
-    if (null === $path) {
-      $path = JINROU_ROOT . '/javascript';
-    }
-    return Text::Format(self::GetJavaScript(), $path, $file);
-  }
-
   //共通 HTML ヘッダ出力
   public static function OutputHeader($title, $css = null, $close = false) {
     echo self::GenerateHeader($title, $css, $close);
@@ -153,21 +129,6 @@ final class HTML {
   //CSS 出力
   public static function OutputCSS($path) {
     echo self::LoadCSS($path);
-  }
-
-  //JavaScript 出力
-  public static function OutputJavaScript($file, $path = null) {
-    echo self::LoadJavaScript($file, $path);
-  }
-
-  //JavaScript ヘッダ出力
-  public static function OutputJavaScriptHeader() {
-    echo self::GenerateJavaScriptHeader();
-  }
-
-  //JavaScript フッタ出力
-  public static function OutputJavaScriptFooter() {
-    echo self::GenerateJavaScriptFooter();
   }
 
   //HTML BODY ヘッダ出力
@@ -262,21 +223,6 @@ EOF;
   //CSS 読み込みタグ
   private static function GetCSS() {
     return '<link rel="stylesheet" href="%s.css">';
-  }
-
-  //JavaScript 読み込みタグ
-  private static function GetJavaScript() {
-    return '<script src="%s/%s.js"></script>';
-  }
-
-  //JavaScript ヘッダタグ
-  private static function GetJavaScriptHeader() {
-    return '<script type="text/javascript"><!--';
-  }
-
-  //JavaScript フッタタグ
-  private static function GetJavaScriptFooter() {
-    return '//--></script>';
   }
 
   //自動リロードタグ

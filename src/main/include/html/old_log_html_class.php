@@ -235,10 +235,10 @@ EOF;
       $timeout = 1;
     }
     $str  = HTML::GenerateHeader($title, 'old_log');
-    $str .= HTML::LoadJavaScript('auto_scroll');
-    $str .= HTML::GenerateJavaScriptHeader();
+    $str .= JavaScriptHTML::Load('auto_scroll');
+    $str .= JavaScriptHTML::GenerateHeader();
     $str .= Text::Format($format, RQ::Fetch()->scroll, $timeout);
-    $str .= HTML::GenerateJavaScriptFooter();
+    $str .= JavaScriptHTML::GenerateFooter();
     $str .= HTML::GenerateBodyHeader(null, 'auto_scroll();');
 
     return $str;

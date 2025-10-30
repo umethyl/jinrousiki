@@ -21,11 +21,11 @@ final class OptionFormHTML {
 
   //JavaScript 出力
   public static function OutputJavaScript(array $list) {
-    HTML::OutputJavaScriptHeader();
+    JavaScriptHTML::OutputHeader();
     foreach ($list as $code) {
       Text::Output($code);
     }
-    HTML::OutputJavaScriptFooter();
+    JavaScriptHTML::OutputFooter();
   }
 
   //チェックボックス生成

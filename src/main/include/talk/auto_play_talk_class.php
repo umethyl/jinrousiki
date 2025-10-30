@@ -54,7 +54,7 @@ final class AutoPlayTalk extends StackStaticManager {
   public static function GenerateHeader($title) {
     $str  = HTML::GenerateHeader($title, 'old_log');
     $str .= HTML::LoadCSS(JINROU_CSS . '/old_log_auto_play');
-    $str .= HTML::LoadJavaScript('auto_play');
+    $str .= JavaScriptHTML::Load('auto_play');
     $str .= HTML::GenerateBodyHeader();
     return $str;
   }
@@ -92,12 +92,12 @@ final class AutoPlayTalk extends StackStaticManager {
 	);
       }
     }
-    $str  = HTML::GenerateJavaScriptHeader();
+    $str  = JavaScriptHTML::GenerateHeader();
     $str .= Text::Format(self::GetJavaScriptHeader(),
       ArrayFilter::ConcatReverse($scene_stack, ',')
     );
     $str .= Text::LineFeed(ArrayFilter::Concat($talk_stack, Text::LF));
-    $str .= HTML::GenerateJavaScriptFooter();
+    $str .= JavaScriptHTML::GenerateFooter();
     return $str;
   }
 

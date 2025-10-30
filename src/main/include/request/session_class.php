@@ -111,7 +111,7 @@ final class Session {
   private static function OutputJump() {
     $url  = URL::GetRoom('game_view', RQ::Fetch()->room_no);
     $body = Text::Join(Message::VIEW_BODY, URL::GetJump($url));
-    $str  = Text::LineFeed($body) . HTML::GenerateSetLocation();
+    $str  = Text::LineFeed($body) . JavaScriptHTML::GenerateJump();
     HTML::OutputResult(Message::VIEW_TITLE, $str, $url);
   }
 }

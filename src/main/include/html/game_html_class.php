@@ -261,7 +261,7 @@ final class GameHTML {
     }
 
     if ($jump != '') { //移動先が設定されていたら画面切り替え
-      $str .= Text::Format(Message::JUMP, $jump) . HTML::GenerateSetLocation();
+      $str .= Text::Format(Message::JUMP, $jump) . JavaScriptHTML::GenerateJump();
       HTML::OutputResult(ServerConfig::TITLE . GameMessage::TITLE, $str, $jump);
     }
 
@@ -270,7 +270,7 @@ final class GameHTML {
     HTML::OutputCSS(sprintf('css/game_%s', DB::$ROOM->scene));
 
     if (DB::$ROOM->IsOff(RoomMode::LOG)) { //過去ログ閲覧時は不要
-      HTML::OutputJavaScript('change_css');
+      JavaScriptHTML::Output('change_css');
       $on_load = sprintf("change_css('%s');", DB::$ROOM->scene);
     } else {
       $on_load = '';
@@ -279,7 +279,7 @@ final class GameHTML {
     if (DB::$ROOM->IsAfterGame()) {
       //ゲーム終了後は自動更新しない
     } elseif (RQ::Fetch()->async) {
-      HTML::OutputJavaScript('game_async');
+      JavaScriptHTML::Output('game_async');
       //リクエストパラメータのハッシュ
       if (method_exists(RQ::Fetch(), 'GetRawUrlStack')) {
         $params = [];
@@ -394,8 +394,8 @@ final class GameHTML {
     $end_date   = GameTime::ConvertJavaScriptDate($end_time);
     $play_sound = (true === isset($type)) && RQ::Fetch()->play_sound;
 
-    HTML::OutputJavaScript('output_realtime');
-    HTML::OutputJavaScriptHeader();
+    JavaScriptHTML::Output('output_realtime');
+    JavaScriptHTML::OutputHeader();
     Text::Printf(self::GetTimer(),
       DB::$ROOM->IsDay() ? GameMessage::TIME_LIMIT_DAY : GameMessage::TIME_LIMIT_NIGHT,
       GameTime::ConvertJavaScriptDate(DB::$ROOM->system_time),
@@ -406,7 +406,7 @@ final class GameHTML {
       Switcher::GetBool($flag),
       TimeConfig::ALERT_DISTANCE
     );
-    HTML::OutputJavaScriptFooter();
+    JavaScriptHTML::OutputFooter();
   }
 
   //日付と生存者の人数を出力
