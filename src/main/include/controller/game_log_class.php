@@ -122,7 +122,7 @@ final class GameLogController extends JinrouController {
       $scene = GameLogMessage::HEAVEN;
       break;
     }
-    HTML::OutputHeaderTitle(GameLogMessage::HEADER . ' ' . $scene);
+    HeaderHTML::OutputTitle(GameLogMessage::HEADER . ' ' . $scene);
   }
 
   //能力発動ログ出力 (管理者限定)

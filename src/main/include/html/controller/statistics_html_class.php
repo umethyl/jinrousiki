@@ -4,30 +4,21 @@ final class StatisticsHTML {
   //出力
   public static function Output() {
     self::OutputHeader();
-    self::OutputMenu();
-    self::OutputFooter();
+    JinrouStatistics::Output();
+    HTML::OutputFooter();
   }
 
   //ヘッダ出力
   private static function OutputHeader() {
     HTML::OutputHeader(StatisticsMessage::TITLE, 'statistics');
     HTML::OutputBodyHeader();
+    HeaderHTML::OutputTitle('統計情報');
     Text::Printf(self::GetHeader(), StatisticsMessage::TOP);
-  }
-
-  //メニュー出力
-  private static function OutputMenu() {
-    self::OutputTotal();
-  }
-
-  //全体統計出力
-  private static function OutputTotal() {
-    JinrouStatistics::Output();
   }
 
   //稼働数ヘッダ出力
   public static function OutputOperationHeader() {
-    Text::Output('<h2>稼働数</h2>');
+    HeaderHTML::OutputSubTitle('稼働数');
     TableHTML::OutputHeader('');
     foreach (['種別', '総数', '日数', '人数', 'ログ検索'] as $str) {
       TableHTML::OutputTh($str);
@@ -45,7 +36,7 @@ final class StatisticsHTML {
 
   //出現役職ヘッダ出力
   public static function OutputRoleHeader() {
-    Text::Output('<h2>出現役職</h2>');
+    HeaderHTML::OutputSubTitle('出現役職');
     TableHTML::OutputHeader('');
     foreach (['役職', '出現数', '出現村数', '出現率', '勝利', '勝率', 'ログ検索'] as $str) {
       TableHTML::OutputTh($str);
@@ -81,16 +72,10 @@ final class StatisticsHTML {
     TableHTML::OutputTd(HTML::GenerateLink($url, $name));
   }
 
-  //フッタ出力
-  private static function OutputFooter() {
-    HTML::OutputFooter();
-  }
-
   //ヘッダタグ
   private static function GetHeader() {
     return <<<EOF
 <div class="link"><a href="./">%s</a> <a href="statistics.php">リセット</a></div>
-<h1>統計情報</h1>
 EOF;
   }
 }

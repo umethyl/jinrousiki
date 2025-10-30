@@ -133,7 +133,7 @@ final class JinrouStatistics extends StackStaticManager {
     $room_count  = self::Stack()->Get(RQ::Fetch()->game_type)->room;
     $camp_appear = self::SubStack(self::CAMP_APPEAR);
 
-    Text::Output('<h2>陣営勝利</h2>');
+    HeaderHTML::OutputSubTitle('陣営勝利');
     foreach (self::$category as $category => $name) {
       if (RQ::Fetch()->game_type != $category) {
 	continue;
@@ -184,7 +184,7 @@ final class JinrouStatistics extends StackStaticManager {
 
   //陣営勝利統計出力 (旧版)
   private static function OutputWinCampOld() {
-    Text::Output('<h2>陣営勝利</h2>');
+    HeaderHTML::OutputSubTitle('陣営勝利');
     foreach (self::$category as $category => $name) {
       if (RQ::Fetch()->game_type != $category) {
 	continue;

@@ -225,11 +225,6 @@ final class HTML {
     printf(self::GetFrameFooter(), Message::NO_FRAME);
   }
 
-  //ヘッダタイトル出力
-  public static function OutputHeaderTitle($str) {
-    Text::Printf(self::GetHeaderTitle(), $str);
-  }
-
   //fieldset ヘッダ出力
   public static function OutputFieldsetHeader($str) {
     Text::Printf(self::GetFieldsetHeader(), $str);
@@ -380,11 +375,6 @@ EOF;
 </frameset>
 </html>
 EOF;
-  }
-
-  //ヘッダタイトルタグ
-  private static function GetHeaderTitle() {
-    return '<h1>%s</h1>';
   }
 
   //フィールドセットヘッダタグ
