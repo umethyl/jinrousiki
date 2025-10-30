@@ -70,7 +70,7 @@ final class RoomOptionManager extends StackStaticManager {
     foreach (RoomOptionFilterData::$fix_in_change as $option) {
       if (DB::$ROOM->IsOption($option)) {
 	OptionLoader::Load($option)->LoadPost();
-	if (RQ::Fetch()->$option) {
+	if (RQ::Get($option)) {
 	  break;
 	}
       }

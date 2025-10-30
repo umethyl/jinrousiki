@@ -468,7 +468,7 @@ abstract class OptionCheckbox extends Option {
     }
 
     RQ::Fetch()->ParsePostOn($this->name);
-    if (RQ::Fetch()->{$this->name}) {
+    if (RQ::Get($this->name)) {
       $this->Set($this->name);
     }
   }
@@ -504,12 +504,12 @@ abstract class OptionTextCheckbox extends OptionCheckbox {
 
   public function LoadPost() {
     RQ::Fetch()->ParsePostData($this->name);
-    if (null === RQ::Fetch()->{$this->name}) {
+    if (null === RQ::Get($this->name)) {
       return false;
     }
 
     RQ::Fetch()->ParsePostStr($this->input);
-    $post = RQ::Fetch()->{$this->input};
+    $post = RQ::Get($this->input);
 
     if (true === empty($post)) {
       $flag = false;
@@ -543,13 +543,13 @@ abstract class OptionLimitedCheckbox extends OptionCheckbox {
     }
 
     RQ::Fetch()->ParsePostOn($this->name);
-    if (false === RQ::Fetch()->{$this->name}) {
+    if (false === RQ::Get($this->name)) {
       return false;
     }
 
     $post = sprintf('%s_count', $this->name);
     RQ::Fetch()->ParsePostInt($post);
-    $count = RQ::Fetch()->$post;
+    $count = RQ::Get($post);
     if (Number::OutRange($count, 1, 99)) {
       RoomManagerHTML::OutputResult('limit_over', $this->GetName());
     }
@@ -691,11 +691,11 @@ abstract class OptionSelector extends Option {
     }
 
     RQ::Fetch()->ParsePostData($this->name);
-    if (null === RQ::Fetch()->{$this->name}) {
+    if (null === RQ::Get($this->name)) {
       return false;
     }
 
-    $post = RQ::Fetch()->{$this->name};
+    $post = RQ::Get($this->name);
     $flag = in_array($post, $this->form_list);
     if (true === $flag) {
       RQ::Set($post, $flag);

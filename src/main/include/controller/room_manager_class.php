@@ -211,12 +211,12 @@ final class RoomManagerController extends JinrouController {
   private static function ValidateCreateInput() {
     foreach (RoomOptionFilterData::$validate_create_name as $type) { //村の名前・説明
       RoomOptionLoader::LoadPost([$type]);
-      if (RQ::Fetch()->$type == '') { //未入力チェック
+      if (RQ::Get($type) == '') { //未入力チェック
 	RoomManagerHTML::OutputResult('empty', OptionManager::GenerateCaption($type));
       }
 
-      if (Text::Over(RQ::Fetch()->$type, RoomConfig::$$type) ||
-	  preg_match(RoomConfig::NG_WORD, RQ::Fetch()->$type)) { //文字列チェック
+      if (Text::Over(RQ::Get($type), RoomConfig::$$type) ||
+	  preg_match(RoomConfig::NG_WORD, RQ::Get($type))) { //文字列チェック
 	RoomManagerHTML::OutputResult('comment', OptionManager::GenerateCaption($type));
       }
     }
@@ -245,7 +245,7 @@ final class RoomManagerController extends JinrouController {
     if (isset($room_password)) {
       $str = 'room_password';
       RQ::Fetch()->ParsePostStr($str);
-      if (RQ::Fetch()->$str != $room_password) {
+      if (RQ::Get($str) != $room_password) {
 	$title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
 	HTML::OutputResult($title, RoomManagerMessage::ERROR_LIMIT_PASSWORD);
       }

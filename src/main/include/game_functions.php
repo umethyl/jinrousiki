@@ -38,7 +38,7 @@ final class GameAction {
 
     //対象者
     RQ::Fetch()->ParsePostInt(RequestDataTalk::TARGET);
-    $target_id = RQ::Fetch()->{RequestDataTalk::TARGET};
+    $target_id = RQ::Get(RequestDataTalk::TARGET);
     $user      = DB::$USER->ByID($target_id);
     if ($target_id != $user->id) {
       return false;

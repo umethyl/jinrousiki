@@ -53,7 +53,7 @@ final class IconDB {
   //検索
   public static function Search($type) {
     //選択状態の抽出
-    $data   = RQ::Fetch()->search ? RQ::Fetch()->$type : Session::Get('icon_view', $type);
+    $data   = RQ::Fetch()->search ? RQ::Get($type) : Session::Get('icon_view', $type);
     $target = empty($data) ? [] : ArrayFilter::Pack($data);
     Session::Set('icon_view', $type, $target);
     if ($type == 'keyword') {

@@ -24,7 +24,7 @@ final class OldLogHTML {
     }
 
     if (RQ::Fetch()->auto_play) { //自動再生モード判定
-      if (false === RQ::Fetch()->reverse_log && RQ::Fetch()->time && DB::$ROOM->IsOn(RoomMode::WATCH)) {
+      if (false === RQ::Get('reverse_log') && RQ::Get('time') && DB::$ROOM->IsOn(RoomMode::WATCH)) {
 	DB::$ROOM->Flag()->Set(RoomMode::AUTO_PLAY, true);
 	AutoPlayTalk::InitStack();
       } else {
@@ -124,8 +124,8 @@ final class OldLogHTML {
       $builder->AddOption('reverse', Switcher::Get($is_reverse));
       $builder->AddOption('watch',   Switcher::Get(RQ::Fetch()->watch));
       foreach (['name', 'room_name', 'winner', 'role', 'game_type'] as $option) {
-	if (RQ::Fetch()->$option) {
-	  $builder->AddOption($option, RQ::Fetch()->$option);
+	if (RQ::Get($option)) {
+	  $builder->AddOption($option, RQ::Get($option));
 	}
       }
 

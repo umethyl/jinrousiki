@@ -22,7 +22,7 @@ final class RoleTestController extends JinrouAdminController {
       'step', 'quiz'
     ];
     RQ::Fetch()->ParsePostData($id);
-    $checked_key = in_array(RQ::Fetch()->$id, $stack) ? RQ::Fetch()->$id : 'chaos_hyper';
+    $checked_key = in_array(RQ::Get($id), $stack) ? RQ::Get($id) : 'chaos_hyper';
     foreach ($stack as $option) {
       $label   = $id . '_' . $option;
       $checked = HTML::GenerateChecked($checked_key == $option);
@@ -37,11 +37,11 @@ final class RoleTestController extends JinrouAdminController {
 	Text::OutputFold(++$count, Text::BR, 11);
 	if (is_int($key)) {
 	  $value   = $mode;
-	  $checked = HTML::GenerateChecked(RQ::Fetch()->$option == $mode);
+	  $checked = HTML::GenerateChecked(RQ::Get($option) == $mode);
 	  $name    = OptionManager::GenerateCaption($mode);
 	} else {
 	  $value   = '';
-	  $checked = HTML::GenerateChecked(RQ::Fetch()->$option == '');
+	  $checked = HTML::GenerateChecked(RQ::Get($option) == '');
 	  $name    = $mode;
 	}
 	$label = $option . (is_int($key) ? '_' . $key : '');
@@ -56,7 +56,7 @@ final class RoleTestController extends JinrouAdminController {
       foreach (GameOptionConfig::${$option.'_list'} as $key => $mode) {
 	Text::OutputFold(++$count, Text::BR, 9);
 	$label   = $option . (is_int($key) ? '_' . $key : '');
-	$checked = HTML::GenerateChecked(RQ::Fetch()->$option == $key);
+	$checked = HTML::GenerateChecked(RQ::Get($option) == $key);
 	DevHTML::OutputRadio($label, $option, $key, $checked, $mode);
       }
       Text::d();
@@ -64,13 +64,13 @@ final class RoleTestController extends JinrouAdminController {
 
     foreach (['museum_topping'] as $option) {
       RQ::Fetch()->ParsePostData($option);
-      if (RQ::Fetch()->$option) {
+      if (RQ::Get($option)) {
 	RQ::Fetch()->ParsePostStr($option . '_input');
-	$value = strtolower(RQ::Fetch()->{$option . '_input'});
+	$value = strtolower(RQ::Get($option . '_input'));
       } else {
 	$value = '';
       }
-      $checked = Switcher::IsOn(RQ::Fetch()->$option);
+      $checked = Switcher::IsOn(RQ::Get($option));
       DevHTML::OutputCheckbox('option_' . $option, $option, RoleTestMessage::$$option, $checked);
       DevHTML::OutputText('option_' . $option . '_input', $option . '_input', $value);
     }
@@ -79,7 +79,7 @@ final class RoleTestController extends JinrouAdminController {
     $id = 'open_cast';
     $stack = ['chaos_open_cast_camp', 'chaos_open_cast_role', 'chaos_open_cast_full'];
     RQ::Fetch()->ParsePostData($id);
-    $checked_key = in_array(RQ::Fetch()->$id, $stack) ? RQ::Fetch()->$id : 'chaos_open_cast_full';
+    $checked_key = in_array(RQ::Get($id), $stack) ? RQ::Get($id) : 'chaos_open_cast_full';
     foreach ($stack as $key => $option) {
       $label   = $id . '_' . $option;
       $checked = HTML::GenerateChecked($checked_key == $option);
@@ -97,7 +97,7 @@ final class RoleTestController extends JinrouAdminController {
     foreach ($stack as $option) {
       Text::OutputFold(++$count, Text::BR, 14);
       RQ::Fetch()->ParsePostData($option);
-      $checked = Switcher::IsOn(RQ::Fetch()->$option);
+      $checked = Switcher::IsOn(RQ::Get($option));
       DevHTML::OutputCheckbox('option_' . $option, $option, RoleTestMessage::$$option, $checked);
     }
     HTML::OutputFormFooter();
@@ -126,43 +126,43 @@ final class RoleTestController extends JinrouAdminController {
     //置換系
     foreach (['replace_human', 'change_common', 'change_mad', 'change_cupid'] as $option) {
       RQ::Fetch()->ParsePostData($option);
-      if (empty(RQ::Fetch()->$option)) {
+      if (empty(RQ::Get($option))) {
 	continue;
       }
 
       $list = $option . '_selector_list';
-      if (array_search(RQ::Fetch()->$option, GameOptionConfig::$$list) !== false) {
-	$stack->option_role[] = RQ::Fetch()->$option;
+      if (array_search(RQ::Get($option), GameOptionConfig::$$list) !== false) {
+	$stack->option_role[] = RQ::Get($option);
       }
     }
 
     //闇鍋/決闘用オプション
     foreach (['topping', 'boost_rate', 'duel_selector'] as $option) {
       RQ::Fetch()->ParsePostData($option);
-      if (empty(RQ::Fetch()->$option)) {
+      if (empty(RQ::Get($option))) {
 	continue;
       }
 
-      if (array_key_exists(RQ::Fetch()->$option, GameOptionConfig::${$option.'_list'})) {
-	$stack->option_role[] = $option . ':' . RQ::Fetch()->$option;
+      if (array_key_exists(RQ::Get($option), GameOptionConfig::${$option.'_list'})) {
+	$stack->option_role[] = $option . ':' . RQ::Get($option);
       }
     }
 
     //闇鍋用オプション(テキスト型)
     foreach (['museum_topping'] as $option) {
       RQ::Fetch()->ParsePostData($option);
-      if (empty(RQ::Fetch()->$option)) {
+      if (empty(RQ::Get($option))) {
 	continue;
       }
 
       $input = $option . '_input';
       RQ::Fetch()->ParsePostStr($input);
-      if (empty(RQ::Fetch()->$input)) {
+      if (empty(RQ::Get($input))) {
 	continue;
       }
-      RQ::Fetch()->$input = strtolower(RQ::Fetch()->$input);
-      if (array_key_exists(RQ::Fetch()->$input, ChaosConfig::${$option.'_list'})) {
-	$stack->option_role[] = $option . ':' . RQ::Fetch()->$input;
+      RQ::Set($input, strtolower(RQ::Get($input)));
+      if (array_key_exists(RQ::Get($input), ChaosConfig::${$option.'_list'})) {
+	$stack->option_role[] = $option . ':' . RQ::Get($input);
       }
     }
 
@@ -183,14 +183,14 @@ final class RoleTestController extends JinrouAdminController {
     ];
     foreach ($option_stack as $option) {
       RQ::Fetch()->ParsePostOn($option);
-      if (RQ::Fetch()->$option) {
+      if (RQ::Get($option)) {
 	$stack->option_role[] = $option;
       }
     }
 
     foreach (['festival'] as $option) { //特殊村
       RQ::Fetch()->ParsePostOn($option);
-      if (RQ::Fetch()->$option) {
+      if (RQ::Get($option)) {
 	$stack->game_option[] = $option;
       }
     }
