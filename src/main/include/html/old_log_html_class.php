@@ -246,7 +246,7 @@ EOF;
 
   //通常ログ出力
   private static function GenerateLog() {
-    if (true === RQ::Fetch()->reverse_log) {
+    if (RQ::Enable('reverse_log')) {
       $str = self::GenerateTalk(0, RoomScene::BEFORE);
       if (DB::$ROOM->IsOption('open_day')) {
 	$str .= self::GenerateTalk(0, RoomScene::DAY);
@@ -281,7 +281,7 @@ EOF;
   //霊界ログ出力
   private static function GenerateHeavenLog() {
     $str = '';
-    if (true === RQ::Fetch()->reverse_log) {
+    if (RQ::Enable('reverse_log')) {
       for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
 	$str .= self::GenerateTalk($i, RoomScene::HEAVEN_ONLY);
       }
@@ -314,13 +314,13 @@ EOF;
 	DB::$USER->ResetRoleList();
 	DB::$ROOM->ResetEvent();
       }
-      if (true === RQ::Fetch()->reverse_log) {
+      if (RQ::Enable('reverse_log')) {
 	DB::$USER->ResetPlayer(); //player 復元処理
       }
       break;
 
     case RoomScene::HEAVEN_ONLY:
-      if (true === RQ::Fetch()->reverse_log && $date != 1) {
+      if (RQ::Enable('reverse_log') && $date != 1) {
 	$table_class = RoomScene::DAY; //2日目以降は昼から
       } else {
 	$table_class = RoomScene::NIGHT;
@@ -329,7 +329,7 @@ EOF;
 
     default:
       $border_game_flag = true;
-      if (true === RQ::Fetch()->reverse_log && $date != 1) {
+      if (RQ::Enable('reverse_log') && $date != 1) {
 	$table_class = RoomScene::DAY; //2日目以降は昼から
       } else {
 	$table_class = RoomScene::NIGHT;
@@ -364,7 +364,7 @@ EOF;
     if (ServerConfig::DEBUG_MODE) {
       Talk::SetBuilder($builder); //デバッグ発言出力用
     }
-    if (true === RQ::Fetch()->reverse_log) {
+    if (RQ::Enable('reverse_log')) {
       $builder->GenerateTimeStamp();
     }
 
@@ -393,7 +393,7 @@ EOF;
     }
     $str .= $builder->Refresh();
 
-    if (true === $border_game_flag && true === RQ::Fetch()->reverse_log) {
+    if (true === $border_game_flag && RQ::Enable('reverse_log')) {
       //突然死で勝敗が決定したケース
       if ($date == DB::$ROOM->last_date && DB::$ROOM->IsDay()) {
 	$str .= self::GenerateVote();
@@ -416,7 +416,7 @@ EOF;
     }
 
     DB::$ROOM->SetDate($date);
-    if (true === RQ::Fetch()->reverse_log) {
+    if (RQ::Enable('reverse_log')) {
       DB::$ROOM->SetScene(RoomScene::NIGHT);
       $str .= self::GenerateVote() . self::GenerateDead();
     } else {

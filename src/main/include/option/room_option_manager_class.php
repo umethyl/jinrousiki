@@ -127,7 +127,7 @@ final class RoomOptionManager extends StackStaticManager {
     }
 
     //ゲルト君モード無効はゲルト君モードと連動させる
-    if (true === RQ::Fetch()->gerd) {
+    if (RQ::Enable('gerd')) {
       RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_gerd);
     }
   }

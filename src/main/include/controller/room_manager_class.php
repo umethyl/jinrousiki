@@ -73,7 +73,7 @@ final class RoomManagerController extends JinrouController {
       RoomManagerHTML::OutputResult('busy');
     }
 
-    if (true === RQ::Fetch()->change_room) {
+    if (RQ::Enable('change_room')) {
       RoomOptionManager::Stack()->Set('change', true);
       self::LoadCreateInChange();
     } else {
@@ -85,7 +85,7 @@ final class RoomManagerController extends JinrouController {
     //self::p(); //テスト用
 
     //-- 登録処理 --//
-    if (true === RQ::Fetch()->change_room) { //オプション変更
+    if (RQ::Enable('change_room')) { //オプション変更
       self::StoreInChange();
       $str = HTML::GenerateCloseWindow(RoomManagerMessage::CHANGE);
       HTML::OutputResult(RoomManagerMessage::TITLE_CHANGE, $str);
