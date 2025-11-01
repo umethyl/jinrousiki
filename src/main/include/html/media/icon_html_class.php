@@ -60,14 +60,14 @@ final class IconHTML {
     );
 
     //検索結果の表示
-    if (empty(RQ::Fetch()->room_no)) {
+    if (empty(RQ::Get(RequestDataGame::ID))) {
       $method = 'OutputDetailForIconView';
       $edit_url = URL::GenerateSwitch('icon_view', RequestDataIcon::MULTI);
       Text::Printf(self::GetCaption(),
 	IconMessage::APPEARANCE, IconMessage::CATEGORY, IconMessage::AUTHOR,
 	IconMessage::SEARCH_EXPLAIN, LinkHTML::Generate($edit_url, IconMessage::MULTI_EDIT)
       );
-    } elseif (isset(RQ::Fetch()->room_no)) {
+    } elseif (isset(RQ::Get(RequestDataGame::ID))) {
       $method = 'OutputDetailForUserEntry';
       Text::Output(self::GetCaptionForUserEntry());
     } else {
@@ -83,8 +83,8 @@ final class IconHTML {
     $CONF->current    = RQ::Fetch()->page;
     $CONF->option     = $url_option;
     $CONF->attributes = ['onClick' => 'return "return submit_icon_search(\'$page\');";'];
-    if (RQ::Fetch()->room_no > 0) {
-      $CONF->option[] = URL::ConvertInt(RequestDataGame::ID, RQ::Fetch()->room_no);
+    if (RQ::Get(RequestDataGame::ID) > 0) {
+      $CONF->option[] = URL::ConvertInt(RequestDataGame::ID, RQ::Get(RequestDataGame::ID));
     }
     if (RQ::Fetch()->icon_no > 0) {
       $CONF->option[] = URL::ConvertInt(RequestDataIcon::ID, RQ::Fetch()->icon_no);

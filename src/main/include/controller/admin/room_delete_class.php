@@ -19,15 +19,16 @@ final class JinrouAdminRoomDeleteController extends JinrouAdminController {
   }
 
   protected static function RunCommand() {
-    if (true === DB::Lock('room') && DB::DeleteRoom(RQ::Fetch()->room_no)) {
+    $room_no = RQ::Get(RequestDataGame::ID);
+    if (true === DB::Lock('room') && DB::DeleteRoom($room_no)) {
       DB::Commit();
       //DB::Optimize(); //遅いのでオフにしておく (オンにする場合は Commit() と差し替え)
 
-      $str = RQ::Fetch()->room_no . RoomDeleteMessage::SUCCESS;
+      $str = $room_no . RoomDeleteMessage::SUCCESS;
       HTML::OutputResult(RoomDeleteMessage::TITLE, $str, '../');
     } else {
       $title = RoomDeleteMessage::TITLE . ' ' . Message::ERROR_TITLE;
-      HTML::OutputResult($title, RQ::Fetch()->room_no . RoomDeleteMessage::FAILED);
+      HTML::OutputResult($title, $room_no . RoomDeleteMessage::FAILED);
     }
   }
 }

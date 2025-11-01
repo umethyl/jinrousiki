@@ -194,6 +194,7 @@ final class Loader extends LoadManager {
     case 'data/event':
     case 'data/role':
     case 'data/vote':
+    case 'data/statistics':
     case 'database':
     case 'request':
     case 'time':
@@ -356,6 +357,10 @@ final class LoaderData {
     'RoleActionDate'			=> 'role_vote_data_class',
     'RoleAbility'			=> 'role_vote_data_class',
     'RoleStackVoteKill'			=> 'role_vote_data_class',
+    //data/statistics
+    'StatisticsStack'			=> 'statistics_data_class',
+    'StatisticsCount'			=> 'statistics_data_class',
+    'StatisticsData'			=> 'statistics_data_class',
     //system
     'JinrouAdmin'		=> 'admin_class',
     'JinrouAdminController'	=> 'admin_class',
@@ -438,6 +443,7 @@ final class LoaderData {
     'VoteResetTime'		=> 'game_vote_functions',
     //statistics
     'JinrouStatistics'		=> 'statistics_manager_class',
+    'StatisticsRole'		=> 'statistics_role_class',
     //controller/test
     'VoteTestController' => 'vote_test_class',
     //controller/message
@@ -643,6 +649,8 @@ final class LoaderData {
     'vote_data_class'		=> 'data/vote',
     'vote_group_data_class'	=> 'data/vote',
     'role_vote_data_class'	=> 'data/vote',
+    //data/statistics
+    'statistics_data_class'	=> 'data/statistics',
     //database
     'db_class'			=> 'database',
     'room_db_class'		=> 'database',
@@ -687,6 +695,7 @@ final class LoaderData {
     'weather_class'	=> 'event',
     //statistics
     'statistics_manager_class'	=> 'statistics',
+    'statistics_role_class'	=> 'statistics',
     //controller
     'index_class'		=> 'controller',
     'room_manager_class'	=> 'controller',

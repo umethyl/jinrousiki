@@ -37,7 +37,7 @@ final class GamePlayTalk {
       身代わり君の個別発言 > ゲーム開始前後 > 身代わり君のシステムメッセージ (遺言) > 死者の霊話
     */
     $talk = new RoleTalkStruct($say);
-    if (true === RQ::Fetch()->individual_talk) {
+    if (RQ::Enable('individual_talk')) {
       $location = TalkLocation::INDIVIDUAL . ':' . RQ::Get(RequestDataTalk::TARGET);
       $talk->Set(TalkStruct::LOCATION, $location);
       return RoleTalk::Store($talk, true);

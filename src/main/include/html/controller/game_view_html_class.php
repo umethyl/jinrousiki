@@ -33,7 +33,7 @@ final class GameViewHTML {
 
     DB::$ROOM->OutputCSS();
     GameHTML::OutputNoCacheHeader();
-    if (GameConfig::AUTO_RELOAD && RQ::Fetch()->auto_reload > 0) { //自動更新
+    if (GameConfig::AUTO_RELOAD && RQ::Get(RequestDataGame::RELOAD) > 0) { //自動更新
       GameHTML::OutputAutoReloadHeader();
     }
 

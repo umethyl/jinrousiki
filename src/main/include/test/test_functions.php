@@ -8,7 +8,7 @@ class DevRoom {
     RQ::Set('vote_times', 1);
     RQ::Set(RequestDataLogRoom::REVERSE, null);
     $base_list = [
-      'id'		=> RQ::Fetch()->room_no,
+      'id'		=> RQ::Get(RequestDataGame::ID),
       'comment'		=> '',
       'date'		=> 0,
       'scene'		=> RoomScene::BEFORE,
@@ -206,7 +206,7 @@ class DevUser {
   //ユーザデータ補完
   public static function Complement($scene = RoomScene::BEFORE) {
     foreach (RQ::GetTest()->test_users as $id => $user) {
-      $user->room_no = RQ::Fetch()->room_no;
+      $user->room_no = RQ::Get(RequestDataGame::ID);
       $user->role_id = $id;
       if (false === isset($user->live)) {
 	$user->live = UserLive::LIVE;

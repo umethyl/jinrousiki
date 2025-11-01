@@ -16,7 +16,7 @@ final class GameUpHTML {
   private static function OutputForm() {
     Text::Printf(self::GetForm(),
       RQ::Fetch()->url, RQ::Fetch()->url, RQ::Fetch()->heaven_mode ? 'reload_middle_frame();' : '',
-      Security::GetToken(RQ::Fetch()->room_no),
+      Security::GetToken(RQ::Get(RequestDataGame::ID)),
       RequestDataTalk::SENTENCE, GameMessage::SUBMIT,
       RequestDataTalk::VOICE,
       TalkVoice::STRONG, GameUpMessage::STRONG,

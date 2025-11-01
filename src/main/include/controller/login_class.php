@@ -64,7 +64,7 @@ final class LoginController extends JinrouController {
     if (null === $jump) {
       $url  = '';
     } else {
-      $url  = URL::GetRoom($jump, RQ::Fetch()->room_no);
+      $url  = URL::GetRoom($jump, RQ::Get(RequestDataGame::ID));
       $body = Text::Join($body, URL::GetJump($url));
     }
     HTML::OutputResult($title, $body, $url);

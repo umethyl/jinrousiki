@@ -11,11 +11,11 @@ final class OldLogController extends JinrouController {
   }
 
   protected static function GetLoadDatabaseID() {
-    return RQ::Fetch()->db_no;
+    return RQ::Get(RequestDataGame::DB);
   }
 
   protected static function EnableLoadRoom() {
-    return true === RQ::Fetch()->is_room;
+    return RQ::Enable('is_room');
   }
 
   protected static function LoadRoom() {
@@ -50,7 +50,7 @@ final class OldLogController extends JinrouController {
   }
 
   protected static function Output() {
-    if (RQ::Fetch()->is_room) {
+    if (RQ::Enable('is_room')) {
       OldLogHTML::Output();
     } else {
       OldLogHTML::OutputList(RQ::Fetch()->page);

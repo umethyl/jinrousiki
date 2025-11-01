@@ -26,7 +26,7 @@ final class RoomManagerController extends JinrouController {
       self::Create();
     } elseif (RQ::Fetch()->describe_room) {
       self::OutputDescribe();
-    } elseif (RQ::Fetch()->room_no > 0) {
+    } elseif (RQ::Get(RequestDataGame::ID) > 0) {
       self::OutputCreate();
     } else {
       self::OutputList();
@@ -44,7 +44,7 @@ final class RoomManagerController extends JinrouController {
       return;
     }
 
-    RoomOptionManager::Stack()->Set('change', RQ::Fetch()->room_no > 0);
+    RoomOptionManager::Stack()->Set('change', RQ::Get(RequestDataGame::ID) > 0);
     if (RoomOptionManager::IsChange()) {
       self::LoadOutputCreateInChange();
       HTML::OutputHeader(RoomManagerMessage::TITLE_CHANGE, 'room_manager');
@@ -73,7 +73,7 @@ final class RoomManagerController extends JinrouController {
       RoomManagerHTML::OutputResult('busy');
     }
 
-    if (true === RQ::Fetch()->change_room) {
+    if (RQ::Enable('change_room')) {
       RoomOptionManager::Stack()->Set('change', true);
       self::LoadCreateInChange();
     } else {
@@ -85,7 +85,7 @@ final class RoomManagerController extends JinrouController {
     //self::p(); //テスト用
 
     //-- 登録処理 --//
-    if (true === RQ::Fetch()->change_room) { //オプション変更
+    if (RQ::Enable('change_room')) { //オプション変更
       self::StoreInChange();
       $str = HTML::GenerateCloseWindow(RoomManagerMessage::CHANGE);
       HTML::OutputResult(RoomManagerMessage::TITLE_CHANGE, $str);
@@ -112,7 +112,7 @@ final class RoomManagerController extends JinrouController {
   //部屋説明出力
   private static function OutputDescribe() {
     //リクエストチェック
-    if (RQ::Fetch()->room_no < 1) {
+    if (RQ::Get(RequestDataGame::ID) < 1) {
       self::OutputDescribeError(Message::INVALID_ROOM);
     }
 

@@ -1,7 +1,7 @@
 <?php
 //-- 個別ユーザクラス (Role 拡張) --//
 //-- ◆文字化け抑制◆ --//
-class RoleUser {
+final class RoleUser {
   //-- 陣営判定 --//
   //所属陣営取得
   public static function GetCamp(User $user, $type, $reparse) {

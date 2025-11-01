@@ -9,7 +9,7 @@ final class RoomManagerDB {
     ];
     $query = self::GetQueryBase()->Select($column)->Where(['room_no'])->Lock($lock);
 
-    DB::Prepare($query->Build(), [RQ::Fetch()->room_no]);
+    DB::Prepare($query->Build(), [RQ::Get(RequestDataGame::ID)]);
     return DB::FetchClass('Room', true);
   }
 

@@ -110,7 +110,7 @@ final class GamePlayController extends JinrouController {
     GamePlayTalk::InitStack(); //判定用変数初期化
 
     //発言送信フレーム (bottom) 判定 > 霊界GM判定
-    if (true === RQ::Fetch()->individual_talk ||
+    if (RQ::Enable('individual_talk') ||
 	DB::$ROOM->IsOff(RoomMode::DEAD) || DB::$ROOM->IsOn(RoomMode::HEAVEN)) {
       GamePlayTalk::Convert(); //発言変換処理
 
@@ -677,7 +677,7 @@ abstract class GamePlayView extends stdClass {
       GamePlayHTML::OutputAbility();
     }
     $this->OutputTalk();
-    if (true === RQ::Fetch()->play_sound) {
+    if (RQ::Enable('play_sound')) {
       $this->OutputSound();
     }
   }
@@ -740,7 +740,7 @@ class GamePlayView_Before extends GamePlayView {
     GamePlayHTML::OutputSceneAsync();
     GameHTML::OutputPlayer();
     $this->OutputTalk();
-    if (true === RQ::Fetch()->play_sound) {
+    if (RQ::Enable('play_sound')) {
       $this->OutputSound();
     }
   }
