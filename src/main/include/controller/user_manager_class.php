@@ -118,7 +118,7 @@ final class UserManagerController extends JinrouController {
       //DB から現在のユーザ情報を取得 (ロック付き)
       //ここで起動している Request クラスは Load 時の Requset_user_manager
       RQ::Set(RequestDataGame::ID, $room_no);
-      RQ::Get('retrieve_type', 'entry_user');
+      RQ::Set('retrieve_type', 'entry_user');
       DB::LoadUser();
 
       //希望役職チェック

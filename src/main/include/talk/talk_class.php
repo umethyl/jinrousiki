@@ -591,7 +591,8 @@ final class TalkBuilder {
 	(($talk->location == TalkLocation::MONOLOGUE && ! $user->IsRole('dummy_common')) ||
 	 $user->IsRole('leader_common', 'mind_read', 'mind_open'))) {
       $name .= TalkHTML::GenerateSelfTalk();
-    } elseif ($talk->uname == GM::DUMMY_BOY && null !== $talk->location) {
+    } elseif ($talk->uname == GM::DUMMY_BOY &&
+	      null !== $talk->location && TalkLocation::SECRET != $talk->location) {
       //個別発言判定
       list($parse_location, $location_id) = Text::Parse($talk->location, ':');
       if ($parse_location == TalkLocation::INDIVIDUAL) {
@@ -679,7 +680,8 @@ final class TalkBuilder {
     }
 
     //個別発言判定
-    if ($talk->uname == GM::DUMMY_BOY && null !== $talk->location && ! $this->flag->open_talk) {
+    if ($talk->uname == GM::DUMMY_BOY && ! $this->flag->open_talk &&
+	null !== $talk->location && TalkLocation::SECRET != $talk->location) {
       list($parse_location, $location_id) = Text::Parse($talk->location, ':');
       if ($parse_location == TalkLocation::INDIVIDUAL) {
 	if ($location_id != $this->actor->id) {
