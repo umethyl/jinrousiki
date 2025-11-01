@@ -140,7 +140,7 @@ final class UserManagerController extends JinrouController {
 	if ($target->session_id != Session::GetID()) {
 	  self::OutputError(Message::SESSION_ERROR, UserManagerMessage::SESSION);
 	}
-	$target->room_no = RQ::Fetch()->room_no;
+	$target->room_no = RQ::Get(RequestDataGame::ID);
 
 	if (! $target->IsDummyBoy() && self::IsSystemName($handle_name)) {
 	  $format = UserManagerMessage::CHECK_HANDLE_NAME;
@@ -246,7 +246,7 @@ final class UserManagerController extends JinrouController {
 
     DB::SetRoom(RoomLoaderDB::LoadEntryUserPage());
     if (null === DB::$ROOM->id) {
-      $str = sprintf(UserManagerMessage::NOT_EXISTS, RQ::Fetch()->room_no);
+      $str = sprintf(UserManagerMessage::NOT_EXISTS, RQ::Get(RequestDataGame::ID));
       self::OutputError(UserManagerMessage::LOGIN, $str);
     }
     if (DB::$ROOM->IsFinished()) {

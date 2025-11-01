@@ -380,14 +380,14 @@ final class RoomLoaderDB {
   //村クラス取得 (ユーザ登録画面用)
   public static function LoadEntryUserPage() {
     $query = self::GetQuery()->Select(['name', 'comment', 'option_role']);
-    return self::LoadRoom($query, [RQ::Fetch()->room_no]);
+    return self::LoadRoom($query, [RQ::Get(RequestDataGame::ID)]);
   }
 
   //村存在判定
   public static function Exists() {
     $query = self::GetQueryBase()->Select(['room_no']);
 
-    DB::Prepare($query->Build(), [RQ::Fetch()->room_no]);
+    DB::Prepare($query->Build(), [RQ::Get(RequestDataGame::ID)]);
     return DB::Exists();
   }
 
