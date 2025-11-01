@@ -67,7 +67,7 @@ final class IconHTML {
 	IconMessage::APPEARANCE, IconMessage::CATEGORY, IconMessage::AUTHOR,
 	IconMessage::SEARCH_EXPLAIN, LinkHTML::Generate($edit_url, IconMessage::MULTI_EDIT)
       );
-    } elseif (isset(RQ::Get(RequestDataGame::ID))) {
+    } elseif (null !== RQ::Get(RequestDataGame::ID)) {
       $method = 'OutputDetailForUserEntry';
       Text::Output(self::GetCaptionForUserEntry());
     } else {
