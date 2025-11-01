@@ -36,7 +36,7 @@ final class GameHTML {
   public static function GenerateAutoReloadLink($url) {
     $format = GameMessage::AUTO_RELOAD_HEADER . '%s' . GameMessage::AUTO_RELOAD_FOOTER;
 
-    if (RQ::Fetch()->auto_reload > 0) {
+    if (RQ::Get(RequestDataGame::RELOAD) > 0) {
       $name = GameMessage::AUTO_RELOAD_MANUAL;
     } else {
       $name = sprintf($format, GameMessage::AUTO_RELOAD_MANUAL);
@@ -45,7 +45,7 @@ final class GameHTML {
 
     foreach (GameConfig::$auto_reload_list as $time) {
       $name  = $time . GameMessage::AUTO_RELOAD_TIME;
-      $value = RQ::Fetch()->auto_reload == $time ? sprintf($format, $name) : $name;
+      $value = (RQ::Get(RequestDataGame::RELOAD) == $time) ? sprintf($format, $name) : $name;
       $str .= ' ' . self::GenerateHeaderLink($url . URL::GetReload($time), $value);
     }
 
@@ -299,7 +299,7 @@ final class GameHTML {
       $on_load .= sprintf("game_async(%s, %s);", $params, $room_status);
     } else {
       self::OutputNoCacheHeader();
-      if (RQ::Fetch()->auto_reload != 0) { //自動リロードをセット
+      if (RQ::Get(RequestDataGame::RELOAD) != 0) { //自動リロードをセット
 	self::OutputAutoReloadHeader();
       }
     }
@@ -361,7 +361,7 @@ final class GameHTML {
 
   //自動更新ヘッダ出力
   public static function OutputAutoReloadHeader() {
-    Text::Output(sprintf(self::GetReload(), RQ::Fetch()->auto_reload));
+    Text::Output(sprintf(self::GetReload(), RQ::Get(RequestDataGame::RELOAD)));
   }
 
   //自動更新リンク出力
@@ -516,7 +516,7 @@ final class GameHTML {
   //移動先 URL 取得
   private static function GenerateJump() {
     $url = URL::GetRoom('game_frame');
-    if (RQ::Fetch()->auto_reload > 0) {
+    if (RQ::Get(RequestDataGame::RELOAD) > 0) {
       $url .= RQ::Fetch()->ToURL(RequestDataGame::RELOAD, true);
     }
 
