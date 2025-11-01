@@ -13,23 +13,57 @@ final class StatisticsHTML {
     HTML::OutputHeader(StatisticsMessage::TITLE, 'statistics');
     HTML::OutputBodyHeader();
     self::OutputHeaderLink();
-    HeaderHTML::OutputTitle('統計情報');
+    HeaderHTML::OutputTitle(StatisticsMessage::TITLE);
   }
 
   //ヘッダリンク出力
   private static function OutputHeaderLink() {
-    $top   = LinkHTML::Generate('./', StatisticsMessage::TOP);
-    $reset = LinkHTML::Generate('statistics.php', 'リセット');
-    DivHTML::Output(ArrayFilter::Concat([$top, $reset]), 'link');
+    $list = [
+      LinkHTML::Generate(StatisticsData::LINK_TOP,   StatisticsMessage::TOP),
+      LinkHTML::Generate(StatisticsData::LINK_RESET, StatisticsMessage::RESET)
+    ];
+    DivHTML::Output(ArrayFilter::Concat($list), 'link');
+  }
+
+  //稼働数出力
+  public static function OutputOperation() {
+    self::OutputOperationHeader();
+    $stack = JinrouStatistics::Stack();
+    foreach (StatisticsData::$category as $game_type => $name) {
+      if ($stack->IsEmpty($game_type)) {
+	continue;
+      }
+
+      TableHTML::OutputTrHeader();
+      self::OutputLink(StatisticsData::LINK_SELF, $game_type, $name);
+      self::OutputOperationData($stack->Get($game_type));
+      self::OutputLink(StatisticsData::LINK_LOG,  $game_type, StatisticsMessage::SEARCH);
+      TableHTML::OutputTrFooter();
+    }
+    TableHTML::OutputFooter(false);
   }
 
   //稼働数ヘッダ出力
-  public static function OutputOperationHeader() {
-    HeaderHTML::OutputSubTitle('稼働数');
+  private static function OutputOperationHeader() {
+    HeaderHTML::OutputSubTitle(StatisticsMessage::SUB_TITLE_OPERATION);
     TableHTML::OutputHeader('');
-    foreach (['種別', '総数', '日数', '人数', 'ログ検索'] as $str) {
+    foreach (StatisticsData::$category_header_operation as $str) {
       TableHTML::OutputTh($str);
     }
+  }
+
+  //稼働数データ出力
+  private static function OutputOperationData(stack $stack) {
+    $list = [];
+    foreach (StatisticsData::$operation as $data) {
+      if ($stack->IsEmpty($data)) {
+	$count = 0;
+      } else {
+	$count = $stack->Get($data);
+      }
+      $list[] = $count;
+    }
+    self::OutputData($list);
   }
 
   //陣営勝利ヘッダ出力

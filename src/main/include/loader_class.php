@@ -194,6 +194,7 @@ final class Loader extends LoadManager {
     case 'data/event':
     case 'data/role':
     case 'data/vote':
+    case 'data/statistics':
     case 'database':
     case 'request':
     case 'time':
@@ -356,6 +357,10 @@ final class LoaderData {
     'RoleActionDate'			=> 'role_vote_data_class',
     'RoleAbility'			=> 'role_vote_data_class',
     'RoleStackVoteKill'			=> 'role_vote_data_class',
+    //data/statistics
+    'StatisticsStack'			=> 'statistics_data_class',
+    'StatisticsCount'			=> 'statistics_data_class',
+    'StatisticsData'			=> 'statistics_data_class',
     //system
     'JinrouAdmin'		=> 'admin_class',
     'JinrouAdminController'	=> 'admin_class',
@@ -643,6 +648,8 @@ final class LoaderData {
     'vote_data_class'		=> 'data/vote',
     'vote_group_data_class'	=> 'data/vote',
     'role_vote_data_class'	=> 'data/vote',
+    //data/statistics
+    'statistics_data_class'	=> 'data/statistics',
     //database
     'db_class'			=> 'database',
     'room_db_class'		=> 'database',
