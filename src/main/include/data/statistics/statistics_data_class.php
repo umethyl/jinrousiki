@@ -40,9 +40,6 @@ final class StatisticsData {
     'quiz'		=> 'クイズ',
   ];
 
-  //種別(特殊配役)
-  public static $special_category = ['festival', 'duel', 'gray_random', 'step', 'quiz'];
-
   //種別(稼働数)
   public static $operation = [
     StatisticsOperation::ROOM,
