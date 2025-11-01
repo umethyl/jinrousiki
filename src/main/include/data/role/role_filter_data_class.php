@@ -386,4 +386,17 @@ final class RoleFilterData {
       CampGroup::PATRON		=> 'sacrifice_patron',
       CampGroup::TENGU		=> 'soul_tengu'
   ];
+
+  //変化役職変換リスト
+  public static $origin_role = [
+    'changed_disguise'		=> 'disguise_wolf',
+    'changed_therian'		=> 'therian_mad',
+    'changed_vindictive'	=> 'vindictive_fox',
+    'copied'			=> 'mania',
+    'copied_trick'		=> 'trick_mania',
+    'copied_basic'		=> 'basic_mania',
+    'copied_nymph'		=> 'nymph_mania',
+    'copied_soul'		=> 'soul_mania',
+    'copied_teller'		=> 'dummy_mania'
+  ];
 }

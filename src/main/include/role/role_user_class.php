@@ -1,7 +1,7 @@
 <?php
 //-- 個別ユーザクラス (Role 拡張) --//
 //-- ◆文字化け抑制◆ --//
-class RoleUser {
+final class RoleUser {
   //-- 陣営判定 --//
   //所属陣営取得
   public static function GetCamp(User $user, $type, $reparse) {
@@ -414,5 +414,20 @@ class RoleUser {
     $stack     = $vote_data[$filter->action];
     //Text::p($stack, "◆Vote [{$filter->role}]");
     return isset($stack[$user->id]);
+  }
+
+  //-- 統計用 --//
+  //変化形判定
+  public static function IsChanged(User $user) {
+    return $user->IsRoleGroup('copied', 'changed');
+  }
+
+  //変化形前役職情報
+  public static function GetOrigin(User $user) {
+    foreach (RoleFilterData::$origin_role as $change => $origin) {
+      if ($user->IsRole($change)) {
+	return [$change => $origin];
+      }
+    }
   }
 }

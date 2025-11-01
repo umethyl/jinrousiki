@@ -416,9 +416,10 @@ final class RoomLoaderDB {
     }
 
     if (isset(RQ::Fetch()->role)) {
-      $query->WhereLike('role')->Where(['role'])->WhereOr(['role', 'role']);
+      $query->WhereLike('role')->WhereLike('role')->WhereLike('role')->
+	Where(['role'])->WhereOr(['role', 'role', 'role', 'role']);
       $role = RQ::Fetch()->role;
-      array_push($list, $role . ' %', $role);
+      array_push($list, $role . ' %', '% ' . $role, '% ' . $role . ' %', $role);
     }
 
     if (isset(RQ::Fetch()->name)) {
@@ -435,15 +436,17 @@ final class RoomLoaderDB {
     if (isset(RQ::Fetch()->game_type)) {
       switch (RQ::Fetch()->game_type) {
       case 'normal':
-	foreach (['chaos', 'duel', 'gray_random', 'quiz'] as $type) {
+	foreach (['festival', 'chaos', 'duel', 'gray_random', 'step', 'quiz'] as $type) {
 	  $query->WhereNotLike('game_option');
 	  $list[] = Query::GetLike($type);
 	}
 	break;
 
+      case 'festival':
       case 'chaos':
       case 'duel':
       case 'gray_random':
+      case 'step':
       case 'quiz':
 	$query->WhereLike('game_option');
 	$list[] = Query::GetLike(RQ::Fetch()->game_type);

@@ -35,7 +35,17 @@ final class StatisticsHTML {
   //陣営勝利ヘッダ出力
   public static function OutputWinCampHeader() {
     TableHTML::OutputHeader('');
-    foreach (['陣営', '出現数', '出現率', '勝利', '勝率', '出現時勝利'] as $str) {
+    foreach (['陣営', '出現数', '出現率', '勝利', '勝率', '出現時勝率'] as $str) {
+      TableHTML::OutputTh($str);
+    }
+    TableHTML::OutputTrFooter();
+  }
+
+  //出現陣営ヘッダ出力
+  public static function OutputCampHeader() {
+    HeaderHTML::OutputSubTitle('出現陣営');
+    TableHTML::OutputHeader('');
+    foreach (['陣営', '出現数', '出現村数', '出現率', '勝利', '勝率'] as $str) {
       TableHTML::OutputTh($str);
     }
     TableHTML::OutputTrFooter();

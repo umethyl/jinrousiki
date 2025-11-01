@@ -504,7 +504,11 @@ final class URL {
 
   //取得 (新役職情報)
   public static function GetRole($role) {
-    $camp = RoleDataManager::GetCamp($role);
+    if (RoleDataManager::IsSub($role)) {
+      $camp = 'sub_role';
+    } else {
+      $camp = RoleDataManager::GetCamp($role);
+    }
     $page = ArrayFilter::Concat(['info', 'new_role', $camp], self::DELIMITER);
     return $page . self::EXT . self::PAGE . $role;
   }
