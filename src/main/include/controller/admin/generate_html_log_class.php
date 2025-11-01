@@ -21,7 +21,7 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
   }
 
   protected static function GetLoadDatabaseID() {
-    return RQ::Fetch()->db_no;
+    return RQ::Get(RequestDataGame::DB);
   }
 
   protected static function EnableCommand() {

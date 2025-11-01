@@ -11,7 +11,7 @@ final class OldLogController extends JinrouController {
   }
 
   protected static function GetLoadDatabaseID() {
-    return RQ::Fetch()->db_no;
+    return RQ::Get(RequestDataGame::DB);
   }
 
   protected static function EnableLoadRoom() {

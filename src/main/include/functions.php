@@ -437,7 +437,7 @@ final class URL {
   /* 判定 */
   //存在判定 (db_no)
   public static function ExistsDB() {
-    return is_int(RQ::Fetch()->db_no) && RQ::Fetch()->db_no > 0;
+    return is_int(RQ::Get(RequestDataGame::DB)) && RQ::Get(RequestDataGame::DB) > 0;
   }
 
   /* パラメータ取得 */
@@ -573,7 +573,12 @@ final class URL {
 
   //取得 (db_no)
   private static function GetDB($str) {
-    return self::ExistsDB() ? ($str . self::ConvertInt(RequestDataGame::DB, RQ::Fetch()->db_no)) : '';
+    if (self::ExistsDB()) {
+      $key = RequestDataGame::DB;
+      return $str . self::ConvertInt($key, RQ::Get($key));
+    } else {
+      return '';
+    }
   }
 }
 

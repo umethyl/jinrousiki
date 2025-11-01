@@ -130,7 +130,7 @@ final class OldLogHTML {
       }
 
       if (URL::ExistsDB()) {
-	$builder->AddOption(RequestDataGame::DB, RQ::Fetch()->db_no);
+	$builder->AddOption(RequestDataGame::DB, RQ::Get(RequestDataGame::DB));
       }
     }
 
