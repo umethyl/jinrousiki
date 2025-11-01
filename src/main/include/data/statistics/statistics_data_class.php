@@ -6,8 +6,8 @@ final class StatisticsStack {
   const ROLE        = 'role';
   const WIN_CAMP    = 'win_camp';
   const WIN_ROLE    = 'win_role';
-  const CAMP_APPEAR = 'camp_appear';
-  const ROLE_APPEAR = 'role_appear';
+  const APPEAR_CAMP = 'appear_camp';
+  const APPEAR_ROLE = 'appear_role';
   const COUNT_UP    = 'count_up';
   const CHANGE      = 'change';
 }
@@ -40,6 +40,9 @@ final class StatisticsData {
     'quiz'		=> 'クイズ',
   ];
 
+  //種別(特殊配役)
+  public static $special_category = ['festival', 'duel', 'gray_random', 'step', 'quiz'];
+
   //種別(稼働数)
   public static $operation = [
     StatisticsOperation::ROOM,
@@ -50,8 +53,8 @@ final class StatisticsData {
   //種別(カウントアップ)
   public static $count = [
     StatisticsCount::WIN  => StatisticsStack::WIN_CAMP,
-    StatisticsCount::CAMP => StatisticsStack::CAMP_APPEAR,
-    StatisticsCount::ROLE => StatisticsStack::ROLE_APPEAR
+    StatisticsCount::CAMP => StatisticsStack::APPEAR_CAMP,
+    StatisticsCount::ROLE => StatisticsStack::APPEAR_ROLE
   ];
 
   //-- 種別項目名ー --//
@@ -62,6 +65,78 @@ final class StatisticsData {
     StatisticsMessage::FIELD_DATE,
     StatisticsMessage::FIELD_USER,
     StatisticsMessage::FIELD_SEARCH
+  ];
+
+  //種別項目名(勝利陣営数)
+  public static $category_header_win_camp = [
+    StatisticsMessage::FIELD_CAMP,
+    StatisticsMessage::FIELD_APPEAR,
+    StatisticsMessage::FIELD_APPEAR_RATE,
+    StatisticsMessage::FIELD_WIN_COUNT,
+    StatisticsMessage::FIELD_WIN_RATE,
+    StatisticsMessage::FIELD_WIN_APPEAR
+  ];
+
+  //種別項目名(出現陣営数)
+  public static $category_header_appear_camp = [
+    StatisticsMessage::FIELD_CAMP,
+    StatisticsMessage::FIELD_APPEAR,
+    StatisticsMessage::FIELD_APPEAR_ROOM,
+    StatisticsMessage::FIELD_APPEAR_RATE,
+    StatisticsMessage::FIELD_WIN_COUNT,
+    StatisticsMessage::FIELD_WIN_RATE
+  ];
+
+  //種別項目名(出現役職数)
+  public static $category_header_appear_role = [
+    StatisticsMessage::FIELD_ROLE,
+    StatisticsMessage::FIELD_APPEAR,
+    StatisticsMessage::FIELD_APPEAR_ROOM,
+    StatisticsMessage::FIELD_APPEAR_RATE,
+    StatisticsMessage::FIELD_WIN_COUNT,
+    StatisticsMessage::FIELD_WIN_RATE,
+    StatisticsMessage::FIELD_SEARCH
+  ];
+
+  //-- 役職 --//
+  //勝利陣営リスト
+  public static $win_camp_list  = [
+    WinCamp::HUMAN,
+    WinCamp::WOLF,
+    WinCamp::FOX,
+    WinCamp::LOVERS,
+    WinCamp::QUIZ,
+    WinCamp::VAMPIRE,
+    WinCamp::DRAW,
+    WinCamp::NONE
+  ];
+
+  //出現陣営リスト
+  public static $appear_camp_list  = [
+    Camp::HUMAN,
+    Camp::WOLF,
+    Camp::FOX,
+    Camp::LOVERS,
+    Camp::QUIZ,
+    Camp::VAMPIRE,
+    Camp::CHIROPTERA,
+    Camp::OGRE,
+    Camp::DUELIST,
+    Camp::TENGU,
+    Camp::MANIA
+  ];
+
+  //変化役職変換リスト
+  public static $origin_role = [
+    'changed_disguise'		=> 'disguise_wolf',
+    'changed_therian'		=> 'therian_mad',
+    'changed_vindictive'	=> 'vindictive_fox',
+    'copied'			=> 'mania',
+    'copied_trick'		=> 'trick_mania',
+    'copied_basic'		=> 'basic_mania',
+    'copied_nymph'		=> 'nymph_mania',
+    'copied_soul'		=> 'soul_mania',
+    'copied_teller'		=> 'dummy_mania'
   ];
 
   //-- リンク --//

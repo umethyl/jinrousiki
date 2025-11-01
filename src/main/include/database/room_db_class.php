@@ -417,9 +417,12 @@ final class RoomLoaderDB {
 
     if (isset(RQ::Fetch()->role)) {
       $query->WhereLike('role')->WhereLike('role')->WhereLike('role')->
-	Where(['role'])->WhereOr(['role', 'role', 'role', 'role']);
+	WhereLike('role')->WhereLike('role')->Where(['role'])->
+	WhereOr(['role', 'role', 'role', 'role', 'role', 'role']);
       $role = RQ::Fetch()->role;
-      array_push($list, $role . ' %', '% ' . $role, '% ' . $role . ' %', $role);
+      array_push($list,
+		 $role . ' %', '% ' . $role, '% ' . $role . ' %',
+		 $role . '[%', '% ' . $role . '[%', $role);
     }
 
     if (isset(RQ::Fetch()->name)) {

@@ -443,6 +443,7 @@ final class LoaderData {
     'VoteResetTime'		=> 'game_vote_functions',
     //statistics
     'JinrouStatistics'		=> 'statistics_manager_class',
+    'StatisticsRole'		=> 'statistics_role_class',
     //controller/test
     'VoteTestController' => 'vote_test_class',
     //controller/message
@@ -694,6 +695,7 @@ final class LoaderData {
     'weather_class'	=> 'event',
     //statistics
     'statistics_manager_class'	=> 'statistics',
+    'statistics_role_class'	=> 'statistics',
     //controller
     'index_class'		=> 'controller',
     'room_manager_class'	=> 'controller',
