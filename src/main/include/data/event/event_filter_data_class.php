@@ -18,7 +18,7 @@ final class EventFilterData {
   ];
 
   //仮想役職セット (悪戯 / 順番依存あり)
-  public static $bad_status = ['shadow_fairy', 'enchant_mad'];
+  public static $bad_status = ['shadow_fairy', 'face_status', 'enchant_mad'];
 
   //決選投票
   public static $vote_duel = ['vote_duel'];

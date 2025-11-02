@@ -22,8 +22,8 @@ $font = 'azuki.ttf';
 //$role = 'homogeneous_wolf';
 $role = 'heterologous_wolf';
 
-//$calib_list = [0,0,0,0];
-$calib_list = [0.5,0,0,0]; //wolf, vampire
+$calib_list = [0,0,0,0];
+//$calib_list = [0.5,0,0,0]; //wolf, vampire
 //$calib_list = [0.8,0,0.7]; //collector_ogre
 //$calib_list = [0.3,0,0,0]; //duelist
 

@@ -502,6 +502,7 @@ final class RoleShortData {
     'enemy'			=> '仇',
     'supported'			=> '援',
     'bad_status'		=> '戯',
+    'face_status'		=> '装',
     'sweet_status'		=> '悲',
     'male_status'		=> '男転',
     'female_status'		=> '女転',

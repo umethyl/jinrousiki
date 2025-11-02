@@ -105,6 +105,7 @@ final class RoleSubData {
     'enemy'			=> '仇敵',
     'supported'			=> '受援者',
     'bad_status'		=> '悪戯',
+    'face_status'		=> '変装',
     'sweet_status'		=> '悲恋',
     'male_status'		=> '男性転換',
     'female_status'		=> '女性転換',
