@@ -25,10 +25,10 @@ final class RoleFilterData {
     'mind_lonely', 'mind_sheep', 'sheep_wisp', 'lovers', 'challenge_lovers', 'vega_lovers',
     'fake_lovers', 'possessed_exchange', 'letter_exchange', 'joker', 'rival', 'enemy', 'supported',
     'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
-    'bad_status', 'sweet_status', 'male_status', 'female_status', 'gender_status', 'protected',
-    'penetration', 'aspirator', 'levitation', 'lost_ability', 'muster_ability', 'changed_disguise',
-    'changed_therian', 'changed_vindictive', 'copied', 'copied_trick', 'copied_basic',
-    'copied_nymph', 'copied_soul', 'copied_teller'
+    'bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status', 'gender_status',
+    'protected', 'penetration', 'aspirator', 'levitation', 'lost_ability', 'muster_ability',
+    'changed_disguise', 'changed_therian', 'changed_vindictive', 'copied', 'copied_trick',
+    'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
   ];
 
   //発言表示

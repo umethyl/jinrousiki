@@ -1205,7 +1205,7 @@ class RoleMessageList {
     'type' => 'fairy'];
 
   public $shadow_fairy = [
-    'message' => "[役割] [|蝙蝠|陣営] [|妖精|系]\n　あなたは|影妖精|です。夜に村人一人に|悪戯|して、その人と同じ顔になることができます。あなたは私？私はあなた？生き別れの双子！？",
+    'message' => "[役割] [|蝙蝠|陣営] [|妖精|系]\n　あなたは|影妖精|です。夜に村人一人に|悪戯|して、その人の顔を別の人にしてしまいます。あなたは私？私はあなた？生き別れの双子！？",
     'type' => 'fairy'];
 
   public $mirror_fairy = [
@@ -1837,6 +1837,10 @@ class RoleMessageList {
   public $joker = [
     'message' => "　あなたは|ジョーカー|を所持しています。所持したままゲーム終了すると無条件で敗北になります。\n　#処刑#投票先が生きていた場合に押し付けることができますが、例外があるので気をつけましょう。",
     'delimiter' => ['|' => 'duelist', '#' => 'vote']];
+
+  public $face_status = [
+    'message' => "　あなたは|変装|中なので、他の誰かの姿になっています。",
+    'type' => 'chiroptera'];
 
   public $sweet_status = [
     'message' => "　あなたは|恋人|と別れました……",
