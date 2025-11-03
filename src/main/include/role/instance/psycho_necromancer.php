@@ -18,6 +18,8 @@ class Role_psycho_necromancer extends Role_necromancer {
       $result = 'mad';
     } elseif ($user->IsRole('changed_vindictive')) {
       $result = 'child_fox';
+    } elseif ($user->IsRole('changed_tailtip')) {
+      $result = 'depraver';
     } elseif ($user->IsMainGroup(CampGroup::UNKNOWN_MANIA)) {
       $result = 'mania';
     } elseif ($user->IsMainGroup(CampGroup::DEPRAVER)) {

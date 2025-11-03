@@ -37,7 +37,7 @@ final class RoleGroupSubData {
     'step'         => ['levitation'],
     'human'        => ['lost_ability', 'muster_ability'],
     'wolf'         => ['possessed_target', 'possessed', 'changed_disguise', 'changed_therian'],
-    'fox'          => ['changed_vindictive'],
+    'fox'          => ['changed_vindictive', 'changed_tailtip'],
     'mania'        => ['copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul',
 		       'copied_teller']
   ];

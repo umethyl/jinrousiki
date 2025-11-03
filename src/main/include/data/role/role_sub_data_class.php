@@ -123,6 +123,7 @@ final class RoleSubData {
     'changed_disguise'		=> '元朔狼',
     'changed_therian'		=> '元獣人',
     'changed_vindictive'	=> '元昼狐',
+    'changed_tailtip'		=> '元尾先',
     'copied'			=> '元神話マニア',
     'copied_trick'		=> '元奇術師',
     'copied_basic'		=> '元求道者',

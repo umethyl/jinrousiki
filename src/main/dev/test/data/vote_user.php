@@ -12,7 +12,7 @@ RQ::GetTest()->test_users[3]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[4]->role = 'soul_mage lovers[16] challenge_lovers rebel critical_luck';
 RQ::GetTest()->test_users[4]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[5]->role = 'mage febris[6]';
+RQ::GetTest()->test_users[5]->role = 'cute_mage febris[6]';
 RQ::GetTest()->test_users[5]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[6]->role = 'eclipse_medium possessed[4-15] frostbite[7]';
@@ -30,7 +30,7 @@ RQ::GetTest()->test_users[9]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[10]->role = 'step_assassin death_note[5] speaker';
 RQ::GetTest()->test_users[10]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[11]->role = 'border_priest downer_luck';
+RQ::GetTest()->test_users[11]->role = 'tailtip_depraver downer_luck';
 RQ::GetTest()->test_users[11]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[12]->role = 'trap_mad death_selected[9]';
@@ -90,3 +90,18 @@ RQ::GetTest()->test_users[29]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[30]->role = 'voodoo_killer';
 RQ::GetTest()->test_users[30]->live = UserLive::LIVE;
+
+RQ::GetTest()->test_users[31]->role = 'necromancer';
+RQ::GetTest()->test_users[31]->live = UserLive::LIVE;
+
+RQ::GetTest()->test_users[32]->role = 'psycho_necromancer';
+RQ::GetTest()->test_users[32]->live = UserLive::LIVE;
+
+RQ::GetTest()->test_users[33]->role = 'assassin';
+RQ::GetTest()->test_users[33]->live = UserLive::LIVE;
+
+RQ::GetTest()->test_users[34]->role = 'mad';
+RQ::GetTest()->test_users[34]->live = UserLive::LIVE;
+
+RQ::GetTest()->test_users[35]->role = 'tailtip_depraver';
+RQ::GetTest()->test_users[35]->live = UserLive::LIVE;

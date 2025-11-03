@@ -182,6 +182,16 @@ class DevUser {
 	   'handle_name'   => '森'],
     30 => ['uname'         => 'violet',
 	   'handle_name'   => '菫'],
+    31 => ['uname'         => 'pink',
+	   'handle_name'   => 'ピンク'],
+    32 => ['uname'         => 'fog',
+	   'handle_name'   => '霞'],
+    33 => ['uname'         => 'smoke',
+	   'handle_name'   => '煙'],
+    34 => ['uname'         => 'light',
+	   'handle_name'   => '光'],
+    35 => ['uname'         => 'dawn',
+	   'handle_name'   => '暁'],
   ];
 
   //ユーザデータ初期化

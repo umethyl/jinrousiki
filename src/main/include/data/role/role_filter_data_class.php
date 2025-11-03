@@ -27,8 +27,8 @@ final class RoleFilterData {
     'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
     'bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status', 'gender_status',
     'protected', 'penetration', 'aspirator', 'levitation', 'lost_ability', 'muster_ability',
-    'changed_disguise', 'changed_therian', 'changed_vindictive', 'copied', 'copied_trick',
-    'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
+    'changed_disguise', 'changed_therian', 'changed_vindictive', 'changed_tailtip', 'copied',
+    'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
   ];
 
   //発言表示
@@ -267,13 +267,16 @@ final class RoleFilterData {
   //護衛後処理
   public static $guard_finish_action = ['serve_doll_master'];
 
-  //呪殺身代わり
-  public static $sacrifice_mage = ['sacrifice_depraver'];
-
   //占い判定妨害 (順番依存あり)
   public static $jammer_mage_result = [
     'sheep_wisp', 'wisp', 'tengu_spell_wisp', 'foughten_wisp', 'black_wisp'
   ];
+
+  //呪殺身代わり
+  public static $sacrifice_mage = ['sacrifice_depraver'];
+
+  //占いカウンター
+  public static $mage_reaction = ['tailtip_depraver'];
 
   //透視/範囲投票
   public static $scan_plural = ['plural_wizard', 'barrier_wizard', 'plural_mad'];

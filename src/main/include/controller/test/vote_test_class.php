@@ -17,7 +17,7 @@ final class VoteTestController extends JinrouTestController {
     include('data/vote_option.php');
 
     //仮想ユーザ
-    DevUser::Initialize(30);
+    DevUser::Initialize(35);
     include('data/vote_user.php');
     DevUser::Complement();
 

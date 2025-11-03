@@ -128,6 +128,7 @@ final class StatisticsData {
     'changed_disguise'		=> 'disguise_wolf',
     'changed_therian'		=> 'therian_mad',
     'changed_vindictive'	=> 'vindictive_fox',
+    'changed_tailtip'		=> 'tailtip_depraver',
     'copied'			=> 'mania',
     'copied_trick'		=> 'trick_mania',
     'copied_basic'		=> 'basic_mania',
