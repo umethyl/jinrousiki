@@ -1183,6 +1183,8 @@ final class VoteNight extends VoteBase {
     RoleVote::FilterNight($vote_data[VoteAction::ASSASSIN], 'SetAssassin');  //暗殺能力者の処理
     //風神の処理
     RoleVote::FilterNight($vote_data[VoteAction::STEP_ASSASSIN], 'SetStepAssassin', null, 'multi');
+    //直線暗殺(魔砲使い)の処理
+    RoleVote::FilterNight($vote_data[VoteAction::SPARK_WIZARD], 'SetLineAssassin', null, 'multi');
     self::FilterDelayTrapKill(); //罠死処理
 
     //RoleManager::Stack()->p($role, "◆Target [{$role}]");
