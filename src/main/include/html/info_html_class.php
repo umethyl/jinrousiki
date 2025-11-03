@@ -61,7 +61,7 @@ final class InfoHTML {
   //オプション出力
   public static function OutputOption($option, $name, $version) {
     Text::Printf(self::GetOption(),
-      $option, $name, GameOptionConfig::${$option.'_list'}[$name], $version, Message::RANGE
+      $option, $name, GameOptionConfig::${$option.'_list'}[$name], $version
     );
   }
 
@@ -277,7 +277,7 @@ EOF;
 
   //オプションタグ
   private static function GetOption() {
-    return '<h3 id="%s_%s">%s [%s%s]</h3>';
+    return '<h3 id="%s_%s">%s [%s]</h3>';
   }
 
   //役職情報ヘッダタグ

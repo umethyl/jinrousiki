@@ -155,6 +155,10 @@ class Role_mage extends Role {
 
   //占いカウンター
   final protected function MageReaction(User $user) {
+    if ($user->IsDead(true)) {
+      return;
+    }
+
     foreach (RoleFilterData::$mage_reaction as $role) {
       if ($user->IsRole($role)) {
 	RoleLoader::Load($role)->MageReaction($user);
