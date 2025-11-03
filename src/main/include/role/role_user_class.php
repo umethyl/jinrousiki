@@ -42,7 +42,9 @@ final class RoleUser {
 
   //妖狐カウント
   public static function IsFoxCount(User $user) {
-    return $user->IsMainGroup(CampGroup::FOX, CampGroup::CHILD_FOX);
+    //変化追跡
+    $changed = isset($user->changed_fox) && true === $user->changed_fox;
+    return $user->IsMainGroup(CampGroup::FOX, CampGroup::CHILD_FOX) || true === $changed;
   }
 
   //-- 性別判定 --//

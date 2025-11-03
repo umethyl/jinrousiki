@@ -264,6 +264,7 @@ class ResultList extends RoleMessageList {
   public $result_critical_fox = ['message' => "さんは|寿羊狐|でした", 'type' => 'result_child_fox'];
   public $result_depraver = ['message' => "さんは|背徳者|でした", 'type' => 'result_fox'];
   public $result_fire_depraver = ['message' => "さんは|紂王|でした", 'type' => 'result_depraver'];
+  public $result_tailtip_depraver = ['message' => "さんは|尾先|でした", 'type' => 'result_depraver'];
   public $result_sacrifice_depraver = ['message' => "さんは|伊呂具秦公|でした", 'type' => 'result_depraver'];
   public $result_silver_depraver = ['message' => "さんは|頭人|でした", 'type' => 'result_depraver'];
   public $result_cupid = ['message' => "さんは|キューピッド|でした", 'delimiter' => ['|' => 'lovers']];
@@ -426,6 +427,7 @@ class ResultList extends RoleMessageList {
   public $result_psycho_necromancer_mad = ['message' => "さんの前世は|狂人|でした", 'type' => 'result_mad'];
   public $result_psycho_necromancer_fox = ['message' => "さんの前世は|妖狐|でした", 'type' => 'result_fox'];
   public $result_psycho_necromancer_child_fox = ['message' => "さんの前世は|子狐|でした", 'type' => 'result_child_fox'];
+  public $result_psycho_necromancer_depraver = ['message' => "さんの前世は|背徳者|でした", 'type' => 'result_child_fox'];
   public $result_psycho_necromancer_lovers = ['message' => "さんの前世は|恋人|でした", 'type' => 'result_cupid'];
   public $result_psycho_necromancer_mania = ['message' => "さんの前世は|神話マニア|でした", 'type' => 'result_mania'];
   public $result_embalm_reposeful = ['message' => "さんの死顔は安らかな表情でした"];

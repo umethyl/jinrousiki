@@ -268,6 +268,7 @@ final class RoleData {
     'critical_fox'		=> '寿羊狐',
     'depraver'			=> '背徳者',
     'fire_depraver'		=> '紂王',
+    'tailtip_depraver'		=> '尾先',
     'sacrifice_depraver'	=> '伊呂具秦公',
     'silver_depraver'		=> '頭人',
     'cupid'			=> 'キューピッド',
