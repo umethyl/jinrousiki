@@ -23,7 +23,7 @@ class Option_chaos extends OptionCastCheckbox {
 
     //-- ランダム枠決定 --//
     $random_role_list = []; //ランダム配役結果
-    $boost_list = DB::$ROOM->GetChaosOptionList('boost_rate'); //出現率補正リスト
+    $boost_list = OptionManager::GetCastChaosBoostRole();
     //Text::p($boost_list, '◆boost');
 
     //-- 最小出現補正 --//

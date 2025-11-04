@@ -4,6 +4,8 @@
 */
 OptionLoader::LoadFile('topping');
 class Option_boost_rate extends Option_topping {
+  use OptionChaosBoost;
+
   public function GetCaption() {
     return '出現率変動モード';
   }

@@ -304,6 +304,7 @@ class GameOptionConfig {
   ];
 
   public static $museum_topping_enable = true; //博物館追加モード
+  public static $museum_boost_enable   = true; //博物館倍率モード
 
   //配役通知設定
   public static $chaos_open_cast_enable      = true; //配役内訳を表示する
