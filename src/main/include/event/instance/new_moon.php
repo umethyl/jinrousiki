@@ -15,6 +15,7 @@ class Event_new_moon extends Event {
       VoteAction::TENGU,
       VoteAction::WIZARD,
       VoteAction::PLURAL_WIZARD,
+      VoteAction::SPARK_WIZARD,
       VoteAction::SPREAD_WIZARD,
       VoteAction::VAMPIRE,
       VoteAction::STEP_VAMPIRE,

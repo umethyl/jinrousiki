@@ -62,7 +62,7 @@ final class RoleTestController extends JinrouAdminController {
       Text::d();
     }
 
-    foreach (['museum_topping'] as $option) {
+    foreach (['museum_topping', 'museum_boost'] as $option) {
       RQ::Fetch()->ParsePostData($option);
       if (RQ::Get($option)) {
 	RQ::Fetch()->ParsePostStr($option . '_input');
@@ -149,7 +149,7 @@ final class RoleTestController extends JinrouAdminController {
     }
 
     //闇鍋用オプション(テキスト型)
-    foreach (['museum_topping'] as $option) {
+    foreach (['museum_topping', 'museum_boost'] as $option) {
       RQ::Fetch()->ParsePostData($option);
       if (empty(RQ::Get($option))) {
 	continue;

@@ -132,6 +132,7 @@ class ResultList extends RoleMessageList {
   public $result_awake_wizard = ['message' => "さんは|比丘尼|でした", 'type' => 'result_wizard'];
   public $result_mimic_wizard = ['message' => "さんは|物真似師|でした", 'type' => 'result_wizard'];
   public $result_plural_wizard = ['message' => "さんは|魔女見習い|でした", 'type' => 'result_wizard'];
+  public $result_spark_wizard = ['message' => "さんは|魔砲使い|でした", 'type' => 'result_wizard'];
   public $result_spiritism_wizard = ['message' => "さんは|交霊術師|でした", 'type' => 'result_wizard'];
   public $result_barrier_wizard = ['message' => "さんは|結界師|でした", 'type' => 'result_wizard'];
   public $result_philosophy_wizard = ['message' => "さんは|賢者|でした", 'type' => 'result_wizard'];

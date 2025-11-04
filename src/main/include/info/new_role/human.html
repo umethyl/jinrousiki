@@ -1502,7 +1502,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <h3 id="guard_limit">護衛制限</h3>
 <ol>
 <li>制限対象は、<a href="#prince">ろくろ首</a>・<a href="#step_mage">審神者</a>・<a href="#emissary_necromancer">密偵</a>・<a href="#priest_group">司祭系</a> (<a href="#crisis_priest">預言者</a>・<a href="#widow_priest">未亡人</a>・<a href="#revive_priest">天人</a>を除く)・<a href="#reporter">ブン屋</a>・<a href="#detective_common">探偵</a>・<a href="#sacrifice_common">首領</a>・<a href="#spell_common">葛の葉</a><br>
-  <a href="#assassin_group">暗殺者系</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#priest_jealousy">恋司祭</a>・<a href="#barrier_brownie">産土神</a>・<a href="#soul_wizard">八卦見</a>・<a href="human.php#esper_wizard">超能力者</a>・<a href="#pierrot_wizard">道化師</a>・<a href="#barrier_wizard">結界師</a>・<a href="#doll_rule_doll_master">人形遣い系</a>・<a href="tengu.php#priest_tengu">鼻高天狗</a>。</li>
+  <a href="#assassin_group">暗殺者系</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#priest_jealousy">恋司祭</a>・<a href="#barrier_brownie">産土神</a>・<a href="#soul_wizard">八卦見</a>・<a href="human.php#esper_wizard">超能力者</a>・<a href="#pierrot_wizard">道化師</a>・<a href="#spark_wizard">魔砲使い</a>・<a href="#barrier_wizard">結界師</a>・<a href="#doll_rule_doll_master">人形遣い系</a>・<a href="tengu.php#priest_tengu">鼻高天狗</a>。</li>
 <li>対象を護衛して襲撃された場合、狩人に「護衛成功」のメッセージは出るが、護衛先は死亡する。</li>
 <li>影響を受けるのは<a href="ability.php#guard">護衛能力者</a>のみで、<a href="#blind_guard">夜雀</a>・<a href="#finder_guard">狛犬</a>・<a href="#step_guard">山立</a>・<a href="#poison_guard">騎士</a>・<a href="#elder_guard">老兵</a>には適用されない。</li>
 <li>対象に<a href="sub_role.php#penetration">護衛貫通</a>がついている場合はあらゆる護衛が無効化される。</a>
@@ -3649,11 +3649,12 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 <a href="#awake_wizard">比丘尼</a>
 <a href="#mimic_wizard">物真似師</a>
 <a href="#plural_wizard">魔女見習い</a>
+<a href="#spark_wizard">魔砲使い</a>
 <a href="#spiritism_wizard">交霊術師</a>
 <a href="#philosophy_wizard">賢者</a>
-<a href="#barrier_wizard">結界師</a>
 </p>
 <p>
+<a href="#barrier_wizard">結界師</a>
 <a href="#astray_wizard">左道使い</a>
 </p>
 
@@ -3860,6 +3861,58 @@ MVP の賞品としてプレゼントしたものです。
 <a href="#barrier_wizard">結界師</a>の占いバージョンです。
 3箇所占った場合、1つ以上成功する確率が 70% 程度となります。
 安定性には欠けますが非常に高い情報収集力を秘めています。
+</pre>
+
+<h3 id="spark_wizard">魔砲使い (占い結果：村人 / 霊能結果：村人) [Ver. 5.1.0 β3]</h3>
+<h4>[耐性] 護衛制限：有り</h4>
+<h4>[暗殺能力] タイプ：暗殺 / 罠：無効</h4>
+<pre>
+魔法使いの一種で、魔法の効果は直線<a href="ability.php#assassin">暗殺</a>能力。
+</pre>
+<h4>投票能力</h4>
+<ol>
+<li>対象者を複数選択することができる</li>
+<li>対象者の位置を直線で選択した場合のみ有効</li>
+<li>直線であれば斜めに選択しても有効</li>
+<li>最少人数は1人で上限はなし</li>
+<li>死者を含めることもできる</li>
+<li>自分には投票できない</li>
+</ol>
+<h4>暗殺発動判定</h4>
+<ol>
+<li><a href="../spec.php#vote_night">判定時</a>に死亡している場合は無効</li>
+<li>3人以上選択した場合のみ発動する</li>
+<li>選択した対象者の陣営が一致した場合のみ有効</li>
+<li>選択された死者も含めて判定する</li>
+<li><a href="lovers.php">恋人</a>は恋人陣営と判定する</li>
+<li>対象者に暗殺無効対象者が含まれていても有効</li>
+</ol>
+<h4>暗殺能力</h4>
+<ol>
+<li>暗殺実行時の死亡処理・死因は<a href="#assassin_spec">暗殺の仕様</a>準拠</li>
+<li>逃亡中の<a href="#escaper_group">逃亡者系</a>を対象にした場合は無効</li>
+<li>対象が<a href="#gatekeeper_guard">門番</a>に護衛されていたら無効</li>
+<li><a href="ability.php#trap">罠能力</a>の影響を受けない</li>
+<li><a href="#assassin_spec">暗殺反射</a>が発生した場合は無効</li>
+<li><a href="#assassin_spec">暗殺反射</a>が発生しても自身は死亡しない (暗殺が無効化されるのみ)</li>
+</ol>
+<h4>天候：<a href="../weather.php#weather_full_wizard">霧雨</a></h4>
+<pre>
+暗殺発動最少人数が 1 人になる
+</pre>
+<h4>天候：<a href="../weather.php#weather_debilitate_wizard">木枯らし</a></h4>
+<pre>
+暗殺発動最少人数が 5 人になる
+</pre>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#step">足音能力者</a>・<a href="ability.php#assassin">暗殺能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+東方 Project のスペルカード「マスタースパーク」がモチーフです。
+大人数・小陣営数でないと条件をほぼ満たせないので基本<a href="../duel.php">決闘村</a>用です。
+この役職でメイン役職の総数が既存のものと合わせてちょうど 400 になりました。
 </pre>
 
 <h3 id="spiritism_wizard">交霊術師 (占い結果：村人 / 霊能結果：村人) [Ver. 1.5.0 α6]</h3>

@@ -55,3 +55,6 @@ RQ::AddTestRoom('option_role', 'sub_role_limit_easy');
 #RQ::AddTestRoom('option_role', 'sub_role_limit_normal');
 #RQ::AddTestRoom('option_role', 'sub_role_limit_hard');
 #RQ::AddTestRoom('option_role', 'topping:k');
+#RQ::AddTestRoom('option_role', 'museum_topping:b1');
+#RQ::AddTestRoom('option_role', 'boost_rate:a');
+#RQ::AddTestRoom('option_role', 'museum_boost:c1');

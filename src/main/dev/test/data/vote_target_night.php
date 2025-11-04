@@ -96,6 +96,7 @@ if (VoteTestRoom::DATE == 1) {
     //['user_no' => 24,	RequestDataVote::TARGET => 22,	'type' => VoteAction::SCAN],
     //['user_no' => 24,	RequestDataVote::TARGET => 11,	'type' => VoteAction::WIZARD],
     ['user_no' => 24,	RequestDataVote::TARGET => '2 11 30',	'type' => VoteAction::PLURAL_WIZARD],
+    //['user_no' => 24,	RequestDataVote::TARGET => '31 32 33 34 35',	'type' => VoteAction::SPARK_WIZARD],
     //['user_no' => 24,	RequestDataVote::TARGET => '3 9',	'type' => VoteAction::SPREAD_WIZARD],
     //['user_no' => 24,	RequestDataVote::TARGET => 12,	'type' => VoteAction::SPREAD_WIZARD],
     //['user_no' => 24,	RequestDataVote::TARGET => 27,	'type' => VoteAction::GUARD],
@@ -114,5 +115,6 @@ if (VoteTestRoom::DATE == 1) {
     //['user_no' => 30,	RequestDataVote::TARGET => 28,	'type' => VoteAction::FAIRY]
     //['user_no' => 33,	RequestDataVote::TARGET =>  9,	'type' => VoteAction::ASSASSIN],
     ['user_no' => 33,	RequestDataVote::TARGET => null,	'type' => VoteAction::NOT_ASSASSIN],
+    ['user_no' => 34,	RequestDataVote::TARGET => '7 13 19',	'type' => VoteAction::SPARK_WIZARD],
   ];
 }

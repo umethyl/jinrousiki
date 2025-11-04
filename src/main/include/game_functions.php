@@ -172,6 +172,23 @@ final class Position {
     return $stack;
   }
 
+  //隣接 (斜め対応)
+  public static function GetFullChain($id, $max) {
+    $stack = self::GetChain($id, $max);
+
+    $point = $id + self::BASE - 1;
+    if (self::ExistsWest($id) && $point <= $max) {
+      $stack['SW'] = $point;
+    }
+
+    $point = $id + self::BASE + 1;
+    if (self::ExistsEast($id, $max) && $point <= $max) {
+      $stack['SE'] = $point;
+    }
+
+    return $stack;
+  }
+
   //十字
   public static function IsCross($id, $viewer) {
     return abs($id - $viewer) == self::BASE ||

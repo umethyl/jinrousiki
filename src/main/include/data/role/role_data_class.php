@@ -136,6 +136,7 @@ final class RoleData {
     'awake_wizard'		=> '比丘尼',
     'mimic_wizard'		=> '物真似師',
     'plural_wizard'		=> '魔女見習い',
+    'spark_wizard'		=> '魔砲使い',
     'spiritism_wizard'		=> '交霊術師',
     'philosophy_wizard'		=> '賢者',
     'barrier_wizard'		=> '結界師',

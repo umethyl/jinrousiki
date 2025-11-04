@@ -94,6 +94,17 @@ final class OptionManager {
     }
   }
 
+  //倍率補正リスト (闇鍋モード用)
+  public static function GetCastChaosBoostRole() {
+    $list = [];
+    foreach (OptionFilterData::$cast_chaos_boost_role as $option) {
+      if (self::CanLoad($option)) {
+	OptionLoader::Load($option)->FilterCastChaosBoostRole($list);
+      }
+    }
+    return $list;
+  }
+
   //配役 (役職置換)
   public static function CastRoleReplace(array &$list, $base, $target) {
     if (ArrayFilter::GetInt($list, $base) < 1) {
@@ -816,5 +827,43 @@ trait OptionChaosTopping {
       }
     }
     //Text::p($list, sprintf('◆%s(%d)', $this->name, array_sum($list)));
+  }
+}
+
+//-- 闇鍋配役(倍率補正) --//
+trait OptionChaosBoost {
+  //配役倍率補正 (闇鍋用)
+  public function FilterCastChaosBoostRole(array &$list) {
+    $stack = DB::$ROOM->GetChaosOptionList($this->name);
+    if (count($stack) < 1) {
+      return;
+    }
+    //Text::p($stack, "◆{$this->name}");
+
+    if (ArrayFilter::IsAssoc($stack, 'fix')) { //個別指定
+      foreach ($stack['fix'] as $role => $rate) {
+	$list[$role] = $rate;
+      }
+    }
+    //Text::p($list, sprintf('◆%s[Fix]', $this->name));
+
+    if (ArrayFilter::IsAssoc($stack, 'boost')) { //全体指定
+      $rate = ChaosConfig::${$this->name . '_fix_rate'};
+      foreach ($stack['boost'] as $role) {
+	if (ArrayFilter::IsAssoc($list, $role)) {
+	  $list[$role] *= $rate;
+	} else {
+	  $list[$role]  = $rate;
+	}
+      }
+    }
+    //Text::p($list, sprintf('◆%s[Boost]', $this->name));
+
+    if (ArrayFilter::IsAssoc($stack, 'zero')) { //0 倍固定
+      foreach ($stack['zero'] as $role) {
+	$list[$role] = 0;
+      }
+    }
+    //Text::p($list, sprintf('◆%s[Zero]', $this->name));
   }
 }
