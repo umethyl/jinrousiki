@@ -3,8 +3,8 @@
 final class SearchRoleInfoController extends JinrouController {
   protected static function LoadRequest() {
     RQ::LoadRequest();
-    RQ::Get()->ParsePostOn('execute');
-    RQ::Get()->ParsePostData('role');
+    RQ::Fetch()->ParsePostOn('execute');
+    RQ::Fetch()->ParsePostData('role');
   }
 
   protected static function Output() {
@@ -18,13 +18,13 @@ final class SearchRoleInfoController extends JinrouController {
 
   //検索実行判定
   private static function IsExecute() {
-    return RQ::Get()->execute && isset(RQ::Get()->role);
+    return RQ::Fetch()->execute && isset(RQ::Fetch()->role);
   }
 
   //検索実行
   private static function RunSearch() {
     $stack = [];
-    $search_list = RoleDataManager::Search(RQ::Get()->role);
+    $search_list = RoleDataManager::Search(RQ::Fetch()->role);
     foreach ($search_list as $category => $list) {
       switch ($category) {
       case 'fix':

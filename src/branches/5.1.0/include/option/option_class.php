@@ -94,6 +94,17 @@ final class OptionManager {
     }
   }
 
+  //倍率補正リスト (闇鍋モード用)
+  public static function GetCastChaosBoostRole() {
+    $list = [];
+    foreach (OptionFilterData::$cast_chaos_boost_role as $option) {
+      if (self::CanLoad($option)) {
+	OptionLoader::Load($option)->FilterCastChaosBoostRole($list);
+      }
+    }
+    return $list;
+  }
+
   //配役 (役職置換)
   public static function CastRoleReplace(array &$list, $base, $target) {
     if (ArrayFilter::GetInt($list, $base) < 1) {
@@ -449,7 +460,7 @@ abstract class OptionText extends Option {
       return false;
     }
 
-    RQ::Get()->ParsePost('Escape', $this->name);
+    RQ::Fetch()->ParsePost('Escape', $this->name);
   }
 
   //プレースホルダ表示メッセージ取得
@@ -467,8 +478,8 @@ abstract class OptionCheckbox extends Option {
       return false;
     }
 
-    RQ::Get()->ParsePostOn($this->name);
-    if (RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostOn($this->name);
+    if (RQ::Get($this->name)) {
       $this->Set($this->name);
     }
   }
@@ -503,13 +514,13 @@ abstract class OptionTextCheckbox extends OptionCheckbox {
   }
 
   public function LoadPost() {
-    RQ::Get()->ParsePostData($this->name);
-    if (null === RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostData($this->name);
+    if (null === RQ::Get($this->name)) {
       return false;
     }
 
-    RQ::Get()->ParsePostStr($this->input);
-    $post = RQ::Get()->{$this->input};
+    RQ::Fetch()->ParsePostStr($this->input);
+    $post = RQ::Get($this->input);
 
     if (true === empty($post)) {
       $flag = false;
@@ -542,14 +553,14 @@ abstract class OptionLimitedCheckbox extends OptionCheckbox {
       return false;
     }
 
-    RQ::Get()->ParsePostOn($this->name);
-    if (false === RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostOn($this->name);
+    if (false === RQ::Get($this->name)) {
       return false;
     }
 
     $post = sprintf('%s_count', $this->name);
-    RQ::Get()->ParsePostInt($post);
-    $count = RQ::Get()->$post;
+    RQ::Fetch()->ParsePostInt($post);
+    $count = RQ::Get($post);
     if (Number::OutRange($count, 1, 99)) {
       RoomManagerHTML::OutputResult('limit_over', $this->GetName());
     }
@@ -690,12 +701,12 @@ abstract class OptionSelector extends Option {
       return false;
     }
 
-    RQ::Get()->ParsePostData($this->name);
-    if (null === RQ::Get()->{$this->name}) {
+    RQ::Fetch()->ParsePostData($this->name);
+    if (null === RQ::Get($this->name)) {
       return false;
     }
 
-    $post = RQ::Get()->{$this->name};
+    $post = RQ::Get($this->name);
     $flag = in_array($post, $this->form_list);
     if (true === $flag) {
       RQ::Set($post, $flag);
@@ -816,5 +827,43 @@ trait OptionChaosTopping {
       }
     }
     //Text::p($list, sprintf('◆%s(%d)', $this->name, array_sum($list)));
+  }
+}
+
+//-- 闇鍋配役(倍率補正) --//
+trait OptionChaosBoost {
+  //配役倍率補正 (闇鍋用)
+  public function FilterCastChaosBoostRole(array &$list) {
+    $stack = DB::$ROOM->GetChaosOptionList($this->name);
+    if (count($stack) < 1) {
+      return;
+    }
+    //Text::p($stack, "◆{$this->name}");
+
+    if (ArrayFilter::IsAssoc($stack, 'fix')) { //個別指定
+      foreach ($stack['fix'] as $role => $rate) {
+	$list[$role] = $rate;
+      }
+    }
+    //Text::p($list, sprintf('◆%s[Fix]', $this->name));
+
+    if (ArrayFilter::IsAssoc($stack, 'boost')) { //全体指定
+      $rate = ChaosConfig::${$this->name . '_fix_rate'};
+      foreach ($stack['boost'] as $role) {
+	if (ArrayFilter::IsAssoc($list, $role)) {
+	  $list[$role] *= $rate;
+	} else {
+	  $list[$role]  = $rate;
+	}
+      }
+    }
+    //Text::p($list, sprintf('◆%s[Boost]', $this->name));
+
+    if (ArrayFilter::IsAssoc($stack, 'zero')) { //0 倍固定
+      foreach ($stack['zero'] as $role) {
+	$list[$role] = 0;
+      }
+    }
+    //Text::p($list, sprintf('◆%s[Zero]', $this->name));
   }
 }

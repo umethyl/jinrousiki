@@ -32,11 +32,11 @@
 未決定枠が比率に応じて配分されます。
 </pre>
 
-<h3 id="decide_role_calib">補正枠枠</h3>
+<h3 id="decide_role_calib">補正枠</h3>
 <pre>
 特定の役職が一定の出現数を超えると差し替えられます。
 </pre>
-<h4>Ver. 5.1.0 α4～</h4>
+<h4>Ver. 5.1.0 α4</h4>
 <pre>
 配役エラーが出ることがあるバグ修正
 </pre>
@@ -50,7 +50,7 @@
 <?php InfoHTML::OutputOptionList('duel_selector', range('a', 'h')); ?>
 </p>
 <p>
-<?php InfoHTML::OutputOptionList('duel_selector', range('i', 'l')); ?>
+<?php InfoHTML::OutputOptionList('duel_selector', range('i', 'm')); ?>
 </p>
 
 <?php InfoHTML::OutputOption('duel_selector', 'a', 'Ver. 5.1.0 α3'); ?>
@@ -86,7 +86,7 @@
 <tr>
   <td>固定</td>
   <td colspan="2"><a href="new_role/lovers.php#triangle_cupid">小悪魔</a></td>
-  <td>Ver. 5.1.0 α4～</td>
+  <td>Ver. 5.1.0 α4</td>
 </tr>
 <tr>
   <td rowspan="2">人口</td>
@@ -101,7 +101,7 @@
 <tr>
   <td>比率</td>
   <td colspan="2"><a href="new_role/human.php#poison">埋毒者</a>・<a href="new_role/human.php#chain_poison">連毒者</a>・<a href="new_role/wolf.php#poison_wolf">毒狼</a>・<a href="new_role/fox.php#poison_fox">管狐</a></td>
-  <td>Ver. 5.1.0 α4～</td>
+  <td>Ver. 5.1.0 α4</td>
 </tr>
 <tr>
   <td>補正</td>
@@ -109,7 +109,7 @@
   <td></td>
 </tr>
 </table>
-<h4>Ver. 5.1.0 α4～</h4>
+<h4>Ver. 5.1.0 α4</h4>
 <pre>
 固定：<a href="new_role/lovers.php#triangle_cupid">小悪魔</a>追加
 比率：<a href="new_role/lovers.php#triangle_cupid">小悪魔</a> → <a href="new_role/fox.php#poison_fox">管狐</a>
@@ -144,15 +144,15 @@
 </tr>
 <tr>
   <td>比率</td>
-  <td colspan="3"><a href="new_role/human.php#select_assassin">おしら様</a>・<a href="new_role/wolf.php#wolf">人狼</a>・<a href="new_role/lovers.php#self_cupid">求愛者</a>・<a href="new_role/lovers.php#mind_cupid">女神</a>・<a href="new_role/lovers.php#triangle_cupid">小悪魔</a></td>
-  <td></td>
+  <td colspan="3"><a href="new_role/human.php#select_assassin">おしら様</a>・<a href="new_role/wolf.php#sweet_wolf">局狼</a>・<a href="new_role/lovers.php#self_cupid">求愛者</a>・<a href="new_role/lovers.php#mind_cupid">女神</a>・<a href="new_role/lovers.php#triangle_cupid">小悪魔</a></td>
+  <td>Ver. 5.1.0 β3</td>
 </tr>
 <tr rowspan="4">
   <td rowspan="4">補正</td>
   <td><a href="new_role/lovers.php#self_cupid">求愛者</a></td>
   <td><a href="new_role/chiroptera.php#dummy_chiroptera">夢求愛者</a></td>
   <td>1人</td>
-  <td rowspan="4"></td>
+  <td rowspan="3"></td>
 </tr>
 <tr>
   <td rowspan="2"><a href="new_role/lovers.php#mind_cupid">女神</a></td>
@@ -164,11 +164,17 @@
   <td>3人</td>
 </tr>
 <tr>
-  <td><a href="new_role/wolf.php#wolf">人狼</a></td>
+  <td><a href="new_role/wolf.php#sweet_wolf">局狼</a></td>
   <td><a href="new_role/wolf.php#silver_wolf">銀狼</a></td>
   <td>2人</td>
+  <td>Ver. 5.1.0 β3</td>
 </tr>
 </table>
+<h4>Ver. 5.1.0 β3</h4>
+<pre>
+比率：<a href="new_role/wolf.php#wolf">人狼</a> → <a href="new_role/wolf.php#sweet_wolf">局狼</a>
+補正：<a href="new_role/wolf.php#wolf">人狼</a> → <a href="new_role/wolf.php#sweet_wolf">局狼</a>
+</pre>
 
 <?php InfoHTML::OutputOption('duel_selector', 'd', 'Ver. 5.1.0 α3'); ?>
 <p>呪い能力者ベース</p>
@@ -182,13 +188,13 @@
 <tr>
   <td rowspan="3">人口</td>
   <td>16人</td>
-  <td><a href="new_role/fox.php#voodoo_fox">九尾</a></td>
-  <td></td>
+  <td><a href="new_role/fox.php#voodoo_fox">九尾</a>・<a href="new_role/fox.php#tailtip_depraver">尾先</a></td>
+  <td>Ver. 5.1.0 β3</td>
 </tr>
 <tr>
   <td>20人</td>
   <td><a href="new_role/human.php#voodoo_killer">陰陽師</a>・<a href="new_role/wolf.php#cursed_wolf">呪狼</a>・<a href="new_role/lovers.php#cursed_angel">堕天使</a></td>
-  <td>Ver. 5.1.0 α4～</td>
+  <td>Ver. 5.1.0 α4</td>
 </tr>
 <tr>
   <td>25人</td>
@@ -198,7 +204,7 @@
 <tr>
   <td>比率</td>
   <td colspan="2"><a href="new_role/human.php#mage">占い師</a>・<a href="new_role/wolf.php#spell_wolf">怨狼</a>・<a href="new_role/wolf.php#voodoo_mad">呪術師</a>・<a href="new_role/chiroptera.php#cursed_chiroptera">呪蝙蝠</a></td>
-  <td>Ver. 5.1.0 α4～</td>
+  <td>Ver. 5.1.0 α4</td>
 </tr>
 <tr>
   <td>補正</td>
@@ -206,7 +212,11 @@
   <td></td>
 </tr>
 </table>
-<h4>Ver. 5.1.0 α4～</h4>
+<h4>Ver. 5.1.0 β3</h4>
+<pre>
+人口(16人)：<a href="new_role/fox.php#tailtip_depraver">尾先</a>追加
+</pre>
+<h4>Ver. 5.1.0 α4</h4>
 <pre>
 人口(20人)：<a href="new_role/human.php#voodoo_killer">陰陽師</a>・<a href="new_role/wolf.php#cursed_wolf">呪狼</a>追加
 比率：<a href="new_role/human.php#voodoo_killer">陰陽師</a>・<a href="new_role/wolf.php#cursed_wolf">呪狼</a> → <a href="new_role/wolf.php#spell_wolf">怨狼</a>
@@ -345,7 +355,7 @@
 <tr>
   <td>比率</td>
   <td colspan="3"><a href="new_role/human.php#dummy_guard">夢守人</a>・<a href="new_role/human.php#psycho_escaper">迷い人</a>・<a href="new_role/wolf.php#miasma_wolf">戯狼</a>・<a href="new_role/wolf.php#dream_eater_mad">獏</a>・<a href="new_role/chiroptera.php#fairy">妖精</a></td>
-  <td>Ver. 5.1.0 α4～</td>
+  <td>Ver. 5.1.0 α4</td>
 </tr>
 <tr>
   <td rowspan="6">補正</td>
@@ -375,7 +385,7 @@
   <td>1人</td>
 </tr>
 </table>
-<h4>Ver. 5.1.0 α4～</h4>
+<h4>Ver. 5.1.0 α4</h4>
 <pre>
 比率：<a href="new_role/wolf.php#wolf">人狼</a> → <a href="new_role/wolf.php#miasma_wolf">戯狼</a>
 </pre>
@@ -397,8 +407,8 @@
 </tr>
 <tr>
   <td>比率</td>
-  <td colspan="2"><a href="new_role/human.php#incubus_escaper">一角獣</a>・<a href="new_role/human.php#succubus_escaper">水妖姫</a>・<a href="new_role/wolf.php#wolf">人狼</a>・<a href="new_role/lovers.php#nephila_cupid">絡新婦</a></td>
-  <td></td>
+  <td colspan="2"><a href="new_role/human.php#incubus_escaper">一角獣</a>・<a href="new_role/human.php#succubus_escaper">水妖姫</a>・<a href="new_role/wolf.php#homogeneous_wolf">爵狼</a>・<a href="new_role/wolf.php#heterologous_wolf">姫狼</a>・<a href="new_role/lovers.php#nephila_cupid">絡新婦</a></td>
+  <td>Ver. 5.1.0 β3</td>
 </tr>
 <tr>
   <td>補正</td>
@@ -406,6 +416,10 @@
   <td></td>
 </tr>
 </table>
+<h4>Ver. 5.1.0 β3</h4>
+<pre>
+比率：<a href="new_role/wolf.php#wolf">人狼</a> → <a href="new_role/wolf.php#homogeneous_wolf">爵狼</a>・<a href="new_role/wolf.php#heterologous_wolf">姫狼</a>
+</pre>
 
 <?php InfoHTML::OutputOption('duel_selector', 'k', 'Ver. 5.1.0 α3'); ?>
 <p>船幽霊ベース</p>
@@ -455,6 +469,32 @@
 <tr>
   <td>補正</td>
   <td>なし</td>
+  <td></td>
+</tr>
+</table>
+
+<?php InfoHTML::OutputOption('duel_selector', 'm', 'Ver. 5.1.0 β3'); ?>
+<p>魔法能力者ベース</p>
+<table>
+<tr><th>出現枠</th><th colspan="2">配役</th><th>設定変更</th></tr>
+<tr>
+  <td>固定</td>
+  <td colspan="2">なし</td>
+  <td></td>
+</tr>
+<tr>
+  <td>人口</td>
+  <td>15人</td>
+  <td><a href="new_role/human.php#plural_wizard">魔女見習い</a></td>
+</tr>
+<tr>
+  <td>比率</td>
+  <td colspan="2"><a href="new_role/human.php#spark_wizard">魔砲使い</a>・<a href="new_role/wolf.php#wolf">人狼</a>・<a href="new_role/wolf.php#plural_mad">魔女</a>・<a href="new_role/chiroptera.php#chiroptera">蝙蝠</a></td>
+  <td></td>
+</tr>
+<tr>
+  <td>補正</td>
+  <td colspan="2">なし</td>
   <td></td>
 </tr>
 </table>

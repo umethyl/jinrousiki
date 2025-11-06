@@ -3,7 +3,7 @@
 final class NameTestController extends JinrouTestController {
   protected static function LoadRequest() {
     DevHTML::LoadRequest();
-    RQ::Get()->ParsePostData('type');
+    RQ::Fetch()->ParsePostData('type');
   }
 
   protected static function OutputHeader() {
@@ -13,15 +13,15 @@ final class NameTestController extends JinrouTestController {
 
   //フォーム出力
   private static function OutputForm() {
-    HTML::OutputFormHeader('name_test.php');
+    FormHTML::OutputHeader('name_test.php');
     Text::d();
     self::OutputFormList();
-    HTML::OutputFormFooter();
+    FormHTML::OutputFooter();
   }
 
   //フォームリスト出力
   private static function OutputFormList() {
-    $id        = RQ::Get()->type ?? 'all-all' ;
+    $id        = RQ::Fetch()->type ?? 'all-all' ;
     $count     = 0;
     $role_data = self::GetList();
     $stack     = ['camp' => VoteMessage::CAMP_FOOTER, 'group' => VoteMessage::GROUP_FOOTER];
@@ -37,7 +37,7 @@ final class NameTestController extends JinrouTestController {
 
   //ラジオボタン出力
   private static function OutputRadio($id, $label, $checked_id) {
-    DevHTML::OutputRadio($id, 'type', $id, HTML::GenerateChecked($id === $checked_id), $label);
+    DevHTML::OutputRadio($id, 'type', $id, FormHTML::Checked($id === $checked_id), $label);
   }
 
   protected static function IsExecute() {
@@ -45,7 +45,7 @@ final class NameTestController extends JinrouTestController {
   }
 
   protected static function RunTest() {
-    list($role, $type) = Text::Parse(RQ::Get()->type, '-');
+    list($role, $type) = Text::Parse(RQ::Fetch()->type, '-');
     switch ($type) {
     case 'all':
       $stack = RoleDataManager::GetList();

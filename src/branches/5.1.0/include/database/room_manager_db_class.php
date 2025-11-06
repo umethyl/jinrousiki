@@ -9,7 +9,7 @@ final class RoomManagerDB {
     ];
     $query = self::GetQueryBase()->Select($column)->Where(['room_no'])->Lock($lock);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no]);
+    DB::Prepare($query->Build(), [RQ::Get(RequestDataGame::ID)]);
     return DB::FetchClass('Room', true);
   }
 
@@ -74,7 +74,7 @@ final class RoomManagerDB {
       'option_role', 'status', 'date', 'scene', 'vote_count', 'revote_count', 'establisher_ip'
     ];
     $list = [
-      $room_no, RQ::Get()->room_name, RQ::Get()->room_comment, RQ::Get()->max_user, $game_option,
+      $room_no, RQ::Fetch()->room_name, RQ::Fetch()->room_comment, RQ::Fetch()->max_user, $game_option,
       $option_role, RoomStatus::WAITING, 0, RoomScene::BEFORE, 1, 0, Security::GetIP()
     ];
 

@@ -3,7 +3,7 @@
 final class TalkDB {
   //発言取得
   public static function Get($heaven = false) {
-    if (RQ::Get()->IsVirtualRoom()) {
+    if (RQ::Fetch()->IsVirtualRoom()) {
       return RQ::GetTest()->talk;
     }
 
@@ -47,11 +47,11 @@ final class TalkDB {
 
   //発言取得 (ログ用)
   public static function GetLog($date, $scene) {
-    $query  = self::GetQueryBase()->Order(['id' => RQ::Get()->reverse_log]);
+    $query  = self::GetQueryBase()->Order(['id' => RQ::Fetch()->reverse_log]);
     $list   = [DB::$ROOM->id];
     $column = ['scene', 'location', 'uname', 'action', 'sentence', 'font_type'];
     $table  = 'talk';
-    if (RQ::Get()->time) {
+    if (RQ::Fetch()->time) {
       $column[] = 'time';
     }
 
@@ -80,7 +80,7 @@ final class TalkDB {
       $list[] = $date;
 
       $stack = [RoomScene::DAY, RoomScene::NIGHT];
-      if (RQ::Get()->heaven_talk) {
+      if (RQ::Fetch()->heaven_talk) {
 	$stack[] = RoomScene::HEAVEN;
       }
       $query->WhereIn('scene', count($stack));

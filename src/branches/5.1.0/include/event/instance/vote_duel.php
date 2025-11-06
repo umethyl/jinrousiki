@@ -6,8 +6,8 @@
 */
 class Event_vote_duel extends Event {
   public function VoteDuel() {
-    //Text::p(RQ::Get()->target_no, "◆Target [$this->name]");
-    if (false === DB::$ROOM->Stack()->IsInclude($this->name, RQ::Get()->target_no)) {
+    //Text::p(RQ::Fetch()->target_no, "◆Target [$this->name]");
+    if (false === DB::$ROOM->Stack()->IsInclude($this->name, RQ::Fetch()->target_no)) {
       VoteHTML::OutputResult(VoteMessage::VOTE_DUEL);
     }
   }

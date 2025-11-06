@@ -255,6 +255,7 @@ class GameOptionConfig {
     'j' => 'J：恋逃村',
     'k' => 'K：道連村',
     'l' => 'L：蘇生村',
+    'm' => 'M：魔法村'
   ];
 
   //-- 闇鍋モード専用設定 --//
@@ -304,6 +305,7 @@ class GameOptionConfig {
   ];
 
   public static $museum_topping_enable = true; //博物館追加モード
+  public static $museum_boost_enable   = true; //博物館倍率モード
 
   //配役通知設定
   public static $chaos_open_cast_enable      = true; //配役内訳を表示する

@@ -3,7 +3,7 @@
 final class OptionHTML {
   //ゲームオプション画像出力
   public static function OutputImage($str) {
-    HTML::OutputDiv(OptionMessage::GAME_OPTION . Message::COLON . $str, 'game-option');
+    DivHTML::Output(OptionMessage::GAME_OPTION . Message::COLON . $str, 'game-option');
   }
 
   //村用オプション説明メッセージ生成

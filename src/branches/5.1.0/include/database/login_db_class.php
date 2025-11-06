@@ -3,7 +3,7 @@
 final class LoginDB {
   //Login 実行処理
   public static function Execute($uname, $password) {
-    $list = [RQ::Get()->room_no, $uname, $password, UserLive::KICK];
+    $list = [RQ::Get(RequestDataGame::ID), $uname, $password, UserLive::KICK];
     return self::Certify($list) && self::Update($list);
   }
 

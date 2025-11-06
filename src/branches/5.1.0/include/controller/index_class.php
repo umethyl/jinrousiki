@@ -7,8 +7,8 @@ final class JinrouIndexController extends JinrouController {
   }
 
   protected static function Output() {
-    if (Number::Within(RQ::Get()->id, 0, count(TopPageConfig::$server_list))) {
-      InfoHTML::OutputSharedRoom(RQ::Get()->id, true);
+    if (Number::Within(RQ::Fetch()->id, 0, count(TopPageConfig::$server_list))) {
+      InfoHTML::OutputSharedRoom(RQ::Fetch()->id, true);
     } else {
       IndexHTML::Output();
     }

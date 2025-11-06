@@ -3,21 +3,21 @@
 final class GameFrameHTML {
   //出力
   public static function Output() {
-    HTML::OutputFrameHeader(ServerConfig::TITLE . GameMessage::TITLE);
-    RQ::Get()->dead_mode ? self::OutputHeavenFrame() : self::OutputFrame();
-    HTML::OutputFrameFooter();
+    FrameHTML::OutputHeader(ServerConfig::TITLE . GameMessage::TITLE);
+    RQ::Fetch()->dead_mode ? self::OutputHeavenFrame() : self::OutputFrame();
+    FrameHTML::OutputFooter();
   }
 
   //フレーム出力
   private static function OutputFrame() {
-    $url = RQ::Get()->url;
+    $url = RQ::Fetch()->url;
     Text::Printf(self::GetFrame(), $url, $url);
   }
 
   //フレーム出力 (霊界用)
   private static function OutputHeavenFrame() {
-    $url = RQ::Get()->url . RQ::Get()->ToURL(RequestDataRoom::DEAD);
-    Text::Printf(self::GetHeavenFrame(), $url, $url, RQ::Get()->url);
+    $url = RQ::Fetch()->url . RQ::Fetch()->ToURL(RequestDataRoom::DEAD);
+    Text::Printf(self::GetHeavenFrame(), $url, $url, RQ::Fetch()->url);
   }
 
   //フレームタグ

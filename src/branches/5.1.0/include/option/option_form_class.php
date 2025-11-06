@@ -138,7 +138,7 @@ class OptionForm {
       if (false === is_string($code)) {
 	$code = $label;
       }
-      $selected = HTML::GenerateSelected($code == $filter->value);
+      $selected = FormHTML::Selected($code == $filter->value);
       $str .= OptionFormHTML::GenerateSelectorOption($code, $selected, $label);
     }
 

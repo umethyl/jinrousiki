@@ -249,12 +249,12 @@ final class DB {
 
   //村情報ロード
   public static function LoadRoom($lock = false) {
-    self::$ROOM = new Room(RQ::Get(), $lock);
+    self::$ROOM = new Room(RQ::Fetch(), $lock);
   }
 
   //ユーザ情報ロード
   public static function LoadUser($lock = false) {
-    self::$USER = new UserLoader(RQ::Get(), $lock);
+    self::$USER = new UserLoader(RQ::Fetch(), $lock);
     if (self::$ROOM->IsOff(RoomMode::LOG)) {
       self::$USER->SetEvent();
     }

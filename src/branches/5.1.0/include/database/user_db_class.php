@@ -11,7 +11,7 @@ final class UserDB {
     ];
     $query  = self::GetQuery()->Table($table)->Select($column)->Where(['user_no']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, $user_no]);
+    DB::Prepare($query->Build(), [RQ::Get(RequestDataGame::ID), $user_no]);
     return DB::FetchClass('User', true);
   }
 
@@ -19,7 +19,7 @@ final class UserDB {
   public static function Get() {
     $query = self::GetQuery()->Select()->Where(['user_no']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, RQ::Get()->user_no]);
+    DB::Prepare($query->Build(), [RQ::Get(RequestDataGame::ID), RQ::Fetch()->user_no]);
     return DB::FetchAssoc(true);
   }
 
@@ -35,7 +35,7 @@ final class UserDB {
   public static function IsKick($uname) {
     $query = self::GetQueryExists()->Where(['live', 'uname']);
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, UserLive::KICK, $uname]);
+    DB::Prepare($query->Build(), [RQ::Get(RequestDataGame::ID), UserLive::KICK, $uname]);
     return DB::Exists();
   }
 
@@ -51,24 +51,27 @@ final class UserDB {
   public static function Duplicate($uname, $handle_name) {
     $query = self::GetQueryExists()
       ->Where(['live', 'uname', 'handle_name'])->WhereOr(['uname', 'handle_name']);
+    $list  = [RQ::Get(RequestDataGame::ID), UserLive::LIVE, $uname, $handle_name];
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, UserLive::LIVE, $uname, $handle_name]);
+    DB::Prepare($query->Build(), $list);
     return DB::Exists();
   }
 
   //重複 HN 判定
   public static function DuplicateName($user_no, $handle_name) {
     $query = self::GetQueryExists()->WhereNot('user_no')->Where(['live', 'handle_name']);
+    $list  = [RQ::Get(RequestDataGame::ID), $user_no, UserLive::LIVE, $handle_name];
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, $user_no, UserLive::LIVE, $handle_name]);
+    DB::Prepare($query->Build(), $list);
     return DB::Exists();
   }
 
   //重複 IP 判定
   public static function DuplicateIP() {
     $query = self::GetQueryExists()->Where(['live', 'ip_address']);
+    $list  = [RQ::Get(RequestDataGame::ID), UserLive::LIVE, Security::GetIP()];
 
-    DB::Prepare($query->Build(), [RQ::Get()->room_no, UserLive::LIVE, Security::GetIP()]);
+    DB::Prepare($query->Build(), $list);
     return DB::Exists();
   }
 

@@ -20,16 +20,16 @@ final class RoomOptionManager extends StackStaticManager {
     self::LoadPostBase();
     self::LoadPostInChange();
 
-    if (RQ::Get()->quiz) { //クイズ村
+    if (RQ::Fetch()->quiz) { //クイズ村
       self::LoadPostQuiz();
     } else {
       self::LoadPostDummyBoy();
-      if (RQ::Get()->chaos || RQ::Get()->chaosfull || RQ::Get()->chaos_hyper ||
-	  RQ::Get()->chaos_verso) { //闇鍋モード
+      if (RQ::Fetch()->chaos || RQ::Fetch()->chaosfull || RQ::Fetch()->chaos_hyper ||
+	  RQ::Fetch()->chaos_verso) { //闇鍋モード
 	self::LoadPostChaos();
-      } elseif (RQ::Get()->duel) {
+      } elseif (RQ::Fetch()->duel) {
 	self::LoadPostDuel();
-      } elseif (RQ::Get()->gray_random || RQ::Get()->step) { //特殊配役
+      } elseif (RQ::Fetch()->gray_random || RQ::Fetch()->step) { //特殊配役
 	self::LoadPostSpecial();
       } else { //通常村
 	self::LoadPostNormal();
@@ -54,7 +54,7 @@ final class RoomOptionManager extends StackStaticManager {
   //村作成オプション入力情報ロード (基本オプション)
   private static function LoadPostBase() {
     RoomOptionLoader::LoadPost(RoomOptionFilterData::$base_core);
-    if (RQ::Get()->real_time) {
+    if (RQ::Fetch()->real_time) {
       RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_real_time);
     }
     RoomOptionLoader::LoadPost(RoomOptionFilterData::$base);
@@ -62,7 +62,7 @@ final class RoomOptionManager extends StackStaticManager {
 
   //村作成オプション入力情報ロード (オプション変更用)
   private static function LoadPostInChange() {
-    if (false === RQ::Get()->change_room) {
+    if (false === RQ::Fetch()->change_room) {
       return;
     }
 
@@ -70,7 +70,7 @@ final class RoomOptionManager extends StackStaticManager {
     foreach (RoomOptionFilterData::$fix_in_change as $option) {
       if (DB::$ROOM->IsOption($option)) {
 	OptionLoader::Load($option)->LoadPost();
-	if (RQ::Get()->$option) {
+	if (RQ::Get($option)) {
 	  break;
 	}
       }
@@ -84,10 +84,10 @@ final class RoomOptionManager extends StackStaticManager {
 
   //村作成オプション入力情報ロード (クイズ村)
   private static function LoadPostQuiz() {
-    if (false === RQ::Get()->change_room) {
+    if (false === RQ::Fetch()->change_room) {
       self::LoadPostPassword();
       self::Stack()->Set('gm_name', Message::GM);
-      self::Stack()->Set('gm_password', RQ::Get()->gm_password);
+      self::Stack()->Set('gm_password', RQ::Fetch()->gm_password);
     }
     RoomOptionLoader::Set(OptionGroup::GAME, 'dummy_boy');
     RoomOptionLoader::Set(OptionGroup::GAME, 'gm_login');
@@ -96,29 +96,29 @@ final class RoomOptionManager extends StackStaticManager {
 
   //村作成オプション入力情報ロード (GMログインパスワード)
   private static function LoadPostPassword() {
-    RQ::Get()->ParsePostStr('gm_password');
-    if (RQ::Get()->gm_password == '') {
+    RQ::Fetch()->ParsePostStr('gm_password');
+    if (RQ::Fetch()->gm_password == '') {
       RoomManagerHTML::OutputResult('no_password');
     }
   }
 
   //村作成オプション入力情報ロード (身代わり君関連)
   private static function LoadPostDummyBoy() {
-    if (RQ::Get()->gm_login) {
-      if (false === RQ::Get()->change_room) {
+    if (RQ::Fetch()->gm_login) {
+      if (false === RQ::Fetch()->change_room) {
 	self::LoadPostPassword();
 	self::Stack()->Set('gm_name', Message::GM);
-	self::Stack()->Set('gm_password', RQ::Get()->gm_password);
+	self::Stack()->Set('gm_password', RQ::Fetch()->gm_password);
       }
       RoomOptionLoader::Set(OptionGroup::GAME, 'dummy_boy');
       RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_gm_login);
     } else {
-      if (false === RQ::Get()->change_room) {
+      if (false === RQ::Fetch()->change_room) {
 	//「身代わり君はGM」が OFF なら仮GMモードを設定可能
 	RoomOptionLoader::LoadPost(RoomOptionFilterData::$enable_temporary_gm);
       }
-      if (RQ::Get()->dummy_boy) {
-	if (false === RQ::Get()->change_room) {
+      if (RQ::Fetch()->dummy_boy) {
+	if (false === RQ::Fetch()->change_room) {
 	  self::Stack()->Set('gm_name', Message::DUMMY_BOY);
 	  self::Stack()->Set('gm_password', ServerConfig::PASSWORD);
 	}
@@ -127,7 +127,7 @@ final class RoomOptionManager extends StackStaticManager {
     }
 
     //ゲルト君モード無効はゲルト君モードと連動させる
-    if (true === RQ::Get()->gerd) {
+    if (RQ::Enable('gerd')) {
       RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_gerd);
     }
   }
@@ -150,24 +150,24 @@ final class RoomOptionManager extends StackStaticManager {
   //村作成オプション入力情報ロード (通常村)
   private static function LoadPostNormal() {
     RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_normal);
-    if (false === RQ::Get()->full_cupid) {
+    if (false === RQ::Fetch()->full_cupid) {
       RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_full_cupid);
     }
-    if (false === RQ::Get()->full_mania) {
+    if (false === RQ::Fetch()->full_mania) {
       RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_full_mania);
     }
-    if (false === RQ::Get()->perverseness) {
+    if (false === RQ::Fetch()->perverseness) {
       RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_perverseness);
     }
   }
 
   //村作成オプション入力情報ロード (クイズ村以外共通)
   private static function LoadPostCommonWithoutQuiz() {
-    if (false === RQ::Get()->perverseness) {
+    if (false === RQ::Fetch()->perverseness) {
       RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_perverseness_without_quiz);
     }
     RoomOptionLoader::LoadPost(RoomOptionFilterData::$add_without_quiz);
-    if (false === RQ::Get()->full_weather) {
+    if (false === RQ::Fetch()->full_weather) {
       RoomOptionLoader::LoadPost(RoomOptionFilterData::$not_full_weather);
     }
   }

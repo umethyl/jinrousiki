@@ -67,10 +67,10 @@ final class JinrouCacheManager {
 
     case self::TALK_PLAY:
       $cache_name = $type;
-      if (RQ::Get()->icon) {
+      if (RQ::Fetch()->icon) {
 	$cache_name .= '_icon';
       }
-      if (RQ::Get()->name) {
+      if (RQ::Fetch()->name) {
 	$cache_name .= '_name';
       }
       self::Load($cache_name, CacheConfig::TALK_PLAY_EXPIRE);
@@ -81,7 +81,7 @@ final class JinrouCacheManager {
 
     case self::TALK_HEAVEN:
       $cache_name = $type;
-      if (RQ::Get()->icon) {
+      if (RQ::Fetch()->icon) {
 	$cache_name .= '_icon';
       }
       self::Load($cache_name, CacheConfig::TALK_HEAVEN_EXPIRE);
@@ -91,7 +91,7 @@ final class JinrouCacheManager {
       return $filter;
 
     case self::LOG:
-      self::Load($type . '/' . print_r(RQ::Get(), true), CacheConfig::OLD_LOG_EXPIRE);
+      self::Load($type . '/' . print_r(RQ::Fetch(), true), CacheConfig::OLD_LOG_EXPIRE);
       return self::Fetch();
 
     case self::LOG_LIST:
@@ -163,7 +163,7 @@ final class JinrouCacheManager {
       $str .= ' ' . Text::Quote(CacheMessage::RELOAD_TALK_PLAY);
       break;
     }
-    HTML::OutputDiv($str, 'talk-cache');
+    DivHTML::Output($str, 'talk-cache');
   }
 
   //時刻出力

@@ -104,7 +104,7 @@ class Role_lovers extends Role {
     }
     //Text::p($fox_list,      '◆List [fox]');
     //Text::p($fox_live_list, '◆List [fox/live]');
-    //Text::p($depraver_list, '◆List [depraver]');
+    //Text::p($depraver_list, '◆List [depraver/live]');
 
     if (count($fox_list) > 0 && count($depraver_list) > 0) { //背徳者出現判定
       $id = ArrayFilter::Pick($fox_list);
@@ -192,7 +192,9 @@ class Role_lovers extends Role {
       $id = $user->GetMainRoleTarget();
       return (null === $id) ? false : DB::$USER->ByID($id)->IsMainGroup(CampGroup::DEPRAVER);
     } else {
-      return $user->IsMainGroup(CampGroup::DEPRAVER);
+      //変化追跡
+      $changed = isset($user->changed_fox) && true === $user->changed_fox;
+      return $user->IsMainGroup(CampGroup::DEPRAVER) && true !== $changed;
     }
   }
 

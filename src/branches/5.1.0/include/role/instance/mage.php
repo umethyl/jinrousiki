@@ -119,12 +119,13 @@ class Role_mage extends Role {
     return $this->SaveMageResult($user, $this->GetMageResult($user), $this->result);
   }
 
-  //占い結果取得 (憑依キャンセル判定 → 呪殺対象判定 → 占い判定)
+  //占い結果取得 (憑依キャンセル判定 → 呪殺対象判定 → 占いカウンター → 占い判定)
   protected function GetMageResult(User $user) {
     $this->MagePossessedCancel($user);
     if ($this->IsMageKill($user)) {
       $this->AddStack($user->id, 'mage_kill');
     }
+    $this->MageReaction($user);
     return $this->DistinguishMage($user);
   }
 
@@ -149,6 +150,19 @@ class Role_mage extends Role {
       );
     } else {
       return false;
+    }
+  }
+
+  //占いカウンター
+  final protected function MageReaction(User $user) {
+    if ($user->IsDead(true)) {
+      return;
+    }
+
+    foreach (RoleFilterData::$mage_reaction as $role) {
+      if ($user->IsRole($role)) {
+	RoleLoader::Load($role)->MageReaction($user);
+      }
     }
   }
 

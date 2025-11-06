@@ -16,8 +16,8 @@ final class ObjectionTestController extends JinrouTestController {
 
   protected static function RunTest() {
     $id  = RequestDataTalk::OBJECTION;
-    RQ::Get()->ParsePostData($id);
-    $key = RQ::Get()->$id;
+    RQ::Fetch()->ParsePostData($id);
+    $key = RQ::Get($id);
     if (in_array($key, self::GetList())) {
       Text::p(ObjectionTestMessage::$$key);
       SoundHTML::Output($key);

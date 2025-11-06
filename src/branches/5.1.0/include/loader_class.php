@@ -194,6 +194,7 @@ final class Loader extends LoadManager {
     case 'data/event':
     case 'data/role':
     case 'data/vote':
+    case 'data/statistics':
     case 'database':
     case 'request':
     case 'time':
@@ -204,6 +205,7 @@ final class Loader extends LoadManager {
     case 'media':
     case 'statistics':
     case 'html':
+    case 'html/markup':
     case 'html/media':
     case 'html/option':
     case 'html/role':
@@ -355,6 +357,10 @@ final class LoaderData {
     'RoleActionDate'			=> 'role_vote_data_class',
     'RoleAbility'			=> 'role_vote_data_class',
     'RoleStackVoteKill'			=> 'role_vote_data_class',
+    //data/statistics
+    'StatisticsStack'			=> 'statistics_data_class',
+    'StatisticsCount'			=> 'statistics_data_class',
+    'StatisticsData'			=> 'statistics_data_class',
     //system
     'JinrouAdmin'		=> 'admin_class',
     'JinrouAdminController'	=> 'admin_class',
@@ -437,6 +443,7 @@ final class LoaderData {
     'VoteResetTime'		=> 'game_vote_functions',
     //statistics
     'JinrouStatistics'		=> 'statistics_manager_class',
+    'StatisticsRole'		=> 'statistics_role_class',
     //controller/test
     'VoteTestController' => 'vote_test_class',
     //controller/message
@@ -479,13 +486,20 @@ final class LoaderData {
     'TripTestMessage'		=> 'trip_test_message',
     //html
     'HTML'		=> 'html_class',
-    'TableHTML'		=> 'table_html_class',
     'GameHTML'		=> 'game_html_class',
     'RoomHTML'		=> 'room_html_class',
     'TalkHTML'		=> 'talk_html_class',
     'VoteHTML'		=> 'vote_html_class',
     'OldLogHTML'	=> 'old_log_html_class',
     'InfoHTML'		=> 'info_html_class',
+    //html/markup
+    'HeaderHTML'	=> 'header_html_class',
+    'JavaScriptHTML'	=> 'javascript_html_class',
+    'FrameHTML'		=> 'frame_html_class',
+    'DivHTML'		=> 'div_html_class',
+    'LinkHTML'		=> 'link_html_class',
+    'TableHTML'		=> 'table_html_class',
+    'FormHTML'		=> 'form_html_class',
     //html/media
     'ImageHTML'		=> 'image_html_class',
     'IconHTML'		=> 'icon_html_class',
@@ -635,6 +649,8 @@ final class LoaderData {
     'vote_data_class'		=> 'data/vote',
     'vote_group_data_class'	=> 'data/vote',
     'role_vote_data_class'	=> 'data/vote',
+    //data/statistics
+    'statistics_data_class'	=> 'data/statistics',
     //database
     'db_class'			=> 'database',
     'room_db_class'		=> 'database',
@@ -679,6 +695,7 @@ final class LoaderData {
     'weather_class'	=> 'event',
     //statistics
     'statistics_manager_class'	=> 'statistics',
+    'statistics_role_class'	=> 'statistics',
     //controller
     'index_class'		=> 'controller',
     'room_manager_class'	=> 'controller',
@@ -726,13 +743,20 @@ final class LoaderData {
     'twitter_test_class'	=> 'controller/test',
     //html
     'html_class'		=> 'html',
-    'table_html_class'		=> 'html',
     'game_html_class'		=> 'html',
     'room_html_class'		=> 'html',
     'talk_html_class'		=> 'html',
     'vote_html_class'		=> 'html',
     'old_log_html_class'	=> 'html',
     'info_html_class'		=> 'html',
+    //html/markup
+    'header_html_class'		=> 'html/markup',
+    'javascript_html_class'	=> 'html/markup',
+    'frame_html_class'		=> 'html/markup',
+    'div_html_class'		=> 'html/markup',
+    'link_html_class'		=> 'html/markup',
+    'table_html_class'		=> 'html/markup',
+    'form_html_class'		=> 'html/markup',
     //html/media
     'image_html_class'		=> 'html/media',
     'icon_html_class'		=> 'html/media',

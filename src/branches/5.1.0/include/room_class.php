@@ -48,7 +48,7 @@ final class Room extends StackManager {
   //-- オプション関連 --//
   //option_role を DB から追加取得
   public function LoadOption() {
-    if (RQ::Get()->IsVirtualRoom()) {
+    if (RQ::Fetch()->IsVirtualRoom()) {
       $option_role = RQ::GetTest()->test_room['option_role'];
     } else {
       $option_role = RoomDB::Get('option_role');
@@ -138,7 +138,7 @@ final class Room extends StackManager {
     }
 
     $date = $this->date;
-    if ((true === $shift && RQ::Get()->reverse_log) || $this->IsAfterGame()) {
+    if ((true === $shift && RQ::Fetch()->reverse_log) || $this->IsAfterGame()) {
       $date++;
     }
 
@@ -366,7 +366,7 @@ final class Room extends StackManager {
   //-- 投票関連 --//
   //シーンに合わせた投票情報を DB から取得
   public function LoadVote($kick = false) {
-    if (RQ::Get()->IsVirtualRoom()) {
+    if (RQ::Fetch()->IsVirtualRoom()) {
       $vote_list = RQ::GetTest()->vote->{$this->scene};
       if (null === $vote_list) {
 	return null;

@@ -109,9 +109,9 @@ final class Session {
 
   //観戦ページ移動
   private static function OutputJump() {
-    $url  = URL::GetRoom('game_view', RQ::Get()->room_no);
+    $url  = URL::GetRoom('game_view', RQ::Get(RequestDataGame::ID));
     $body = Text::Join(Message::VIEW_BODY, URL::GetJump($url));
-    $str  = Text::LineFeed($body) . HTML::GenerateSetLocation();
+    $str  = Text::LineFeed($body) . JavaScriptHTML::GenerateJump();
     HTML::OutputResult(Message::VIEW_TITLE, $str, $url);
   }
 }

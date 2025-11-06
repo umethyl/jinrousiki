@@ -12,8 +12,8 @@ final class GamePlayTalk {
 
   //発言変換処理
   public static function Convert() {
-    Talk::Stack()->Set(Talk::LIMIT_SAY, RoleTalk::Convert(RQ::Get()->say)); //発言置換処理
-    Text::Escape(RQ::Get()->say, false); //エスケープ処理 (以降に置換処理が無いことが前提)
+    Talk::Stack()->Set(Talk::LIMIT_SAY, RoleTalk::Convert(RQ::Fetch()->say)); //発言置換処理
+    Text::Escape(RQ::Fetch()->say, false); //エスケープ処理 (以降に置換処理が無いことが前提)
   }
 
   //発言登録
@@ -23,7 +23,7 @@ final class GamePlayTalk {
     if (GameAction::IsIndividual()) {
       //-- 個別発言 --//
       RQ::Set(RequestDataTalk::VOICE, TalkVoice::NORMAL); //声の大きさは普通で固定
-    } elseif (RQ::Get()->font_type == TalkVoice::SECRET) {
+    } elseif (RQ::Fetch()->font_type == TalkVoice::SECRET) {
       //-- 秘密発言判定 --//
       RQ::Set('secret_talk', true);
       RQ::Set(RequestDataTalk::VOICE, TalkVoice::NORMAL); //声の大きさは普通で固定
@@ -37,13 +37,13 @@ final class GamePlayTalk {
       身代わり君の個別発言 > ゲーム開始前後 > 身代わり君のシステムメッセージ (遺言) > 死者の霊話
     */
     $talk = new RoleTalkStruct($say);
-    if (true === RQ::Get()->individual_talk) {
-      $location = TalkLocation::INDIVIDUAL . ':' . RQ::Get()->{RequestDataTalk::TARGET};
+    if (RQ::Enable('individual_talk')) {
+      $location = TalkLocation::INDIVIDUAL . ':' . RQ::Get(RequestDataTalk::TARGET);
       $talk->Set(TalkStruct::LOCATION, $location);
       return RoleTalk::Store($talk, true);
     } elseif (false === DB::$ROOM->IsPlaying()) {
       return RoleTalk::Store($talk, true);
-    } elseif (RQ::Get()->last_words && DB::$SELF->IsDummyBoy()) {
+    } elseif (RQ::Fetch()->last_words && DB::$SELF->IsDummyBoy()) {
       $talk->Set(TalkStruct::LOCATION, TalkLocation::DUMMY_BOY);
       return RoleTalk::Store($talk);
     } elseif (DB::$SELF->IsDead()) {
@@ -62,7 +62,7 @@ final class GamePlayTalk {
 	return false;
       }
 
-      if (RQ::Get()->secret_talk) {
+      if (RQ::Fetch()->secret_talk) {
 	$talk->Set(TalkStruct::LOCATION, TalkLocation::SECRET);
       } else {
 	//発言数制限制

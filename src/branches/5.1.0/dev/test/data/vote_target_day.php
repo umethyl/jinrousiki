@@ -27,7 +27,12 @@ if (VoteTestRoom::DUEL) {
     ['id' => 27, RequestDataVote::TARGET => 15],
     ['id' => 28, RequestDataVote::TARGET => 15],
     ['id' => 29, RequestDataVote::TARGET => 15],
-    ['id' => 30, RequestDataVote::TARGET => 15]
+    ['id' => 30, RequestDataVote::TARGET => 15],
+    ['id' => 31, RequestDataVote::TARGET => 15],
+    ['id' => 32, RequestDataVote::TARGET => 15],
+    ['id' => 33, RequestDataVote::TARGET => 15],
+    ['id' => 34, RequestDataVote::TARGET => 15],
+    ['id' => 35, RequestDataVote::TARGET => 15]
   ];
 } else {
   RQ::GetTest()->vote_target_day = [
@@ -63,6 +68,11 @@ if (VoteTestRoom::DUEL) {
     ['id' => 27, RequestDataVote::TARGET =>  3],
     ['id' => 28, RequestDataVote::TARGET => 29],
     ['id' => 29, RequestDataVote::TARGET => 11],
-    ['id' => 30, RequestDataVote::TARGET => 26]
+    ['id' => 30, RequestDataVote::TARGET => 26],
+    ['id' => 31, RequestDataVote::TARGET => 11],
+    ['id' => 32, RequestDataVote::TARGET => 11],
+    ['id' => 33, RequestDataVote::TARGET => 11],
+    ['id' => 34, RequestDataVote::TARGET => 11],
+    ['id' => 35, RequestDataVote::TARGET => 11]
   ];
 }

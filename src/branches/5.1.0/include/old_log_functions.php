@@ -25,7 +25,7 @@ final class PageLinkBuilder extends stdClass {
   public function Generate() {
     $url_stack = [Text::QuoteBracket($this->title)];
     if ($this->file == 'index') {
-      $url_stack[] = Text::QuoteBracket(HTML::GenerateLink('index.html', 'new'));
+      $url_stack[] = Text::QuoteBracket(LinkHTML::Generate('index.html', 'new'));
     }
 
     //表示ページ数調整 (先頭側)
@@ -64,7 +64,7 @@ final class PageLinkBuilder extends stdClass {
       }
       $url_stack[] =  $this->GenerateTag($this->page->set, $name, true);
 
-      if (RQ::Get()->watch) {
+      if (RQ::Fetch()->watch) {
 	$this->AddOption('reverse', Switcher::Get($this->set_reverse));
 	$this->AddOption('watch',   Switcher::OFF);
 	$url_stack[] = $this->GenerateTag($this->page->set, OldLogMessage::LINK_WIN, true);

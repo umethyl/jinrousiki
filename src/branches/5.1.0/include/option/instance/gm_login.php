@@ -14,8 +14,8 @@ class Option_gm_login extends OptionCheckbox {
 
   public function LoadPost() {
     if (RoomOptionManager::IsChange()) { //GMログアウト判定 (クイズ村は無効)
-      if (RQ::Get()->dummy_boy_selector == 'gm_logout' && false === DB::$ROOM->IsQuiz()) {
-	RQ::Get()->gm_logout = true;
+      if (RQ::Fetch()->dummy_boy_selector == 'gm_logout' && false === DB::$ROOM->IsQuiz()) {
+	RQ::Fetch()->gm_logout = true;
 	return;
       }
     }

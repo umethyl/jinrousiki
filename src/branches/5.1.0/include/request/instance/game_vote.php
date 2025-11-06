@@ -17,6 +17,6 @@ class Request_game_vote extends RequestGamePlay {
 
     $url = $this->GetURL();
     $this->post_url = 'game_vote.php' . $url;
-    $this->back_url = HTML::GenerateLink('game_up.php' . $url, Message::BACK . ' &amp; reload');
+    $this->back_url = LinkHTML::Generate('game_up.php' . $url, Message::BACK . ' &amp; reload');
   }
 }

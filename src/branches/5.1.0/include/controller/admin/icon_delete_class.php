@@ -7,10 +7,10 @@ final class JinrouAdminIconDeleteController extends JinrouAdminController {
 
   protected static function LoadRequest() {
     RQ::LoadRequest();
-    RQ::Get()->ParseGetInt(RequestDataIcon::ID);
+    RQ::Fetch()->ParseGetInt(RequestDataIcon::ID);
 
     //-- Validate --//
-    $icon_no = RQ::Get()->icon_no;
+    $icon_no = RQ::Fetch()->icon_no;
     if ($icon_no < 1) {
       self::OutputError(sprintf(IconMessage::NOT_EXISTS, $icon_no));
     }
@@ -26,7 +26,7 @@ final class JinrouAdminIconDeleteController extends JinrouAdminController {
 
   protected static function RunCommand() {
     //-- Validate --//
-    $icon_no = RQ::Get()->icon_no;
+    $icon_no = RQ::Fetch()->icon_no;
     if (false === DB::Lock('icon')) {
       self::OutputError(Message::DB_ERROR_LOAD);
     }
