@@ -13,18 +13,18 @@ class Role_attempt_necromancer extends Role_necromancer {
     $stack = [];
 
     //-- 人狼襲撃 --//
-    $user = RoleManager::Stack()->Get('wolf_target');
-    if ($user->IsLive(true)) {
-      $stack[$user->id] = true;
-    }
+    $this->SaveNecromancerNightUser(RoleManager::Stack()->Get('wolf_target'), $stack);
 
     //-- 暗殺・人攫い --//
     $vote_data = RoleManager::GetVoteData();
     foreach ([VoteAction::ASSASSIN, VoteAction::OGRE] as $action) {
-      foreach ($vote_data[$action] as $id) {
-	if (DB::$USER->ByID($id)->IsLive(true)) {
-	  $stack[$id] = true;
-	}
+      $this->SaveNecromancerNight($vote_data[$action], $stack);
+    }
+
+    //-- 魔砲使い --//
+    foreach ([VoteAction::SPARK_WIZARD] as $action) {
+      foreach ($vote_data[$action] as $id => $list) {
+	$this->SaveNecromancerNight(Text::Parse($list), $stack);
       }
     }
 
@@ -37,6 +37,20 @@ class Role_attempt_necromancer extends Role_necromancer {
 
     foreach ($str_stack as $target) {
       DB::$ROOM->StoreAbility($this->result, 'attempt', $target);
+    }
+  }
+
+  //霊能発動対象ユーザー登録
+  private function SaveNecromancerNightUser(User $user, array &$stack) {
+    if ($user->IsLive(true)) {
+      $stack[$user->id] = true;
+    }
+  }
+
+  //霊能発動対象登録
+  private function SaveNecromancerNight(array $list, array &$stack) {
+    foreach ($list as $id) {
+      $this->SaveNecromancerNightUser(DB::$USER->ByID($id), $stack);
     }
   }
 }
