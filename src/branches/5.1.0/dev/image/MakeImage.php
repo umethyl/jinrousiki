@@ -16,14 +16,15 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'result_heterologous_wolf';
+//$role = 'result_spark_wizard';
 //$role = 'prediction_weather_no_escape';
 //$role = 'finder_guard';
 //$role = 'homogeneous_wolf';
-$role = 'heterologous_wolf';
+//$role = 'heterologous_wolf';
+$role = 'tailtip_depraver';
 
-//$calib_list = [0,0,0,0];
-$calib_list = [0.5,0,0,0]; //wolf, vampire
+$calib_list = [0,0,0,0];
+//$calib_list = [0.5,0,0,0]; //wolf, vampire
 //$calib_list = [0.8,0,0.7]; //collector_ogre
 //$calib_list = [0.3,0,0,0]; //duelist
 
@@ -43,8 +44,8 @@ if (true === $wish_role) {
   require_once('config/ability_list.php');
   require_once('config/weather_list.php');
   $builder = new MessageImageBuilder('RoleMessageList', $font);
-  $builder = new MessageImageBuilder('ResultList', $font);
-  #$builder = new MessageImageBuilder('WeatherList', $font);
+  //$builder = new MessageImageBuilder('ResultList', $font);
+  //$builder = new MessageImageBuilder('WeatherList', $font);
 }
 
 if (true === $test_mode) {

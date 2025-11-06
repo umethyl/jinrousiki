@@ -4,7 +4,7 @@
 final class ChaosVersoTestController extends JinrouTestController {
   protected static function OutputHeader() {
     DevHTML::OutputRoleTestHeader(ChaosVersoTestMessage::TITLE, 'chaos_verso.php');
-    HTML::OutputFormFooter();
+    FormHTML::OutputFooter();
   }
 
   protected static function IsExecute() {

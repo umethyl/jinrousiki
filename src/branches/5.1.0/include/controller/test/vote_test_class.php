@@ -17,7 +17,7 @@ final class VoteTestController extends JinrouTestController {
     include('data/vote_option.php');
 
     //仮想ユーザ
-    DevUser::Initialize(30);
+    DevUser::Initialize(35);
     include('data/vote_user.php');
     DevUser::Complement();
 
@@ -231,13 +231,13 @@ final class VoteTestController extends JinrouTestController {
 
   //発言変換テスト
   private static function ConvertTalk() {
-    if (RQ::Get()->say == '') {
+    if (RQ::Fetch()->say == '') {
       return;
     }
 
-    RoleTalk::Convert(RQ::Get()->say);
-    Text::Escape(RQ::Get()->say, false);
-    $talk = new RoleTalkStruct(RQ::Get()->say);
+    RoleTalk::Convert(RQ::Fetch()->say);
+    Text::Escape(RQ::Fetch()->say, false);
+    $talk = new RoleTalkStruct(RQ::Fetch()->say);
     $talk->Set(TalkStruct::SCENE, RoomScene::DAY);
     RoleTalk::Store($talk);
   }
@@ -245,9 +245,9 @@ final class VoteTestController extends JinrouTestController {
   //投票集計処理 (昼)
   private static function AggregateDay() {
     $self_id = DB::$SELF->id;
-    RQ::Get()->situation = VoteAction::VOTE_KILL;
-    RQ::Get()->back_url  = '';
-    RQ::Get()->token     = Security::GetToken(DB::$ROOM->id);
+    RQ::Fetch()->situation = VoteAction::VOTE_KILL;
+    RQ::Fetch()->back_url  = '';
+    RQ::Fetch()->token     = Security::GetToken(DB::$ROOM->id);
     foreach (RQ::GetTest()->vote_target_day as $stack) {
       DB::LoadSelf($stack['id']);
       RQ::Set(RequestDataVote::TARGET, $stack[RequestDataVote::TARGET]);

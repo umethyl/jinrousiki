@@ -3,9 +3,10 @@
 //-- 村オプション表示順データベース --//
 final class RoomOptionOrderData {
   public static $list = [
-    'wish_role', 'real_time', 'dummy_boy', 'gm_login', 'temporary_gm', 'gerd', 'disable_gerd',
-    'dummy_boy_cast_limit', 'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name',
-    'necessary_trip', 'wait_morning', 'limit_last_words', 'limit_talk', 'secret_talk', 'no_silence',
+    'wish_role', 'real_time',
+    'dummy_boy', 'gm_login', 'temporary_gm', 'gerd', 'disable_gerd', 'dummy_boy_cast_limit',
+    'open_vote', 'settle', 'seal_message', 'open_day', 'necessary_name', 'necessary_trip',
+    'wait_morning', 'limit_last_words', 'limit_talk', 'secret_talk', 'no_silence',
     'not_open_cast', 'auto_open_cast',
     'poison', 'assassin', 'wolf', 'boss_wolf', 'poison_wolf', 'tongue_wolf', 'possessed_wolf',
     'sirius_wolf', 'mad', 'fox', 'no_fox', 'child_fox', 'depraver', 'cupid', 'medium', 'mania',
@@ -18,8 +19,10 @@ final class RoomOptionOrderData {
     'change_whisper_mad', 'change_immolate_mad', 'change_cupid', 'change_mind_cupid',
     'change_triangle_cupid', 'change_angel', 'change_exchange_angel',
     'duel', 'duel_selector', 'gray_random', 'step', 'quiz',
-    'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso', 'topping', 'boost_rate', 'museum_topping',
-    'chaos_open_cast', 'chaos_open_cast_camp', 'chaos_open_cast_role', 'secret_sub_role',
-    'no_sub_role', 'sub_role_limit_easy', 'sub_role_limit_normal', 'sub_role_limit_hard'
+    'chaos', 'chaosfull', 'chaos_hyper', 'chaos_verso',
+    'topping', 'boost_rate', 'museum_topping', 'museum_boost',
+    'chaos_open_cast', 'chaos_open_cast_camp', 'chaos_open_cast_role',
+    'secret_sub_role', 'no_sub_role',
+    'sub_role_limit_easy', 'sub_role_limit_normal', 'sub_role_limit_hard'
   ];
 }

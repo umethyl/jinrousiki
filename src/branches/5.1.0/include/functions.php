@@ -394,6 +394,11 @@ final class Number {
   public static function MultipleThree($number, $limit = null) {
     return self::Multiple($number, 3, 0, $limit);
   }
+
+  //割合
+  public static function Percent(int $number, int $base, int $digit) {
+    return sprintf('%.' . $digit . 'f', $number / $base * 100);
+  }
 }
 
 //-- Switch (bool) 関連 --//
@@ -432,7 +437,7 @@ final class URL {
   /* 判定 */
   //存在判定 (db_no)
   public static function ExistsDB() {
-    return is_int(RQ::Get()->db_no) && RQ::Get()->db_no > 0;
+    return is_int(RQ::Get(RequestDataGame::DB)) && RQ::Get(RequestDataGame::DB) > 0;
   }
 
   /* パラメータ取得 */
@@ -499,7 +504,11 @@ final class URL {
 
   //取得 (新役職情報)
   public static function GetRole($role) {
-    $camp = RoleDataManager::GetCamp($role);
+    if (RoleDataManager::IsSub($role)) {
+      $camp = 'sub_role';
+    } else {
+      $camp = RoleDataManager::GetCamp($role);
+    }
     $page = ArrayFilter::Concat(['info', 'new_role', $camp], self::DELIMITER);
     return $page . self::EXT . self::PAGE . $role;
   }
@@ -564,7 +573,12 @@ final class URL {
 
   //取得 (db_no)
   private static function GetDB($str) {
-    return self::ExistsDB() ? ($str . self::ConvertInt(RequestDataGame::DB, RQ::Get()->db_no)) : '';
+    if (self::ExistsDB()) {
+      $key = RequestDataGame::DB;
+      return $str . self::ConvertInt($key, RQ::Get($key));
+    } else {
+      return '';
+    }
   }
 }
 
@@ -1038,7 +1052,7 @@ final class Security {
 
   //CSRF対策用トークン検証
   public static function IsInvalidToken($id) {
-    return RQ::Get()->token != self::GetToken($id);
+    return RQ::Fetch()->token != self::GetToken($id);
   }
 
   /* 判定系 */
@@ -1099,7 +1113,7 @@ final class ExternalLinkBuilder {
   //出力
   public static function Output($title, $data) {
     HTML::OutputFieldsetHeader($title);
-    HTML::OutputDiv(HTML::GenerateTag('dl', $data), 'game-list');
+    DivHTML::Output(HTML::GenerateTag('dl', $data), 'game-list');
     HTML::OutputFieldsetFooter();
   }
 

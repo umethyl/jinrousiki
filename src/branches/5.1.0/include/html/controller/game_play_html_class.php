@@ -16,7 +16,7 @@ final class GamePlayHTML {
 
   //ヘッダーリンク出力 (スイッチ)
   public static function OutputHeaderSwitchLink($url, $type) {
-    if (RQ::Get()->$type) {
+    if (RQ::Get($type)) {
       $switch = Switcher::ON;
     } else {
       $url   .= URL::AddSwitch($type);
@@ -27,7 +27,7 @@ final class GamePlayHTML {
 
   //ヘッダーリンク出力 (リスト)
   public static function OutputHeaderListLink($url, $type) {
-    if (RQ::Get()->$type) {
+    if (RQ::Get($type)) {
       $switch = Switcher::OFF;
     } else {
       $url   .= URL::AddSwitch($type);
@@ -71,7 +71,7 @@ final class GamePlayHTML {
 
   //未投票突然死メッセージ出力
   public static function OutputSuddenDeathAnnounce($str) {
-    HTML::OutputDiv($str, 'system-sudden-death');
+    DivHTML::Output($str, 'system-sudden-death');
   }
 
   //役職能力出力
@@ -80,9 +80,9 @@ final class GamePlayHTML {
       return;
     }
 
-    HTML::OutputDivHeader('ability-elements');
+    DivHTML::OutputHeader('ability-elements');
     RoleHTML::OutputAbility();
-    HTML::OutputDivFooter();
+    DivHTML::OutputFooter();
   }
 
   //投票情報出力
@@ -91,7 +91,7 @@ final class GamePlayHTML {
       return;
     }
 
-    HTML::OutputDivHeader('vote-elements');
+    DivHTML::OutputHeader('vote-elements');
     RoleHTML::OutputVoteKill();
     if (DB::$ROOM->IsPlaying()) {
       GameHTML::OutputRevote();
@@ -99,7 +99,7 @@ final class GamePlayHTML {
     if (DB::$ROOM->IsQuiz() && DB::$ROOM->IsDay() && DB::$SELF->IsDummyBoy()) {
       GamePlayHTML::OutputQuizVote();
     }
-    HTML::OutputDivFooter();
+    DivHTML::OutputFooter();
   }
 
   //投票結果出力 (クイズ村GM専用)

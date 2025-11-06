@@ -135,6 +135,7 @@ Ver. 5.1.0
 <a href="#ver510a4">α4</a><br>
 <a href="#ver510b1">β1</a>
 <a href="#ver510b2">β2</a>
+<a href="#ver510b3">β3</a>
 </p>
 
 <p>
@@ -197,6 +198,7 @@ Ver. 4.1.0
 <a href="#sub_ver410a1">α1</a><br>
 Ver. 5.1.0
 <a href="#sub_ver510b1">β1</a>
+<a href="#sub_ver510b3">β3</a>
 </p>
 
 <table id="main_role">
@@ -208,7 +210,7 @@ Ver. 5.1.0
   <th>占い結果</th>
   <th>霊能結果</th>
   <th>能力</th>
-  <th>初登場</th>
+  <th>バージョン</th>
 </tr>
 <tr id="ver140a2">
   <td><a href="quiz.php#quiz">出題者</a></td>
@@ -1921,7 +1923,7 @@ Ver. 5.1.0
   <td><a href="chiroptera.php#fairy_group">妖精系</a></td>
   <td>村人</td>
   <td>村人</td>
-  <td class="ability">自分のアイコンと色を悪戯先と同じにする妖精。</td>
+  <td class="ability">悪戯先に<a href="sub_role.php#face_status">変装</a>を付与する妖精。</td>
   <td>Ver. 1.4.0 β20</td>
 </tr>
 <tr id="ver140b21">
@@ -3691,7 +3693,7 @@ Ver. 5.1.0
   <td><a href="wolf.php#spell_wolf">怨狼</a></td>
   <td><a href="wolf.php">人狼</a></td>
   <td><a href="wolf.php#wolf_group">人狼系</a></td>
-  <td>人狼(呪殺)</td>
+  <td>人狼<br>(呪殺)</td>
   <td>特殊な人狼</td>
   <td class="ability">護衛の影響を受けずに襲撃することができる人狼。通常の<a href="human.php#mage_group">占い</a>に加え、<a href="human.php#voodoo_killer">陰陽師</a>から占われても死亡する。</td>
   <td>Ver. 5.1.0 α4</td>
@@ -3767,6 +3769,24 @@ Ver. 5.1.0
   <td>人狼</td>
   <td class="ability">自分に処刑投票してきた人が同性だった場合は 70% の確率で<a href="sub_role.php#death_warrant">死の宣告</a> (4 日後) を付加する人狼。</td>
   <td>Ver. 5.1.0 β2</td>
+</tr>
+<tr id="ver510b3">
+  <td><a href="fox.php#tailtip_depraver">尾先</a></td>
+  <td><a href="fox.php">妖狐</a></td>
+  <td><a href="fox.php#depraver_group">背徳者系</a></td>
+  <td>村人<br>(妖狐変化)</td>
+  <td>村人</td>
+  <td class="ability"><a href="ability.php#mage">占い</a>をされたら<a href="fox.php#fox">妖狐</a>に変化する背徳者。</td>
+  <td>Ver. 5.1.0 β3</td>
+</tr>
+<tr>
+  <td><a href="human.php#spark_wizard">魔砲使い</a></td>
+  <td><a href="human.php">村人</a></td>
+  <td><a href="human.php#wizard_group">魔法使い系</a></td>
+  <td>村人</td>
+  <td>村人</td>
+  <td class="ability">魔法使いの一種で、魔法の効果は直線<a href="ability.php#assassin">暗殺</a>能力。</td>
+  <td>Ver. 5.1.0 β3</td>
 </tr>
 </table>
 
@@ -4272,7 +4292,7 @@ Ver. 5.1.0
   </tr>
   <tr id="sub_ver140b15">
     <td><a href="sub_role.php#changed_therian">元獣人</a></td>
-    <td><a href="sub_role.php#other_group">その他</a></td>
+    <td><a href="sub_role.php#changed_group">変化系</a></td>
     <td>無し</td>
     <td class="ability"><a href="wolf.php#wolf">人狼</a>に変化した後の<a href="wolf.php#therian_mad">獣人</a>に付加される。</td>
     <td>Ver. 1.4.0 β15</td>
@@ -4496,7 +4516,7 @@ Ver. 5.1.0
   </tr>
   <tr id="sub_ver210a3">
     <td><a href="sub_role.php#changed_disguise">元朔狼</a></td>
-    <td><a href="sub_role.php#other_group">その他</a></td>
+    <td><a href="sub_role.php#changed_group">変化系</a></td>
     <td>無し</td>
     <td class="ability"><a href="wolf.php#whisper_mad">囁き狂人</a>に変化した後の<a href="wolf.php#disguise_wolf">朔狼</a>に付加される。</td>
     <td>Ver. 2.1.0 α3</td>
@@ -4510,7 +4530,7 @@ Ver. 5.1.0
   </tr>
   <tr id="sub_ver210a6">
     <td><a href="sub_role.php#changed_vindictive">元昼狐</a></td>
-    <td><a href="sub_role.php#other_group">その他</a></td>
+    <td><a href="sub_role.php#changed_group">変化系</a></td>
     <td>無し</td>
     <td class="ability"><a href="fox.php#fox">妖狐</a>に変化した後の<a href="fox.php#vindictive_fox">昼狐</a>に付加される。</td>
     <td>Ver. 2.1.0 α6</td>
@@ -4623,9 +4643,23 @@ Ver. 5.1.0
   <tr id="sub_ver510b1">
     <td><a href="sub_role.php#critical_chicken">魔女の一撃</a></td>
     <td><a href="sub_role.php#chicken_group">小心者系</a></td>
-    <td>強制</td>
+    <td>有り</td>
     <td class="ability">処刑投票時に100票以上貰うとショック死する。</td>
     <td>Ver. 5.1.0 β1</td>
+  </tr>
+  <tr id="sub_ver510b3">
+    <td><a href="sub_role.php#face_status">変装</a></td>
+    <td><a href="sub_role.php#bad_status_group">悪戯系</a></td>
+    <td>有り</td>
+    <td class="ability">表示された日の自分のアイコンと色が、指定された他の人と同じになる。</td>
+    <td>Ver. 5.1.0 β3</td>
+  </tr>
+  <tr>
+    <td><a href="sub_role.php#changed_tailtip">元尾先</a></td>
+    <td><a href="sub_role.php#changed_group">変化系</a></td>
+    <td>無し</td>
+    <td class="ability"><a href="fox.php#fox">妖狐</a>に変化した後の<a href="fox.php#tailtip_depraver">尾先</a>に付加される。</td>
+    <td>Ver. 5.1.0 β3</td>
   </tr>
 </table>
 

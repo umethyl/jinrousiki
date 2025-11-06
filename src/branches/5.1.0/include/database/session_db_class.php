@@ -13,7 +13,7 @@ final class SessionDB {
   public static function Certify() {
     $query = self::GetQuery()->Select(['user_no'])->Where(['room_no'])->WhereNot('live');
 
-    DB::Prepare($query->Build(), [Session::GetID(), RQ::Get()->room_no, UserLive::KICK]);
+    DB::Prepare($query->Build(), [Session::GetID(), RQ::Get(RequestDataGame::ID), UserLive::KICK]);
     return DB::FetchColumn();
   }
 

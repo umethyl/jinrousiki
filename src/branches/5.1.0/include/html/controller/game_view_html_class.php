@@ -33,7 +33,7 @@ final class GameViewHTML {
 
     DB::$ROOM->OutputCSS();
     GameHTML::OutputNoCacheHeader();
-    if (GameConfig::AUTO_RELOAD && RQ::Get()->auto_reload > 0) { //自動更新
+    if (GameConfig::AUTO_RELOAD && RQ::Get(RequestDataGame::RELOAD) > 0) { //自動更新
       GameHTML::OutputAutoReloadHeader();
     }
 
@@ -60,7 +60,7 @@ final class GameViewHTML {
 
     Text::Printf(self::GetLink(),
       RoomHTML::GenerateTitle(),
-      $url, RQ::Get()->ToURL(RequestDataGame::RELOAD, true), GameViewMessage::RELOAD,
+      $url, RQ::Fetch()->ToURL(RequestDataGame::RELOAD, true), GameViewMessage::RELOAD,
       GameConfig::AUTO_RELOAD ? GameHTML::GenerateAutoReloadLink('<a href="' . $url) : '',
       $url, GameViewMessage::BLANK, GameViewMessage::BACK, $link
     );

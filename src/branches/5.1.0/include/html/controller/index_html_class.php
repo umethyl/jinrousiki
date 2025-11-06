@@ -12,11 +12,11 @@ final class IndexHTML {
   //ヘッダ出力
   private static function OutputHeader() {
     HTML::OutputHeader(ServerConfig::TITLE . ServerConfig::COMMENT, 'index');
-    HTML::OutputJavaScript('index');
-    HTML::OutputJavaScript('room_manager');
+    JavaScriptHTML::Output('index');
+    JavaScriptHTML::Output('room_manager');
     HTML::OutputBodyHeader();
     if (ServerConfig::BACK_PAGE != '') {
-      HTML::OutputLink(ServerConfig::BACK_PAGE, Message::BACK, true);
+      LinkHTML::Output(ServerConfig::BACK_PAGE, Message::BACK, true);
     }
     Text::Printf(self::GetTitle(),
       TopPageMessage::TITLE, TopPageMessage::TITLE,
@@ -76,9 +76,9 @@ final class IndexHTML {
   //一覧出力
   private static function OutputField($title, $class, $file) {
     HTML::OutputFieldsetHeader($title);
-    HTML::OutputDivHeader($class);
+    DivHTML::OutputHeader($class);
     include($file);
-    HTML::OutputDivFooter();
+    DivHTML::OutputFooter();
     HTML::OutputFieldsetFooter();
   }
 

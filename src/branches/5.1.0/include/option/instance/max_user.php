@@ -18,7 +18,7 @@ class Option_max_user extends OptionSelector {
   }
 
   public function LoadPost() {
-    RQ::Get()->ParsePostInt($this->name);
+    RQ::Fetch()->ParsePostInt($this->name);
   }
 
   public function GetCaption() {

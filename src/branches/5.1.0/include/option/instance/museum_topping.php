@@ -18,6 +18,6 @@ class Option_museum_topping extends OptionTextCheckbox {
   }
 
   public function GetTextSize() {
-    return 4;
+    return 6;
   }
 }

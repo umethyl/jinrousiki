@@ -11,7 +11,7 @@ final class IconViewHTML {
   //ヘッダ出力
   private static function OutputHeader() {
     HTML::OutputHeader(IconMessage::TITLE, 'icon_view');
-    HTML::OutputJavaScript('submit_icon_search');
+    JavaScriptHTML::Output('submit_icon_search');
     HTML::OutputBodyHeader();
     Text::Printf(self::GetHeader(),
       IconMessage::TOP, IconMessage::UPLOAD, IconMessage::VIEW, IconMessage::VIEW
@@ -20,9 +20,9 @@ final class IconViewHTML {
 
   //アイコン情報出力
   private static function OutputIcon() {
-    if (RQ::Get()->icon_no > 0) {
+    if (RQ::Fetch()->icon_no > 0) {
       self::OutputSingleEdit();
-    } elseif (RQ::Get()->Enable(RequestDataIcon::MULTI)) {
+    } elseif (RQ::Fetch()->Enable(RequestDataIcon::MULTI)) {
       self::OutputMultiEdit();
     } else {
       HTML::OutputFieldsetHeader(IconMessage::TITLE);
@@ -47,12 +47,12 @@ final class IconViewHTML {
 
   //バックリンク出力
   private static function OutputLink() {
-    HTML::OutputDiv(HTML::GenerateLink('icon_view.php', IconMessage::BACK), 'link');
+    DivHTML::Output(LinkHTML::Generate('icon_view.php', IconMessage::BACK), 'link');
   }
 
   //個別編集フォーム出力
   private static function OutputSingleEditForm() {
-    $icon_no = RQ::Get()->icon_no;
+    $icon_no = RQ::Fetch()->icon_no;
     $stack = IconDB::Get($icon_no);
     if (count($stack) < 1) {
       return;
@@ -67,7 +67,7 @@ final class IconViewHTML {
       IconMessage::CATEGORY,	$category,	$size,
       IconMessage::AUTHOR,	$author,	$size,
       IconMessage::COLOR,	$color,		IconMessage::EXAMPLE,
-      IconMessage::DISABLE, HTML::GenerateChecked($disable > 0),
+      IconMessage::DISABLE, FormHTML::Checked($disable > 0),
       IconMessage::PASSWORD,
       IconMessage::SUBMIT
     );

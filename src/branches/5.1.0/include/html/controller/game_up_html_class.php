@@ -5,7 +5,7 @@ final class GameUpHTML {
   public static function Output() {
     HTML::OutputHeader(ServerConfig::TITLE . GameUpMessage::TITLE, 'game_up');
     GameHTML::OutputSceneCSS();
-    HTML::OutputJavaScript('game_up');
+    JavaScriptHTML::Output('game_up');
     HTML::OutputBodyHeader(null, 'set_focus();reload_game();');
     GameHTML::OutputGameTop();
     self::OutputForm();
@@ -15,16 +15,16 @@ final class GameUpHTML {
   //フォーム出力
   private static function OutputForm() {
     Text::Printf(self::GetForm(),
-      RQ::Get()->url, RQ::Get()->url, RQ::Get()->heaven_mode ? 'reload_middle_frame();' : '',
-      Security::GetToken(RQ::Get()->room_no),
+      RQ::Fetch()->url, RQ::Fetch()->url, RQ::Fetch()->heaven_mode ? 'reload_middle_frame();' : '',
+      Security::GetToken(RQ::Get(RequestDataGame::ID)),
       RequestDataTalk::SENTENCE, GameMessage::SUBMIT,
       RequestDataTalk::VOICE,
       TalkVoice::STRONG, GameUpMessage::STRONG,
-      TalkVoice::NORMAL, HTML::GenerateSelected(true), GameUpMessage::NORMAL,
+      TalkVoice::NORMAL, FormHTML::Selected(true), GameUpMessage::NORMAL,
       TalkVoice::WEAK, GameUpMessage::WEAK,
       TalkVoice::SECRET, GameUpMessage::SECRET,
       TalkVoice::LAST_WORDS, GameUpMessage::LAST_WORDS,
-      RQ::Get()->url, GameUpMessage::VOTE, GameUpMessage::TOP
+      RQ::Fetch()->url, GameUpMessage::VOTE, GameUpMessage::TOP
     );
   }
 

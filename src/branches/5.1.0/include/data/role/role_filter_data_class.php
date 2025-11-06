@@ -25,10 +25,10 @@ final class RoleFilterData {
     'mind_lonely', 'mind_sheep', 'sheep_wisp', 'lovers', 'challenge_lovers', 'vega_lovers',
     'fake_lovers', 'possessed_exchange', 'letter_exchange', 'joker', 'rival', 'enemy', 'supported',
     'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
-    'bad_status', 'sweet_status', 'male_status', 'female_status', 'gender_status', 'protected',
-    'penetration', 'aspirator', 'levitation', 'lost_ability', 'muster_ability', 'changed_disguise',
-    'changed_therian', 'changed_vindictive', 'copied', 'copied_trick', 'copied_basic',
-    'copied_nymph', 'copied_soul', 'copied_teller'
+    'bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status', 'gender_status',
+    'protected', 'penetration', 'aspirator', 'levitation', 'lost_ability', 'muster_ability',
+    'changed_disguise', 'changed_therian', 'changed_vindictive', 'changed_tailtip', 'copied',
+    'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
   ];
 
   //発言表示
@@ -267,13 +267,16 @@ final class RoleFilterData {
   //護衛後処理
   public static $guard_finish_action = ['serve_doll_master'];
 
-  //呪殺身代わり
-  public static $sacrifice_mage = ['sacrifice_depraver'];
-
   //占い判定妨害 (順番依存あり)
   public static $jammer_mage_result = [
     'sheep_wisp', 'wisp', 'tengu_spell_wisp', 'foughten_wisp', 'black_wisp'
   ];
+
+  //呪殺身代わり
+  public static $sacrifice_mage = ['sacrifice_depraver'];
+
+  //占いカウンター
+  public static $mage_reaction = ['tailtip_depraver'];
 
   //透視/範囲投票
   public static $scan_plural = ['plural_wizard', 'barrier_wizard', 'plural_mad'];
@@ -351,39 +354,39 @@ final class RoleFilterData {
 
   //覚醒コピー変換リスト
   public static $soul_delay_copy = [
-      CampGroup::HUMAN		=> 'executor',
-      CampGroup::MAGE		=> 'soul_mage',
-      CampGroup::NECROMANCER	=> 'soul_necromancer',
-      CampGroup::MEDIUM		=> 'revive_medium',
-      CampGroup::PRIEST		=> 'high_priest',
-      CampGroup::GUARD		=> 'poison_guard',
-      CampGroup::COMMON		=> 'ghost_common',
-      CampGroup::POISON		=> 'strong_poison',
-      CampGroup::POISON_CAT	=> 'revive_cat',
-      CampGroup::PHARMACIST	=> 'alchemy_pharmacist',
-      CampGroup::ASSASSIN	=> 'soul_assassin',
-      CampGroup::MIND_SCANNER	=> 'clairvoyance_scanner',
-      CampGroup::JEALOUSY	=> 'flower_jealousy',
-      CampGroup::BROWNIE	=> 'barrier_brownie',
-      CampGroup::WIZARD		=> 'soul_wizard',
-      CampGroup::DOLL		=> 'serve_doll_master',
-      CampGroup::ESCAPER	=> 'divine_escaper',
-      CampGroup::WOLF		=> 'sirius_wolf',
-      CampGroup::MAD		=> 'whisper_mad',
-      CampGroup::FOX		=> 'cursed_fox',
-      CampGroup::CHILD_FOX	=> 'jammer_fox',
-      CampGroup::DEPRAVER	=> 'sacrifice_depraver',
-      CampGroup::CUPID		=> 'minstrel_cupid',
-      CampGroup::ANGEL		=> 'sacrifice_angel',
-      CampGroup::QUIZ		=> 'quiz',
-      CampGroup::VAMPIRE	=> 'soul_vampire',
-      CampGroup::CHIROPTERA	=> 'boss_chiroptera',
-      CampGroup::FAIRY		=> 'ice_fairy',
-      CampGroup::OGRE		=> 'sacrifice_ogre',
-      CampGroup::YAKSA		=> 'dowser_yaksa',
-      CampGroup::DUELIST	=> 'critical_duelist',
-      CampGroup::AVENGER	=> 'revive_avenger',
-      CampGroup::PATRON		=> 'sacrifice_patron',
-      CampGroup::TENGU		=> 'soul_tengu'
+    CampGroup::HUMAN		=> 'executor',
+    CampGroup::MAGE		=> 'soul_mage',
+    CampGroup::NECROMANCER	=> 'soul_necromancer',
+    CampGroup::MEDIUM		=> 'revive_medium',
+    CampGroup::PRIEST		=> 'high_priest',
+    CampGroup::GUARD		=> 'poison_guard',
+    CampGroup::COMMON		=> 'ghost_common',
+    CampGroup::POISON		=> 'strong_poison',
+    CampGroup::POISON_CAT	=> 'revive_cat',
+    CampGroup::PHARMACIST	=> 'alchemy_pharmacist',
+    CampGroup::ASSASSIN		=> 'soul_assassin',
+    CampGroup::MIND_SCANNER	=> 'clairvoyance_scanner',
+    CampGroup::JEALOUSY		=> 'flower_jealousy',
+    CampGroup::BROWNIE		=> 'barrier_brownie',
+    CampGroup::WIZARD		=> 'soul_wizard',
+    CampGroup::DOLL		=> 'serve_doll_master',
+    CampGroup::ESCAPER		=> 'divine_escaper',
+    CampGroup::WOLF		=> 'sirius_wolf',
+    CampGroup::MAD		=> 'whisper_mad',
+    CampGroup::FOX		=> 'cursed_fox',
+    CampGroup::CHILD_FOX	=> 'jammer_fox',
+    CampGroup::DEPRAVER		=> 'sacrifice_depraver',
+    CampGroup::CUPID		=> 'minstrel_cupid',
+    CampGroup::ANGEL		=> 'sacrifice_angel',
+    CampGroup::QUIZ		=> 'quiz',
+    CampGroup::VAMPIRE		=> 'soul_vampire',
+    CampGroup::CHIROPTERA	=> 'boss_chiroptera',
+    CampGroup::FAIRY		=> 'ice_fairy',
+    CampGroup::OGRE		=> 'sacrifice_ogre',
+    CampGroup::YAKSA		=> 'dowser_yaksa',
+    CampGroup::DUELIST		=> 'critical_duelist',
+    CampGroup::AVENGER		=> 'revive_avenger',
+    CampGroup::PATRON		=> 'sacrifice_patron',
+    CampGroup::TENGU		=> 'soul_tengu'
   ];
 }

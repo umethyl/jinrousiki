@@ -21,19 +21,19 @@ final class IconEditController extends JinrouController {
     //入力データチェック
     extract(RQ::ToArray()); //引数を展開
 
-    if (RQ::Get()->Enable(RequestDataIcon::MULTI)) {
+    if (RQ::Fetch()->Enable(RequestDataIcon::MULTI)) {
       $url = self::URL . URL::HEAD . URL::AddSwitch(RequestDataIcon::MULTI);
     } else {
       $url = URL::GetIcon(self::URL, $icon_no);
     }
-    $link = HTML::GenerateLink($url, Message::BACK);
+    $link = LinkHTML::Generate($url, Message::BACK);
 
     if ($password != UserIconConfig::PASSWORD) { //パスワード照合
       self::OutputError(IconEditMessage::PASSWORD, $link);
     }
 
     //一括編集時にはアイコン名を変更しない
-    if (RQ::Get()->Enable(RequestDataIcon::MULTI)) {
+    if (RQ::Fetch()->Enable(RequestDataIcon::MULTI)) {
       //アイコン番号リストチェック
       $icon_no_list = [];
       foreach (Text::Parse($number_list, ',') as $value) {
@@ -54,7 +54,7 @@ final class IconEditController extends JinrouController {
     }
 
     //クエリ初期化
-    if (RQ::Get()->Enable(RequestDataIcon::MULTI)) {
+    if (RQ::Fetch()->Enable(RequestDataIcon::MULTI)) {
       $query = IconDB::GetQueryMultiUpdate($icon_no_list);
     } else {
       $query = IconDB::GetQueryUpdate();
@@ -63,7 +63,7 @@ final class IconEditController extends JinrouController {
 
     //入力データの文字列長チェック
     foreach (UserIcon::ValidateText(IconEditMessage::TITLE, $link) as $key => $value) {
-      if (RQ::Get()->Enable(RequestDataIcon::MULTI) && RequestDataIcon::NAME == $key) {
+      if (RQ::Fetch()->Enable(RequestDataIcon::MULTI) && RequestDataIcon::NAME == $key) {
 	continue;
       }
 
@@ -84,7 +84,7 @@ final class IconEditController extends JinrouController {
       self::OutputError(IconEditMessage::LOCK . Message::DB_ERROR_LOAD, $link);
     }
 
-    if (RQ::Get()->Enable(RequestDataIcon::MULTI)) {
+    if (RQ::Fetch()->Enable(RequestDataIcon::MULTI)) {
       //差分を正確に追跡するのは手間なので個別に判定する
       foreach ($icon_no_list as $number) {
 	if (false === IconDB::Exists($number)) { //存在チェック
@@ -127,7 +127,7 @@ final class IconEditController extends JinrouController {
     }
 
     $query->Set(array_keys($stack));
-    if (RQ::Get()->Enable(RequestDataIcon::MULTI)) {
+    if (RQ::Fetch()->Enable(RequestDataIcon::MULTI)) {
       $list = array_merge(array_values($stack), $icon_no_list);
     } else {
       $list = array_merge(array_values($stack), [$icon_no]);

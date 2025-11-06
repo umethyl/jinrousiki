@@ -1,7 +1,7 @@
 <?php
 //-- 個別ユーザクラス (Role 拡張) --//
 //-- ◆文字化け抑制◆ --//
-class RoleUser {
+final class RoleUser {
   //-- 陣営判定 --//
   //所属陣営取得
   public static function GetCamp(User $user, $type, $reparse) {
@@ -42,7 +42,9 @@ class RoleUser {
 
   //妖狐カウント
   public static function IsFoxCount(User $user) {
-    return $user->IsMainGroup(CampGroup::FOX, CampGroup::CHILD_FOX);
+    //変化追跡
+    $changed = isset($user->changed_fox) && true === $user->changed_fox;
+    return $user->IsMainGroup(CampGroup::FOX, CampGroup::CHILD_FOX) || true === $changed;
   }
 
   //-- 性別判定 --//

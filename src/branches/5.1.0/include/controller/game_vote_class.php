@@ -39,12 +39,12 @@ final class GameVoteController extends JinrouController {
   }
 
   protected static function EnableCommand() {
-    return RQ::Get()->vote;
+    return RQ::Fetch()->vote;
   }
 
   protected static function RunCommand() {
     if (DB::$ROOM->IsBeforeGame()) { //ゲーム開始 or Kick 投票処理
-      switch (RQ::Get()->situation) {
+      switch (RQ::Fetch()->situation) {
       case VoteAction::GAME_START:
 	return VoteGameStart::Execute();
 
@@ -56,7 +56,7 @@ final class GameVoteController extends JinrouController {
       }
     } elseif (DB::$SELF->IsDead()) { //死者の霊界投票処理
       if (DB::$SELF->IsDummyBoy()) { //身代わり君機能
-	switch (RQ::Get()->situation) {
+	switch (RQ::Fetch()->situation) {
 	case VoteAction::FORCE_SUDDEN_DEATH:
 	  return VoteForceSuddenDeath::Execute();
 
@@ -69,7 +69,7 @@ final class GameVoteController extends JinrouController {
       } else {
 	VoteHeaven::Execute();
       }
-    } elseif (RQ::Get()->target_no == 0) { //空投票検出
+    } elseif (RQ::Fetch()->target_no == 0) { //空投票検出
       VoteHTML::OutputError(VoteMessage::NO_TARGET_TITLE, VoteMessage::NO_TARGET);
     } elseif (DB::$ROOM->IsDay()) { //昼の処刑投票処理
       VoteDay::Execute();

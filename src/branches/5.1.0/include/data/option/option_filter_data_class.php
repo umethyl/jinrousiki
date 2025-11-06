@@ -41,6 +41,9 @@ final class OptionFilterData {
   //追加配役/闇鍋固定枠
   public static $cast_chaos_fix_role = ['topping', 'museum_topping', 'gerd', 'detective'];
 
+  //配役倍率/闇鍋モード用 (順番依存あり)
+  public static $cast_chaos_boost_role = ['museum_boost', 'boost_rate'];
+
   //-- Cast::Execute() --//
   //身代わり君固定配役 (順番依存あり)
   public static $cast_dummy_boy_fix_role = ['quiz', 'gerd'];

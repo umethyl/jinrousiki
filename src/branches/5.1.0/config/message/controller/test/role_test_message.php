@@ -17,6 +17,7 @@ class RoleTestMessage {
 
   /* 追加オプション */
   public static $museum_topping		= '博物館(追加)';
+  public static $museum_boost		= '博物館(倍率)';
   public static $gerd			= 'ゲルト君';
   public static $disable_gerd		= 'ゲルト君無効';
   public static $poison			= '毒';

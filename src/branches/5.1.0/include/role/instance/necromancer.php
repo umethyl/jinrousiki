@@ -22,6 +22,7 @@ class Role_necromancer extends Role {
     $camp = $user->DistinguishCamp();
     switch ($camp) {
     case Camp::WOLF:
+      //特殊人狼
       $stack = [
         'boss_wolf', 'mist_wolf', 'tiger_wolf', 'phantom_wolf', 'cursed_wolf', 'spell_wolf',
 	'possessed_wolf'
@@ -32,13 +33,15 @@ class Role_necromancer extends Role {
       break;
 
     case Camp::FOX:
+      //子狐
       if ($user->IsMainGroup(CampGroup::CHILD_FOX)) {
 	return 'child_fox';
       }
 
+      //特殊妖狐 (変化型も含む)
       $stack = [
         'white_fox', 'black_fox', 'mist_fox', 'tiger_fox', 'phantom_fox', 'sacrifice_fox',
-	'possessed_fox', 'cursed_fox'
+	'possessed_fox', 'cursed_fox', 'changed_vindictive', 'changed_tailtip'
       ];
       if ($user->IsRole($stack)) {
 	return $camp;

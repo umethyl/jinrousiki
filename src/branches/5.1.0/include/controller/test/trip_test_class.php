@@ -17,7 +17,7 @@ final class TripTestController extends JinrouTestController {
 
   protected static function RunTest() {
     $key = 'trip';
-    RQ::Get()->ParsePost('Trip', $key);
-    Text::p(RQ::Get()->$key, TripTestMessage::RESULT);
+    RQ::Fetch()->ParsePost('Trip', $key);
+    Text::p(RQ::Get($key), TripTestMessage::RESULT);
   }
 }

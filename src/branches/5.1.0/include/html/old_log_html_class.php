@@ -5,8 +5,8 @@ final class OldLogHTML {
   public static function Generate() {
     $base_title = ServerConfig::TITLE . OldLogMessage::TITLE;
     if (false === DB::$ROOM->IsFinished() || false === DB::$ROOM->IsAfterGame()) { //閲覧判定
-      $url  = RQ::Get()->generate_index ? 'index.html' : 'old_log.php';
-      $back = HTML::GenerateLink($url, Message::BACK);
+      $url  = RQ::Fetch()->generate_index ? 'index.html' : 'old_log.php';
+      $back = LinkHTML::Generate($url, Message::BACK);
       $str  = Text::Join(OldLogMessage::NOT_FINISHED, $back);
       HTML::OutputResult($base_title, $str);
     }
@@ -23,8 +23,8 @@ final class OldLogHTML {
       DB::$ROOM->SetStatus(RoomStatus::PLAYING);
     }
 
-    if (RQ::Get()->auto_play) { //自動再生モード判定
-      if (false === RQ::Get()->reverse_log && RQ::Get()->time && DB::$ROOM->IsOn(RoomMode::WATCH)) {
+    if (RQ::Fetch()->auto_play) { //自動再生モード判定
+      if (false === RQ::Get('reverse_log') && RQ::Get('time') && DB::$ROOM->IsOn(RoomMode::WATCH)) {
 	DB::$ROOM->Flag()->Set(RoomMode::AUTO_PLAY, true);
 	AutoPlayTalk::InitStack();
       } else {
@@ -45,29 +45,29 @@ final class OldLogHTML {
 
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $str = AutoPlayTalk::GenerateHeader($title);
-    } elseif (RQ::Get()->reverse_log && RQ::Get()->scroll > 0) {
+    } elseif (RQ::Fetch()->reverse_log && RQ::Fetch()->scroll > 0) {
       $str = self::GenerateScrollHeader($title);
     } else {
       $str = HTML::GenerateHeader($title, 'old_log', true);
     }
     $str .= Text::Join(
-      HTML::GenerateLink(URL::GetHeaderDB('old_log'), Message::BACK),
+      LinkHTML::Generate(URL::GetHeaderDB('old_log'), Message::BACK),
       RoomHTML::GenerateLogTitle(), RoomOptionLoader::GenerateImage(),
-      Text::LineFeed(HTML::GenerateLink('#beforegame', OldLogMessage::BEFORE))
+      Text::LineFeed(LinkHTML::Generate('#beforegame', OldLogMessage::BEFORE))
     );
     for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
-      $str .= Text::LineFeed(HTML::GenerateLink('#date' . $i, $i));
+      $str .= Text::LineFeed(LinkHTML::Generate('#date' . $i, $i));
     }
-    $str .= HTML::GenerateLink('#aftergame', OldLogMessage::AFTER) . Message::SPACER;
-    $str .= Text::LineFeed(RQ::Get()->GetURL());
+    $str .= LinkHTML::Generate('#aftergame', OldLogMessage::AFTER) . Message::SPACER;
+    $str .= Text::LineFeed(RQ::Fetch()->GetURL());
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $str .= Text::Format('<a href="#game_top" onClick="start_auto_play();">%s</a>', '開始');
     }
     $str .= GameHTML::GeneratePlayer();
-    if (RQ::Get()->role_list) {
+    if (RQ::Fetch()->role_list) {
       $str .= self::GenerateRoleLink();
     }
-    $str .= RQ::Get()->heaven_only ? self::GenerateHeavenLog() : self::GenerateLog();
+    $str .= RQ::Fetch()->heaven_only ? self::GenerateHeavenLog() : self::GenerateLog();
     if (JinrouCacheManager::Enable(JinrouCacheManager::LOG)) {
       JinrouCacheManager::Store($str);
     }
@@ -88,7 +88,7 @@ final class OldLogHTML {
     $room_count = RoomLoaderDB::CountFinished();
     if ($room_count < 1) {
       $title = ServerConfig::TITLE . OldLogMessage::TITLE;
-      $back  = HTML::GenerateLink('./', Message::BACK);
+      $back  = LinkHTML::Generate('./', Message::BACK);
       HTML::OutputResult($title, Text::Join(OldLogMessage::NO_LOG, $back));
     }
 
@@ -104,33 +104,33 @@ final class OldLogHTML {
     }
 
     //ページリンクデータの生成
-    if (empty(RQ::Get()->reverse)) {
+    if (empty(RQ::Fetch()->reverse)) {
       $is_reverse = OldLogConfig::REVERSE;
     } else {
-      $is_reverse = Switcher::IsOn(RQ::Get()->reverse);
+      $is_reverse = Switcher::IsOn(RQ::Fetch()->reverse);
     }
 
-    if (RQ::Get()->generate_index) {
-      $max = RQ::Get()->max_room_no;
+    if (RQ::Fetch()->generate_index) {
+      $max = RQ::Fetch()->max_room_no;
       if (is_int($max) && Number::InRange($max, 0, $room_count)) {
 	$room_count = $max;
       }
-      $builder = new PageLinkBuilder('index', RQ::Get()->page, $room_count);
+      $builder = new PageLinkBuilder('index', RQ::Fetch()->page, $room_count);
       $builder->set_reverse = $is_reverse;
       $builder->url = '<a href="index';
     } else {
-      $builder = new PageLinkBuilder('old_log', RQ::Get()->page, $room_count);
+      $builder = new PageLinkBuilder('old_log', RQ::Fetch()->page, $room_count);
       $builder->set_reverse = $is_reverse;
       $builder->AddOption('reverse', Switcher::Get($is_reverse));
-      $builder->AddOption('watch',   Switcher::Get(RQ::Get()->watch));
+      $builder->AddOption('watch',   Switcher::Get(RQ::Fetch()->watch));
       foreach (['name', 'room_name', 'winner', 'role', 'game_type'] as $option) {
-	if (RQ::Get()->$option) {
-	  $builder->AddOption($option, RQ::Get()->$option);
+	if (RQ::Get($option)) {
+	  $builder->AddOption($option, RQ::Get($option));
 	}
       }
 
       if (URL::ExistsDB()) {
-	$builder->AddOption(RequestDataGame::DB, RQ::Get()->db_no);
+	$builder->AddOption(RequestDataGame::DB, RQ::Get(RequestDataGame::DB));
       }
     }
 
@@ -143,39 +143,39 @@ final class OldLogHTML {
       DB::SetRoom(RoomLoaderDB::LoadFinished($room_no));
 
       $vanish = DateBorder::On(0) ? ' vanish' : ''; //廃村判定
-      if (RQ::Get()->generate_index) {
-	$base_url = RQ::Get()->prefix . DB::$ROOM->id . '.html';
+      if (RQ::Fetch()->generate_index) {
+	$base_url = RQ::Fetch()->prefix . DB::$ROOM->id . '.html';
 	$view_url = '';
 	$login    = '';
 	$log_link = sprintf('(<a href="%s%dr.html">%s</a>)',
-	  RQ::Get()->prefix, DB::$ROOM->id, Message::LOG_REVERSE
+	  RQ::Fetch()->prefix, DB::$ROOM->id, Message::LOG_REVERSE
 	);
       } else {
 	$base_url = URL::GetRoom('old_log');;
 	if (URL::ExistsDB()) {
-	  $view_url  = RQ::Get()->ToURL(RequestDataGame::DB, true);
+	  $view_url  = RQ::Fetch()->ToURL(RequestDataGame::DB, true);
 	  $base_url .= $view_url;
 	} else {
 	  $view_url  = '';
 	}
-	if (RQ::Get()->watch) {
+	if (RQ::Fetch()->watch) {
 	  $base_url .= URL::AddSwitch(RequestDataLogRoom::WATCH);
 	}
 
 	if ($current_time - strtotime(DB::$ROOM->finish_datetime ?? 0) > RoomConfig::KEEP_SESSION) {
 	  $login = '';
 	} else {
-	  $login = Text::LineFeed(HTML::GenerateLink(URL::GetRoom('login'), OldLogMessage::LOGIN));
+	  $login = Text::LineFeed(LinkHTML::Generate(URL::GetRoom('login'), OldLogMessage::LOGIN));
 	}
 
-	if (RQ::Get()->watch) {
+	if (RQ::Fetch()->watch) {
 	  $log_link  = self::GenerateWatchLogLink($base_url, '(', '', ' )');
 	} else {
-	  $log_link  = HTML::GenerateLogLink($base_url, true, '(', '', ' )');
+	  $log_link  = LinkHTML::GenerateLog($base_url, true, '(', '', ' )');
 
 	  $url       = $base_url . URL::AddSwitch(RequestDataLogRoom::ROLE);
 	  $header    = Text::LF . OldLogMessage::ADD_ROLE . ' (';
-	  $log_link .= HTML::GenerateLogLink($url, false, $header, $vanish, ' )');
+	  $log_link .= LinkHTML::GenerateLog($url, false, $header, $vanish, ' )');
 	}
       }
 
@@ -198,7 +198,7 @@ final class OldLogHTML {
 	DB::$ROOM->id, $vanish, $base_url, DB::$ROOM->GenerateName(),
 	DB::$ROOM->user_count, ImageManager::Room()->GenerateMaxUser(DB::$ROOM->max_user),
 	DB::$ROOM->date,
-	RQ::Get()->watch ? '-' : ImageManager::Winner()->Generate(DB::$ROOM->winner),
+	RQ::Fetch()->watch ? '-' : ImageManager::Winner()->Generate(DB::$ROOM->winner),
 	DB::$ROOM->GenerateComment(), $establish, $vanish,
 	$login, $log_link, RoomOptionLoader::GenerateImage()
       );
@@ -229,16 +229,16 @@ var timeout  = %d;
 var y = 0;
 EOF;
 
-    if (RQ::Get()->scroll_time > 0) {
-      $timeout = RQ::Get()->scroll_time;
+    if (RQ::Fetch()->scroll_time > 0) {
+      $timeout = RQ::Fetch()->scroll_time;
     } else {
       $timeout = 1;
     }
     $str  = HTML::GenerateHeader($title, 'old_log');
-    $str .= HTML::LoadJavaScript('auto_scroll');
-    $str .= HTML::GenerateJavaScriptHeader();
-    $str .= Text::Format($format, RQ::Get()->scroll, $timeout);
-    $str .= HTML::GenerateJavaScriptFooter();
+    $str .= JavaScriptHTML::Load('auto_scroll');
+    $str .= JavaScriptHTML::GenerateHeader();
+    $str .= Text::Format($format, RQ::Fetch()->scroll, $timeout);
+    $str .= JavaScriptHTML::GenerateFooter();
     $str .= HTML::GenerateBodyHeader(null, 'auto_scroll();');
 
     return $str;
@@ -246,7 +246,7 @@ EOF;
 
   //通常ログ出力
   private static function GenerateLog() {
-    if (true === RQ::Get()->reverse_log) {
+    if (RQ::Enable('reverse_log')) {
       $str = self::GenerateTalk(0, RoomScene::BEFORE);
       if (DB::$ROOM->IsOption('open_day')) {
 	$str .= self::GenerateTalk(0, RoomScene::DAY);
@@ -281,7 +281,7 @@ EOF;
   //霊界ログ出力
   private static function GenerateHeavenLog() {
     $str = '';
-    if (true === RQ::Get()->reverse_log) {
+    if (RQ::Enable('reverse_log')) {
       for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
 	$str .= self::GenerateTalk($i, RoomScene::HEAVEN_ONLY);
       }
@@ -303,7 +303,7 @@ EOF;
 	DB::$USER->ResetRoleList();
 	DB::$ROOM->ResetEvent();
       }
-      if (false === RQ::Get()->reverse_log) {
+      if (false === RQ::Fetch()->reverse_log) {
 	DB::$USER->ResetPlayer(); //player 復元処理
       }
       break;
@@ -314,13 +314,13 @@ EOF;
 	DB::$USER->ResetRoleList();
 	DB::$ROOM->ResetEvent();
       }
-      if (true === RQ::Get()->reverse_log) {
+      if (RQ::Enable('reverse_log')) {
 	DB::$USER->ResetPlayer(); //player 復元処理
       }
       break;
 
     case RoomScene::HEAVEN_ONLY:
-      if (true === RQ::Get()->reverse_log && $date != 1) {
+      if (RQ::Enable('reverse_log') && $date != 1) {
 	$table_class = RoomScene::DAY; //2日目以降は昼から
       } else {
 	$table_class = RoomScene::NIGHT;
@@ -329,7 +329,7 @@ EOF;
 
     default:
       $border_game_flag = true;
-      if (true === RQ::Get()->reverse_log && $date != 1) {
+      if (RQ::Enable('reverse_log') && $date != 1) {
 	$table_class = RoomScene::DAY; //2日目以降は昼から
       } else {
 	$table_class = RoomScene::NIGHT;
@@ -344,7 +344,7 @@ EOF;
 
     //出力
     $str = '';
-    if (true === $border_game_flag && false === RQ::Get()->reverse_log) {
+    if (true === $border_game_flag && false === RQ::Fetch()->reverse_log) {
       DB::$ROOM->SetDate($date + 1);
       DB::$ROOM->SetScene(RoomScene::DAY);
       $str .= self::GenerateLastWords() . self::GenerateDead(); //死亡者を出力
@@ -364,7 +364,7 @@ EOF;
     if (ServerConfig::DEBUG_MODE) {
       Talk::SetBuilder($builder); //デバッグ発言出力用
     }
-    if (true === RQ::Get()->reverse_log) {
+    if (RQ::Enable('reverse_log')) {
       $builder->GenerateTimeStamp();
     }
 
@@ -388,12 +388,12 @@ EOF;
       $builder->Generate($talk); //会話生成
     }
 
-    if (false === RQ::Get()->reverse_log) {
+    if (false === RQ::Fetch()->reverse_log) {
       $builder->GenerateTimeStamp();
     }
     $str .= $builder->Refresh();
 
-    if (true === $border_game_flag && true === RQ::Get()->reverse_log) {
+    if (true === $border_game_flag && RQ::Enable('reverse_log')) {
       //突然死で勝敗が決定したケース
       if ($date == DB::$ROOM->last_date && DB::$ROOM->IsDay()) {
 	$str .= self::GenerateVote();
@@ -411,12 +411,12 @@ EOF;
   //シーン切り替え処理
   private static function GenerateSceneChange($date) {
     $str = '';
-    if (RQ::Get()->heaven_only) {
+    if (RQ::Fetch()->heaven_only) {
       return $str;
     }
 
     DB::$ROOM->SetDate($date);
-    if (true === RQ::Get()->reverse_log) {
+    if (RQ::Enable('reverse_log')) {
       DB::$ROOM->SetScene(RoomScene::NIGHT);
       $str .= self::GenerateVote() . self::GenerateDead();
     } else {
@@ -461,7 +461,7 @@ EOF;
 
   //キャッシュ有効判定
   private static function EnableCache() {
-    foreach (RQ::Get() as $key => $value) { //何か値がセットされていたら無効
+    foreach (RQ::Fetch() as $key => $value) { //何か値がセットされていたら無効
       switch ($key) {
       case 'page':
 	if ($value != 1) {
@@ -511,11 +511,11 @@ EOF;
 
   //一覧ヘッダー生成
   private static function GenerateListHeader(PageLinkBuilder $builder) {
-    if (RQ::Get()->generate_index) {
-      $back = HTML::GenerateLink('../', Message::BACK);
+    if (RQ::Fetch()->generate_index) {
+      $back = LinkHTML::Generate('../', Message::BACK);
       $url  = '../';
     } else {
-      $back = HTML::GenerateLink('./', Message::BACK);
+      $back = LinkHTML::Generate('./', Message::BACK);
       $url  = '';
     }
     $str = Text::Format(self::GetListHeader(),

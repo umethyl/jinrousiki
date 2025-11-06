@@ -16,9 +16,9 @@ final class TwitterTestController extends JinrouTestController {
   }
 
   protected static function RunTest() {
-    RQ::Get()->ParsePostInt('number');
-    RQ::Get()->ParsePostData('name', 'comment');
-    if (JinrouTwitter::Send(RQ::Get()->number, RQ::Get()->name, RQ::Get()->comment)) {
+    RQ::Fetch()->ParsePostInt('number');
+    RQ::Fetch()->ParsePostData('name', 'comment');
+    if (JinrouTwitter::Send(RQ::Fetch()->number, RQ::Fetch()->name, RQ::Fetch()->comment)) {
       Text::d(TwitterMessage::SUCCESS);
     }
   }

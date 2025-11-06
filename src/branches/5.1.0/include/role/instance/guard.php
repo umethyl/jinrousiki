@@ -200,7 +200,7 @@ class Role_guard extends Role {
       return $user->IsRole(
 	'prince', 'step_mage', 'emissary_necromancer', 'reporter', 'detective_common',
 	'sacrifice_common', 'spell_common', 'clairvoyance_scanner', 'barrier_brownie',
-	'soul_wizard', 'esper_wizard', 'pierrot_wizard', 'barrier_wizard'
+	'soul_wizard', 'esper_wizard', 'pierrot_wizard', 'spark_wizard', 'barrier_wizard'
       );
     }
   }

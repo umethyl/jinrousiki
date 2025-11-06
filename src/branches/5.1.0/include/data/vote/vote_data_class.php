@@ -21,6 +21,7 @@ final class VoteAction {
   const STEP_SCAN		= 'STEP_SCANNER_DO';
   const WIZARD			= 'WIZARD_DO';
   const PLURAL_WIZARD		= 'PLURAL_WIZARD_DO';
+  const SPARK_WIZARD		= 'SPARK_WIZARD_DO';
   const SPREAD_WIZARD		= 'SPREAD_WIZARD_DO';
   const ESCAPE			= 'ESCAPE_DO';
   const WOLF			= 'WOLF_EAT';

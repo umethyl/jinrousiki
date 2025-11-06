@@ -3,9 +3,9 @@
 final class SearchRoleInfoHTML {
   //フォーム出力
   public static function OutputForm() {
-    HTML::OutputFormHeader('search.php');
+    FormHTML::OutputHeader('search.php');
     self::OutputTextForm();
-    HTML::OutputFormFooter();
+    FormHTML::OutputFooter();
   }
 
   //リンク出力
@@ -15,7 +15,7 @@ final class SearchRoleInfoHTML {
 
   //フォーム入力欄出力
   private static function OutputTextForm() {
-    Text::Printf(self::GetTextForm(), 'role', 'role', RQ::Get()->role);
+    Text::Printf(self::GetTextForm(), 'role', 'role', RQ::Fetch()->role);
   }
 
   //フォーム入力欄タグ
