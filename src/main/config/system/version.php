@@ -4,7 +4,7 @@ class ScriptInfo {
   const VERSION = 'Ver. 5.1.0 β3';
 
   //パッケージの最終更新日
-  const LAST_UPDATE = '2025/10/29 (Wed) 01:55';
+  const LAST_UPDATE = '2025/11/07 (Fri) 01:56';
 
   //パッケージ化した時の Revision
   const REVISION = 2753;
