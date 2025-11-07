@@ -5,8 +5,7 @@ final class JinrouAdminRoomDeleteController extends JinrouAdminController {
     return 'room_delete';
   }
 
-  protected static function LoadRequest() {
-    RQ::LoadRequest();
+  protected static function LoadRequestExtra() {
     RQ::Fetch()->ParseGetRoomNo();
   }
 

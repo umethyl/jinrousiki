@@ -1,6 +1,10 @@
 <?php
 //-- ゲームオプション情報コントローラー --//
 final class GameOptionInfoController extends JinrouController {
+  protected static function EnableLoadRequest() {
+    return false;
+  }
+
   protected static function Output() {
     InfoHTML::OutputHeader(GameOptionInfoMessage::TITLE, 0, 'game_option');
     InfoHTML::Load('game_option');

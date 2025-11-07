@@ -5,8 +5,7 @@ final class JinrouAdminIconDeleteController extends JinrouAdminController {
     return 'icon_delete';
   }
 
-  protected static function LoadRequest() {
-    RQ::LoadRequest();
+  protected static function LoadRequestExtra() {
     RQ::Fetch()->ParseGetInt(RequestDataIcon::ID);
 
     //-- Validate --//

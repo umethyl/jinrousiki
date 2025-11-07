@@ -5,8 +5,11 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
     return 'generate_html_log';
   }
 
-  protected static function LoadRequest() {
-    RQ::LoadRequest('old_log');
+  protected static function GetLoadRequest() {
+    return 'old_log';
+  }
+
+  protected static function LoadRequestExtra() {
     RQ::Set('prefix',		GenerateHTMLLogConfig::PREFIX);
     RQ::Set('index_no',		GenerateHTMLLogConfig::INDEX_START);
     RQ::Set('min_room_no',	GenerateHTMLLogConfig::ROOM_START);
