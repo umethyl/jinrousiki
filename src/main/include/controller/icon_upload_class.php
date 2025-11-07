@@ -3,10 +3,12 @@
 final class IconUploadController extends JinrouController {
   const URL = 'icon_upload.php';
 
-  protected static function Start() {
-    if (UserIconConfig::DISABLE) {
-      HTML::OutputResult(IconUploadMessage::TITLE, IconUploadMessage::DISABLE);
-    }
+  protected static function Unusable() {
+    return UserIconConfig::DISABLE;
+  }
+
+  protected static function OutputUnusableError() {
+    HTML::OutputResult(IconUploadMessage::TITLE, IconUploadMessage::DISABLE);
   }
 
   protected static function GetLoadRequest() {

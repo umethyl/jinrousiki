@@ -11,7 +11,7 @@ final class GM {
 //-- コントローラー基底クラス --//
 abstract class JinrouController {
   //実行
-  public static function Execute() {
+  final public static function Execute() {
     static::Start();
     static::Load();
     if (true === static::EnableCommand()) {
@@ -23,7 +23,25 @@ abstract class JinrouController {
   }
 
   //初期処理
-  protected static function Start() {}
+  final protected static function Start() {
+    if (true === static::Unusable()) {
+      static::OutputUnusableError();
+    }
+    static::Maintenance();
+  }
+
+  //実行不許可判定
+  protected static function Unusable() {
+    return false;
+  }
+
+  //実行不許可エラー表示
+  protected static function OutputUnusableError() {
+    HTML::OutputUnusableError();
+  }
+
+  //保守処理
+  protected static function Maintenance() {}
 
   //データロード
   final protected static function Load() {

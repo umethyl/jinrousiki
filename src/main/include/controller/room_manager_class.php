@@ -1,13 +1,18 @@
 <?php
 //-- 村作成コントローラー --//
 final class RoomManagerController extends JinrouController {
-  protected static function Start() {
-    if (false === DB::ConnectInHeader()) {
-      return false;
+  protected static function Maintenance() {
+    if (false === DB::ConnectInHeader()) { //ここでDB接続を行う
+      return;
+    }
+
+    if (ServerConfig::DISABLE_MAINTENANCE) {
+      return;
     }
 
     if (Loader::IsLoadedFile('index_class')) {
-      self::Maintenance();
+      RoomManagerDB::DieRoom();		//一定時間更新の無い村は廃村にする
+      RoomManagerDB::ClearSession();	//終了した村のセッションデータを削除する
     }
   }
 
@@ -51,16 +56,6 @@ final class RoomManagerController extends JinrouController {
       HeaderHTML::OutputTitle(RoomManagerMessage::TITLE_CHANGE);
     }
     RoomManagerHTML::OutputCreate();
-  }
-
-  //メンテナンス処理
-  private static function Maintenance() {
-    if (ServerConfig::DISABLE_MAINTENANCE) { //スキップ判定
-      return;
-    }
-
-    RoomManagerDB::DieRoom();		//一定時間更新の無い村は廃村にする
-    RoomManagerDB::ClearSession();	//終了した村のセッションデータを削除する
   }
 
   //村 (room) の作成

@@ -3,10 +3,12 @@
 final class IconEditController extends JinrouController {
   const URL = 'icon_view.php';
 
-  protected static function Start() {
-    if (Security::IsInvalidReferer(self::URL)) {
-      self::OutputError(IconEditMessage::REFERER);
-    }
+  protected static function Unusable() {
+    return Security::IsInvalidReferer(self::URL);
+  }
+
+  protected static function OutputUnusableError() {
+    self::OutputError(IconEditMessage::REFERER);
   }
 
   protected static function GetLoadRequest() {
