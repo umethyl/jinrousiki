@@ -5,6 +5,10 @@ final class RoleTestController extends JinrouAdminController {
     return 'role_test';
   }
 
+  protected static function LoadRequestExtra() {
+    RQ::Fetch()->ParsePostOn('execute');
+  }
+
   protected static function Output() {
     DevHTML::OutputRoleTestHeader(RoleTestMessage::TITLE, 'role_test.php');
     self::OutputForm();

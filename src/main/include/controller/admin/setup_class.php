@@ -7,6 +7,10 @@ final class JinrouAdminSetupController extends JinrouAdminController {
     return 'setup';
   }
 
+  protected static function EnableLoadRequest() {
+    return false;
+  }
+
   protected static function Output() {
     HTML::OutputHeader(SetupMessage::TITLE, null, true);
     DB::Enable(true, true);
