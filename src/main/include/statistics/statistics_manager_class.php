@@ -30,6 +30,9 @@ final class JinrouStatistics extends StackStaticManager {
 
     $role_count   = self::SubStack(StatisticsStack::ROLE);
     $win_role     = self::SubStack(StatisticsStack::WIN_ROLE);
+    $lose_role    = self::SubStack(StatisticsStack::LOSE_ROLE);
+    $draw_role    = self::SubStack(StatisticsStack::DRAW_ROLE);
+    $live_count   = self::SubStack(StatisticsStack::LIVE_ROLE);
     $change_count = self::SubStack(StatisticsStack::CHANGE);
     self::InitCountUp();
     foreach (DB::$USER->Get() as $user) {
@@ -39,10 +42,24 @@ final class JinrouStatistics extends StackStaticManager {
       }
 
       //個人勝利判定
-      $win = false;
-      if (Winner::Generate($user->id) == WinnerMessage::$personal_win) {
+      $personal_result = Winner::Generate($user->id);
+      switch ($personal_result) {
+      case WinnerMessage::$personal_win:
 	$win_role->AddNumber($user->main_role, 1);
-	$win = true;
+	break;
+
+      case WinnerMessage::$personal_lose:
+	$lose_role->AddNumber($user->main_role, 1);
+	break;
+
+      case WinnerMessage::$personal_draw:
+	$draw_role->AddNumber($user->main_role, 1);
+	break;
+      }
+
+      //生存情報
+      if ($user->IsLive()) {
+	$live_count->AddNumber($user->main_role, 1);
       }
 
       //統計登録
@@ -58,8 +75,22 @@ final class JinrouStatistics extends StackStaticManager {
       //変化役職追跡
       if (StatisticsRole::IsChanged($user)) {
 	foreach (StatisticsRole::GetOrigin($user) as $change_role => $origin_role) {
-	  if (true === $win) {
+	  switch ($personal_result) {
+	  case WinnerMessage::$personal_win:
 	    $win_role->AddNumber($change_role, 1);
+	    break;
+
+	  case WinnerMessage::$personal_lose:
+	    $lose_role->AddNumber($change_role, 1);
+	    break;
+
+	  case WinnerMessage::$personal_draw:
+	    $draw_role->AddNumber($change_role, 1);
+	    break;
+	  }
+
+	  if ($user->IsLive()) {
+	    $live_count->AddNumber($change_role, 1);
 	  }
 
 	  //陣営変化追跡
@@ -105,6 +136,18 @@ final class JinrouStatistics extends StackStaticManager {
       $sub_stack = self::SubStack($stack_key);
       foreach ($stack->$type as $role => $flag) {
 	$sub_stack->AddNumber($role, 1);
+      }
+    }
+
+    //引き分け時の出現陣営カウントアップ
+    $draw_list = StatisticsRole::GetWinCampGroup(WinCamp::DRAW);
+    if (ArrayFilter::IsInclude($draw_list, DB::$ROOM->winner)) {
+      $draw_stack = self::SubStack(StatisticsStack::DRAW_CAMP);
+      $type = StatisticsCount::CAMP;
+      foreach ($stack->$type as $camp => $flag) {
+	if (ArrayFilter::IsInclude(StatisticsData::$win_camp_list, $camp)) {
+	  $draw_stack->AddNumber($camp, 1);
+	}
       }
     }
   }
@@ -231,7 +274,7 @@ final class JinrouStatistics extends StackStaticManager {
   public static function Aggregate(string $game_type, $appear = false) {
     $result = [];
     $stack  = self::SubStack($game_type)->Get(StatisticsStack::WINNER);
-
+    $draw   = self::SubStack($game_type)->Get(StatisticsStack::DRAW_CAMP);
     if (true === $appear) {
       $camp_list = StatisticsData::$appear_camp_list;
     } else {
