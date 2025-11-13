@@ -20,19 +20,19 @@ final class HTML {
     if (true === isset($align)) {
       $str .= self::GenerateAttribute('align', $align);
     }
-    return '<' . $str . '>';
+    return Text::Quote($str, '<', '>');
   }
 
   //共通タグフッタ生成
   public static function GenerateTagFooter($name) {
-    return '</' . $name . '>';
+    return Text::Quote($name, '</', '>');
   }
 
   //Attribute 要素生成
   public static function GenerateAttribute($name, $value = null) {
     $str = ' ' . $name;
     if (true === isset($value)) {
-      $str .= '="' . $value . '"';
+      $str .= Text::Quote($value, '="', '"');
     }
     return $str;
   }
