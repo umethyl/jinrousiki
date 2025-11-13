@@ -18,7 +18,6 @@ $font = 'azuki.ttf';
 //$role = 'poison'; //128
 //$role = 'result_spark_wizard';
 //$role = 'prediction_weather_no_escape';
-//$role = 'finder_guard';
 //$role = 'homogeneous_wolf';
 //$role = 'heterologous_wolf';
 $role = 'tailtip_depraver';

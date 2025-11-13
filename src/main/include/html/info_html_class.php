@@ -17,7 +17,8 @@ final class InfoHTML {
 
   //フレーム出力
   public static function OutputFrame($url) {
-    Text::Printf(self::GetFrame(), $url);
+    FrameHTML::OutputCol([180, '*']);
+    FrameHTML::OutputSrc(['menu' => 'menu.php', 'body' => $url . URL::EXT]);
   }
 
   //サイドメニュー出力
@@ -263,15 +264,6 @@ final class InfoHTML {
 <a target="_top" href="%s">&lt;= TOP</a>
 <a target="_top" href="%s">← %s</a>
 </p>
-EOF;
-  }
-
-  //フレームタグ
-  private static function GetFrame() {
-    return <<< EOF
-<frameset cols="180, *" border="1" frameborder="1" framespacing="1" bordercolor="#C0C0C0">
-<frame name="menu" src="menu.php">
-<frame name="body" src="%s.php">
 EOF;
   }
 

@@ -27,6 +27,10 @@ class StatisticsMessage {
   const FIELD_APPEAR_ROOM = '出現村数';
   const FIELD_APPEAR_RATE = '出現率';
   const FIELD_WIN_COUNT   = '勝利';
+  const FIELD_LOSE_COUNT  = '敗北';
+  const FIELD_DRAW_COUNT  = '引分';
   const FIELD_WIN_RATE    = '勝率';
   const FIELD_WIN_APPEAR  = '出現時勝率';
+  const FIELD_LIVE        = '生存';
+  const FIELD_LIVE_RATE   = '生存率';
 }

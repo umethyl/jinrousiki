@@ -35,20 +35,35 @@ final class StatisticsHTML {
 
     $room_count = JinrouStatistics::SubStack($game_type)->Get(StatisticsOperation::ROOM);
     $camp_stack = JinrouStatistics::SubStack(StatisticsStack::WIN_CAMP);
-    foreach (JinrouStatistics::Aggregate($game_type) as $camp => $win_count) {
+    $camp_list  = JinrouStatistics::Aggregate($game_type);
+    $draw_stack = JinrouStatistics::SubStack(StatisticsStack::DRAW_CAMP);
+    foreach ($camp_list as $camp => $win_count) {
       if ($win_count < 1 && $camp_stack->$camp < 1) {
 	continue;
       }
 
       switch ($camp) {
       case WinCamp::DRAW:
-      case WinCamp::NONE:
 	$data_list = [
-	  '',
-	  '',
 	  $win_count,
 	  Number::Percent($win_count, $room_count, 2) . '%',
-	  ''
+	  0,
+	  0,
+	  $win_count,
+	  Number::Percent($win_count, $room_count, 2) . '%',
+	  Number::Percent(0, $room_count, 2) . '%',
+	];
+	break;
+
+      case WinCamp::NONE:
+	$data_list = [
+	  $win_count,
+	  Number::Percent($win_count, $room_count, 2) . '%',
+	  $win_count,
+	  0,
+	  0,
+	  Number::Percent($win_count, $room_count, 2) . '%',
+	  Number::Percent($win_count, $win_count,  2) . '%',
 	];
 	break;
 
@@ -57,6 +72,8 @@ final class StatisticsHTML {
 	  $camp_stack->$camp,
 	  Number::Percent($camp_stack->$camp, $room_count, 2) . '%',
 	  $win_count,
+	  $camp_stack->$camp - ($win_count + $draw_stack->$camp ?? 0),
+	  $draw_stack->$camp ?? 0,
 	  Number::Percent($win_count, $room_count, 2) . '%',
 	  Number::Percent($win_count, $camp_stack->$camp, 2) . '%'
 	];
@@ -76,6 +93,9 @@ final class StatisticsHTML {
     $camp_stack = JinrouStatistics::SubStack(StatisticsStack::APPEAR_CAMP);
     $role_stack = JinrouStatistics::SubStack(StatisticsStack::ROLE);
     $win_stack  = JinrouStatistics::SubStack(StatisticsStack::WIN_ROLE);
+    $lose_stack = JinrouStatistics::SubStack(StatisticsStack::LOSE_ROLE);
+    $draw_stack = JinrouStatistics::SubStack(StatisticsStack::DRAW_ROLE);
+    $live_stack = JinrouStatistics::SubStack(StatisticsStack::LIVE_ROLE);
     foreach (JinrouStatistics::Aggregate($game_type, true) as $camp => $camp_count) {
       $appear_camp = StatisticsRole::ConvertAppearCamp($camp);
       if ($camp_count < 1 && $camp_stack->$appear_camp < 1) {
@@ -84,11 +104,17 @@ final class StatisticsHTML {
 
       $appear_count = 0;
       $win_count    = 0;
+      $lose_count   = 0;
+      $draw_count   = 0;
+      $live_count   = 0;
       foreach ($role_stack as $role => $role_count) {
 	$camp_role = StatisticsRole::ConvertOriginCampRole($role);
 	if (RoleDataManager::GetCamp($camp_role, true) == $appear_camp) {
 	  $appear_count += $role_count;
 	  $win_count    += $win_stack->GetInt($role);
+	  $lose_count   += $lose_stack->GetInt($role);
+	  $draw_count   += $draw_stack->GetInt($role);
+	  $live_count   += $live_stack->GetInt($role);
 	}
       }
 
@@ -97,7 +123,11 @@ final class StatisticsHTML {
 	$camp_stack->$appear_camp,
 	Number::Percent($camp_stack->$appear_camp, $room_count, 2) . '%',
 	$win_count,
-	Number::Percent($win_count, $appear_count, 2) . '%'
+	$lose_count,
+	$draw_count,
+	Number::Percent($win_count,  $appear_count, 2) . '%',
+	$live_count,
+	Number::Percent($live_count, $appear_count, 2) . '%'
       ];
 
       TableHTML::OutputTrHeader();
@@ -115,6 +145,9 @@ final class StatisticsHTML {
 
     $room_count = JinrouStatistics::SubStack(RQ::Get('game_type'))->Get(StatisticsOperation::ROOM);
     $win_count  = JinrouStatistics::SubStack(StatisticsStack::WIN_ROLE);
+    $lose_count = JinrouStatistics::SubStack(StatisticsStack::LOSE_ROLE);
+    $draw_count = JinrouStatistics::SubStack(StatisticsStack::DRAW_ROLE);
+    $live_count = JinrouStatistics::SubStack(StatisticsStack::LIVE_ROLE);
     $appear     = JinrouStatistics::SubStack(StatisticsStack::APPEAR_ROLE);
     $stack      = JinrouStatistics::SubStack(StatisticsStack::ROLE);
     $list       = get_object_vars($stack);
@@ -127,8 +160,12 @@ final class StatisticsHTML {
 	$stack->$role,
  	$appear->$role,
 	Number::Percent($appear->$role, $room_count, 2) . '%',
-	$win_count->$role ?? 0,
-	Number::Percent($win_count->$role ?? 0, $stack->$role, 2) . '%'
+	$win_count->$role  ?? 0,
+	$lose_count->$role ?? 0,
+	$draw_count->$role ?? 0,
+	Number::Percent($win_count->$role ?? 0, $stack->$role, 2) . '%',
+	$live_count->$role ?? 0,
+	Number::Percent($live_count->$role ?? 0, $stack->$role, 2) . '%',
       ];
       self::OutputData($data_list);
       self::OutputSearchRoleLink($role);
@@ -141,12 +178,17 @@ final class StatisticsHTML {
     foreach (RoleDataManager::GetDiff($change_list, true) as $role => $name) {
       TableHTML::OutputTrHeader();
       self::OutputRoleLink($role, $name);
+      $role_count = $stack->$role ?? $change_stack->$role;
       $data_list = [
-	$stack->$role ?? $change_stack->$role,
+	$role_count,
  	$appear->$role,
 	Number::Percent($appear->$role, $room_count, 2) . '%',
-	$win_count->$role ?? 0,
-	Number::Percent($win_count->$role ?? 0, $stack->$role ?? $change_stack->$role, 2) . '%'
+	$win_count->$role  ?? 0,
+	$lose_count->$role ?? 0,
+	$draw_count->$role ?? 0,
+	Number::Percent($win_count->$role ?? 0,  $role_count, 2) . '%',
+	$live_count->$role ?? 0,
+	Number::Percent($live_count->$role ?? 0, $role_count, 2) . '%',
       ];
       self::OutputData($data_list);
       self::OutputSearchRoleLink($role);
