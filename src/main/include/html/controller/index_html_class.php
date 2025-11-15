@@ -18,18 +18,26 @@ final class IndexHTML {
     if (ServerConfig::BACK_PAGE != '') {
       LinkHTML::Output(ServerConfig::BACK_PAGE, Message::BACK, true);
     }
-    Text::Printf(self::GetTitle(),
-      TopPageMessage::TITLE, TopPageMessage::TITLE,
-      ServerConfig::COMMENT, TopPageMessage::CAUTION_JAVASCRIPT
-    );
+    LinkHTML::Output('./', self::GenerateHeaderImage());
+    DivHTML::Output(ServerConfig::COMMENT, 'comment');
+    JavaScriptHTML::OutputNoscript(TopPageMessage::CAUTION_JAVASCRIPT);
+  }
+
+  //ヘッダ画像生成
+  private static function GenerateHeaderImage() {
+    $path  = 'img/title/top.jpg';
+    $title = ImageHTML::GenerateTitle(TopPageMessage::TITLE, TopPageMessage::TITLE);
+    $css   = '';
+    return ImageHTML::Generate($path, $title, $css);
   }
 
   //メニュー出力
   private static function OutputMenu() {
-    Text::Output(self::GetMainHeader());
+    Text::Output(TableHTML::GenerateHeader(null, true, 'main'));
+    TableHTML::OutputTdHeader();
     include('top/menu.html');
     self::OutputMenuLink();
-    self::OutputMenuAddLink();
+    self::OutputAddMenuLink();
     TableHTML::OutputTdFooter();
   }
 
@@ -39,23 +47,50 @@ final class IndexHTML {
       return;
     }
 
-    Text::Printf(self::GetMenu(),
-      TopPageMessage::MENU_COMMUNICATION, self::GenerateMenuLink(MenuConfig::$list)
-    );
+    self::OutputMenuLinkHeader(TopPageMessage::MENU_COMMUNICATION);
+    self::OutputMenuLinkList(MenuConfig::$list);
+    Text::Output(HTML::GenerateTagFooter('ul'));
   }
 
   //メニュー外部リンク出力
-  private static function OutputMenuAddLink() {
+  private static function OutputAddMenuLink() {
     if (count(MenuConfig::$add_list) < 1) {
       return;
     }
 
-    $tag = self::GetSubMenu();
-    $str = '';
+    self::OutputMenuLinkHeader(TopPageMessage::MENU_OUTER);
     foreach (MenuConfig::$add_list as $group => $list) {
-      $str .= Text::Format($tag, $group, self::GenerateMenuLink($list));
+      self::OutputAddMenuLinkHeader($group);
+      self::OutputMenuLinkList($list);
+      Text::Output(HTML::GenerateTagFooter('ul'));
     }
-    Text::Printf(self::GetMenu(), TopPageMessage::MENU_OUTER, $str);
+    Text::Output(HTML::GenerateTagFooter('ul'));
+  }
+
+  //メニューリンクヘッダ出力
+  private static function OutputMenuLinkHeader(string $str) {
+    DivHTML::Output($str, 'menu');
+    Text::Output(HTML::GenerateTagHeader('ul'));
+  }
+
+  //メニューリンクリスト出力
+  private static function OutputMenuLinkList(array $list) {
+    $tag = 'li';
+    $css = 'menu-link';
+    foreach ($list as $name => $url) {
+      Text::Output('  ' . HTML::GenerateTag($tag, LinkHTML::Generate($url, $name), $css));
+    }
+  }
+
+  //メニュー外部リンクヘッダ出力
+  private static function OutputAddMenuLinkHeader(string $str) {
+    $tag  = 'ul';
+    $tag .= HTML::GenerateAttribute('class', 'submenu');
+    $tag .= HTML::GenerateAttribute('onClick', 'fold_menu(this)');
+    Text::Output(HTML::GenerateTagHeader($tag));
+
+    $url = LinkHTML::Generate('javascript:void(0)', '▼' . $str);
+    Text::Output('  ' . HTML::GenerateTag('li', $url, 'menu-name'));
   }
 
   //メイン情報出力
@@ -92,6 +127,7 @@ final class IndexHTML {
     if (BBSConfig::DISABLE) {
       return;
     }
+
     if (! ExternalLinkBuilder::IsConnect(BBSConfig::RAW_URL)) {
       $title = sprintf(TopPageMessage::BBS_TITLE, BBSConfig::VIEW_URL, BBSConfig::THREAD);
       ExternalLinkBuilder::OutputTimeOut($title, BBSConfig::RAW_URL);
@@ -124,16 +160,6 @@ final class IndexHTML {
     HTML::OutputFieldsetFooter();
   }
 
-  //メニューリンク生成
-  private static function GenerateMenuLink(array $list) {
-    $tag = self::GetMenuLink();
-    $str = '';
-    foreach ($list as $name => $url) {
-      $str .= Text::Format($tag, $url, $name);
-    }
-    return $str;
-  }
-
   //フッター出力
   private static function OutputFooter() {
     if (ServerConfig::ADMIN) {
@@ -146,46 +172,6 @@ final class IndexHTML {
       ScriptInfo::PACKAGE, ScriptInfo::VERSION, ScriptInfo::DEVELOPER, $str
     );
     HTML::OutputFooter();
-  }
-
-  //タイトル画像タグ
-  private static function GetTitle() {
-    return <<<EOF
-<a href="./"><img src="img/title/top.jpg" alt="%s" title="%s"></a>
-<div class="comment">%s</div>
-<noscript>%s</noscript>
-EOF;
-  }
-
-  //メインテーブルヘッダタグ
-  private static function GetMainHeader() {
-    return <<<EOF
-<table id="main"><tr>
-<td>
-EOF;
-  }
-
-  //メニュータグ
-  private static function GetMenu() {
-    return <<<EOF
-<div class="menu">%s</div>
-<ul>
-%s</ul>
-EOF;
-  }
-
-  //メニューリンクタグ
-  private static function GetMenuLink() {
-    return '  <li class="menu-link"><a href="%s">%s</a></li>';
-  }
-
-  //サブメニュータグ
-  private static function GetSubMenu() {
-    return <<<EOF
-<ul class="submenu" onClick="fold_menu(this)">
-  <li class="menu-name"><a href="javascript:void(0)">▼%s</a></li>
-%s</ul>
-EOF;
   }
 
   //掲示板タグ

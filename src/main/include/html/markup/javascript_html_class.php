@@ -40,6 +40,11 @@ final class JavaScriptHTML {
     echo self::GenerateFooter();
   }
 
+  //noscript 出力
+  public static function OutputNoscript(string $str) {
+    Text::Output(HTML::GenerateTag('noscript', $str));
+  }
+
   //読み込みタグ
   private static function Get() {
     return '<script src="%s/%s.js"></script>';
