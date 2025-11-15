@@ -309,6 +309,7 @@ final class RoleData {
     'scarlet_vampire'		=> '屍鬼',
     'chiroptera'		=> '蝙蝠',
     'poison_chiroptera'		=> '毒蝙蝠',
+    'follow_chiroptera'		=> '曼陀羅華',
     'cursed_chiroptera'		=> '呪蝙蝠',
     'boss_chiroptera'		=> '大蝙蝠',
     'elder_chiroptera'		=> '古蝙蝠',

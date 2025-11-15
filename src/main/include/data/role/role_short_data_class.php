@@ -308,6 +308,7 @@ final class RoleShortData {
     'scarlet_vampire'		=> '屍',
     'chiroptera'		=> '蝙',
     'poison_chiroptera'		=> '毒蝙',
+    'follow_chiroptera'		=> '曼',
     'cursed_chiroptera'		=> '呪蝙',
     'boss_chiroptera'		=> '大蝙',
     'elder_chiroptera'		=> '古蝙',

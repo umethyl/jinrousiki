@@ -165,7 +165,8 @@ final class RoleFilterData {
 
   //処刑者カウンター
   public static $vote_kill_counter = [
-    'brownie', 'sun_brownie', 'doom_doll', 'miasma_fox', 'follow_vampire', 'mirror_fairy'
+    'brownie', 'sun_brownie', 'doom_doll', 'miasma_fox', 'follow_vampire', 'follow_chiroptera',
+    'mirror_fairy'
   ];
 
   //処刑投票能力処理 (順番依存あり)
