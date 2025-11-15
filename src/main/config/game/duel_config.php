@@ -22,11 +22,13 @@ class DuelConfig {
 	    'count' => [15 => ['sweet_fairy' => 1],
 			20 => ['enchant_mad' => 1],
 			25 => ['sirius_wolf' => 1, 'moon_cupid' => 1],
-			30 => ['quiz' => 1]],
+			30 => ['altair_cupid' => 1]],
 	    'rate' => ['select_assassin' => 5, 'sweet_wolf' => 3, 'self_cupid' => 1,
 		       'mind_cupid' => 4, 'triangle_cupid' => 1],
 	    'calib' => ['self_cupid' => ['dummy_chiroptera' => 1],
-			'mind_cupid' => ['exchange_angel' => 3, 'sweet_cupid' => 3],
+			'mind_cupid' => ['exchange_angel' => 3, 'sweet_cupid' => 3,
+					 'letter_cupid' => 3],
+			'triangle_cupid' => ['nephila_cupid' => 1],
 			'sweet_wolf' => ['silver_wolf' => 2]]],
     'd' => ['fix'   => [],
 	    'count' => [16 => ['voodoo_fox' => 1, 'tailtip_depraver' => 1],
@@ -85,6 +87,10 @@ class DuelConfig {
     'm' => ['fix'   => [],
 	    'count' => [15 => ['plural_wizard' => 1]],
 	    'rate'  => ['spark_wizard' => 2, 'wolf' => 3, 'plural_mad' => 6, 'chiroptera' => 2],
+	    'calib' => []],
+    'n' => ['fix'   => ['boss_wolf' => 1, 'white_fox' => 1],
+	    'count' => [],
+	    'rate'  => ['silver_depraver' => 10, 'cursed_angel' => 1],
 	    'calib' => []]
   ];
 }

@@ -551,14 +551,15 @@ class ChaosConfig {
     'sacrifice_vampire'     =>   8,
     'soul_vampire'          =>   6,
     'scarlet_vampire'       =>  18,
-    'chiroptera'            =>  40,
-    'poison_chiroptera'     =>  20,
-    'cursed_chiroptera'     =>  20,
+    'chiroptera'            =>  36,
+    'poison_chiroptera'     =>  17,
+    'follow_chiroptera'     =>  15,
+    'cursed_chiroptera'     =>  17,
     'boss_chiroptera'       =>  10,
-    'elder_chiroptera'      =>  15,
+    'elder_chiroptera'      =>  12,
     'cute_chiroptera'       =>  25,
-    'doom_chiroptera'       =>  15,
-    'scarlet_chiroptera'    =>  20,
+    'doom_chiroptera'       =>  12,
+    'scarlet_chiroptera'    =>  18,
     'dummy_chiroptera'      =>  15,
     'fairy'                 =>  10,
     'spring_fairy'          =>   7,
@@ -1068,8 +1069,7 @@ class ChaosConfig {
   */
   public static $boost_rate_fix_rate = 20;
   public static $boost_rate_list = [
-    'a' => ['fix' => ['spark_wizard'     => 20,
-		      'tailtip_depraver' => 20]],
+    'a' => ['fix' => ['follow_chiroptera' => 20]],
     'b' => ['zero' => ['elder',
 		       'scripter',
 		       'eccentricer',
@@ -1159,6 +1159,7 @@ class ChaosConfig {
 		       'silver_depraver',
 		       'chiroptera',
 		       'poison_chiroptera',
+		       'follow_chiroptera',
 		       'cursed_chiroptera',
 		       'boss_chiroptera',
 		       'elder_chiroptera',
@@ -1336,6 +1337,7 @@ class ChaosConfig {
 		       'snow_cupid',
 		       'cursed_angel',
 		       'doom_vampire',
+		       'follow_chiroptera',
 		       'doom_chiroptera',
 		       'chill_fairy',
 		       'ice_fairy',
@@ -1736,6 +1738,7 @@ class ChaosConfig {
 	     'pick' => [['list' => ['homogeneous_wolf', 'heterologous_wolf'],
 			 'count' => 1]]],
     'j5' => ['fix' => ['spark_wizard' => 1, 'tailtip_depraver' => 1]],
+    'j6' => ['fix' => ['follow_chiroptera' => 1]],
   ];
 
   //-- 博物館モード(倍率型) --//
@@ -1766,6 +1769,7 @@ class ChaosConfig {
     'j3' => ['boost' => ['plural_wizard' , 'plural_mad', 'sweet_wolf', 'sweet_fox']],
     'j4' => ['boost' => ['finder_guard', 'homogeneous_wolf', 'heterologous_wolf']],
     'j5' => ['boost' => ['spark_wizard', 'tailtip_depraver']],
+    'j6' => ['boost' => ['follow_chiroptera']],
   ];
 
   //サブ役職制限：EASYモード
