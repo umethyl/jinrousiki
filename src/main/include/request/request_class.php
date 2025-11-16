@@ -44,6 +44,16 @@ final class RQ extends LoadManager {
     return self::Fetch()->Enable($key);
   }
 
+  //無効
+  public static function Disable(string $key) {
+    return self::Fetch()->Disable($key);
+  }
+
+  //文字型判定
+  public static function IsString(string $key) {
+    return self::Fetch()->IsString($key);
+  }
+
   //データ展開
   public static function ToArray() {
     return self::Fetch()->ToArray();
@@ -158,6 +168,11 @@ class Request extends stdClass {
   //無効
   public function Disable(string $key) {
     return true !== $this->$key;
+  }
+
+  //文字型判定
+  public function IsString(string $key) {
+    return true === is_string($this->$key);
   }
 
   //-- データ展開用 --//

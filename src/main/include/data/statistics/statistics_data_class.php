@@ -6,6 +6,7 @@ final class StatisticsStack {
   const ROLE        = 'role';
   const WIN_CAMP    = 'win_camp';
   const DRAW_CAMP   = 'draw_camp';
+  const GAME_TYPE   = 'game_type';
   const WIN_ROLE    = 'win_role';
   const LOSE_ROLE   = 'lose_role';
   const DRAW_ROLE   = 'draw_role';

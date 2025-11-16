@@ -6,7 +6,7 @@ class DevRoom {
     //初期村データを生成
     RQ::Set(RequestDataGame::ID, 1);
     RQ::Set('vote_times', 1);
-    RQ::Set(RequestDataLogRoom::REVERSE, null);
+    RQ::Set(RequestDataLogRoom::REVERSE_LOG, null);
     $base_list = [
       'id'		=> RQ::Get(RequestDataGame::ID),
       'comment'		=> '',

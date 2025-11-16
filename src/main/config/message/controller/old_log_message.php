@@ -24,8 +24,14 @@ class OldLogMessage {
   const LINK_WIN      = '勝敗表示';
 
   /* 個別ログ */
-  const BEFORE = '前';
-  const AFTER  = '後';
+  const BEFORE   = '前';
+  const AFTER    = '後';
+  const ROLE     = '役';
+  const TIME     = '時';
+  const ICON     = '顔';
+  const SEX      = '性';
+  const WOLF     = '狼';
+  const PERSONAL = '結';
 
   /* エラー */
   const NO_LOG       = 'ログはありません。';

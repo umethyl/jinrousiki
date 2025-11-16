@@ -14,8 +14,8 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
     RQ::Set('index_no',		GenerateHTMLLogConfig::INDEX_START);
     RQ::Set('min_room_no',	GenerateHTMLLogConfig::ROOM_START);
     RQ::Set('max_room_no',	GenerateHTMLLogConfig::ROOM_END);
-    RQ::Set(RequestDataLogRoom::ROLE,   true);
-    RQ::Set(RequestDataLogRoom::HEAVEN, true);
+    RQ::Set(RequestDataLogRoom::ADD_ROLE, true);
+    RQ::Set(RequestDataLogRoom::HEAVEN,   true);
     RQ::Set('generate_index', true);
   }
 
@@ -69,7 +69,7 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
     for ($i = RQ::Fetch()->min_room_no; $i <= RQ::Fetch()->max_room_no; $i++) {
       RQ::Set(RequestDataGame::ID, $i);
       foreach ([false, true] as $flag) {
-	RQ::Set(RequestDataLogRoom::REVERSE, $flag);
+	RQ::Set(RequestDataLogRoom::REVERSE_LOG, $flag);
 
 	DB::LoadRoom();
 	DB::$ROOM->SetFlag(RoomMode::LOG);
@@ -89,7 +89,7 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
 
   //過去ログ一覧のHTML化処理
   private static function GenerateIndex() {
-    RQ::Set('reverse', Switcher::OFF);
+    RQ::Set(RequestDataLogRoom::REVERSE_LIST, Switcher::OFF);
     $header = sprintf('../%s/%sindex', GenerateHTMLLogConfig::DIR, RQ::Fetch()->prefix);
     $footer = Text::LineFeed(HTML::GenerateFooter());
     $end_page = ceil((RQ::Fetch()->max_room_no - RQ::Fetch()->min_room_no + 1) / OldLogConfig::VIEW);

@@ -23,8 +23,10 @@ final class OldLogHTML {
       DB::$ROOM->SetStatus(RoomStatus::PLAYING);
     }
 
-    if (RQ::Fetch()->auto_play) { //自動再生モード判定
-      if (false === RQ::Get('reverse_log') && RQ::Get('time') && DB::$ROOM->IsOn(RoomMode::WATCH)) {
+    if (RQ::Enable(RoomMode::AUTO_PLAY)) { //自動再生モード判定
+      if (RQ::Disable(RequestDataLogRoom::REVERSE_LOG) &&
+	  RQ::Get(RequestDataLogRoom::TIME) &&
+	  DB::$ROOM->IsOn(RoomMode::WATCH)) {
 	DB::$ROOM->Flag()->Set(RoomMode::AUTO_PLAY, true);
 	AutoPlayTalk::InitStack();
       } else {
@@ -45,7 +47,7 @@ final class OldLogHTML {
 
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $str = AutoPlayTalk::GenerateHeader($title);
-    } elseif (RQ::Fetch()->reverse_log && RQ::Fetch()->scroll > 0) {
+    } elseif (RQ::Fetch()->reverse_log && RQ::Get(RequestDataLogRoom::SCROLL) > 0) {
       $str = self::GenerateScrollHeader($title);
     } else {
       $str = HTML::GenerateHeader($title, 'old_log', true);
@@ -64,7 +66,7 @@ final class OldLogHTML {
       $str .= Text::Format('<a href="#game_top" onClick="start_auto_play();">%s</a>', '開始');
     }
     $str .= GameHTML::GeneratePlayer();
-    if (RQ::Fetch()->role_list) {
+    if (RQ::Get(RequestDataLogRoom::ROLE_LIST)) {
       $str .= self::GenerateRoleLink();
     }
     $str .= RQ::Fetch()->heaven_only ? self::GenerateHeavenLog() : self::GenerateLog();
@@ -87,9 +89,7 @@ final class OldLogHTML {
     //村数の確認
     $room_count = RoomLoaderDB::CountFinished();
     if ($room_count < 1) {
-      $title = ServerConfig::TITLE . OldLogMessage::TITLE;
-      $back  = LinkHTML::Generate('./', Message::BACK);
-      HTML::OutputResult($title, Text::Join(OldLogMessage::NO_LOG, $back));
+      self::OutputNoLog();
     }
 
     $cache_flag = false; //キャッシュ有効判定
@@ -104,37 +104,12 @@ final class OldLogHTML {
     }
 
     //ページリンクデータの生成
-    if (empty(RQ::Fetch()->reverse)) {
+    if (null !== RQ::Get(RequestDataLogRoom::REVERSE_LIST)) {
+      $is_reverse = Switcher::IsOn(RQ::Get(RequestDataLogRoom::REVERSE_LIST));
+    } else {
       $is_reverse = OldLogConfig::REVERSE;
-    } else {
-      $is_reverse = Switcher::IsOn(RQ::Fetch()->reverse);
     }
-
-    if (RQ::Fetch()->generate_index) {
-      $max = RQ::Fetch()->max_room_no;
-      if (is_int($max) && Number::InRange($max, 0, $room_count)) {
-	$room_count = $max;
-      }
-      $builder = new PageLinkBuilder('index', RQ::Fetch()->page, $room_count);
-      $builder->set_reverse = $is_reverse;
-      $builder->url = '<a href="index';
-    } else {
-      $builder = new PageLinkBuilder('old_log', RQ::Fetch()->page, $room_count);
-      $builder->set_reverse = $is_reverse;
-      $builder->AddOption('reverse', Switcher::Get($is_reverse));
-      $builder->AddOption('watch',   Switcher::Get(RQ::Fetch()->watch));
-      foreach (['name', 'room_name', 'winner', 'role', 'game_type'] as $option) {
-	if (RQ::Get($option)) {
-	  $builder->AddOption($option, RQ::Get($option));
-	}
-      }
-
-      if (URL::ExistsDB()) {
-	$builder->AddOption(RequestDataGame::DB, RQ::Get(RequestDataGame::DB));
-      }
-    }
-
-    $str = self::GenerateListHeader($builder);
+    $str = self::GenerateListHeader(self::GetPageLinkBuilder($room_count, $is_reverse));
 
     //全部表示の場合、一ページで全部表示する。それ以外は設定した数毎に表示
     $format = self::GetList();
@@ -173,7 +148,7 @@ final class OldLogHTML {
 	} else {
 	  $log_link  = LinkHTML::GenerateLog($base_url, true, '(', '', ' )');
 
-	  $url       = $base_url . URL::AddSwitch(RequestDataLogRoom::ROLE);
+	  $url       = $base_url . URL::AddSwitch(RequestDataLogRoom::ADD_ROLE);
 	  $header    = Text::LF . OldLogMessage::ADD_ROLE . ' (';
 	  $log_link .= LinkHTML::GenerateLog($url, false, $header, $vanish, ' )');
 	}
@@ -229,15 +204,15 @@ var timeout  = %d;
 var y = 0;
 EOF;
 
-    if (RQ::Fetch()->scroll_time > 0) {
-      $timeout = RQ::Fetch()->scroll_time;
+    if (RQ::Get(RequestDataLogRoom::SCROLL_TIME) > 0) {
+      $timeout = RQ::Get(RequestDataLogRoom::SCROLL_TIME);
     } else {
       $timeout = 1;
     }
     $str  = HTML::GenerateHeader($title, 'old_log');
     $str .= JavaScriptHTML::Load('auto_scroll');
     $str .= JavaScriptHTML::GenerateHeader();
-    $str .= Text::Format($format, RQ::Fetch()->scroll, $timeout);
+    $str .= Text::Format($format, RQ::Get(RequestDataLogRoom::SCROLL), $timeout);
     $str .= JavaScriptHTML::GenerateFooter();
     $str .= HTML::GenerateBodyHeader(null, 'auto_scroll();');
 
@@ -526,6 +501,52 @@ EOF;
 
     $title = ServerConfig::TITLE . OldLogMessage::TITLE;
     return HTML::GenerateHeader($title, 'old_log_list', true) . $str;
+  }
+
+  //ログ存在なしエラー出力
+  private static function OutputNoLog() {
+    $title = ServerConfig::TITLE . OldLogMessage::TITLE;
+    $back  = LinkHTML::Generate('./', Message::BACK);
+    HTML::OutputResult($title, Text::Join(OldLogMessage::NO_LOG, $back));
+  }
+
+  //PageLinkBuilder オブジェクト生成
+  private static function GetPageLinkBuilder(int $room_count, bool $is_reverse) {
+    if (RQ::Fetch()->generate_index) {
+      $max = RQ::Fetch()->max_room_no;
+      if (is_int($max) && Number::InRange($max, 0, $room_count)) {
+	$room_count = $max;
+      }
+      $builder = new PageLinkBuilder('index', RQ::Fetch()->page, $room_count);
+      $builder->set_reverse = $is_reverse;
+      $builder->url = '<a href="index';
+    } else {
+      $builder = new PageLinkBuilder('old_log', RQ::Fetch()->page, $room_count);
+      $builder->set_reverse = $is_reverse;
+      $builder->AddOption(RequestDataLogRoom::REVERSE_LIST, Switcher::Get($is_reverse));
+      $builder->AddOption(RequestDataLogRoom::WATCH, Switcher::Get(RQ::Fetch()->watch));
+      foreach (self::GetPageLinkBuilderOption() as $option) {
+	if (RQ::Get($option)) {
+	  $builder->AddOption($option, RQ::Get($option));
+	}
+      }
+
+      if (URL::ExistsDB()) {
+	$builder->AddOption(RequestDataGame::DB, RQ::Get(RequestDataGame::DB));
+      }
+    }
+    return $builder;
+  }
+
+  //PageLinkBuilder オブジェクトにセットするオプション取得
+  private static function GetPageLinkBuilderOption() {
+    return [
+      RequestDataLogRoom::NAME,
+      RequestDataLogRoom::ROOM_NAME,
+      RequestDataLogRoom::WINNER,
+      RequestDataLogRoom::ROLE,
+      RequestDataLogRoom::GAME_TYPE
+    ];
   }
 
   //一覧ヘッダータグ
