@@ -66,7 +66,7 @@ final class GameHTML {
     $str    = LinkHTML::GenerateLog($url, true, Text::BRLF . $header);
 
     $header = GameMessage::LOG_LINK_ROLE;
-    $url   .= URL::AddSwitch(RequestDataLogRoom::ROLE);
+    $url   .= URL::AddSwitch(RequestDataLogRoom::ADD_ROLE);
     return $str . LinkHTML::GenerateLog($url, false, Text::BRLF . $header);
   }
 

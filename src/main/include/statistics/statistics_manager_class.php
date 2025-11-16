@@ -5,7 +5,7 @@ final class JinrouStatistics extends StackStaticManager {
   public static function Output() {
     self::LoadRoom();
     StatisticsHTML::OutputOperation();
-    if (RQ::Get('game_type')) {
+    if (RQ::Get(RequestDataLogRoom::GAME_TYPE)) {
       self::OutputWinCamp();
       self::OutputAppearCamp();
       StatisticsHTML::OutputAppearRole();
@@ -179,7 +179,7 @@ final class JinrouStatistics extends StackStaticManager {
   //勝利陣営統計出力
   private static function OutputWinCamp() {
     foreach (StatisticsData::$category as $game_type => $name) {
-      if (RQ::Get('game_type') != $game_type) {
+      if (RQ::Get(RequestDataLogRoom::GAME_TYPE) != $game_type) {
 	continue;
       }
 
@@ -195,7 +195,7 @@ final class JinrouStatistics extends StackStaticManager {
   //出現陣営統計出力
   private static function OutputAppearCamp() {
     foreach (StatisticsData::$category as $game_type => $name) {
-      if (RQ::Get('game_type') != $game_type) {
+      if (RQ::Get(RequestDataLogRoom::GAME_TYPE) != $game_type) {
 	continue;
       }
 
@@ -212,7 +212,7 @@ final class JinrouStatistics extends StackStaticManager {
   private static function OutputWinCampOld() {
     HeaderHTML::OutputSubTitle(StatisticsMessage::SUB_TITLE_WIN_CAMP);
     foreach (StatisticsData::$category as $game_type => $name) {
-      if (RQ::Get('game_type') != $game_type) {
+      if (RQ::Get(RequestDataLogRoom::GAME_TYPE) != $game_type) {
 	continue;
       }
 

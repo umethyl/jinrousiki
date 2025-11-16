@@ -143,7 +143,8 @@ final class StatisticsHTML {
     $title = StatisticsMessage::SUB_TITLE_APPEAR_ROLE;
     self::OutputSubHeader($title, StatisticsData::$category_header_appear_role);
 
-    $room_count = JinrouStatistics::SubStack(RQ::Get('game_type'))->Get(StatisticsOperation::ROOM);
+    $name       = RQ::Get(StatisticsStack::GAME_TYPE);
+    $room_count = JinrouStatistics::SubStack($name)->Get(StatisticsOperation::ROOM);
     $win_count  = JinrouStatistics::SubStack(StatisticsStack::WIN_ROLE);
     $lose_count = JinrouStatistics::SubStack(StatisticsStack::LOSE_ROLE);
     $draw_count = JinrouStatistics::SubStack(StatisticsStack::DRAW_ROLE);
@@ -255,7 +256,7 @@ final class StatisticsHTML {
 
   //リンク出力
   private static function OutputLink(string $url, string $game_type, string $name) {
-    self::OutputTdLink(URL::GetSearch($url, ['game_type' => $game_type]), $name);
+    self::OutputTdLink(URL::GetSearch($url, [StatisticsStack::GAME_TYPE => $game_type]), $name);
   }
 
   //役職リンク出力
@@ -265,7 +266,10 @@ final class StatisticsHTML {
 
   //役職検索リンク出力
   private static function OutputSearchRoleLink(string $role) {
-    $list = ['role' => $role, 'game_type' => RQ::Get('game_type')];
+    $list = [
+      StatisticsStack::ROLE      => $role,
+      StatisticsStack::GAME_TYPE => RQ::Get(StatisticsStack::GAME_TYPE)
+    ];
     $url  = URL::GetSearch(StatisticsData::LINK_LOG, $list);
     self::OutputTdLink($url, StatisticsMessage::SEARCH);
   }
