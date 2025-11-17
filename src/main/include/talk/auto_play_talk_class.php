@@ -101,6 +101,7 @@ final class AutoPlayTalk extends StackStaticManager {
       ArrayFilter::ConcatReverse($scene_stack, ',')
     );
     $str .= Text::LineFeed(ArrayFilter::Concat($talk_stack, Text::LF));
+    $str .= Text::LineFeed('document.getElementById("auto_play_end").style.display = "none";');
     $str .= JavaScriptHTML::GenerateFooter();
     return $str;
   }
@@ -119,17 +120,17 @@ final class AutoPlayTalk extends StackStaticManager {
   //JavaScript 変数取得 (ヘッダ用)
   private static function GetJavaScriptHeader() {
     return <<<EOF
-var scene_list     = new Array(%s);
-var talk_id_list   = new Array();
-var talk_time_list = new Array();
+var scene_list     = [%s];
+var talk_id_list   = [];
+var talk_time_list = [];
 EOF;
   }
 
   //JavaScript 変数取得 (talk 用)
   private static function GetJavaScriptStack() {
     return <<<EOF
-talk_id_list['%s']   = new Array(%s);
-talk_time_list['%s'] = new Array(%s);
+talk_id_list['%s']   = [%s];
+talk_time_list['%s'] = [%s];
 EOF;
   }
 }

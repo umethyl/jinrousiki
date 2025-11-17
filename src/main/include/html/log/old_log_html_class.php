@@ -4,26 +4,31 @@ final class OldLogHTML {
   //指定の部屋番号のログを生成する
   public static function Generate() {
     $base_title = ServerConfig::TITLE . OldLogMessage::TITLE;
-    if (false === DB::$ROOM->IsFinished() || false === DB::$ROOM->IsAfterGame()) { //閲覧判定
+
+    //-- 閲覧可能判定 --//
+    if (false === DB::$ROOM->IsFinished() || false === DB::$ROOM->IsAfterGame()) {
       $url  = RQ::Fetch()->generate_index ? 'index.html' : 'old_log.php';
       $back = LinkHTML::Generate($url, Message::BACK);
       $str  = Text::Join(OldLogMessage::NOT_FINISHED, $back);
       HTML::OutputResult($base_title, $str);
     }
 
-    if (JinrouCacheManager::Enable(JinrouCacheManager::LOG)) { //キャッシュ取得判定
+    //-- キャッシュ存在判定 --//
+    if (JinrouCacheManager::Enable(JinrouCacheManager::LOG)) {
       $str = JinrouCacheManager::Get(JinrouCacheManager::LOG);
       if (true === isset($str)) {
 	return $str;
       }
     }
 
-    if (DB::$ROOM->IsOn(RoomMode::WATCH)) { //観戦モード判定
+    //-- 観戦モード判定 --//
+    if (DB::$ROOM->IsOn(RoomMode::WATCH)) {
       DB::$ROOM->SetScene(RoomScene::DAY);
       DB::$ROOM->SetStatus(RoomStatus::PLAYING);
     }
 
-    if (RQ::Enable(RoomMode::AUTO_PLAY)) { //自動再生モード判定
+    //-- 自動再生モード判定 --//
+    if (RQ::Enable(RoomMode::AUTO_PLAY)) {
       if (RQ::Disable(RequestDataLogRoom::REVERSE_LOG) &&
 	  RQ::Get(RequestDataLogRoom::TIME) &&
 	  DB::$ROOM->IsOn(RoomMode::WATCH)) {
@@ -34,6 +39,7 @@ final class OldLogHTML {
       }
     }
 
+    //-- 村情報ロード --//
     $list = [
       'game_option' => DB::$ROOM->game_option->row,
       'option_role' => DB::$ROOM->option_role->row,
@@ -41,9 +47,12 @@ final class OldLogHTML {
     ];
     RoomOptionLoader::Load($list);
 
+    //-- タイトル --//
     $title = sprintf('[%d%s] %s - %s',
       DB::$ROOM->id, GameMessage::ROOM_NUMBER_FOOTER, DB::$ROOM->name, $base_title
     );
+
+    //-- モード別ヘッダ --//
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $str = AutoPlayTalk::GenerateHeader($title);
     } elseif (RQ::Fetch()->reverse_log && RQ::Get(RequestDataLogRoom::SCROLL) > 0) {
@@ -56,21 +65,31 @@ final class OldLogHTML {
       RoomHTML::GenerateLogTitle(), RoomOptionLoader::GenerateImage(),
       Text::LineFeed(LinkHTML::Generate('#beforegame', OldLogMessage::BEFORE))
     );
+
+    //-- 日付ページ内リンク・スイッチリンク --/
     for ($i = 1; $i <= DB::$ROOM->last_date; $i++) {
       $str .= Text::LineFeed(LinkHTML::Generate('#date' . $i, $i));
     }
     $str .= LinkHTML::Generate('#aftergame', OldLogMessage::AFTER) . Message::SPACER;
     $str .= Text::LineFeed(RQ::Fetch()->GetURL());
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
-      $str .= Text::Format('<a href="#game_top" onClick="start_auto_play();">%s</a>', '開始');
+      $str .= sprintf('<a href="#game_top" onClick="start_auto_play();">%s</a>', '開始');
+      $str .= ' ' . HTML::GenerateSpan('終了', null, 'auto_play_end');
+    } elseif (RQ::Get(RequestDataLogRoom::AUTO_PLAY)) {
+      $str .= Text::BRLF . OldLogMessage::AUTO_PLAY_ON . ' ';
+      $str .= RQ::Fetch()->GetAutoPlayURL();
     } elseif (RQ::Get(RequestDataLogRoom::SCROLL_ON)) {
-      $str .= Text::BRLF . '[自動スクロール]';
+      $str .= Text::BRLF . OldLogMessage::SCROLL_ON . ' ';
       $str .= RQ::Fetch()->GetScrollURL();
     }
+
+    //-- 参加者一覧 --//
     $str .= GameHTML::GeneratePlayer();
     if (RQ::Get(RequestDataLogRoom::ROLE_LIST)) {
       $str .= self::GenerateRoleLink();
     }
+
+    //-- ログ本体 --//
     $str .= RQ::Fetch()->heaven_only ? self::GenerateHeavenLog() : self::GenerateLog();
     if (JinrouCacheManager::Enable(JinrouCacheManager::LOG)) {
       JinrouCacheManager::Store($str);

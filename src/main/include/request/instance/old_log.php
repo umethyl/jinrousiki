@@ -26,6 +26,7 @@ class Request_old_log extends Request {
 	RequestDataLogRoom::PERSONAL,
 	RequestDataLogRoom::ROLE_LIST,
 	RequestDataLogRoom::SCROLL_ON,
+	RequestDataLogRoom::AUTO_PLAY,
 	RoomMode::AUTO_PLAY
       );
     } else {
@@ -75,14 +76,42 @@ class Request_old_log extends Request {
 	break;
       }
     }
-    $base_url .= URL::AddDB();
     $base_url .= URL::AddSwitch(RequestDataLogRoom::REVERSE_LOG);
+    $base_url .= URL::AddDB();
     foreach ($this->GetScrollLinkList() as $name => $list) {
       $link = $base_url;
       foreach ($list as $distance => $timeout) {
 	$link .= URL::AddInt('scroll', $distance);
 	$link .= URL::AddInt('scroll_time', $timeout);
       }
+      $link_url = Text::QuoteBracket(LinkHTML::Generate($link, $name));
+      $url .= Text::LineFeed($link_url);
+    }
+    return $url;
+  }
+
+  //個別ログページの自動再生リンク生成
+  public function GetAutoPlayURL() {
+    $url = '';
+    $base_url = URL::GetRoom('old_log', $this->room_no);
+    foreach (array_keys($this->GetHeaderLinkList()) as $i) {
+      switch ($i) {
+      case RequestDataLogRoom::REVERSE_LOG:
+      case RequestDataLogRoom::WATCH:
+	break;
+
+      default:
+	$base_url .= $this->ToURL($i);
+	break;
+      }
+    }
+    $base_url .= URL::AddSwitch(RequestDataLogRoom::WATCH);
+    $base_url .= URL::AddSwitch(RequestDataLogRoom::TIME);
+    $base_url .= URL::AddSwitch(RoomMode::AUTO_PLAY);
+    $base_url .= URL::AddDB();
+    foreach ($this->GetAutoPlayLinkList() as $name => $time) {
+      $link = $base_url;
+      $link .= URL::AddInt('scroll_time', $time);
       $link_url = Text::QuoteBracket(LinkHTML::Generate($link, $name));
       $url .= Text::LineFeed($link_url);
     }
@@ -102,7 +131,8 @@ class Request_old_log extends Request {
       RequestDataLogRoom::WATCH		=> Message::LOG_WATCH,
       RequestDataLogRoom::WOLF		=> OldLogMessage::WOLF,
       RequestDataLogRoom::PERSONAL	=> OldLogMessage::PERSONAL,
-      RequestDataLogRoom::SCROLL_ON	=> OldLogMessage::SCROLL
+      RequestDataLogRoom::SCROLL_ON	=> OldLogMessage::SCROLL,
+      RequestDataLogRoom::AUTO_PLAY	=> OldLogMessage::AUTO
     ];
   }
 
@@ -117,7 +147,20 @@ class Request_old_log extends Request {
       'B3' => [100 =>  500],
       'C1' => [100 => 1000],
       'C2' => [200 => 1000],
-      'C3' => [300 => 1000],
+      'C3' => [300 => 1000]
+    ];
+  }
+
+  //自動再生項目リスト取得
+  private function GetAutoPlayLinkList() {
+    return [
+      '等速' =>  1,
+       '2倍' =>  2,
+       '3倍' =>  3,
+       '5倍' =>  5,
+      '10倍' => 10,
+      '20倍' => 20,
+      '50倍' => 50
     ];
   }
 }

@@ -77,11 +77,12 @@ final class RequestDataLogRoom {
   const WOLF         = 'wolf_sight';
   const PERSONAL     = 'personal_result';
   const SCROLL_ON    = 'scroll_on';
+  const SCROLL       = 'scroll';
+  const SCROLL_TIME  = 'scroll_time';
+  const AUTO_PLAY    = 'auto_play_on';
 
   //個別ログ (未実装/隠し機能)
   const ROLE_LIST    = 'role_list';
-  const SCROLL       = 'scroll';
-  const SCROLL_TIME  = 'scroll_time';
 }
 
 //-- 定数リスト (Request/Icon) --//
