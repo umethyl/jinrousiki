@@ -17,7 +17,7 @@ final class AutoPlayTalk extends StackStaticManager {
   //シーン初期化
   public static function InitScene() {
     self::SetScene();
-    if (! self::Stack()->IsInclude(self::SCENE, self::Stack()->Get(self::DATE))) {
+    if (true !== self::Stack()->IsInclude(self::SCENE, self::Stack()->Get(self::DATE))) {
       self::Stack()->Add(self::SCENE, self::Stack()->Get(self::DATE));
     }
   }

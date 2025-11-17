@@ -84,116 +84,9 @@ final class OldLogHTML {
     return sprintf(self::getSwitchLink(), $url, $css, $str);
   }
 
-  //過去ログ一覧生成
-  public static function GenerateList($page) {
-    //村数の確認
-    $room_count = RoomLoaderDB::CountFinished();
-    if ($room_count < 1) {
-      self::OutputNoLog();
-    }
-
-    $cache_flag = false; //キャッシュ有効判定
-    if (JinrouCacheManager::Enable(JinrouCacheManager::LOG_LIST)) {
-      $cache_flag = self::EnableCache();
-      if (true === $cache_flag) {
-	$str = JinrouCacheManager::Get(JinrouCacheManager::LOG_LIST);
-	if (true === isset($str)) {
-	  return $str;
-	}
-      }
-    }
-
-    //ページリンクデータの生成
-    if (null !== RQ::Get(RequestDataLogRoom::REVERSE_LIST)) {
-      $is_reverse = Switcher::IsOn(RQ::Get(RequestDataLogRoom::REVERSE_LIST));
-    } else {
-      $is_reverse = OldLogConfig::REVERSE;
-    }
-    $str = self::GenerateListHeader(self::GetPageLinkBuilder($room_count, $is_reverse));
-
-    //全部表示の場合、一ページで全部表示する。それ以外は設定した数毎に表示
-    $format = self::GetList();
-    $current_time = Time::Get();
-    foreach (RoomLoaderDB::GetFinished($is_reverse) as $room_no) {
-      DB::SetRoom(RoomLoaderDB::LoadFinished($room_no));
-
-      $vanish = DateBorder::On(0) ? ' vanish' : ''; //廃村判定
-      if (RQ::Fetch()->generate_index) {
-	$base_url = RQ::Fetch()->prefix . DB::$ROOM->id . '.html';
-	$view_url = '';
-	$login    = '';
-	$log_link = sprintf('(<a href="%s%dr.html">%s</a>)',
-	  RQ::Fetch()->prefix, DB::$ROOM->id, Message::LOG_REVERSE
-	);
-      } else {
-	$base_url = URL::GetRoom('old_log');;
-	if (URL::ExistsDB()) {
-	  $view_url  = RQ::Fetch()->ToURL(RequestDataGame::DB, true);
-	  $base_url .= $view_url;
-	} else {
-	  $view_url  = '';
-	}
-	if (RQ::Fetch()->watch) {
-	  $base_url .= URL::AddSwitch(RequestDataLogRoom::WATCH);
-	}
-
-	if ($current_time - strtotime(DB::$ROOM->finish_datetime ?? 0) > RoomConfig::KEEP_SESSION) {
-	  $login = '';
-	} else {
-	  $login = Text::LineFeed(LinkHTML::Generate(URL::GetRoom('login'), OldLogMessage::LOGIN));
-	}
-
-	if (RQ::Fetch()->watch) {
-	  $log_link  = self::GenerateWatchLogLink($base_url, '(', '', ' )');
-	} else {
-	  $log_link  = LinkHTML::GenerateLog($base_url, true, '(', '', ' )');
-
-	  $url       = $base_url . URL::AddSwitch(RequestDataLogRoom::ADD_ROLE);
-	  $header    = Text::LF . OldLogMessage::ADD_ROLE . ' (';
-	  $log_link .= LinkHTML::GenerateLog($url, false, $header, $vanish, ' )');
-	}
-      }
-
-      if (DB::$ROOM->establish_datetime == '') {
-	$establish = '';
-      } else {
-	$establish = Time::ConvertTimeStamp(DB::$ROOM->establish_datetime);
-      }
-
-      $list = [
-	'game_option' => DB::$ROOM->game_option,
-	'option_role' => DB::$ROOM->option_role,
-	'max_user'    => DB::$ROOM->max_user
-      ];
-      RoomOptionLoader::Load($list);
-      RoomOptionLoader::SetStack();
-
-      $str .= Text::Format($format,
-	URL::GetRoom('game_view'), $view_url,
-	DB::$ROOM->id, $vanish, $base_url, DB::$ROOM->GenerateName(),
-	DB::$ROOM->user_count, ImageManager::Room()->GenerateMaxUser(DB::$ROOM->max_user),
-	DB::$ROOM->date,
-	RQ::Fetch()->watch ? '-' : ImageManager::Winner()->Generate(DB::$ROOM->winner),
-	DB::$ROOM->GenerateComment(), $establish, $vanish,
-	$login, $log_link, RoomOptionLoader::GenerateImage()
-      );
-    }
-
-    $str .= Text::LineFeed(self::GetListFooter());
-    if (true === $cache_flag) {
-      JinrouCacheManager::Store($str);
-    }
-    return $str;
-  }
-
   //指定の部屋番号のログを出力する
   public static function Output() {
     echo self::Generate();
-  }
-
-  //過去ログ一覧表示
-  public static function OutputList($page) {
-    echo self::GenerateList($page);
   }
 
   //自動スクロール設定生成
@@ -434,26 +327,6 @@ EOF;
     return ArrayFilter::Concat($str_stack, Text::BRLF);
   }
 
-  //キャッシュ有効判定
-  private static function EnableCache() {
-    foreach (RQ::Fetch() as $key => $value) { //何か値がセットされていたら無効
-      switch ($key) {
-      case 'page':
-	if ($value != 1) {
-	  return false;
-	}
-	break;
-
-      default:
-	if (false === empty($value)) {
-	  return false;
-	}
-	break;
-      }
-    }
-    return true;
-  }
-
   //投票結果生成
   private static function GenerateVote() {
     $str = GameHTML::GenerateVote();
@@ -484,109 +357,6 @@ EOF;
     }
   }
 
-  //一覧ヘッダー生成
-  private static function GenerateListHeader(PageLinkBuilder $builder) {
-    if (RQ::Fetch()->generate_index) {
-      $back = LinkHTML::Generate('../', Message::BACK);
-      $url  = '../';
-    } else {
-      $back = LinkHTML::Generate('./', Message::BACK);
-      $url  = '';
-    }
-    $str = Text::Format(self::GetListHeader(),
-      $back, $url, OldLogMessage::TITLE, OldLogMessage::TITLE, $builder->Generate(),
-      OldLogMessage::NUMBER, OldLogMessage::NAME, OldLogMessage::COUNT,
-      OldLogMessage::DATE, OldLogMessage::WIN
-    );
-
-    $title = ServerConfig::TITLE . OldLogMessage::TITLE;
-    return HTML::GenerateHeader($title, 'old_log_list', true) . $str;
-  }
-
-  //ログ存在なしエラー出力
-  private static function OutputNoLog() {
-    $title = ServerConfig::TITLE . OldLogMessage::TITLE;
-    $back  = LinkHTML::Generate('./', Message::BACK);
-    HTML::OutputResult($title, Text::Join(OldLogMessage::NO_LOG, $back));
-  }
-
-  //PageLinkBuilder オブジェクト生成
-  private static function GetPageLinkBuilder(int $room_count, bool $is_reverse) {
-    if (RQ::Fetch()->generate_index) {
-      $max = RQ::Fetch()->max_room_no;
-      if (is_int($max) && Number::InRange($max, 0, $room_count)) {
-	$room_count = $max;
-      }
-      $builder = new PageLinkBuilder('index', RQ::Fetch()->page, $room_count);
-      $builder->set_reverse = $is_reverse;
-      $builder->url = '<a href="index';
-    } else {
-      $builder = new PageLinkBuilder('old_log', RQ::Fetch()->page, $room_count);
-      $builder->set_reverse = $is_reverse;
-      $builder->AddOption(RequestDataLogRoom::REVERSE_LIST, Switcher::Get($is_reverse));
-      $builder->AddOption(RequestDataLogRoom::WATCH, Switcher::Get(RQ::Fetch()->watch));
-      foreach (self::GetPageLinkBuilderOption() as $option) {
-	if (RQ::Get($option)) {
-	  $builder->AddOption($option, RQ::Get($option));
-	}
-      }
-
-      if (URL::ExistsDB()) {
-	$builder->AddOption(RequestDataGame::DB, RQ::Get(RequestDataGame::DB));
-      }
-    }
-    return $builder;
-  }
-
-  //PageLinkBuilder オブジェクトにセットするオプション取得
-  private static function GetPageLinkBuilderOption() {
-    return [
-      RequestDataLogRoom::NAME,
-      RequestDataLogRoom::ROOM_NAME,
-      RequestDataLogRoom::WINNER,
-      RequestDataLogRoom::ROLE,
-      RequestDataLogRoom::GAME_TYPE
-    ];
-  }
-
-  //一覧ヘッダータグ
-  private static function GetListHeader() {
-    return <<<EOF
-<p>%s</p>
-<img src="%simg/title/old_log.jpg" alt="%s" title="%s"><br>
-<div>
-<table>
-<caption>%s</caption>
-<thead>
-<tr><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th></tr>
-</thead>
-<tbody>
-EOF;
-  }
-
-  //一覧個別村情報タグ
-  private static function GetList() {
-    return <<<EOF
-<tr>
-<td class="number" rowspan="3"><a href="%s%s">%d</a></td>
-<td class="title%s"><a href="%s">%s</a></td>
-<td class="upper">%d %s</td>
-<td class="upper">%d</td>
-<td class="side">%s</td>
-</tr>
-<tr class="list middle">
-<td class="comment side">%s</td>
-<td class="time comment" colspan="3">%s</td>
-</tr>
-<tr class="lower list">
-<td class="comment%s">
-%s%s
-</td>
-<td colspan="3">%s</td>
-</tr>
-EOF;
-  }
-
   //ログへのリンクタグ (人狼視点モード用)
   private static function GetWolfSiteLogLink() {
     return <<<EOF
@@ -600,14 +370,5 @@ EOF;
   //リンクタグ (スイッチ型)
   private static function GetSwitchLink() {
     return '[<a href="%s" class="option-%s">%s</a>]';
-  }
-
-  //一覧フッタータグ
-  private static function GetListFooter() {
-    return <<<EOF
-</tbody>
-</table>
-</div>
-EOF;
   }
 }
