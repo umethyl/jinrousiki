@@ -32,6 +32,7 @@ class OldLogMessage {
   const SEX      = '性';
   const WOLF     = '狼';
   const PERSONAL = '結';
+  const SCROLL   = '巻';
 
   /* エラー */
   const NO_LOG       = 'ログはありません。';

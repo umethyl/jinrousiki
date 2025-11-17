@@ -44,7 +44,6 @@ final class OldLogHTML {
     $title = sprintf('[%d%s] %s - %s',
       DB::$ROOM->id, GameMessage::ROOM_NUMBER_FOOTER, DB::$ROOM->name, $base_title
     );
-
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $str = AutoPlayTalk::GenerateHeader($title);
     } elseif (RQ::Fetch()->reverse_log && RQ::Get(RequestDataLogRoom::SCROLL) > 0) {
@@ -64,6 +63,9 @@ final class OldLogHTML {
     $str .= Text::LineFeed(RQ::Fetch()->GetURL());
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $str .= Text::Format('<a href="#game_top" onClick="start_auto_play();">%s</a>', '開始');
+    } elseif (RQ::Get(RequestDataLogRoom::SCROLL_ON)) {
+      $str .= Text::BRLF . '[自動スクロール]';
+      $str .= RQ::Fetch()->GetScrollURL();
     }
     $str .= GameHTML::GeneratePlayer();
     if (RQ::Get(RequestDataLogRoom::ROLE_LIST)) {

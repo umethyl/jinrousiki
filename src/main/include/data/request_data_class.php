@@ -76,6 +76,7 @@ final class RequestDataLogRoom {
   const WATCH        = 'watch';
   const WOLF         = 'wolf_sight';
   const PERSONAL     = 'personal_result';
+  const SCROLL_ON    = 'scroll_on';
 
   //個別ログ (未実装/隠し機能)
   const ROLE_LIST    = 'role_list';
