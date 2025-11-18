@@ -9,7 +9,7 @@ final class DevHTML {
   //配役テストヘッダ出力
   public static function OutputRoleTestHeader($title, $url) {
     HTML::OutputHeader($title, 'test/role', true);
-    FormHTML::OutputHeader($url);
+    FormHTML::OutputExecute($url);
 
     $id_u = 'user_count';
     $id_t = 'try_count';

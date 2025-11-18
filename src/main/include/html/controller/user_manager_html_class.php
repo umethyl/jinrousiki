@@ -18,7 +18,7 @@ final class UserManagerHTML {
   //エラーバックリンク
   public static function GenerateError($url) {
     $stack = RQ::Fetch()->GetIgnoreError();
-    $str   = FormHTML::GenerateHeader($url, Message::BACK);
+    $str   = FormHTML::GenerateExecute($url, Message::BACK);
     foreach (RQ::Fetch() as $key => $value) {
       if (in_array($key, $stack)) {
         continue;

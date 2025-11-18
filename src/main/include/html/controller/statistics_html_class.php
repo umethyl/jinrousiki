@@ -4,6 +4,7 @@ final class StatisticsHTML {
   //出力
   public static function Output() {
     self::OutputHeader();
+    self::OutputForm();
     JinrouStatistics::Output();
     HTML::OutputFooter();
   }
@@ -202,8 +203,8 @@ final class StatisticsHTML {
   private static function OutputHeader() {
     HTML::OutputHeader(StatisticsMessage::TITLE, 'statistics');
     HTML::OutputBodyHeader();
-    self::OutputHeaderLink();
     HeaderHTML::OutputTitle(StatisticsMessage::TITLE);
+    self::OutputHeaderLink();
   }
 
   //ヘッダリンク出力
@@ -212,7 +213,27 @@ final class StatisticsHTML {
       LinkHTML::Generate(StatisticsData::LINK_TOP,   StatisticsMessage::TOP),
       LinkHTML::Generate(StatisticsData::LINK_RESET, StatisticsMessage::RESET)
     ];
-    DivHTML::Output(ArrayFilter::Concat($list), 'link');
+    HTML::OutputP(ArrayFilter::Concat($list));
+  }
+
+  //フォーム出力
+  private static function OutputForm() {
+    $url = URL::GetHeaderDB('statistics');
+    $key = StatisticsStack::GAME_TYPE;
+    if (null !== RQ::Get($key)) {
+      if (URL::ExistsDB()) {
+	$url .= URL::AddString($key, RQ::Get($key));
+      } else {
+	$url .= URL::HEAD . URL::ConvertString($key, RQ::Get($key));
+      }
+    }
+
+    FormHTML::OutputHeader($url);
+    FormHTML::OutputHiddenExecute();
+    FormHTML::OutputText(RequestDataLogRoom::NAME);
+    Text::Output(': 参加ユーザー名');
+    FormHTML::OutputFooter();
+    echo Text::BRLF;
   }
 
   //サブタイトルヘッダ出力
@@ -256,7 +277,12 @@ final class StatisticsHTML {
 
   //リンク出力
   private static function OutputLink(string $url, string $game_type, string $name) {
-    self::OutputTdLink(URL::GetSearch($url, [StatisticsStack::GAME_TYPE => $game_type]), $name);
+    $list = [StatisticsStack::GAME_TYPE => $game_type];
+    if (true !== empty(RQ::Get(RequestDataLogRoom::NAME))) {
+      $list[RequestDataLogRoom::NAME] = RQ::Get(RequestDataLogRoom::NAME);
+    }
+
+    self::OutputTdLink(URL::GetSearch($url, $list), $name);
   }
 
   //役職リンク出力
@@ -270,6 +296,10 @@ final class StatisticsHTML {
       StatisticsStack::ROLE      => $role,
       StatisticsStack::GAME_TYPE => RQ::Get(StatisticsStack::GAME_TYPE)
     ];
+    if (true !== empty(RQ::Get(RequestDataLogRoom::NAME))) {
+      $list[RequestDataLogRoom::NAME] = RQ::Get(RequestDataLogRoom::NAME);
+    }
+
     $url  = URL::GetSearch(StatisticsData::LINK_LOG, $list);
     self::OutputTdLink($url, StatisticsMessage::SEARCH);
   }

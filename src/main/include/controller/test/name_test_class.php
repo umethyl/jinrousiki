@@ -13,7 +13,7 @@ final class NameTestController extends JinrouTestController {
 
   //フォーム出力
   private static function OutputForm() {
-    FormHTML::OutputHeader('name_test.php');
+    FormHTML::OutputExecute('name_test.php');
     Text::d();
     self::OutputFormList();
     FormHTML::OutputFooter();

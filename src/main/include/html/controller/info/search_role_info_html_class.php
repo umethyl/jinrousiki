@@ -3,7 +3,7 @@
 final class SearchRoleInfoHTML {
   //フォーム出力
   public static function OutputForm() {
-    FormHTML::OutputHeader('search.php');
+    FormHTML::OutputExecute('search.php');
     self::OutputTextForm();
     FormHTML::OutputFooter();
   }
