@@ -3,10 +3,11 @@
 final class LogListHTML {
   //過去ログ一覧生成
   public static function Generate($page) {
-    //村数の確認
+    //-- 村数取得 --//
     $room_count = self::LoadRoomCount();
 
-    $cache_flag = false; //キャッシュ有効判定
+    //-- キャッシュ有効判定 --//
+    $cache_flag = false;
     if (JinrouCacheManager::Enable(JinrouCacheManager::LOG_LIST)) {
       $cache_flag = self::EnableCache();
       if (true === $cache_flag) {
@@ -17,7 +18,7 @@ final class LogListHTML {
       }
     }
 
-    //ページリンクデータの生成
+    //-- ページリンクデータ生成 --//
     if (null !== RQ::Get(RequestDataLogRoom::REVERSE_LIST)) {
       $is_reverse = Switcher::IsOn(RQ::Get(RequestDataLogRoom::REVERSE_LIST));
     } else {
@@ -25,8 +26,8 @@ final class LogListHTML {
     }
     $str = self::GenerateHeader(self::GetPageLinkBuilder($room_count, $is_reverse));
 
+    //-- 個別村情報出力 --//
     //全部表示の場合、一ページで全部表示する。それ以外は設定した数毎に表示
-    $format = self::GetList();
     $current_time = Time::Get();
     foreach (RoomLoaderDB::GetFinished($is_reverse) as $room_no) {
       DB::SetRoom(RoomLoaderDB::LoadFinished($room_no));
@@ -58,7 +59,7 @@ final class LogListHTML {
 	}
 
 	if (RQ::Fetch()->watch) {
-	  $log_link  = self::GenerateWatchLogLink($base_url, '(', '', ' )');
+	  $log_link  = self::GenerateWatchLogLink($base_url,  '(', '', ' )');
 	} else {
 	  $log_link  = LinkHTML::GenerateLog($base_url, true, '(', '', ' )');
 
@@ -66,12 +67,6 @@ final class LogListHTML {
 	  $header    = Text::LF . OldLogMessage::ADD_ROLE . ' (';
 	  $log_link .= LinkHTML::GenerateLog($url, false, $header, $vanish, ' )');
 	}
-      }
-
-      if (DB::$ROOM->establish_datetime == '') {
-	$establish = '';
-      } else {
-	$establish = Time::ConvertTimeStamp(DB::$ROOM->establish_datetime);
       }
 
       $list = [
@@ -82,18 +77,12 @@ final class LogListHTML {
       RoomOptionLoader::Load($list);
       RoomOptionLoader::SetStack();
 
-      $str .= Text::Format($format,
-	URL::GetRoom('game_view'), $view_url,
-	DB::$ROOM->id, $vanish, $base_url, DB::$ROOM->GenerateName(),
-	DB::$ROOM->user_count, ImageManager::Room()->GenerateMaxUser(DB::$ROOM->max_user),
-	DB::$ROOM->date,
-	RQ::Fetch()->watch ? '-' : ImageManager::Winner()->Generate(DB::$ROOM->winner),
-	DB::$ROOM->GenerateComment(), $establish, $vanish,
-	$login, $log_link, RoomOptionLoader::GenerateImage()
-      );
+      $str .= self::GenerateRoom($base_url, $view_url, $vanish, $login, $log_link);
     }
 
-    $str .= Text::LineFeed(self::GetFooter());
+    $str .= TableHTML::GenerateTbodyFooter();
+    $str .= Text::LineFeed(TableHTML::GenerateFooter(false));
+    $str .= Text::LineFeed(DivHTML::GenerateFooter());
     if (true === $cache_flag) {
       JinrouCacheManager::Store($str);
     }
@@ -174,7 +163,7 @@ final class LogListHTML {
     $str .= TableHTML::GenerateTh(OldLogMessage::WIN);
     $str .= TableHTML::GenerateTrFooter() . Text::LF;
     $str .= TableHTML::GenerateTheadFooter();
-    $str .= TableHTML::GenerateTbodydHeader();
+    $str .= TableHTML::GenerateTbodyHeader();
 
     return $str;
   }
@@ -218,35 +207,113 @@ final class LogListHTML {
     ];
   }
 
-  //一覧個別村情報タグ
-  private static function GetList() {
-    return <<<EOF
-<tr>
-<td class="number" rowspan="3"><a href="%s%s">%d</a></td>
-<td class="title%s"><a href="%s">%s</a></td>
-<td class="upper">%d %s</td>
-<td class="upper">%d</td>
-<td class="side">%s</td>
-</tr>
-<tr class="list middle">
-<td class="comment side">%s</td>
-<td class="time comment" colspan="3">%s</td>
-</tr>
-<tr class="lower list">
-<td class="comment%s">
-%s%s
-</td>
-<td colspan="3">%s</td>
-</tr>
-EOF;
+  //個別村情報生成
+  private static function GenerateRoom($base_url, $view_url, $vanish, $login, $log_link) {
+    $str  = self::GenerateRoomUpper($view_url, $base_url, $vanish);
+    $str .= self::GenerateRoomMiddle();
+    $str .= self::GenerateRoomLower($login, $log_link, $vanish);
+
+    return $str;
   }
 
-  //フッタタグ
-  private static function GetFooter() {
-    return <<<EOF
-</tbody>
-</table>
-</div>
-EOF;
+  //個別村情報生成/上段
+  private static function GenerateRoomUpper($view_url, $base_url, $vanish) {
+    $str  = Text::LineFeed(TableHTML::GenerateTrHeader());
+    $str .= self::GenerateRoomHeader($view_url);
+    $str .= self::GenerateRoomTitle($base_url, $vanish);
+    $str .= self::GenerateRoomMaxUser();
+    $str .= Text::LineFeed(TableHTML::GenerateTd(DB::$ROOM->date, 'upper'));
+    $str .= self::GenerateRoomSide();
+    $str .= Text::LineFeed(TableHTML::GenerateTrFooter());
+
+    return $str;
+  }
+
+  //個別村情報生成/上段/ヘッダ
+  private static function GenerateRoomHeader(string $url) {
+    $class = HTML::GenerateAttribute('class', 'number');
+    $span  = HTML::GenerateAttribute('rowspan', 3);
+
+    $header = HTML::GenerateTagHeader('td' . $class . $span);
+    $link   = LinkHTML::Generate(URL::GetRoom('game_view') . $url, DB::$ROOM->id);
+    $footer = TableHTML::GenerateTdFooter();
+
+    return Text::LineFeed($header . $link . $footer);
+  }
+
+  //個別村情報生成/上段/村名
+  private static function GenerateRoomTitle(string $url, string $vanish) {
+    $link = LinkHTML::Generate($url, DB::$ROOM->GenerateName());
+
+    return Text::LineFeed(TableHTML::GenerateTd($link, 'title' . $vanish));
+  }
+
+  //個別村情報生成/上段/最大人数
+  private static function GenerateRoomMaxUser() {
+    $count = DB::$ROOM->user_count;
+    $image = ImageManager::Room()->GenerateMaxUser(DB::$ROOM->max_user);;
+
+    return Text::LineFeed(TableHTML::GenerateTd($count . ' ' . $image, 'upper'));
+  }
+
+  //個別村情報生成/上段/勝利
+  private static function GenerateRoomSide() {
+    if (RQ::Fetch()->watch) {
+      $winner = '-';
+    } else {
+      $winner = ImageManager::Winner()->Generate(DB::$ROOM->winner);
+    }
+
+    return Text::LineFeed(TableHTML::GenerateTd($winner, 'side'));
+  }
+
+  //個別村情報生成/中段
+  private static function GenerateRoomMiddle() {
+    $str  = Text::LineFeed(TableHTML::GenerateTrHeader('list middle'));
+    $str .= Text::LineFeed(TableHTML::GenerateTd(DB::$ROOM->GenerateComment(), 'comment side'));
+    $str .= self::GenerateRoomTime();
+    $str .= Text::LineFeed(TableHTML::GenerateTrFooter());
+
+    return $str;
+  }
+
+  //個別村情報生成/中段/日時
+  private static function GenerateRoomTime() {
+    $class  = HTML::GenerateAttribute('class', 'time comment');
+    $span   = HTML::GenerateAttribute('colspan', 3);
+
+    $header = HTML::GenerateTagHeader('td' . $class . $span);
+    if (DB::$ROOM->establish_datetime == '') {
+      $establish = '';
+    } else {
+      $establish = Time::ConvertTimeStamp(DB::$ROOM->establish_datetime);
+    }
+    $footer = TableHTML::GenerateTdFooter();
+
+    return Text::LineFeed($header . $establish . $footer);
+  }
+
+  //個別村情報生成/下段
+  private static function GenerateRoomLower($login, $log_link, $vanish) {
+    $link  = Text::LineFeed(Text::LF . $login . $log_link);
+    $class = 'comment' . $vanish;
+
+    $str  = Text::LineFeed(TableHTML::GenerateTrHeader('lower list'));
+    $str .= Text::LineFeed(TableHTML::GenerateTd($link, $class));
+    $str .= self::GenerateRoomOption();
+    $str .= Text::LineFeed(TableHTML::GenerateTrFooter());
+
+    return $str;
+  }
+
+  //個別村情報生成/下段/オプション
+  private static function GenerateRoomOption() {
+    $span = HTML::GenerateAttribute('colspan', 3);
+
+    $header = HTML::GenerateTagHeader('td' . $span);
+    $image  = RoomOptionLoader::GenerateImage();
+    $footer = TableHTML::GenerateTdFooter();
+
+    return Text::LineFeed($header . $image . $footer);
   }
 }

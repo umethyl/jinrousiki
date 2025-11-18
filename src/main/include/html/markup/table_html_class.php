@@ -29,8 +29,13 @@ final class TableHTML {
   }
 
   //tbody ヘッダ生成
-  public static function GenerateTbodydHeader() {
+  public static function GenerateTbodyHeader() {
     return Text::LineFeed(HTML::GenerateTagHeader('tbody'));
+  }
+
+  //tbody フッタ生成
+  public static function GenerateTbodyFooter() {
+    return Text::LineFeed(HTML::GenerateTagFooter('tbody'));
   }
 
   //th 生成
