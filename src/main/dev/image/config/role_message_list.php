@@ -976,7 +976,7 @@ class RoleMessageList {
     'type' => 'depraver', 'delimiter' => ['^' => 'vote', ':' => 'wisp']];
 
   public $tailtip_depraver = [
-    'message' => "[役割] [|妖狐|陣営] [|背徳者|系]\n　あなたは|尾先|です。_占い_をされると|妖狐|に変化します。",
+    'message' => "[役割] [|妖狐|陣営] [|背徳者|系]\n　あなたは|尾先|です。_占い_をされると|妖狐|に変化します。待っていた。あなたに見初められ、わたしが目覚めるその時を。",
     'type' => 'depraver'];
 
   public $sacrifice_depraver = [
