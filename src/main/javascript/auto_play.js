@@ -1,16 +1,25 @@
 function start_auto_play() {
-  var scene = scene_list.pop();
-  if (! scene) {
+  if (scene_list.length > 0) {
+    var scene = scene_list.pop();
+    auto_play_open_scene(scene);
+    auto_play_interval_open(scene);
+  } else {
+    auto_play_finish();
     return;
   }
-  auto_play_open_scene(scene);
-  auto_play_interval_open(scene);
 }
 
 function auto_play_open_scene(scene) {
   var stack = talk_id_list[scene];
   for (var id in stack) {
     auto_play_hide('talk_' + stack[id]);
+  }
+
+  if (scene + '_day' in talk_id_list) {
+    stack = talk_id_list[scene + '_day'];
+    for (id in stack) {
+      auto_play_hide('talk_' + stack[id]);
+    }
   }
   auto_play_open(scene);
 }
@@ -71,8 +80,8 @@ function auto_play_open_dead_night(scene) {
 }
 
 function auto_play_interval_open_talk(scene) {
-  var id = talk_id_list[scene].pop();
-  if (id) {
+  if (scene in talk_id_list && talk_id_list[scene].length > 0) {
+    var id = talk_id_list[scene].pop();
     auto_play_open('talk_' + id);
     setTimeout(function (){ auto_play_interval_open_talk(scene); }, talk_time_list[scene].pop());
   } else {
@@ -91,7 +100,12 @@ function auto_play_hide_scene(scene) {
     setTimeout('start_auto_play()', 1500);
   } else {
     auto_play_open('winner');
+    auto_play_finish();
   }
+}
+
+function auto_play_finish() {
+  auto_play_open('auto_play_end');
 }
 
 function auto_play_open(id) {

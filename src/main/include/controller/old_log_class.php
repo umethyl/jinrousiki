@@ -53,7 +53,7 @@ final class OldLogController extends JinrouController {
     if (RQ::Enable('is_room')) {
       OldLogHTML::Output();
     } else {
-      OldLogHTML::OutputList(RQ::Fetch()->page);
+      LogListHTML::Output(RQ::Fetch()->page);
     }
     HTML::OutputFooter();
   }

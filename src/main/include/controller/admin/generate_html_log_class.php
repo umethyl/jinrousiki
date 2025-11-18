@@ -96,7 +96,7 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
     for ($i = 1; $i <= $end_page; $i++) {
       RQ::Set('page', $i);
       $index = RQ::Fetch()->index_no - $i + 1;
-      file_put_contents($header. $index . '.html', OldLogHTML::GenerateList($i) . $footer);
+      file_put_contents($header. $index . '.html', LogListHTML::Generate($i) . $footer);
     }
 
     $format = GenerateHTMLLogMessage::FORMAT;

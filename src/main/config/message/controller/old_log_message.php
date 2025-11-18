@@ -32,6 +32,12 @@ class OldLogMessage {
   const SEX      = '性';
   const WOLF     = '狼';
   const PERSONAL = '結';
+  const SCROLL   = '巻';
+  const AUTO     = '再';
+
+  /* 特殊機能 */
+  const SCROLL_ON    = '[自動スクロール]';
+  const AUTO_PLAY_ON = '[自動再生(β版)]';
 
   /* エラー */
   const NO_LOG       = 'ログはありません。';

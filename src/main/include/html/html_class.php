@@ -63,6 +63,11 @@ final class HTML {
     );
   }
 
+  //p 生成
+  public static function GenerateP($str) {
+    return Text::LineFeed(self::GenerateTag('p', $str));
+  }
+
   //span 生成
   public static function GenerateSpan($str, $class = null, $id = null) {
     return self::GenerateTag('span', $str, $class, $id);
@@ -128,7 +133,7 @@ final class HTML {
 
   //p 出力
   public static function OutputP($str) {
-    Text::Output(self::GenerateTag('p', $str));
+    echo self::GenerateP($str);
   }
 
   //警告メッセージ出力

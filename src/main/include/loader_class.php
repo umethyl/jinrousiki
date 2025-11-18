@@ -209,6 +209,7 @@ final class Loader extends LoadManager {
     case 'html/media':
     case 'html/option':
     case 'html/role':
+    case 'html/log':
     case 'html/controller':
     case 'html/controller/info':
     case 'html/controller/test':
@@ -490,7 +491,6 @@ final class LoaderData {
     'RoomHTML'		=> 'room_html_class',
     'TalkHTML'		=> 'talk_html_class',
     'VoteHTML'		=> 'vote_html_class',
-    'OldLogHTML'	=> 'old_log_html_class',
     'InfoHTML'		=> 'info_html_class',
     //html/markup
     'HeaderHTML'	=> 'header_html_class',
@@ -510,6 +510,9 @@ final class LoaderData {
     //html/role
     'RoleHTML'		=> 'role_html_class',
     'RoleDataHTML'	=> 'role_data_html_class',
+    //html/log
+    'OldLogHTML'	=> 'old_log_html_class',
+    'LogListHTML'	=> 'log_list_html_class',
     //html/controller
     'IndexHTML'		=> 'index_html_class',
     'RoomManagerHTML'	=> 'room_manager_html_class',
@@ -748,7 +751,6 @@ final class LoaderData {
     'room_html_class'		=> 'html',
     'talk_html_class'		=> 'html',
     'vote_html_class'		=> 'html',
-    'old_log_html_class'	=> 'html',
     'info_html_class'		=> 'html',
     //html/markup
     'header_html_class'		=> 'html/markup',
@@ -768,6 +770,9 @@ final class LoaderData {
     //html/role
     'role_html_class'		=> 'html/role',
     'role_data_html_class'	=> 'html/role',
+    //html/log
+    'old_log_html_class'	=> 'html/log',
+    'log_list_html_class'	=> 'html/log',
     //html/controller
     'index_html_class'		=> 'html/controller',
     'room_manager_html_class'	=> 'html/controller',

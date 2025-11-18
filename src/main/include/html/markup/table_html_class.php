@@ -13,6 +13,36 @@ final class TableHTML {
     return (true === $tr) ? self::GenerateTrFooter() . $str : $str;
   }
 
+  //caption 生成
+  public static function GenerateCaption(string $str) {
+    return Text::LineFeed(HTML::GenerateTag('caption', $str));
+  }
+
+  //thead ヘッダ生成
+  public static function GenerateTheadHeader() {
+    return Text::LineFeed(HTML::GenerateTagHeader('thead'));
+  }
+
+  //thead フッタ生成
+  public static function GenerateTheadFooter() {
+    return Text::LineFeed(HTML::GenerateTagFooter('thead'));
+  }
+
+  //tbody ヘッダ生成
+  public static function GenerateTbodyHeader() {
+    return Text::LineFeed(HTML::GenerateTagHeader('tbody'));
+  }
+
+  //tbody フッタ生成
+  public static function GenerateTbodyFooter() {
+    return Text::LineFeed(HTML::GenerateTagFooter('tbody'));
+  }
+
+  //th 生成
+  public static function GenerateTh($str, $class = null) {
+    return HTML::GenerateTag('th', $str, $class);
+  }
+
   //tr 生成
   public static function GenerateTr($str, $class = null) {
     return self::GenerateTrHeader($class) . $str . self::GenerateTrFooter();
@@ -26,11 +56,6 @@ final class TableHTML {
   //tr フッタ生成
   public static function GenerateTrFooter() {
     return HTML::GenerateTagFooter('tr');
-  }
-
-  //th 生成
-  public static function GenerateTh($str, $class = null) {
-    return HTML::GenerateTag('th', $str, $class);
   }
 
   //tr 改行生成
