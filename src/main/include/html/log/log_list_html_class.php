@@ -82,7 +82,7 @@ final class LogListHTML {
 
     $str .= TableHTML::GenerateTbodyFooter();
     $str .= Text::LineFeed(TableHTML::GenerateFooter(false));
-    $str .= Text::LineFeed(DivHTML::GenerateFooter());
+    $str .= DivHTML::Footer(true);
     if (true === $cache_flag) {
       JinrouCacheManager::Store($str);
     }
@@ -129,7 +129,7 @@ final class LogListHTML {
   private static function GenerateHeader(PageLinkBuilder $builder) {
     $str  = HTML::GenerateHeader(ServerConfig::TITLE . OldLogMessage::TITLE, 'old_log_list', true);
     $str .= self::GenerateTitle();
-    $str .= DivHTML::GenerateHeader() . Text::LF;
+    $str .= DivHTML::Header(line: true);
     $str .= self::GenerateTableHeader($builder);
 
     return $str;

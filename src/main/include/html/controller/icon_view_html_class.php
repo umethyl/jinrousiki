@@ -47,7 +47,7 @@ final class IconViewHTML {
 
   //バックリンク出力
   private static function OutputLink() {
-    DivHTML::Output(LinkHTML::Generate('icon_view.php', IconMessage::BACK), 'link');
+    DivHTML::Output(LinkHTML::Generate('icon_view.php', IconMessage::BACK), [HTML::CSS => 'link']);
   }
 
   //個別編集フォーム出力

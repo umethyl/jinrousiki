@@ -71,7 +71,7 @@ final class GamePlayHTML {
 
   //未投票突然死メッセージ出力
   public static function OutputSuddenDeathAnnounce($str) {
-    DivHTML::Output($str, 'system-sudden-death');
+    DivHTML::Output($str, [HTML::CSS => 'system-sudden-death']);
   }
 
   //役職能力出力
@@ -80,7 +80,7 @@ final class GamePlayHTML {
       return;
     }
 
-    DivHTML::OutputHeader('ability-elements');
+    DivHTML::OutputHeader([HTML::CSS => 'ability-elements']);
     RoleHTML::OutputAbility();
     DivHTML::OutputFooter();
   }
@@ -91,7 +91,7 @@ final class GamePlayHTML {
       return;
     }
 
-    DivHTML::OutputHeader('vote-elements');
+    DivHTML::OutputHeader([HTML::CSS => 'vote-elements']);
     RoleHTML::OutputVoteKill();
     if (DB::$ROOM->IsPlaying()) {
       GameHTML::OutputRevote();

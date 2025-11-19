@@ -24,7 +24,7 @@ final class InfoHTML {
   //サイドメニュー出力
   public static function OutputMenu($title, $path = '') {
     HTML::OutputHeader(self::GenerateTitle($title, InfoMessage::TITLE_MENU), 'info/menu', true);
-    DivHTML::Output($title, 'menu');
+    DivHTML::Output($title, [HTML::CSS => 'menu']);
     self::Load('menu', $path);
     HTML::OutputFooter();
   }

@@ -1113,7 +1113,7 @@ final class ExternalLinkBuilder {
   //出力
   public static function Output($title, $data) {
     HTML::OutputFieldsetHeader($title);
-    DivHTML::Output(HTML::GenerateTag('dl', $data), 'game-list');
+    DivHTML::Output(HTML::GenerateTag('dl', $data), [HTML::CSS => 'game-list']);
     HTML::OutputFieldsetFooter();
   }
 

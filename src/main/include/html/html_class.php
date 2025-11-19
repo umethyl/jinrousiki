@@ -1,6 +1,11 @@
 <?php
 //-- HTML 生成クラス --//
 final class HTML {
+  //-- Attribute --//
+  const ID    = 'id';
+  const CSS   = 'class';
+  const ALIGN = 'align';
+
   //共通タグ生成
   public static function GenerateTag($name, $str, $class = null, $id = null, $align = null) {
     $header = self::GenerateTagHeader($name, $class, $id, $align);
@@ -26,6 +31,20 @@ final class HTML {
   //共通タグフッタ生成
   public static function GenerateTagFooter($name) {
     return Text::Quote($name, '</', '>');
+  }
+
+  //共通タグヘッダ生成
+  public static function TagHeader(string $name, array $list = [], bool $line = false) {
+    $str = $name;
+    foreach ($list as $key => $value) {
+      $str .= self::GenerateAttribute($key, $value);
+    }
+    return self::LineFeed(Text::Quote($str, '<', '>'), $line);
+  }
+
+  //共通タグフッタ生成
+  public static function TagFooter(string $name, bool $line = false) {
+    return self::LineFeed(Text::Quote($name, '</', '>'), $line);
   }
 
   //Attribute 要素生成
@@ -164,6 +183,11 @@ final class HTML {
   //使用不可エラー出力
   public static function OutputUnusableError() {
     self::OutputResult(Message::DISABLE_ERROR, Message::UNUSABLE_ERROR);
+  }
+
+  //改行生成
+  private static function LineFeed(string $tag, bool $line) {
+    return $line ? Text::LineFeed($tag) : $tag;
   }
 
   //HTML ヘッダタグ

@@ -61,7 +61,7 @@ final class JinrouAdmin {
     }
 
     HTML::OutputFieldsetHeader(TopPageMessage::NOTICE);
-    DivHTML::OutputHeader('information');
+    DivHTML::OutputHeader([HTML::CSS => 'information']);
     Text::p(AdminMessage::EXPLAIN . Text::BRLF);
     foreach ($stack->Get('type') as $type) {
       Text::p(AdminMessage::$$type . AdminMessage::NOTICE_ENABLE);

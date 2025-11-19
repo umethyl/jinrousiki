@@ -85,12 +85,12 @@ final class RoleHTML {
     $vote_count = sprintf(RoleAbilityMessage::VOTE_COUNT, DB::$ROOM->revote_count + 1);
     if (null === DB::$SELF->target_no) {
       $result = HTML::GenerateWarning(RoleAbilityMessage::NOT_VOTED);
-      DivHTML::Output($vote_count . $result, 'self-vote');
+      DivHTML::Output($vote_count . $result, [HTML::CSS => 'self-vote']);
       echo HTML::GenerateSpan(RoleAbilityMessage::VOTE_KILL, 'ability vote-do') . Text::BRLF;
     } else {
       $user   = DB::$USER->ByVirtual(DB::$SELF->target_no);
       $result = $user->handle_name . RoleAbilityMessage::SETTLE_VOTED;
-      DivHTML::Output($vote_count . $result, 'self-vote');
+      DivHTML::Output($vote_count . $result, [HTML::CSS => 'self-vote']);
     }
   }
 

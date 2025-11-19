@@ -515,7 +515,7 @@ abstract class GamePlayView extends stdClass {
       return;
     }
 
-    DivHTML::OutputHeader('timelimit');
+    DivHTML::OutputHeader([HTML::CSS => 'timelimit']);
     if (DB::$ROOM->IsEvent('wait_morning')) {
       GameHTML::OutputVoteAnnounce(GameMessage::WAIT_MORNING);
     } elseif ($left_time == 0) {
