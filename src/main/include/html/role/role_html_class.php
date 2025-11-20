@@ -47,17 +47,17 @@ final class RoleHTML {
       return;
     }
 
-    $list[] = TableHTML::GenerateTdFooter();
+    $list[] = TableHTML::TdFooter();
     $str    = ArrayFilter::Concat($list, RoleAbilityMessage::HONORIFIC . Message::SPACER);
     $stack  = [
-      TableHTML::GenerateHeader('ability-partner'),
+      TableHTML::Header([HTML::CSS => 'ability-partner'], false) . TableHTML::TrHeader(),
       ImageManager::Role()->Generate($header, null, true),
-      TableHTML::GenerateTdHeader() . Message::SPACER . $str
+      TableHTML::TdHeader() . Message::SPACER . $str
     ];
     if (isset($footer)) {
       $stack[] = ImageManager::Role()->Generate($footer, null, true);
     }
-    $stack[] = TableHTML::GenerateFooter();
+    $stack[] = TableHTML::Footer(false, true);
     Text::Output(ArrayFilter::Concat($stack, Text::LF));
   }
 
@@ -384,18 +384,18 @@ final class RoleHTML {
 
   //個別能力発動結果表示
   public static function OutputAbilityResult($header, $target, $footer = null) {
-    $str = Text::LineFeed(TableHTML::GenerateHeader('ability-result'));
+    $str = TableHTML::Header([HTML::CSS => 'ability-result'], tr: true);
     if (true === isset($header)) {
       $str .= Text::LineFeed(ImageManager::Role()->Generate($header, null, true));
     }
     if (true === isset($target)) {
-      $str .= Text::LineFeed(TableHTML::GenerateTd($target));
+      $str .= TableHTML::Td($target, line: true);
     }
     if (true === isset($footer)) {
       $str .= Text::LineFeed(ImageManager::Role()->Generate($footer, null, true));
     }
     echo $str;
-    TableHTML::OutputFooter();
+    TableHTML::OutputFooter(tr: true);
   }
 
   //夜投票チェックボックス生成

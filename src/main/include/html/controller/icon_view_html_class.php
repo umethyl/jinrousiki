@@ -91,7 +91,7 @@ final class IconViewHTML {
 
   //フッタ出力
   private static function OutputFooter() {
-    echo TableHTML::GenerateTdFooter();
+    TableHTML::OutputTdFooter();
     TableHTML::OutputFooter();
     HTML::OutputFooter();
   }

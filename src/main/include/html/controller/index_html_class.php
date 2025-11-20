@@ -33,7 +33,7 @@ final class IndexHTML {
 
   //メニュー出力
   private static function OutputMenu() {
-    Text::Output(TableHTML::GenerateHeader(null, true, 'main'));
+    TableHTML::OutputHeader([HTML::ID => 'main'], tr: true);
     TableHTML::OutputTdHeader();
     include('top/menu.html');
     self::OutputMenuLink();
@@ -105,7 +105,7 @@ final class IndexHTML {
     self::OutputBBS();
     self::OutputCreateRoom();
     TableHTML::OutputTdFooter();
-    TableHTML::OutputFooter();
+    TableHTML::OutputFooter(tr: true);
   }
 
   //一覧出力

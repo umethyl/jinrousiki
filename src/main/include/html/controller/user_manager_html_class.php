@@ -47,7 +47,7 @@ final class UserManagerHTML {
   private static function OutputForm() {
     TableHTML::OutputTrHeader();
     TableHTML::OutputTdHeader();
-    TableHTML::OutputHeader('input', false);
+    TableHTML::OutputHeader([HTML::CSS => 'input'], true);
     self::OutputFormUname();
     self::OutputFormHandleName();
     self::OutputFormPassword();
@@ -69,7 +69,7 @@ final class UserManagerHTML {
       $str .= UserManagerMessage::UNAME_EXPLAIN_FOOTER;
 
       TableHTML::OutputTd(RQ::Fetch()->uname);
-      TableHTML::OutputTd($str, 'explain');
+      TableHTML::OutputTd($str, [HTML::CSS => 'explain']);
     } elseif (GameConfig::TRIP) { //トリップ対応
       Text::Printf(self::GetFormUnameWithTrip(),
 	RQ::Fetch()->uname, Message::TRIP_KEY, RQ::Fetch()->trip,

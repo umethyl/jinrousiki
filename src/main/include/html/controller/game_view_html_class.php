@@ -89,7 +89,7 @@ final class GameViewHTML {
     GameHTML::OutputTimeTable();
     if (DB::$ROOM->IsPlaying()) {
       GameHTML::OutputTimePass($left_time);
-      TableHTML::OutputFooter();
+      TableHTML::OutputFooter(tr: true);
 
       if (DB::$ROOM->IsEvent('wait_morning')) {
 	GameHTML::OutputVoteAnnounce(GameMessage::WAIT_MORNING);
@@ -97,7 +97,7 @@ final class GameViewHTML {
 	GameHTML::OutputVoteAnnounce();
       }
     } else {
-      TableHTML::OutputFooter();
+      TableHTML::OutputFooter(tr: true);
     }
   }
 

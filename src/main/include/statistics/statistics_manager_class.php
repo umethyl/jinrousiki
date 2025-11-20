@@ -222,7 +222,7 @@ final class JinrouStatistics extends StackStaticManager {
       }
       $result_list = self::Aggregate($stack->Get(StatisticsStack::WINNER));
 
-      TableHTML::OutputHeader('');
+      TableHTML::OutputHeader(tr: true);
       foreach ($result_list as $camp => $count) {
 	if ($count > 0) {
 	  TableHTML::OutputTh(self::GetWinCampName($camp));

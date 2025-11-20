@@ -126,12 +126,13 @@ final class InfoHTML {
     }
     $role_list = RoleDataManager::Sort(array_unique($stack)); //表示順を決定
 
-    $header = TableHTML::GenerateTrHeader() . TableHTML::GenerateTh(InfoMessage::POPULATION);
+    TableHTML::OutputHeader([HTML::CSS => 'member'], true);
+    $header = TableHTML::TrHeader() . TableHTML::Th(InfoMessage::POPULATION);
     foreach ($role_list as $role) {
-      $header .= RoleDataHTML::GenerateMain($role, 'th');
+      $header .= RoleDataHTML::GenerateMain($role, TableHTML::TAG_TH);
     }
-    $header .= TableHTML::GenerateTrFooter();
-    Text::Output(Text::LineFeed(TableHTML::GenerateHeader('member', false)) . $header);
+    $header .= TableHTML::TrFooter(false);
+    Text::Output($header);
 
     //人数毎の配役を表示
     foreach (CastConfig::$role_list as $key => $value) {
@@ -139,11 +140,11 @@ final class InfoHTML {
 	continue;
       }
 
-      $str = TableHTML::GenerateTd(HTML::GenerateTag('b', $key));
+      $str = TableHTML::Td(HTML::Tag('b', $key));
       foreach ($role_list as $role) {
-	$str .= TableHTML::GenerateTd(ArrayFilter::GetInt($value, $role));
+	$str .= TableHTML::Td(ArrayFilter::GetInt($value, $role));
       }
-      TableHTML::OutputTr($str);
+      TableHTML::OutputTr($str, line: true);
       if ($key == $max) {
 	break;
       }

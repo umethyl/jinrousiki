@@ -125,9 +125,10 @@ final class GameHTML {
     //$stack->p(null, '◆Player');
 
     $count = 0; //改行カウントを初期化
-    $str   = Text::LineFeed(self::GetPlayerHeader());
+    $str   = DivHTML::Header([HTML::CSS => 'player'], true);
+    $str  .= TableHTML::Header(line: false, tr: true);
     foreach (DB::$USER->Get() as $id => $user) {
-      $str .= Text::Fold($count++, TableHTML::GenerateTrLineFeed());
+      $str .= Text::Fold($count++, TableHTML::TrLineFeed());
 
       $td_header = self::GeneratePlayerVoteHeader($user, $stack); //投票済み判定
       $str .= $td_header;
@@ -168,9 +169,10 @@ final class GameHTML {
 	$str .= Text::BR . HTML::GenerateSpan(Text::QuoteBracket(GameMessage::TEMPORARY_GM));
       }
 
-      $str .= Text::LineFeed(TableHTML::GenerateTdFooter());
+      $str .= TableHTML::TdFooter(true);
     }
-    return $str . self::GetPlayerFooter();
+
+    return $str . TableHTML::Footer(tr: true) . DivHTML::Footer(true);
   }
 
   //死亡メッセージ生成
@@ -411,16 +413,16 @@ final class GameHTML {
 
   //日付と生存者の人数を出力
   public static function OutputTimeTable() {
-    $str = TableHTML::GenerateHeader('time-table'); //ヘッダ
+    $str = TableHTML::Header([HTML::CSS => 'time-table'], false, tr: true);
     if (DB::$ROOM->IsBeforeGame()) {
       if (DB::$ROOM->IsClosing()) { //募集停止判定
-	$str .= Text::LF . TableHTML::GenerateTd(GameMessage::CLOSING, RoomStatus::CLOSING);
+	$str .= TableHTML::Td(GameMessage::CLOSING, [HTML::CSS => RoomStatus::CLOSING]);
       }
     } else { //ゲーム開始以後は生存者を表示
       $td = sprintf(GameMessage::TIME_TABLE, DB::$ROOM->date, DB::$USER->CountLive());
-      $str .= Text::LF . TableHTML::GenerateTd($td);
+      $str .= TableHTML::Td($td, line: true);
     }
-    Text::Output($str);
+    echo $str;
   }
 
   //経過時間情報を出力
@@ -588,7 +590,14 @@ final class GameHTML {
       $voted = false;
       break;
     }
-    return TableHTML::GenerateTdHeader($voted ? 'already-vote' : null);
+
+    if ($voted) {
+      $attribute = [HTML::CSS => 'already-vote'];
+    } else {
+      $attribute = [];
+    }
+
+    return TableHTML::TdHeader($attribute);
   }
 
   //ユーザ公開情報生成
@@ -769,15 +778,22 @@ final class GameHTML {
       break;
     }
 
-    $str  = Text::LineFeed(TableHTML::GenerateHeader('dead-type', false));
-    $str .= TableHTML::GenerateTrHeader((null === $class) ? null : 'dead-type-' . $class);
-    $str .= TableHTML::GenerateTd($name . DeadMessage::${true === $base ? 'deadman' : $action});
-    if (isset($reason)) {
-      $str .= TableHTML::GenerateTrLineFeed();
-      $str .= TableHTML::GenerateTd(Text::Quote($name . DeadMessage::$$reason));
+    if (null === $class) {
+      $attribute = [];
+    } else {
+      $attribute = [HTML::CSS => 'dead-type-' . $class];
     }
-    $str .= Text::LineFeed(TableHTML::GenerateTrFooter());
-    $str .= Text::LineFeed(TableHTML::GenerateFooter(false));
+
+    $str  = TableHTML::Header([HTML::CSS => 'dead-type'], true);
+    $str .= TableHTML::TrHeader($attribute);
+    $str .= TableHTML::Td($name . DeadMessage::${true === $base ? 'deadman' : $action});
+    if (isset($reason)) {
+      $str .= TableHTML::TrLineFeed();
+      $str .= TableHTML::Td(Text::Quote($name . DeadMessage::$$reason));
+    }
+    $str .= TableHTML::TrFooter();
+    $str .= TableHTML::Footer();
+
     return $str;
   }
 
@@ -928,11 +944,6 @@ EOF;
 EOF;
   }
 
-  //プレイヤー一覧ヘッダタグ
-  private static function GetPlayerHeader() {
-    return DivHTML::Header([HTML::CSS => 'player']) . TableHTML::GenerateHeader();
-  }
-
   //プレイヤーアイコンタグ
   private static function GetPlayerImage() {
     return <<<EOF
@@ -953,11 +964,6 @@ EOF;
     return <<<EOF
  onMouseout="this.src='%s'"
 EOF;
-  }
-
-  //プレイヤー一覧フッタタグ
-  private static function GetPlayerFooter() {
-    return TableHTML::GenerateFooter() . DivHTML::Footer(true);
   }
 
   //リアルタイム制残り時間表示タグ

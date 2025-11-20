@@ -8,11 +8,12 @@ final class VoteTestHTML {
     Text::Printf(self::GetCastHeader(), VoteTestMessage::CAST_POPULATION);
     foreach (ChaosConfig::$role_group_rate_list as $group => $rate) {
       $role = RoleDataManager::GetGroup($group);
-      TableHTML::OutputTh(RoleDataManager::GetShortName($role), RoleDataManager::GetCSS($role));
+      $str  = RoleDataManager::GetShortName($role);
+      TableHTML::OutputTh($str, [HTML::CSS => RoleDataManager::GetCSS($role)]);
     }
     TableHTML::OutputTrFooter();
     for ($i = 8; $i <= 40; $i++) {
-      TableHTML::OutputTrHeader(null, 'right');
+      TableHTML::OutputTrHeader([HTML::ALIGN => 'right']);
       TableHTML::OutputTh($i);
       foreach (ChaosConfig::$role_group_rate_list as $rate) {
 	TableHTML::OutputTd(round($i / $rate));

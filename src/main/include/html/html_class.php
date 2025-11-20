@@ -33,9 +33,14 @@ final class HTML {
     return Text::Quote($name, '</', '>');
   }
 
+  //共通タグ生成
+  public static function Tag(string $tag, string $str = '', array $list = [], bool $line = false) {
+    return self::TagHeader($tag, $list) . $str . self::TagFooter($tag, $line);
+  }
+
   //共通タグヘッダ生成
-  public static function TagHeader(string $name, array $list = [], bool $line = false) {
-    $str = $name;
+  public static function TagHeader(string $tag, array $list = [], bool $line = false) {
+    $str = $tag;
     foreach ($list as $key => $value) {
       $str .= self::GenerateAttribute($key, $value);
     }
@@ -43,12 +48,12 @@ final class HTML {
   }
 
   //共通タグフッタ生成
-  public static function TagFooter(string $name, bool $line = false) {
-    return self::LineFeed(Text::Quote($name, '</', '>'), $line);
+  public static function TagFooter(string $tag, bool $line = false) {
+    return self::LineFeed(Text::Quote($tag, '</', '>'), $line);
   }
 
   //Attribute 要素生成
-  public static function GenerateAttribute($name, $value = null) {
+  public static function GenerateAttribute(string $name, $value = null) {
     $str = ' ' . $name;
     if (true === isset($value)) {
       $str .= Text::Quote($value, '="', '"');

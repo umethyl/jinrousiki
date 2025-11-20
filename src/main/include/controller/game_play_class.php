@@ -351,14 +351,14 @@ abstract class GamePlayView extends stdClass {
 
   //ヘッダ出力
   final protected function OutputHeader() {
-    TableHTML::OutputHeader('game-header');
+    TableHTML::OutputHeader([HTML::CSS => 'game-header'], tr: true);
     $this->OutputHeaderTitle();
     $this->OutputHeaderLogLink();
     $this->OutputHeaderLinkHeader();
     $this->OutputHeaderLink();
     $this->OutputHeaderLinkFooter();
     TableHTML::OutputTdFooter();
-    TableHTML::OutputFooter();
+    TableHTML::OutputFooter(tr: true);
   }
 
   //ヘッダタイトル
@@ -475,7 +475,7 @@ abstract class GamePlayView extends stdClass {
       GamePlayHTML::OutputTalkCount();
     }
     $this->OutputObjection($left_time);
-    TableHTML::OutputFooter();
+    TableHTML::OutputFooter(tr: true);
 
     $this->OutputTimelimit($left_time);
   }
