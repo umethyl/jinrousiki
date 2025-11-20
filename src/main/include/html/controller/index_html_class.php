@@ -19,7 +19,7 @@ final class IndexHTML {
       LinkHTML::Output(ServerConfig::BACK_PAGE, Message::BACK, true);
     }
     LinkHTML::Output('./', self::GenerateHeaderImage());
-    DivHTML::Output(ServerConfig::COMMENT, 'comment');
+    DivHTML::Output(ServerConfig::COMMENT, [HTML::CSS => 'comment']);
     JavaScriptHTML::OutputNoscript(TopPageMessage::CAUTION_JAVASCRIPT);
   }
 
@@ -33,7 +33,7 @@ final class IndexHTML {
 
   //メニュー出力
   private static function OutputMenu() {
-    Text::Output(TableHTML::GenerateHeader(null, true, 'main'));
+    TableHTML::OutputHeader([HTML::ID => 'main'], tr: true);
     TableHTML::OutputTdHeader();
     include('top/menu.html');
     self::OutputMenuLink();
@@ -69,7 +69,7 @@ final class IndexHTML {
 
   //メニューリンクヘッダ出力
   private static function OutputMenuLinkHeader(string $str) {
-    DivHTML::Output($str, 'menu');
+    DivHTML::Output($str, [HTML::CSS => 'menu']);
     Text::Output(HTML::GenerateTagHeader('ul'));
   }
 
@@ -105,13 +105,13 @@ final class IndexHTML {
     self::OutputBBS();
     self::OutputCreateRoom();
     TableHTML::OutputTdFooter();
-    TableHTML::OutputFooter();
+    TableHTML::OutputFooter(tr: true);
   }
 
   //一覧出力
   private static function OutputField($title, $class, $file) {
     HTML::OutputFieldsetHeader($title);
-    DivHTML::OutputHeader($class);
+    DivHTML::OutputHeader([HTML::CSS => $class]);
     include($file);
     DivHTML::OutputFooter();
     HTML::OutputFieldsetFooter();

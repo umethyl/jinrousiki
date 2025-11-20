@@ -47,17 +47,17 @@ final class RoleHTML {
       return;
     }
 
-    $list[] = TableHTML::GenerateTdFooter();
+    $list[] = TableHTML::TdFooter();
     $str    = ArrayFilter::Concat($list, RoleAbilityMessage::HONORIFIC . Message::SPACER);
     $stack  = [
-      TableHTML::GenerateHeader('ability-partner'),
+      TableHTML::Header([HTML::CSS => 'ability-partner'], false) . TableHTML::TrHeader(),
       ImageManager::Role()->Generate($header, null, true),
-      TableHTML::GenerateTdHeader() . Message::SPACER . $str
+      TableHTML::TdHeader() . Message::SPACER . $str
     ];
     if (isset($footer)) {
       $stack[] = ImageManager::Role()->Generate($footer, null, true);
     }
-    $stack[] = TableHTML::GenerateFooter();
+    $stack[] = TableHTML::Footer(false, true);
     Text::Output(ArrayFilter::Concat($stack, Text::LF));
   }
 
@@ -85,12 +85,12 @@ final class RoleHTML {
     $vote_count = sprintf(RoleAbilityMessage::VOTE_COUNT, DB::$ROOM->revote_count + 1);
     if (null === DB::$SELF->target_no) {
       $result = HTML::GenerateWarning(RoleAbilityMessage::NOT_VOTED);
-      DivHTML::Output($vote_count . $result, 'self-vote');
+      DivHTML::Output($vote_count . $result, [HTML::CSS => 'self-vote']);
       echo HTML::GenerateSpan(RoleAbilityMessage::VOTE_KILL, 'ability vote-do') . Text::BRLF;
     } else {
       $user   = DB::$USER->ByVirtual(DB::$SELF->target_no);
       $result = $user->handle_name . RoleAbilityMessage::SETTLE_VOTED;
-      DivHTML::Output($vote_count . $result, 'self-vote');
+      DivHTML::Output($vote_count . $result, [HTML::CSS => 'self-vote']);
     }
   }
 
@@ -384,18 +384,18 @@ final class RoleHTML {
 
   //個別能力発動結果表示
   public static function OutputAbilityResult($header, $target, $footer = null) {
-    $str = Text::LineFeed(TableHTML::GenerateHeader('ability-result'));
+    $str = TableHTML::Header([HTML::CSS => 'ability-result'], tr: true);
     if (true === isset($header)) {
       $str .= Text::LineFeed(ImageManager::Role()->Generate($header, null, true));
     }
     if (true === isset($target)) {
-      $str .= Text::LineFeed(TableHTML::GenerateTd($target));
+      $str .= TableHTML::Td($target, line: true);
     }
     if (true === isset($footer)) {
       $str .= Text::LineFeed(ImageManager::Role()->Generate($footer, null, true));
     }
     echo $str;
-    TableHTML::OutputFooter();
+    TableHTML::OutputFooter(tr: true);
   }
 
   //夜投票チェックボックス生成

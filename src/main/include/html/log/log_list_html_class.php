@@ -41,7 +41,7 @@ final class LogListHTML {
 	  RQ::Fetch()->prefix, DB::$ROOM->id, Message::LOG_REVERSE
 	);
       } else {
-	$base_url = URL::GetRoom('old_log');;
+	$base_url = URL::GetRoom('old_log');
 	if (URL::ExistsDB()) {
 	  $view_url  = RQ::Fetch()->ToURL(RequestDataGame::DB, true);
 	  $base_url .= $view_url;
@@ -80,9 +80,9 @@ final class LogListHTML {
       $str .= self::GenerateRoom($base_url, $view_url, $vanish, $login, $log_link);
     }
 
-    $str .= TableHTML::GenerateTbodyFooter();
-    $str .= Text::LineFeed(TableHTML::GenerateFooter(false));
-    $str .= Text::LineFeed(DivHTML::GenerateFooter());
+    $str .= TableHTML::TbodyFooter();
+    $str .= TableHTML::Footer();
+    $str .= DivHTML::Footer(true);
     if (true === $cache_flag) {
       JinrouCacheManager::Store($str);
     }
@@ -129,7 +129,7 @@ final class LogListHTML {
   private static function GenerateHeader(PageLinkBuilder $builder) {
     $str  = HTML::GenerateHeader(ServerConfig::TITLE . OldLogMessage::TITLE, 'old_log_list', true);
     $str .= self::GenerateTitle();
-    $str .= DivHTML::GenerateHeader() . Text::LF;
+    $str .= DivHTML::Header(line: true);
     $str .= self::GenerateTableHeader($builder);
 
     return $str;
@@ -152,18 +152,18 @@ final class LogListHTML {
 
   //テーブルヘッダ生成
   private static function GenerateTableHeader(PageLinkBuilder $builder) {
-    $str  = TableHTML::GenerateHeader(null, false) . Text::LF;
-    $str .= TableHTML::GenerateCaption($builder->Generate());
-    $str .= TableHTML::GenerateTheadHeader();
-    $str .= TableHTML::GenerateTrHeader();
-    $str .= TableHTML::GenerateTh(OldLogMessage::NUMBER);
-    $str .= TableHTML::GenerateTh(OldLogMessage::NAME);
-    $str .= TableHTML::GenerateTh(OldLogMessage::COUNT);
-    $str .= TableHTML::GenerateTh(OldLogMessage::DATE);
-    $str .= TableHTML::GenerateTh(OldLogMessage::WIN);
-    $str .= TableHTML::GenerateTrFooter() . Text::LF;
-    $str .= TableHTML::GenerateTheadFooter();
-    $str .= TableHTML::GenerateTbodyHeader();
+    $str  = TableHTML::Header(line: true);
+    $str .= TableHTML::Caption($builder->Generate());
+    $str .= TableHTML::TheadHeader();
+    $str .= TableHTML::TrHeader();
+    $str .= TableHTML::Th(OldLogMessage::NUMBER);
+    $str .= TableHTML::Th(OldLogMessage::NAME);
+    $str .= TableHTML::Th(OldLogMessage::COUNT);
+    $str .= TableHTML::Th(OldLogMessage::DATE);
+    $str .= TableHTML::Th(OldLogMessage::WIN);
+    $str .= TableHTML::TrFooter(true);
+    $str .= TableHTML::TheadFooter();
+    $str .= TableHTML::TbodyHeader();
 
     return $str;
   }
@@ -218,34 +218,29 @@ final class LogListHTML {
 
   //個別村情報生成/上段
   private static function GenerateRoomUpper($view_url, $base_url, $vanish) {
-    $str  = Text::LineFeed(TableHTML::GenerateTrHeader());
+    $str  = TableHTML::TrHeader(line: true);
     $str .= self::GenerateRoomHeader($view_url);
     $str .= self::GenerateRoomTitle($base_url, $vanish);
     $str .= self::GenerateRoomMaxUser();
-    $str .= Text::LineFeed(TableHTML::GenerateTd(DB::$ROOM->date, 'upper'));
+    $str .= TableHTML::Td(DB::$ROOM->date, [HTML::CSS => 'upper'], true);
     $str .= self::GenerateRoomSide();
-    $str .= Text::LineFeed(TableHTML::GenerateTrFooter());
+    $str .= TableHTML::TrFooter();
 
     return $str;
   }
 
   //個別村情報生成/上段/ヘッダ
   private static function GenerateRoomHeader(string $url) {
-    $class = HTML::GenerateAttribute('class', 'number');
-    $span  = HTML::GenerateAttribute('rowspan', 3);
+    $link = LinkHTML::Generate(URL::GetRoom('game_view') . $url, DB::$ROOM->id);
 
-    $header = HTML::GenerateTagHeader('td' . $class . $span);
-    $link   = LinkHTML::Generate(URL::GetRoom('game_view') . $url, DB::$ROOM->id);
-    $footer = TableHTML::GenerateTdFooter();
-
-    return Text::LineFeed($header . $link . $footer);
+    return TableHTML::Td($link, [HTML::CSS => 'number', TableHTML::ATTR_ROW => 3], true);
   }
 
   //個別村情報生成/上段/村名
   private static function GenerateRoomTitle(string $url, string $vanish) {
     $link = LinkHTML::Generate($url, DB::$ROOM->GenerateName());
 
-    return Text::LineFeed(TableHTML::GenerateTd($link, 'title' . $vanish));
+    return TableHTML::Td($link, [HTML::CSS => 'title' . $vanish], true);
   }
 
   //個別村情報生成/上段/最大人数
@@ -253,7 +248,7 @@ final class LogListHTML {
     $count = DB::$ROOM->user_count;
     $image = ImageManager::Room()->GenerateMaxUser(DB::$ROOM->max_user);;
 
-    return Text::LineFeed(TableHTML::GenerateTd($count . ' ' . $image, 'upper'));
+    return TableHTML::Td($count . ' ' . $image, [HTML::CSS => 'upper'], true);
   }
 
   //個別村情報生成/上段/勝利
@@ -264,33 +259,28 @@ final class LogListHTML {
       $winner = ImageManager::Winner()->Generate(DB::$ROOM->winner);
     }
 
-    return Text::LineFeed(TableHTML::GenerateTd($winner, 'side'));
+    return TableHTML::Td($winner, [HTML::CSS => 'side'], true);
   }
 
   //個別村情報生成/中段
   private static function GenerateRoomMiddle() {
-    $str  = Text::LineFeed(TableHTML::GenerateTrHeader('list middle'));
-    $str .= Text::LineFeed(TableHTML::GenerateTd(DB::$ROOM->GenerateComment(), 'comment side'));
+    $str  = TableHTML::TrHeader([HTML::CSS => 'list middle'], true);
+    $str .= TableHTML::Td(DB::$ROOM->GenerateComment(), [HTML::CSS => 'comment side'], true);
     $str .= self::GenerateRoomTime();
-    $str .= Text::LineFeed(TableHTML::GenerateTrFooter());
+    $str .= TableHTML::TrFooter();
 
     return $str;
   }
 
   //個別村情報生成/中段/日時
   private static function GenerateRoomTime() {
-    $class  = HTML::GenerateAttribute('class', 'time comment');
-    $span   = HTML::GenerateAttribute('colspan', 3);
-
-    $header = HTML::GenerateTagHeader('td' . $class . $span);
     if (DB::$ROOM->establish_datetime == '') {
-      $establish = '';
+      $str = '';
     } else {
-      $establish = Time::ConvertTimeStamp(DB::$ROOM->establish_datetime);
+      $str = Time::ConvertTimeStamp(DB::$ROOM->establish_datetime);
     }
-    $footer = TableHTML::GenerateTdFooter();
 
-    return Text::LineFeed($header . $establish . $footer);
+    return TableHTML::Td($str, [HTML::CSS => 'time comment', TableHTML::ATTR_COL => 3], true);
   }
 
   //個別村情報生成/下段
@@ -298,22 +288,11 @@ final class LogListHTML {
     $link  = Text::LineFeed(Text::LF . $login . $log_link);
     $class = 'comment' . $vanish;
 
-    $str  = Text::LineFeed(TableHTML::GenerateTrHeader('lower list'));
-    $str .= Text::LineFeed(TableHTML::GenerateTd($link, $class));
-    $str .= self::GenerateRoomOption();
-    $str .= Text::LineFeed(TableHTML::GenerateTrFooter());
+    $str  = TableHTML::TrHeader([HTML::CSS => 'lower list'], true);
+    $str .= TableHTML::Td($link, [HTML::CSS => $class], true);
+    $str .= TableHTML::Td(RoomOptionLoader::GenerateImage(), [TableHTML::ATTR_COL => 3], true);
+    $str .= TableHTML::TrFooter();
 
     return $str;
-  }
-
-  //個別村情報生成/下段/オプション
-  private static function GenerateRoomOption() {
-    $span = HTML::GenerateAttribute('colspan', 3);
-
-    $header = HTML::GenerateTagHeader('td' . $span);
-    $image  = RoomOptionLoader::GenerateImage();
-    $footer = TableHTML::GenerateTdFooter();
-
-    return Text::LineFeed($header . $image . $footer);
   }
 }

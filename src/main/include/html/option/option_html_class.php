@@ -2,8 +2,9 @@
 //-- HTML 生成クラス (Option 拡張) --//
 final class OptionHTML {
   //ゲームオプション画像出力
-  public static function OutputImage($str) {
-    DivHTML::Output(OptionMessage::GAME_OPTION . Message::COLON . $str, 'game-option');
+  public static function OutputImage($image) {
+    $str = OptionMessage::GAME_OPTION . Message::COLON . $image;
+    DivHTML::Output($str, [HTML::CSS => 'game-option']);
   }
 
   //村用オプション説明メッセージ生成

@@ -7,10 +7,10 @@ final class ObjectionTestHTML {
     $image = URL::Combine(JINROU_ROOT, GameConfig::OBJECTION_IMAGE);
 
     HTML::OutputP(LinkHTML::Generate($url, ObjectionTestMessage::RESET));
-    TableHTML::OutputHeader(null, false);
+    TableHTML::OutputHeader(line: true);
     foreach ($stack as $name) {
-      TableHTML::OutputTrHeader();
-      TableHTML::OutputTdHeader('objection');
+      TableHTML::OutputTrHeader(line: true);
+      TableHTML::OutputTdHeader([HTML::CSS => 'objection']);
       Text::Printf(self::GetForm(),
         $url, Switcher::ON, RequestDataTalk::OBJECTION, $name,
         $image . self::GetImage($name) . '.gif', ObjectionTestMessage::$$name
@@ -18,7 +18,7 @@ final class ObjectionTestHTML {
       TableHTML::OutputTdFooter();
       TableHTML::OutputTrFooter();
     }
-    TableHTML::OutputFooter(false);
+    TableHTML::OutputFooter(true);
   }
 
   //画像取得

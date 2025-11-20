@@ -132,7 +132,7 @@ final class StatisticsHTML {
       ];
 
       TableHTML::OutputTrHeader();
-      TableHTML::OutputTd(StatisticsRole::GetWinCampName($camp), $camp);
+      TableHTML::OutputTd(StatisticsRole::GetWinCampName($camp), [HTML::CSS => $camp]);
       self::OutputData($data_list);
       TableHTML::OutputTrFooter();
     }
@@ -239,7 +239,7 @@ final class StatisticsHTML {
   //サブタイトルヘッダ出力
   private static function OutputSubHeader(string $title, array $list) {
     HeaderHTML::OutputSubTitle($title);
-    TableHTML::OutputHeader('');
+    TableHTML::OutputHeader(tr: true);
     foreach ($list as $str) {
       TableHTML::OutputTh($str);
     }
@@ -263,7 +263,7 @@ final class StatisticsHTML {
   //勝利陣営統計データ出力
   private static function OutputWinCampData(string $camp, array $list) {
     TableHTML::OutputTrHeader();
-    TableHTML::OutputTd(StatisticsRole::GetWinCampName($camp), $camp);
+    TableHTML::OutputTd(StatisticsRole::GetWinCampName($camp), [HTML::CSS => $camp]);
     self::OutputData($list);
     TableHTML::OutputTrFooter();
   }
@@ -271,7 +271,7 @@ final class StatisticsHTML {
   //数値データ出力
   private static function OutputData(array $list) {
     foreach ($list as $data) {
-      TableHTML::OutputTd($data, 'member');
+      TableHTML::OutputTd($data, [HTML::CSS => 'member']);
     }
   }
 

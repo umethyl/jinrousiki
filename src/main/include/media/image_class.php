@@ -54,7 +54,7 @@ abstract class Image {
     if (true === static::EnableLink()) {
       $str = static::GenerateLink($name, $str);
     }
-    return $table ? TableHTML::GenerateTd($str) : $str;
+    return $table ? TableHTML::Td($str) : $str;
   }
 
   //画像出力
