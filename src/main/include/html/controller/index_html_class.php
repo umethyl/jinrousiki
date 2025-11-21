@@ -156,7 +156,7 @@ final class IndexHTML {
   //村作成フォーム出力
   private static function OutputCreateRoom() {
     HTML::OutputFieldsetHeader(TopPageMessage::CREATE_ROOM);
-    RoomManagerController::OutputCreate();
+    RoomEntry::Output();
     HTML::OutputFieldsetFooter();
   }
 
