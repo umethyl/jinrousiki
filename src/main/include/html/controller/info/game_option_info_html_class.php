@@ -3,9 +3,7 @@
 final class GameOptionInfoHTML {
   //出力
   public static function Output() {
-    InfoHTML::OutputHeader(GameOptionInfoMessage::TITLE, 0, 'game_option');
-    InfoHTML::Load('game_option');
-    HTML::OutputFooter();
+    InfoHTML::Output(GameOptionInfoMessage::TITLE, 'game_option');
   }
 
   //追加役職の説明出力

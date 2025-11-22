@@ -6,6 +6,13 @@ final class InfoHTML {
     include(sprintf('%s/info/%s%s.html', JINROU_INC, $path, $name));
   }
 
+  //出力
+  public static function Output($title, $name) {
+    self::OutputHeader($title, 0, $name);
+    self::Load($name);
+    HTML::OutputFooter();
+  }
+
   //ヘッダ出力
   public static function OutputHeader($title, $level = 0, $css = 'info') {
     HTML::OutputHeader(Text::QuoteBracket($title), 'info/' . $css, true);
