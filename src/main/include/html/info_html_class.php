@@ -1,11 +1,6 @@
 <?php
 //-- HTML 生成クラス (Info 拡張) --//
 final class InfoHTML {
-  //HTMLファイルロード
-  public static function Load($name, $path = '') {
-    include(sprintf('%s/info/%s%s.html', JINROU_INC, $path, $name));
-  }
-
   //出力
   public static function Output($title, $name) {
     self::OutputHeader($title, 0, $name);
@@ -36,6 +31,13 @@ final class InfoHTML {
     HTML::OutputFooter();
   }
 
+  //新役職情報出力
+  public static function OutputRole($title, $name) {
+    self::OutputRoleHeader($title);
+    self::Load($name, 'new_role/');
+    HTML::OutputFooter();
+  }
+
   //新役職情報移動出力
   public static function OutputMoveRole() {
     $title = sprintf('%s %s', ServerConfig::TITLE, Text::QuoteBracket(InfoMessage::TITLE_ROLE));
@@ -44,13 +46,6 @@ final class InfoHTML {
     HTML::OutputHeader($title, 'index', true);
     LinkHTML::Output('../', '← TOP', true);
     HTML::OutputP($str . LinkHTML::Generate('new_role/', InfoMessage::TITLE_ROLE));
-    HTML::OutputFooter();
-  }
-
-  //新役職情報出力
-  public static function OutputRole($title, $name) {
-    self::OutputRoleHeader($title);
-    self::Load($name, 'new_role/');
     HTML::OutputFooter();
   }
 
@@ -160,7 +155,7 @@ final class InfoHTML {
 	Text::Output($header);
       }
     }
-    TableHTML::OutputFooter(false);
+    TableHTML::OutputFooter();
   }
 
   //他のサーバの部屋画面ロード用データを出力
@@ -257,6 +252,11 @@ final class InfoHTML {
     $replace_list = ['href="' => 'href="' . $url, 'src="'  => 'src="' . $url];
     $data = strtr($data, $replace_list);
     ExternalLinkBuilder::Output($title, $data);
+  }
+
+  //HTMLファイルロード
+  private static function Load($name, $path = '') {
+    include(sprintf('%s/info/%s%s.html', JINROU_INC, $path, $name));
   }
 
   //サブタイトル付タイトル生成
