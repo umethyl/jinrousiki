@@ -607,7 +607,7 @@ class RoleMessageList {
     'type' => 'wolf', 'delimiter' => ['_' => 'vote', '#' => 'sex', '^' => 'chicken']];
 
   public $heterologous_wolf = [
-    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|姫狼|です。あなたに_処刑_投票してきた人が#同性#だった場合は一定確率で^死の宣告^を与えます。",
+    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|姫狼|です。あなたに_処刑_投票してきた人が#同性#だった場合は一定確率で^死の宣告^を与えます。\n　万緑叢中紅一点、私は#異性#を魅了する一輪花。立場を脅かす輩には死に至る呪いをさしあげましょう。",
     'type' => 'wolf', 'delimiter' => ['_' => 'vote', '#' => 'sex', '^' => 'chicken']];
 
   public $ascetic_wolf = [
