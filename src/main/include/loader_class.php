@@ -210,6 +210,7 @@ final class Loader extends LoadManager {
     case 'database':
     case 'request':
     case 'room':
+    case 'user':
     case 'option':
     case 'event':
     case 'role':
@@ -442,7 +443,8 @@ final class LoaderData {
     'RoomEntry'		=> 'room_entry_class',
     //user
     'User'		=> 'user_class',
-    'UserLoader'	=> 'user_class',
+    'UserLoader'	=> 'user_loader_class',
+    'UserEntry'		=> 'user_entry_class',
     //option
     'OptionManager'	=> 'option_class',
     'OptionLoader'	=> 'option_class',
@@ -681,6 +683,10 @@ final class LoaderData {
     //room
     'room_class'		=> 'room',
     'room_entry_class'		=> 'room',
+    //room
+    'user_class'		=> 'user',
+    'user_loader_class'		=> 'user',
+    'user_entry_class'		=> 'user',
     //option
     'option_class'		=> 'option',
     'option_form_class'		=> 'option',
