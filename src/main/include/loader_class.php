@@ -186,7 +186,6 @@ final class Loader extends LoadManager {
     switch ($type) {
     case 'admin':
     case 'server':
-    case 'game':
     case 'system':
     case 'message':
     case 'message/controller':
@@ -194,6 +193,10 @@ final class Loader extends LoadManager {
     case 'message/controller/info':
     case 'message/controller/test':
       $path = JINROU_CONF . '/' . $type;
+      break;
+
+    case 'config::game':
+      $path = JINROU_CONF . '/' . 'game';
       break;
 
     case 'controller':
@@ -210,9 +213,11 @@ final class Loader extends LoadManager {
     case 'database':
     case 'request':
     case 'room':
+    case 'user':
     case 'option':
     case 'event':
     case 'role':
+    case 'game':
     case 'talk':
     case 'time':
     case 'media':
@@ -412,11 +417,6 @@ final class LoaderData {
     'Cast'			=> 'cast_class',
     'PageLinkBuilder'		=> 'old_log_functions',
     'JinrouCacheManager'	=> 'cache_class',
-    //system/game
-    'GameAction'	=> 'game_functions',
-    'Position'		=> 'game_functions',
-    'Objection'		=> 'game_functions',
-    'Winner'		=> 'game_functions',
     //database
     'DB'		=> 'db_class',
     'Query'		=> 'db_class',
@@ -442,7 +442,8 @@ final class LoaderData {
     'RoomEntry'		=> 'room_entry_class',
     //user
     'User'		=> 'user_class',
-    'UserLoader'	=> 'user_class',
+    'UserLoader'	=> 'user_loader_class',
+    'UserEntry'		=> 'user_entry_class',
     //option
     'OptionManager'	=> 'option_class',
     'OptionLoader'	=> 'option_class',
@@ -461,6 +462,13 @@ final class LoaderData {
     'RoleDataManager'	=> 'role_data_manager_class',
     'RoleUser'		=> 'role_user_class',
     'RoleVote'		=> 'role_vote_class',
+    //game
+    'GameAction'	=> 'game_functions',
+    'Objection'		=> 'objection_class',
+    'Position'		=> 'position_class',
+    'Winner'		=> 'winner_class',
+    'GamePlay'		=> 'game_play_functions',
+    'GamePlayView'	=> 'game_play_view_class',
     //talk
     'Talk'		=> 'talk_class',
     'TalkParser'	=> 'talk_class',
@@ -570,13 +578,13 @@ final class LoaderData {
     'bbs_config'		=> 'server',
     'shared_server_config'	=> 'server',
     'twitter_config'		=> 'server',
-    'game_config'		=> 'game',
-    'cast_config'		=> 'game',
-    'chaos_config'		=> 'game',
-    'duel_config'		=> 'game',
-    'time_config'		=> 'game',
-    'icon_config'		=> 'game',
-    'sound_config'		=> 'game',
+    'game_config'		=> 'config::game',
+    'cast_config'		=> 'config::game',
+    'chaos_config'		=> 'config::game',
+    'duel_config'		=> 'config::game',
+    'time_config'		=> 'config::game',
+    'icon_config'		=> 'config::game',
+    'sound_config'		=> 'config::game',
     'copyright_config'		=> 'system',
     'version'			=> 'system',
     'admin_message'		=> 'message',
@@ -681,6 +689,10 @@ final class LoaderData {
     //room
     'room_class'		=> 'room',
     'room_entry_class'		=> 'room',
+    //user
+    'user_class'		=> 'user',
+    'user_loader_class'		=> 'user',
+    'user_entry_class'		=> 'user',
     //option
     'option_class'		=> 'option',
     'option_form_class'		=> 'option',
@@ -694,6 +706,13 @@ final class LoaderData {
     'role_user_class'		=> 'role',
     'role_vote_class'		=> 'role',
     'role_data_manager_class'	=> 'role',
+    //game
+    'game_functions'		=> 'game',
+    'objection_class'		=> 'game',
+    'position_class'		=> 'game',
+    'winner_class'		=> 'game',
+    'game_play_functions'	=> 'game',
+    'game_play_view_class'	=> 'game',
     //talk
     'talk_class'		=> 'talk',
     'game_play_talk_class'	=> 'talk',
