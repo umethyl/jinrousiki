@@ -19,7 +19,6 @@ $font = 'azuki.ttf';
 //$role = 'result_follow_chiroptera';
 //$role = 'prediction_weather_no_escape';
 $role = 'homogeneous_wolf';
-//$role = 'heterologous_wolf';
 //$role = 'follow_chiroptera';
 
 //$calib_list = [0,0,0,0];

@@ -7,8 +7,6 @@ final class ChaosInfoController extends JinrouController {
   }
 
   protected static function Output() {
-    InfoHTML::OutputHeader(ChaosInfoMessage::TITLE, 0, 'chaos');
-    InfoHTML::Load('chaos');
-    HTML::OutputFooter();
+    InfoHTML::Output(ChaosInfoMessage::TITLE, 'chaos');
   }
 }

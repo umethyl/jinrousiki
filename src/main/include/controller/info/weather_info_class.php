@@ -7,8 +7,6 @@ final class WeatherInfoController extends JinrouController {
   }
 
   protected static function Output() {
-    InfoHTML::OutputHeader(WeatherInfoMessage::TITLE, 0, 'weather');
-    InfoHTML::Load('weather');
-    HTML::OutputFooter();
+    InfoHTML::Output(WeatherInfoMessage::TITLE, 'weather');
   }
 }

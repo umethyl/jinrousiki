@@ -7,8 +7,6 @@ final class DuelInfoController extends JinrouController {
   }
 
   protected static function Output() {
-    InfoHTML::OutputHeader(DuelInfoMessage::TITLE, 0, 'duel');
-    InfoHTML::Load('duel');
-    HTML::OutputFooter();
+    InfoHTML::Output(DuelInfoMessage::TITLE, 'duel');
   }
 }
