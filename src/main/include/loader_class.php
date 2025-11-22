@@ -532,6 +532,7 @@ final class LoaderData {
     'StatisticsHTML'	=> 'statistics_html_class',
     //html/controller/info
     'ScriptInfoHTML'		=> 'script_info_html_class',
+    'RuleInfoHTML'		=> 'rule_info_html_class',
     'GameOptionInfoHTML'	=> 'game_option_info_html_class',
     'DuelInfoHTML'		=> 'duel_info_html_class',
     'CopyrightInfoHTML'		=> 'copyright_info_html_class',
@@ -797,6 +798,7 @@ final class LoaderData {
     'statistics_html_class'	=> 'html/controller',
     //html/controller/info
     'script_info_html_class'		=> 'html/controller/info',
+    'rule_info_html_class'		=> 'html/controller/info',
     'game_option_info_html_class'	=> 'html/controller/info',
     'copyright_info_html_class'		=> 'html/controller/info',
     'search_role_info_html_class'	=> 'html/controller/info',
