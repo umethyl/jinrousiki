@@ -531,6 +531,7 @@ final class LoaderData {
     'IconUploadHTML'	=> 'icon_upload_html_class',
     'StatisticsHTML'	=> 'statistics_html_class',
     //html/controller/info
+    'GameOptionInfoHTML'	=> 'game_option_info_html_class',
     'DuelInfoHTML'		=> 'duel_info_html_class',
     'CopyrightInfoHTML'		=> 'copyright_info_html_class',
     'SearchRoleInfoHTML'	=> 'search_role_info_html_class',
@@ -794,6 +795,7 @@ final class LoaderData {
     'icon_upload_html_class'	=> 'html/controller',
     'statistics_html_class'	=> 'html/controller',
     //html/controller/info
+    'game_option_info_html_class'	=> 'html/controller/info',
     'copyright_info_html_class'		=> 'html/controller/info',
     'search_role_info_html_class'	=> 'html/controller/info',
     //html/controller/test
