@@ -91,7 +91,7 @@ final class VoteHTML {
     self::OutputHeader();
     //Text::p($filter, '◆Filter');
     //RoleManager::Stack()->p();
-    TableHTML::OutputHeader('vote-page');
+    TableHTML::OutputHeader([HTML::CSS => 'vote-page'], tr: true);
     $count = 0;
     foreach ($filter->GetVoteNightTargetUser() as $id => $user) {
       TableHTML::OutputFold($count++);
@@ -124,7 +124,7 @@ final class VoteHTML {
       );
     }
 
-    echo TableHTML::GenerateFooter();
+    TableHTML::OutputFooter(tr: true);
     DivHTML::OutputFooter();
     if (false === DB::$ROOM->IsTest()) {
       HTML::OutputFooter(true);
@@ -175,7 +175,7 @@ final class VoteHTML {
       );
     }
 
-    echo TableHTML::GenerateFooter();
+    TableHTML::OutputFooter(tr: true);
     DivHTML::OutputFooter();
     if (false === DB::$ROOM->IsTest()) {
       HTML::OutputFooter(true);

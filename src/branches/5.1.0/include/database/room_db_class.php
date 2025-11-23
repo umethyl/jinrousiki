@@ -404,40 +404,40 @@ final class RoomLoaderDB {
   //Prepare 処理
   private static function Prepare(Query $query) {
     $table = 'room';
-    if (isset(RQ::Fetch()->role) || isset(RQ::Fetch()->name)) {
+    if (isset(RQ::Fetch()->role) || RQ::IsString(RequestDataLogRoom::NAME)) {
       $table .= ' INNER JOIN user_entry USING (room_no)';
     }
     $query->Table($table)->Select(['room_no'])->Where(['status']);
     $list = [RoomStatus::FINISHED];
 
-    if (isset(RQ::Fetch()->room_name)) {
+    if (RQ::IsString(RequestDataLogRoom::ROOM_NAME)) {
       $query->WhereLike('name');
-      $list[] = Query::GetLike(RQ::Fetch()->room_name);
+      $list[] = Query::GetLike(RQ::Get(RequestDataLogRoom::ROOM_NAME));
     }
 
-    if (isset(RQ::Fetch()->role)) {
+    if (RQ::IsString(RequestDataLogRoom::ROLE)) {
       $query->WhereLike('role')->WhereLike('role')->WhereLike('role')->
 	WhereLike('role')->WhereLike('role')->Where(['role'])->
 	WhereOr(['role', 'role', 'role', 'role', 'role', 'role']);
-      $role = RQ::Fetch()->role;
+      $role = RQ::Get(RequestDataLogRoom::ROLE);
       array_push($list,
 		 $role . ' %', '% ' . $role, '% ' . $role . ' %',
 		 $role . '[%', '% ' . $role . '[%', $role);
     }
 
-    if (isset(RQ::Fetch()->name)) {
+    if (RQ::IsString(RequestDataLogRoom::NAME)) {
       $query->WhereLike('uname')->WhereLike('handle_name')->WhereOr(['uname', 'handle_name']);
-      $name = Query::GetLike(RQ::Fetch()->name);
+      $name = Query::GetLike(RQ::Get(RequestDataLogRoom::NAME));
       array_push($list, $name, $name);
     }
 
-    if (isset(RQ::Fetch()->winner)) {
+    if (RQ::IsString(RequestDataLogRoom::WINNER)) {
       $query->Where(['winner']);
-      $list[] = RQ::Fetch()->winner;
+      $list[] = RQ::Get(RequestDataLogRoom::WINNER);
     }
 
-    if (isset(RQ::Fetch()->game_type)) {
-      switch (RQ::Fetch()->game_type) {
+    if (RQ::IsString(RequestDataLogRoom::GAME_TYPE)) {
+      switch (RQ::Get(RequestDataLogRoom::GAME_TYPE)) {
       case 'normal':
 	foreach (['festival', 'chaos', 'duel', 'gray_random', 'step', 'quiz'] as $type) {
 	  $query->WhereNotLike('game_option');

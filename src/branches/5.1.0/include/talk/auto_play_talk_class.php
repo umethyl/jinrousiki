@@ -17,7 +17,7 @@ final class AutoPlayTalk extends StackStaticManager {
   //シーン初期化
   public static function InitScene() {
     self::SetScene();
-    if (! self::Stack()->IsInclude(self::SCENE, self::Stack()->Get(self::DATE))) {
+    if (true !== self::Stack()->IsInclude(self::SCENE, self::Stack()->Get(self::DATE))) {
       self::Stack()->Add(self::SCENE, self::Stack()->Get(self::DATE));
     }
   }
@@ -46,8 +46,8 @@ final class AutoPlayTalk extends StackStaticManager {
   //データ隠蔽
   public static function Hide($str, $class) {
     $scene  = self::Stack()->Get(self::DATE);
-    $header = Text::LineFeed(DivHTML::GenerateHeader('hide', $class . '_' . $scene));
-    return $header . $str . DivHTML::GenerateFooter(true);
+    $header = DivHTML::Header([HTML::ID => $class . '_' . $scene, HTML::CSS => 'hide'], true);
+    return $header . $str . DivHTML::Footer(true);
   }
 
   //ヘッダ生成
@@ -63,7 +63,11 @@ final class AutoPlayTalk extends StackStaticManager {
   public static function GenerateFooter() {
     //self::Stack()->p(null, '◆GenerateFooter');
     $count = 0;
-    $speed = RQ::Fetch()->scroll_time < 1 ? 1 : RQ::Fetch()->scroll_time;
+    if (RQ::Get(RequestDataLogRoom::SCROLL_TIME) < 1) {
+      $speed = 1;
+    } else {
+      $speed = RQ::Get(RequestDataLogRoom::SCROLL_TIME);
+    }
     $scene_stack = [];
     $talk_stack  = [];
     foreach (array_reverse(self::Stack()->Get(self::SCENE)) as $scene) {
@@ -97,6 +101,7 @@ final class AutoPlayTalk extends StackStaticManager {
       ArrayFilter::ConcatReverse($scene_stack, ',')
     );
     $str .= Text::LineFeed(ArrayFilter::Concat($talk_stack, Text::LF));
+    $str .= Text::LineFeed('document.getElementById("auto_play_end").style.display = "none";');
     $str .= JavaScriptHTML::GenerateFooter();
     return $str;
   }
@@ -115,17 +120,17 @@ final class AutoPlayTalk extends StackStaticManager {
   //JavaScript 変数取得 (ヘッダ用)
   private static function GetJavaScriptHeader() {
     return <<<EOF
-var scene_list     = new Array(%s);
-var talk_id_list   = new Array();
-var talk_time_list = new Array();
+var scene_list     = [%s];
+var talk_id_list   = [];
+var talk_time_list = [];
 EOF;
   }
 
   //JavaScript 変数取得 (talk 用)
   private static function GetJavaScriptStack() {
     return <<<EOF
-talk_id_list['%s']   = new Array(%s);
-talk_time_list['%s'] = new Array(%s);
+talk_id_list['%s']   = [%s];
+talk_time_list['%s'] = [%s];
 EOF;
   }
 }

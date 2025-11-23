@@ -58,15 +58,31 @@ final class RequestDataVote {
 
 //-- 定数リスト (Request/Log/Room) --//
 final class RequestDataLogRoom {
-  const REVERSE     = 'reverse_log';
-  const HEAVEN      = 'heaven_talk';
-  const HEAVEN_ONLY = 'heaven_only';
-  const ROLE        = 'add_role';
-  const TIME        = 'time';
-  const SEX         = 'sex';
-  const WATCH       = 'watch';
-  const WOLF        = 'wolf_sight';
-  const PERSONAL    = 'personal_result';
+  //リスト
+  const REVERSE_LIST = 'reverse_list';
+  const NAME         = 'name';
+  const ROOM_NAME    = 'room_name';
+  const WINNER       = 'winner';
+  const ROLE         = 'role';
+  const GAME_TYPE    = 'game_type';
+
+  //個別ログ
+  const REVERSE_LOG  = 'reverse_log';
+  const HEAVEN       = 'heaven_talk';
+  const HEAVEN_ONLY  = 'heaven_only';
+  const ADD_ROLE     = 'add_role';
+  const TIME         = 'time';
+  const SEX          = 'sex';
+  const WATCH        = 'watch';
+  const WOLF         = 'wolf_sight';
+  const PERSONAL     = 'personal_result';
+  const SCROLL_ON    = 'scroll_on';
+  const SCROLL       = 'scroll';
+  const SCROLL_TIME  = 'scroll_time';
+  const AUTO_PLAY    = 'auto_play_on';
+
+  //個別ログ (未実装/隠し機能)
+  const ROLE_LIST    = 'role_list';
 }
 
 //-- 定数リスト (Request/Icon) --//

@@ -68,25 +68,6 @@ final class RoomManagerHTML {
     );
   }
 
-  //部屋説明出力
-  public static function OutputDescribe() {
-    //表示情報取得
-    $stack = [
-      'game_option' => DB::$ROOM->game_option,
-      'option_role' => DB::$ROOM->option_role,
-      'max_user'    => DB::$ROOM->max_user
-    ];
-    RoomOptionLoader::Load($stack);
-
-    HTML::OutputHeader(RoomManagerMessage::TITLE_DESCRIBE, 'info/info', true);
-    Text::Printf(self::GetDescribe(),
-      DB::$ROOM->GenerateNumber(), DB::$ROOM->GenerateName(), Text::BR,
-      DB::$ROOM->GenerateComment(), RoomOptionLoader::Generate()
-    );
-    RoomOptionLoader::OutputCaption();
-    HTML::OutputFooter();
-  }
-
   //結果出力
   public static function OutputResult($type, $str = '') {
     $title  = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_INPUT);
@@ -179,13 +160,5 @@ EOF;
   //村タグ
   private static function GetRoom() {
     return '%s<a href="%s">%s <span>[%s]</span>%s%s<div>%s %s</div></a>%s';
-  }
-
-  //部屋説明タグ
-  private static function GetDescribe() {
-    return <<<EOF
-[%s] %s%s
-<div>%s %s</div>
-EOF;
   }
 }

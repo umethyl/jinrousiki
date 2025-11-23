@@ -306,6 +306,7 @@ class ResultList extends RoleMessageList {
   public $result_scarlet_vampire = ['message' => "さんは|屍鬼|でした", 'type' => 'result_vampire'];
   public $result_chiroptera = ['message' => "さんは|蝙蝠|でした", 'delimiter' => ['|' => 'chiroptera']];
   public $result_poison_chiroptera = ['message' => "さんは|毒蝙蝠|でした", 'type' => 'result_chiroptera'];
+  public $result_follow_chiroptera = ['message' => "さんは|曼陀羅華|でした", 'type' => 'result_chiroptera'];
   public $result_cursed_chiroptera = ['message' => "さんは|呪蝙蝠|でした", 'type' => 'result_chiroptera'];
   public $result_boss_chiroptera = ['message' => "さんは|大蝙蝠|でした", 'type' => 'result_chiroptera'];
   public $result_elder_chiroptera = ['message' => "さんは|古蝙蝠|でした", 'type' => 'result_chiroptera'];

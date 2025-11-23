@@ -4,7 +4,7 @@
 final class RoomHTML {
   //タイトル生成
   public static function GenerateTitle() {
-    return TableHTML::GenerateTd(self::GenerateTitleBase(), 'room');
+    return TableHTML::Td(self::GenerateTitleBase(), [HTML::CSS => 'room']);
   }
 
   //タイトル生成 (ログ用)

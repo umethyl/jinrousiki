@@ -1,8 +1,8 @@
 <?php
 //-- 異議ありテストコントローラー --//
 final class ObjectionTestController extends JinrouTestController {
-  protected static function LoadRequest() {
-    DevHTML::LoadRequest();
+  protected static function LoadRequestExtra() {
+    RQ::Fetch()->ParsePostOn('execute');
   }
 
   protected static function OutputHeader() {

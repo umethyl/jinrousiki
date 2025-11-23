@@ -42,10 +42,12 @@
 <a href="#win">勝利条件</a>
 <a href="#vote_kill_counter">処刑カウンター</a>
 <a href="#decide">処刑者決定</a>
+<a href="#vote_sudden_death">処刑ショック死</a>
 <a href="#vote_action">処刑投票</a>
-<a href="#vote_reaction">処刑得票</a>
 </p>
 <p>
+<a href="#vote_action_sudden_death">処刑投票ショック死</a>
+<a href="#vote_reaction">処刑得票</a>
 <a href="#sudden_death">ショック死</a>
 <a href="#resist_sudden_death">ショック死耐性</a>
 <a href="#anti_sudden_death">ショック死抑制</a>
@@ -54,10 +56,10 @@
 <a href="#wolf_kill_counter">人狼襲撃カウンター</a>
 <a href="#resist_wolf">人狼襲撃耐性</a>
 <a href="#psycho">精神</a>
-<a href="#sex">性別</a>
-<a href="#revive">蘇生</a>
 </p>
 <p>
+<a href="#sex">性別</a>
+<a href="#revive">蘇生</a>
 <a href="#revive_limit">蘇生制限</a>
 <a href="#anti_revive">蘇生妨害</a>
 </p>
@@ -408,7 +410,7 @@
 <h2 id="vote_kill_counter">処刑カウンター能力者</h2>
 <h3 id="vote_kill_counter_solo">個別型</h3>
 <pre>
-<a href="human.php#brownie">座敷童子</a>・<a href="human.php#doom_doll">蓬莱人形</a>・<a href="fox.php#miasma_fox">蟲狐</a>・<a href="vampire.php#follow_vampire">鮮血夫人</a>
+<a href="human.php#brownie">座敷童子</a>・<a href="human.php#doom_doll">蓬莱人形</a>・<a href="fox.php#miasma_fox">蟲狐</a>・<a href="vampire.php#follow_vampire">鮮血夫人</a>・<a href="chiroptera.php#follow_chiroptera">曼陀羅華</a>
 </pre>
 <h3 id="vote_kill_counter_random">確率付与型</h3>
 <pre>
@@ -423,6 +425,11 @@
 <pre>
 <a href="human.php#saint">聖女</a>・<a href="human.php#executor">執行者</a>・<a href="wolf.php#agitate_mad">扇動者</a>・<a href="quiz.php#quiz">出題者</a>
 <a href="sub_role.php#impatience">短気</a>・<a href="sub_role.php#decide_group">決定者系</a>・<a href="sub_role.php#vega_lovers">織姫</a>
+</pre>
+
+<h2 id="vote_sudden_death">処刑ショック死能力者</h2>
+<pre>
+<a href="human.php#bacchus_medium">神主</a>・<a href="human.php#seal_medium">封印師</a>・<a href="duelist.php#cowboy_duelist">無鉄砲者</a>・<a href="duelist.php#sea_duelist">海御前</a>
 </pre>
 
 <h2 id="vote_action">処刑投票能力者</h2>
@@ -464,6 +471,11 @@
 <a href="wolf.php#disguise_wolf">朔狼</a>
 </pre>
 
+<h2 id="vote_action_sudden_death">処刑投票ショック死能力者</h2>
+<pre>
+<a href="human.php#eclipse_medium">蝕巫女</a>・<a href="lovers.php#cursed_angel">堕天使</a>・<a href="chiroptera.php#doom_chiroptera">蝉蝙蝠</a>・<a href="tengu.php">天狗陣営</a>
+</pre>
+
 <h2 id="vote_reaction">処刑得票能力者</h2>
 <h3 id="vote_reaction_chicken">小心者系付加型</h3>
 <pre>
@@ -502,7 +514,7 @@
 <h3 id="sudden_death_direct">直接型</h3>
 <pre>
 <a href="human.php#bacchus_medium">神主</a>・<a href="human.php#seal_medium">封印師</a>・<a href="human.php#eclipse_medium">蝕巫女</a>・<a href="human.php#jealousy">橋姫</a>・<a href="human.php#thunder_brownie">雷公</a>・<a href="wolf.php#agitate_mad">扇動者</a>・<a href="wolf.php#follow_mad">舟幽霊</a>・<a href="lovers.php#cursed_angel">堕天使</a>
-<a href="chiroptera.php#doom_chiroptera">蝉蝙蝠</a>・<a href="duelist.php#cowboy_duelist">無鉄砲者</a>・<a href="duelist.php#sea_duelist">海御前</a>・<a href="tengu.php">天狗陣営</a>
+<a href="chiroptera.php#follow_chiroptera">曼陀羅華</a>・<a href="chiroptera.php#doom_chiroptera">蝉蝙蝠</a>・<a href="duelist.php#cowboy_duelist">無鉄砲者</a>・<a href="duelist.php#sea_duelist">海御前</a>・<a href="tengu.php">天狗陣営</a>
 <a href="sub_role.php#chicken_group">小心者系</a>・<a href="sub_role.php#challenge_lovers">難題</a>
 </pre>
 <h3 id="sudden_death_indirect">間接型</h3>
@@ -832,7 +844,7 @@
 
 <h2 id="multi_vote">複数投票能力者</h2>
 <pre>
-<a href="human.php#barrier_wizard">結界師</a>・<a href="#step">足音能力者</a>
+<a href="human.php#plural_wizard">魔女見習い</a>・<a href="human.php#spark_wizard">魔砲使い</a>・<a href="human.php#barrier_wizard">結界師</a>・<a href="wolf.php#plural_mad">魔女</a>・<a href="#step">足音能力者</a>
 </pre>
 
 <h2 id="disguise">変化能力者</h2>
@@ -855,7 +867,7 @@
 <h2 id="follow">道連れ能力者</h2>
 <h3 id="follow_direct">直接型</h3>
 <pre>
-<a href="wolf.php#follow_mad">舟幽霊</a>
+<a href="wolf.php#follow_mad">舟幽霊</a>・<a href="chiroptera.php#follow_chiroptera">曼陀羅華</a>
 </pre>
 <h3 id="follow_indirect">間接型</h3>
 <pre>

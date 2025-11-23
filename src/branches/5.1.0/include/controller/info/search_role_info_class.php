@@ -1,8 +1,7 @@
 <?php
 //-- 検索情報コントローラー (新役職情報) --//
 final class SearchRoleInfoController extends JinrouController {
-  protected static function LoadRequest() {
-    RQ::LoadRequest();
+  protected static function LoadRequestExtra() {
     RQ::Fetch()->ParsePostOn('execute');
     RQ::Fetch()->ParsePostData('role');
   }

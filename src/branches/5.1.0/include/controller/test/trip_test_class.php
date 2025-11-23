@@ -2,8 +2,8 @@
 //-- ◆文字化け抑制◆ --//
 //-- トリップテストコントローラー --//
 final class TripTestController extends JinrouTestController {
-  protected static function LoadRequest() {
-    DevHTML::LoadRequest();
+  protected static function LoadRequestExtra() {
+    RQ::Fetch()->ParsePostOn('execute');
   }
 
   protected static function OutputHeader() {

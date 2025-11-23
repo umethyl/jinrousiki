@@ -1,9 +1,11 @@
 <?php
 //-- HTML 生成クラス (Info 拡張) --//
 final class InfoHTML {
-  //HTMLファイルロード
-  public static function Load($name, $path = '') {
-    include(sprintf('%s/info/%s%s.html', JINROU_INC, $path, $name));
+  //出力
+  public static function Output($title, $name) {
+    self::OutputHeader($title, 0, $name);
+    self::Load($name);
+    HTML::OutputFooter();
   }
 
   //ヘッダ出力
@@ -17,14 +19,22 @@ final class InfoHTML {
 
   //フレーム出力
   public static function OutputFrame($url) {
-    Text::Printf(self::GetFrame(), $url);
+    FrameHTML::OutputCol([180, '*']);
+    FrameHTML::OutputSrc(['menu' => 'menu.php', 'body' => $url . URL::EXT]);
   }
 
   //サイドメニュー出力
   public static function OutputMenu($title, $path = '') {
     HTML::OutputHeader(self::GenerateTitle($title, InfoMessage::TITLE_MENU), 'info/menu', true);
-    DivHTML::Output($title, 'menu');
+    DivHTML::Output($title, [HTML::CSS => 'menu']);
     self::Load('menu', $path);
+    HTML::OutputFooter();
+  }
+
+  //新役職情報出力
+  public static function OutputRole($title, $name) {
+    self::OutputRoleHeader($title);
+    self::Load($name, 'new_role/');
     HTML::OutputFooter();
   }
 
@@ -36,13 +46,6 @@ final class InfoHTML {
     HTML::OutputHeader($title, 'index', true);
     LinkHTML::Output('../', '← TOP', true);
     HTML::OutputP($str . LinkHTML::Generate('new_role/', InfoMessage::TITLE_ROLE));
-    HTML::OutputFooter();
-  }
-
-  //新役職情報出力
-  public static function OutputRole($title, $name) {
-    self::OutputRoleHeader($title);
-    self::Load($name, 'new_role/');
     HTML::OutputFooter();
   }
 
@@ -125,12 +128,13 @@ final class InfoHTML {
     }
     $role_list = RoleDataManager::Sort(array_unique($stack)); //表示順を決定
 
-    $header = TableHTML::GenerateTrHeader() . TableHTML::GenerateTh(InfoMessage::POPULATION);
+    TableHTML::OutputHeader([HTML::CSS => 'member'], true);
+    $header = TableHTML::TrHeader() . TableHTML::Th(InfoMessage::POPULATION);
     foreach ($role_list as $role) {
-      $header .= RoleDataHTML::GenerateMain($role, 'th');
+      $header .= RoleDataHTML::GenerateMain($role, TableHTML::TAG_TH);
     }
-    $header .= TableHTML::GenerateTrFooter();
-    Text::Output(Text::LineFeed(TableHTML::GenerateHeader('member', false)) . $header);
+    $header .= TableHTML::TrFooter(false);
+    Text::Output($header);
 
     //人数毎の配役を表示
     foreach (CastConfig::$role_list as $key => $value) {
@@ -138,11 +142,11 @@ final class InfoHTML {
 	continue;
       }
 
-      $str = TableHTML::GenerateTd(HTML::GenerateTag('b', $key));
+      $str = TableHTML::Td(HTML::Tag('b', $key));
       foreach ($role_list as $role) {
-	$str .= TableHTML::GenerateTd(ArrayFilter::GetInt($value, $role));
+	$str .= TableHTML::Td(ArrayFilter::GetInt($value, $role));
       }
-      TableHTML::OutputTr($str);
+      TableHTML::OutputTr($str, line: true);
       if ($key == $max) {
 	break;
       }
@@ -151,7 +155,7 @@ final class InfoHTML {
 	Text::Output($header);
       }
     }
-    TableHTML::OutputFooter(false);
+    TableHTML::OutputFooter();
   }
 
   //他のサーバの部屋画面ロード用データを出力
@@ -250,6 +254,11 @@ final class InfoHTML {
     ExternalLinkBuilder::Output($title, $data);
   }
 
+  //HTMLファイルロード
+  private static function Load($name, $path = '') {
+    include(sprintf('%s/info/%s%s.html', JINROU_INC, $path, $name));
+  }
+
   //サブタイトル付タイトル生成
   private static function GenerateTitle($main, $sub) {
     return $main . ' - ' . Text::QuoteBracket($sub);
@@ -263,15 +272,6 @@ final class InfoHTML {
 <a target="_top" href="%s">&lt;= TOP</a>
 <a target="_top" href="%s">← %s</a>
 </p>
-EOF;
-  }
-
-  //フレームタグ
-  private static function GetFrame() {
-    return <<< EOF
-<frameset cols="180, *" border="1" frameborder="1" framespacing="1" bordercolor="#C0C0C0">
-<frame name="menu" src="menu.php">
-<frame name="body" src="%s.php">
 EOF;
   }
 
