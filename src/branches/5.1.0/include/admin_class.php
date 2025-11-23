@@ -61,7 +61,7 @@ final class JinrouAdmin {
     }
 
     HTML::OutputFieldsetHeader(TopPageMessage::NOTICE);
-    DivHTML::OutputHeader('information');
+    DivHTML::OutputHeader([HTML::CSS => 'information']);
     Text::p(AdminMessage::EXPLAIN . Text::BRLF);
     foreach ($stack->Get('type') as $type) {
       Text::p(AdminMessage::$$type . AdminMessage::NOTICE_ENABLE);
@@ -73,10 +73,8 @@ final class JinrouAdmin {
 
 //-- 管理用コントローラー基底クラス --//
 abstract class JinrouAdminController extends JinrouController {
-  protected static function Start() {
-    if (true !== JinrouAdmin::Enable(static::GetAdminType())) {
-      HTML::OutputUnusableError();
-    }
+  protected static function Unusable() {
+    return true !== JinrouAdmin::Enable(static::GetAdminType());
   }
 
   //管理ツール名取得
@@ -85,10 +83,8 @@ abstract class JinrouAdminController extends JinrouController {
 
 //-- 開発テスト用コントローラー基底クラス --//
 abstract class JinrouTestController extends JinrouController {
-  protected static function Start() {
-    if (true !== ServerConfig::DEBUG_MODE) {
-      HTML::OutputUnusableError();
-    }
+  protected static function Unusable() {
+    return true !== ServerConfig::DEBUG_MODE;
   }
 
   protected static function Output() {

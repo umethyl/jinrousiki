@@ -149,7 +149,7 @@ final class VoteTestController extends JinrouTestController {
 
   //発言出力
   private static function OutputTalk() {
-    RQ::Set(RequestDataLogRoom::ROLE, false);
+    RQ::Set(RequestDataLogRoom::ADD_ROLE, false);
     require_once('data/vote_talk.php');
     RQ::GetTest()->talk = [];
     foreach (VoteTestTalk::Get() as $stack) {

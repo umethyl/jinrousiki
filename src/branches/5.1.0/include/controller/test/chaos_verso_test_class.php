@@ -2,6 +2,10 @@
 //-- ◆文字化け抑制◆ --//
 //-- 裏・闇鍋モードテストコントローラー --//
 final class ChaosVersoTestController extends JinrouTestController {
+  protected static function LoadRequestExtra() {
+    RQ::Fetch()->ParsePostOn('execute');
+  }
+
   protected static function OutputHeader() {
     DevHTML::OutputRoleTestHeader(ChaosVersoTestMessage::TITLE, 'chaos_verso.php');
     FormHTML::OutputFooter();

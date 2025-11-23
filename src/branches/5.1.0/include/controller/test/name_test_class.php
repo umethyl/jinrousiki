@@ -1,8 +1,8 @@
 <?php
 //-- 役職名表示コントローラー --//
 final class NameTestController extends JinrouTestController {
-  protected static function LoadRequest() {
-    DevHTML::LoadRequest();
+  protected static function LoadRequestExtra() {
+    RQ::Fetch()->ParsePostOn('execute');
     RQ::Fetch()->ParsePostData('type');
   }
 
@@ -13,7 +13,7 @@ final class NameTestController extends JinrouTestController {
 
   //フォーム出力
   private static function OutputForm() {
-    FormHTML::OutputHeader('name_test.php');
+    FormHTML::OutputExecute('name_test.php');
     Text::d();
     self::OutputFormList();
     FormHTML::OutputFooter();

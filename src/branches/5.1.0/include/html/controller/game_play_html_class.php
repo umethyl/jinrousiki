@@ -45,7 +45,7 @@ final class GamePlayHTML {
 
   //時間設定出力
   public static function OutputTimeSetting() {
-    TableHTML::OutputTdHeader('real-time');
+    TableHTML::OutputTdHeader([HTML::CSS => 'real-time']);
     if (DB::$ROOM->IsRealTime()) { //実時間の制限時間を取得
       printf(GamePlayMessage::REAL_TIME, DB::$ROOM->real_time->day, DB::$ROOM->real_time->night);
     }
@@ -71,7 +71,7 @@ final class GamePlayHTML {
 
   //未投票突然死メッセージ出力
   public static function OutputSuddenDeathAnnounce($str) {
-    DivHTML::Output($str, 'system-sudden-death');
+    DivHTML::Output($str, [HTML::CSS => 'system-sudden-death']);
   }
 
   //役職能力出力
@@ -80,7 +80,7 @@ final class GamePlayHTML {
       return;
     }
 
-    DivHTML::OutputHeader('ability-elements');
+    DivHTML::OutputHeader([HTML::CSS => 'ability-elements']);
     RoleHTML::OutputAbility();
     DivHTML::OutputFooter();
   }
@@ -91,7 +91,7 @@ final class GamePlayHTML {
       return;
     }
 
-    DivHTML::OutputHeader('vote-elements');
+    DivHTML::OutputHeader([HTML::CSS => 'vote-elements']);
     RoleHTML::OutputVoteKill();
     if (DB::$ROOM->IsPlaying()) {
       GameHTML::OutputRevote();
@@ -113,14 +113,14 @@ final class GamePlayHTML {
     $header = sprintf(self::GetQuizVoteHeader(),
       GamePlayMessage::QUIZ_VOTED_NAME, GamePlayMessage::QUIZ_VOTED_COUNT
     );
-    $table_stack = [TableHTML::GenerateHeader('vote-list'), $header];
+    $table_stack = [TableHTML::Header([HTML::CSS => 'vote-list']), $header];
 
     $format = self::GetQuizVote();
     foreach ($stack as $id => $list) {
       $user = DB::$USER->ByID($id);
       $table_stack[] = sprintf($format, $user->handle_name, count($list), GameMessage::VOTE_UNIT);
     }
-    $table_stack[] = TableHTML::GenerateFooter(false);
+    $table_stack[] = TableHTML::Footer(false);
     Text::Output(ArrayFilter::Concat($table_stack, Text::LF));
   }
 
@@ -160,7 +160,7 @@ final class GamePlayHTML {
 
   //ログリンクテーブル td タグ
   public static function GetLogLinkTableTd() {
-    return TableHTML::GenerateTdHeader('view-option');
+    return TableHTML::TdHeader([HTML::CSS => 'view-option']);
   }
 
   //更新ボタンタグ

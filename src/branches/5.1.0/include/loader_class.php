@@ -184,6 +184,21 @@ final class Loader extends LoadManager {
     }
 
     switch ($type) {
+    case 'admin':
+    case 'server':
+    case 'system':
+    case 'message':
+    case 'message/controller':
+    case 'message/controller/admin':
+    case 'message/controller/info':
+    case 'message/controller/test':
+      $path = JINROU_CONF . '/' . $type;
+      break;
+
+    case 'config::game':
+      $path = JINROU_CONF . '/' . 'game';
+      break;
+
     case 'controller':
     case 'controller/admin':
     case 'controller/info':
@@ -197,36 +212,29 @@ final class Loader extends LoadManager {
     case 'data/statistics':
     case 'database':
     case 'request':
-    case 'time':
+    case 'room':
+    case 'user':
     case 'option':
     case 'event':
     case 'role':
+    case 'game':
     case 'talk':
+    case 'time':
     case 'media':
     case 'statistics':
     case 'html':
     case 'html/markup':
-    case 'html/media':
+    case 'html/room':
     case 'html/option':
     case 'html/role':
+    case 'html/media':
+    case 'html/log':
     case 'html/controller':
     case 'html/controller/info':
     case 'html/controller/test':
     case 'test':
     case 'paparazzi':
       $path = JINROU_INC . '/' . $type;
-      break;
-
-    case 'admin':
-    case 'server':
-    case 'game':
-    case 'system':
-    case 'message':
-    case 'message/controller':
-    case 'message/controller/admin':
-    case 'message/controller/info':
-    case 'message/controller/test':
-      $path = JINROU_CONF . '/' . $type;
       break;
 
     case 'mb-emulator':
@@ -263,11 +271,12 @@ final class LoaderData {
 
   //クラス => ファイル対応表
   public static $file = [
-    //config/admin
+    //-- config --//
+    //admin
     'AdminConfig'		=> 'admin_config',
     'SetupConfig'		=> 'setup_config',
     'GenerateHTMLLogConfig'	=> 'generate_html_log_config',
-    //config/server
+    //server
     'ServerConfig'		=> 'server_config',
     'DatabaseConfig'		=> 'database_config',
     'RoomConfig'		=> 'room_config',
@@ -280,7 +289,7 @@ final class LoaderData {
     'BBSConfig'			=> 'bbs_config',
     'SharedServerConfig'	=> 'shared_server_config',
     'TwitterConfig'		=> 'twitter_config',
-    //config/game
+    //game
     'GameConfig'	=> 'game_config',
     'CastConfig'	=> 'cast_config',
     'ChaosConfig'	=> 'chaos_config',
@@ -288,10 +297,11 @@ final class LoaderData {
     'TimeConfig'	=> 'time_config',
     'IconConfig'	=> 'icon_config',
     'SoundConfig'	=> 'sound_config',
-    //config/system
+    //system
     'CopyrightConfig'	=> 'copyright_config',
     'ScriptInfo'	=> 'version',
-    //config/message
+    //-- config/message --//
+    //message
     'Message'			=> 'message',
     'GameMessage'		=> 'game_message',
     'DeadMessage'		=> 'dead_message',
@@ -305,10 +315,50 @@ final class LoaderData {
     'OptionMessage'		=> 'option_message',
     'IconMessage'		=> 'icon_message',
     'InfoMessage'		=> 'info_message',
+    'AdminMessage'		=> 'admin_message',
     'StatisticsMessage'		=> 'statistics_message',
     'CacheMessage'		=> 'cache_message',
     'TwitterMessage'		=> 'twitter_message',
     'TestMessage'		=> 'test_message',
+    //controller
+    'TopPageMessage'		=> 'top_page_message',
+    'RoomManagerMessage'	=> 'room_manager_message',
+    'LoginMessage'		=> 'login_message',
+    'UserManagerMessage'	=> 'user_manager_message',
+    'GameViewMessage'		=> 'game_view_message',
+    'GameUpMessage'		=> 'game_up_message',
+    'GamePlayMessage'		=> 'game_play_message',
+    'GameLogMessage'		=> 'game_log_message',
+    'OldLogMessage'		=> 'old_log_message',
+    'IconEditMessage'		=> 'icon_edit_message',
+    'IconUploadMessage'		=> 'icon_upload_message',
+    //controller/admin
+    'RoomDeleteMessage'		=> 'room_delete_message',
+    'IconDeleteMessage'		=> 'icon_delete_message',
+    'GenerateHTMLLogMessage'	=> 'generate_html_log_message',
+    'SetupMessage'		=> 'setup_message',
+    //controller/test
+    'NameTestMessage'		=> 'name_test_message',
+    'RoleTestMessage'		=> 'role_test_message',
+    'CastTestMessage'		=> 'cast_test_message',
+    'ChaosVersoTestMessage'	=> 'chaos_verso_test_message',
+    'VoteTestMessage'		=> 'vote_test_message',
+    'ObjectionTestMessage'	=> 'objection_test_message',
+    'TripTestMessage'		=> 'trip_test_message',
+    //controller/info
+    'ScriptInfoMessage'		=> 'script_info_message',
+    'RuleInfoMessage'		=> 'rule_info_message',
+    'CastInfoMessage'		=> 'cast_info_message',
+    'GameOptionInfoMessage'	=> 'game_option_info_message',
+    'ChaosInfoMessage'		=> 'chaos_info_message',
+    'DuelInfoMessage'		=> 'duel_info_message',
+    'WeatherInfoMessage'	=> 'weather_info_message',
+    'SpecInfoMessage'		=> 'spec_info_message',
+    'SharedRoomInfoMessage'	=> 'shared_room_info_message',
+    'CopyrightInfoMessage'	=> 'copyright_info_message',
+    'SearchRoleInfoMessage'	=> 'search_role_info_message',
+    //controller/test
+    'VoteTestController' => 'vote_test_class',
     //data
     'DeadReason'	=> 'dead_reason_data_class',
     //data/room
@@ -318,12 +368,6 @@ final class LoaderData {
     //data/user
     'UserLive'	=> 'user_data_class',
     'UserMode'	=> 'user_data_class',
-    //data/talk
-    'TalkLocation'	=> 'talk_data_class',
-    'TalkAction'	=> 'talk_data_class',
-    'TalkVoice'		=> 'talk_data_class',
-    'TalkElement'	=> 'talk_data_class',
-    'TalkCSS'		=> 'talk_data_class',
     //data/option
     'OptionGroup'		=> 'option_data_class',
     'OptionFormType'		=> 'option_data_class',
@@ -347,6 +391,12 @@ final class LoaderData {
     'Camp'	=> 'camp_data_class',
     'CampGroup'	=> 'camp_data_class',
     'WinCamp'	=> 'camp_data_class',
+    //data/talk
+    'TalkLocation'	=> 'talk_data_class',
+    'TalkAction'	=> 'talk_data_class',
+    'TalkVoice'		=> 'talk_data_class',
+    'TalkElement'	=> 'talk_data_class',
+    'TalkCSS'		=> 'talk_data_class',
     //date/vote
     'VoteAction'			=> 'vote_data_class',
     'VoteKickElement'			=> 'vote_data_class',
@@ -368,16 +418,6 @@ final class LoaderData {
     'Cast'			=> 'cast_class',
     'PageLinkBuilder'		=> 'old_log_functions',
     'JinrouCacheManager'	=> 'cache_class',
-    //system/game
-    'GameAction'	=> 'game_functions',
-    'Position'		=> 'game_functions',
-    'Objection'		=> 'game_functions',
-    'Winner'		=> 'game_functions',
-    //system/room
-    'Room'		=> 'room_class',
-    //system/user
-    'User'		=> 'user_class',
-    'UserLoader'	=> 'user_class',
     //database
     'DB'		=> 'db_class',
     'Query'		=> 'db_class',
@@ -398,6 +438,15 @@ final class LoaderData {
     'RQ'		=> 'request_class',
     'Session'		=> 'session_class',
     'JinrouCookie'	=> 'cookie_class',
+    //room
+    'Room'		=> 'room_class',
+    'RoomEntry'		=> 'room_entry_class',
+    'RoomDescribe'	=> 'room_describe_class',
+    'RoomError'		=> 'room_error_class',
+    //user
+    'User'		=> 'user_class',
+    'UserLoader'	=> 'user_loader_class',
+    'UserEntry'		=> 'user_entry_class',
     //option
     'OptionManager'	=> 'option_class',
     'OptionLoader'	=> 'option_class',
@@ -405,23 +454,9 @@ final class LoaderData {
     'OptionForm'	=> 'option_form_class',
     'RoomOptionLoader'	=> 'room_option_loader_class',
     'RoomOptionManager'	=> 'room_option_manager_class',
-    //time
-    'Time'		=> 'time_class',
-    'GameTime'		=> 'game_time_class',
-    'InfoTime'		=> 'info_time_class',
-    'DateBorder'	=> 'date_border_class',
-    //talk
-    'Talk'		=> 'talk_class',
-    'TalkParser'	=> 'talk_class',
-    'TalkBuilder'	=> 'talk_class',
-    'GamePlayTalk'	=> 'game_play_talk_class',
-    'AutoPlayTalk'	=> 'auto_play_talk_class',
-    //media
-    'ImageManager'	=> 'image_class',
-    'Icon'		=> 'icon_class',
-    'UserIcon'		=> 'user_icon_class',
-    'Sound'		=> 'sound_class',
-    'JinrouTwitter'	=> 'twitter_class',
+    //event
+    'EventManager'	=> 'event_class',
+    'WeatherManager'	=> 'weather_class',
     //role
     'RoleManager'	=> 'role_class',
     'RoleLoader'	=> 'role_class',
@@ -430,9 +465,19 @@ final class LoaderData {
     'RoleDataManager'	=> 'role_data_manager_class',
     'RoleUser'		=> 'role_user_class',
     'RoleVote'		=> 'role_vote_class',
-    //event
-    'EventManager'	=> 'event_class',
-    'WeatherManager'	=> 'weather_class',
+    //game
+    'GameAction'	=> 'game_functions',
+    'Objection'		=> 'objection_class',
+    'Position'		=> 'position_class',
+    'Winner'		=> 'winner_class',
+    'GamePlay'		=> 'game_play_functions',
+    'GamePlayView'	=> 'game_play_view_class',
+    //talk
+    'Talk'		=> 'talk_class',
+    'TalkParser'	=> 'talk_class',
+    'TalkBuilder'	=> 'talk_class',
+    'GamePlayTalk'	=> 'game_play_talk_class',
+    'AutoPlayTalk'	=> 'auto_play_talk_class',
     //vote
     'VoteKick'			=> 'game_vote_functions',
     'VoteGameStart'		=> 'game_vote_functions',
@@ -441,56 +486,26 @@ final class LoaderData {
     'VoteHeaven'		=> 'game_vote_functions',
     'VoteForceSuddenDeath'	=> 'game_vote_functions',
     'VoteResetTime'		=> 'game_vote_functions',
+    //time
+    'Time'		=> 'time_class',
+    'GameTime'		=> 'game_time_class',
+    'InfoTime'		=> 'info_time_class',
+    'DateBorder'	=> 'date_border_class',
+    //media
+    'ImageManager'	=> 'image_class',
+    'Icon'		=> 'icon_class',
+    'UserIcon'		=> 'user_icon_class',
+    'Sound'		=> 'sound_class',
     //statistics
     'JinrouStatistics'		=> 'statistics_manager_class',
     'StatisticsRole'		=> 'statistics_role_class',
-    //controller/test
-    'VoteTestController' => 'vote_test_class',
-    //controller/message
-    'AdminMessage'		=> 'admin_message',
-    'TopPageMessage'		=> 'top_page_message',
-    'RoomManagerMessage'	=> 'room_manager_message',
-    'LoginMessage'		=> 'login_message',
-    'UserManagerMessage'	=> 'user_manager_message',
-    'GameViewMessage'		=> 'game_view_message',
-    'GameUpMessage'		=> 'game_up_message',
-    'GamePlayMessage'		=> 'game_play_message',
-    'GameLogMessage'		=> 'game_log_message',
-    'OldLogMessage'		=> 'old_log_message',
-    'IconEditMessage'		=> 'icon_edit_message',
-    'IconUploadMessage'		=> 'icon_upload_message',
-    //controller/info/admin
-    'RoomDeleteMessage'		=> 'room_delete_message',
-    'IconDeleteMessage'		=> 'icon_delete_message',
-    'GenerateHTMLLogMessage'	=> 'generate_html_log_message',
-    'SetupMessage'		=> 'setup_message',
-    //controller/info/message
-    'ScriptInfoMessage'		=> 'script_info_message',
-    'RuleInfoMessage'		=> 'rule_info_message',
-    'CastInfoMessage'		=> 'cast_info_message',
-    'GameOptionInfoMessage'	=> 'game_option_info_message',
-    'ChaosInfoMessage'		=> 'chaos_info_message',
-    'DuelInfoMessage'		=> 'duel_info_message',
-    'WeatherInfoMessage'	=> 'weather_info_message',
-    'SpecInfoMessage'		=> 'spec_info_message',
-    'SharedRoomInfoMessage'	=> 'shared_room_info_message',
-    'CopyrightInfoMessage'	=> 'copyright_info_message',
-    'SearchRoleInfoMessage'	=> 'search_role_info_message',
-    //config/test/message
-    'NameTestMessage'		=> 'name_test_message',
-    'RoleTestMessage'		=> 'role_test_message',
-    'CastTestMessage'		=> 'cast_test_message',
-    'ChaosVersoTestMessage'	=> 'chaos_verso_test_message',
-    'VoteTestMessage'		=> 'vote_test_message',
-    'ObjectionTestMessage'	=> 'objection_test_message',
-    'TripTestMessage'		=> 'trip_test_message',
+    //mod
+    'JinrouTwitter'	=> 'twitter_class',
     //html
     'HTML'		=> 'html_class',
     'GameHTML'		=> 'game_html_class',
-    'RoomHTML'		=> 'room_html_class',
     'TalkHTML'		=> 'talk_html_class',
     'VoteHTML'		=> 'vote_html_class',
-    'OldLogHTML'	=> 'old_log_html_class',
     'InfoHTML'		=> 'info_html_class',
     //html/markup
     'HeaderHTML'	=> 'header_html_class',
@@ -500,16 +515,22 @@ final class LoaderData {
     'LinkHTML'		=> 'link_html_class',
     'TableHTML'		=> 'table_html_class',
     'FormHTML'		=> 'form_html_class',
-    //html/media
-    'ImageHTML'		=> 'image_html_class',
-    'IconHTML'		=> 'icon_html_class',
-    'SoundHTML'		=> 'sound_html_class',
+    //html/room
+    'RoomHTML'		=> 'room_html_class',
+    'RoomDescribeHTML'	=> 'room_describe_html_class',
     //html/option
     'OptionHTML'	=> 'option_html_class',
     'OptionFormHTML'	=> 'option_form_html_class',
     //html/role
     'RoleHTML'		=> 'role_html_class',
     'RoleDataHTML'	=> 'role_data_html_class',
+    //html/media
+    'ImageHTML'		=> 'image_html_class',
+    'IconHTML'		=> 'icon_html_class',
+    'SoundHTML'		=> 'sound_html_class',
+    //html/log
+    'OldLogHTML'	=> 'old_log_html_class',
+    'LogListHTML'	=> 'log_list_html_class',
     //html/controller
     'IndexHTML'		=> 'index_html_class',
     'RoomManagerHTML'	=> 'room_manager_html_class',
@@ -517,11 +538,15 @@ final class LoaderData {
     'GameFrameHTML'	=> 'game_frame_html_class',
     'GameUpHTML'	=> 'game_up_html_class',
     'GamePlayHTML'	=> 'game_play_html_class',
+    'GameLogHTML'	=> 'game_log_html_class',
     'UserManagerHTML'	=> 'user_manager_html_class',
     'IconViewHTML'	=> 'icon_view_html_class',
     'IconUploadHTML'	=> 'icon_upload_html_class',
     'StatisticsHTML'	=> 'statistics_html_class',
     //html/controller/info
+    'ScriptInfoHTML'		=> 'script_info_html_class',
+    'RuleInfoHTML'		=> 'rule_info_html_class',
+    'GameOptionInfoHTML'	=> 'game_option_info_html_class',
     'DuelInfoHTML'		=> 'duel_info_html_class',
     'CopyrightInfoHTML'		=> 'copyright_info_html_class',
     'SearchRoleInfoHTML'	=> 'search_role_info_html_class',
@@ -558,13 +583,13 @@ final class LoaderData {
     'bbs_config'		=> 'server',
     'shared_server_config'	=> 'server',
     'twitter_config'		=> 'server',
-    'game_config'		=> 'game',
-    'cast_config'		=> 'game',
-    'chaos_config'		=> 'game',
-    'duel_config'		=> 'game',
-    'time_config'		=> 'game',
-    'icon_config'		=> 'game',
-    'sound_config'		=> 'game',
+    'game_config'		=> 'config::game',
+    'cast_config'		=> 'config::game',
+    'chaos_config'		=> 'config::game',
+    'duel_config'		=> 'config::game',
+    'time_config'		=> 'config::game',
+    'icon_config'		=> 'config::game',
+    'sound_config'		=> 'config::game',
     'copyright_config'		=> 'system',
     'version'			=> 'system',
     'admin_message'		=> 'message',
@@ -666,33 +691,49 @@ final class LoaderData {
     'request_class'	=> 'request',
     'session_class'	=> 'request',
     'cookie_class'	=> 'request',
-    //time
-    'time_class'		=> 'time',
-    'game_time_class'		=> 'time',
-    'info_time_class'		=> 'time',
-    'date_border_class'		=> 'time',
+    //room
+    'room_class'		=> 'room',
+    'room_entry_class'		=> 'room',
+    'room_describe_class'	=> 'room',
+    'room_error_class'		=> 'room',
+    //user
+    'user_class'		=> 'user',
+    'user_loader_class'		=> 'user',
+    'user_entry_class'		=> 'user',
     //option
     'option_class'		=> 'option',
     'option_form_class'		=> 'option',
     'room_option_loader_class'	=> 'option',
     'room_option_manager_class'	=> 'option',
-    //talk
-    'talk_class'		=> 'talk',
-    'game_play_talk_class'	=> 'talk',
-    'auto_play_talk_class'	=> 'talk',
-    //media
-    'image_class'	=> 'media',
-    'icon_class'	=> 'media',
-    'user_icon_class'	=> 'media',
-    'sound_class'	=> 'media',
+    //event
+    'event_class'	=> 'event',
+    'weather_class'	=> 'event',
     //role
     'role_class'		=> 'role',
     'role_user_class'		=> 'role',
     'role_vote_class'		=> 'role',
     'role_data_manager_class'	=> 'role',
-    //event
-    'event_class'	=> 'event',
-    'weather_class'	=> 'event',
+    //game
+    'game_functions'		=> 'game',
+    'objection_class'		=> 'game',
+    'position_class'		=> 'game',
+    'winner_class'		=> 'game',
+    'game_play_functions'	=> 'game',
+    'game_play_view_class'	=> 'game',
+    //talk
+    'talk_class'		=> 'talk',
+    'game_play_talk_class'	=> 'talk',
+    'auto_play_talk_class'	=> 'talk',
+    //time
+    'time_class'		=> 'time',
+    'game_time_class'		=> 'time',
+    'info_time_class'		=> 'time',
+    'date_border_class'		=> 'time',
+    //media
+    'image_class'	=> 'media',
+    'icon_class'	=> 'media',
+    'user_icon_class'	=> 'media',
+    'sound_class'	=> 'media',
     //statistics
     'statistics_manager_class'	=> 'statistics',
     'statistics_role_class'	=> 'statistics',
@@ -747,7 +788,6 @@ final class LoaderData {
     'room_html_class'		=> 'html',
     'talk_html_class'		=> 'html',
     'vote_html_class'		=> 'html',
-    'old_log_html_class'	=> 'html',
     'info_html_class'		=> 'html',
     //html/markup
     'header_html_class'		=> 'html/markup',
@@ -757,16 +797,22 @@ final class LoaderData {
     'link_html_class'		=> 'html/markup',
     'table_html_class'		=> 'html/markup',
     'form_html_class'		=> 'html/markup',
-    //html/media
-    'image_html_class'		=> 'html/media',
-    'icon_html_class'		=> 'html/media',
-    'sound_html_class'		=> 'html/media',
+    //html/room
+    'room_html_class'		=> 'html/room',
+    'room_describe_html_class'	=> 'html/room',
     //html/option
     'option_html_class'		=> 'html/option',
     'option_form_html_class'	=> 'html/option',
     //html/role
     'role_html_class'		=> 'html/role',
     'role_data_html_class'	=> 'html/role',
+    //html/media
+    'image_html_class'		=> 'html/media',
+    'icon_html_class'		=> 'html/media',
+    'sound_html_class'		=> 'html/media',
+    //html/log
+    'old_log_html_class'	=> 'html/log',
+    'log_list_html_class'	=> 'html/log',
     //html/controller
     'index_html_class'		=> 'html/controller',
     'room_manager_html_class'	=> 'html/controller',
@@ -774,11 +820,15 @@ final class LoaderData {
     'game_frame_html_class'	=> 'html/controller',
     'game_up_html_class'	=> 'html/controller',
     'game_play_html_class'	=> 'html/controller',
+    'game_log_html_class'	=> 'html/controller',
     'user_manager_html_class'	=> 'html/controller',
     'icon_view_html_class'	=> 'html/controller',
     'icon_upload_html_class'	=> 'html/controller',
     'statistics_html_class'	=> 'html/controller',
     //html/controller/info
+    'script_info_html_class'		=> 'html/controller/info',
+    'rule_info_html_class'		=> 'html/controller/info',
+    'game_option_info_html_class'	=> 'html/controller/info',
     'copyright_info_html_class'		=> 'html/controller/info',
     'search_role_info_html_class'	=> 'html/controller/info',
     //html/controller/test

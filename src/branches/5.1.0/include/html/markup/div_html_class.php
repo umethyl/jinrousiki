@@ -1,33 +1,35 @@
 <?php
 //-- HTML 生成クラス (div 拡張) --//
 final class DivHTML {
+  const TAG = 'div';
+
   //生成
-  public static function Generate($str, $class = null, $id = null) {
-    return self::GenerateHeader($class, $id) . $str . self::GenerateFooter();
+  public static function Generate($str, array $list = [], bool $line = false) {
+    return self::Header($list) . $str . self::Footer($line);
   }
 
   //ヘッダ生成
-  public static function GenerateHeader($class = null, $id = null) {
-    return HTML::GenerateTagHeader('div', $class, $id);
+  public static function Header(array $list = [], bool $line = false) {
+    return HTML::TagHeader(self::TAG, $list, $line);
   }
 
   //フッタ生成
-  public static function GenerateFooter($return = false) {
-    return HTML::GenerateTagFooter('div') . (true === $return ? Text::LF : '');
+  public static function Footer(bool $line = false) {
+    return HTML::TagFooter(self::TAG, $line);
   }
 
   //出力
-  public static function Output($str, $class = null, $id = null) {
-    Text::Output(self::Generate($str, $class, $id));
+  public static function Output($str, array $list = []) {
+    echo self::Generate($str, $list, true);
   }
 
   //ヘッダ出力
-  public static function OutputHeader($class = null, $id = null) {
-    Text::Output(self::GenerateHeader($class, $id));
+  public static function OutputHeader(array $list = []) {
+    echo self::Header($list, true);
   }
 
   //フッタ出力
-  public static function OutputFooter($return = false) {
-    Text::Output(self::GenerateFooter($return));
+  public static function OutputFooter() {
+    echo self::Footer(true);
   }
 }

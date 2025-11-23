@@ -5,14 +5,17 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
     return 'generate_html_log';
   }
 
-  protected static function LoadRequest() {
-    RQ::LoadRequest('old_log');
+  protected static function GetLoadRequest() {
+    return 'old_log';
+  }
+
+  protected static function LoadRequestExtra() {
     RQ::Set('prefix',		GenerateHTMLLogConfig::PREFIX);
     RQ::Set('index_no',		GenerateHTMLLogConfig::INDEX_START);
     RQ::Set('min_room_no',	GenerateHTMLLogConfig::ROOM_START);
     RQ::Set('max_room_no',	GenerateHTMLLogConfig::ROOM_END);
-    RQ::Set(RequestDataLogRoom::ROLE,   true);
-    RQ::Set(RequestDataLogRoom::HEAVEN, true);
+    RQ::Set(RequestDataLogRoom::ADD_ROLE, true);
+    RQ::Set(RequestDataLogRoom::HEAVEN,   true);
     RQ::Set('generate_index', true);
   }
 
@@ -66,7 +69,7 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
     for ($i = RQ::Fetch()->min_room_no; $i <= RQ::Fetch()->max_room_no; $i++) {
       RQ::Set(RequestDataGame::ID, $i);
       foreach ([false, true] as $flag) {
-	RQ::Set(RequestDataLogRoom::REVERSE, $flag);
+	RQ::Set(RequestDataLogRoom::REVERSE_LOG, $flag);
 
 	DB::LoadRoom();
 	DB::$ROOM->SetFlag(RoomMode::LOG);
@@ -86,14 +89,14 @@ final class JinrouAdminGenerateHTMLLogController extends JinrouAdminController {
 
   //過去ログ一覧のHTML化処理
   private static function GenerateIndex() {
-    RQ::Set('reverse', Switcher::OFF);
+    RQ::Set(RequestDataLogRoom::REVERSE_LIST, Switcher::OFF);
     $header = sprintf('../%s/%sindex', GenerateHTMLLogConfig::DIR, RQ::Fetch()->prefix);
     $footer = Text::LineFeed(HTML::GenerateFooter());
     $end_page = ceil((RQ::Fetch()->max_room_no - RQ::Fetch()->min_room_no + 1) / OldLogConfig::VIEW);
     for ($i = 1; $i <= $end_page; $i++) {
       RQ::Set('page', $i);
       $index = RQ::Fetch()->index_no - $i + 1;
-      file_put_contents($header. $index . '.html', OldLogHTML::GenerateList($i) . $footer);
+      file_put_contents($header. $index . '.html', LogListHTML::Generate($i) . $footer);
     }
 
     $format = GenerateHTMLLogMessage::FORMAT;

@@ -25,15 +25,21 @@ final class TalkHTML {
   /* 個別データ */
   //ヘッダー生成
   public static function GenerateHeader($class, $id = null) {
+    if (null === $id) {
+      $attribute = [];
+    } else {
+      $attribute = [HTML::ID => $id];
+    }
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $class .= ' hide';
     }
-    return Text::LineFeed(TableHTML::GenerateHeader($class, false, $id));
+    $attribute[HTML::CSS] = $class;
+    return TableHTML::Header($attribute, true);
   }
 
   //フッター生成
   public static function GenerateFooter() {
-    return Text::LineFeed(TableHTML::GenerateFooter(false));
+    return TableHTML::Footer();
   }
 
   //ユーザ名生成

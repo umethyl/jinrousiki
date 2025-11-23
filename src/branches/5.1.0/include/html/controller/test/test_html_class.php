@@ -1,12 +1,6 @@
 <?php
 //-- HTML 生成クラス (テスト拡張) --//
 final class DevHTML {
-  //共通リクエストロード
-  public static function LoadRequest() {
-    RQ::LoadRequest();
-    RQ::Fetch()->ParsePostOn('execute');
-  }
-
   //実行判定
   public static function IsExecute() {
     return RQ::Fetch()->execute;
@@ -14,9 +8,8 @@ final class DevHTML {
 
   //配役テストヘッダ出力
   public static function OutputRoleTestHeader($title, $url) {
-    self::LoadRequest();
     HTML::OutputHeader($title, 'test/role', true);
-    FormHTML::OutputHeader($url);
+    FormHTML::OutputExecute($url);
 
     $id_u = 'user_count';
     $id_t = 'try_count';

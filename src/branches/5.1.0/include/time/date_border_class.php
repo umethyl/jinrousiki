@@ -51,6 +51,11 @@ final class DateBorder {
     return DB::$ROOM->date < $date;
   }
 
+  //-- 以下(当日 + 未来) --//
+  public static function InLower($date) {
+    return DB::$ROOM->date <= $date;
+  }
+
   //1日目未満
   public static function PreOne() {
     return self::Lower(1);

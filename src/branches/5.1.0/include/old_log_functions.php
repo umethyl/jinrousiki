@@ -49,7 +49,8 @@ final class PageLinkBuilder extends stdClass {
     }
 
     if ($this->file == 'old_log') {
-      $this->AddOption('reverse', Switcher::Get(false === $this->set_reverse));
+      $value = Switcher::Get(false === $this->set_reverse);
+      $this->AddOption(RequestDataLogRoom::REVERSE_LIST, $value);
       $url_stack[] = OldLogMessage::LINK_ORDER;
       if ($this->set_reverse) {
 	$url_stack[] = OldLogMessage::ORDER_REVERSE;
@@ -65,8 +66,8 @@ final class PageLinkBuilder extends stdClass {
       $url_stack[] =  $this->GenerateTag($this->page->set, $name, true);
 
       if (RQ::Fetch()->watch) {
-	$this->AddOption('reverse', Switcher::Get($this->set_reverse));
-	$this->AddOption('watch',   Switcher::OFF);
+	$this->AddOption(RequestDataLogRoom::REVERSE_LIST, Switcher::Get($this->set_reverse));
+	$this->AddOption(RequestDataLogRoom::WATCH, Switcher::OFF);
 	$url_stack[] = $this->GenerateTag($this->page->set, OldLogMessage::LINK_WIN, true);
       }
     }

@@ -5,7 +5,12 @@ final class StatisticsStack {
   const WINNER      = 'winner';
   const ROLE        = 'role';
   const WIN_CAMP    = 'win_camp';
+  const DRAW_CAMP   = 'draw_camp';
+  const GAME_TYPE   = 'game_type';
   const WIN_ROLE    = 'win_role';
+  const LOSE_ROLE   = 'lose_role';
+  const DRAW_ROLE   = 'draw_role';
+  const LIVE_ROLE   = 'live_role';
   const APPEAR_CAMP = 'appear_camp';
   const APPEAR_ROLE = 'appear_role';
   const COUNT_UP    = 'count_up';
@@ -70,6 +75,8 @@ final class StatisticsData {
     StatisticsMessage::FIELD_APPEAR,
     StatisticsMessage::FIELD_APPEAR_RATE,
     StatisticsMessage::FIELD_WIN_COUNT,
+    StatisticsMessage::FIELD_LOSE_COUNT,
+    StatisticsMessage::FIELD_DRAW_COUNT,
     StatisticsMessage::FIELD_WIN_RATE,
     StatisticsMessage::FIELD_WIN_APPEAR
   ];
@@ -81,7 +88,11 @@ final class StatisticsData {
     StatisticsMessage::FIELD_APPEAR_ROOM,
     StatisticsMessage::FIELD_APPEAR_RATE,
     StatisticsMessage::FIELD_WIN_COUNT,
-    StatisticsMessage::FIELD_WIN_RATE
+    StatisticsMessage::FIELD_LOSE_COUNT,
+    StatisticsMessage::FIELD_DRAW_COUNT,
+    StatisticsMessage::FIELD_WIN_RATE,
+    StatisticsMessage::FIELD_LIVE,
+    StatisticsMessage::FIELD_LIVE_RATE
   ];
 
   //種別項目名(出現役職数)
@@ -91,7 +102,11 @@ final class StatisticsData {
     StatisticsMessage::FIELD_APPEAR_ROOM,
     StatisticsMessage::FIELD_APPEAR_RATE,
     StatisticsMessage::FIELD_WIN_COUNT,
+    StatisticsMessage::FIELD_LOSE_COUNT,
+    StatisticsMessage::FIELD_DRAW_COUNT,
     StatisticsMessage::FIELD_WIN_RATE,
+    StatisticsMessage::FIELD_LIVE,
+    StatisticsMessage::FIELD_LIVE_RATE,
     StatisticsMessage::FIELD_SEARCH
   ];
 

@@ -1,6 +1,11 @@
 <?php
 //-- HTML 生成クラス --//
 final class HTML {
+  //-- Attribute --//
+  const ID    = 'id';
+  const CSS   = 'class';
+  const ALIGN = 'align';
+
   //共通タグ生成
   public static function GenerateTag($name, $str, $class = null, $id = null, $align = null) {
     $header = self::GenerateTagHeader($name, $class, $id, $align);
@@ -20,19 +25,38 @@ final class HTML {
     if (true === isset($align)) {
       $str .= self::GenerateAttribute('align', $align);
     }
-    return '<' . $str . '>';
+    return Text::Quote($str, '<', '>');
   }
 
   //共通タグフッタ生成
   public static function GenerateTagFooter($name) {
-    return '</' . $name . '>';
+    return Text::Quote($name, '</', '>');
+  }
+
+  //共通タグ生成
+  public static function Tag(string $tag, string $str = '', array $list = [], bool $line = false) {
+    return self::TagHeader($tag, $list) . $str . self::TagFooter($tag, $line);
+  }
+
+  //共通タグヘッダ生成
+  public static function TagHeader(string $tag, array $list = [], bool $line = false) {
+    $str = $tag;
+    foreach ($list as $key => $value) {
+      $str .= self::GenerateAttribute($key, $value);
+    }
+    return self::LineFeed(Text::Quote($str, '<', '>'), $line);
+  }
+
+  //共通タグフッタ生成
+  public static function TagFooter(string $tag, bool $line = false) {
+    return self::LineFeed(Text::Quote($tag, '</', '>'), $line);
   }
 
   //Attribute 要素生成
-  public static function GenerateAttribute($name, $value = null) {
+  public static function GenerateAttribute(string $name, $value = null) {
     $str = ' ' . $name;
     if (true === isset($value)) {
-      $str .= '="' . $value . '"';
+      $str .= Text::Quote($value, '="', '"');
     }
     return $str;
   }
@@ -61,6 +85,11 @@ final class HTML {
       isset($css)     ? self::LoadCSS($css) : '',
       isset($on_load) ? self::GenerateAttribute('onLoad', $on_load) : ''
     );
+  }
+
+  //p 生成
+  public static function GenerateP($str) {
+    return Text::LineFeed(self::GenerateTag('p', $str));
   }
 
   //span 生成
@@ -128,7 +157,7 @@ final class HTML {
 
   //p 出力
   public static function OutputP($str) {
-    Text::Output(self::GenerateTag('p', $str));
+    echo self::GenerateP($str);
   }
 
   //警告メッセージ出力
@@ -159,6 +188,11 @@ final class HTML {
   //使用不可エラー出力
   public static function OutputUnusableError() {
     self::OutputResult(Message::DISABLE_ERROR, Message::UNUSABLE_ERROR);
+  }
+
+  //改行生成
+  private static function LineFeed(string $tag, bool $line) {
+    return $line ? Text::LineFeed($tag) : $tag;
   }
 
   //HTML ヘッダタグ

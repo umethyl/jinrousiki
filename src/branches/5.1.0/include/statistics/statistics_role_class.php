@@ -9,10 +9,10 @@ final class StatisticsRole {
       return RoleDataManager::GetName($camp, true);
 
     case WinCamp::DRAW:
-      return '引分';
+      return WinnerMessage::$personal_draw;
 
     case WinCamp::NONE:
-      return '無し';
+      return WinnerMessage::$personal_none;
 
     default:
       return RoleDataManager::GetName($camp);

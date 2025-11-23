@@ -153,7 +153,7 @@ class RoleMessageList {
     'type' => 'guard', 'delimiter' => ['^' => 'assassin']];
 
   public $finder_guard = [
-    'message' => "[役割] [|村人|陣営] [#狩人#系]\n　あなたは#狛犬#です。#狩り#能力を持たず、時々#護衛#に失敗します。#護衛#先が^強い力^を所持していると#護衛#成功率が上昇します。",
+    'message' => "[役割] [|村人|陣営] [#狩人#系]\n　あなたは#狛犬#です。#狩り#能力を持たず、時々#護衛#に失敗します。#護衛#先が^強い力^を所持していると#護衛#成功率が上昇します。\n　いつもは頼りなくとも、守るべきものを見つけ出したなら守り抜く。神仏に仇なす不届きモノよ、ここから先には通さない！",
     'type' => 'guard', 'delimiter' => ['^' => 'mania']];
 
   public $step_guard = [
@@ -603,11 +603,11 @@ class RoleMessageList {
     'type' => 'wolf', 'delimiter' => ['_' => 'vote', '#' => 'chiroptera', '^' => 'chicken']];
 
   public $homogeneous_wolf = [
-    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|爵狼|です。あなたに_処刑_投票してきた人が#異性#だった場合は一定確率で^死の宣告^を与えます。",
+    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|爵狼|です。あなたに_処刑_投票してきた人が#異性#だった場合は一定確率で^死の宣告^を与えます。\n　月下人無く、更に清淑。#異性#を厭う花をなお踏み荒らすというならば、呪いをその身に受けるがいい！",
     'type' => 'wolf', 'delimiter' => ['_' => 'vote', '#' => 'sex', '^' => 'chicken']];
 
   public $heterologous_wolf = [
-    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|姫狼|です。あなたに_処刑_投票してきた人が#同性#だった場合は一定確率で^死の宣告^を与えます。",
+    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|姫狼|です。あなたに_処刑_投票してきた人が#同性#だった場合は一定確率で^死の宣告^を与えます。\n　万緑叢中紅一点、私は#異性#を魅了する一輪花。立場を脅かす輩には死に至る呪いをさしあげましょう。",
     'type' => 'wolf', 'delimiter' => ['_' => 'vote', '#' => 'sex', '^' => 'chicken']];
 
   public $ascetic_wolf = [
@@ -976,7 +976,7 @@ class RoleMessageList {
     'type' => 'depraver', 'delimiter' => ['^' => 'vote', ':' => 'wisp']];
 
   public $tailtip_depraver = [
-    'message' => "[役割] [|妖狐|陣営] [|背徳者|系]\n　あなたは|尾先|です。_占い_をされると|妖狐|に変化します。",
+    'message' => "[役割] [|妖狐|陣営] [|背徳者|系]\n　あなたは|尾先|です。_占い_をされると|妖狐|に変化します。待っていた。あなたに見初められ、わたしが目覚めるその時を。",
     'type' => 'depraver'];
 
   public $sacrifice_depraver = [
@@ -1136,6 +1136,10 @@ class RoleMessageList {
     'message' => "[役割] [|蝙蝠|陣営] [|蝙蝠|系]\n　あなたは|毒蝙蝠|、#毒#を持っています。この#毒#は村にとって便利な道具です。正体が知られたら道具として死体を晒すことでしょう。",
     'type' => 'chiroptera', 'delimiter' => ['#' => 'poison']];
 
+  public $follow_chiroptera = [
+    'message' => "[役割] [|蝙蝠|陣営] [|蝙蝠|系]\n　あなたは|曼陀羅華|です。#処刑#されたら進行中の_死の宣告_対象者をまとめて_ショック死_させます。",
+    'type' => 'chiroptera', 'delimiter' => ['#' => 'vote', '_' => 'chicken']];
+
   public $cursed_chiroptera = [
     'message' => "[役割] [|蝙蝠|陣営] [|蝙蝠|系]\n　あなたは|呪蝙蝠|、#呪い#を持っています。#呪返し#で混乱する村を尻目にしたたかに生き延びるのです！",
     'type' => 'chiroptera', 'delimiter' => ['#' => 'wolf']];
@@ -1154,7 +1158,7 @@ class RoleMessageList {
 
   public $doom_chiroptera = [
     'message' => "[役割] [|蝙蝠|陣営] [|蝙蝠|系]\n　あなたは|蝉蝙蝠|です。一定日数後に#ショック死#してしまいます。村へと声を響かせなさい。短く儚い命を燃やし、生への執着を叫ぶのです。",
-    'type' => 'chiroptera', 'delimiter' => ['#' => 'chicken', '^' => 'necromancer']];
+    'type' => 'chiroptera', 'delimiter' => ['#' => 'chicken']];
 
   public $scarlet_chiroptera = [
     'message' => "[役割] [|蝙蝠|陣営] [|蝙蝠|系]\n　あなたは|紅蝙蝠|です。#人狼#からは_無意識_に、^妖狐^からは^子狐^に、:人形:からは:人形遣い:に見えています。\n　#人狼#から放置され、^妖狐^にはすり寄られ、:人形:から恨まれますが知った事か！生き延びろそれが|蝙蝠|。",
