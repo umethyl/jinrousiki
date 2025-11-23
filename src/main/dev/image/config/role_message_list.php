@@ -603,7 +603,7 @@ class RoleMessageList {
     'type' => 'wolf', 'delimiter' => ['_' => 'vote', '#' => 'chiroptera', '^' => 'chicken']];
 
   public $homogeneous_wolf = [
-    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|爵狼|です。あなたに_処刑_投票してきた人が#異性#だった場合は一定確率で^死の宣告^を与えます。",
+    'message' => "[役割] [|人狼|陣営] [|人狼|系]\n　あなたは|爵狼|です。あなたに_処刑_投票してきた人が#異性#だった場合は一定確率で^死の宣告^を与えます。\n　月下人無く、更に清淑。#異性#を厭う花をなお踏み荒らすというならば、呪いをその身に受けるがいい！",
     'type' => 'wolf', 'delimiter' => ['_' => 'vote', '#' => 'sex', '^' => 'chicken']];
 
   public $heterologous_wolf = [

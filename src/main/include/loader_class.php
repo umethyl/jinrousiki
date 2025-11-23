@@ -224,6 +224,7 @@ final class Loader extends LoadManager {
     case 'statistics':
     case 'html':
     case 'html/markup':
+    case 'html/room':
     case 'html/option':
     case 'html/role':
     case 'html/media':
@@ -440,6 +441,8 @@ final class LoaderData {
     //room
     'Room'		=> 'room_class',
     'RoomEntry'		=> 'room_entry_class',
+    'RoomDescribe'	=> 'room_describe_class',
+    'RoomError'		=> 'room_error_class',
     //user
     'User'		=> 'user_class',
     'UserLoader'	=> 'user_loader_class',
@@ -501,7 +504,6 @@ final class LoaderData {
     //html
     'HTML'		=> 'html_class',
     'GameHTML'		=> 'game_html_class',
-    'RoomHTML'		=> 'room_html_class',
     'TalkHTML'		=> 'talk_html_class',
     'VoteHTML'		=> 'vote_html_class',
     'InfoHTML'		=> 'info_html_class',
@@ -513,6 +515,9 @@ final class LoaderData {
     'LinkHTML'		=> 'link_html_class',
     'TableHTML'		=> 'table_html_class',
     'FormHTML'		=> 'form_html_class',
+    //html/room
+    'RoomHTML'		=> 'room_html_class',
+    'RoomDescribeHTML'	=> 'room_describe_html_class',
     //html/option
     'OptionHTML'	=> 'option_html_class',
     'OptionFormHTML'	=> 'option_form_html_class',
@@ -689,6 +694,8 @@ final class LoaderData {
     //room
     'room_class'		=> 'room',
     'room_entry_class'		=> 'room',
+    'room_describe_class'	=> 'room',
+    'room_error_class'		=> 'room',
     //user
     'user_class'		=> 'user',
     'user_loader_class'		=> 'user',
@@ -790,6 +797,9 @@ final class LoaderData {
     'link_html_class'		=> 'html/markup',
     'table_html_class'		=> 'html/markup',
     'form_html_class'		=> 'html/markup',
+    //html/room
+    'room_html_class'		=> 'html/room',
+    'room_describe_html_class'	=> 'html/room',
     //html/option
     'option_html_class'		=> 'html/option',
     'option_form_html_class'	=> 'html/option',

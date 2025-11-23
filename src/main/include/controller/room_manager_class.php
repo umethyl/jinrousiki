@@ -26,11 +26,11 @@ final class RoomManagerController extends JinrouController {
 
   protected static function RunCommand() {
     if (RQ::Fetch()->create_room) {
-      RoomEntry::Create();
+      RoomEntry::Execute();
     } elseif (RQ::Fetch()->change_room) {
-      RoomEntry::Create();
+      RoomEntry::Execute();
     } elseif (RQ::Fetch()->describe_room) {
-      RoomEntry::OutputDescribe();
+      RoomDescribe::Execute();
     } elseif (RQ::Get(RequestDataGame::ID) > 0) {
       RoomEntry::Output();
     } else {
