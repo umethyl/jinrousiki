@@ -52,25 +52,6 @@ final class RoomEntry {
     RoomManagerHTML::OutputCreate();
   }
 
-  //部屋説明出力
-  public static function OutputDescribe() {
-    //リクエストチェック
-    if (RQ::Get(RequestDataGame::ID) < 1) {
-      self::OutputDescribeError(Message::INVALID_ROOM);
-    }
-
-    //村情報ロード
-    DB::SetRoom(RoomManagerDB::Load());
-    if (DB::$ROOM->id < 1) {
-      self::OutputDescribeError(Message::INVALID_ROOM);
-    }
-    if (DB::$ROOM->IsFinished()) {
-      self::OutputDescribeError(self::GetErrorRoom(RoomManagerMessage::ERROR_FINISHED));
-    }
-
-    RoomManagerHTML::OutputDescribe();
-  }
-
   //データロード (村作成 / オプション変更時)
   private static function LoadCreateInChange() {
     Session::Login();
@@ -146,10 +127,10 @@ final class RoomEntry {
   //村情報チェック (オプション変更時)
   private static function ValidateRoomCreateInChange() {
     if (DB::$ROOM->IsFinished()) {
-      self::OutputCreateInChangeError(self::GetErrorRoom(RoomManagerMessage::ERROR_FINISHED));
+      self::OutputCreateInChangeError(RoomError::GetRoom(RoomManagerMessage::ERROR_FINISHED));
     }
     if (false === DB::$ROOM->IsBeforegame()) {
-      self::OutputCreateInChangeError(self::GetErrorRoom(RoomManagerMessage::ERROR_CHANGE_PLAYING));
+      self::OutputCreateInChangeError(RoomError::GetRoom(RoomManagerMessage::ERROR_CHANGE_PLAYING));
     }
   }
 
@@ -296,27 +277,7 @@ final class RoomEntry {
 
   //オプション変更時エラー出力
   private static function OutputCreateInChangeError($body) {
-    HTML::OutputResult(self::GetErrorTitle(RoomManagerMessage::TITLE_CHANGE), $body);
-  }
-
-  //部屋説明エラー出力
-  private static function OutputDescribeError($body) {
-    HTML::OutputResult(self::GetErrorTitle(RoomManagerMessage::TITLE_DESCRIBE), $body);
-  }
-
-  //エラーメッセージタイトル取得
-  private static function GetErrorTitle($str) {
-    return $str . ' ' . Message::ERROR_TITLE;
-  }
-
-  //エラーメッセージ対象村取得
-  private static function GetErrorRoom($str) {
-    return self::GetErrorRoomHeader() . $str;
-  }
-
-  //エラーメッセージ対象村ヘッダー取得
-  private static function GetErrorRoomHeader() {
-    return DB::$ROOM->id . GameMessage::ROOM_NUMBER_FOOTER;
+    HTML::OutputResult(RoomError::GetTitle(RoomManagerMessage::TITLE_CHANGE), $body);
   }
 
   //テスト用結果表示

@@ -28,13 +28,12 @@ final class TalkHTML {
     if (null === $id) {
       $attribute = [];
     } else {
-      $attibute = [HTML::ID => $id];
+      $attribute = [HTML::ID => $id];
     }
     if (DB::$ROOM->IsOn(RoomMode::AUTO_PLAY)) {
       $class .= ' hide';
     }
     $attribute[HTML::CSS] = $class;
-
     return TableHTML::Header($attribute, true);
   }
 
