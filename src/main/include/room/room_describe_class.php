@@ -43,7 +43,7 @@ final class RoomDescribe {
   }
 
   //エラー出力
-  private static function OutputError($body) {
-    HTML::OutputResult(RoomError::GetTitle(RoomManagerMessage::TITLE_DESCRIBE), $body);
+  private static function OutputError(string $str) {
+    HTML::OutputResult(RoomError::GetTitle(RoomManagerMessage::TITLE_DESCRIBE), $str);
   }
 }
