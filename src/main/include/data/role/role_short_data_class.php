@@ -85,6 +85,7 @@ final class RoleShortData {
     'sacrifice_cat'		=> '猫神',
     'doom_cat'			=> '神医',
     'missfire_cat'		=> '常',
+    'fetish_cat'		=> '呪遣',
     'eclipse_cat'		=> '蝕狸',
     'pharmacist'		=> '薬',
     'cure_pharmacist'		=> '河',

@@ -326,10 +326,11 @@ class ChaosConfig {
     'chain_poison'          =>  60,
     'dummy_poison'          =>  90,
     'poison_cat'            =>  40,
-    'revive_cat'            =>  25,
-    'sacrifice_cat'         =>  25,
-    'doom_cat'              =>  20,
-    'missfire_cat'          =>  20,
+    'revive_cat'            =>  16,
+    'sacrifice_cat'         =>  20,
+    'doom_cat'              =>  18,
+    'missfire_cat'          =>  18,
+    'fetish_cat'            =>  18,
     'eclipse_cat'           =>  20,
     'pharmacist'            =>  60,
     'cure_pharmacist'       =>  40,
@@ -791,10 +792,11 @@ class ChaosConfig {
 	    'count' => [1, 1]],
     'd' => ['fix'    => ['grave_mad' => 1],
 	    'random' => [['poison_cat'    => 3,
-			  'revive_cat'    => 2,
+			  'revive_cat'    => 1,
 			  'sacrifice_cat' => 1,
 			  'doom_cat'      => 1,
 			  'missfire_cat'  => 1,
+			  'fetish_cat'    => 1,
 			  'eclipse_cat'   => 2]],
 	    'count'  => [1]],
     'e' => ['fix' => ['anti_voodoo' => 1, 'possessed_wolf' => 1]],
@@ -1069,7 +1071,7 @@ class ChaosConfig {
   */
   public static $boost_rate_fix_rate = 20;
   public static $boost_rate_list = [
-    'a' => ['fix' => ['follow_chiroptera' => 20]],
+    'a' => ['fix' => ['fetish_cat' => 20]],
     'b' => ['zero' => ['elder',
 		       'scripter',
 		       'eccentricer',
@@ -1141,6 +1143,7 @@ class ChaosConfig {
 		       'sacrifice_cat',
 		       'doom_cat',
 		       'missfire_cat',
+		       'fetish_cat',
 		       'eclipse_cat',
 		       'revive_doll_master',
 		       'possessed_mad',
@@ -1739,6 +1742,7 @@ class ChaosConfig {
 			 'count' => 1]]],
     'j5' => ['fix' => ['spark_wizard' => 1, 'tailtip_depraver' => 1]],
     'j6' => ['fix' => ['follow_chiroptera' => 1]],
+    'j7' => ['fix' => ['fetish_cat' => 1]],
   ];
 
   //-- 博物館モード(倍率型) --//
@@ -1864,6 +1868,7 @@ class ChaosConfig {
     'j4' => ['boost' => ['finder_guard', 'homogeneous_wolf', 'heterologous_wolf']],
     'j5' => ['boost' => ['spark_wizard', 'tailtip_depraver']],
     'j6' => ['boost' => ['follow_chiroptera']],
+    'j7' => ['boost' => ['fetish_cat']],
   ];
 
   //サブ役職制限：EASYモード

@@ -16,9 +16,10 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'result_follow_chiroptera';
+//$role = 'result_fetish_cat';
 //$role = 'prediction_weather_no_escape';
-$role = 'follow_chiroptera';
+//$role = 'follow_chiroptera';
+$role = 'fetish_cat';
 
 $calib_list = [0,0,0,0];
 //$calib_list = [0.5,0,0,0]; //wolf, vampire

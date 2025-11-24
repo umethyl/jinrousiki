@@ -82,6 +82,7 @@ class ResultList extends RoleMessageList {
   public $result_sacrifice_cat = ['message' => "さんは|猫神|でした", 'type' => 'result_poison_cat'];
   public $result_doom_cat = ['message' => "さんは|神医|でした", 'type' => 'result_poison_cat'];
   public $result_missfire_cat = ['message' => "さんは|常世神|でした", 'type' => 'result_poison_cat'];
+  public $result_fetish_cat = ['message' => "さんは|呪物遣い|でした", 'type' => 'result_poison_cat'];
   public $result_eclipse_cat = ['message' => "さんは|蝕仙狸|でした", 'type' => 'result_poison_cat'];
   public $result_pharmacist = ['message' => "さんは|薬師|でした", 'type' => 'result_poison'];
   public $result_cure_pharmacist = ['message' => "さんは|河童|でした", 'type' => 'result_pharmacist'];

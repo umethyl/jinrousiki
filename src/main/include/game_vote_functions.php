@@ -1439,6 +1439,13 @@ final class VoteNight extends VoteBase {
     $action    = VoteAction::REVIVE;
     $vote_data = RoleManager::GetVoteData();
     RoleVote::FilterNight($vote_data[$action], 'Revive', 'inactive');
+
+    //蘇生身代わり
+    foreach (RoleFilterData::$revive_sacrifice as $role) {
+      RoleLoader::Load($role)->ReviveSacrifice();
+    }
+
+    //蘇生キャンセル後処理
     foreach (RoleFilterData::$revive_cancel as $role) {
       foreach (DB::$USER->GetRoleUser($role) as $user) {
 	//未投票者のみ・直前に死んでいたら無効

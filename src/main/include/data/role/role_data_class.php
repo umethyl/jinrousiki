@@ -86,6 +86,7 @@ final class RoleData {
     'sacrifice_cat'		=> '猫神',
     'doom_cat'			=> '神医',
     'missfire_cat'		=> '常世神',
+    'fetish_cat'		=> '呪物遣い',
     'eclipse_cat'		=> '蝕仙狸',
     'pharmacist'		=> '薬師',
     'cure_pharmacist'		=> '河童',

@@ -2267,6 +2267,7 @@ Ver. 1.4.0 β9 からは吊られた時のみ<a href="wolf.php#dream_eater_mad">
 <a href="#sacrifice_cat">猫神</a>
 <a href="#doom_cat">神医</a>
 <a href="#missfire_cat">常世神</a>
+<a href="#fetish_cat">呪物遣い</a>
 <a href="#eclipse_cat">蝕仙狸</a>
 </p>
 
@@ -2367,10 +2368,12 @@ Ver. 1.4.0 β9 からは吊られた時のみ<a href="wolf.php#dream_eater_mad">
 <ol>
 <li>蘇生キャンセル時に<a href="sub_role.php#death_warrant">死の宣告</a>を一度も受けていない場合に発動する (3 日後)。</il>
 <li>蘇生成功時に発動前の<a href="sub_role.php#death_warrant">死の宣告</a>があった場合は追加で発動する (発動日 + 2 日後)。</il>
+<li>天候「<a href="../weather.php#weather_full_revive">雷雨</a>」時は無効。</il>
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#doom">死の宣告能力者</a>
+<a href="ability.php#doom">死の宣告能力者</a>・<a href="ability.php#revive_cancel">蘇生キャンセル能力者</a>
+
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2390,6 +2393,43 @@ Ver. 1.4.0 β9 からは吊られた時のみ<a href="wolf.php#dream_eater_mad">
 <pre>
 <a href="#eclipse_cat">蝕仙狸</a>と違い、自覚があるので動き方が異なってくると思われます。
 <a href="../weather.php#weather_full_revive">天候</a>や<a href="#revive_brownie">蛇神</a>が絡んでくると通常蘇生も狙えます。
+</pre>
+
+<h3 id="fetish_cat">呪物遣い (占い結果：村人 / 霊能結果：村人) [Ver. 5.1.0 β5]</h3>
+<h4>[耐性] 蘇生：不可</h4>
+<h4>[蘇生能力] 成功率：60% / 誤爆：無し</h4>
+<pre>
+蘇生に成功すると、さらに追加でランダムに1人蘇生するが、
+誰か1人を身代わりに死亡させる猫又の亜種。
+蘇生成功率は 60%、誤爆率は 0% で固定。
+</pre>
+<h4>身代わり蘇生能力</h4>
+<ol>
+<li><a href="../spec.php#vote_night">判定</a>は蘇生レイヤーの蘇生実行後。</il>
+<li>蘇生対象者は、判定時点の死亡者からランダム。</il>
+  <ul>
+     <li><a href="ability.php#revive_limit">蘇生制限対象者</a>は除外される。</li>
+     <li>対象者が不在だった場合は不発 (通常蘇生は成立する)。</li>
+  </ul>
+<li>身代わり対象者は、判定時点の生存者からランダム。</li>
+  <ul>
+    <li>身代わり蘇生が発生した場合のみ、身代わりが発生する。</li>
+    <li>当日に蘇生された人は除外される。</li>
+    <li><a href="ability.php#special_resist">特殊耐性能力者</a>は除外される。</li>
+    <li>対象者が不在だった場合は不発 (身代わり蘇生は成立する)。</li>
+  </ul>
+<li>天候「<a href="../weather.php#weather_full_revive">雷雨</a>」「<a href="../weather.php#weather_no_sacrifice">蛍火</a>」時は無効。</il>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#revive_sacrifice">蘇生身代わり能力者</a>・<a href="ability.php#sacrifice">身代わり能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="../duel.php#duel_selector_l">特殊決闘村</a>を盛り上げるために蘇生の代償が重い能力を考案しました。
+小説「猿の手」がモチーフです。
+劣勢時には理屈上、敵対勢力が身代わりになりやすくなるので
+逆転を期待して賭けに出るのもありかもしれません。
 </pre>
 
 <h3 id="eclipse_cat">蝕仙狸 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 β17]</h3>
@@ -4300,7 +4340,7 @@ MVP の賞品としてプレゼントしたものです。
 例3) A[奉公童女] → B[村人] ← C[人狼] / D[吸血鬼] → B[村人]<br>
 => B で護衛成功二回、身代わり発生は一回。
 </li>
-<li><a href="../weather.php#weather_no_sacrifice">蛍火</a>の場合は人形の身代わり能力無効。</li>
+<li>天候「<a href="../weather.php#weather_no_sacrifice">蛍火</a>」の場合は人形の身代わり能力無効。</li>
 </ol>
 <h5>Ver. 3.1.0 α9</h5>
 <pre>
@@ -4309,7 +4349,7 @@ MVP の賞品としてプレゼントしたものです。
 <h5>Ver. 3.0.0 α5</h5>
 <pre>
 <a href="sub_role.php#vega_lovers">織姫</a>を護衛の身代わりにすることがあるバグ修正
-<a href="../weather.php#weather_no_sacrifice">蛍火</a>の場合は人形の身代わり能力無効
+天候「<a href="../weather.php#weather_no_sacrifice">蛍火</a>」の場合は人形の身代わり能力無効
 </pre>
 <h4>関連役職</h4>
 <pre>

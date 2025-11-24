@@ -77,12 +77,12 @@ RQ::GetTest()->test_users[25]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[25]->profile = "あーうー\nうーあー";
 
 RQ::GetTest()->test_users[26]->role = 'trick_mania';
-RQ::GetTest()->test_users[26]->live = UserLive::LIVE;
+RQ::GetTest()->test_users[26]->live = UserLive::DEAD;
 
 RQ::GetTest()->test_users[27]->role = 'revive_mania[24] mind_friend[27] penetration';
 RQ::GetTest()->test_users[27]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[28]->role = 'doom_cat bad_luck face_status[2-4]';
+RQ::GetTest()->test_users[28]->role = 'fetish_cat bad_luck face_status[2-4]';
 RQ::GetTest()->test_users[28]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[29]->role = 'flower_jealousy mind_friend[29]';
