@@ -105,6 +105,7 @@ if (VoteTestRoom::DATE == 1) {
     ['user_no' => 25,	RequestDataVote::TARGET => 12,	'type' => VoteAction::OGRE],
     //['user_no' => 25,	RequestDataVote::TARGET => null,	'type' => VoteAction::NOT_OGRE],
     //['user_no' => 28,	RequestDataVote::TARGET => 18,	'type' => VoteAction::GUARD],
+    //['user_no' => 28,	RequestDataVote::TARGET => 18,	'type' => VoteAction::REVIVE],
     ['user_no' => 28,	RequestDataVote::TARGET => 18,	'type' => VoteAction::NOT_REVIVE],
     //['user_no' => 29,	RequestDataVote::TARGET =>  8,	'type' => VoteAction::TENGU],
     ['user_no' => 29,	RequestDataVote::TARGET =>  27,	'type' => VoteAction::MAGE],

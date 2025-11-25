@@ -1442,7 +1442,9 @@ final class VoteNight extends VoteBase {
 
     //蘇生身代わり
     foreach (RoleFilterData::$revive_sacrifice as $role) {
-      RoleLoader::Load($role)->ReviveSacrifice();
+      if (DB::$USER->CountRole($role) > 0) {
+	RoleLoader::Load($role)->ReviveSacrifice();
+      }
     }
 
     //蘇生キャンセル後処理

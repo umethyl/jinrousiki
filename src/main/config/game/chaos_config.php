@@ -1851,14 +1851,43 @@ class ChaosConfig {
     'c24' => ['boost' => ['emperor_wolf']],
     //TypeD: Ver. 2.1.0
     'd1' => ['boost' => ['swindle_mad']],
+    'd2' => ['boost' => ['eccentricer']],
+    'd3' => ['boost' => ['disguise_wolf']],
+    'd4' => ['boost' => ['decieve_wolf']],
+    'd5' => ['boost' => ['purple_wolf', 'snow_wolf', 'purple_fox', 'snow_fox']],
+    'd6' => ['boost' => ['sweep_assassin', 'professional_assassin', 'ascetic_assassin',
+			 'ascetic_wolf', 'vindictive_fox', 'vajra_yaksa']],
+    'd7' => ['boost' => ['poison_vampire', 'passion_vampire']],
     //TypeE: Ver. 2.2.0
     'e1' => ['boost' => ['step_mage', 'step_guard', 'step_wolf', 'step_mad', 'step_fox']],
+    'e2' => ['boost' => ['step_vampire']],
+    'e3' => ['boost' => ['cow_ogre', 'horse_ogre']],
+    'e4' => ['boost' => ['fire_mad', 'sea_duelist']],
+    'e5' => ['boost' => ['plumage_patron', 'scarlet_mania']],
+    'e6' => ['boost' => ['tough']],
     //TypeF: Ver. 2.3.0
     'f1' => ['boost' => ['altair_cupid']],
+    'f2' => ['boost' => ['nephila_cupid', 'doom_chiroptera']],
+    'f3' => ['boost' => ['depraver', 'sacrifice_depraver', 'silver_depraver']],
+    'f4' => ['boost' => ['honey_wolf', 'lute_mania', 'harp_mania']],
+    'f5' => ['boost' => ['prince', 'perverse_duelist']],
+    'f6' => ['boost' => ['wanderer_guard', 'step_assassin', 'step_scanner']],
     //TypeG: Ver. 3.0.0
     'g1' => ['boost' => ['tengu', 'soul_tengu', 'eclipse_tengu']],
+    'g2' => ['boost' => ['tiger_wolf', 'tiger_fox', 'fire_depraver']],
+    'g3' => ['boost' => ['toy_doll_master', 'revive_doll_master', 'serve_doll_master']],
+    'g4' => ['boost' => ['critical_mage', 'barrier_brownie', 'passion_tengu']],
+    'g5' => ['boost' => ['eye_scanner', 'eye_wolf', 'letter_cupid']],
+    'g6' => ['boost' => ['meteor_tengu', 'priest_tengu']],
     //TypeH: Ver. 3.1.0
     'h1' => ['boost' => ['mask_mania']],
+    'h2' => ['boost' => ['stargazer_escaper', 'involve_tengu', 'grave_guard', 'grave_mad']],
+    'h3' => ['boost' => ['doom_cat', 'foughten_avenger']],
+    'h4' => ['boost' => ['agent_escaper', 'follow_vampire']],
+    'h5' => ['boost' => ['seiren_mad', 'fortitude_wolf', 'fortitude_fox']],
+    'h6' => ['boost' => ['thorn_wolf', 'collector_ogre']],
+    'h7' => ['boost' => ['spy_mad']],
+    'h8' => ['boost' => ['esper_wizard', 'chill_fairy', 'triphase_duelist', 'trick_avenger']],
     //TypeI: Ver. 4.1.0
     'i1' => ['boost' => ['homogeneous_vampire', 'heterologous_vampire', 'gender_fairy']],
     //TypeJ: Ver. 5.1.0

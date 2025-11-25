@@ -23,8 +23,9 @@ class Role_fetish_cat extends Role_poison_cat {
   //蘇生身代わり処理
   public function ReviveSacrifice() {
     $user_list = $this->GetStack();
-    //天候判定 (「雷雨」発生時は空になる)
-    if (count($user_list) < 1 || DB::$ROOM->IsEvent('no_sacrifice')) {
+
+    //キャンセル/天候判定 (「雷雨」発生時は空になる)
+    if (null === $user_list || DB::$ROOM->IsEvent('no_sacrifice')) {
       return;
     }
 
