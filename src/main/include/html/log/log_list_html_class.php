@@ -59,7 +59,7 @@ final class LogListHTML {
 	}
 
 	if (RQ::Fetch()->watch) {
-	  $log_link  = self::GenerateWatchLogLink($base_url,  '(', '', ' )');
+	  $log_link  = LinkHTML::GenerateWolfSiteLog($base_url);
 	} else {
 	  $log_link  = LinkHTML::GenerateLog($base_url, true, '(', '', ' )');
 
@@ -207,17 +207,6 @@ final class LogListHTML {
     ];
   }
 
-  //ログへのリンク生成 (観戦モード用)
-  private static function GenerateWatchLogLink($url, $header = '', $css = '', $footer = '') {
-    $str = sprintf(self::GetWolfSiteLogLink(), $header,
-      $url, $css, Message::LOG_NORMAL,
-      $url, $css, Message::LOG_REVERSE,
-      $url, $css, Message::LOG_WOLF,
-      $url, $css, Message::LOG_WOLF_REVERSE
-    );
-    return $str . $footer;
-  }
-
   //個別村情報生成
   private static function GenerateRoom($base_url, $view_url, $vanish, $login, $log_link) {
     $str  = self::GenerateRoomUpper($view_url, $base_url, $vanish);
@@ -305,15 +294,5 @@ final class LogListHTML {
     $str .= TableHTML::TrFooter();
 
     return $str;
-  }
-
-  //ログへのリンクタグ (人狼視点モード用)
-  private static function GetWolfSiteLogLink() {
-    return <<<EOF
-%s <a target="_top" href="%s"%s>%s</a>
-<a target="_top" href="%s&reverse_log=on"%s>%s</a>
-<a target="_top" href="%s&wolf_sight=on"%s >%s</a>
-<a target="_top" href="%s&wolf_sight=on&reverse_log=on"%s>%s</a>
-EOF;
   }
 }
