@@ -6,6 +6,6 @@
 */
 class Event_full_revive extends Event {
   public function SealVoteNight(array &$stack) {
-    $stack[] = VoteAction::GRAVE;
+    array_push($stack, VoteAction::GRAVE, VoteAction::RIOTE);
   }
 }

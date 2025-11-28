@@ -44,6 +44,7 @@ final class VoteActionGroup {
     VoteAction::TRAP,
     VoteAction::POSSESSED,
     VoteAction::GRAVE,
+    VoteAction::RIOTE,
     VoteAction::EXIT_DO,
     VoteAction::VAMPIRE,
     VoteAction::STEP_VAMPIRE,

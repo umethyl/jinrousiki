@@ -156,17 +156,6 @@ EOF;
     return $str;
   }
 
-  //ログへのリンク生成 (観戦モード用)
-  private static function GenerateWatchLogLink($url, $header = '', $css = '', $footer = '') {
-    $str = sprintf(self::GetWolfSiteLogLink(), $header,
-      $url, $css, Message::LOG_NORMAL,
-      $url, $css, Message::LOG_REVERSE,
-      $url, $css, Message::LOG_WOLF,
-      $url, $css, Message::LOG_WOLF_REVERSE
-    );
-    return $str . $footer;
-  }
-
   //霊界ログ出力
   private static function GenerateHeavenLog() {
     $str = '';
@@ -376,16 +365,6 @@ EOF;
     } else {
       return $str;
     }
-  }
-
-  //ログへのリンクタグ (人狼視点モード用)
-  private static function GetWolfSiteLogLink() {
-    return <<<EOF
-%s <a target="_top" href="%s"%s>%s</a>
-<a target="_top" href="%s&reverse_log=on"%s>%s</a>
-<a target="_top" href="%s&wolf_sight=on"%s >%s</a>
-<a target="_top" href="%s&wolf_sight=on&reverse_log=on"%s>%s</a>
-EOF;
   }
 
   //リンクタグ (スイッチ型)

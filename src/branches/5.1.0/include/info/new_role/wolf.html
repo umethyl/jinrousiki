@@ -1521,15 +1521,16 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
 <a href="#dream_eater_mad">獏</a>
 <a href="#possessed_mad">犬神</a>
 <a href="#grave_mad">墓荒らし</a>
+<a href="#rioter_mad">暴徒</a>
 <a href="#trap_mad">罠師</a>
 <a href="#snow_trap_mad">雪女</a>
 <a href="#corpse_courier_mad">火車</a>
 <a href="#amaze_mad">傘化け</a>
 <a href="#agitate_mad">扇動者</a>
 <a href="#miasma_mad">土蜘蛛</a>
-<a href="#critical_mad">釣瓶落とし</a>
 </p>
 <p>
+<a href="#critical_mad">釣瓶落とし</a>
 <a href="#fire_mad">煙々羅</a>
 <a href="#follow_mad">舟幽霊</a>
 <a href="#therian_mad">獣人</a>
@@ -1841,6 +1842,53 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
 <pre>
 蘇生に成功した<a href="ability.php#revive">蘇生能力者</a>を襲撃以外で排除するのが難しいので
 対抗能力をデザインしてみました。
+</pre>
+
+<h3 id="rioter_mad">暴徒 (占い結果：村人 / 霊能結果：村人) [Ver. 5.1.0 β5]</h3>
+<h4>[耐性] 罠：有効 / 狩り：有効</h4>
+<pre>
+一度だけ、夜に投票した人が蘇生したら、その周囲8マスからランダムに2人死亡させる特殊な狂人。
+</pre>
+<h4>投票能力</h4>
+<ol>
+  <li>2日目以降の夜から投票できる。</li>
+  <li>対象の生死を問わず投票できる。</li>
+  <li>身代わり君と自分自身には投票できない。</li>
+  <li>投票イベント名は「対象の周囲に張り込み」。</li>
+  <li>「張り込みしない」を選択することができる。</li>
+  <li>「張り込み」は<a href="../spec.php#vote_night">接触レイヤー</a>で行う。</li>
+  <li>生存者に投票した場合は<a href="ability.php#trap">罠</a>にかかる可能性がある。</li>
+  <li><a href="ability.php#trap">罠</a>で死亡した場合は投票無効。</li>
+  <li>天候「<a href="../../info/weather.php#weather_no_contact">花曇り</a>・<a href="../../info/weather.php#weather_full_revive">雷雨</a>」時には投票無効。</li>
+  <li>投票が有効になったら能力を失う (<a href="sub_role.php#lost_ability">能力喪失</a>)。</li>
+</ol>
+<h4>暴動発動判定</h4>
+<ol>
+  <li>判定は<a href="../spec.php#vote_night">蘇生レイヤー</a>で行う。</li>
+  <li>判定時に投票先が蘇生していると発動する。</li>
+  <li>蘇生の要因は種類を問わない (<a href="human.php#reverse_assassin">反魂</a>・<a href="ability.php#revive">蘇生能力</a>)。</li>
+  <li>判定前に本人が死亡していた場合は無効。</li>
+  <ul><li>判定時に蘇生している場合でも無効。</li></ul>
+  <li>判定は個々で行う (複数の暴徒が投票していた場合は重複する)。</li>
+</ol>
+<h4>暴動能力</h4>
+<ol>
+  <li>対象は蘇生した人の周囲8マスからランダムに最大2人。</li>
+  <li>判定時に蘇生している人は除外される。</li>
+  <li><a href="ability.php#special_resist">特殊耐性能力者</a>は除外される。</li>
+  <li>対象範囲に暴徒自身がいる場合は自身も候補となる。</li>
+  <li>候補がいなかった場合は不発。</li>
+  <li>複数の暴徒が別々の対象者に対して発動する場合、発動順は対象者単位でランダム。</li>
+  <li><a href="../spec.php#dead_night">死因</a>は「暴動に巻き込まれたようです」。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#anti_revive">蘇生妨害能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="../duel.php#duel_selector_l">特殊決闘村</a>を盛り上げるために蘇生発生をトリガーに死者を増やせる能力を考案しました。
+決闘村の場合は<a href="ability.php#revive">自己蘇生</a>が発生しそうな位置が狙い目となります。
 </pre>
 
 <h3 id="trap_mad">罠師 (占い結果：村人 / 霊能結果：村人) [Ver. 1.4.0 α18]</h3>

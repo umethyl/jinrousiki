@@ -59,7 +59,7 @@ final class LogListHTML {
 	}
 
 	if (RQ::Fetch()->watch) {
-	  $log_link  = self::GenerateWatchLogLink($base_url,  '(', '', ' )');
+	  $log_link  = LinkHTML::GenerateWolfSiteLog($base_url);
 	} else {
 	  $log_link  = LinkHTML::GenerateLog($base_url, true, '(', '', ' )');
 

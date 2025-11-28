@@ -312,6 +312,9 @@ final class RoleFilterData {
   //死者妨害
   public static $grave = ['grave_mad'];
 
+  //身代わり蘇生
+  public static $revive_sacrifice = ['fetish_cat'];
+
   //蘇生キャンセル
   public static $revive_cancel = ['doom_cat'];
 
