@@ -28,6 +28,17 @@ final class LinkHTML {
     return $str . $footer;
   }
 
+  //ログへのリンク生成 (勝敗隠蔽モード用)
+  public static function GenerateWolfSiteLog($url) {
+    $str = sprintf(self::GetWolfSiteLogLink(),
+      $url, Message::LOG_NORMAL,
+      $url, Message::LOG_REVERSE,
+      $url, Message::LOG_WOLF,
+      $url, Message::LOG_WOLF_REVERSE
+    );
+    return Text::Quote($str, '( ', ' )');
+  }
+
   //出力
   public static function Output($url, $str, $line = false) {
     Text::Output(self::Generate($url, $str), $line);
@@ -55,6 +66,16 @@ EOF;
     return <<<EOF
 <a target="_top" href="%s&watch=on"%s>%s</a>
 <a target="_top" href="%s&watch=on&reverse_log=on"%s>%s</a>
+EOF;
+  }
+
+  //ログへのリンクタグ (勝敗隠蔽モード用)
+  private static function GetWolfSiteLogLink() {
+    return <<<EOF
+<a target="_top" href="%s">%s</a>
+<a target="_top" href="%s&reverse_log=on">%s</a>
+<a target="_top" href="%s&wolf_sight=on">%s</a>
+<a target="_top" href="%s&wolf_sight=on&reverse_log=on">%s</a>
 EOF;
   }
 }

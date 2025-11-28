@@ -36,6 +36,8 @@ final class VoteAction {
   const NOT_POSSESSED		= 'POSSESSED_NOT_DO';
   const GRAVE			= 'GRAVE_DO';
   const NOT_GRAVE		= 'GRAVE_NOT_DO';
+  const RIOTE			= 'RIOTE_DO';
+  const NOT_RIOTE		= 'RIOTE_NOT_DO';
   const TRAP			= 'TRAP_MAD_DO';
   const NOT_TRAP		= 'TRAP_MAD_NOT_DO';
   const EXIT_DO			= 'EXIT_DO';

@@ -127,11 +127,8 @@ final class TalkParser extends stdClass {
       return;
 
     case VoteAction::NOT_POSSESSED:
-      $this->class     = VoteCSS::WOLF;
-      $this->sentence .= VoteTalkMessage::${$this->action};
-      return;
-
     case VoteAction::NOT_GRAVE:
+    case VoteAction::NOT_RIOTE:
       $this->class     = VoteCSS::WOLF;
       $this->sentence .= VoteTalkMessage::${$this->action};
       return;
@@ -217,6 +214,7 @@ final class TalkParser extends stdClass {
     case VoteAction::DREAM:
     case VoteAction::POSSESSED:
     case VoteAction::GRAVE:
+    case VoteAction::RIOTE:
       $this->class = VoteCSS::WOLF;
       break;
 

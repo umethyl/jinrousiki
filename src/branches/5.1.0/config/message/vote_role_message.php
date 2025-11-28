@@ -26,6 +26,8 @@ class VoteRoleMessage {
   public static $POSSESSED_NOT_DO  = '誰にも憑依しない';		//犬神 (キャンセル)
   public static $GRAVE_DO          = '対象の墓を荒らす';		//墓荒らし
   public static $GRAVE_NOT_DO      = '墓を荒らさない';			//墓荒らし (キャンセル)
+  public static $RIOTE_DO          = '対象の周辺に張り込む';		//暴徒
+  public static $RIOTE_NOT_DO      = '誰も張り込まない';		//暴徒 (キャンセル)
   public static $STEP_DO           = '対象の周辺を徘徊する';		//家鳴
   public static $STEP_NOT_DO       = 'どこにも徘徊しない';		//家鳴 (キャンセル)
   public static $EXIT_DO           = '離脱する';			//内通者

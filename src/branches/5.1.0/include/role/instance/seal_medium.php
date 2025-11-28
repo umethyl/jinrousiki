@@ -24,7 +24,7 @@ class Role_seal_medium extends Role_medium {
   private function GetSealList() {
     return [
       'phantom_wolf', 'resist_wolf', 'revive_wolf', 'step_wolf', 'tongue_wolf',
-      'trap_mad', 'possessed_mad', 'revive_mad',
+      'rioter_mad', 'trap_mad', 'possessed_mad', 'revive_mad',
       'phantom_fox', 'spell_fox', 'emerald_fox', 'revive_fox', 'possessed_fox', 'trap_fox',
       'revive_cupid',
       'revive_avenger'

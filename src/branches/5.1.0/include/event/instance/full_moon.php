@@ -7,8 +7,13 @@
 class Event_full_moon extends Event {
   public function SealVoteNight(array &$stack) {
     array_push($stack,
-      VoteAction::JAMMER, VoteAction::VOODOO_MAD, VoteAction::VOODOO_FOX,
-      VoteAction::GUARD,  VoteAction::STEP_GUARD, VoteAction::REPORTER, VoteAction::ANTI_VOODOO
+      VoteAction::JAMMER,
+      VoteAction::VOODOO_MAD,
+      VoteAction::VOODOO_FOX,
+      VoteAction::GUARD,
+      VoteAction::STEP_GUARD,
+      VoteAction::REPORTER,
+      VoteAction::ANTI_VOODOO
     );
   }
 }

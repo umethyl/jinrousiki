@@ -74,6 +74,8 @@ final class RoleVoteTarget {
   const SACRIFICE		= 'sacrifice';
   const ANTI_VOODOO		= 'anti_voodoo';
   const REVERSE_ASSASSIN	= 'reverse_assassin';
+  const GRAVE			= 'grave';
+  const RIOTE			= 'riote';
 }
 
 //-- 定数リスト (Role/Vote/Success) --//
