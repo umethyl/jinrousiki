@@ -314,8 +314,7 @@
 <pre>
 人口(15人)：<a href="new_role/wolf.php#purple_wolf">紫狼</a>・<a href="new_role/fox.php#purple_fox">紫狐</a>追加
 比率：<a href="new_role/wolf.php#trap_mad">罠師</a> → <a href="new_role/chiroptera.php#follow_chiroptera">曼陀羅華</a>
-補正：<a href="new_role/wolf.php#doom_wolf">冥狼</a> → <a href="new_role/wolf.php#heterologous_wolf">姫狼</a>追加
-      <a href="new_role/wolf.php#doom_wolf">冥狼</a> → <a href="new_role/wolf.php#homogeneous_wolf">爵狼</a>追加
+補正：<a href="new_role/wolf.php#doom_wolf">冥狼</a> → <a href="new_role/wolf.php#heterologous_wolf">姫狼</a>・<a href="new_role/wolf.php#homogeneous_wolf">爵狼</a>追加
       <a href="new_role/chiroptera.php#follow_chiroptera">曼陀羅華</a> → <a href="new_role/chiroptera.php#doom_chiroptera">蝉蝙蝠</a>追加
 </pre>
 
@@ -472,25 +471,48 @@
 <?php InfoHTML::OutputOption('duel_selector', 'l', 'Ver. 5.1.0 α3'); ?>
 <p>蘇生能力者ベース</p>
 <table>
-<tr><th>出現枠</th><th>配役</th><th>設定変更</th></tr>
+<tr><th>出現枠</th><th colspan="3">配役</th><th>設定変更</th></tr>
 <tr>
   <td>固定</td>
-  <td>なし</td>
-  <td rowspan="4"></td>
+  <td colspan="3">なし</td>
+  <td></td>
 </tr>
 <tr>
-  <td>人口</td>
-  <td>なし</td>
+  <td rowspan="3">人口</td>
+  <td>18人</td>
+  <td colspan="2"><a href="new_role/human.php#revive_cat">仙狸</a>・<a href="new_role/fox.php#revive_fox">仙狐</a></td>
+  <td rowspan="5">Ver. 5.1.0 β5</td>
+</tr>
+<tr>
+  <td>20人</td>
+  <td colspan="2"><a href="new_role/human.php#grave_guard">墓守</a>・<a href="new_role/wolf.php#grave_mad">墓荒らし</a></td>
+</tr>
+<tr>
+  <td>25人</td>
+  <td colspan="2"><a href="new_role/wolf.php#possessed_mad">犬神</a>・<a href="new_role/fox.php#possessed_fox">憑狐</a></td>
 </tr>
 <tr>
   <td>比率</td>
-  <td><a href="new_role/human.php#grave_guard">墓守</a>・<a href="new_role/human.php#reverse_assassin">反魂師</a>・<a href="new_role/human.php#poison_cat">猫又</a>・<a href="new_role/human.php#doom_cat">神医</a>・<a href="new_role/human.php#missfire_cat">常世神</a>・<a href="new_role/human.php#eclipse_cat">蝕仙狸</a>・<a href="new_role/wolf.php#wolf">人狼</a>・<a href="new_role/wolf.php#resist_wolf">抗毒狼</a>・<a href="new_role/wolf.php#grave_mad">墓荒らし</a></td>
+  <td colspan="3"><a href="new_role/human.php#reverse_assassin">反魂師</a>・<a href="new_role/human.php#fetish_cat">呪物遣い</a>・<a href="new_role/wolf.php#revive_wolf">仙狼</a>・<a href="new_role/wolf.php#rioter_mad">暴徒</a>・<a href="new_role/chiroptera.php#chiroptera">蝙蝠</a></td>
 </tr>
 <tr>
   <td>補正</td>
-  <td>なし</td>
+  <td><a href="new_role/chiroptera.php#chiroptera">蝙蝠</a></td>
+  <td><a href="new_role/chiroptera.php#poison_chiroptera">毒蝙蝠</a></td>
+  <td>3人</td>
 </tr>
 </table>
+<h4>Ver. 5.1.0 β5</h4>
+<pre>
+人口(18人)：<a href="new_role/human.php#revive_cat">仙狸</a>・<a href="new_role/fox.php#revive_fox">仙狐</a>追加
+人口(20人)：<a href="new_role/human.php#grave_guard">墓守</a>・<a href="new_role/wolf.php#grave_mad">墓荒らし</a>追加
+人口(25人)：<a href="new_role/wolf.php#possessed_mad">犬神</a>・<a href="new_role/fox.php#possessed_fox">憑狐</a>追加
+比率：<a href="new_role/human.php#grave_guard">墓守</a> → <a href="new_role/chiroptera.php#chiroptera">蝙蝠</a>
+      <a href="new_role/human.php#poison_cat">猫又</a>・<a href="new_role/human.php#doom_cat">神医</a>・<a href="new_role/human.php#missfire_cat">常世神</a>・<a href="new_role/human.php#eclipse_cat">蝕仙狸</a> → <a href="new_role/human.php#fetish_cat">呪物遣い</a>
+      <a href="new_role/wolf.php#wolf">人狼</a>・<a href="new_role/wolf.php#resist_wolf">抗毒狼</a> → <a href="new_role/wolf.php#revive_wolf">仙狼</a>
+      <a href="new_role/wolf.php#grave_mad">墓荒らし</a> → <a href="new_role/wolf.php#rioter_mad">暴徒</a>
+補正：<a href="new_role/chiroptera.php#chiroptera">蝙蝠</a> → <a href="new_role/chiroptera.php#poison_chiroptera">毒蝙蝠</a>追加
+</pre>
 
 <?php InfoHTML::OutputOption('duel_selector', 'm', 'Ver. 5.1.0 β3'); ?>
 <p>魔法能力者ベース</p>

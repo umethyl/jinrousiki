@@ -211,7 +211,7 @@ class Role_poison_cat extends Role {
 	$this->RevivePossessedCancel($user); //憑依キャンセル判定
       }
     } else {
-      $name = 'grave';
+      $name = RoleVoteTarget::GRAVE;
       if ($this->InStack($user->id, $name)) { //死者妨害判定
 	//Text::p($this->GetActor()->uname, "◆Target [{$name}/{$this->role}]");
 	foreach (RoleLoader::LoadFilter($name) as $filter) {

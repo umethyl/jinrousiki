@@ -25,6 +25,7 @@ final class DeadReason {
   const REVIVE_SUCCESS		= 'REVIVE_SUCCESS';
   const REVIVE_FAILED		= 'REVIVE_FAILED';
   const SACRIFICE		= 'SACRIFICE';
+  const RIOTED			= 'RIOTED';
   const SUICIDE			= 'SUICIDE';
   const WOLF_FAILED		= 'WOLF_FAILED';
   const NOVOTED			= 'NOVOTED';

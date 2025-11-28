@@ -20,6 +20,7 @@ class RoleAbilityMessage {
   const DREAM_EATER   = '夢を食べる人を選択してください';	//獏
   const POSSESSED     = '憑依する人を選択してください';		//犬神
   const GRAVE         = '墓を荒らす人を選択してください';	//墓荒らし
+  const RIOTE         = '張り込む人を選択してください';		//暴徒
   const TRAP          = '罠を設置する先を選択してください';	//罠師
   const SPY           = '離脱を行うか選択してください';		//内通者
   const CUPID         = '結びつける人を選択してください';	//キューピッド

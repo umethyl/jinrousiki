@@ -212,6 +212,7 @@
 <li>憑依解放 (<a href="new_role/human.php#anti_voodoo">厄神</a>)</li>
 <li>人外尾行 (<a href="new_role/human.php#reporter">ブン屋</a>)</li>
 <li>帰還 (<a href="new_role/human.php#revive_priest">天人</a>・<a href="new_role/sub_role.php#death_selected">オシラ遊び</a>)</li>
+<li>暴動 (<a href="new_role/wolf.php#rioter_mad">暴徒</a>)</li>
 </ul>
 <h4>～<?php echo DeadMessage::$revive_success; ?> [Ver. 1.4.0 α18]</h4>
 <ul>
@@ -399,7 +400,7 @@
 
 <h4>接触</h4>
 <pre>
-離脱 → 逃亡失敗 → 人狼襲撃 → <a href="new_role/ability.php#wolf_kill_counter">人狼襲撃カウンター</a> → <a href="new_role/sub_role.php#death_note">デスノート</a> → 狩り →
+離脱 → 逃亡失敗 → 張り込み → 人狼襲撃 → <a href="new_role/ability.php#wolf_kill_counter">人狼襲撃カウンター</a> → <a href="new_role/sub_role.php#death_note">デスノート</a> → 狩り →
 <a href="new_role/ability.php#trap">罠能力者</a>の罠死 → 吸血 → 暗殺 → 人攫い → <a href="new_role/sub_role.php#death_selected">オシラ遊び</a> → 反魂判定 → 凍傷判定
 </pre>
 
@@ -413,6 +414,13 @@
 罠 ＞ 逃亡失敗
 
 + 逃亡能力者 (<a href="new_role/human.php#escaper_group">逃亡者系</a>)
+</pre>
+
+<h5>張り込み</h5>
+<pre>
+罠 ＞ 張り込み
+
++ 暴動能力者 (<a href="new_role/wolf.php#rioter_mad">暴徒</a>)
 </pre>
 
 <h5>人狼襲撃</h5>
@@ -484,6 +492,16 @@
 <h4>尾行</h4>
 <pre>
 + <a href="new_role/human.php#reporter">ブン屋</a>・<a href="new_role/human.php#step_scanner">雷神</a>・<a href="new_role/human.php#clairvoyance_scanner">猩々</a>
+</pre>
+
+<h4>蘇生</h4>
+<pre>
+<a href="new_role/ability.php#revive">蘇生</a> → <a href="new_role/ability.php#revive_sacrifice">蘇生身代わり</a> → <a href="new_role/ability.php#revive_cancel">蘇生キャンセル能力</a> → 暴動
+</pre>
+
+<h5>暴動</h5>
+<pre>
++ 暴動能力者 (<a href="new_role/wolf.php#rioter_mad">暴徒</a>)
 </pre>
 
 <h4>後追い</h4>

@@ -31,6 +31,8 @@ class VoteTalkMessage {
   public static $POSSESSED_NOT_DO  = ' は憑依を行いませんでした';	//犬神 (キャンセル)
   public static $GRAVE_DO          = ' の墓を荒らします';		//墓荒らし
   public static $GRAVE_NOT_DO      = ' は墓を荒らしませんでした';	//墓荒らし (キャンセル)
+  public static $RIOTE_DO          = ' の周辺に張り込みます';		//暴徒
+  public static $RIOTE_NOT_DO      = ' は張り込みしませんでした';	//暴徒 (キャンセル)
   public static $TRAP_DO           = ' の周辺に罠を仕掛けます';		//罠師
   public static $TRAP_NOT_DO       = ' は罠を仕掛けませんでした';	//罠師 (キャンセル)
   public static $EXIT_DO           = ' は離脱を決行しました';		//内通者
