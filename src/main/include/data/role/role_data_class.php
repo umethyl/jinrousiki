@@ -218,6 +218,7 @@ final class RoleData {
     'dream_eater_mad'		=> '獏',
     'possessed_mad'		=> '犬神',
     'grave_mad'			=> '墓荒らし',
+    'rioter_mad'		=> '暴徒',
     'trap_mad'			=> '罠師',
     'snow_trap_mad'		=> '雪女',
     'corpse_courier_mad'	=> '火車',

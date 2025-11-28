@@ -217,6 +217,7 @@ final class RoleShortData {
     'dream_eater_mad'		=> '獏',
     'possessed_mad'		=> '犬',
     'grave_mad'			=> '墓荒',
+    'rioter_mad'		=> '暴徒',
     'trap_mad'			=> '罠',
     'snow_trap_mad'		=> '雪',
     'corpse_courier_mad'	=> '火',

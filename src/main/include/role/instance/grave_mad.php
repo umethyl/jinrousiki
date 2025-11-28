@@ -2,7 +2,8 @@
 /*
   ◆墓荒らし (grave_mad)
   ○仕様
-  ・死者妨害：憑依能力者以外
+  ・死者妨害対象者：憑依能力者以外
+  ・死者妨害：死の宣告 (蘇生実行者/70%)
 */
 class Role_grave_mad extends Role {
   public $action     = VoteAction::GRAVE;
@@ -14,10 +15,6 @@ class Role_grave_mad extends Role {
 
   protected function IsAddVote() {
     return DB::$ROOM->IsOption('not_open_cast') || DB::$ROOM->IsOption('auto_open_cast');
-  }
-
-  protected function IgnoreResult() {
-    return DateBorder::PreThree() || false === $this->IsAddVote();
   }
 
   public function OutputAction() {
@@ -44,7 +41,7 @@ class Role_grave_mad extends Role {
   //死者妨害対象者セット
   public function SetGrave(User $user) {
     if (false === RoleUser::IsPossessed($user)) {
-      $this->AddStack($user->id, 'grave');
+      $this->AddStack($user->id, RoleVoteTarget::GRAVE);
     }
   }
 

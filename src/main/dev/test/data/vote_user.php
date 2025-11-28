@@ -63,7 +63,7 @@ RQ::GetTest()->test_users[20]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[21]->role = 'soul_mania[13] mind_friend[21]';
 RQ::GetTest()->test_users[21]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[22]->role = 'shadow_fairy face_status[10-2] face_status[10-4]';
+RQ::GetTest()->test_users[22]->role = 'rioter_mad';
 RQ::GetTest()->test_users[22]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[23]->role = 'clairvoyance_scanner earplug death_selected[8] face_status[7-4]';

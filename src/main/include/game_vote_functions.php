@@ -768,6 +768,7 @@ final class VoteNight extends VoteBase {
       self::LoadGuard();
       self::LoadExit();
       self::LoadEscape();
+      self::LoadRiote();
     }
 
     self::FilterWolfEat();
@@ -829,9 +830,10 @@ final class VoteNight extends VoteBase {
 
       //-- 蘇生レイヤー --//
       if (false === DB::$ROOM->IsOpenCast()) {
-	self::FilterGrave();
+	self::LoadGrave();
 	self::FilterRevive();
       }
+      self::FilterRiote();
 
       //-- 憑依レイヤー --//
       self::LoadPossessed();
@@ -1085,9 +1087,10 @@ final class VoteNight extends VoteBase {
 
   //護衛能力者の情報収集
   private static function LoadGuard() {
+    $method = 'SetGuard';
     $vote_data = RoleManager::GetVoteData();
-    RoleVote::FilterNightSet($vote_data[VoteAction::GUARD],   'SetGuard'); //護衛能力者
-    RoleVote::FilterNight($vote_data[VoteAction::STEP_GUARD], 'SetGuard', 'none', 'step'); //山立
+    RoleVote::FilterNightSet($vote_data[VoteAction::GUARD],   $method); //護衛能力者
+    RoleVote::FilterNight($vote_data[VoteAction::STEP_GUARD], $method, 'none', 'step'); //山立
     if (RoleManager::Stack()->Exists(RoleVoteTarget::GUARD)) {
       RoleLoader::Load('guard');
     }
@@ -1109,11 +1112,20 @@ final class VoteNight extends VoteBase {
     }
   }
 
-  //逃亡者系の情報収集
+  //逃亡能力者の情報収集
   private static function LoadEscape() {
     $vote_data = RoleManager::GetVoteData();
     RoleVote::FilterNightSet($vote_data[VoteAction::ESCAPE], 'Escape');
     //RoleManager::Stack()->p(RoleVoteTarget::ESCAPER, '◆Target [escaper]');
+  }
+
+  //暴動能力者の情報収集
+  private static function LoadRiote() {
+    $name = RoleVoteTarget::RIOTE;
+    RoleManager::Stack()->Init($name);
+    $vote_data = RoleManager::GetVoteData();
+    RoleVote::FilterNightSet($vote_data[VoteAction::RIOTE], 'SetRiote');
+    //RoleManager::Stack()->p($name, '◆Target [riote]');
   }
 
   //人狼襲撃処理
@@ -1131,7 +1143,7 @@ final class VoteNight extends VoteBase {
     }
   }
 
-  //狩人系の狩り処理
+  //狩り処理
   private static function FilterHunt() {
     if (DB::$ROOM->IsEvent('no_hunt')) { //川霧ならスキップ
       return;
@@ -1180,7 +1192,8 @@ final class VoteNight extends VoteBase {
     RoleManager::Stack()->Init($role); //暗殺対象者リスト
 
     $vote_data = RoleManager::GetVoteData();
-    RoleVote::FilterNight($vote_data[VoteAction::ASSASSIN], 'SetAssassin');  //暗殺能力者の処理
+    //暗殺能力者の処理
+    RoleVote::FilterNight($vote_data[VoteAction::ASSASSIN], 'SetAssassin');
     //風神の処理
     RoleVote::FilterNight($vote_data[VoteAction::STEP_ASSASSIN], 'SetStepAssassin', null, 'multi');
     //直線暗殺(魔砲使い)の処理
@@ -1273,7 +1286,7 @@ final class VoteNight extends VoteBase {
     //RoleManager::Stack()->p($name, "◆Success [{$role}]");
   }
 
-  //呪術系能力者の情報収集
+  //呪術能力者の情報収集
   private static function LoadVoodoo() {
     $name = 'voodoo';
     RoleManager::Stack()->Init($name); //呪術対象リスト
@@ -1286,7 +1299,7 @@ final class VoteNight extends VoteBase {
     //RoleManager::Stack()->p(RoleVoteSuccess::VOODOO_KILLER, "◆Success [voodoo_killer/{$name}]");
     //RoleManager::Stack()->p(RoleVoteSuccess::ANTI_VOODOO, "◆Success [anti_voodoo/{$name}]");
 
-    //呪術系能力者の対象先が重なった場合は呪返しを受ける
+    //呪術能力者の対象が重なった場合は呪返しを受ける
     if (RoleManager::Stack()->Exists($name)) {
       RoleLoader::Load('voodoo_mad')->VoodooToVoodoo();
     }
@@ -1306,7 +1319,7 @@ final class VoteNight extends VoteBase {
   //占い処理
   private static function FilterMage() {
     $name = RoleVoteSuccess::PHANTOM;
-    RoleManager::Stack()->Init($name);   //幻系の発動者リスト
+    RoleManager::Stack()->Init($name); //幻系の発動者リスト
     RoleManager::Stack()->Init('mage_kill'); //呪殺対象者リスト
 
     //占い系の処理
@@ -1425,9 +1438,9 @@ final class VoteNight extends VoteBase {
     RoleManager::Stack()->Clear($name);
   }
 
-  //死者妨害能力者の処理
-  private static function FilterGrave() {
-    $name = 'grave';
+  //死者妨害能力者の情報収集
+  private static function LoadGrave() {
+    $name = RoleVoteTarget::GRAVE;
     RoleManager::Stack()->Init($name); //死者妨害リスト
     $vote_data = RoleManager::GetVoteData();
     RoleVote::FilterNight($vote_data[VoteAction::GRAVE], 'SetGrave', 'inactive');
@@ -1457,6 +1470,17 @@ final class VoteNight extends VoteBase {
 	RoleLoader::LoadMain($user)->ReviveCancelAction();
       }
     }
+  }
+
+  //暴動能力者の処理
+  private static function FilterRiote() {
+    $role = 'rioter_mad';
+    $name = RoleVoteTarget::RIOTE;
+    //RoleManager::Stack()->p($name, "◆Target [{$role}]");
+    if (RoleManager::Stack()->Exists($name)) {
+      RoleLoader::Load($role)->Riote();
+    }
+    RoleManager::Stack()->Clear($name);
   }
 
   //憑依能力者の情報収集

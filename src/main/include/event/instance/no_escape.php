@@ -7,8 +7,10 @@
 class Event_no_escape extends Event {
   public function SealVoteNight(array &$stack) {
     array_push($stack,
-      VoteAction::ESCAPE,   VoteAction::EXIT_DO,
-      VoteAction::ASSASSIN, VoteAction::STEP_ASSASSIN
+      VoteAction::ESCAPE,
+      VoteAction::EXIT_DO,
+      VoteAction::ASSASSIN,
+      VoteAction::STEP_ASSASSIN
     );
   }
 }

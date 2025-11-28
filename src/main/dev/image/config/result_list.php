@@ -214,6 +214,7 @@ class ResultList extends RoleMessageList {
   public $result_dream_eater_mad = ['message' => "さんは|獏|でした", 'type' => 'result_mad'];
   public $result_possessed_mad = ['message' => "さんは|犬神|でした", 'type' => 'result_mad'];
   public $result_grave_mad = ['message' => "さんは|墓荒らし|でした", 'type' => 'result_mad'];
+  public $result_rioter_mad = ['message' => "さんは|暴徒|でした", 'type' => 'result_mad'];
   public $result_trap_mad = ['message' => "さんは|罠師|でした", 'type' => 'result_mad'];
   public $result_snow_trap_mad = ['message' => "さんは|雪女|でした", 'type' => 'result_mad'];
   public $result_corpse_courier_mad = ['message' => "さんは|火車|でした", 'type' => 'result_mad'];

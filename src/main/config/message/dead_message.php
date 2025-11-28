@@ -27,6 +27,7 @@ class DeadMessage {
   public static $revive_success     = 'は生き返りました';				//蘇生成功
   public static $revive_failed      = 'の蘇生に失敗したようです';			//蘇生失敗
   public static $sacrifice          = 'は誰かの犠牲となって死亡したようです';		//身代わり
+  public static $rioted             = 'は暴動に巻き込まれたようです';			//暴動死
   public static $suicide            = 'は自決したようです';				//自決
 
   /* ショック死 */

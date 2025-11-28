@@ -16,13 +16,14 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'result_fetish_cat';
+//$role = 'result_rioter_mad';
 //$role = 'prediction_weather_no_escape';
 //$role = 'follow_chiroptera';
-$role = 'fetish_cat';
+//$role = 'fetish_cat';
+$role = 'rioter_mad';
 
-$calib_list = [0,0,0,0];
-//$calib_list = [0.5,0,0,0]; //wolf, vampire
+//$calib_list = [0,0,0,0];
+$calib_list = [0.5,0,0,0]; //wolf, vampire
 //$calib_list = [0.8,0,0.7]; //collector_ogre
 //$calib_list = [0.3,0,0,0]; //duelist
 
