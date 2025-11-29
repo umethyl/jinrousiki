@@ -8,7 +8,7 @@ final class RoomEntry {
     //-- 入力データのエラーチェック --//
     RoomEntryValidate::Input();
     if (false === DB::Lock('room')) { //トランザクション開始
-      RoomManagerHTML::OutputResult('busy');
+      RoomError::Entry(RoomError::BUSY);
     }
 
     if (RQ::Enable('change_room')) {
@@ -39,7 +39,7 @@ final class RoomEntry {
   //出力
   public static function Output() {
     if (ServerConfig::DISABLE_ESTABLISH || DatabaseConfig::DISABLE) { //無効判定
-      Text::Output(RoomManagerMessage::NOT_ESTABLISH);
+      Text::Output(RoomEntryMessage::NOT_ESTABLISH);
       return;
     }
 
@@ -49,7 +49,7 @@ final class RoomEntry {
       HTML::OutputHeader(RoomManagerMessage::TITLE_CHANGE, 'room_manager');
       HeaderHTML::OutputTitle(RoomManagerMessage::TITLE_CHANGE);
     }
-    RoomManagerHTML::OutputCreate();
+    RoomEntryHTML::Output();
   }
 
   //データロード (村作成 / オプション変更時)
@@ -63,10 +63,7 @@ final class RoomEntry {
     //ユーザー情報ロード
     DB::LoadUser();
     if (RQ::Fetch()->max_user < DB::$USER->Count()) {
-      $title = sprintf('%s [%s]',
-	RoomManagerMessage::TITLE_CHANGE, RoomManagerMessage::ERROR_INPUT
-      );
-      HTML::OutputResult($title, RoomManagerMessage::ERROR_CHANGE_MAX_USER);
+      RoomError::Change(RoomErrorMessage::CHANGE_MAX_USER);
     }
 
     //本人情報ロード
@@ -97,7 +94,7 @@ final class RoomEntry {
       $game_option = RoomOptionLoader::Get(OptionGroup::GAME);
       $option_role = RoomOptionLoader::Get(OptionGroup::ROLE);
       if (false === RoomManagerDB::Insert($room_no, $game_option, $option_role)) { //村作成
-	RoomManagerHTML::OutputResult('busy');
+	RoomError::Entry(RoomError::BUSY);
       }
 
       //身代わり君を入村させる
@@ -114,7 +111,7 @@ final class RoomEntry {
 	  'last_words'	=> Message::DUMMY_BOY_LAST_WORDS
 	];
 	if (false === UserDB::Insert($list)) {
-	  RoomManagerHTML::OutputResult('busy');
+	  RoomError::Entry(RoomError::BUSY);
 	}
       }
     }
@@ -135,9 +132,9 @@ final class RoomEntry {
     RoomOptionLoader::LoadPost(RoomOptionFilterData::$store_in_change);
     if (RQ::Fetch()->gm_logout) { //GMログアウト処理
       if (DB::$ROOM->IsClosing() || RQ::Fetch()->close_room == RoomStatus::CLOSING) {
-	RoomManagerHTML::OutputResult('gm_logout');
+	RoomError::Change(RoomErrorMessage::CHANGE_GM_LOGOUT);
       } elseif (false === UserDB::LogoutGM()) {
-	RoomManagerHTML::OutputResult('busy');
+	RoomError::Entry(RoomError::BUSY);
       }
     }
 
@@ -152,7 +149,7 @@ final class RoomEntry {
       'status'		=> RQ::Fetch()->close_room ? RoomStatus::CLOSING : RoomStatus::WAITING
     ];
     if (false === RoomManagerDB::Update($list)) {
-      RoomManagerHTML::OutputResult('busy');
+      RoomError::Entry(RoomError::BUSY);
     }
 
     //システムメッセージ
@@ -164,7 +161,7 @@ final class RoomEntry {
 	DB::$ROOM->game_option->row != $game_option ||
 	DB::$ROOM->option_role->row != $option_role) {
       if (false === RoomDB::UpdateVoteCount()) {
-	RoomManagerHTML::OutputResult('busy');
+	RoomError::Entry(RoomError::BUSY);
       }
     }
     DB::Commit();
@@ -194,13 +191,11 @@ final class RoomEntryValidate {
   //呼び出しチェック
   public static function Execute() {
     if (ServerConfig::DISABLE_ESTABLISH || DatabaseConfig::DISABLE) { //無効設定
-      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
-      HTML::OutputResult($title, RoomManagerMessage::NOT_ESTABLISH);
+      RoomError::Limit(RoomEntryMessage::NOT_ESTABLISH);
     }
 
     if (Security::IsInvalidReferer('', ['127.0.0.1', '192.168.'])) { //リファラチェック
-      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
-      HTML::OutputResult($title, RoomManagerMessage::ERROR_LIMIT_ACCESS);
+      RoomError::Limit(RoomErrorMessage::LIMIT_ACCESS);
     }
   }
 
@@ -209,19 +204,18 @@ final class RoomEntryValidate {
     foreach (RoomOptionFilterData::$validate_create_name as $type) { //村の名前・説明
       RoomOptionLoader::LoadPost([$type]);
       if (RQ::Get($type) == '') { //未入力チェック
-	RoomManagerHTML::OutputResult('empty', OptionManager::GenerateCaption($type));
+	RoomError::Entry(RoomError::EMPTY, OptionManager::GenerateCaption($type));
       }
 
       if (Text::Over(RQ::Get($type), RoomConfig::$$type) ||
 	  preg_match(RoomConfig::NG_WORD, RQ::Get($type))) { //文字列チェック
-	RoomManagerHTML::OutputResult('comment', OptionManager::GenerateCaption($type));
+	RoomError::Entry(RoomError::COMMENT, OptionManager::GenerateCaption($type));
       }
     }
 
     RoomOptionLoader::LoadPost(RoomOptionFilterData::$validate_create_user); //最大人数
     if (false === in_array(RQ::Fetch()->max_user, RoomConfig::$max_user_list)) {
-      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_INPUT);
-      HTML::OutputResult($title, RoomManagerMessage::ERROR_INPUT_MAX_USER);
+      RoomError::Entry(RoomError::USER);
     }
   }
 
@@ -233,8 +227,7 @@ final class RoomEntryValidate {
 
     //-- ブラックリスト --//
     if (Security::IsEstablishBlackList()) {
-      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
-      HTML::OutputResult($title, RoomManagerMessage::ERROR_LIMIT_BLACK_LIST);
+      RoomError::Limit(RoomErrorMessage::LIMIT_BLACK_LIST);
     }
 
     //-- 村作成パスワード照合 --//
@@ -243,56 +236,47 @@ final class RoomEntryValidate {
       $str = 'room_password';
       RQ::Fetch()->ParsePostStr($str);
       if (RQ::Get($str) != $room_password) {
-	$title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
-	HTML::OutputResult($title, RoomManagerMessage::ERROR_LIMIT_PASSWORD);
+	RoomError::Limit(RoomErrorMessage::LIMIT_PASSWORD);
       }
     }
 
     //-- 最大稼働数制限 --//
     if (RoomManagerDB::CountActive() >= RoomConfig::MAX_ACTIVE_ROOM) {
-      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
-      $str   = Text::Join(
-	RoomManagerMessage::ERROR_LIMIT_MAX_ROOM, RoomManagerMessage::ERROR_WAIT_FINISH
-      );
-      HTML::OutputResult($title, $str);
+      RoomError::Wait(RoomErrorMessage::LIMIT_MAX_ROOM);
     }
 
     //-- 同一ユーザの連続作成制限 --//
     if (RoomManagerDB::CountEstablish() > 0) {
-      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
-      $str   = Text::Join(
-	RoomManagerMessage::ERROR_LIMIT_ESTABLISH, RoomManagerMessage::ERROR_WAIT_FINISH
-      );
-      HTML::OutputResult($title, $str);
+      RoomError::Wait(RoomErrorMessage::LIMIT_ESTABLISH_SELF);
     }
 
     //-- 連続作成制限 --//
     $time = RoomManagerDB::GetLastEstablish();
     if (isset($time) &&
 	Time::Get() - Time::ConvertTimeStamp($time, false) <= RoomConfig::ESTABLISH_WAIT) {
-      $title = sprintf(RoomManagerMessage::ERROR, RoomManagerMessage::ERROR_LIMIT);
-      $str   = Text::Join(
-	RoomManagerMessage::ERROR_LIMIT_ESTABLISH_WAIT, RoomManagerMessage::ERROR_WAIT_TIME
+      $str = Text::Join(
+	RoomErrorMessage::LIMIT_ESTABLISH_WAIT, RoomErrorMessage::LIMIT_WAIT_TIME
       );
-      HTML::OutputResult($title, $str);
+      RoomError::Limit($str);
     }
   }
 
   //村情報チェック (オプション変更時)
   public static function RoomStatus() {
     if (DB::$ROOM->IsFinished()) {
-      RoomError::Output(RoomError::GetRoom(RoomManagerMessage::ERROR_FINISHED));
+      RoomError::Change(RoomError::GetRoom(RoomErrorMessage::FINISHED));
     }
+
     if (false === DB::$ROOM->IsBeforegame()) {
-      RoomError::Output(RoomError::GetRoom(RoomManagerMessage::ERROR_CHANGE_PLAYING));
+      RoomError::Change(RoomError::GetRoom(RoomErrorMessage::CHANGE_PLAYING));
     }
   }
 
   //本人情報チェック (オプション変更時)
   public static function SelfStatus() {
     if (false === RoomOptionManager::EnableChange()) {
-      $str = sprintf(RoomManagerMessage::ERROR_CHANGE_NOT_GM, Message::DUMMY_BOY, Message::GM);
-      RoomError::Output($str);
+      $str = sprintf(RoomErrorMessage::CHANGE_NOT_GM, Message::DUMMY_BOY, Message::GM);
+      RoomError::Change($str);
     }
   }
 }

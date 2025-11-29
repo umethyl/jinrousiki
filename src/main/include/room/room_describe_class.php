@@ -23,12 +23,14 @@ final class RoomDescribe {
 
   //村情報ロード
   private static function LoadRoom() {
-    DB::SetRoom(RoomManagerDB::Load());
-    if (DB::$ROOM->id < 1) {
+    $room = RoomManagerDB::Load();
+    if (true !== $room instanceof Room) {
       self::OutputError(Message::INVALID_ROOM);
     }
+    DB::SetRoom($room);
+
     if (DB::$ROOM->IsFinished()) {
-      self::OutputError(RoomError::GetRoom(RoomManagerMessage::ERROR_FINISHED));
+      self::OutputError(RoomError::GetRoom(RoomErrorMessage::FINISHED));
     }
   }
 
@@ -44,6 +46,6 @@ final class RoomDescribe {
 
   //エラー出力
   private static function OutputError(string $str) {
-    HTML::OutputResult(RoomError::GetTitle(RoomManagerMessage::TITLE_DESCRIBE), $str);
+    HTML::OutputResult(RoomError::GetTitle(RoomDescribeMessage::TITLE), $str);
   }
 }
