@@ -562,7 +562,7 @@ abstract class OptionLimitedCheckbox extends OptionCheckbox {
     RQ::Fetch()->ParsePostInt($post);
     $count = RQ::Get($post);
     if (Number::OutRange($count, 1, 99)) {
-      RoomManagerHTML::OutputResult('limit_over', $this->GetName());
+      RoomError::Entry(RoomError::INPUT, $this->GetName());
     }
     $this->Set(sprintf('%s:%d', $this->name, $count));
   }

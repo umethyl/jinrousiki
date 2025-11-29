@@ -12,6 +12,6 @@ class Option_room_comment extends OptionText {
   }
 
   public function GetPlaceholder() {
-    return RoomManagerMessage::PLACEHOLDER_ROOM_COMMENT;
+    return RoomEntryMessage::PLACEHOLDER_ROOM_COMMENT;
   }
 }
