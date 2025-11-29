@@ -2,11 +2,11 @@
 /*
   ◆魔女見習い (plural_wizard)
   ○仕様
-  ・魔法：占い師 (複合投票/35%)
+  ・魔法：占い師 (複数投票/35%)
   ・天候：霧雨(成功率 100%), 木枯らし(成功率 0%)
   ・占い：通常
   ・占い失敗固定：有効
-  ・夜投票所要人数：3人
+  ・夜投票所要人数：最大3人
 */
 RoleLoader::LoadFile('wizard');
 class Role_plural_wizard extends Role_wizard {
@@ -32,10 +32,6 @@ class Role_plural_wizard extends Role_wizard {
 
   public function SetVoteNightTargetList(array $list) {
     $this->SetVoteNightTargetListRange($list);
-  }
-
-  protected function GetWizardList() {
-    return [1 => VoteAction::MAGE];
   }
 
   //複数占い

@@ -523,7 +523,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <tr>
   <td><a href="wolf.php#mad_group">狂人系</a> (<a href="wolf.php#swindle_mad">因幡兎</a>を除く)</td>
   <td>嘘をついている</td>
-  <td>Ver. 1.5.2 / Ver. 2.1.0α1</td>
+  <td>Ver. 1.5.2 / Ver. 2.1.0 α1</td>
 </tr>
 <tr>
   <td><a href="fox.php#depraver_group">背徳者系</a></td>
@@ -549,7 +549,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <pre>
 <a href="fox.php#depraver_group">背徳者系</a>を追加
 </pre>
-<h5>Ver. 1.5.2 / Ver. 2.1.0α1</h5>
+<h5>Ver. 1.5.2 / Ver. 2.1.0 α1</h5>
 <pre>
 <a href="wolf.php#swindle_mad">因幡兎</a>を追加
 </pre>
@@ -1624,19 +1624,19 @@ PP ラインの計算を複雑にするために作成してみました。
 </pre>
 <h4>護衛能力</h4>
 <ol>
-<li>護衛先が「強い力を持っている」場合、<a href="#guard_probability">護衛成功率</a>は 90% になる</li>
+<li>護衛先が「強い力を持っている」場合、<a href="#guard_probability">護衛成功率</a>は 90% になる。</li>
 <ul>
-  <li>天候「<a href="../weather.php#weather_no_hunt">川霧</a>」だった場合は護衛先の「強さ」を判定できない</li>
+  <li>天候「<a href="../weather.php#weather_no_hunt">川霧</a>」だった場合は護衛先の「強さ」を判定できない。</li>
 </ul>
-<li>護衛先に関わらず、常に<a href="#guard_limit">護衛制限</a>の影響を受けない</li>
+<li>護衛先に関わらず、常に<a href="#guard_limit">護衛制限</a>の影響を受けない。</li>
 </ol>
 <h4>狩り能力</h4>
 <ol>
-<li>護衛先の「強さ」を判定する</li>
+<li>護衛先の「強さ」を判定する。</li>
 <li><a href="mania.php#soul_mania">覚醒者</a>のコピー先役職だった場合に「強い力を持っている」と判定する</a>
-<li>「強い力を持っている」と判定された場合のみ、システムメッセージが出力される</li>
-<li>通常の<a href="#guard_hunt">狩り能力</a>とは異なり、対象は死亡しない</li>
-<li><a href="sub_role.php#vega_lovers">織姫</a>の場合でも判定は有効</li>
+<li>「強い力を持っている」と判定された場合のみ、システムメッセージが出力される。</li>
+<li>通常の<a href="#guard_hunt">狩り能力</a>とは異なり、対象は死亡しない。</li>
+<li>対象が<a href="sub_role.php#vega_lovers">織姫</a>の場合でも判定は有効。</li>
 </ol>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2418,7 +2418,7 @@ Ver. 1.4.0 β9 からは吊られた時のみ<a href="wolf.php#dream_eater_mad">
     <li><a href="ability.php#special_resist">特殊耐性能力者</a>は除外される。</li>
     <li>対象者が不在だった場合は不発 (身代わり蘇生は成立する)。</li>
   </ul>
-<li>天候「<a href="../weather.php#weather_full_revive">雷雨</a>」「<a href="../weather.php#weather_no_sacrifice">蛍火</a>」時は無効。</il>
+<li>天候「<a href="../weather.php#weather_full_revive">雷雨</a>・<a href="../weather.php#weather_no_sacrifice">蛍火</a>」時は無効。</il>
 </ol>
 <h4>関連役職</h4>
 <pre>
@@ -3881,12 +3881,12 @@ MVP の賞品としてプレゼントしたものです。
 </pre>
 <h4>占い能力</h4>
 <ol>
-<li>成功率は 35% で、個別に判定される</li>
-<li>成功率は選択した人数と関係なく一定</li>
-<li>発動に失敗した場合、結果表示は<a href="wolf.php#jammer_mad">月兎</a>の能力発動時と同じになる</li>
-<li><a href="ability.php#phantom_active">占い妨害能力者(能動型)</a> に妨害された場合は全て失敗となる</li>
-<li><a href="ability.php#cursed_group">呪い能力</a>に遭遇した場合は全ての判定を実行後に死亡する</li>
-<li>全ての判定を実行後に生存していた場合のみ、結果が登録される</li>
+<li>成功率は 35% で、個別に判定される。</li>
+<li>成功率は選択した人数と関係なく一定。</li>
+<li>発動に失敗した場合、結果表示は<a href="wolf.php#jammer_mad">月兎</a>の能力発動時と同じになる。</li>
+<li><a href="ability.php#phantom_active">占い妨害能力者(能動型)</a> に妨害された場合は全て失敗となる。</li>
+<li><a href="ability.php#cursed_group">呪い能力</a>に遭遇した場合は全ての判定を実行後に死亡する。</li>
+<li>全ての判定を実行後に生存していた場合のみ、結果が登録される。</li>
 </ol>
 <h4>天候：<a href="../weather.php#weather_full_wizard">霧雨</a></h4>
 <pre>
@@ -3915,31 +3915,40 @@ MVP の賞品としてプレゼントしたものです。
 </pre>
 <h4>投票能力</h4>
 <ol>
-<li>対象者を複数選択することができる</li>
-<li>対象者の位置を直線で選択した場合のみ有効</li>
-<li>直線であれば斜めに選択しても有効</li>
-<li>最少人数は1人で上限はなし</li>
-<li>死者を含めることもできる</li>
-<li>自分には投票できない</li>
+<li>対象者を複数選択することができる。</li>
+<li>対象者の位置を直線で選択した場合のみ有効。</li>
+  <ul>
+    <li>直線であれば斜めに選択しても有効。</li>
+  </ul>
+<li>最少人数は1人で上限はなし。</li>
+<li>死者を含めることもできる。</li>
+<li>自分には投票できない。</li>
 <li><a href="#clairvoyance_scanner">猩々</a>が透視した場合は全ての投票先が表示される。</li>
 </ol>
 <h4>暗殺発動判定</h4>
 <ol>
-<li><a href="../spec.php#vote_night">判定時</a>に死亡している場合は無効</li>
-<li>3人以上選択した場合のみ発動する</li>
-<li>選択した対象者の陣営が一致した場合のみ有効</li>
-<li>選択された死者も含めて判定する</li>
-<li><a href="lovers.php">恋人</a>は恋人陣営と判定する</li>
-<li>対象者に暗殺無効対象者が含まれていても有効</li>
+<li><a href="../spec.php#vote_night">判定時</a>に死亡している場合は無効。</li>
+<li>3人以上選択した場合のみ発動する。</li>
+  <ul>
+    <li>天候「<a href="../weather.php#weather_full_wizard">霧雨</a>・<a href="../weather.php#weather_debilitate_wizard">木枯らし</a>」の影響を受ける。</li>
+  </ul>
+<li>選択した対象者の陣営が一致した場合のみ有効。</li>
+  <ul>
+    <li>選択された死者も含めて判定する。</li>
+    <li><a href="lovers.php">恋人</a>は恋人陣営と判定する。</li>
+    <li>対象者に暗殺無効対象者が含まれていても有効。</li>
+  </ul>
 </ol>
 <h4>暗殺能力</h4>
 <ol>
-<li>暗殺実行時の死亡処理・死因は<a href="#assassin_spec">暗殺の仕様</a>準拠</li>
-<li>逃亡中の<a href="#escaper_group">逃亡者系</a>を対象にした場合は無効</li>
-<li>対象が<a href="#gatekeeper_guard">門番</a>に護衛されていたら無効</li>
-<li><a href="ability.php#trap">罠能力</a>の影響を受けない</li>
-<li><a href="#assassin_spec">暗殺反射</a>が発生した場合は無効</li>
-<li><a href="#assassin_spec">暗殺反射</a>が発生しても自身は死亡しない (暗殺が無効化されるのみ)</li>
+<li>暗殺実行時の死亡処理・死因は<a href="#assassin_spec">暗殺の仕様</a>準拠。</li>
+<li><a href="ability.php#trap">罠能力</a>の影響を受けない。</li>
+<li>逃亡中の<a href="#escaper_group">逃亡者系</a>を対象にした場合は無効。</li>
+<li>対象が<a href="#gatekeeper_guard">門番</a>に護衛されていたら無効。</li>
+<li><a href="#assassin_spec">暗殺反射</a>が発生した場合は無効。</li>
+  <ul>
+    <li><a href="#assassin_spec">暗殺反射</a>が発生しても自身は死亡しない (暗殺が無効化されるのみ)。</li>
+  </ul>
 </ol>
 <h4>天候：<a href="../weather.php#weather_full_wizard">霧雨</a></h4>
 <pre>
