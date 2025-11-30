@@ -240,18 +240,7 @@ final class Text {
   /* 更新系 */
   //POST されたデータの文字コードを統一する
   public static function EncodePost() {
-    foreach ($_POST as $key => $value) {
-      //多段配列対応(例: アイコンのカテゴリ)
-      if (is_array($value)) {
-	foreach ($value as $v_key => $v_value) {
-          $encode = @mb_detect_encoding($v_value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
-	  $_POST[$key][$v_key] = self::Encode($v_value, $encode);
-	}
-      } else {
-        $encode = @mb_detect_encoding($value, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
-        $_POST[$key] = self::Encode($value, $encode);
-      }
-    }
+    self::EncodeFilter($_POST);
   }
 
   //特殊文字のエスケープ処理
@@ -281,6 +270,68 @@ final class Text {
       $str = str_replace([self::CRLF, self::CR, self::LF], self::LF, $str);
     }
     return $str;
+  }
+
+  //配列データフィルタリング (POST 変換用)
+  private static function EncodeFilter(array &$list) {
+    foreach ($list as $key => $value) {
+      //多段配列対応(例: アイコンのカテゴリ)
+      if (is_array($value)) {
+	self::EncodeFilter($value);
+      } else {
+	$list[$key] = self::EncodeConvert($value, self::EncodeDetect($value));
+      }
+    }
+  }
+
+  //変換
+  private static function EncodeConvert($str, $encode, $convert = ServerConfig::ENCODE) {
+    if ($encode == '' || $encode == 'ASCII' || $encode == $convert) {
+      return $str;
+    } else {
+      return mb_convert_encoding($str, $convert, $encode);
+    }
+  }
+
+  //文字コード判定
+  private static function EncodeDetect(string $str) {
+    if (self::UTF($str)) {
+      return 'UTF-8';
+    } else {
+      return @mb_detect_encoding($str, 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
+    }
+  }
+
+  //UTF-8判定
+  private static function UTF(string $str) {
+    $len = strlen($str);
+    for ($i = 0; $i < $len; $i++) {
+      $c = ord($str[$i]);
+      if ($c > 128) {
+	if ($c > 247) {
+	  return false;
+	} elseif ($c > 239) {
+	  $bytes = 4;
+	} elseif ($c > 223) {
+	  $bytes = 3;
+	} elseif ($c > 191) {
+	  $bytes = 2;
+	} else {
+	  return false;
+	}
+	if (($i + $bytes) > $len) {
+	  return false;
+	}
+	while ($bytes > 1) {
+	  $i++;
+	  if (Number::OutRange(ord($str[$i]), 128, 191)) {
+	    return false;
+	  }
+	  $bytes--;
+	}
+      }
+    }
+    return true;
   }
 
   /* デバッグ用 */
