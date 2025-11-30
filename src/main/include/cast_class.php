@@ -172,6 +172,18 @@ final class Cast extends StackStaticManager {
     return $main_header . ArrayFilter::Concat($stack, Message::SPACER);
   }
 
+  //闇鍋カスタム設定取得
+  public static function GetChaosCustomConfig(string $option) {
+    //管理者設定が存在するならマージする
+    if (is_array(ChaosCustomConfig::${$option . '_list'})) {
+      $custom = ChaosCustomConfig::${$option . '_list'};
+    } else {
+      $custom = [];
+    }
+    $list = ChaosConfig::${$option . '_list'};
+    return array_merge($custom, $list);
+  }
+
   //変数初期化
   private static function InitStack() {
     $stack = self::Stack();

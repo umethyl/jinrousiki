@@ -165,7 +165,7 @@ final class RoleTestController extends JinrouAdminController {
 	continue;
       }
       RQ::Set($input, strtolower(RQ::Get($input)));
-      if (array_key_exists(RQ::Get($input), ChaosConfig::${$option.'_list'})) {
+      if (array_key_exists(RQ::Get($input), Cast::GetChaosCustomConfig($option))) {
 	$stack->option_role[] = $option . ':' . RQ::Get($input);
       }
     }
