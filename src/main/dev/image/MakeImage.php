@@ -19,7 +19,6 @@ $font = 'azuki.ttf';
 //$role = 'result_rioter_mad';
 //$role = 'prediction_weather_no_escape';
 //$role = 'follow_chiroptera';
-//$role = 'fetish_cat';
 $role = 'rioter_mad';
 
 //$calib_list = [0,0,0,0];
