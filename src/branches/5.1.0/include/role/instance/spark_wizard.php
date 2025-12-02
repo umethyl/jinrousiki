@@ -2,13 +2,18 @@
 /*
   ◆魔砲使い (spark_wizard)
   ○仕様
-  ・魔法：直線暗殺
+  ・能力結果：なし
+  ・魔法：直線範囲暗殺
   ・天候：霧雨(最小1人) / 木枯らし(最小5人)
 */
 RoleLoader::LoadFile('wizard');
 class Role_spark_wizard extends Role_wizard {
   public $action = VoteAction::SPARK_WIZARD;
   public $submit = VoteAction::WIZARD;
+
+  protected function IgnoreWizardResult() {
+    return true;
+  }
 
   protected function IsVoteNightCheckboxLive($live) {
     return true;
@@ -22,7 +27,7 @@ class Role_spark_wizard extends Role_wizard {
     return $this->ValidateSparkVoteNightTargetList($list);
   }
 
-  //複合投票型夜投票無効判定 (魔砲使い用)
+  //複数投票型夜投票無効判定 (魔砲使い用)
   protected function ValidateSparkVoteNightTargetList(array $list) {
     //-- 経路判定 --//
     sort($list);
@@ -54,7 +59,7 @@ class Role_spark_wizard extends Role_wizard {
     $this->SetVoteNightTargetListRange($root_list);
   }
 
-  //範囲暗殺
+  //直線範囲暗殺
   public function SetLineAssassin(array $list) {
     //Text::p($list, "◆[{$this->role}] ({$this->GetActor()->uname})");
 
@@ -83,13 +88,13 @@ class Role_spark_wizard extends Role_wizard {
       return false;
     }
 
-    //範囲暗殺実行登録
+    //直線範囲暗殺実行登録
     foreach ($target_list as $id) {
       $this->AddSuccess($id, RoleVoteSuccess::ASSASSIN);
     }
   }
 
-  //範囲暗殺成立最小対象人数
+  //直線範囲暗殺成立最小対象人数
   final protected function GetLineAssassinMinUserCount() {
     if (DB::$ROOM->IsEvent('full_wizard')) {
       return 1;
@@ -100,7 +105,7 @@ class Role_spark_wizard extends Role_wizard {
     }
   }
 
-  //範囲暗殺有効判定 (対暗殺護衛 > 逃亡 > 反射)
+  //直線範囲暗殺有効判定 (対暗殺護衛 > 逃亡 > 反射)
   final protected function EnableLineAssassin(User $user) {
     //生存者のみ
     if ($user->IsDead(true)) {

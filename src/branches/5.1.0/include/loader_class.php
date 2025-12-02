@@ -188,6 +188,7 @@ final class Loader extends LoadManager {
     case 'server':
     case 'system':
     case 'message':
+    case 'message/room':
     case 'message/controller':
     case 'message/controller/admin':
     case 'message/controller/info':
@@ -293,6 +294,7 @@ final class LoaderData {
     'GameConfig'	=> 'game_config',
     'CastConfig'	=> 'cast_config',
     'ChaosConfig'	=> 'chaos_config',
+    'ChaosCustomConfig'	=> 'chaos_custom_config',
     'DuelConfig'	=> 'duel_config',
     'TimeConfig'	=> 'time_config',
     'IconConfig'	=> 'icon_config',
@@ -320,6 +322,10 @@ final class LoaderData {
     'CacheMessage'		=> 'cache_message',
     'TwitterMessage'		=> 'twitter_message',
     'TestMessage'		=> 'test_message',
+    //room
+    'RoomEntryMessage'		=> 'room_entry_message',
+    'RoomDescribeMessage'	=> 'room_describe_message',
+    'RoomErrorMessage'		=> 'room_error_message',
     //controller
     'TopPageMessage'		=> 'top_page_message',
     'RoomManagerMessage'	=> 'room_manager_message',
@@ -517,7 +523,9 @@ final class LoaderData {
     'FormHTML'		=> 'form_html_class',
     //html/room
     'RoomHTML'		=> 'room_html_class',
+    'RoomEntryHTML'	=> 'room_entry_html_class',
     'RoomDescribeHTML'	=> 'room_describe_html_class',
+    'RoomErrorHTML'	=> 'room_error_html_class',
     //html/option
     'OptionHTML'	=> 'option_html_class',
     'OptionFormHTML'	=> 'option_form_html_class',
@@ -586,6 +594,7 @@ final class LoaderData {
     'game_config'		=> 'config::game',
     'cast_config'		=> 'config::game',
     'chaos_config'		=> 'config::game',
+    'chaos_custom_config'	=> 'config::game',
     'duel_config'		=> 'config::game',
     'time_config'		=> 'config::game',
     'icon_config'		=> 'config::game',
@@ -609,6 +618,11 @@ final class LoaderData {
     'cache_message'		=> 'message',
     'twitter_message'		=> 'message',
     'test_message'		=> 'message',
+    //config/message/room
+    'room_entry_message'	=> 'message/room',
+    'room_describe_message'	=> 'message/room',
+    'room_error_message'	=> 'message/room',
+    //config/message/controller
     'top_page_message'		=> 'message/controller',
     'room_manager_message'	=> 'message/controller',
     'login_message'		=> 'message/controller',
@@ -799,7 +813,9 @@ final class LoaderData {
     'form_html_class'		=> 'html/markup',
     //html/room
     'room_html_class'		=> 'html/room',
+    'room_entry_html_class'	=> 'html/room',
     'room_describe_html_class'	=> 'html/room',
+    'room_error_html_class'	=> 'html/room',
     //html/option
     'option_html_class'		=> 'html/option',
     'option_form_html_class'	=> 'html/option',

@@ -18,12 +18,21 @@ class Role_wizard extends Role {
   }
 
   protected function OutputAddResult() {
+    if ($this->IgnoreWizardResult()) {
+      return;
+    }
+
     foreach ($this->GetWizardResultList() as $result) {
       RoleHTML::OutputResult($result);
     }
   }
 
-  //能力結果表示対象役職取得
+  //魔法能力結果表示無効判定
+  protected function IgnoreWizardResult() {
+    return false;
+  }
+
+  //魔法能力結果表示対象役職取得
   protected function GetWizardResultList() {
     return [RoleAbility::MAGE, RoleAbility::GUARD, RoleAbility::HUNTED];
   }

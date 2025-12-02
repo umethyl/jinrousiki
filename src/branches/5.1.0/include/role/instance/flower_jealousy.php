@@ -62,7 +62,7 @@ class Role_flower_jealousy extends Role_jealousy {
     }
   }
 
-  //位置占い (経路距離が奇数：好き / 偶数：嫌い)
+  //位置占い (経路距離が[奇数：好き/偶数：嫌い])
   private function DistinguishFlowerMage(User $user) {
     if (Number::Odd(Position::GetRouteDistance($user->id, $this->GetID()))) {
       return 'flower_mage_like';

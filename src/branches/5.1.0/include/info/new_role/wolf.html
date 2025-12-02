@@ -443,23 +443,23 @@
 <h3 id="miasma_wolf">戯狼 (占い結果：人狼 / 霊能結果：人狼) [Ver. 5.1.0 α4]</h3>
 <pre>
 自分に処刑投票してきた人が<a href="sub_role.php#bad_status">悪戯</a>されていた場合は<a href="sub_role.php#febris">熱病</a>を付加する人狼。
-自身が<a href="sub_role.php#bad_status">悪戯</a>されていた場合はさらに、自身にも<a href="sub_role.php#febris">熱病</a>を付加してしまう。
+自身が<a href="sub_role.php#bad_status">悪戯</a>されていた場合は、さらに自身にも<a href="sub_role.php#febris">熱病</a>を付加してしまう。
 </pre>
 <h4>処刑得票能力 (他者)</h4>
 <ol>
-<li><a href="sub_role.php#febris">熱病</a>の発動日は投票された翌日の昼</li>
-<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後</li>
-<li>当日有効になっている<a href="sub_role.php#bad_status">悪戯</a>を所持している場合のみ有効</li>
-<li>自分が処刑された場合でも有効</li>
-<li>対象者が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効</li>
+<li><a href="sub_role.php#febris">熱病</a>の発動日は投票された翌日の昼。</li>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後。</li>
+<li>当日有効になっている<a href="sub_role.php#bad_status">悪戯</a>を所持している場合のみ有効。</li>
+<li>自分が処刑された場合でも有効。</li>
+<li>対象者が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効。</li>
 </ol>
 <h4>処刑得票能力 (自身)</h4>
 <ol>
-<li><a href="sub_role.php#febris">熱病</a>の発動日は投票された翌日の昼</li>
-<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後</li>
-<li>当日有効になっている<a href="sub_role.php#bad_status">悪戯</a>を所持している場合のみ有効</li>
-<li>自分の投票・得票状況とは関係なく有効</li>
-<li>自分が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効</li>
+<li><a href="sub_role.php#febris">熱病</a>の発動日は投票された翌日の昼。</li>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後。</li>
+<li>当日有効になっている<a href="sub_role.php#bad_status">悪戯</a>を所持している場合のみ有効。</li>
+<li>自分の投票・得票状況とは関係なく有効。</li>
+<li>自分が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効。</li>
 </ol>
 <h4>関連役職</h4>
 <pre>
@@ -478,9 +478,9 @@
 </pre>
 <h4>処刑得票能力</h4>
 <ol>
-<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後</li>
-<li>自分が処刑された場合は無効</li>
-<li>対象者が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効</li>
+<li><a href="../spec.php#vote_day">判定</a>は処刑者決定後。</li>
+<li>自分が処刑された場合は無効。</li>
+<li>対象者が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効。</li>
 </ol>
 <h4>関連役職</h4>
 <pre>
@@ -873,7 +873,7 @@ Ver. 2.1.0 α4 からは貴重な対護衛能力者として生まれ変わり�
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#wolf_kill_avoid">人狼襲撃回避能力者</a>
+<a href="ability.php#wolf_kill_reason">人狼襲撃特殊死因能力者</a>・<a href="ability.php#wolf_kill_avoid">人狼襲撃回避能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -891,15 +891,18 @@ Ver. 2.1.0 α4 からは貴重な対護衛能力者として生まれ変わり�
 </pre>
 <h4>襲撃能力</h4>
 <ol>
-<li>身代わり君襲撃時は無効(死因も含めて通常の人狼襲撃相当になる)</li>
-<li><a href="ability.php#trap_night">罠(夜投票型)</a> 無効</li>
-<li><a href="ability.php#guard">護衛能力者</a>の能力無効</li>
-<li><a href="ability.php#poison">毒</a>の能力無効</li>
-<li>襲撃が成功した場合の死因は「<a href="../spec.php#dead_night">呪殺</a>」</li>
-<li>襲撃が成功した場合、対象者が<a href="human.php#mage_group">占い師系</a>だった場合は自身が死亡する</li>
+<li>身代わり君襲撃時は無効。</li>
+  <ul>
+    <li>死因も含めて通常の人狼襲撃相当になる。</li>
+  </ul>
+<li><a href="ability.php#trap_night">罠(夜投票型)</a> 無効。</li>
+<li><a href="ability.php#guard">護衛能力者</a>の能力無効。</li>
+<li><a href="ability.php#poison">毒</a>の能力無効。</li>
+<li>襲撃が成功した場合の死因は「<a href="../spec.php#dead_night">呪殺</a>」。</li>
+<li>襲撃が成功した場合、対象者が<a href="human.php#mage_group">占い師系</a>だった場合は自身が死亡する。</li>
 <ul>
-  <li>自身が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効</li>
-  <li>死因は「<a href="../spec.php#dead_night">呪返し</a>」</li>
+  <li>自身が<a href="ability.php#special_resist">特殊耐性能力者</a>だった場合は無効。</li>
+  <li>死因は「<a href="../spec.php#dead_night">呪返し</a>」。</li>
 </ul>
 </ol>
 <h4>能力発動例</h4>
@@ -936,7 +939,7 @@ B：人狼に狙われたようです
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#sirius_wolf">天狼</a>・<a href="ability.php#result_mage">特殊占い判定能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
+<a href="ability.php#wolf_kill_reason">人狼襲撃特殊死因能力者</a>・<a href="#sirius_wolf">天狼</a>・<a href="ability.php#result_mage">特殊占い判定能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1338,7 +1341,7 @@ C に「受託結果：B は A に襲撃されました。」と表示される�
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#possessed">憑依能力者</a>・<a href="ability.php#last_words_decieve">遺言偽装能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
+<a href="ability.php#wolf_kill_reason">人狼襲撃特殊死因能力者</a>・<a href="ability.php#possessed">憑依能力者</a>・<a href="ability.php#last_words_decieve">遺言偽装能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -1580,7 +1583,7 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
 相談できるので完璧な連携が取れます。
 </pre>
 
-<h3 id="swindle_mad">因幡兎 (占い結果：人狼 / 霊能結果：村人) [Ver. 1.5.2 / Ver. 2.1.0α1]</h3>
+<h3 id="swindle_mad">因幡兎 (占い結果：人狼 / 霊能結果：村人) [Ver. 1.5.2 / Ver. 2.1.0 α1]</h3>
 <h4>[耐性] 精神鑑定：正常</h4>
 <pre>
 占い結果が人狼、精神鑑定結果が正常と判定される特殊な狂人。
@@ -1604,8 +1607,8 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
 </pre>
 <h4>占い能力</h4>
 <ol>
-<li>基本仕様は<a href="human.php#plural_wizard">魔女見習い</a>と同じ</li>
-<li>成功率は 50% で、個別に判定される</li>
+<li>基本仕様は<a href="human.php#plural_wizard">魔女見習い</a>と同じ。</li>
+<li>成功率は 50% で、個別に判定される。</li>
 </ol>
 <h4>関連役職</h4>
 <pre>
@@ -1855,10 +1858,14 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
   <li>対象の生死を問わず投票できる。</li>
   <li>身代わり君と自分自身には投票できない。</li>
   <li>投票イベント名は「対象の周囲に張り込み」。</li>
+  <ul>
+    <li>「張り込み」は<a href="../spec.php#vote_night">接触レイヤー</a>で行う。</li>
+  </ul>
   <li>「張り込みしない」を選択することができる。</li>
-  <li>「張り込み」は<a href="../spec.php#vote_night">接触レイヤー</a>で行う。</li>
   <li>生存者に投票した場合は<a href="ability.php#trap">罠</a>にかかる可能性がある。</li>
-  <li><a href="ability.php#trap">罠</a>で死亡した場合は投票無効。</li>
+  <ul>
+    <li><a href="ability.php#trap">罠</a>で死亡した場合は投票無効。</li>
+  </ul>
   <li>天候「<a href="../../info/weather.php#weather_no_contact">花曇り</a>・<a href="../../info/weather.php#weather_full_revive">雷雨</a>」時には投票無効。</li>
   <li>投票が有効になったら能力を失う (<a href="sub_role.php#lost_ability">能力喪失</a>)。</li>
 </ol>
@@ -1866,7 +1873,9 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
 <ol>
   <li>判定は<a href="../spec.php#vote_night">蘇生レイヤー</a>で行う。</li>
   <li>判定時に投票先が蘇生していると発動する。</li>
-  <li>蘇生の要因は種類を問わない (<a href="human.php#reverse_assassin">反魂</a>・<a href="ability.php#revive">蘇生能力</a>)。</li>
+  <ul>
+    <li>蘇生の要因は種類を問わない (<a href="human.php#reverse_assassin">反魂</a>・<a href="ability.php#revive">蘇生能力</a>)。</li>
+  </ul>
   <li>判定前に本人が死亡していた場合は無効。</li>
   <ul><li>判定時に蘇生している場合でも無効。</li></ul>
   <li>判定は個々で行う (複数の暴徒が投票していた場合は重複する)。</li>
@@ -1883,7 +1892,7 @@ PP 圏内まで持ち込んだ時に真価を発揮します。
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#anti_revive">蘇生妨害能力者</a>
+<a href="ability.php#position">位置能力者</a>・<a href="ability.php#anti_revive">蘇生妨害能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>

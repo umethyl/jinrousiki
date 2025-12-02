@@ -47,9 +47,6 @@ final class RoomManagerController extends JinrouController {
     if (ServerConfig::SECRET_ROOM) { //シークレットテストモード
       return;
     }
-
-    foreach (RoomManagerDB::GetList() as $stack) {
-      RoomManagerHTML::OutputRoom($stack);
-    }
+    RoomManagerHTML::Output();
   }
 }

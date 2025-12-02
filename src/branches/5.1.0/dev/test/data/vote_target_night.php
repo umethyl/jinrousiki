@@ -20,7 +20,9 @@ if (VoteTestRoom::DATE == 1) {
     ['user_no' => 27,	RequestDataVote::TARGET => 23,	'type' => VoteAction::MANIA],
     //['user_no' => 23,	RequestDataVote::TARGET =>  4,	'type' => VoteAction::CHILD_FOX],
     //['user_no' => 24,	RequestDataVote::TARGET =>  2,	'type' => VoteAction::SCAN)
-    ['user_no' => 30,	RequestDataVote::TARGET => 28,	'type' => VoteAction::FAIRY]
+    ['user_no' => 29,	RequestDataVote::TARGET => 27,	'type' => VoteAction::MAGE],
+    //['user_no' => 30,	RequestDataVote::TARGET => 28,	'type' => VoteAction::FAIRY]
+    ['user_no' => 30,	RequestDataVote::TARGET =>  8,	'type' => VoteAction::VOODOO_KILLER],
   ];
 } else {
   RQ::GetTest()->vote->night = [
@@ -108,7 +110,7 @@ if (VoteTestRoom::DATE == 1) {
     //['user_no' => 28,	RequestDataVote::TARGET => 18,	'type' => VoteAction::REVIVE],
     ['user_no' => 28,	RequestDataVote::TARGET => 18,	'type' => VoteAction::NOT_REVIVE],
     //['user_no' => 29,	RequestDataVote::TARGET =>  8,	'type' => VoteAction::TENGU],
-    ['user_no' => 29,	RequestDataVote::TARGET =>  27,	'type' => VoteAction::MAGE],
+    ['user_no' => 29,	RequestDataVote::TARGET => 27,	'type' => VoteAction::MAGE],
     //['user_no' => 30,	RequestDataVote::TARGET => '12 13 14',	'type' => VoteAction::STEP_SCAN],
     //['user_no' => 30,	RequestDataVote::TARGET => null,	'type' => VoteAction::NOT_TRAP],
     //['user_no' => 30,	RequestDataVote::TARGET => 22,	'type' => VoteAction::JAMMER],

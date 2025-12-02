@@ -1,6 +1,6 @@
 <?php
 //-- 配役設定 --//
-class ChaosConfig {
+final class ChaosConfig {
   //-- 固定枠 --//
   //闇鍋
   public static $chaos_fix_role_list		= ['mage' => 1, 'wolf' => 1];
@@ -1466,8 +1466,7 @@ class ChaosConfig {
   //-- 博物館モード(追加型) --//
   /* $topping_list とルールは同じ */
   public static $museum_topping_list = [
-    //TypeA: 管理者設定
-    'a1' => [],
+    //TypeA: 管理者設定 (ChaosCustomConfig::$museum_topping_list)
     //TypeB: Ver. 1.4.0
     'b1' => ['fix' => ['quiz' => 1]],
     'b2' => ['pick' => [['list' => ['soul_mage', 'medium', 'poison_guard'],
@@ -1753,8 +1752,7 @@ class ChaosConfig {
   /* $boost_rate_list とルールは同じ */
   public static $museum_boost_fix_rate = 10;
   public static $museum_boost_list = [
-    //TypeA: 管理者設定
-    'a1' => [],
+    //TypeA: 管理者設定 (ChaosCustomConfig::$museum_boost_list)
     //TypeB: Ver. 1.4.0
     'b1'  => ['boost' => ['quiz']],
     'b2'  => ['boost' => ['soul_mage', 'medium', 'poison_guard', 'boss_wolf', 'fanatic_mad', 'child_fox']],

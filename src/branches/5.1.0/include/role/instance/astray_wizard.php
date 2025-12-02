@@ -2,13 +2,14 @@
 /*
   ◆左道使い (astray_wizard)
   ○仕様
+  ・能力結果：なし
   ・魔法：反魂師・月兎・呪術師・獏・雪女・冥狐・闇妖精
   ・天候：霧雨(反魂師), 木枯らし(闇妖精)
 */
 RoleLoader::LoadFile('wizard');
 class Role_astray_wizard extends Role_wizard {
-  protected function GetWizardResultList() {
-    return [];
+  protected function IgnoreWizardResult() {
+    return true;
   }
 
   protected function GetWizardList() {

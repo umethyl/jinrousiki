@@ -526,7 +526,8 @@ abstract class OptionTextCheckbox extends OptionCheckbox {
       $flag = false;
     } else {
       $post = strtolower($post); //小文字で正規化する
-      $flag = isset(ChaosConfig::${$this->source}[$post]);
+      $list = Cast::GetChaosCustomConfig($this->name);
+      $flag = isset($list[$post]);
     }
     if (true === $flag) {
       array_push(RoomOptionLoader::${$this->group}, sprintf('%s:%s', $this->name, $post));
@@ -562,7 +563,7 @@ abstract class OptionLimitedCheckbox extends OptionCheckbox {
     RQ::Fetch()->ParsePostInt($post);
     $count = RQ::Get($post);
     if (Number::OutRange($count, 1, 99)) {
-      RoomManagerHTML::OutputResult('limit_over', $this->GetName());
+      RoomError::Entry(RoomError::INPUT, $this->GetName());
     }
     $this->Set(sprintf('%s:%d', $this->name, $count));
   }

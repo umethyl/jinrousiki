@@ -2,7 +2,7 @@
 /*
   ◆魔女 (plural_mad)
   ○仕様
-  ・魔法：占い師 (複合投票/50%)
+  ・魔法：占い師 (複数投票/50%)
 */
 class Role_plural_mad extends Role {
   public $mix_in = ['vote' => 'plural_wizard'];

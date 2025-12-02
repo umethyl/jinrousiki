@@ -52,7 +52,8 @@ class Role_tengu extends Role {
 	foreach (DB::$USER->Get() as $user) $user->StackReparse();
       }
 
-      $stack = [Camp::HUMAN => 0, Camp::WOLF => 0]; //村と狼は初期値を入れておく
+      //初期値をセット
+      $stack = [Camp::HUMAN => 0, Camp::WOLF => 0, Camp::TENGU => 0];
       foreach (DB::$USER->Get() as $user) {
 	$target = $reparse ? $user->GetReparse() : $user;
 	$camp   = $target->GetWinCamp($reparse);
@@ -61,10 +62,13 @@ class Role_tengu extends Role {
       }
       //Text::p($stack, '◆Camp [tengu]');
 
-      /* 両方 0 => 村 / どちらかが 0 => 0 じゃない方 / 同数 => 村 */
+      /* 天狗不在 => null / 両方 0 => 村 / どちらかが 0 => 0 じゃない方 / 同数 => 村 */
       $human = $stack[Camp::HUMAN];
       $wolf  = $stack[Camp::WOLF];
-      if ($human == 0 && $wolf == 0) {
+      $tengu = $stack[Camp::TENGU];
+      if ($tengu == 0) {
+	$camp = null;
+      } elseif ($human == 0 && $wolf == 0) {
 	$camp = Camp::HUMAN;
       } elseif ($human == 0) {
 	$camp = Camp::WOLF;
@@ -143,7 +147,9 @@ class Role_tengu extends Role {
   //勝利陣営判定
   final public function SetWinCamp() {
     $camp = $this->GetWinCamp(true);
-    DB::$ROOM->StoreAbility($this->result, 'result_tengu_camp_' . $camp);
+    if (null !== $camp) {
+      DB::$ROOM->StoreAbility($this->result, 'result_tengu_camp_' . $camp);
+    }
   }
 
   public function Win($winner) {
