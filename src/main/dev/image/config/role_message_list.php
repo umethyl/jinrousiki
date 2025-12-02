@@ -1145,7 +1145,7 @@ class RoleMessageList {
     'type' => 'chiroptera', 'delimiter' => ['#' => 'poison']];
 
   public $follow_chiroptera = [
-    'message' => "[役割] [|蝙蝠|陣営] [|蝙蝠|系]\n　あなたは|曼陀羅華|です。#処刑#されたら進行中の_死の宣告_対象者をまとめて_ショック死_させます。",
+    'message' => "[役割] [|蝙蝠|陣営] [|蝙蝠|系]\n　あなたは|曼陀羅華|です。#処刑#されたら進行中の_死の宣告_対象者をまとめて_ショック死_させます。\n　いやだ、たすけて、死にたくない！死の間際にこそあなたは叫ぶ、ほころぶ命を_道連れ_にして。",
     'type' => 'chiroptera', 'delimiter' => ['#' => 'vote', '_' => 'chicken']];
 
   public $cursed_chiroptera = [
