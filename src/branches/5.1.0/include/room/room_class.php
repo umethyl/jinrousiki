@@ -75,7 +75,8 @@ final class Room extends StackManager {
   //闇鍋モード用オプション配役データ取得
   public function GetChaosOptionList($option) {
     if ($this->IsOption($option)) {
-      return ChaosConfig::${$option . '_list'}[$this->option_role->list[$option][0]];
+      $list = Cast::GetChaosCustomConfig($option);
+      return $list[$this->option_role->list[$option][0]];
     } else {
       return [];
     }

@@ -98,7 +98,7 @@ final class RoomOptionManager extends StackStaticManager {
   private static function LoadPostPassword() {
     RQ::Fetch()->ParsePostStr('gm_password');
     if (RQ::Fetch()->gm_password == '') {
-      RoomManagerHTML::OutputResult('no_password');
+      RoomError::Entry(RoomError::PASSWORD);
     }
   }
 

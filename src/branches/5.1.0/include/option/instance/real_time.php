@@ -18,7 +18,7 @@ class Option_real_time extends OptionLimitedCheckbox {
     $day   = RQ::Get($post_day);
     $night = RQ::Get($post_night);
     if (Number::OutRange($day, 1, 99) || Number::OutRange($night, 1, 99)) {
-      RoomManagerHTML::OutputResult('time');
+      RoomError::Entry(RoomError::TIME);
     }
     $this->Set(sprintf('%s:%d:%d', $this->name, $day, $night));
   }

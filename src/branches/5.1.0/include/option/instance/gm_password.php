@@ -23,6 +23,6 @@ class Option_gm_password extends OptionText {
   }
 
   public function GetPlaceholder() {
-    return RoomManagerMessage::PLACEHOLDER_GM_PASSWORD;
+    return RoomEntryMessage::PLACEHOLDER_GM_PASSWORD;
   }
 }
