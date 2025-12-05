@@ -1,6 +1,10 @@
 <?php
 //--  ログ削除(管理用)コントローラー --//
-final class JinrouAdminLogDeleteController extends JinrouAdminController {
+final class JinrouAdminLogDeleteController extends JinrouController {
+  protected static function IsAdmin() {
+    return true;
+  }
+
   protected static function GetAdminType() {
     return 'log_delete';
   }
@@ -15,6 +19,7 @@ final class JinrouAdminLogDeleteController extends JinrouAdminController {
 
   protected static function RunCommand() {
     HTML::OutputResult('ログ削除', '未完成につき、使用できません');
+
     self::OutputHeader();
     Old_LogListOutput();
     self::DeleteRoom();
@@ -40,7 +45,7 @@ final class JinrouAdminLogDeleteController extends JinrouAdminController {
     print("background-position: 100% 100%;background-attachment: fixed }");
     print("table{filter:alpha(opacity=80,enabled=80)}");
     print("body{background-color:$background_color;color:$text_color;}\r\n");
-    
+
     print("A:link{ color: $a_color; } A:visited{ color: $a_vcolor; } A:active{ color: $a_acolor; } A:hover{ color: red; } \r\n");
     print(".day{  background-color:$background_color_day; color : $text_color_day;} \r\n");
     print(".night{background-color:$background_color_night; color: $text_color_night;} \r\n");
