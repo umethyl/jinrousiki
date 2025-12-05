@@ -1,6 +1,10 @@
 <?php
 //--  アイコン削除(管理用)コントローラー --//
-final class JinrouAdminIconDeleteController extends JinrouAdminController {
+final class JinrouAdminIconDeleteController extends JinrouController {
+  protected static function IsAdmin() {
+    return true;
+  }
+
   protected static function GetAdminType() {
     return 'icon_delete';
   }

@@ -1,6 +1,10 @@
 <?php
 //-- オプション配役テストコントローラー --//
-final class RoleTestController extends JinrouAdminController {
+final class RoleTestController extends JinrouController {
+  protected static function IsAdmin() {
+    return true;
+  }
+
   protected static function GetAdminType() {
     return 'role_test';
   }

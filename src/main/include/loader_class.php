@@ -184,7 +184,6 @@ final class Loader extends LoadManager {
     }
 
     switch ($type) {
-    case 'admin':
     case 'server':
     case 'system':
     case 'message':
@@ -196,10 +195,15 @@ final class Loader extends LoadManager {
       $path = JINROU_CONF . '/' . $type;
       break;
 
+    case 'config::admin':
+      $path = JINROU_CONF . '/' . 'admin';
+      break;
+
     case 'config::game':
       $path = JINROU_CONF . '/' . 'game';
       break;
 
+    case 'admin':
     case 'controller':
     case 'controller/admin':
     case 'controller/info':
@@ -417,10 +421,11 @@ final class LoaderData {
     'StatisticsStack'			=> 'statistics_data_class',
     'StatisticsCount'			=> 'statistics_data_class',
     'StatisticsData'			=> 'statistics_data_class',
-    //system
+    //admin
     'JinrouAdmin'		=> 'admin_class',
-    'JinrouAdminController'	=> 'admin_class',
     'JinrouTestController'	=> 'admin_class',
+    'JinrouHTMLLogGenerator'	=> 'html_log_generator_class',
+    //system
     'Cast'			=> 'cast_class',
     'PageLinkBuilder'		=> 'old_log_functions',
     'JinrouCacheManager'	=> 'cache_class',
@@ -576,9 +581,9 @@ final class LoaderData {
   public static $path = [
     /* include */
     //config
-    'admin_config'		=> 'admin',
-    'setup_config'		=> 'admin',
-    'generate_html_log_config'	=> 'admin',
+    'admin_config'		=> 'config::admin',
+    'setup_config'		=> 'config::admin',
+    'generate_html_log_config'	=> 'config::admin',
     'server_config'		=> 'server',
     'database_config'		=> 'server',
     'room_config'		=> 'server',
@@ -660,6 +665,9 @@ final class LoaderData {
     'vote_test_message'		=> 'message/controller/test',
     'objection_test_message'	=> 'message/controller/test',
     'trip_test_message'		=> 'message/controller/test',
+    //admin
+    'admin_class'		=> 'admin',
+    'html_log_generator_class'	=> 'admin',
     //data
     'room_data_class'		=> 'data',
     'user_data_class'		=> 'data',

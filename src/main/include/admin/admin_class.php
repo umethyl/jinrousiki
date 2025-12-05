@@ -71,16 +71,6 @@ final class JinrouAdmin {
   }
 }
 
-//-- 管理用コントローラー基底クラス --//
-abstract class JinrouAdminController extends JinrouController {
-  protected static function Unusable() {
-    return true !== JinrouAdmin::Enable(static::GetAdminType());
-  }
-
-  //管理ツール名取得
-  abstract protected static function GetAdminType();
-}
-
 //-- 開発テスト用コントローラー基底クラス --//
 abstract class JinrouTestController extends JinrouController {
   protected static function Unusable() {

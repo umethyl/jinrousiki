@@ -1,7 +1,11 @@
 <?php
 //-- データベース初期セットアップコントローラー --//
-final class JinrouAdminSetupController extends JinrouAdminController {
+final class JinrouAdminSetupController extends JinrouController {
   private static $table_list = []; //テーブルリスト
+
+  protected static function IsAdmin() {
+    return true;
+  }
 
   protected static function GetAdminType() {
     return 'setup';

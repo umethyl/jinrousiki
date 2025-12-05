@@ -1,6 +1,10 @@
 <?php
 //--  村削除(管理用)コントローラー --//
-final class JinrouAdminRoomDeleteController extends JinrouAdminController {
+final class JinrouAdminRoomDeleteController extends JinrouController {
+  protected static function IsAdmin() {
+    return true;
+  }
+
   protected static function GetAdminType() {
     return 'room_delete';
   }

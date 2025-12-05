@@ -32,8 +32,19 @@ abstract class JinrouController {
 
   //実行不許可判定
   protected static function Unusable() {
+    if (true === static::IsAdmin()) {
+      return true !== JinrouAdmin::Enable(static::GetAdminType());
+    }
     return false;
   }
+
+  //管理機能判定
+  protected static function IsAdmin() {
+    return false;
+  }
+
+  //管理機能名取得
+  protected static function GetAdminType() {}
 
   //実行不許可エラー表示
   protected static function OutputUnusableError() {
