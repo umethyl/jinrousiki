@@ -49,12 +49,15 @@ final class OldLogController extends JinrouController {
     }
   }
 
+  protected static function EnableCommand() {
+    return RQ::Enable('is_room');
+  }
+
+  protected static function RunCommand() {
+    OldLogHTML::Output();
+  }
+
   protected static function Output() {
-    if (RQ::Enable('is_room')) {
-      OldLogHTML::Output();
-    } else {
-      LogListHTML::Output(RQ::Fetch()->page);
-    }
-    HTML::OutputFooter();
+    LogListHTML::Output(RQ::Fetch()->page);
   }
 }

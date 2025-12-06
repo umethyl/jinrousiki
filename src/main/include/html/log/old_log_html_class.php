@@ -108,6 +108,7 @@ final class OldLogHTML {
   //指定の部屋番号のログを出力する
   public static function Output() {
     echo self::Generate();
+    HTML::OutputFooter();
   }
 
   //自動スクロール設定生成
