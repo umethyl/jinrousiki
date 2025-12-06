@@ -21,20 +21,32 @@ final class RoomManagerController extends JinrouController {
   }
 
   protected static function EnableCommand() {
-    return true;
+    switch (true) {
+    case RQ::Fetch()->create_room:
+    case RQ::Fetch()->change_room:
+    case RQ::Fetch()->describe_room:
+    case (RQ::Get(RequestDataGame::ID) > 0):
+      return true;
+
+    default:
+      return false;
+    }
   }
 
   protected static function RunCommand() {
-    if (RQ::Fetch()->create_room) {
+    switch (true) {
+    case RQ::Fetch()->create_room:
+    case RQ::Fetch()->change_room:
       RoomEntry::Execute();
-    } elseif (RQ::Fetch()->change_room) {
-      RoomEntry::Execute();
-    } elseif (RQ::Fetch()->describe_room) {
+      return;
+
+    case RQ::Fetch()->describe_room:
       RoomDescribe::Execute();
-    } elseif (RQ::Get(RequestDataGame::ID) > 0) {
+      return;
+
+    case (RQ::Get(RequestDataGame::ID) > 0):
       RoomEntry::Output();
-    } else {
-      self::OutputList();
+      return;
     }
   }
 
@@ -43,7 +55,7 @@ final class RoomManagerController extends JinrouController {
   }
 
   //稼働中の村リスト出力
-  private static function OutputList() {
+  protected static function Output() {
     if (ServerConfig::SECRET_ROOM) { //シークレットテストモード
       return;
     }
