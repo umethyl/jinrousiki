@@ -14,11 +14,7 @@ abstract class JinrouController {
   final public static function Execute() {
     static::Start();
     static::Load();
-    if (true === static::EnableCommand()) {
-      static::RunCommand();
-    } else {
-      static::Output();
-    }
+    static::Run();
     static::Finish();
   }
 
@@ -31,11 +27,14 @@ abstract class JinrouController {
   }
 
   //実行不許可判定
-  protected static function Unusable() {
+  final protected static function Unusable() {
     if (true === static::IsAdmin()) {
       return true !== JinrouAdmin::Enable(static::GetAdminType());
     }
-    return false;
+    if (true === static::IsTest()) {
+      return true !== ServerConfig::DEBUG_MODE;
+    }
+    return static::IsUnusable();
   }
 
   //管理機能判定
@@ -45,6 +44,16 @@ abstract class JinrouController {
 
   //管理機能名取得
   protected static function GetAdminType() {}
+
+  //テスト機能判定
+  protected static function IsTest() {
+    return false;
+  }
+
+  //個別実行不許可判定
+  protected static function IsUnusable() {
+    return false;
+  }
 
   //実行不許可エラー表示
   protected static function OutputUnusableError() {
@@ -134,6 +143,20 @@ abstract class JinrouController {
   //追加情報ロード
   protected static function LoadExtra() {}
 
+  //処理実行
+  final protected static function Run() {
+    static::OutputRunHeader();
+    if (true === static::EnableCommand()) {
+      static::RunCommand();
+    } else {
+      static::Output();
+    }
+    static::OutputRunFooter();
+  }
+
+  //実行前出力
+  protected static function OutputRunHeader() {}
+
   //コマンド実行有効判定
   protected static function EnableCommand() {
     return false;
@@ -144,6 +167,9 @@ abstract class JinrouController {
 
   //出力
   protected static function Output() {}
+
+  //実行後出力
+  protected static function OutputRunFooter() {}
 
   //終了処理
   protected static function Finish() {}

@@ -6,13 +6,17 @@ final class SharedRoomInfoController extends JinrouController {
     return 'shared_room';
   }
 
+  protected static function EnableCommand() {
+    return Number::Within(RQ::Fetch()->id, 0, count(SharedServerConfig::$server_list));
+  }
+
+  protected static function RunCommand() {
+    InfoHTML::OutputSharedRoom(RQ::Fetch()->id);
+  }
+
   protected static function Output() {
-    if (Number::Within(RQ::Fetch()->id, 0, count(SharedServerConfig::$server_list))) {
-      InfoHTML::OutputSharedRoom(RQ::Fetch()->id);
-    } else {
-      InfoHTML::OutputHeader(SharedRoomInfoMessage::TITLE, 0, 'shared_room');
-      InfoHTML::OutputSharedRoomList();
-      HTML::OutputFooter();
-    }
+    InfoHTML::OutputHeader(SharedRoomInfoMessage::TITLE, 0, 'shared_room');
+    InfoHTML::OutputSharedRoomList();
+    HTML::OutputFooter();
   }
 }

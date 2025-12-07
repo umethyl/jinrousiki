@@ -1,6 +1,11 @@
 <?php
 //-- HTML 生成クラス (テスト拡張) --//
 final class DevHTML {
+  //リクエストロード
+  public static function LoadRequest() {
+    RQ::Fetch()->ParsePostOn('execute');
+  }
+
   //実行判定
   public static function IsExecute() {
     return RQ::Fetch()->execute;

@@ -6,11 +6,15 @@ final class JinrouIndexController extends JinrouController {
     return 'request_index';
   }
 
+  protected static function EnableCommand() {
+    return Number::Within(RQ::Fetch()->id, 0, count(TopPageConfig::$server_list));
+  }
+
+  protected static function RunCommand() {
+    InfoHTML::OutputSharedRoom(RQ::Fetch()->id, true);
+  }
+
   protected static function Output() {
-    if (Number::Within(RQ::Fetch()->id, 0, count(TopPageConfig::$server_list))) {
-      InfoHTML::OutputSharedRoom(RQ::Fetch()->id, true);
-    } else {
-      IndexHTML::Output();
-    }
+    IndexHTML::Output();
   }
 }

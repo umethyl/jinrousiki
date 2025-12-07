@@ -3,7 +3,7 @@
 final class IconUploadController extends JinrouController {
   const URL = 'icon_upload.php';
 
-  protected static function Unusable() {
+  protected static function IsUnusable() {
     return UserIconConfig::DISABLE;
   }
 

@@ -1,6 +1,10 @@
 <?php
 //足音投票テストコントローラー
-final class StepVoteTestController extends JinrouTestController {
+final class StepVoteTestController extends JinrouController {
+  protected static function IsTest() {
+    return true;
+  }
+
   protected static function GetLoadRequest() {
     return 'game_view';
   }

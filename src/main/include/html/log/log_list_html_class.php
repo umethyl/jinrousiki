@@ -92,6 +92,7 @@ final class LogListHTML {
   //過去ログ一覧表示
   public static function Output($page) {
     echo self::Generate($page);
+    HTML::OutputFooter();
   }
 
   //村数取得

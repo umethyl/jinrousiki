@@ -1,20 +1,24 @@
 <?php
 //-- 異議ありテストコントローラー --//
-final class ObjectionTestController extends JinrouTestController {
-  protected static function LoadRequestExtra() {
-    RQ::Fetch()->ParsePostOn('execute');
+final class ObjectionTestController extends JinrouController {
+  protected static function IsTest() {
+    return true;
   }
 
-  protected static function OutputHeader() {
+  protected static function LoadRequestExtra() {
+    DevHTML::LoadRequest();
+  }
+
+  protected static function OutputRunHeader() {
     HTML::OutputHeader(ObjectionTestMessage::TITLE, null, true);
     ObjectionTestHTML::OutputForm(self::GetList());
   }
 
-  protected static function IsExecute() {
+  protected static function EnableCommand() {
     return DevHTML::IsExecute();
   }
 
-  protected static function RunTest() {
+  protected static function RunCommand() {
     $id  = RequestDataTalk::OBJECTION;
     RQ::Fetch()->ParsePostData($id);
     $key = RQ::Get($id);
@@ -30,5 +34,9 @@ final class ObjectionTestController extends JinrouTestController {
       'entry', 'full', 'morning', 'night', 'vote_success', 'revote', 'novote', 'alert',
       'objection_male', 'objection_female'
     ];
+  }
+
+  protected static function OutputRunFooter() {
+    HTML::OutputFooter();
   }
 }

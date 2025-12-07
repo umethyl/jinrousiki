@@ -1,6 +1,6 @@
 <?php
 //-- テスト村生成クラス --//
-class DevRoom {
+final class DevRoom {
   //テスト村データ初期化
   public static function Initialize($list = []) {
     //初期村データを生成
@@ -111,7 +111,7 @@ class DevRoom {
 }
 
 //-- テストユーザ生成クラス --//
-class DevUser {
+final class DevUser {
   // ユーザのアイコンカラーリスト
   static $icon_color_list = [
     '#DDDDDD', '#999999', '#FFD700', '#FF9900', '#FF0000',
@@ -258,7 +258,7 @@ class DevUser {
 }
 
 //-- テスト投票処理クラス --//
-class DevVote {
+final class DevVote {
   //出力
   public static function Output($url) {
     self::Load($url);

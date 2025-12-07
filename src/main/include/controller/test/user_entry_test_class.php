@@ -1,6 +1,10 @@
 <?php
 //-- 住民登録テストコントローラー --//
-final class UserEntryTestController extends JinrouTestController {
+final class UserEntryTestController extends JinrouController {
+  protected static function IsTest() {
+    return true;
+  }
+
   protected static function GetLoadRequest() {
     return 'game_view';
   }

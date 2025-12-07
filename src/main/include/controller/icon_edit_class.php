@@ -3,7 +3,7 @@
 final class IconEditController extends JinrouController {
   const URL = 'icon_view.php';
 
-  protected static function Unusable() {
+  protected static function IsUnusable() {
     return Security::IsInvalidReferer(self::URL);
   }
 

@@ -10,16 +10,12 @@ final class RoleTestController extends JinrouController {
   }
 
   protected static function LoadRequestExtra() {
-    RQ::Fetch()->ParsePostOn('execute');
+    DevHTML::LoadRequest();
   }
 
-  protected static function Output() {
+  protected static function OutputRunHeader() {
     DevHTML::OutputRoleTestHeader(RoleTestMessage::TITLE, 'role_test.php');
     self::OutputForm();
-    if (DevHTML::IsExecute()) {
-      self::RunTest();
-    }
-    HTML::OutputFooter(true);
   }
 
   //フォーム出力
@@ -111,8 +107,11 @@ final class RoleTestController extends JinrouController {
     FormHTML::OutputFooter();
   }
 
-  //テスト実行
-  private static function RunTest() {
+  protected static function EnableCommand() {
+    return DevHTML::IsExecute();
+  }
+
+  protected static function RunCommand() {
     RQ::InitTestRoom();
     $stack = new stdClass();
     $stack->game_option = ['dummy_boy'];
@@ -208,5 +207,9 @@ final class RoleTestController extends JinrouController {
       ChaosConfig::$role_group_rate_list = [];
     }
     DevRoom::Cast($stack);
+  }
+
+  protected static function OutputRunFooter() {
+    HTML::OutputFooter(true);
   }
 }

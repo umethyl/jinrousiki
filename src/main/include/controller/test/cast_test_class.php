@@ -1,6 +1,10 @@
 <?php
 //-- 村配役テストコントローラー --//
-final class CastTestController extends JinrouTestController {
+final class CastTestController extends JinrouController {
+  protected static function IsTest() {
+    return true;
+  }
+
   protected static function GetLoadRequest() {
     return 'game_view';
   }
@@ -30,16 +34,16 @@ final class CastTestController extends JinrouTestController {
     DevUser::Load();
   }
 
-  protected static function OutputHeader() {
+  protected static function OutputRunHeader() {
     HTML::OutputHeader(CastTestMessage::TITLE, 'game_play', true);
     GameHTML::OutputPlayer();
   }
 
-  protected static function IsExecute() {
+  protected static function EnableCommand() {
     return true;
   }
 
-  protected static function RunTest() {
+  protected static function RunCommand() {
     VoteGameStart::Aggregate();
     DB::$ROOM->date++;
     DB::$ROOM->SetScene(RoomScene::NIGHT);
@@ -48,7 +52,8 @@ final class CastTestController extends JinrouTestController {
     }
   }
 
-  protected static function OutputFooter() {
+  protected static function OutputRunFooter() {
     GameHTML::OutputPlayer();
+    HTML::OutputFooter();
   }
 }
