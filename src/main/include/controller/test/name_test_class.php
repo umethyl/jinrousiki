@@ -1,12 +1,16 @@
 <?php
 //-- 役職名表示コントローラー --//
-final class NameTestController extends JinrouTestController {
+final class NameTestController extends JinrouController {
+  protected static function IsTest() {
+    return true;
+  }
+
   protected static function LoadRequestExtra() {
-    RQ::Fetch()->ParsePostOn('execute');
+    DevHTML::LoadRequest();
     RQ::Fetch()->ParsePostData('type');
   }
 
-  protected static function OutputHeader() {
+  protected static function OutputRunHeader() {
     HTML::OutputHeader(NameTestMessage::TITLE, 'test/name', true);
     self::OutputForm();
   }
@@ -40,11 +44,11 @@ final class NameTestController extends JinrouTestController {
     DevHTML::OutputRadio($id, 'type', $id, FormHTML::Checked($id === $checked_id), $label);
   }
 
-  protected static function IsExecute() {
+  protected static function EnableCommand() {
     return DevHTML::IsExecute();
   }
 
-  protected static function RunTest() {
+  protected static function RunCommand() {
     list($role, $type) = Text::Parse(RQ::Fetch()->type, '-');
     switch ($type) {
     case 'all':
@@ -76,5 +80,9 @@ final class NameTestController extends JinrouTestController {
       }
     }
     return $stack;
+  }
+
+  protected static function OutputRunFooter() {
+    HTML::OutputFooter();
   }
 }

@@ -2,26 +2,20 @@
 //-- 検索情報コントローラー (新役職情報) --//
 final class SearchRoleInfoController extends JinrouController {
   protected static function LoadRequestExtra() {
-    RQ::Fetch()->ParsePostOn('execute');
+    DevHTML::LoadRequest();
     RQ::Fetch()->ParsePostData('role');
   }
 
-  protected static function Output() {
+  protected static function OutputRunHeader() {
     InfoHTML::OutputRoleHeader(SearchRoleInfoMessage::TITLE);
     SearchRoleInfoHTML::OutputForm();
-    if (self::IsExecute()) {
-      self::RunSearch();
-    }
-    HTML::OutputFooter();
   }
 
-  //検索実行判定
-  private static function IsExecute() {
+  protected static function EnableCommand() {
     return RQ::Fetch()->execute && isset(RQ::Fetch()->role);
   }
 
-  //検索実行
-  private static function RunSearch() {
+  protected static function RunCommand() {
     $stack = [];
     $search_list = RoleDataManager::Search(RQ::Fetch()->role);
     foreach ($search_list as $category => $list) {
@@ -67,5 +61,9 @@ final class SearchRoleInfoController extends JinrouController {
 	break;
       }
     }
+  }
+
+  protected static function OutputRunFooter() {
+    HTML::OutputFooter();
   }
 }

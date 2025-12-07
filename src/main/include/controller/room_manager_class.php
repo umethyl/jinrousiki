@@ -50,15 +50,14 @@ final class RoomManagerController extends JinrouController {
     }
   }
 
-  protected static function Finish() {
-    DB::Disconnect();
-  }
-
-  //稼働中の村リスト出力
   protected static function Output() {
     if (ServerConfig::SECRET_ROOM) { //シークレットテストモード
       return;
     }
     RoomManagerHTML::Output();
+  }
+
+  protected static function Finish() {
+    DB::Disconnect();
   }
 }

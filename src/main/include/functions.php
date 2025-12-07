@@ -1047,7 +1047,7 @@ final class Security {
       }
     }
     $url = ServerConfig::SITE_ROOT . $page;
-    return strncmp(@$_SERVER['HTTP_REFERER'], $url, strlen($url)) != 0;
+    return strncmp($_SERVER['HTTP_REFERER'] ?? '', $url, strlen($url)) != 0;
   }
 
   //CSRF対策用トークン検証
