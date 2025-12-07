@@ -185,7 +185,6 @@ final class Loader extends LoadManager {
 
     switch ($type) {
     case 'server':
-    case 'system':
     case 'message':
     case 'message/room':
     case 'message/controller':
@@ -199,11 +198,16 @@ final class Loader extends LoadManager {
       $path = JINROU_CONF . '/' . 'admin';
       break;
 
+    case 'config::system':
+      $path = JINROU_CONF . '/' . 'system';
+      break;
+
     case 'config::game':
       $path = JINROU_CONF . '/' . 'game';
       break;
 
     case 'admin':
+    case 'system':
     case 'controller':
     case 'controller/admin':
     case 'controller/info':
@@ -224,6 +228,7 @@ final class Loader extends LoadManager {
     case 'role':
     case 'game':
     case 'talk':
+    case 'text':
     case 'time':
     case 'media':
     case 'statistics':
@@ -266,7 +271,7 @@ final class LoaderData {
   //依存ファイル情報 (読み込むデータ => 依存するファイル)
   public static $depend = [
     //config
-    'server_config'	=> ['system_class', 'functions', 'request_data_class'], //常時ロード
+    'server_config'	=> ['system_class', 'request_data_class'], //常時ロード
     //library
     'twitter_class'	=> 'twitter',
     'paparazzi_class'	=> 'paparazzi',
@@ -426,8 +431,14 @@ final class LoaderData {
     'JinrouTestController'	=> 'admin_class',
     'JinrouHTMLLogGenerator'	=> 'html_log_generator_class',
     //system
-    'Cast'			=> 'cast_class',
-    'PageLinkBuilder'		=> 'old_log_functions',
+    'JinrouController'		=> 'controller_class',
+    'GM'			=> 'gm_class',
+    'Security'			=> 'security_class',
+    'ArrayFilter'		=> 'array_class',
+    'Switcher'			=> 'switcher_class',
+    'Lottery'			=> 'lottery_class',
+    'PageLinkBuilder'		=> 'page_link_class',
+    'ExternalLinkBuilder'	=> 'external_link_class',
     'JinrouCacheManager'	=> 'cache_class',
     //database
     'DB'		=> 'db_class',
@@ -478,7 +489,9 @@ final class LoaderData {
     'RoleVote'		=> 'role_vote_class',
     //game
     'GameAction'	=> 'game_functions',
+    'Cast'		=> 'cast_class',
     'Objection'		=> 'objection_class',
+    'Sex'		=> 'sex_class',
     'Position'		=> 'position_class',
     'Winner'		=> 'winner_class',
     'GamePlay'		=> 'game_play_functions',
@@ -497,6 +510,11 @@ final class LoaderData {
     'VoteHeaven'		=> 'game_vote_functions',
     'VoteForceSuddenDeath'	=> 'game_vote_functions',
     'VoteResetTime'		=> 'game_vote_functions',
+    //text
+    'Text'		=> 'text_class',
+    'Encoder'		=> 'encoder_class',
+    'Number'		=> 'number_class',
+    'URL'		=> 'url_class',
     //time
     'Time'		=> 'time_class',
     'GameTime'		=> 'game_time_class',
@@ -604,8 +622,8 @@ final class LoaderData {
     'time_config'		=> 'config::game',
     'icon_config'		=> 'config::game',
     'sound_config'		=> 'config::game',
-    'copyright_config'		=> 'system',
-    'version'			=> 'system',
+    'copyright_config'		=> 'config::system',
+    'version'			=> 'config::system',
     'admin_message'		=> 'message',
     'message'			=> 'message',
     'game_message'		=> 'message',
@@ -668,6 +686,16 @@ final class LoaderData {
     //admin
     'admin_class'		=> 'admin',
     'html_log_generator_class'	=> 'admin',
+    //system
+    'controller_class'		=> 'system',
+    'gm_class'			=> 'system',
+    'security_class'		=> 'system',
+    'array_class'		=> 'system',
+    'switcher_class'		=> 'system',
+    'lottery_class'		=> 'system',
+    'page_link_class'		=> 'system',
+    'external_link_class'	=> 'system',
+    'cache_class'		=> 'system',
     //data
     'room_data_class'		=> 'data',
     'user_data_class'		=> 'data',
@@ -737,7 +765,9 @@ final class LoaderData {
     'role_data_manager_class'	=> 'role',
     //game
     'game_functions'		=> 'game',
+    'cast_class'		=> 'game',
     'objection_class'		=> 'game',
+    'sex_class'			=> 'game',
     'position_class'		=> 'game',
     'winner_class'		=> 'game',
     'game_play_functions'	=> 'game',
@@ -746,6 +776,11 @@ final class LoaderData {
     'talk_class'		=> 'talk',
     'game_play_talk_class'	=> 'talk',
     'auto_play_talk_class'	=> 'talk',
+    //text
+    'text_class'	=> 'text',
+    'encoder_class'	=> 'text',
+    'number_class'	=> 'text',
+    'url_class'		=> 'text',
     //time
     'time_class'		=> 'time',
     'game_time_class'		=> 'time',
