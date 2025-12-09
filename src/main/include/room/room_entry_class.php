@@ -116,9 +116,6 @@ final class RoomEntry {
       }
     }
 
-    //Twitter 投稿
-    JinrouTwitter::Send($room_no, RQ::Fetch()->room_name, RQ::Fetch()->room_comment);
-
     //コミット
     if (CacheConfig::ENABLE) {
       JinrouCacheDB::Clear(); //コミットも内部で行う

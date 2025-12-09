@@ -248,7 +248,6 @@ final class Loader extends LoadManager {
       break;
 
     case 'mb-emulator':
-    case 'twitter':
       $path = JINROU_MOD . '/' . $name;
       break;
 
@@ -273,7 +272,6 @@ final class LoaderData {
     //config
     'server_config'	=> ['system_class', 'request_data_class'], //常時ロード
     //library
-    'twitter_class'	=> 'twitter',
     'paparazzi_class'	=> 'paparazzi',
     //controller/test
     'user_entry_test_class'	=> 'user_manager_class',
@@ -298,7 +296,6 @@ final class LoaderData {
     'MenuConfig'		=> 'menu_config',
     'BBSConfig'			=> 'bbs_config',
     'SharedServerConfig'	=> 'shared_server_config',
-    'TwitterConfig'		=> 'twitter_config',
     //game
     'GameConfig'	=> 'game_config',
     'CastConfig'	=> 'cast_config',
@@ -329,7 +326,6 @@ final class LoaderData {
     'AdminMessage'		=> 'admin_message',
     'StatisticsMessage'		=> 'statistics_message',
     'CacheMessage'		=> 'cache_message',
-    'TwitterMessage'		=> 'twitter_message',
     'TestMessage'		=> 'test_message',
     //room
     'RoomEntryMessage'		=> 'room_entry_message',
@@ -430,6 +426,7 @@ final class LoaderData {
     'JinrouAdmin'		=> 'admin_class',
     'JinrouSetupManager'	=> 'setup_manager_class',
     'JinrouHTMLLogGenerator'	=> 'html_log_generator_class',
+    'JinrouLogDeleteManager'	=> 'log_delete_manager_class',
     //system
     'JinrouController'		=> 'controller_class',
     'GM'			=> 'gm_class',
@@ -529,8 +526,6 @@ final class LoaderData {
     //statistics
     'JinrouStatistics'		=> 'statistics_manager_class',
     'StatisticsRole'		=> 'statistics_role_class',
-    //mod
-    'JinrouTwitter'	=> 'twitter_class',
     //html
     'HTML'		=> 'html_class',
     'GameHTML'		=> 'game_html_class',
@@ -587,11 +582,8 @@ final class LoaderData {
     'VoteTestHTML'	=> 'vote_test_html_class',
     'ObjectionTestHTML'	=> 'objection_test_html_class',
     'TripTestHTML'	=> 'trip_test_html_class',
-    'TwitterTestHTML'	=> 'twitter_test_html_class',
     //info
     'Info'	=> 'info_functions',
-    //module
-    'OAuthException'	=> 'twitter',
     //test
     'DevRoom' => 'test_functions'
   ];
@@ -614,7 +606,6 @@ final class LoaderData {
     'menu_config'		=> 'server',
     'bbs_config'		=> 'server',
     'shared_server_config'	=> 'server',
-    'twitter_config'		=> 'server',
     'game_config'		=> 'config::game',
     'cast_config'		=> 'config::game',
     'chaos_config'		=> 'config::game',
@@ -640,7 +631,6 @@ final class LoaderData {
     'icon_message'		=> 'message',
     'info_message'		=> 'message',
     'cache_message'		=> 'message',
-    'twitter_message'		=> 'message',
     'test_message'		=> 'message',
     //config/message/room
     'room_entry_message'	=> 'message/room',
@@ -688,6 +678,7 @@ final class LoaderData {
     'admin_class'		=> 'admin',
     'setup_manager_class'	=> 'admin',
     'html_log_generator_class'	=> 'admin',
+    'log_delete_manager_class'	=> 'admin',
     //system
     'controller_class'		=> 'system',
     'gm_class'			=> 'system',
@@ -841,7 +832,6 @@ final class LoaderData {
     'step_vote_test_class'	=> 'controller/test',
     'objection_test_class'	=> 'controller/test',
     'trip_test_class'		=> 'controller/test',
-    'twitter_test_class'	=> 'controller/test',
     //html
     'html_class'		=> 'html',
     'game_html_class'		=> 'html',
@@ -898,7 +888,6 @@ final class LoaderData {
     'vote_test_html_class'	=> 'html/controller/test',
     'objection_test_html_class'	=> 'html/controller/test',
     'trip_test_html_class'	=> 'html/controller/test',
-    'twitter_test_html_class'	=> 'html/controller/test',
     //debug
     'paparazzi'		=> 'paparazzi',
     'paparazzi_class'	=> 'paparazzi',

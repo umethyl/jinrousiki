@@ -5,8 +5,7 @@ final class CopyrightConfig {
   public static $list = [
     'システム' => [
 		   'PHP4 + MYSQLスクリプト (リンク切れ)' => 'http://f45.aaa.livedoor.jp/~netfilms/',
-		   'mbstringエミュレータ (リンク切れ)' => 'http://sourceforge.jp/projects/mbemulator/',
-		   'Twitter投稿モジュール' => 'https://github.com/abraham/twitteroauth'
+		   'mbstringエミュレータ (リンク切れ)' => 'http://sourceforge.jp/projects/mbemulator/'
                   ],
     '写真素材' => ['天の欠片' => 'http://photozou.jp/photo/list/2066445/5445429'],
     'フォント素材' => ['あずきフォント' => 'http://azukifont.com/']
