@@ -430,6 +430,7 @@ final class LoaderData {
     'JinrouAdmin'		=> 'admin_class',
     'JinrouSetupManager'	=> 'setup_manager_class',
     'JinrouHTMLLogGenerator'	=> 'html_log_generator_class',
+    'JinrouLogDeleteManager'	=> 'log_delete_manager_class',
     //system
     'JinrouController'		=> 'controller_class',
     'GM'			=> 'gm_class',
@@ -688,6 +689,7 @@ final class LoaderData {
     'admin_class'		=> 'admin',
     'setup_manager_class'	=> 'admin',
     'html_log_generator_class'	=> 'admin',
+    'log_delete_manager_class'	=> 'admin',
     //system
     'controller_class'		=> 'system',
     'gm_class'			=> 'system',
