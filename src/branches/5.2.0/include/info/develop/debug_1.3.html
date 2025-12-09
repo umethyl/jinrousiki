@@ -1,0 +1,11 @@
+<p>
+Ver. 1.3.x<br>
+<a href="#ver133">3</a>
+</p>
+
+<h2><a id="ver133">Ver. 1.3.3</a></h2>
+<h3>game_vote.php % 240 行目 (2011/02/22 (Tue) 01:52)</h3>
+<pre>
+× $rand_keys = array_rand($role_array, $user_count); //ランダムキーを取得
+○ <span>shuffle(</span>$rand_keys = array_rand($role_array, $user_count)<span>)</span>; //ランダムキーを取得)
+</pre>

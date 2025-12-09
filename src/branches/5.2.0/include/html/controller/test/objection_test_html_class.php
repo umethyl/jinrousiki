@@ -1,0 +1,46 @@
+<?php
+//-- HTML 生成クラス (異議ありテスト拡張) --//
+final class ObjectionTestHTML {
+  //フォーム出力
+  public static function OutputForm(array $stack) {
+    $url   = 'objection_test.php';
+    $image = URL::Combine(JINROU_ROOT, GameConfig::OBJECTION_IMAGE);
+
+    HTML::OutputP(LinkHTML::Generate($url, ObjectionTestMessage::RESET));
+    TableHTML::OutputHeader(line: true);
+    foreach ($stack as $name) {
+      TableHTML::OutputTrHeader(line: true);
+      TableHTML::OutputTdHeader([HTML::CSS => 'objection']);
+      Text::Printf(self::GetForm(),
+        $url, Switcher::ON, RequestDataTalk::OBJECTION, $name,
+        $image . self::GetImage($name) . '.gif', ObjectionTestMessage::$$name
+      );
+      TableHTML::OutputTdFooter();
+      TableHTML::OutputTrFooter();
+    }
+    TableHTML::OutputFooter(true);
+  }
+
+  //画像取得
+  private static function GetImage($name) {
+    switch ($name) {
+    case 'objection_male':
+    case 'objection_female':
+      return $name;
+
+    default:
+      return 'objection';
+    }
+  }
+
+  //フォームタグ
+  private static function GetForm() {
+    return <<<EOF
+<form method="post" action="%s">
+<input type="hidden" name="execute" value="%s">
+<input type="hidden" name="%s" value="%s">
+<input type="image" name="objection_image" src="%s" border="0"> %s
+</form>
+EOF;
+  }
+}
