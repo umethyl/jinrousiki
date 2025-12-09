@@ -10,16 +10,18 @@ final class SetupDB {
     }
   }
 
-  //権限設定
-  public static function Grant($name) {
-    DB::Prepare(sprintf('GRANT ALL ON %s.* TO %s', $name, DatabaseConfig::USER));
-    return DB::FetchBool(true);
+  //データベース作成
+  public static function CreateDatabase(string $name) {
+    $query = 'CREATE DATABASE %s DEFAULT CHARSET %s';
+    DB::Prepare(sprintf($query, $name, DatabaseConfig::ENCODE));
+    return DB::FetchBool();
   }
 
-  //データベース作成
-  public static function CreateDatabase($name) {
-    DB::Prepare(sprintf('CREATE DATABASE %s DEFAULT CHARSET utf8', $name));
-    return DB::FetchBool();
+  //権限設定
+  public static function Grant(string $name) {
+    $query = 'GRANT ALL ON %s.* TO %s';
+    DB::Prepare(sprintf($query, $name, DatabaseConfig::USER));
+    return DB::FetchBool(true);
   }
 
   //テーブル一覧取得
@@ -29,45 +31,54 @@ final class SetupDB {
   }
 
   //テーブル作成
-  public static function CreateTable($table) {
-    DB::Prepare(sprintf('CREATE TABLE %s(%s) ENGINE = InnoDB', $table, self::GetSchema($table)));
+  public static function CreateTable(string $table) {
+    $query = 'CREATE TABLE %s(%s) ENGINE = InnoDB';
+    DB::Prepare(sprintf($query, $table, self::GetSchema($table)));
     return DB::FetchBool();
   }
 
   //カラム一覧取得
-  public static function ShowColumn($table) {
+  public static function ShowColumn(string $table) {
     DB::Prepare('SHOW COLUMNS FROM ' . $table);
     return DB::FetchColumn();
   }
 
+  //テーブル文字コード変更
+  public static function ChangeEncode(string $table, string $encode) {
+    $query = 'ALTER TABLE %s CONVERT TO CHARACTER SET %s COLLATE %s_general_ci';
+    DB::Prepare(sprintf($query, $table, $encode, $encode));
+    return DB::FetchBool();
+  }
+
   //型変更
-  public static function ChangeColumn($table, $column) {
-    $schema = self::GetColumn($table, $column);
-    DB::Prepare(sprintf('ALTER TABLE %s CHANGE %s %s', $table, $column, $schema));
+  public static function ChangeColumn(string $table, string $column) {
+    $query = 'ALTER TABLE %s CHANGE %s %s';
+    DB::Prepare(sprintf($query, $table, $column, self::GetColumn($table, $column)));
     return DB::FetchBool();
   }
 
   //インデックス再生成
-  public static function RegenerateIndex($table, $index, $value) {
+  public static function RegenerateIndex(string $table, string $index, string $value) {
     $query = 'ALTER TABLE %s DROP INDEX %s, ADD INDEX %s (%s)';
     DB::Prepare(sprintf($query, $table, $index, $index, $value));
     return DB::FetchBool();
   }
 
   //テーブル削除
-  public static function DropTable($table) {
-    DB::Prepare(sprintf('DROP TABLE %s', $table));
+  public static function DropTable(string $table) {
+    DB::Prepare('DROP TABLE ' . $table);
     return DB::FetchBool();
   }
 
   //カラム削除
-  public static function DropColumn($table, $column) {
-    DB::Prepare(sprintf('ALTER TABLE %s DROP %s', $table, $column));
+  public static function DropColumn(string $table, string $column) {
+    $query = 'ALTER TABLE %s DROP %s';
+    DB::Prepare(sprintf($query, $table, $column));
     return DB::FetchBool();
   }
 
   //スキーマ取得
-  private static function GetSchema($table) {
+  private static function GetSchema(string $table) {
     switch ($table) {
     case 'room':
       return <<<EOF
@@ -289,7 +300,7 @@ EOF;
   }
 
   //型取得 (変更用)
-  private static function GetColumn($table, $column) {
+  private static function GetColumn(string $table, string $column) {
     switch ($table) {
     case 'room':
       switch ($column) {

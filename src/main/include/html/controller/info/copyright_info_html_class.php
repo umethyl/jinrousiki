@@ -50,7 +50,7 @@ EOF;
 <h2>%s</h2>
 <ul>
 <li>PHP Ver. %s</li>
-<li>%s %s (Rev. %d)</li>
+<li>%s %s (Rev. %s)</li>
 <li>LastUpdate: %s</li>
 </ul>
 EOF;

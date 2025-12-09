@@ -9,8 +9,9 @@ class SetupMessage {
   const CREATE_DB = 'データベース作成';
 
   /* テーブル */
-  const CREATE_TABLE = 'テーブル作成';
-  const DROP_TABLE   = 'テーブル削除';
+  const CREATE_TABLE  = 'テーブル作成';
+  const DROP_TABLE    = 'テーブル削除';
+  const CHANGE_ENCODE = '文字コード変更: ';
 
   /* インデックス */
   const CREATE_INDEX     = 'インデックス生成';

@@ -1,5 +1,5 @@
 <?php
-class ScriptInfo {
+final class ScriptInfo {
   //パッケージのバージョン
   const VERSION = 'Ver. 5.2.0 α1';
 
@@ -7,7 +7,7 @@ class ScriptInfo {
   const LAST_UPDATE = '2025/12/02 (Tue) 23:15';
 
   //パッケージ化した時の Revision
-  const REVISION = 2753;
+  const REVISION = '#115';
 
   //パッケージ名
   const PACKAGE = '<a href="https://github.com/umethyl/jinrousiki">人狼式</a>';
