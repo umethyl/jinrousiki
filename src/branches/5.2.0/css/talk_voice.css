@@ -1,0 +1,21 @@
+@charset "utf-8";
+/* 声の大きさ */
+.normal { /* 通常の発言 */
+  font-size: 12pt;
+}
+.strong {  /* 大声 */
+  /* 赤文字 */
+  /*
+  color: #D70035;
+  */
+  font-size: 20pt;
+  font-weight: bold;
+}
+.weak { /* 小声 */
+  /* 青文字 */
+  /*
+  color: #1E90FF;
+  */
+  font-size: 8pt;
+  font-weight: lighter;
+}

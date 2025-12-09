@@ -1,0 +1,54 @@
+<?php
+/*
+  ◆墓荒らし (grave_mad)
+  ○仕様
+  ・死者妨害対象者：憑依能力者以外
+  ・死者妨害：死の宣告 (蘇生実行者/70%)
+*/
+class Role_grave_mad extends Role {
+  public $action     = VoteAction::GRAVE;
+  public $not_action = VoteAction::NOT_GRAVE;
+
+  protected function GetActionDate() {
+    return RoleActionDate::AFTER;
+  }
+
+  protected function IsAddVote() {
+    return DB::$ROOM->IsOption('not_open_cast') || DB::$ROOM->IsOption('auto_open_cast');
+  }
+
+  public function OutputAction() {
+    $str = RoleAbilityMessage::GRAVE;
+    RoleHTML::OutputVoteNight(VoteCSS::WOLF, $str, $this->action, $this->not_action);
+  }
+
+  protected function GetDisabledAddVoteNightMessage() {
+    return VoteRoleMessage::OPEN_CAST;
+  }
+
+  protected function FixLiveVoteNightIconPath() {
+    return true;
+  }
+
+  protected function IsVoteNightCheckboxLive($live) {
+    return false === $live;
+  }
+
+  protected function DisableVoteNightCheckboxDummyBoy() {
+    return true;
+  }
+
+  //死者妨害対象者セット
+  public function SetGrave(User $user) {
+    if (false === RoleUser::IsPossessed($user)) {
+      $this->AddStack($user->id, RoleVoteTarget::GRAVE);
+    }
+  }
+
+  //死者妨害
+  public function Grave(User $user) {
+    if (false === RoleUser::Avoid($user) && Lottery::Percent(70)) {
+      $user->AddDoom(2);
+    }
+  }
+}
