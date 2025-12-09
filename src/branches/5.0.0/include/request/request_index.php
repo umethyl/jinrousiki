@@ -6,10 +6,10 @@
 */
 class Request_request_index extends Request {
   public $room_no;
-  protected $id;
-  protected $create_room;
-  protected $change_room;
-  protected $describe_room;
+  public $id;
+  public $create_room;
+  public $change_room;
+  public $describe_room;
 
   public function __construct() {
     $this->ParseGetInt('id');
