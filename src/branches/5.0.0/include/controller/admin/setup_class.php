@@ -162,7 +162,7 @@ final class JinrouAdminSetupController extends JinrouAdminController {
   private static function Update($table) {
     switch ($table) {
     case 'room':
-      if (false === self::IsRevision(863)) {
+      if (self::IsRevision(863)) {
 	$stack = [
 	  'room_no', 'name', 'comment', 'max_user', 'game_option', 'option_role', 'date',
 	  'vote_count', 'revote_count', 'winner', 'establisher_ip'
