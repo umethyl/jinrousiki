@@ -1,6 +1,6 @@
 <?php
 //アイコン登録設定
-class UserIconConfig {
+final class UserIconConfig {
   const DISABLE  = false; //アイコンのアップロードの停止設定 (true:停止する / false:しない)
   const LENGTH   = 30;    //アイコン名につけられる文字数(半角)
   const FILE     = 15360; //アップロードできるアイコンファイルの最大容量(単位：バイト)

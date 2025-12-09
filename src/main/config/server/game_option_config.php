@@ -1,6 +1,6 @@
 <?php
 //-- ゲームオプション設定 --//
-class GameOptionConfig {
+final class GameOptionConfig {
   //-- 基本設定 --//
   public static $wish_role_enable  = true; //役割希望制
   public static $default_wish_role = false;

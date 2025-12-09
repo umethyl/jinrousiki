@@ -428,7 +428,7 @@ final class LoaderData {
     'StatisticsData'			=> 'statistics_data_class',
     //admin
     'JinrouAdmin'		=> 'admin_class',
-    'JinrouTestController'	=> 'admin_class',
+    'JinrouSetupManager'	=> 'setup_manager_class',
     'JinrouHTMLLogGenerator'	=> 'html_log_generator_class',
     //system
     'JinrouController'		=> 'controller_class',
@@ -440,6 +440,7 @@ final class LoaderData {
     'PageLinkBuilder'		=> 'page_link_class',
     'ExternalLinkBuilder'	=> 'external_link_class',
     'JinrouCacheManager'	=> 'cache_class',
+    'JinrouVersion'		=> 'version_class',
     //database
     'DB'		=> 'db_class',
     'Query'		=> 'db_class',
@@ -685,6 +686,7 @@ final class LoaderData {
     'trip_test_message'		=> 'message/controller/test',
     //admin
     'admin_class'		=> 'admin',
+    'setup_manager_class'	=> 'admin',
     'html_log_generator_class'	=> 'admin',
     //system
     'controller_class'		=> 'system',
@@ -696,6 +698,7 @@ final class LoaderData {
     'page_link_class'		=> 'system',
     'external_link_class'	=> 'system',
     'cache_class'		=> 'system',
+    'version_class'		=> 'system',
     //data
     'room_data_class'		=> 'data',
     'user_data_class'		=> 'data',

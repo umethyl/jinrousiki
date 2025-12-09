@@ -1,6 +1,6 @@
 <?php
 //-- TOP ページ設定 --//
-class TopPageConfig {
+final class TopPageConfig {
   /* 全体設定 */
   const DISABLE_SHARED_SERVER = true; //関連サーバ <表示を [true:無効 / false:有効] にする>
 

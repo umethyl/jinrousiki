@@ -1,13 +1,13 @@
 <?php
 //-- データベース設定 --//
-class DatabaseConfig {
+final class DatabaseConfig {
   //データベースサーバのホスト名 hostname:port
   //ポート番号を省略するとデフォルトポートがセットされます。(MySQL:3306)
   const HOST     = 'localhost';
   const NAME     = 'jinrou';	//データベース名
   const USER     = 'xxxx';	//ユーザ名
   const PASSWORD = 'xxxxxxxx';	//パスワード
-  const ENCODE   = 'utf8';	//文字コード
+  const ENCODE   = 'utf8mb4';	//文字コード
   const DISABLE  = false;	// true にすると DB 接続をしません
 
   //サブデータベースのリスト (サーバによってはサブのデータベースを作れないので注意)

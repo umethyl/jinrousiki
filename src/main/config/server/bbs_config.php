@@ -1,6 +1,6 @@
 <?php
 //-- 告知スレッド表示設定 --//
-class BBSConfig {
+final class BBSConfig {
   const DISABLE  = true; //表示無効設定 (true:無効にする / false:しない)
   const TITLE    = '告知スレッド情報'; //表示名
   const RAW_URL  = 'http://jbbs.livedoor.jp/bbs/rawmode.cgi'; //データ取得用 URL

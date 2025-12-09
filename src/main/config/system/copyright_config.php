@@ -1,6 +1,6 @@
 <?php
 //素材情報設定
-class CopyrightConfig {
+final class CopyrightConfig {
   //システム標準情報
   public static $list = [
     'システム' => [

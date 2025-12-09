@@ -1,6 +1,6 @@
 <?php
 //-- サーバ設定 --//
-class ServerConfig {
+final class ServerConfig {
   /* サイト設定 */
   const SITE_ROOT = 'http://localhost/jinrou/';		//サーバのurl
   const TITLE     = '汝は人狼なりや？';		//タイトル

@@ -1,6 +1,6 @@
 <?php
 //-- Twitter 投稿設定 --//
-class TwitterConfig {
+final class TwitterConfig {
   const DISABLE = true; //Twitter 投稿停止設定 (true:停止する / false:しない)
   const SERVER = 'localhost'; //サーバ名
   const HASH   = ''; //ハッシュタグ (任意、「#」は不要)

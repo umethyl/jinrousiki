@@ -1,6 +1,6 @@
 <?php
 //-- キャッシュ設定 --//
-class CacheConfig {
+final class CacheConfig {
   /* 全体設定 */
   const ENABLE = false; //有効設定 (true:有効にする / false:しない)
   const EXCEED = 172800; //キャッシュデータ保持時間 (秒)

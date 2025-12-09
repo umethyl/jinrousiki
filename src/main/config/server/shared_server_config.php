@@ -1,6 +1,6 @@
 <?php
 //-- 村情報共有サーバの設定 --//
-class SharedServerConfig {
+final class SharedServerConfig {
   const DISABLE = false; //無効設定 <表示を [true:無効 / false:有効] にする>
 
   //表示する他のサーバのリスト
