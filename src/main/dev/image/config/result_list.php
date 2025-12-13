@@ -138,6 +138,7 @@ class ResultList extends RoleMessageList {
   public $result_barrier_wizard = ['message' => "さんは|結界師|でした", 'type' => 'result_wizard'];
   public $result_philosophy_wizard = ['message' => "さんは|賢者|でした", 'type' => 'result_wizard'];
   public $result_astray_wizard = ['message' => "さんは|左道使い|でした", 'type' => 'result_wizard'];
+  public $result_servant = ['message' => "さんは|従者|でした", 'delimiter' => ['|' => 'servant']];
   public $result_doll = ['message' => "さんは|上海人形|でした", 'delimiter' => ['|' => 'doll']];
   public $result_friend_doll = ['message' => "さんは|仏蘭西人形|でした", 'type' => 'result_doll'];
   public $result_phantom_doll = ['message' => "さんは|倫敦人形|でした", 'type' => 'result_doll'];

@@ -12,6 +12,8 @@ class RoleAbilityMessage {
   const ASSASSIN      = '暗殺する人を選択してください';		//暗殺者
   const SCAN          = '心を読む人を選択してください';		//さとり
   const WIZARD        = '魔法をかける人を選択してください';	//魔法使い
+  const SERVANT       = '主にする人を選択してください';		//従者 (主選択)
+  const SERVANT_END   = '主を裏切るか選択してください';		//従者 (裏切り)
   const ESCAPER       = '逃亡する先を選択してください';		//逃亡者
   const WOLF          = '喰い殺す人を選択してください';		//人狼
   const JAMMER        = '占いを妨害する人を選択してください';	//月兎

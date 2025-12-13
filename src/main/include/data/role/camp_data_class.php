@@ -35,6 +35,7 @@ final class CampGroup extends Camp {
   const JEALOUSY	= 'jealousy';
   const BROWNIE		= 'brownie';
   const WIZARD		= 'wizard';
+  const SERVANT		= 'servant';
   const DOLL		= 'doll';
   const ESCAPER		= 'escaper';
   const MAD		= 'mad';

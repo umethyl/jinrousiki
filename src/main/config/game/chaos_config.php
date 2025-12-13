@@ -1746,6 +1746,8 @@ final class ChaosConfig {
     'j5' => ['fix' => ['spark_wizard' => 1, 'tailtip_depraver' => 1]],
     'j6' => ['fix' => ['follow_chiroptera' => 1]],
     'j7' => ['fix' => ['fetish_cat' => 1, 'rioter_mad' => 1]],
+    //TypeK: Ver. 5.2.0
+    'k1' => ['fix' => ['servant' => 1]],
   ];
 
   //-- 博物館モード(倍率型) --//
@@ -1900,6 +1902,8 @@ final class ChaosConfig {
     'j5' => ['boost' => ['spark_wizard', 'tailtip_depraver']],
     'j6' => ['boost' => ['follow_chiroptera']],
     'j7' => ['boost' => ['fetish_cat', 'rioter_mad']],
+    //TypeK: Ver. 5.2.0
+    'k1' => ['boost' => ['servant']],
   ];
 
   //サブ役職制限：EASYモード
