@@ -1,7 +1,7 @@
 <?php
 class ScriptInfo {
   //パッケージのバージョン
-  const VERSION = 'Ver. 5.1.1';
+  const VERSION = 'Ver. 5.1.2';
 
   //パッケージの最終更新日
   const LAST_UPDATE = '2025/12/13 (Sat) 03:42';
