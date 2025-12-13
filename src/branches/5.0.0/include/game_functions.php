@@ -394,7 +394,7 @@ class Winner {
 	break;
 
       case Camp::VAMPIRE:
-	$win_flag = $winner == $camp && (DB::$SELF->IsRoleGroup('mania') || $user->IsLive());
+	$win_flag = $winner == $camp && ($user->IsRoleGroup('mania') || $user->IsLive());
 	break;
 
       case Camp::CHIROPTERA:
