@@ -35,6 +35,7 @@ final class RoleGroupSubData {
     'guard'        => ['protected', 'penetration'],
     'poison'       => ['aspirator'],
     'step'         => ['levitation'],
+    'servant'      => ['serve_support'],
     'human'        => ['lost_ability', 'muster_ability'],
     'wolf'         => ['possessed_target', 'possessed', 'changed_disguise', 'changed_therian'],
     'fox'          => ['changed_vindictive', 'changed_tailtip'],

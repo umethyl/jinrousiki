@@ -42,8 +42,8 @@ class Role_spy_mad extends Role_fanatic_mad {
     return $this->IsActor($user);
   }
 
-  public function ValidateVoteNightTargetFilter(User $user) {
-    if (false === $this->IsActor($user)) {
+  protected function ValidateVoteNightTargetFilter(User $user) {
+    if (true !== $this->IsActor($user)) {
       throw new UnexpectedValueException(VoteRoleMessage::TARGET_INCLUDE_MYSELF);
     }
   }

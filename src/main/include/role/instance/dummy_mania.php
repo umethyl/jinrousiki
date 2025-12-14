@@ -31,6 +31,7 @@ class Role_dummy_mania extends Role_soul_mania {
       CampGroup::JEALOUSY	=> 'critical_jealousy',
       CampGroup::BROWNIE	=> 'maple_brownie',
       CampGroup::WIZARD		=> 'astray_wizard',
+      CampGroup::SERVANT	=> 'servant',
       CampGroup::DOLL		=> 'silver_doll',
       CampGroup::ESCAPER	=> 'stargazer_escaper',
       CampGroup::WOLF		=> 'emperor_wolf',

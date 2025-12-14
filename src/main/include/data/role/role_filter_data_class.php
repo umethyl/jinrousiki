@@ -26,9 +26,10 @@ final class RoleFilterData {
     'fake_lovers', 'possessed_exchange', 'letter_exchange', 'joker', 'rival', 'enemy', 'supported',
     'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
     'bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status', 'gender_status',
-    'protected', 'penetration', 'aspirator', 'levitation', 'lost_ability', 'muster_ability',
-    'changed_disguise', 'changed_therian', 'changed_vindictive', 'changed_tailtip', 'copied',
-    'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
+    'protected', 'penetration', 'aspirator', 'levitation', 'serve_support',
+    'lost_ability', 'muster_ability',
+    'changed_disguise', 'changed_therian', 'changed_vindictive', 'changed_tailtip',
+    'copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
   ];
 
   //発言表示
@@ -114,10 +115,10 @@ final class RoleFilterData {
   //処刑得票 (メイン)
   public static $vote_poll_main = ['critical_common', 'critical_patron'];
 
-  //処刑得票 (サブ)
+  //処刑得票 (サブ / 順番依存あり)
   public static $vote_poll_sub = [
     'upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck', 'random_luck',
-    'occupied_luck', 'wirepuller_luck', 'vega_lovers'
+    'occupied_luck', 'wirepuller_luck', 'serve_support', 'vega_lovers'
   ];
 
   //処刑投票魔法
@@ -373,6 +374,7 @@ final class RoleFilterData {
     CampGroup::JEALOUSY		=> 'flower_jealousy',
     CampGroup::BROWNIE		=> 'barrier_brownie',
     CampGroup::WIZARD		=> 'soul_wizard',
+    CampGroup::SERVANT		=> 'servant',
     CampGroup::DOLL		=> 'serve_doll_master',
     CampGroup::ESCAPER		=> 'divine_escaper',
     CampGroup::WOLF		=> 'sirius_wolf',

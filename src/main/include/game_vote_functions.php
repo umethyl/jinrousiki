@@ -806,6 +806,9 @@ final class VoteNight extends VoteBase {
       //-- コピーレイヤー --//
       self::FilterCopy();
 
+      //-- 従者(主選択)レイヤー --//
+      self::FilterServantSelect();
+
       //-- 帰還レイヤー --//
       self::FilterPriestReturn();
 
@@ -820,6 +823,9 @@ final class VoteNight extends VoteBase {
     } else {
       //-- 尾行レイヤー --//
       self::FilterReport();
+
+      //-- 従者(裏切り)レイヤー --//
+      self::FilterServantEnd();
     }
 
     //-- 反魂レイヤー --//
@@ -1371,6 +1377,18 @@ final class VoteNight extends VoteBase {
   private static function FilterCopy() {
     $vote_data = RoleManager::GetVoteData();
     RoleVote::FilterNight($vote_data[VoteAction::MANIA], 'Copy');
+  }
+
+  //従者の主選択処理
+  private static function FilterServantSelect() {
+    $vote_data = RoleManager::GetVoteData();
+    RoleVote::FilterNight($vote_data[VoteAction::SERVE], 'ServantSelect');
+  }
+
+  //従者の主裏切り処理
+  private static function FilterServantEnd() {
+    $vote_data = RoleManager::GetVoteData();
+    RoleVote::FilterNight($vote_data[VoteAction::SERVE_END], 'ServantEnd');
   }
 
   //天人の帰還処理

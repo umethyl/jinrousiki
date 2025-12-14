@@ -17,6 +17,7 @@ class WishRoleList {
   public $role_jealousy         = ['message' => '←橋姫'];
   public $role_brownie          = ['message' => '←座敷童子'];
   public $role_wizard           = ['message' => '←魔法使い'];
+  public $role_servant          = ['message' => '←従者'];
   public $role_doll             = ['message' => '←上海人形'];
   public $role_escaper          = ['message' => '←逃亡者'];
   public $role_wolf             = ['message' => '←人狼'];

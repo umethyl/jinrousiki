@@ -21,6 +21,7 @@ final class VoteActionGroup {
 
   //夜投票初期化 / 一日目
   public static $init_first = [
+    VoteAction::SERVE,
     VoteAction::MANIA,
     VoteAction::DUELIST
   ];
@@ -39,6 +40,7 @@ final class VoteActionGroup {
     VoteAction::PLURAL_WIZARD,
     VoteAction::SPARK_WIZARD,
     VoteAction::SPREAD_WIZARD,
+    VoteAction::SERVE_END,
     VoteAction::ESCAPE,
     VoteAction::DREAM,
     VoteAction::TRAP,

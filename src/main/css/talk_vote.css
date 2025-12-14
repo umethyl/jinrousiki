@@ -10,6 +10,7 @@
 .assassin-do      { background-color: #904040; } /* 暗殺者 */
 .mind-scanner-do  { background-color: #A0A000; } /* さとり */
 .wizard-do        { background-color: #BB88CC; } /* 魔法使い */
+.servant-do       { background-color: #609060; } /* 従者 */
 .escape-do        { background-color: #606090; } /* 逃亡者 */
 .wolf-eat         { background-color: #CC3300; } /* 人狼 */
 .step-do          { background-color: #669933; } /* 家鳴 */

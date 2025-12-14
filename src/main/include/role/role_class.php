@@ -119,6 +119,9 @@ abstract class Role extends stdClass {
     switch ($name) {
     case 'action':
     case 'not_action':
+      $this->$name = $this->GetAction($name);
+      return;
+
     case 'add_action':
     case 'submit':
     case 'not_submit':
@@ -316,6 +319,7 @@ abstract class Role extends stdClass {
       return $this->CallVoteMix(__FUNCTION__);
     }
 
+    $this->SetAction();
     return (null !== $this->action) && $this->IsVoteDate() && $this->IsAddVote();
   }
 
@@ -332,6 +336,14 @@ abstract class Role extends stdClass {
       return true;
     }
   }
+
+  //投票能力取得
+  protected function GetAction(string $name) {
+    return $this->$name ?? null;
+  }
+
+  //投票能力セット
+  protected function SetAction() {}
 
   //投票可能日タイプ取得
   protected function GetActionDate() {
@@ -561,7 +573,7 @@ abstract class Role extends stdClass {
       return $this->CallVoteMix(__FUNCTION__);
     }
 
-    if (false === $this->IsVote()) {
+    if (false === $this->IsVote() || false === $this->MatchVote()) {
       VoteHTML::OutputResult($this->GetDisabledVoteNightMessage());
     }
 
@@ -583,6 +595,8 @@ abstract class Role extends stdClass {
   final protected function GetDisabledVoteNightMessage() {
     if (null === $this->action) {
       return VoteRoleMessage::NO_ACTION;
+    } elseif (false === $this->MatchVote()) {
+      return VoteMessage::INVALID_COMMAND;
     } elseif (false === $this->IsVoteDate()) {
       switch ($this->GetActionDate()) {
       case RoleActionDate::FIRST:
@@ -599,6 +613,11 @@ abstract class Role extends stdClass {
     } else { //ここに来たらロジックエラー
       return VoteHTML::OutputError(VoteMessage::INVALID_COMMAND);
     }
+  }
+
+  //夜投票整合判定
+  protected function MatchVote() {
+    return true;
   }
 
   //夜投票無効メッセージ取得 (追加判定)
