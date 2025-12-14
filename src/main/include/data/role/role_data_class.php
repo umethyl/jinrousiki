@@ -144,6 +144,7 @@ final class RoleData {
     'astray_wizard'		=> '左道使い',
     'servant'			=> '従者',
     'vassal_servant'		=> '家臣',
+    'sweet_servant'		=> '仲人',
     'doll'			=> '上海人形',
     'friend_doll'		=> '仏蘭西人形',
     'phantom_doll'		=> '倫敦人形',

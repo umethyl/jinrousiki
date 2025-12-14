@@ -143,6 +143,7 @@ final class RoleShortData {
     'astray_wizard'		=> '左',
     'servant'			=> '従',
     'vassal_servant'		=> '臣',
+    'sweet_servant'		=> '仲',
     'doll'			=> '海',
     'friend_doll'		=> '仏',
     'phantom_doll'		=> '倫',

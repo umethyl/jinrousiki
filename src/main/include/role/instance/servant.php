@@ -5,8 +5,10 @@
   ・投票コマンド：初日：主選択 / 二日目以降：主裏切り
   ・仲間表示：自分が選んだ主
   ・主支援役職：従者支援
-  ・投票数：変化なし
-  ・得票数：支援：-1 / 裏切り：+1
+  ・主裏切り：従者支援変化
+  ・主裏切り追加処理：なし
+  ・従者支援(投票数)：変化なし
+  ・従者支援(得票数)：支援：-1 / 裏切り：+1
 */
 class Role_servant extends RoleAbility_servant {
   protected function GetServantTargetRole() {
@@ -168,9 +170,14 @@ class RoleAbility_servant extends Role {
   //主裏切り処理
   final public function ServantEnd(User $user) {
     //支援終了 (能力喪失)
-    $actor = $this->GetActor();
-    $actor->LostAbility();
+    $this->GetActor()->LostAbility();
+
+    //追加処理
+    $this->ServantEndAction($user);
   }
+
+  //主裏切り追加処理
+  protected function ServantEndAction(User $user) {}
 
   //-- 従者支援用 --//
   protected function GetVoteDoCount() {

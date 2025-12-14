@@ -100,8 +100,8 @@ RQ::GetTest()->test_users[32]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[33]->role = 'servant[32]';
 RQ::GetTest()->test_users[33]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[34]->role = 'spark_wizard serve_support[35]';
+RQ::GetTest()->test_users[34]->role = 'spark_wizard sweet_ringing';
 RQ::GetTest()->test_users[34]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[35]->role = 'vassal_servant[34]';
+RQ::GetTest()->test_users[35]->role = 'sweet_servant[34]';
 RQ::GetTest()->test_users[35]->live = UserLive::LIVE;
