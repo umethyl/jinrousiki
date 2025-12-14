@@ -142,6 +142,7 @@ final class RoleShortData {
     'philosophy_wizard'		=> '賢',
     'astray_wizard'		=> '左',
     'servant'			=> '従',
+    'vassal_servant'		=> '臣',
     'doll'			=> '海',
     'friend_doll'		=> '仏',
     'phantom_doll'		=> '倫',

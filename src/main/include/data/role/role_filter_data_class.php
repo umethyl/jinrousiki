@@ -106,10 +106,10 @@ final class RoleFilterData {
     'cowboy_duelist'
   ];
 
-  //処刑投票 (サブ)
+  //処刑投票 (サブ / 順番依存あり)
   public static $vote_do_sub = [
     'authority', 'reduce_voter', 'upper_voter', 'downer_voter', 'critical_voter', 'random_voter',
-    'day_voter', 'wirepuller_luck', 'watcher', 'panelist', 'vega_lovers'
+    'day_voter', 'wirepuller_luck', 'serve_support', 'watcher', 'panelist', 'vega_lovers'
   ];
 
   //処刑得票 (メイン)

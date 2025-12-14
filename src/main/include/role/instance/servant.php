@@ -5,6 +5,7 @@
   ・投票コマンド：初日：主選択 / 二日目以降：主裏切り
   ・仲間表示：自分が選んだ主
   ・主支援役職：従者支援
+  ・投票数：変化なし
   ・得票数：支援：-1 / 裏切り：+1
 */
 class Role_servant extends RoleAbility_servant {
@@ -172,6 +173,10 @@ class RoleAbility_servant extends Role {
   }
 
   //-- 従者支援用 --//
+  protected function GetVoteDoCount() {
+    return 0;
+  }
+
   protected function GetVotePollCount() {
     return 0;
   }
