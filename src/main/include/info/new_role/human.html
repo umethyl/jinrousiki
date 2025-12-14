@@ -4086,6 +4086,7 @@ MVP の賞品としてプレゼントしたものです。
 <p><a href="#servant_rule">基本ルール</a></p>
 <p>
 <a href="#servant">従者</a>
+<a href="#vassal_servant">家臣</a>
 </p>
 
 <h3 id="servant_rule">基本ルール [従者]</h3>
@@ -4157,7 +4158,7 @@ MVP の賞品としてプレゼントしたものです。
 </ol>
 <h4>関連役職</h4>
 <pre>
-<a href="ability.php#luck">得票数変化能力者</a>
+<a href="sub_role.php#star">人気者</a>・<a href="sub_role.php#disfavor">不人気</a>・<a href="sub_role.php#serve_support">従者支援</a>・<a href="ability.php#luck">得票数変化能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -4165,6 +4166,36 @@ MVP の賞品としてプレゼントしたものです。
 <a href="duelist.php#avenger_group">復讐者系</a>と<a href="duelist.php#patron_group">後援者系</a>を併せ持つような能力ですが、勝利条件の枷とはなっていません。
 自らが選んだ「主」は果たして味方(村人陣営)なのか、
 敵対陣営と見限って裏切りをするか否かの選択に迫られることになります。
+</pre>
+
+<h3 id="vassal_servant">家臣 (占い結果：村人 / 霊能結果：村人) [Ver. 5.2.0 α2]</h3>
+<h4>[従者能力] 主選択：<a href="sub_role.php#serve_support">従者支援</a>付与 / 支援：投票数 +1 / 裏切り： 投票数 -1</h4>
+<pre>
+投票数の支援能力を持つ従者。
+</pre>
+<h4>支援能力</h4>
+<ol>
+<li><a href="sub_role.php#serve_support">従者支援</a>を付与する。</li>
+<li>主の投票数が +1 される。</li>
+<li>支援している<a href="#vassal_servant">家臣</a>が死亡している場合は無効。</li>
+<li>他の<a href="#vassal_servant">家臣</a>の支援/裏切り効果と重複する。</li>
+</ol>
+<h4>裏切り能力</h4>
+<ol>
+<li>付与している<a href="sub_role.php#serve_support">従者支援</a>の効果が変化する。</li>
+<li>主の得票数が -1 される。</li>
+<li>支援している<a href="#vassal_servant">家臣</a>が死亡している場合は無効。</li>
+<li>他の<a href="#vassal_servant">家臣</a>の支援/裏切り効果と重複する。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="sub_role.php#authority">権力者</a>・<a href="sub_role.php#reduce_voter">無精者</a>・<a href="sub_role.php#serve_support">従者支援</a>・<a href="ability.php#authority">投票数変化能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#servant">従者</a>の投票数支援バージョンです。
+主に「権力」を与え、「下剋上」でその「権力」を剥奪する、というデザインです。
+<a href="wolf.php#elder_wolf">古狼</a>が仲間と共謀して騙ることも可能です。
 </pre>
 
 

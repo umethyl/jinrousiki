@@ -16,10 +16,11 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'result_servant';
+//$role = 'result_vassal_servant';
 //$role = 'servant_target';
 //$role = 'prediction_weather_no_escape';
-$role = 'servant';
+//$role = 'servant';
+$role = 'vassal_servant';
 
 $calib_list = [0,0,0,0];
 //$calib_list = [0.5,0,0,0]; //wolf, vampire

@@ -143,6 +143,7 @@ final class RoleData {
     'barrier_wizard'		=> '結界師',
     'astray_wizard'		=> '左道使い',
     'servant'			=> '従者',
+    'vassal_servant'		=> '家臣',
     'doll'			=> '上海人形',
     'friend_doll'		=> '仏蘭西人形',
     'phantom_doll'		=> '倫敦人形',
