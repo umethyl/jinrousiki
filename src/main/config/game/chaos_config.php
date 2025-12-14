@@ -386,7 +386,9 @@ final class ChaosConfig {
     'philosophy_wizard'     =>  10,
     'barrier_wizard'        =>  10,
     'astray_wizard'         =>  12,
-    'servant'               => 120,
+    'servant'               =>  60,
+    'vassal_servant'        =>  30,
+    'sweet_servant'         =>  30,
     'doll'                  =>  50,
     'friend_doll'           =>  30,
     'phantom_doll'          =>  20,
@@ -1076,7 +1078,7 @@ final class ChaosConfig {
   */
   public static $boost_rate_fix_rate = 20;
   public static $boost_rate_list = [
-    'a' => ['fix' => ['servant' => 10]],
+    'a' => ['fix' => ['servant' => 10, 'vassal_servant' => 10, 'sweet_servant' => 10]],
     'b' => ['zero' => ['elder',
 		       'scripter',
 		       'eccentricer',
@@ -1749,7 +1751,8 @@ final class ChaosConfig {
     'j6' => ['fix' => ['follow_chiroptera' => 1]],
     'j7' => ['fix' => ['fetish_cat' => 1, 'rioter_mad' => 1]],
     //TypeK: Ver. 5.2.0
-    'k1' => ['fix' => ['servant' => 1]],
+    'k1' => ['pick' => [['list' => ['servant', 'vassal_servant', 'sweet_servant'],
+			 'count' => 2]]],
   ];
 
   //-- 博物館モード(倍率型) --//
@@ -1905,7 +1908,7 @@ final class ChaosConfig {
     'j6' => ['boost' => ['follow_chiroptera']],
     'j7' => ['boost' => ['fetish_cat', 'rioter_mad']],
     //TypeK: Ver. 5.2.0
-    'k1' => ['boost' => ['servant']],
+    'k1' => ['boost' => ['servant', 'vassal_servant', 'sweet_servant']],
   ];
 
   //サブ役職制限：EASYモード
