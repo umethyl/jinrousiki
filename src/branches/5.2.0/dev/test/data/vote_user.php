@@ -9,10 +9,10 @@ RQ::GetTest()->test_users[2]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[3]->role = 'possessed_wolf possessed_target[3-17]';
 RQ::GetTest()->test_users[3]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[4]->role = 'soul_mage lovers[16] challenge_lovers rebel critical_luck';
+RQ::GetTest()->test_users[4]->role = 'soul_mage lovers[16] challenge_lovers critical_luck';
 RQ::GetTest()->test_users[4]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[5]->role = 'cute_mage febris[6]';
+RQ::GetTest()->test_users[5]->role = 'cute_mage rebel febris[6]';
 RQ::GetTest()->test_users[5]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[6]->role = 'eclipse_medium possessed[4-15] frostbite[7]';
@@ -94,14 +94,14 @@ RQ::GetTest()->test_users[30]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[31]->role = 'necromancer';
 RQ::GetTest()->test_users[31]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[32]->role = 'psycho_necromancer';
+RQ::GetTest()->test_users[32]->role = 'psycho_necromancer serve_protect[33]';
 RQ::GetTest()->test_users[32]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[33]->role = 'assassin';
+RQ::GetTest()->test_users[33]->role = 'barrier_servant[32]';
 RQ::GetTest()->test_users[33]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[34]->role = 'spark_wizard';
+RQ::GetTest()->test_users[34]->role = 'spark_wizard sweet_ringing';
 RQ::GetTest()->test_users[34]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[35]->role = 'tailtip_depraver';
+RQ::GetTest()->test_users[35]->role = 'sweet_servant[34]';
 RQ::GetTest()->test_users[35]->live = UserLive::LIVE;

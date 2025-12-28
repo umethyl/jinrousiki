@@ -26,9 +26,10 @@ final class RoleFilterData {
     'fake_lovers', 'possessed_exchange', 'letter_exchange', 'joker', 'rival', 'enemy', 'supported',
     'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
     'bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status', 'gender_status',
-    'protected', 'penetration', 'aspirator', 'levitation', 'lost_ability', 'muster_ability',
-    'changed_disguise', 'changed_therian', 'changed_vindictive', 'changed_tailtip', 'copied',
-    'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
+    'protected', 'penetration', 'aspirator', 'levitation', 'serve_support',
+    'lost_ability', 'muster_ability',
+    'changed_disguise', 'changed_therian', 'changed_vindictive', 'changed_tailtip',
+    'copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
   ];
 
   //発言表示
@@ -105,19 +106,19 @@ final class RoleFilterData {
     'cowboy_duelist'
   ];
 
-  //処刑投票 (サブ)
+  //処刑投票 (サブ / 順番依存あり)
   public static $vote_do_sub = [
     'authority', 'reduce_voter', 'upper_voter', 'downer_voter', 'critical_voter', 'random_voter',
-    'day_voter', 'wirepuller_luck', 'watcher', 'panelist', 'vega_lovers'
+    'day_voter', 'wirepuller_luck', 'serve_support', 'watcher', 'panelist', 'vega_lovers'
   ];
 
   //処刑得票 (メイン)
   public static $vote_poll_main = ['critical_common', 'critical_patron'];
 
-  //処刑得票 (サブ)
+  //処刑得票 (サブ / 順番依存あり)
   public static $vote_poll_sub = [
     'upper_luck', 'downer_luck', 'star', 'disfavor', 'critical_luck', 'random_luck',
-    'occupied_luck', 'wirepuller_luck', 'vega_lovers'
+    'occupied_luck', 'wirepuller_luck', 'serve_support', 'vega_lovers'
   ];
 
   //処刑投票魔法
@@ -226,9 +227,9 @@ final class RoleFilterData {
 
   //人狼襲撃耐性 (順番依存あり)
   public static $wolf_eat_resist = [
-    'challenge_lovers', 'vega_lovers', 'protected', 'sacrifice_angel', 'doom_vampire',
-    'sacrifice_patron', 'sacrifice_mania', 'tough', 'fend_guard', 'awake_wizard',
-    'ascetic_assassin'
+    'challenge_lovers', 'vega_lovers', 'protected', 'serve_protect',
+    'sacrifice_angel', 'doom_vampire', 'sacrifice_patron', 'sacrifice_mania',
+    'tough', 'fend_guard', 'awake_wizard', 'ascetic_assassin'
   ];
 
   //人狼襲撃得票カウンター (+ 身代わり能力者)
@@ -373,6 +374,7 @@ final class RoleFilterData {
     CampGroup::JEALOUSY		=> 'flower_jealousy',
     CampGroup::BROWNIE		=> 'barrier_brownie',
     CampGroup::WIZARD		=> 'soul_wizard',
+    CampGroup::SERVANT		=> 'barrier_servant',
     CampGroup::DOLL		=> 'serve_doll_master',
     CampGroup::ESCAPER		=> 'divine_escaper',
     CampGroup::WOLF		=> 'sirius_wolf',

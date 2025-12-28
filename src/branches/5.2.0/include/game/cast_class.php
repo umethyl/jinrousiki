@@ -174,13 +174,14 @@ final class Cast extends StackStaticManager {
 
   //闇鍋カスタム設定取得
   public static function GetChaosCustomConfig(string $option) {
+    $name = $option . '_list';
     //管理者設定が存在するならマージする
-    if (is_array(ChaosCustomConfig::${$option . '_list'})) {
-      $custom = ChaosCustomConfig::${$option . '_list'};
+    if (property_exists('ChaosCustomConfig', $name) && is_array(ChaosCustomConfig::$$name)) {
+      $custom = ChaosCustomConfig::$$name;
     } else {
       $custom = [];
     }
-    $list = ChaosConfig::${$option . '_list'};
+    $list = ChaosConfig::$$name;
     return array_merge($custom, $list);
   }
 

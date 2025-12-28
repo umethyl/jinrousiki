@@ -121,6 +121,11 @@ final class TalkParser extends stdClass {
       $this->sentence .= VoteTalkMessage::${$this->action};
       return;
 
+    case VoteAction::NOT_SERVE_END:
+      $this->class     = VoteCSS::SERVANT;
+      $this->sentence .= VoteTalkMessage::${$this->action};
+      return;
+
     case VoteAction::NOT_STEP:
       $this->class     = VoteCSS::STEP;
       $this->sentence .= VoteTalkMessage::${$this->action};
@@ -163,6 +168,11 @@ final class TalkParser extends stdClass {
     case VoteAction::REVIVE:
       $action      = 'REVIVE_DO';
       $this->class = VoteCSS::REVIVE;
+      break;
+
+    case VoteAction::SERVE_END:
+      $action      = $this->action;
+      $this->class = VoteCSS::SERVANT;
       break;
 
     case VoteAction::STEP_ASSASSIN:

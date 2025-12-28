@@ -23,6 +23,7 @@ class DeadMessage {
   public static $assassin_killed    = 'は暗殺されたようです';				//暗殺
   public static $ogre_killed        = 'は鬼に攫われたようです';				//人攫い
   public static $tengu_killed       = 'は神隠しに遭ったようです';			//神隠し
+  public static $servant_killed     = 'は従者に裏切られたようです';			//従者裏切り
   public static $priest_returned    = 'は天に帰ったようです';				//天人帰還
   public static $revive_success     = 'は生き返りました';				//蘇生成功
   public static $revive_failed      = 'の蘇生に失敗したようです';			//蘇生失敗

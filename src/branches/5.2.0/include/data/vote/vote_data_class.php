@@ -19,6 +19,9 @@ final class VoteAction {
   const STEP_ASSASSIN		= 'STEP_ASSASSIN_DO';
   const SCAN			= 'MIND_SCANNER_DO';
   const STEP_SCAN		= 'STEP_SCANNER_DO';
+  const SERVE			= 'SERVANT_DO';
+  const SERVE_END		= 'SERVANT_END_DO';
+  const NOT_SERVE_END		= 'SERVANT_END_NOT_DO';
   const WIZARD			= 'WIZARD_DO';
   const PLURAL_WIZARD		= 'PLURAL_WIZARD_DO';
   const SPARK_WIZARD		= 'SPARK_WIZARD_DO';
@@ -96,6 +99,7 @@ final class VoteCSS {
   const ASSASSIN	= 'assassin-do';
   const SCAN		= 'mind-scanner-do';
   const WIZARD		= 'wizard-do';
+  const SERVANT		= 'servant-do';
   const ESCAPE		= 'escape-do';
   const WOLF		= 'wolf-eat';
   const STEP		= 'step-do';
