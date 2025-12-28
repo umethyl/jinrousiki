@@ -4,10 +4,10 @@ final class ScriptInfo {
   const VERSION = 'Ver. 5.2.0 α2';
 
   //パッケージの最終更新日
-  const LAST_UPDATE = '2025/12/10 (Wed) 04:17';
+  const LAST_UPDATE = '2025/12/28 (Sun) 20:05';
 
   //パッケージ化した時の Revision
-  const REVISION = '#131';
+  const REVISION = '#146';
 
   //パッケージ名
   const PACKAGE = '<a href="https://github.com/umethyl/jinrousiki">人狼式</a>';
