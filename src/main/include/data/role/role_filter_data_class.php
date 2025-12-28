@@ -227,9 +227,9 @@ final class RoleFilterData {
 
   //人狼襲撃耐性 (順番依存あり)
   public static $wolf_eat_resist = [
-    'challenge_lovers', 'vega_lovers', 'protected', 'sacrifice_angel', 'doom_vampire',
-    'sacrifice_patron', 'sacrifice_mania', 'tough', 'fend_guard', 'awake_wizard',
-    'ascetic_assassin'
+    'challenge_lovers', 'vega_lovers', 'protected', 'serve_protect',
+    'sacrifice_angel', 'doom_vampire', 'sacrifice_patron', 'sacrifice_mania',
+    'tough', 'fend_guard', 'awake_wizard', 'ascetic_assassin'
   ];
 
   //人狼襲撃得票カウンター (+ 身代わり能力者)
@@ -374,7 +374,7 @@ final class RoleFilterData {
     CampGroup::JEALOUSY		=> 'flower_jealousy',
     CampGroup::BROWNIE		=> 'barrier_brownie',
     CampGroup::WIZARD		=> 'soul_wizard',
-    CampGroup::SERVANT		=> 'servant',
+    CampGroup::SERVANT		=> 'barrier_servant',
     CampGroup::DOLL		=> 'serve_doll_master',
     CampGroup::ESCAPER		=> 'divine_escaper',
     CampGroup::WOLF		=> 'sirius_wolf',

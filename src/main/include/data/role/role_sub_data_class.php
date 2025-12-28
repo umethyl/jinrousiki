@@ -119,6 +119,7 @@ final class RoleSubData {
     'aspirator'			=> '吸毒者',
     'levitation'		=> '空中浮遊',
     'serve_support'		=> '従者支援',
+    'serve_protect'		=> '従者護衛',
     'lost_ability'		=> '能力喪失',
     'muster_ability'		=> '能力発現',
     'changed_disguise'		=> '元朔狼',

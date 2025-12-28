@@ -9,7 +9,7 @@ class Role_priest_tengu extends Role_tengu {
   public $mix_in = ['mage', 'chicken', 'priest'];
 
   protected function IgnoreResult() {
-    return Number::Odd(DB::$ROOM->date, 3);
+    return false === DateBorder::Two() && Number::Odd(DB::$ROOM->date, 3);
   }
 
   protected function OutputAddResult() {

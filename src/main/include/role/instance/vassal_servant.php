@@ -19,7 +19,7 @@ class Role_vassal_servant extends RoleAbility_servant {
       return 0;
     }
 
-    //裏切り判定
+    //支援中判定
     return $user->IsActive() ? +1 : -1;
   }
 }

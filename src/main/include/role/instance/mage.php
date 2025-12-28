@@ -193,7 +193,8 @@ class Role_mage extends Role {
       return false === $user->IsRole('boss_wolf') && false === RoleUser::IsSiriusWolf($user);
     } else {
       return $user->IsRole(
-	'suspect', 'cute_mage', 'swindle_mad', 'black_fox', 'cute_chiroptera', 'cute_avenger'
+	'suspect', 'cute_mage', 'barrier_servant', 'swindle_mad', 'black_fox',
+	'cute_chiroptera', 'cute_avenger'
       );
     }
   }

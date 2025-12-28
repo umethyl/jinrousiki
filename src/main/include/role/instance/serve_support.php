@@ -6,12 +6,8 @@
   ・投票数：従者側に移譲
   ・得票数：従者側に移譲
 */
-class Role_serve_support extends Role {
+class Role_serve_support extends RoleAbility_serve_support {
   public $mix_in = ['authority', 'upper_luck'];
-
-  protected function IgnoreImage() {
-    return true;
-  }
 
   protected function GetVoteDoCount() {
     return $this->FilterVoteCount(__FUNCTION__);
@@ -33,6 +29,13 @@ class Role_serve_support extends Role {
       $count += $this->CallServant($id, $method);
     }
     return $count;
+  }
+}
+
+//-- 従者支援の基礎クラス --//
+class RoleAbility_serve_support extends Role {
+  protected function IgnoreImage() {
+    return true;
   }
 
   //従者側関数呼び出し

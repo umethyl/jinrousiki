@@ -1389,6 +1389,13 @@ final class VoteNight extends VoteBase {
   private static function FilterServantEnd() {
     $vote_data = RoleManager::GetVoteData();
     RoleVote::FilterNight($vote_data[VoteAction::SERVE_END], 'ServantEnd');
+
+    $name = 'servant_kill';
+    //RoleManager::Stack()->p($name, "◆Target [{$name}]");
+    if (RoleManager::Stack()->Exists($name)) {
+      RoleLoader::Load('servant')->ServantEndKill();
+    }
+    RoleManager::Stack()->Clear($name);
   }
 
   //天人の帰還処理

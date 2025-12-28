@@ -62,6 +62,15 @@ class Role_necromancer extends Role {
       return $camp;
     }
 
-    return ($user->IsMainGroup(CampGroup::WOLF) xor (true === $reverse)) ? 'wolf' : 'human';
+    return ($this->IsNecromancerWolf($user) xor (true === $reverse)) ? 'wolf' : 'human';
+  }
+
+  //霊能人狼判定 (人狼系 > 個別)
+  final protected function IsNecromancerWolf(User $user) {
+    if ($user->IsMainGroup(CampGroup::WOLF)) {
+      return true;
+    } else {
+      return $user->IsRole('barrier_servant');
+    }
   }
 }

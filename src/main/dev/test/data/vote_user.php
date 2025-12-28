@@ -94,10 +94,10 @@ RQ::GetTest()->test_users[30]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[31]->role = 'necromancer';
 RQ::GetTest()->test_users[31]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[32]->role = 'psycho_necromancer serve_support[33]';
+RQ::GetTest()->test_users[32]->role = 'psycho_necromancer serve_protect[33]';
 RQ::GetTest()->test_users[32]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[33]->role = 'servant[32]';
+RQ::GetTest()->test_users[33]->role = 'barrier_servant[32]';
 RQ::GetTest()->test_users[33]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[34]->role = 'spark_wizard sweet_ringing';

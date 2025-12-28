@@ -32,7 +32,7 @@ final class RoleGroupSubData {
     'assassin'     => ['death_note', 'death_selected'],
     'chiroptera'   => ['bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status',
 		       'gender_status'],
-    'guard'        => ['protected', 'penetration'],
+    'guard'        => ['protected', 'penetration', 'serve_protect'],
     'poison'       => ['aspirator'],
     'step'         => ['levitation'],
     'servant'      => ['serve_support'],
