@@ -17,9 +17,9 @@ final class DateBorder {
   }
 
   //3の倍数日
-  public static function OnThree() {
+  public static function OnThree(int $target = 0) {
     //日付の概念上、0 は含まない
-    return self::First() && Number::MultipleThree(DB::$ROOM->date);
+    return self::First() && Number::MultipleThree(DB::$ROOM->date, $target);
   }
 
   //-- 以降(過去) --//

@@ -36,8 +36,8 @@ final class Number {
   }
 
   //3の倍数
-  public static function MultipleThree(int $number, $limit = null) {
-    return self::Multiple($number, 3, 0, $limit);
+  public static function MultipleThree(int $number, int $target = 0) {
+    return self::Multiple($number, 3, $target);
   }
 
   //割合

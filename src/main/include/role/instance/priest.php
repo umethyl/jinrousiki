@@ -53,7 +53,7 @@ class Role_priest extends Role {
 
     //-- 天候判定 --//
     if (DB::$ROOM->IsOption('full_weather') ||
-	(DB::$ROOM->IsOption('weather') && Number::Multiple(DB::$ROOM->date, 3, 1))) {
+	(DB::$ROOM->IsOption('weather') && DateBorder::OnThree(1))) {
       $role = 'weather_priest';
       $data->$role = true;
       ArrayFilter::Register($data->list, $role);
