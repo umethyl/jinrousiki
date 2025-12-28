@@ -147,7 +147,7 @@ class Role_priest extends Role {
 
   //司祭能力発動情報スキップ判定
   protected function IgnoreSetPriest() {
-    return Number::Even(DB::$ROOM->date, 3);
+    return DateBorder::EvenFuture(3);
   }
 
   //司祭能力発動情報スキップイベント判定

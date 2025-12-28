@@ -7,7 +7,7 @@
 RoleLoader::LoadFile('priest');
 class Role_bishop_priest extends Role_priest {
   protected function IgnoreResult() {
-    return Number::Even(DB::$ROOM->date, 2);
+    return DateBorder::EvenFuture(2);
   }
 
   protected function IgnoreSetPriest() {

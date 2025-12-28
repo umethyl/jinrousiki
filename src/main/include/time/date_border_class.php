@@ -86,4 +86,9 @@ final class DateBorder {
   public static function PreFive() {
     return self::Future(5);
   }
+
+  //規定日以降の偶数日
+  public static function EvenFuture(int $date) {
+    return self::Future($date) || Number::Even(DB::$ROOM->date);
+  }
 }
