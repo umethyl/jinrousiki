@@ -26,7 +26,7 @@ final class RoleFilterData {
     'fake_lovers', 'possessed_exchange', 'letter_exchange', 'joker', 'rival', 'enemy', 'supported',
     'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
     'bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status', 'gender_status',
-    'protected', 'penetration', 'aspirator', 'levitation', 'serve_support',
+    'protected', 'penetration', 'aspirator', 'levitation', 'serve_support', 'serve_protect',
     'lost_ability', 'muster_ability',
     'changed_disguise', 'changed_therian', 'changed_vindictive', 'changed_tailtip',
     'copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
