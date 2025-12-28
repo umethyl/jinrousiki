@@ -11,7 +11,8 @@ class Role_high_priest extends Role_priest {
   }
 
   protected function GetPriestResultRole() {
-    return Number::Even(DB::$ROOM->date) ? 'priest' : 'bishop_priest';
+    //0日目の判定発動は想定していない
+    return DateBorder::Even() ? 'priest' : 'bishop_priest';
   }
 
   protected function IgnoreSetPriest() {
