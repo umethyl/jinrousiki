@@ -8,7 +8,11 @@ class Option_dummy_boy extends OptionCheckbox {
 
   protected function FilterEnable() {
     if (true === $this->enable && RoomOptionManager::IsChange()) {
-      $this->enable = (false === DB::$ROOM->IsOption('gm_login'));
+      if (DB::$ROOM->IsOption('gm_login')) {
+	$this->enable = false;
+      } else {
+	$this->enable = DB::$ROOM->IsOption($this->name);
+      }
     }
   }
 
