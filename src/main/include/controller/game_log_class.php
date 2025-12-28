@@ -69,7 +69,7 @@ final class GameLogController extends JinrouController {
 
   //未来判定
   private static function IsFuture() {
-    if (DateBorder::Lower(RQ::Fetch()->date)) {
+    if (DateBorder::Futuer(RQ::Fetch()->date)) {
       return true;
     }
 

@@ -35,7 +35,7 @@ class Role_male_status extends Role {
   final protected function GetGenderStatusDate() {
     $target_date = 0;
     foreach ($this->GetActor()->GetPartner($this->role) as $date) {
-      if (DateBorder::Lower($date)) {
+      if (DateBorder::Futuer($date)) {
 	break;
       } else {
 	$target_date = $date;

@@ -47,37 +47,37 @@ final class DateBorder {
   }
 
   //-- 未満(未来) --//
-  public static function Lower($date) {
+  public static function Future($date) {
     return DB::$ROOM->date < $date;
   }
 
   //-- 以下(当日 + 未来) --//
-  public static function InLower($date) {
+  public static function InFuture($date) {
     return DB::$ROOM->date <= $date;
   }
 
   //1日目未満
   public static function PreOne() {
-    return self::Lower(1);
+    return self::Futuer(1);
   }
 
   //2日目未満
   public static function PreTwo() {
-    return self::Lower(2);
+    return self::Futuer(2);
   }
 
   //3日目未満
   public static function PreThree() {
-    return self::Lower(3);
+    return self::Futuer(3);
   }
 
   //4日目未満
   public static function PreFour() {
-    return self::Lower(4);
+    return self::Futuer(4);
   }
 
   //5日目未満
   public static function PreFive() {
-    return self::Lower(5);
+    return self::Futuer(5);
   }
 }
