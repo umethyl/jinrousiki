@@ -58,26 +58,26 @@ final class DateBorder {
 
   //1日目未満
   public static function PreOne() {
-    return self::Futuer(1);
+    return self::Future(1);
   }
 
   //2日目未満
   public static function PreTwo() {
-    return self::Futuer(2);
+    return self::Future(2);
   }
 
   //3日目未満
   public static function PreThree() {
-    return self::Futuer(3);
+    return self::Future(3);
   }
 
   //4日目未満
   public static function PreFour() {
-    return self::Futuer(4);
+    return self::Future(4);
   }
 
   //5日目未満
   public static function PreFive() {
-    return self::Futuer(5);
+    return self::Future(5);
   }
 }

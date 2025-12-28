@@ -33,7 +33,7 @@ class Role_follow_chiroptera extends Role {
     if (true !== $user->IsRole($role)) {
       return false;
     }
-    return DateBorder::InFutuer(7);
+    return DateBorder::InFuture(7);
   }
 
   //道連れ判定 (サブ役職)
@@ -43,7 +43,7 @@ class Role_follow_chiroptera extends Role {
     if (true !== $user->IsRole($role)) {
       return false;
     }
-    return DateBorder::InFutuer($user->GetDoomDate($role));
+    return DateBorder::InFuture($user->GetDoomDate($role));
   }
 
   protected function GetSuddenDeathType() {
