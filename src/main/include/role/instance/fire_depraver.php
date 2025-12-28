@@ -13,7 +13,7 @@ class Role_fire_depraver extends Role_depraver {
   }
 
   protected function IsVoteKillActionTarget(User $user) {
-    return Number::MultipleThree(DB::$ROOM->date, 2);
+    return DateBorder::OnThree();
   }
 
   protected function GetVoteKillActionRole() {
