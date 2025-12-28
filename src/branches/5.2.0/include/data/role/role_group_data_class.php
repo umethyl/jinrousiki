@@ -66,6 +66,7 @@ final class RoleGroupData {
     'scanner'		=> CampGroup::MIND_SCANNER,	//さとり系
     'brownie'		=> CampGroup::BROWNIE,		//座敷童子系
     'wizard'		=> CampGroup::WIZARD,		//魔法使い系
+    'servant'		=> CampGroup::SERVANT,		//従者系
     'doll'		=> CampGroup::DOLL,		//上海人形系
     'escaper'		=> CampGroup::ESCAPER,		//逃亡者系
     //占い師系

@@ -58,6 +58,10 @@ class AbilityList extends RoleMessageList {
     'message' => "あなたと|共鳴|しているのは以下の人たちです： ",
     'type' => 'mind_read'];
 
+  public $servant_target = [
+    'message' => "あなたの|主|は以下の人たちです： ",
+    'delimiter' => ['|' => 'servant']];
+
   public $doll_master_list = [
     'message' => "あなたを呪縛する|人形遣い|は以下の人たちです： ",
     'delimiter' => ['|' => 'doll']];

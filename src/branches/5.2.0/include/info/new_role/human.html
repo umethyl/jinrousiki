@@ -20,6 +20,7 @@
 <a href="#jealousy_group">橋姫系</a>
 <a href="#brownie_group">座敷童子系</a>
 <a href="#wizard_group">魔法使い系</a>
+<a href="#servant_group">従者系</a>
 <a href="#doll_group">上海人形系</a>
 <a href="#escaper_group">逃亡者系</a>
 </p>
@@ -1502,7 +1503,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <h3 id="guard_limit">護衛制限</h3>
 <ol>
 <li>制限対象は、<a href="#prince">ろくろ首</a>・<a href="#step_mage">審神者</a>・<a href="#emissary_necromancer">密偵</a>・<a href="#priest_group">司祭系</a> (<a href="#crisis_priest">預言者</a>・<a href="#widow_priest">未亡人</a>・<a href="#revive_priest">天人</a>を除く)・<a href="#reporter">ブン屋</a>・<a href="#detective_common">探偵</a>・<a href="#sacrifice_common">首領</a>・<a href="#spell_common">葛の葉</a><br>
-  <a href="#assassin_group">暗殺者系</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#priest_jealousy">恋司祭</a>・<a href="#barrier_brownie">産土神</a>・<a href="#soul_wizard">八卦見</a>・<a href="human.php#esper_wizard">超能力者</a>・<a href="#pierrot_wizard">道化師</a>・<a href="#spark_wizard">魔砲使い</a>・<a href="#barrier_wizard">結界師</a>・<a href="#doll_rule_doll_master">人形遣い系</a>・<a href="tengu.php#priest_tengu">鼻高天狗</a>。</li>
+  <a href="#assassin_group">暗殺者系</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#priest_jealousy">恋司祭</a>・<a href="#barrier_brownie">産土神</a>・<a href="#soul_wizard">八卦見</a>・<a href="human.php#esper_wizard">超能力者</a>・<a href="#pierrot_wizard">道化師</a>・<a href="#spark_wizard">魔砲使い</a>・<a href="#barrier_wizard">結界師</a>・<a href="#barrier_servant">番犬</a>・<a href="#doll_rule_doll_master">人形遣い系</a>・<a href="tengu.php#priest_tengu">鼻高天狗</a>。</li>
 <li>対象を護衛して襲撃された場合、狩人に「護衛成功」のメッセージは出るが、護衛先は死亡する。</li>
 <li>影響を受けるのは<a href="ability.php#guard">護衛能力者</a>のみで、<a href="#blind_guard">夜雀</a>・<a href="#finder_guard">狛犬</a>・<a href="#step_guard">山立</a>・<a href="#poison_guard">騎士</a>・<a href="#elder_guard">老兵</a>には適用されない。</li>
 <li>対象に<a href="sub_role.php#penetration">護衛貫通</a>がついている場合はあらゆる護衛が無効化される。</a>
@@ -4078,6 +4079,186 @@ MVP の賞品としてプレゼントしたものです。
 <pre>
 魔法使いの<a href="wolf.php#mad_group">狂人系</a>バージョンです。
 魔法の対象役職は騙りやすいですが、信用を得ても生き残るのは難しいでしょう。
+</pre>
+
+
+<h2 id="servant_group">従者系</h2>
+<p><a href="#servant_rule">基本ルール</a></p>
+<p>
+<a href="#servant">従者</a>
+<a href="#vassal_servant">家臣</a>
+<a href="#sweet_servant">仲人</a>
+<a href="#barrier_servant">番犬</a>
+</p>
+
+<h3 id="servant_rule">基本ルール [従者]</h3>
+<p>
+<a href="#servant_rule_summary">概要</a>
+<a href="#servant_rule_select">主の選択</a>
+<a href="#servant_rule_partner">仲間表示</a>
+<a href="#servant_rule_support">支援</a>
+<a href="#servant_rule_support_end">裏切り</a>
+</p>
+<h4 id="servant_rule_summary">概要</h4>
+<ol>
+<li>初日の夜に「主」を選択し、支援を行う。</li>
+<li>2 日目以降の夜に「主を裏切る / 裏切らない」を必ず投票する必要がある。</li>
+<li>「主」の存在の有無と勝利条件は無関係。</li>
+</ol>
+
+<h4 id="servant_rule_select">主の選択</h4>
+<ol>
+<li>初日の夜のみ、実行する (<a href="../spec.php#vote_night">判定順</a>)。</li>
+<li>選択先に支援用のサブ役職を付加する。</li>
+<li>身代わり君は選択不可。</li>
+</ol>
+
+<h4 id="servant_rule_partner">仲間表示</h4>
+<ol>
+<li>選択した主の名前が表示される。</li>
+<li>主に<a href="ability.php#possessed">憑依</a>が発生しても分からない。</li>
+<li>裏切った場合でもそのまま表示される。</li>
+</ol>
+
+<h4 id="servant_rule_support">支援</h4>
+<ol>
+<li>支援用に付加するサブ役職と効果は個々で異なる。</li>
+<li>主に<a href="ability.php#possessed">憑依</a>が発生していても有効。</li>
+<li>本人が<a href="ability.php#possessed">憑依</a>されている場合は無効。</li>
+</ol>
+
+<h4 id="servant_rule_support_end">裏切り</h4>
+<ol>
+<li>2 日目以降の夜に実行できる (<a href="../spec.php#vote_night">判定順</a>)。</li>
+<li>投票実行時に主が死亡していた場合は実行不可。</li>
+<li>判定実行時に死亡していた場合は無効。</li>
+<li>裏切りが成立すると投票能力を失う (<a href="sub_role.php#lost_ability">能力喪失</a>)。</li>
+<li>裏切りで発生する効果は個々で異なる。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="ability.php#count_limit">回数制限能力者</a>
+</pre>
+
+<h3 id="servant">従者 (占い結果：村人 / 霊能結果：村人) [Ver. 5.2.0 α2]</h3>
+<h4>[従者能力] 主選択：<a href="sub_role.php#serve_support">従者支援</a>付加 / 支援：得票数 -1 / 裏切り：得票数 +1</h4>
+<pre>
+従者系の<a href="mania.php#basic_mania">基本種</a>。
+</pre>
+<h4>支援能力</h4>
+<ol>
+<li><a href="sub_role.php#serve_support">従者支援</a>を付加する。</li>
+<li>主の得票数が -1 される。</li>
+<li>支援している<a href="#servant">従者</a>が死亡している場合は無効。</li>
+<li>他の<a href="#servant">従者</a>の支援/裏切り効果と重複する。</li>
+</ol>
+<h4>裏切り能力</h4>
+<ol>
+<li>付与している<a href="sub_role.php#serve_support">従者支援</a>の効果が変化する。</li>
+<li>主の得票数が +1 される。</li>
+<li>支援している<a href="#servant">従者</a>が死亡している場合は無効。</li>
+<li>他の<a href="#servant">従者</a>の支援/裏切り効果と重複する。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="sub_role.php#star">人気者</a>・<a href="sub_role.php#disfavor">不人気</a>・<a href="sub_role.php#serve_support">従者支援</a>・<a href="ability.php#luck">得票数変化能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#barrier_servant">番犬</a>の実装にあたり、合致する投票能力が存在しなかったので新設することにしました。
+<a href="duelist.php#avenger_group">復讐者系</a>と<a href="duelist.php#patron_group">後援者系</a>を併せ持つような能力ですが、勝利条件の枷とはなっていません。
+自らが選んだ「主」は果たして味方(村人陣営)なのか、
+敵対陣営と見限って裏切りをするか否かの選択に迫られることになります。
+</pre>
+
+<h3 id="vassal_servant">家臣 (占い結果：村人 / 霊能結果：村人) [Ver. 5.2.0 α2]</h3>
+<h4>[従者能力] 主選択：<a href="sub_role.php#serve_support">従者支援</a>付加 / 支援：投票数 +1 / 裏切り：投票数 -1</h4>
+<pre>
+投票数の支援能力を持つ従者。
+</pre>
+<h4>支援能力</h4>
+<ol>
+<li><a href="sub_role.php#serve_support">従者支援</a>を付加する。</li>
+<li>主の投票数が +1 される。</li>
+<li>支援している<a href="#vassal_servant">家臣</a>が死亡している場合は無効。</li>
+<li>他の<a href="#vassal_servant">家臣</a>の支援/裏切り効果と重複する。</li>
+</ol>
+<h4>裏切り能力</h4>
+<ol>
+<li>付与している<a href="sub_role.php#serve_support">従者支援</a>の効果が変化する。</li>
+<li>主の投票数が -1 される。</li>
+<li>支援している<a href="#vassal_servant">家臣</a>が死亡している場合は無効。</li>
+<li>他の<a href="#vassal_servant">家臣</a>の支援/裏切り効果と重複する。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="sub_role.php#authority">権力者</a>・<a href="sub_role.php#reduce_voter">無精者</a>・<a href="sub_role.php#serve_support">従者支援</a>・<a href="ability.php#authority">投票数変化能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#servant">従者</a>の投票数支援バージョンです。
+主に「権力」を与え、「下剋上」でその「権力」を剥奪する、というデザインです。
+<a href="wolf.php#elder_wolf">古狼</a>が仲間と共謀して騙ることも可能です。
+</pre>
+
+<h3 id="sweet_servant">仲人 (占い結果：村人 / 霊能結果：村人) [Ver. 5.2.0 α2]</h3>
+<h4>[従者能力] 主選択：<a href="sub_role.php#sweet_ringing">恋耳鳴</a> / 支援：なし / 裏切り：<a href="sub_role.php#random_voice">臆病者</a>付加</h4>
+<pre>
+支援として主選択時に<a href="sub_role.php#sweet_ringing">恋耳鳴</a>を、裏切りとして<a href="sub_role.php#random_voice">臆病者</a>を付加する従者。
+</pre>
+<h4>支援能力</h4>
+<ol>
+<li><a href="sub_role.php#sweet_ringing">恋耳鳴</a>を付加する。</li>
+<li>付加した<a href="#sweet_servant">仲人</a>が死亡していても有効。</li>
+</ol>
+<h4>裏切り能力</h4>
+<ol>
+<li><a href="sub_role.php#random_voice">臆病者</a>を付加する。</li>
+<li>付加した<a href="#sweet_servant">仲人</a>が死亡していても有効。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="sub_role.php#sweet_ringing">恋耳鳴</a>・<a href="sub_role.php#random_voice">臆病者</a>・<a href="ability.php#talk_mind">発言閲覧能力者</a>・<a href="ability.php#talk_convert">発言変換能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="#servant">従者</a>の発言妨害バージョンです。
+ハズレ寄りの能力として選定してみましたが、
+自己証明ができて一定の情報が得られるので存外強いかもしれません。
+</pre>
+
+<h3 id="barrier_servant">番犬 (占い結果：人狼 / 霊能結果：人狼) [Ver. 5.2.0 α2]</h3>
+<h4>[耐性] 護衛制限：有り</h4>
+<h4>[従者能力] 主選択：<a href="sub_role.php#serve_protect">従者護衛</a>付加 / 支援：人狼襲撃無効 / 裏切り：主襲撃</h4>
+<pre>
+護衛の支援能力を持つ従者。占い・霊能結果は「人狼」で、狩人の<a href="#guard_limit">護衛制限</a>対象。
+</pre>
+<h4>支援能力</h4>
+<ol>
+<li><a href="sub_role.php#serve_protect">従者護衛</a>を付加する。</li>
+<li>主への人狼襲撃が無効化される。</li>
+<li><a href="#guard_limit">護衛制限</a>・<a href="ability.php#trap">罠</a>・<a href="../weather.php">天候</a>の影響を受けない。</li>
+<li>支援している<a href="#barrier_servant">番犬</a>が死亡している場合は無効。</li>
+</ol>
+<h4>裏切り能力</h4>
+<ol>
+<li>主を襲撃し、死亡させる。</li>
+<li><a href="../spec.php#dead_night">死因</a>は「従者に裏切られた」。</li>
+<li><a href="ability.php#trap">罠</a>・<a href="../weather.php">天候</a>の影響を受けない。</li>
+<li><a href="ability.php#special_resist">特殊耐性能力者</a>の場合は無効。</li>
+<ul>
+  <li>それ以外の耐性は一切適用されない。</li>
+</ul>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="sub_role.php#serve_protect">従者護衛</a>・<a href="ability.php#guard">護衛能力者</a>・<a href="ability.php#resist_wolf">人狼襲撃耐性能力者</a>・<a href="ability.php#result_mage">特殊占い判定能力者</a>・<a href="ability.php#necromancer">特殊霊能判定能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+トガの狼の犬に相当します。
+強力な護衛・殺傷力を持ちますが、占い・霊能からは人狼にしか見えないので
+大きな混乱をきたす可能性があります。
 </pre>
 
 
