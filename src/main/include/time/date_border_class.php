@@ -16,68 +16,94 @@ final class DateBorder {
     return self::On(2);
   }
 
+  //-- 倍数日(日付の概念上、0 は含まない) --//
+  //偶数日
+  public static function Even() {
+    return self::First() && Number::Even(DB::$ROOM->date);
+  }
+
+  //奇数日
+  public static function Odd() {
+    return Number::Odd(DB::$ROOM->date);
+  }
+
+  //3の倍数日
+  public static function OnThree(int $target = 0) {
+    return self::First() && Number::MultipleThree(DB::$ROOM->date, $target);
+  }
+
   //-- 以降(過去) --//
-  public static function Upper($date) {
+  public static function Past($date) {
     return DB::$ROOM->date > $date;
   }
 
   //1日目以降
   public static function First() {
-    return self::Upper(0);
+    return self::Past(0);
   }
 
   //2日目以降
   public static function Second() {
-    return self::Upper(1);
+    return self::Past(1);
   }
 
   //3日目以降
   public static function Third() {
-    return self::Upper(2);
+    return self::Past(2);
   }
 
   //4日目以降
   public static function Fourth() {
-    return self::Upper(3);
+    return self::Past(3);
   }
 
   //5日目以降
   public static function Fifth() {
-    return self::Upper(4);
+    return self::Past(4);
   }
 
   //-- 未満(未来) --//
-  public static function Lower($date) {
+  public static function Future($date) {
     return DB::$ROOM->date < $date;
   }
 
   //-- 以下(当日 + 未来) --//
-  public static function InLower($date) {
+  public static function InFuture($date) {
     return DB::$ROOM->date <= $date;
   }
 
   //1日目未満
   public static function PreOne() {
-    return self::Lower(1);
+    return self::Future(1);
   }
 
   //2日目未満
   public static function PreTwo() {
-    return self::Lower(2);
+    return self::Future(2);
   }
 
   //3日目未満
   public static function PreThree() {
-    return self::Lower(3);
+    return self::Future(3);
   }
 
   //4日目未満
   public static function PreFour() {
-    return self::Lower(4);
+    return self::Future(4);
   }
 
   //5日目未満
   public static function PreFive() {
-    return self::Lower(5);
+    return self::Future(5);
+  }
+
+  //規定日以降の偶数日
+  public static function EvenFuture(int $date) {
+    return self::Future($date) || self::Even();
+  }
+
+  //規定日以降の奇数日
+  public static function OddFuture(int $date) {
+    return self::Future($date) || self::Odd();
   }
 }

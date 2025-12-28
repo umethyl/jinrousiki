@@ -24,7 +24,7 @@ class Role_doom_cat extends Role_poison_cat {
     }
 
     $date = $actor->GetDoomDate($role); //未達の宣告があれば延長する
-    if (DateBorder::Lower($date)) {
+    if (DateBorder::Future($date)) {
       $actor->AddDoom($date - DB::$ROOM->date + 2);
     }
   }
