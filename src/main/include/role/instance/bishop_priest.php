@@ -11,7 +11,7 @@ class Role_bishop_priest extends Role_priest {
   }
 
   protected function IgnoreSetPriest() {
-    return Number::Odd(DB::$ROOM->date, 1);
+    return DateBorder::OddFuture(1);
   }
 
   protected function GetPriestType() {

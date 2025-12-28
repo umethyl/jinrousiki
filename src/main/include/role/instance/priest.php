@@ -6,7 +6,7 @@
 */
 class Role_priest extends Role {
   protected function IgnoreResult() {
-    return Number::Odd(DB::$ROOM->date, 3);
+    return DateBorder::OddFuture(3);
   }
 
   protected function OutputAddResult() {

@@ -20,7 +20,7 @@ class Role_high_priest extends Role_priest {
   }
 
   protected function GetPriestType() {
-    return Number::Odd(DB::$ROOM->date) ? 'human_side' : 'dead';
+    return DateBorder::Odd() ? 'human_side' : 'dead';
   }
 
   protected function IgnorePriest() {
@@ -28,6 +28,6 @@ class Role_high_priest extends Role_priest {
   }
 
   protected function GetPriestRole() {
-    return Number::Odd(DB::$ROOM->date) ? 'priest' : 'bishop_priest';
+    return DateBorder::Odd() ? 'priest' : 'bishop_priest';
   }
 }

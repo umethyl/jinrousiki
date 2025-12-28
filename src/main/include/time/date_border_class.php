@@ -22,6 +22,11 @@ final class DateBorder {
     return self::First() && Number::Even(DB::$ROOM->date);
   }
 
+  //奇数日
+  public static function Odd() {
+    return Number::Odd(DB::$ROOM->date);
+  }
+
   //3の倍数日
   public static function OnThree(int $target = 0) {
     return self::First() && Number::MultipleThree(DB::$ROOM->date, $target);
@@ -95,5 +100,10 @@ final class DateBorder {
   //規定日以降の偶数日
   public static function EvenFuture(int $date) {
     return self::Future($date) || self::Even();
+  }
+
+  //規定日以降の奇数日
+  public static function OddFuture(int $date) {
+    return self::Future($date) || self::Odd();
   }
 }
