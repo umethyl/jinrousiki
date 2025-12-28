@@ -145,6 +145,7 @@ final class RoleData {
     'servant'			=> '従者',
     'vassal_servant'		=> '家臣',
     'sweet_servant'		=> '仲人',
+    'barrier_servant'		=> '番犬',
     'doll'			=> '上海人形',
     'friend_doll'		=> '仏蘭西人形',
     'phantom_doll'		=> '倫敦人形',

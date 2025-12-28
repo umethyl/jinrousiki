@@ -22,7 +22,7 @@ class Role_servant extends RoleAbility_servant {
       return 0;
     }
 
-    //裏切り判定
+    //支援中判定
     return $user->IsActive() ? -1 : +1;
   }
 }
@@ -173,11 +173,20 @@ class RoleAbility_servant extends Role {
     $this->GetActor()->LostAbility();
 
     //追加処理
-    $this->ServantEndAction($user);
+    if ($user->IsLive(true)) {
+      $this->ServantEndAction($user);
+    }
   }
 
   //主裏切り追加処理
   protected function ServantEndAction(User $user) {}
+
+  //主裏切り死亡処理
+  final public function ServantEndKill() {
+    foreach ($this->GetStack('servant_kill') as $id) {
+      DB::$USER->Kill($id, DeadReason::SERVANT_KILLED);
+    }
+  }
 
   //-- 従者支援用 --//
   protected function GetVoteDoCount() {
@@ -187,4 +196,7 @@ class RoleAbility_servant extends Role {
   protected function GetVotePollCount() {
     return 0;
   }
+
+  //-- 従者護衛用 --//
+  //番犬以外の従者系にも使用したら登録する
 }

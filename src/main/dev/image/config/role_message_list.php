@@ -478,6 +478,10 @@ class RoleMessageList {
     'message' => "[役割] [|村人|陣営] [#従者#系]\n　あなたは#仲人#です。初日の夜に主となる人を選び、_恋耳鳴_を付与します。二日目以降は^臆病者^を付与することもできます。",
    'type' => 'servant', 'delimiter' => ['_' => 'no_last_words', '^' => 'voice']];
 
+  public $barrier_servant = [
+    'message' => "[役割] [|村人|陣営] [#従者#系]\n　あなたは#番犬#です。初日の夜に主となる人を選び、_護衛_の支援を行います。二日目以降に主を^食い殺す^こともできます。",
+   'type' => 'servant', 'delimiter' => ['_' => 'guard', '^' => 'assassin']];
+
   public $doll = [
     'message' => "[役割] [|村人|陣営] [#上海人形#系]\n　あなたは#上海人形#です。あなたは#人形遣い#を倒し、|村人|を勝利に導く必要があります。自由を得るために立ち上がりましょう！",
     'type' => 'human', 'delimiter' => ['#' => 'doll']];

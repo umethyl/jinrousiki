@@ -386,9 +386,10 @@ final class ChaosConfig {
     'philosophy_wizard'     =>  10,
     'barrier_wizard'        =>  10,
     'astray_wizard'         =>  12,
-    'servant'               =>  60,
-    'vassal_servant'        =>  30,
-    'sweet_servant'         =>  30,
+    'servant'               =>  55,
+    'vassal_servant'        =>  25,
+    'sweet_servant'         =>  25,
+    'barrier_servant'       =>  15,
     'doll'                  =>  50,
     'friend_doll'           =>  30,
     'phantom_doll'          =>  20,
@@ -933,16 +934,17 @@ final class ChaosConfig {
 			  'soul_necromancer'     => 6,
 			  'revive_medium'        => 6,
 			  'high_priest'          => 6,
-			  'poison_guard'         => 4,
-			  'ghost_common'         => 4,
+			  'poison_guard'         => 3,
+			  'ghost_common'         => 3,
 			  'strong_poison'        => 6,
 			  'revive_cat'           => 6,
 			  'alchemy_pharmacist'   => 6,
 			  'soul_assassin'        => 4,
-			  'clairvoyance_scanner' => 6,
+			  'clairvoyance_scanner' => 5,
 			  'flower_jealousy'      => 6,
-			  'barrier_brownie'      => 6,
+			  'barrier_brownie'      => 5,
 			  'soul_wizard'          => 6,
+			  'barrier_servant'      => 4,
 			  'serve_doll_master'    => 8,
 			  'divine_escaper'       => 8],
 			 ['boss_wolf'      => 2,
@@ -1078,7 +1080,8 @@ final class ChaosConfig {
   */
   public static $boost_rate_fix_rate = 20;
   public static $boost_rate_list = [
-    'a' => ['fix' => ['servant' => 10, 'vassal_servant' => 10, 'sweet_servant' => 10]],
+    'a' => ['fix' => ['servant' => 10, 'vassal_servant' => 10,
+		      'sweet_servant' => 10, 'barrier_servant' => 10]],
     'b' => ['zero' => ['elder',
 		       'scripter',
 		       'eccentricer',
@@ -1091,6 +1094,8 @@ final class ChaosConfig {
 		       'maple_brownie',
 		       'esper_wizard',
 		       'philosophy_wizard',
+		       'servant',
+		       'vassal_servant',
 		       'divine_escaper',
 		       'ascetic_wolf',
 		       'elder_wolf',
@@ -1122,6 +1127,7 @@ final class ChaosConfig {
 		       'jealousy',
 		       'brownie',
 		       'wizard',
+		       'servant',
 		       'doll',
 		       'escaper',
 		       'wolf',
@@ -1393,6 +1399,7 @@ final class ChaosConfig {
 		       'critical_jealousy',
 		       'maple_brownie',
 		       'astray_wizard',
+		       'sweet_servant',
 		       'silver_doll',
 		       'stargazer_escaper',
 		       'emperor_wolf',
@@ -1751,7 +1758,7 @@ final class ChaosConfig {
     'j6' => ['fix' => ['follow_chiroptera' => 1]],
     'j7' => ['fix' => ['fetish_cat' => 1, 'rioter_mad' => 1]],
     //TypeK: Ver. 5.2.0
-    'k1' => ['pick' => [['list' => ['servant', 'vassal_servant', 'sweet_servant'],
+    'k1' => ['pick' => [['list' => ['servant', 'vassal_servant', 'sweet_servant', 'barrier_servant'],
 			 'count' => 2]]],
   ];
 
@@ -1908,7 +1915,7 @@ final class ChaosConfig {
     'j6' => ['boost' => ['follow_chiroptera']],
     'j7' => ['boost' => ['fetish_cat', 'rioter_mad']],
     //TypeK: Ver. 5.2.0
-    'k1' => ['boost' => ['servant', 'vassal_servant', 'sweet_servant']],
+    'k1' => ['boost' => ['servant', 'vassal_servant', 'sweet_servant', 'barrier_servant']],
   ];
 
   //サブ役職制限：EASYモード

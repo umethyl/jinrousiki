@@ -12,6 +12,6 @@ class Role_sweet_servant extends RoleAbility_servant {
   }
 
   protected function ServantEndAction(User $user) {
-    return $user->AddRole('random_voice');
+    $user->AddRole('random_voice');
   }
 }
