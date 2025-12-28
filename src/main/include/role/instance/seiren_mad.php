@@ -8,7 +8,7 @@ class Role_seiren_mad extends Role {
   public $mix_in = ['vote' => 'fairy'];
 
   protected function IsFairyVote() {
-    return DateBorder::Third() && Number::MultipleThree(DB::$ROOM->date);
+    return DateBorder::OnThree();
   }
 
   protected function GetDisabledFairyVoteNightMessage() {

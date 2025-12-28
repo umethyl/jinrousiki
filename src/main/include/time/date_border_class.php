@@ -16,6 +16,12 @@ final class DateBorder {
     return self::On(2);
   }
 
+  //3の倍数日
+  public static function OnThree() {
+    //日付の概念上、0 は含まない
+    return self::First() && Number::MultipleThree(DB::$ROOM->date);
+  }
+
   //-- 以降(過去) --//
   public static function Past($date) {
     return DB::$ROOM->date > $date;
