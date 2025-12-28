@@ -110,7 +110,7 @@ final class AutoPlayTalk extends StackStaticManager {
   private static function GetScene($strict = false) {
     if (false === DB::$ROOM->IsPlaying()) {
       return DB::$ROOM->scene;
-    } elseif (DateBorder::Upper(DB::$ROOM->last_date)) {
+    } elseif (DateBorder::Past(DB::$ROOM->last_date)) {
       return RoomScene::AFTER;
     } else {
       return 'date' . DB::$ROOM->date . ($strict ? ('_' . DB::$ROOM->scene) : '');
