@@ -128,6 +128,7 @@ final class RoleShortData {
     'cursed_brownie'		=> '祟',
     'sun_brownie'		=> '烏',
     'history_brownie'		=> '澤',
+    'bell_brownie'		=> '住',
     'barrier_brownie'		=> '産',
     'wizard'			=> '魔',
     'soul_wizard'		=> '八',

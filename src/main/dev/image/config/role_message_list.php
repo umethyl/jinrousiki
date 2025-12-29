@@ -414,6 +414,10 @@ class RoleMessageList {
     'message' => "[役割] [|村人|陣営] [#座敷童子#系]\n　あなたは#白澤#です。=人狼=に襲撃されたら次の日の夜を飛ばしてしまいます。どんな悲惨な夜も歴史に残さなければ消えてしまうのです。",
     'type' => 'brownie', 'delimiter' => ['=' => 'wolf']];
 
+  public $bell_brownie = [
+    'message' => "[役割] [|村人|陣営] [#座敷童子#系]\n　あなたは#住職#です。毎朝鐘の音を響かせます。",
+    'type' => 'brownie', 'delimiter' => ['=' => 'wolf']];
+
   public $barrier_brownie = [
     'message' => "[役割] [|村人|陣営] [#座敷童子#系]\n　あなたは#産土神#です。低確率で|村人陣営|を=人狼=の襲撃から*護衛*することができます。地縁で繋った村人たちを遍く守るのです。",
     'type' => 'history_brownie', 'delimiter' => ['*' => 'guard']];

@@ -100,7 +100,7 @@ RQ::GetTest()->test_users[32]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[33]->role = 'barrier_servant[32]';
 RQ::GetTest()->test_users[33]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[34]->role = 'spark_wizard sweet_ringing';
+RQ::GetTest()->test_users[34]->role = 'bell_brownie';
 RQ::GetTest()->test_users[34]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[35]->role = 'sweet_servant[34]';

@@ -741,6 +741,11 @@ final class GameHTML {
       $action = strtolower($type . '_' . $result);
       break;
 
+    case DeadReason::BELL:
+      $base  = false;
+      $class = 'step';
+      break;
+
     case DeadReason::STEP:
       $base  = false;
       $class = 'step';

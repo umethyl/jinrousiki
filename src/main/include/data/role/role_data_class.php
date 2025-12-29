@@ -129,6 +129,7 @@ final class RoleData {
     'cursed_brownie'		=> '祟神',
     'sun_brownie'		=> '八咫烏',
     'history_brownie'		=> '白澤',
+    'bell_brownie'		=> '住職',
     'barrier_brownie'		=> '産土神',
     'wizard'			=> '魔法使い',
     'soul_wizard'		=> '八卦見',

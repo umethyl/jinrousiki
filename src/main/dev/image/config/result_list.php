@@ -125,6 +125,7 @@ class ResultList extends RoleMessageList {
   public $result_cursed_brownie = ['message' => "さんは|祟神|でした", 'type' => 'result_brownie'];
   public $result_sun_brownie = ['message' => "さんは|八咫烏|でした", 'type' => 'result_brownie'];
   public $result_history_brownie = ['message' => "さんは|白澤|でした", 'type' => 'result_brownie'];
+  public $result_bell_brownie = ['message' => "さんは|住職|でした", 'type' => 'result_brownie'];
   public $result_barrier_brownie = ['message' => "さんは|産土神|でした", 'type' => 'result_brownie'];
   public $result_wizard = ['message' => "さんは|魔法使い|でした", 'delimiter' => ['|' => 'wizard']];
   public $result_soul_wizard = ['message' => "さんは|八卦見|でした", 'type' => 'result_wizard'];
