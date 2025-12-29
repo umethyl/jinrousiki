@@ -1503,7 +1503,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <h3 id="guard_limit">護衛制限</h3>
 <ol>
 <li>制限対象は、<a href="#prince">ろくろ首</a>・<a href="#step_mage">審神者</a>・<a href="#emissary_necromancer">密偵</a>・<a href="#priest_group">司祭系</a> (<a href="#crisis_priest">預言者</a>・<a href="#widow_priest">未亡人</a>・<a href="#revive_priest">天人</a>を除く)・<a href="#reporter">ブン屋</a>・<a href="#detective_common">探偵</a>・<a href="#sacrifice_common">首領</a>・<a href="#spell_common">葛の葉</a><br>
-  <a href="#assassin_group">暗殺者系</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#priest_jealousy">恋司祭</a>・<a href="#barrier_brownie">産土神</a>・<a href="#soul_wizard">八卦見</a>・<a href="human.php#esper_wizard">超能力者</a>・<a href="#pierrot_wizard">道化師</a>・<a href="#spark_wizard">魔砲使い</a>・<a href="#barrier_wizard">結界師</a>・<a href="#barrier_servant">番犬</a>・<a href="#doll_rule_doll_master">人形遣い系</a>・<a href="tengu.php#priest_tengu">鼻高天狗</a>。</li>
+  <a href="#assassin_group">暗殺者系</a>・<a href="#clairvoyance_scanner">猩々</a>・<a href="#priest_jealousy">恋司祭</a>・<a href="#bell_brownie">住職</a>・<a href="#barrier_brownie">産土神</a>・<a href="#soul_wizard">八卦見</a>・<a href="human.php#esper_wizard">超能力者</a>・<a href="#pierrot_wizard">道化師</a>・<a href="#spark_wizard">魔砲使い</a>・<a href="#barrier_wizard">結界師</a>・<a href="#barrier_servant">番犬</a>・<a href="#doll_rule_doll_master">人形遣い系</a>・<a href="tengu.php#priest_tengu">鼻高天狗</a>。</li>
 <li>対象を護衛して襲撃された場合、狩人に「護衛成功」のメッセージは出るが、護衛先は死亡する。</li>
 <li>影響を受けるのは<a href="ability.php#guard">護衛能力者</a>のみで、<a href="#blind_guard">夜雀</a>・<a href="#finder_guard">狛犬</a>・<a href="#step_guard">山立</a>・<a href="#poison_guard">騎士</a>・<a href="#elder_guard">老兵</a>には適用されない。</li>
 <li>対象に<a href="sub_role.php#penetration">護衛貫通</a>がついている場合はあらゆる護衛が無効化される。</a>
@@ -3438,6 +3438,9 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 <a href="#cursed_brownie">祟神</a>
 <a href="#sun_brownie">八咫烏</a>
 <a href="#history_brownie">白澤</a>
+<a href="#bell_brownie">住職</a>
+</p>
+<p>
 <a href="#barrier_brownie">産土神</a>
 </p>
 
@@ -3653,6 +3656,50 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 <pre>
 翠星石鯖＠やる夫人狼で実施された記念村の設定を役職にしてみました。
 東方 Project の上白沢 慧音がモチーフです。
+</pre>
+
+<h3 id="bell_brownie">住職 (占い結果：村人 / 霊能結果：村人) [Ver. 5.2.0 α3]</h3>
+<h4>[耐性] 護衛制限：有り</h4>
+<pre>
+生存中は死亡メッセージ欄に専用メッセージが出力される、座敷童子の亜種。
+</pre>
+<h4>出力条件</h4>
+<ol>
+<li><a href="../spec.php#vote_night">判定</a> (夜投票/座敷童) 時に住職が生存している場合に有効。</li>
+<li>複数生存していても効果は重複しない。</li>
+</ol>
+<h4>出力内容</h4>
+<ol>
+<li>「～回、鐘の音が鳴りました」と表示される。</li>
+<li>回数は出力パターンから設定された確率に応じて選定される。</li>
+</ol>
+<h4>出力パターン</h4>
+<ol>
+<li>1 (固定値)</li>
+<li>108 (固定値)</li>
+<li>65535 (固定値)</li>
+<li>村の番地番号</li>
+<li>村の日数 (翌朝時点)</li>
+<li>村名の文字数</li>
+<li>生存人数 (判定時)</li>
+<li>人狼の生存人数 (判定時)</li>
+<li>生存陣営数 (判定時/恋人は恋人陣営カウント)</li>
+<li>生存している住職誰か一人の入村番号</li>
+<li>生存している住職誰か一人と同じ性別の人数</li>
+<li>リアルタイムの年 (判定時)</li>
+<li>リアルタイムの月 (判定時)</li>
+<li>リアルタイムの日 (判定時)</li>
+<li>リアルタイムの時刻 (判定時/24時間表記)</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="#priest_group">司祭系</a>・<a href="ability.php#camp">陣営判定能力者</a>・<a href="ability.php#sex">性別能力者</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+他国のパン屋に相当します。
+淡々と鐘の音が鳴っているだけより、ごくまれに意味のあるメッセージが
+出力される方が面白いかなと思ってパターンを凝ってみました。
 </pre>
 
 <h3 id="barrier_brownie">産土神 (占い結果：村人 / 霊能結果：村人) [Ver. 3.0.0 α5]</h3>

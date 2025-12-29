@@ -370,10 +370,11 @@ final class ChaosConfig {
     'revive_brownie'        =>  14,
     'harvest_brownie'       =>  12,
     'maple_brownie'         =>  12,
-    'cursed_brownie'        =>  10,
-    'sun_brownie'           =>  10,
-    'history_brownie'       =>  10,
-    'barrier_brownie'       =>   8,
+    'cursed_brownie'        =>   8,
+    'sun_brownie'           =>   8,
+    'history_brownie'       =>   8,
+    'bell_brownie'          =>   8,
+    'barrier_brownie'       =>   6,
     'wizard'                =>  16,
     'soul_wizard'           =>   6,
     'pierrot_wizard'        =>   8,
@@ -1080,8 +1081,7 @@ final class ChaosConfig {
   */
   public static $boost_rate_fix_rate = 20;
   public static $boost_rate_list = [
-    'a' => ['fix' => ['servant' => 10, 'vassal_servant' => 10,
-		      'sweet_servant' => 10, 'barrier_servant' => 10]],
+    'a' => ['fix' => ['bell_brownie' => 20]],
     'b' => ['zero' => ['elder',
 		       'scripter',
 		       'eccentricer',
@@ -1760,6 +1760,7 @@ final class ChaosConfig {
     //TypeK: Ver. 5.2.0
     'k1' => ['pick' => [['list' => ['servant', 'vassal_servant', 'sweet_servant', 'barrier_servant'],
 			 'count' => 2]]],
+    'k2' => ['fix' => ['bell_brownie' => 1]],
   ];
 
   //-- 博物館モード(倍率型) --//
@@ -1916,6 +1917,7 @@ final class ChaosConfig {
     'j7' => ['boost' => ['fetish_cat', 'rioter_mad']],
     //TypeK: Ver. 5.2.0
     'k1' => ['boost' => ['servant', 'vassal_servant', 'sweet_servant', 'barrier_servant']],
+    'k2' => ['boost' => ['bell_brownie']],
   ];
 
   //サブ役職制限：EASYモード

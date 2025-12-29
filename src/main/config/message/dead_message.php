@@ -80,6 +80,7 @@ class DeadMessage {
   public static $joker_moved           = 'にジョーカーが移動したようです';		//ジョーカー移動
   public static $death_note_moved      = 'にデスノートが移動したようです';		//デスノート移動
   public static $letter_exchange_moved = 'に交換日記が移動したようです';		//交換日記移動
+  public static $bell                  = '回、鐘の音が鳴りました';			//住職
   public static $step                  = 'で足音が聞こえた…';				//足音
   public static $active_critical_voter = 'は会心が発動したようです';			//会心発動
   public static $active_critical_luck  = 'は痛恨が発動したようです';			//痛恨発動
