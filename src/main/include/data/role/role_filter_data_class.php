@@ -166,8 +166,8 @@ final class RoleFilterData {
 
   //処刑者カウンター
   public static $vote_kill_counter = [
-    'brownie', 'sun_brownie', 'doom_doll', 'miasma_fox', 'follow_vampire', 'follow_chiroptera',
-    'mirror_fairy'
+    'scarlet_peach', 'brownie', 'sun_brownie', 'doom_doll',
+    'miasma_fox', 'follow_vampire', 'follow_chiroptera', 'mirror_fairy'
   ];
 
   //処刑投票能力 (順番依存あり)
@@ -241,7 +241,8 @@ final class RoleFilterData {
 
   //人狼襲撃カウンター
   public static $wolf_eat_counter = [
-    'ghost_common', 'presage_scanner', 'cursed_brownie', 'sun_brownie', 'history_brownie',
+    'scarlet_peach', 'ghost_common', 'presage_scanner',
+    'cursed_brownie', 'sun_brownie', 'history_brownie',
     'miasma_fox', 'follow_vampire', 'involve_tengu', 'revive_mania', 'mind_sheep'
   ];
 

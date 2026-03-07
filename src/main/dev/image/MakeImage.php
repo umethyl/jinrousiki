@@ -16,7 +16,7 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'result_bell_brownie';
+//$role = 'result_scarlet_peach';
 //$role = 'servant_target';
 //$role = 'prediction_weather_no_escape';
 //$role = 'servant';

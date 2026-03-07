@@ -415,8 +415,8 @@ class RoleMessageList {
     'type' => 'brownie', 'delimiter' => ['=' => 'wolf']];
 
   public $bell_brownie = [
-    'message' => "[役割] [|村人|陣営] [#座敷童子#系]\n　あなたは#住職#です。毎朝鐘の音を響かせます。",
-    'type' => 'brownie', 'delimiter' => ['=' => 'wolf']];
+    'message' => "[役割] [|村人|陣営] [#座敷童子#系]\n　あなたは#住職#です。毎朝=鐘の音=を響かせます。",
+    'type' => 'brownie', 'delimiter' => ['=' => 'step']];
 
   public $barrier_brownie = [
     'message' => "[役割] [|村人|陣営] [#座敷童子#系]\n　あなたは#産土神#です。低確率で|村人陣営|を=人狼=の襲撃から*護衛*することができます。地縁で繋った村人たちを遍く守るのです。",
