@@ -284,13 +284,14 @@ PP ラインの計算を複雑にするために作成してみました。
 <h4>[役職表示] <a href="#human">村人</a></h4>
 <pre>
 処刑、または人狼の襲撃で死亡したら死亡メッセージ欄に専用メッセージが出力される村人。
+人狼の襲撃は身代わり君か、<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) による襲撃の場合は無効。
+メッセージは「村に芳しい香りが漂っています」と表示される。
 <a href="wolf.php#partner">人狼</a>から<a href="#unconscious">無意識</a>に、<a href="fox.php#partner">妖狐陣営</a>から<a href="fox.php#child_fox_group">子狐</a>に、<a href="#doll_rule">人形</a>から<a href="#doll_rule_doll_master">人形遣い系</a>に見える。
 本人表記は「<a href="#human">村人</a>」。
-メッセージは「村に芳しい香りが漂っています」と表示される。
 </pre>
 <h4>関連役職</h4>
 <pre>
-<a href="#bell_brownie">住職</a>・<a href="#sun_brownie">八咫烏</a>・<a href="ability.php#partner_jammer_scarlet">仲間情報妨害能力者</a>
+<a href="#bell_brownie">住職</a>・<a href="#sun_brownie">八咫烏</a>・<a href="ability.php#wolf_kill_counter">人狼襲撃カウンター能力者</a>・<a href="ability.php#partner_jammer_scarlet">仲間情報妨害能力者</a>
 </pre>
 <h4>[作成者からのコメント]</h4>
 <pre>
@@ -2057,7 +2058,7 @@ PP ラインの計算を複雑にするために作成してみました。
 <pre>
 自分を襲撃した<a href="wolf.php#wolf_group">人狼</a>に<a href="sub_role.php#chicken">小心者</a>を付加する上位共有者。
 <a href="wolf.php#possessed_wolf_sub_role">憑狼</a>は本体に付加される。
-身代わり君か、襲撃者が<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) だった場合は能力無効。
+身代わり君か、<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) による襲撃の場合は無効。
 </pre>
 <h4>関連役職</h4>
 <pre>
@@ -3641,7 +3642,7 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 <pre>
 座敷童子の亜種で、人狼に襲撃されたら次の日を全員<a href="sub_role.php#mind_open">公開者</a> (白夜) に、
 処刑されたら次の日の昼を全員<a href="sub_role.php#blinder">目隠し</a> (宵闇) にする。
-身代わり君か、<a href="wolf.php#hungry_wolf">餓狼</a>・<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) による襲撃の場合は無効。
+身代わり君か、<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) による襲撃の場合は無効。
 </pre>
 <h5>Ver. 2.0.0 α3</h5>
 <pre>
@@ -3663,7 +3664,7 @@ Ver. 1.4.0 α23 からは常時遠吠えを見えなくしました。
 <pre>
 人狼に襲撃されたら次の日の夜を飛ばしてしまう、座敷童子の亜種。
 能力が発動した場合は、専用のメッセージが表示される。
-身代わり君か、<a href="wolf.php#hungry_wolf">餓狼</a>・<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) による襲撃の場合は無効。
+身代わり君か、<a href="wolf.php#sirius_wolf">天狼</a> (完全覚醒状態) による襲撃の場合は無効。
 </pre>
 <h5>Ver. 2.0.0 α3</h5>
 <pre>
