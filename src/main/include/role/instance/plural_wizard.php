@@ -36,7 +36,7 @@ class Role_plural_wizard extends Role_wizard {
 
   //複数占い
   public function PluralMage(array $list) {
-    $this->InitStack();
+    $this->InitStack(); //未登録のみ初期化される
     foreach ($list as $target_id) {
       $this->Mage(DB::$USER->ByID($target_id));
     }
@@ -47,7 +47,7 @@ class Role_plural_wizard extends Role_wizard {
 	$this->SaveMageResult($stack['user'], $stack['result'], RoleAbility::MAGE);
       }
     }
-    //$this->InitStack(); //再利用は想定していないのでここで消すのもあり
+    $this->ClearStack(); //複数人いる場合に対応するため消去する
   }
 
   //占い (妨害 > 呪返し > 占い判定)
