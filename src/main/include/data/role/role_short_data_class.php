@@ -11,6 +11,7 @@ final class RoleShortData {
     'eccentricer'		=> '傾',
     'tough'			=> '益',
     'prince'			=> '首',
+    'scarlet_peach'		=> '桃',
     'suspect'			=> '審',
     'unconscious'		=> '無',
     'mage'			=> '占',

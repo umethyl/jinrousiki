@@ -8,6 +8,7 @@ class ResultList extends RoleMessageList {
   public $result_eccentricer = ['message' => "さんは|傾奇者|でした", 'type' => 'result_human'];
   public $result_tough = ['message' => "さんは|益荒男|でした", 'type' => 'result_human'];
   public $result_prince = ['message' => "さんは|ろくろ首|でした", 'type' => 'result_human'];
+  public $result_scarlet_peach = ['message' => "さんは|桃娘|でした", 'type' => 'result_human'];
   public $result_suspect = ['message' => "さんは|不審者|でした", 'type' => 'result_human'];
   public $result_unconscious = ['message' => "さんは|無意識|でした", 'type' => 'result_human'];
   public $result_mage = ['message' => "さんは|占い師|でした", 'delimiter' => ['|' => 'mage']];

@@ -12,6 +12,7 @@ final class RoleData {
     'eccentricer'		=> '傾奇者',
     'tough'			=> '益荒男',
     'prince'			=> 'ろくろ首',
+    'scarlet_peach'		=> '桃娘',
     'suspect'			=> '不審者',
     'unconscious'		=> '無意識',
     'mage'			=> '占い師',

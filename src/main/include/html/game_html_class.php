@@ -669,6 +669,7 @@ final class GameHTML {
       $class = 'revive';
       break;
 
+    case DeadReason::PEACH_DEAD:
     case DeadReason::GENDER_STATUS:
       $base  = false;
       $class = 'fairy';
