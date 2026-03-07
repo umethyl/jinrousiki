@@ -88,7 +88,7 @@ final class GameHTML {
 
     if (DateBorder::Second()) {
       $str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, 1);
-      for ($i = 2; DateBorder::Upper($i); $i++) {
+      for ($i = 2; DateBorder::Past($i); $i++) {
 	$str .= self::GenerateGameLogLink($url, RoomScene::DAY, $i);
 	$str .= self::GenerateGameLogLink($url, RoomScene::NIGHT, $i);
       }
@@ -669,6 +669,7 @@ final class GameHTML {
       $class = 'revive';
       break;
 
+    case DeadReason::PEACH_DEAD:
     case DeadReason::GENDER_STATUS:
       $base  = false;
       $class = 'fairy';
@@ -739,6 +740,11 @@ final class GameHTML {
       $base   = false;
       $class  = 'wolf';
       $action = strtolower($type . '_' . $result);
+      break;
+
+    case DeadReason::BELL:
+      $base  = false;
+      $class = 'step';
       break;
 
     case DeadReason::STEP:

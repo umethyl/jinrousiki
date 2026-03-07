@@ -10,7 +10,7 @@ class Role_priest_jealousy extends Role {
   public $display_role = 'priest';
 
   protected function IgnoreResult() {
-    return Number::Odd(DB::$ROOM->date, 3);
+    return DateBorder::OddFuture(3);
   }
 
   protected function OutputAddResult() {

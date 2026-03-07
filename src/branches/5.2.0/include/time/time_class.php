@@ -30,6 +30,26 @@ final class Time {
     return self::GetDate('Y/m/d (D) H:i:s', $time);
   }
 
+  //現在の年を返す
+  public static function GetYear() {
+    return self::GetNow('Y');
+  }
+
+  //現在の月を返す (先頭0なし)
+  public static function GetMonth() {
+    return self::GetNow('n');
+  }
+
+  //現在の日を返す (先頭0なし)
+  public static function GetDay() {
+    return self::GetNow('j');
+  }
+
+  //現在の時を返す (先頭0なし)
+  public static function GetHour() {
+    return self::GetNow('G');
+  }
+
   //分 -> 秒
   public static function ByMinute($minute) {
     return $minute * 60;
@@ -73,5 +93,10 @@ final class Time {
       $time += ServerConfig::OFFSET_SECONDS;
     }
     return $date ? self::GetTimeStamp($time) : $time;
+  }
+
+  //現在の日時をフォーマット補正をかけて返す
+  private static function GetNow($format) {
+    return self::GetDate($format, self::Get());
   }
 }

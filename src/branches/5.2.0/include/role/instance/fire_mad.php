@@ -11,7 +11,7 @@ class Role_fire_mad extends Role_critical_mad {
   }
 
   protected function IsVoteKillActionTarget(User $user) {
-    return Number::MultipleThree(DB::$ROOM->date, 2);
+    return DateBorder::OnThree();
   }
 
   protected function GetVoteKillActionRole() {

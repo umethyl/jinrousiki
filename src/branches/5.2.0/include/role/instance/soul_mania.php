@@ -42,6 +42,8 @@ class Role_soul_mania extends Role_mania {
 	$role = $stack[CampGroup::WOLF];
       } elseif ($user->IsRole('changed_therian')) {
 	$role = $stack[CampGroup::MAD];
+      } elseif ($user->IsRole('changed_tailtip')) {
+	$role = $stack[CampGroup::DEPRAVER];
       } else {
 	$role = $stack[$user->DistinguishRoleGroup()];
       }
