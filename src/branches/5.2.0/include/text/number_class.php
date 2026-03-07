@@ -17,27 +17,23 @@ final class Number {
   }
 
   //倍数
-  public static function Multiple(int $number, int $base, int $target, $limit = null) {
-    if (null === $limit) {
-      return $number % $base == $target;
-    } else {
-      return $number < $limit || $number % $base == $target;
-    }
+  public static function Multiple(int $number, int $base, int $target) {
+    return $number % $base == $target;
   }
 
   //偶数
-  public static function Even(int $number, $limit = null) {
-    return self::Multiple($number, 2, 0, $limit);
+  public static function Even(int $number) {
+    return self::Multiple($number, 2, 0);
   }
 
   //奇数
-  public static function Odd(int $number, $limit = null) {
-    return self::Multiple($number, 2, 1, $limit);
+  public static function Odd(int $number) {
+    return self::Multiple($number, 2, 1);
   }
 
   //3の倍数
-  public static function MultipleThree(int $number, $limit = null) {
-    return self::Multiple($number, 3, 0, $limit);
+  public static function MultipleThree(int $number, int $target = 0) {
+    return self::Multiple($number, 3, $target);
   }
 
   //割合

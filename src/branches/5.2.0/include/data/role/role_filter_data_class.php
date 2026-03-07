@@ -26,7 +26,7 @@ final class RoleFilterData {
     'fake_lovers', 'possessed_exchange', 'letter_exchange', 'joker', 'rival', 'enemy', 'supported',
     'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
     'bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status', 'gender_status',
-    'protected', 'penetration', 'aspirator', 'levitation', 'serve_support',
+    'protected', 'penetration', 'aspirator', 'levitation', 'serve_support', 'serve_protect',
     'lost_ability', 'muster_ability',
     'changed_disguise', 'changed_therian', 'changed_vindictive', 'changed_tailtip',
     'copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
@@ -166,11 +166,11 @@ final class RoleFilterData {
 
   //処刑者カウンター
   public static $vote_kill_counter = [
-    'brownie', 'sun_brownie', 'doom_doll', 'miasma_fox', 'follow_vampire', 'follow_chiroptera',
-    'mirror_fairy'
+    'scarlet_peach', 'brownie', 'sun_brownie', 'doom_doll',
+    'miasma_fox', 'follow_vampire', 'follow_chiroptera', 'mirror_fairy'
   ];
 
-  //処刑投票能力処理 (順番依存あり)
+  //処刑投票能力 (順番依存あり)
   public static $vote_kill_action = [
     'seal_medium', 'bacchus_medium', 'cowboy_duelist', 'sea_duelist', 'centaurus_pharmacist',
     'spell_common', 'miasma_jealousy', 'critical_jealousy', 'corpse_courier_mad', 'amaze_mad',
@@ -241,7 +241,8 @@ final class RoleFilterData {
 
   //人狼襲撃カウンター
   public static $wolf_eat_counter = [
-    'ghost_common', 'presage_scanner', 'cursed_brownie', 'sun_brownie', 'history_brownie',
+    'scarlet_peach', 'ghost_common', 'presage_scanner',
+    'cursed_brownie', 'sun_brownie', 'history_brownie',
     'miasma_fox', 'follow_vampire', 'involve_tengu', 'revive_mania', 'mind_sheep'
   ];
 
@@ -289,6 +290,18 @@ final class RoleFilterData {
   //透視/足音 (直線型)
   public static $scan_step_line = ['step_assassin', 'step_scanner', 'step_mad', 'step_fox'];
 
+  //死者妨害
+  public static $grave = ['grave_mad'];
+
+  //身代わり蘇生
+  public static $revive_sacrifice = ['fetish_cat'];
+
+  //蘇生キャンセル
+  public static $revive_cancel = ['doom_cat'];
+
+  //蘇生制限判定
+  public static $limited_revive = ['detective_common', 'scarlet_vampire', 'resurrect_mania'];
+
   //復活
   public static $resurrect = [
     'revive_pharmacist', 'revive_brownie', 'revive_doll', 'revive_mad', 'revive_cupid',
@@ -310,17 +323,8 @@ final class RoleFilterData {
   //人狼襲撃失敗カウンター
   public static $wolf_eat_failed_counter = ['wanderer_guard'];
 
-  //死者妨害
-  public static $grave = ['grave_mad'];
-
-  //身代わり蘇生
-  public static $revive_sacrifice = ['fetish_cat'];
-
-  //蘇生キャンセル
-  public static $revive_cancel = ['doom_cat'];
-
-  //蘇生制限判定
-  public static $limited_revive = ['detective_common', 'scarlet_vampire', 'resurrect_mania'];
+  //座敷童 (夜発動型)
+  public static $brownie_night = ['bell_brownie'];
 
   //憑依能力者判定
   public static $possessed_group = ['possessed_wolf', 'possessed_mad', 'possessed_fox'];

@@ -116,8 +116,8 @@ class CastConfig {
   //役職振替モード (オプション名 => 置換先役職)
   public static $shuffle_role_list = [
     'shuffle_human' => [
-       'saint', 'executor', 'suspect', 'unconscious', 'crisis_priest', 'widow_priest',
-       'chain_poison', 'dummy_scanner'
+       'saint', 'executor', 'scarlet_peach', 'suspect', 'unconscious', 'crisis_priest',
+       'widow_priest', 'chain_poison', 'dummy_scanner'
      ],
   ];
 }

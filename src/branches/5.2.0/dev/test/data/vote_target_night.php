@@ -30,9 +30,9 @@ if (VoteTestRoom::DATE == 1) {
   RQ::GetTest()->vote->night = [
     ['user_no' => 2,	RequestDataVote::TARGET => 30,	'type' => VoteAction::WOLF],
     //['user_no' => 3,	RequestDataVote::TARGET => 22,	'type' => VoteAction::WOLF],
-    ['user_no' => 4, 	RequestDataVote::TARGET => 35,	'type' => VoteAction::MAGE],
+    ['user_no' => 4, 	RequestDataVote::TARGET => 34,	'type' => VoteAction::MAGE],
     //['user_no' => 4, 	RequestDataVote::TARGET => '9 14 19 18 3',	'type' => VoteAction::STEP_MAGE],
-    ['user_no' => 5,	RequestDataVote::TARGET => 35,	'type' => VoteAction::MAGE],
+    ['user_no' => 5,	RequestDataVote::TARGET => 34,	'type' => VoteAction::MAGE],
     ['user_no' => 7,	RequestDataVote::TARGET => 29,	'type' => VoteAction::GUARD],
     //['user_no' => 7,	RequestDataVote::TARGET => '8 9 10',	'type' => VoteAction::STEP_GUARD],
     //['user_no' => 8,	RequestDataVote::TARGET => 16,	'type' => VoteAction::GUARD],
@@ -123,7 +123,7 @@ if (VoteTestRoom::DATE == 1) {
     //['user_no' => 33,	RequestDataVote::TARGET => null,	'type' => VoteAction::NOT_ASSASSIN],
     //['user_no' => 33,	RequestDataVote::TARGET => 32,	'type' => VoteAction::SERVE_END],
     ['user_no' => 33,	RequestDataVote::TARGET => null,	'type' => VoteAction::NOT_SERVE_END],
-    ['user_no' => 34,	RequestDataVote::TARGET => '7 13 19',	'type' => VoteAction::SPARK_WIZARD],
+    //['user_no' => 34,	RequestDataVote::TARGET => '7 13 19',	'type' => VoteAction::SPARK_WIZARD],
     ['user_no' => 35,	RequestDataVote::TARGET => 34,		'type' => VoteAction::SERVE_END],
     //['user_no' => 35,	RequestDataVote::TARGET => null,	'type' => VoteAction::NOT_SERVE_END],
   ];

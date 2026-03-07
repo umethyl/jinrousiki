@@ -868,7 +868,13 @@ final class VoteNight extends VoteBase {
       self::FilterNecromancerNight();
     }
     self::FilterPriest();
+
+    //-- 生存者確定後 --//
+    //-- 人狼襲撃失敗カウンター --//
     self::FilterWolfEatFailedCounter();
+
+    //-- 座敷童 --//
+    self::FilterBrownie();
 
     //-- 日付変更処理 --//
     $status = DB::$ROOM->ChangeDate();
@@ -1609,6 +1615,15 @@ final class VoteNight extends VoteBase {
     foreach (RoleFilterData::$wolf_eat_failed_counter as $role) {
       if (DB::$USER->IsAppear($role)) {
 	RoleLoader::Load($role)->WolfEatFailedCounter();
+      }
+    }
+  }
+
+  //座敷童 (夜発動型)
+  private static function FilterBrownie() {
+    foreach (RoleFilterData::$brownie_night as $role) {
+      if (DB::$USER->IsLiveRole($role)) {
+	RoleLoader::Load($role)->BrownieNight();
       }
     }
   }

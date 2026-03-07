@@ -249,15 +249,16 @@ final class ChaosConfig {
   //超・闇鍋
   public static $chaos_hyper_random_role_list = [
     'human'                 =>   1,
-    'saint'                 =>  12,
+    'saint'                 =>  10,
     'executor'              =>   9,
-    'elder'                 =>  20,
+    'elder'                 =>  18,
     'scripter'              =>  10,
     'eccentricer'           =>  10,
     'tough'                 =>   9,
     'prince'                =>   9,
-    'suspect'               =>  20,
-    'unconscious'           =>  20,
+    'scarlet_peach'         =>  12,
+    'suspect'               =>  16,
+    'unconscious'           =>  16,
     'mage'                  => 100,
     'puppet_mage'           =>  40,
     'step_mage'             =>  25,
@@ -370,10 +371,11 @@ final class ChaosConfig {
     'revive_brownie'        =>  14,
     'harvest_brownie'       =>  12,
     'maple_brownie'         =>  12,
-    'cursed_brownie'        =>  10,
-    'sun_brownie'           =>  10,
-    'history_brownie'       =>  10,
-    'barrier_brownie'       =>   8,
+    'cursed_brownie'        =>   8,
+    'sun_brownie'           =>   8,
+    'history_brownie'       =>   8,
+    'bell_brownie'          =>   8,
+    'barrier_brownie'       =>   6,
     'wizard'                =>  16,
     'soul_wizard'           =>   6,
     'pierrot_wizard'        =>   8,
@@ -769,7 +771,8 @@ final class ChaosConfig {
 			  'toy_doll_master'    => 30,
 			  'revive_doll_master' => 20,
 			  'serve_doll_master'  => 10],
-			 ['puppet_mage'        => 15,
+			 ['scarlet_peach'      =>  5,
+			  'puppet_mage'        => 10,
 			  'scarlet_doll'       =>  5,
 			  'scarlet_wolf'       => 25,
 			  'scarlet_fox'        => 15,
@@ -1080,8 +1083,8 @@ final class ChaosConfig {
   */
   public static $boost_rate_fix_rate = 20;
   public static $boost_rate_list = [
-    'a' => ['fix' => ['servant' => 10, 'vassal_servant' => 10,
-		      'sweet_servant' => 10, 'barrier_servant' => 10]],
+    'a' => ['fix' => ['scarlet_peach' => 10,
+		      'bell_brownie' => 20]],
     'b' => ['zero' => ['elder',
 		       'scripter',
 		       'eccentricer',
@@ -1442,7 +1445,8 @@ final class ChaosConfig {
 		       'immolate_mad',
 		       'immolate_fox',
 		       'critical_fox']],
-    'm' => ['zero' => ['puppet_mage',
+    'm' => ['zero' => ['scarlet_peach',
+		       'puppet_mage',
 		       'scarlet_doll',
 		       'silver_doll',
 		       'toy_doll_master',
@@ -1593,8 +1597,7 @@ final class ChaosConfig {
     'b31' => ['pick' => [['list' => ['divorce_jealousy', 'amaze_mad'],
 			  'count' => 1],
 			 ['list' => ['poison_ogre', 'east_ogre', 'west_ogre', 'north_ogre',
-				     'south_ogre', 'wise_ogre', 'yaksa', 'incubus_ogre',
-				     'succubus_yaksa'],
+				     'south_ogre', 'yaksa', 'incubus_ogre', 'succubus_yaksa'],
 			  'count' => 1],
 			 ['list' => ['doom_vampire', 'soul_vampire'],
 			  'count' => 1]]],
@@ -1760,6 +1763,7 @@ final class ChaosConfig {
     //TypeK: Ver. 5.2.0
     'k1' => ['pick' => [['list' => ['servant', 'vassal_servant', 'sweet_servant', 'barrier_servant'],
 			 'count' => 2]]],
+    'k2' => ['fix' => ['scarlet_peach' => 1, 'bell_brownie' => 1]],
   ];
 
   //-- 博物館モード(倍率型) --//
@@ -1916,6 +1920,7 @@ final class ChaosConfig {
     'j7' => ['boost' => ['fetish_cat', 'rioter_mad']],
     //TypeK: Ver. 5.2.0
     'k1' => ['boost' => ['servant', 'vassal_servant', 'sweet_servant', 'barrier_servant']],
+    'k2' => ['boost' => ['scarlet_peach', 'bell_brownie']],
   ];
 
   //サブ役職制限：EASYモード

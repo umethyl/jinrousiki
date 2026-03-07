@@ -6,7 +6,7 @@
 */
 class Role_priest extends Role {
   protected function IgnoreResult() {
-    return Number::Odd(DB::$ROOM->date, 3);
+    return DateBorder::OddFuture(3);
   }
 
   protected function OutputAddResult() {
@@ -53,7 +53,7 @@ class Role_priest extends Role {
 
     //-- 天候判定 --//
     if (DB::$ROOM->IsOption('full_weather') ||
-	(DB::$ROOM->IsOption('weather') && Number::Multiple(DB::$ROOM->date, 3, 1))) {
+	(DB::$ROOM->IsOption('weather') && DateBorder::OnThree(1))) {
       $role = 'weather_priest';
       $data->$role = true;
       ArrayFilter::Register($data->list, $role);
@@ -147,7 +147,7 @@ class Role_priest extends Role {
 
   //司祭能力発動情報スキップ判定
   protected function IgnoreSetPriest() {
-    return Number::Even(DB::$ROOM->date, 3);
+    return DateBorder::EvenFuture(3);
   }
 
   //司祭能力発動情報スキップイベント判定
