@@ -264,10 +264,13 @@ abstract class Role extends stdClass {
     RoleManager::Stack()->Set((null === $role) ? $this->role : $role, $data);
   }
 
-  //データ初期化
+  //データ初期化 (未登録時のみ)
   final protected function InitStack($name = null) {
     $data  = (null === $name) ? $this->role : $name;
-    RoleManager::Stack()->Init($data);
+    $stack = RoleManager::Stack()->Get($data);
+    if (false === isset($stack)) {
+      RoleManager::Stack()->Init($data);
+    }
   }
 
   //データ追加
@@ -292,6 +295,15 @@ abstract class Role extends stdClass {
   //データ存在判定
   final protected function InStack($data, $name = null) {
     return in_array($data, $this->GetStack($name));
+  }
+
+  //データ消去
+  final protected function ClearStack($name = null) {
+    $data  = (null === $name) ? $this->role : $name;
+    $stack = RoleManager::Stack()->Get($data);
+    if (true === isset($stack)) {
+      RoleManager::Stack()->Clear($data);
+    }
   }
 
   //同一ユーザ判定
