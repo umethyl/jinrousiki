@@ -1826,7 +1826,7 @@ final class ChaosConfig {
 			  'ogre', 'orange_ogre', 'indigo_ogre']],
     'b31' => ['boost' => ['divorce_jealousy', 'amaze_mad',
 			  'poison_ogre', 'east_ogre', 'west_ogre', 'north_ogre',
-			  'south_ogre', 'wise_ogre', 'yaksa', 'incubus_ogre', 'succubus_yaksa',
+			  'south_ogre', 'yaksa', 'incubus_ogre', 'succubus_yaksa',
 			  'doom_vampire', 'soul_vampire']],
     'b32' => ['boost' => ['attempt_necromancer', 'revive_brownie', 'cursed_brownie',
 			  'phantom_doll', 'revive_doll', 'sacrifice_ogre', 'shadow_fairy']],
