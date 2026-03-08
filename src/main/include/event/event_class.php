@@ -39,7 +39,7 @@ final class EventManager {
 
   //処刑投票数補正
   public static function VoteDo() {
-    self::Filter('vote_do', __FUNCTION__);
+    self::Filter('vote_do', 'FilterVoteDo');
   }
 
   //処刑投票妨害
