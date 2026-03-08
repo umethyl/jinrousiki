@@ -160,12 +160,14 @@ class Option_chaos extends OptionCastCheckbox {
       if ($count > 0) {
 	$name = ChaosConfig::${$this->name . '_replace_human_role_list'};
 	$rate = Lottery::GetChaos($name, $boost_list);
-	$list = Lottery::Generate($rate);
-	Lottery::Add($role_list, $list, $count);
-	//Lottery::ToProbability($rate); //テスト用
-	//Text::p($list, "◆Human [{$count}]");
-	$role_list[$role] -= $count;
-	ArrayFilter::Sweep($role_list, $role); //0 になったらリストから除く
+	if (array_sum($rate) > 0) { //オプションの組み合わせで変換先が存在しないケースがある
+	  $list = Lottery::Generate($rate);
+	  Lottery::Add($role_list, $list, $count);
+	  //Lottery::ToProbability($rate); //テスト用
+	  //Text::p($list, "◆Human [{$count}]");
+	  $role_list[$role] -= $count;
+	  ArrayFilter::Sweep($role_list, $role); //0 になったらリストから除く
+	}
 	//Text::p($role_list, sprintf('◆4th(%d)', array_sum($role_list)));
       }
     }
