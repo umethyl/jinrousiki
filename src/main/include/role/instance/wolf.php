@@ -13,6 +13,7 @@
   ・妖狐襲撃：なし
   ・襲撃死因：人狼襲撃
   ・襲撃追加：なし
+  ・襲撃カウンター無効化：なし
   ・襲撃毒発動：有効
   ・襲撃毒対象選出：通常
   ・毒死：通常
@@ -278,8 +279,10 @@ class Role_wolf extends Role {
       }
 
       //人狼襲撃カウンター処理
-      foreach (RoleLoader::LoadUser($target, 'wolf_eat_counter') as $filter) {
-	$filter->WolfEatCounter($actor);
+      if (true !== $wolf_filter->DisableWolfEatCount()) {
+	foreach (RoleLoader::LoadUser($target, 'wolf_eat_counter') as $filter) {
+	  $filter->WolfEatCounter($actor);
+	}
       }
     }
     return false;
@@ -323,6 +326,11 @@ class Role_wolf extends Role {
 
   //人狼襲撃処理
   public function WolfEatAction(User $user) {}
+
+  //人狼襲撃カウンター無効化判定
+  public function DisableWolfEatCount() {
+    return false;
+  }
 
   //人狼襲撃死亡処理
   final public function WolfKill(User $user) {

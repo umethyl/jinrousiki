@@ -202,6 +202,7 @@ final class RoleShortData {
     'sharp_wolf'		=> '鋭',
     'hungry_wolf'		=> '餓',
     'spell_wolf'		=> '怨',
+    'seal_wolf'			=> '封狼',
     'tongue_wolf'		=> '舌',
     'possessed_wolf'		=> '憑狼',
     'sirius_wolf'		=> '天狼',

@@ -198,7 +198,8 @@ class ResultList extends RoleMessageList {
   public $result_honey_wolf = ['message' => "さんは|蜜狼|でした", 'type' => 'result_wolf'];
   public $result_sharp_wolf = ['message' => "さんは|鋭狼|でした", 'type' => 'result_wolf'];
   public $result_hungry_wolf = ['message' => "さんは|餓狼|でした", 'type' => 'result_wolf'];
-  public $result_grudge_wolf = ['message' => "さんは|怨狼|でした", 'type' => 'result_wolf'];
+  public $result_spell_wolf = ['message' => "さんは|怨狼|でした", 'type' => 'result_wolf'];
+  public $result_seal_wolf = ['message' => "さんは|封狼|でした", 'type' => 'result_wolf'];
   public $result_tongue_wolf = ['message' => "さんは|舌禍狼|でした", 'type' => 'result_wolf'];
   public $result_possessed_wolf = ['message' => "さんは|憑狼|でした", 'type' => 'result_wolf'];
   public $result_sirius_wolf = ['message' => "さんは|天狼|でした", 'type' => 'result_wolf'];

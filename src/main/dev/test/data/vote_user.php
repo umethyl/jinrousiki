@@ -3,7 +3,7 @@
 RQ::GetTest()->test_users[1]->role = 'harp_mania';
 RQ::GetTest()->test_users[1]->live = UserLive::DEAD;
 
-RQ::GetTest()->test_users[2]->role = 'spell_wolf authority';
+RQ::GetTest()->test_users[2]->role = 'seal_wolf authority';
 RQ::GetTest()->test_users[2]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[3]->role = 'possessed_wolf possessed_target[3-17]';
@@ -100,7 +100,7 @@ RQ::GetTest()->test_users[32]->live = UserLive::LIVE;
 RQ::GetTest()->test_users[33]->role = 'barrier_servant[32]';
 RQ::GetTest()->test_users[33]->live = UserLive::LIVE;
 
-RQ::GetTest()->test_users[34]->role = 'bell_brownie';
+RQ::GetTest()->test_users[34]->role = 'scarlet_peach';
 RQ::GetTest()->test_users[34]->live = UserLive::LIVE;
 
 RQ::GetTest()->test_users[35]->role = 'sweet_servant[34]';
