@@ -308,6 +308,9 @@ final class RoleFilterData {
     'scarlet_vampire', 'revive_ogre', 'revive_avenger', 'revive_mania', 'resurrect_mania'
   ];
 
+  //復活無効
+  public static $disable_resurrect = ['seal_wolf'];
+
   //天人帰還
   public static $priest_return = ['revive_priest'];
 
