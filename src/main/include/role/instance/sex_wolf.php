@@ -4,6 +4,7 @@
   ○仕様
   ・能力結果：襲撃
   ・襲撃：性別鑑定
+  ・妖狐襲撃得票カウンター：無効
 */
 RoleLoader::LoadFile('wolf');
 class Role_sex_wolf extends Role_wolf {
@@ -20,5 +21,9 @@ class Role_sex_wolf extends Role_wolf {
 
     $user->wolf_eat = true; //襲撃は成功扱い
     return true;
+  }
+
+  public function EnableWolfEatFoxReaction() {
+    return false;
   }
 }

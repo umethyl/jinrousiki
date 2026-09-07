@@ -903,6 +903,10 @@ class RoleMessageList {
     'message' => "[役割] [|妖狐|陣営] [|妖狐|系]\n　あなたは|蒼狐|です。あなたを襲撃した#人狼#を_はぐれ者_にすることができます。返す刀で#遠吠え#を引き裂いて#人狼#の群れを瓦解させるのです！",
     'type' => 'fox', 'delimiter' => ['_' => 'mind']];
 
+  public $seal_fox = [
+    'message' => "[役割] [|妖狐|陣営] [|妖狐|系]\n　あなたは|封狐|です。#人狼#に襲撃されたら死亡と引き換えに#抜牙#を与えることができます。",
+    'type' => 'fox', 'delimiter' => ['_' => 'mind']];
+
   public $spell_fox = [
     'message' => "[役割] [|妖狐|陣営] [|妖狐|系]\n　あなたは|宙狐|です。一度だけ、あなたを襲撃した#人狼#に_狐火_を灯すことができます。\n　飛んで火に入る#人狼#を、化かして騙して煙に巻き、村に混沌なる火種を撒くのです！",
     'type' => 'fox', 'delimiter' => ['_' => 'wisp']];
@@ -1909,6 +1913,10 @@ class RoleMessageList {
   public $death_selected = [
     'message' => "　あなたは|オシラ遊び|の生贄に選ばれたので今夜死亡します。",
     'delimiter' => ['|' => 'assassin']];
+
+  public $lost_fang = [
+    'message' => "　あなたは|抜牙|されたので、襲撃しても噛み殺すことができません。",
+    'delimiter' => ['|' => 'wolf']];
 
   public $aspirator = [
     'message' => "　あなたは|吸毒者|です。#処刑#時に発動する|毒|に優先的に中ってしまいます。",

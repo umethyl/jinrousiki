@@ -14,7 +14,8 @@ final class RoleFilterData {
     'infatuated', 'day_voter', 'wirepuller_luck', 'occupied_luck', 'tengu_voice', 'mind_open',
     'mind_read', 'mind_evoke', 'mind_lonely', 'mind_receiver', 'mind_friend', 'mind_sympathy',
     'mind_sheep', 'mind_presage', 'wisp', 'black_wisp', 'spell_wisp', 'foughten_wisp', 'gold_wisp',
-    'tengu_spell_wisp', 'sheep_wisp', 'male_status', 'female_status', 'gender_status', 'aspirator'
+    'tengu_spell_wisp', 'sheep_wisp', 'male_status', 'female_status', 'gender_status', 'lost_fang',
+    'aspirator'
   ];
 
   //初期配役抑制役職
@@ -24,10 +25,10 @@ final class RoleFilterData {
     'mind_read', 'mind_receiver', 'mind_friend', 'mind_sympathy', 'mind_evoke', 'mind_presage',
     'mind_lonely', 'mind_sheep', 'sheep_wisp', 'lovers', 'challenge_lovers', 'vega_lovers',
     'fake_lovers', 'possessed_exchange', 'letter_exchange', 'joker', 'rival', 'enemy', 'supported',
-    'death_note', 'death_selected', 'possessed_target', 'possessed', 'infected', 'psycho_infected',
-    'bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status', 'gender_status',
-    'protected', 'penetration', 'aspirator', 'levitation', 'serve_support', 'serve_protect',
-    'lost_ability', 'muster_ability',
+    'death_note', 'death_selected', 'possessed_target', 'possessed', 'lost_fang', 'infected',
+    'psycho_infected', 'bad_status', 'face_status', 'sweet_status', 'male_status', 'female_status',
+    'gender_status', 'protected', 'penetration', 'aspirator', 'levitation', 'serve_support',
+    'serve_protect', 'lost_ability', 'muster_ability',
     'changed_disguise', 'changed_therian', 'changed_vindictive', 'changed_tailtip',
     'copied', 'copied_trick', 'copied_basic', 'copied_nymph', 'copied_soul', 'copied_teller'
   ];
@@ -232,12 +233,18 @@ final class RoleFilterData {
     'tough', 'fend_guard', 'awake_wizard', 'ascetic_assassin'
   ];
 
+  //人狼襲撃無効(サブ役職) (順番依存あり)
+  public static $disable_wolf_eat_sub = ['lost_fang'];
+
   //人狼襲撃得票カウンター (+ 身代わり能力者)
   public static $wolf_eat_reaction = [
     'therian_mad', 'immolate_mad', 'sacrifice_common', 'doll_master', 'toy_doll_master',
     'revive_doll_master', 'serve_doll_master', 'sacrifice_fox', 'sacrifice_cupid',
     'sacrifice_vampire', 'boss_chiroptera', 'sacrifice_ogre'
   ];
+
+  //人狼妖狐襲撃得票カウンター
+  public static $wolf_eat_fox_reaction = ['seal_fox'];
 
   //人狼襲撃カウンター
   public static $wolf_eat_counter = [

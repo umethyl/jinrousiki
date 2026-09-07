@@ -2288,6 +2288,7 @@ B：「恋人陣営の勝利」
 <p>
 <a href="#possessed_target">憑依者</a>
 <a href="#possessed">憑依</a>
+<a href="#lost_fang">抜牙</a>
 <a href="#protected">庇護者</a>
 <a href="#penetration">護衛貫通</a>
 <a href="#aspirator">吸毒者</a>
@@ -2332,6 +2333,27 @@ B：「恋人陣営の勝利」
 <h4>[作成者からのコメント]</h4>
 <pre>
 憑依システム用に実装されたサブ役職です。
+</pre>
+
+<h3 id="lost_fang">抜牙 [Ver. 5.2.0 α4]</h3>
+<h4>[役職表示] 常時表示</h4>
+<h4>[配役制限] 役職付加専用</h4>
+<pre>
+襲撃に成功しても噛み殺すことができなくなる。
+</pre>
+<h4>仕様</h4>
+<ol>
+<li>襲撃は成功扱い (<a href="human.php#reporter">ブン屋</a>)。</li>
+<li>人狼のメイン役職の能力発動前に判定される (<a href="ability.php#wolf_kill_avoid">人狼襲撃回避能力者</a>)。</li>
+<li>発動すると「人狼は襲撃能力を喪失しているようです」と出力される (<a href="../spec.php#wolf_failed">人狼襲撃失敗一覧</a>)。</li>
+</ol>
+<h4>関連役職</h4>
+<pre>
+<a href="wolf.php#sex_wolf">雛狼</a>・<a href="fox.php#seal_fox">封狐</a>
+</pre>
+<h4>[作成者からのコメント]</h4>
+<pre>
+<a href="fox.php#seal_fox">封狐</a>用に実装されたサブ役職です。
 </pre>
 
 <h3 id="protected">庇護者 [Ver. 1.4.0 β18]</h3>
