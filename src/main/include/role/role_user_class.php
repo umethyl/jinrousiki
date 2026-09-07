@@ -410,6 +410,15 @@ final class RoleUser {
     return false;
   }
 
+  //復活無効化 (覚醒天狼 > メイン役職判定)
+  public static function DisableResurrect(User $user) {
+    if (self::IsSiriusWolf($user) || $user->IsRole(RoleFilterData::$disable_resurrect)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   //行動判定
   private static function IsExecute(User $user, Role $filter) {
     $vote_data = RoleManager::GetVoteData();

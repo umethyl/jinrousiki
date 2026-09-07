@@ -136,7 +136,7 @@ class Role_mage extends Role {
     }
   }
 
-  //呪殺対象判定 (天候 > 生存状態 > 特殊判定 > サブ > メイン)
+  //呪殺対象判定 (天候 > 生存状態 > 特殊判定 > サブ(能力) > メイン(妖狐) > メイン(個別))
   final protected function IsMageKill(User $user) {
     if (DB::$ROOM->IsEvent('no_fox_dead')) {
       return false;
@@ -148,6 +148,8 @@ class Role_mage extends Role {
       return false === $user->IsRole(
 	'white_fox', 'black_fox', 'mist_fox', 'tiger_fox', 'sacrifice_fox'
       );
+    } elseif ($user->IsRole('seal_wolf')) {
+      return true;
     } else {
       return false;
     }

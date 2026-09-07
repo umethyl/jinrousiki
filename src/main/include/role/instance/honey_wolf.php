@@ -5,6 +5,7 @@
   ・妖狐襲撃：自決
   ・襲撃：自決
   ・自決：恋人・LWは除く
+  ・妖狐襲撃得票カウンター：無効
 */
 RoleLoader::LoadFile('wolf');
 class Role_honey_wolf extends Role_wolf {
@@ -14,6 +15,10 @@ class Role_honey_wolf extends Role_wolf {
 
   public function WolfEatAction(User $user) {
     $this->Suicide();
+    return false;
+  }
+
+  public function EnableWolfEatFoxReaction() {
     return false;
   }
 

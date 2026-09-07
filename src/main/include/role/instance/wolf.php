@@ -13,6 +13,8 @@
   ・妖狐襲撃：なし
   ・襲撃死因：人狼襲撃
   ・襲撃追加：なし
+  ・妖狐襲撃得票カウンター：有効
+  ・襲撃カウンター無効化：なし
   ・襲撃毒発動：有効
   ・襲撃毒対象選出：通常
   ・毒死：通常
@@ -167,7 +169,9 @@ class Role_wolf extends Role {
 
     $actor = $this->GetWolfVoter();
     $wolf_filter = RoleLoader::LoadMain($actor);
-    if ($wolf_filter->EnableTrap($actor)) { //罠有効判定
+
+    //罠有効判定
+    if ($wolf_filter->EnableTrap($actor)) {
       foreach (RoleLoader::LoadFilter('trap') as $filter) {
 	if ($filter->TrapComposite($actor, $target->id)) {
 	  return $this->WolfEatFailed('TRAP');
@@ -187,7 +191,9 @@ class Role_wolf extends Role {
       RoleLoader::LoadMain($actor)->GuardCounter();
       return $this->WolfEatFailed('GUARD');
     }
-    if ($this->IgnoreWolfEat()) { //襲撃失敗判定
+
+    //襲撃失敗判定
+    if ($this->IgnoreWolfEat()) {
       return;
     }
 
@@ -260,8 +266,17 @@ class Role_wolf extends Role {
       }
     }
 
+    //人狼襲撃無効判定 (サブ役職)
+    foreach (RoleLoader::LoadUser($actor, 'disable_wolf_eat_sub') as $filter) {
+      if ($filter->DisableWolfEatSub()) {
+	$target->wolf_eat = true; //襲撃は成功扱い
+	return $this->WolfEatFailed($filter->GetWolfEatFailedType(), true);
+      }
+    }
+
+    //人狼襲撃無効判定 (メイン役職)
     $wolf_filter = RoleLoader::LoadMain($actor);
-    if ($wolf_filter->DisableWolfEat($target)) { //人狼襲撃無効判定
+    if ($wolf_filter->DisableWolfEat($target)) {
       return true;
     }
 
@@ -273,13 +288,22 @@ class Role_wolf extends Role {
 	}
       }
 
+      //人狼妖狐襲撃得票カウンター
+      if ($wolf_filter->EnableWolfEatFoxReaction()) {
+	foreach (RoleLoader::LoadUser($target, 'wolf_eat_fox_reaction') as $filter) {
+	  $filter->WolfEatFoxReaction($actor);
+	}
+      }
+
       if ($wolf_filter->WolfEatAction($target)) { //人狼襲撃能力処理
 	return $this->WolfEatFailed('ACTION', true);
       }
 
       //人狼襲撃カウンター処理
-      foreach (RoleLoader::LoadUser($target, 'wolf_eat_counter') as $filter) {
-	$filter->WolfEatCounter($actor);
+      if (true !== $wolf_filter->DisableWolfEatCount()) {
+	foreach (RoleLoader::LoadUser($target, 'wolf_eat_counter') as $filter) {
+	  $filter->WolfEatCounter($actor);
+	}
       }
     }
     return false;
@@ -323,6 +347,16 @@ class Role_wolf extends Role {
 
   //人狼襲撃処理
   public function WolfEatAction(User $user) {}
+
+  //人狼妖狐襲撃得票カウンター有効判定
+  public function EnableWolfEatFoxReaction() {
+    return true;
+  }
+
+  //人狼襲撃カウンター無効化判定
+  public function DisableWolfEatCount() {
+    return false;
+  }
 
   //人狼襲撃死亡処理
   final public function WolfKill(User $user) {
