@@ -6,6 +6,7 @@
   ・襲撃無効判定：なし
   ・襲撃：人外カウントのみ
   ・襲撃死因：餓狼襲撃
+  ・妖狐襲撃得票カウンター：無効
 */
 RoleLoader::LoadFile('wolf');
 class Role_hungry_wolf extends Role_wolf {
@@ -23,5 +24,9 @@ class Role_hungry_wolf extends Role_wolf {
 
   protected function GetWolfKillReason() {
     return DeadReason::HUNGRY_WOLF_KILLED;
+  }
+
+  public function EnableWolfEatFoxReaction() {
+    return false;
   }
 }

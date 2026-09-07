@@ -68,6 +68,7 @@ class DeadMessage {
   public static $wolf_failed_fox      = '人狼は妖狐を襲撃したようです';		//妖狐襲撃
   public static $wolf_failed_reaction = '人狼は能力に阻まれたようです';		//身代わり他
   public static $wolf_failed_action   = '人狼は襲撃を回避したようです';		//人狼能力
+  public static $wolf_failed_lost     = '人狼は襲撃能力を喪失しているようです';	//人狼襲撃能力喪失
 
   /* 特殊 */
   public static $novoted               = 'は突然お亡くなりになられました';		//未投票突然死

@@ -247,6 +247,7 @@ class ResultList extends RoleMessageList {
   public $result_snow_fox = ['message' => "さんは|雪狐|でした", 'type' => 'result_fox'];
   public $result_fortitude_fox = ['message' => "さんは|剛狐|でした", 'type' => 'result_fox'];
   public $result_poison_fox = ['message' => "さんは|管狐|でした", 'type' => 'result_fox'];
+  public $result_seal_fox = ['message' => "さんは|封狐|でした", 'type' => 'result_fox'];
   public $result_blue_fox = ['message' => "さんは|蒼狐|でした", 'type' => 'result_fox'];
   public $result_spell_fox = ['message' => "さんは|宙狐|でした", 'type' => 'result_fox'];
   public $result_sacrifice_fox = ['message' => "さんは|白蔵主|でした", 'type' => 'result_fox'];

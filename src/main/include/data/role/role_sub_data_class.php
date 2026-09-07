@@ -114,6 +114,7 @@ final class RoleSubData {
     'death_selected'		=> 'オシラ遊び',
     'possessed_target'		=> '憑依者',
     'possessed'			=> '憑依',
+    'lost_fang'			=> '抜牙',
     'protected'			=> '庇護者',
     'penetration'		=> '護衛貫通',
     'aspirator'			=> '吸毒者',

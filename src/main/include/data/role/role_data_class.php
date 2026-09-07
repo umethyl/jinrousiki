@@ -251,6 +251,7 @@ final class RoleData {
     'snow_fox'			=> '雪狐',
     'fortitude_fox'		=> '剛狐',
     'poison_fox'		=> '管狐',
+    'seal_fox'			=> '封狐',
     'blue_fox'			=> '蒼狐',
     'spell_fox'			=> '宙狐',
     'sacrifice_fox'		=> '白蔵主',
