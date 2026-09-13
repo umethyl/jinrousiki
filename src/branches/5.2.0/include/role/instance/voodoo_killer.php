@@ -46,7 +46,7 @@ class Role_voodoo_killer extends Role {
     }
 
     return $user->IsRoleGroup('cursed') || RoleUser::IsPossessed($user) ||
-      $user->IsRole('spell_wolf');
+      $user->IsRole('spell_wolf', 'seal_wolf');
   }
 
   //成功結果登録

@@ -2,7 +2,7 @@
 /*
   ◆雪狐 (snow_fox)
   ○仕様
-  ・処刑得票：凍傷 (投票者：狂人系限定)
+  ・処刑得票：凍傷 (狂人系限定)
 */
 RoleLoader::LoadFile('fox');
 class Role_snow_fox extends Role_fox {

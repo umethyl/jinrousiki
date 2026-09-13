@@ -4,7 +4,7 @@ if (true !== ServerConfig::DEBUG_MODE) {
   HTML::OutputUnusableError();
 }
 
-#define('IMAGE_FONT_PATH', "C:\\WINDOWS\\Fonts\\");
+//define('IMAGE_FONT_PATH', "C:\\WINDOWS\\Fonts\\");
 define('IMAGE_FONT_PATH', "./");
 //define('IMAGE_FONT_PATH', '/Library/Fonts');
 
@@ -16,17 +16,19 @@ $font = 'azuki.ttf';
 //$font = 'Osaka.ttc';
 
 //$role = 'poison'; //128
-//$role = 'result_scarlet_peach';
+//$role = 'result_seal_fox';
 //$role = 'servant_target';
 //$role = 'prediction_weather_no_escape';
 //$role = 'servant';
 //$role = 'vassal_servant';
 //$role = 'sweet_servant';
 //$role = 'barrier_servant';
-$role = 'bell_brownie';
+//$role = 'bell_brownie';
+//$role = 'seal_wolf';
+$role = 'seal_fox';
 
-$calib_list = [0,0,0,0];
-//$calib_list = [0.5,0,0,0]; //wolf, vampire
+//$calib_list = [0,0,0,0];
+$calib_list = [0.5,0,0,0]; //wolf, vampire
 //$calib_list = [0.8,0,0.7]; //collector_ogre
 //$calib_list = [0.3,0,0,0]; //duelist
 
