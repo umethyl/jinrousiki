@@ -12,7 +12,7 @@ class Role_seal_wolf extends Role_wolf {
     return false;
   }
 
-  public function DisableWolfEatCount() {
+  public function DisableWolfEatCounter() {
     return true;
   }
 }

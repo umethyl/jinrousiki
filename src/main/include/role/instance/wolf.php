@@ -300,7 +300,7 @@ class Role_wolf extends Role {
       }
 
       //人狼襲撃カウンター処理
-      if (true !== $wolf_filter->DisableWolfEatCount()) {
+      if (true !== $wolf_filter->DisableWolfEatCounter()) {
 	foreach (RoleLoader::LoadUser($target, 'wolf_eat_counter') as $filter) {
 	  $filter->WolfEatCounter($actor);
 	}
@@ -354,7 +354,7 @@ class Role_wolf extends Role {
   }
 
   //人狼襲撃カウンター無効化判定
-  public function DisableWolfEatCount() {
+  public function DisableWolfEatCounter() {
     return false;
   }
 
