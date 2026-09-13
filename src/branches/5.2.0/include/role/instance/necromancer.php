@@ -25,7 +25,7 @@ class Role_necromancer extends Role {
       //特殊人狼
       $stack = [
         'boss_wolf', 'mist_wolf', 'tiger_wolf', 'phantom_wolf', 'cursed_wolf', 'spell_wolf',
-	'possessed_wolf'
+	'seal_wolf', 'possessed_wolf'
       ];
       if ($user->IsRole($stack)) {
 	return 'wolf_special';

@@ -10,17 +10,17 @@ RoleLoader::LoadFile('pharmacist');
 class Role_revive_pharmacist extends Role_pharmacist {
   //復活処理
   final public function Resurrect() {
-    //無効判定 (身代わり君 > 人狼襲撃失敗 > 覚醒天狼襲撃 > 無効判定 > 能力判定)
+    //無効判定 (身代わり君 > 人狼襲撃失敗 > 無効判定(襲撃人狼) > 無効判定(本人) > 能力判定)
     $user = $this->GetActor();
     if ($user->IsDummyBoy()) {
       return false;
-    } elseif (! $user->wolf_killed) {
+    } elseif (true !== $user->wolf_killed) {
       return false;
-    } elseif (RoleUser::IsSiriusWolf($this->GetWolfVoter())) {
+    } elseif (RoleUser::DisableResurrect($this->GetWolfVoter())) {
       return false;
     } elseif ($this->CallParent('IgnoreResurrect')) {
       return false;
-    } elseif (! $this->CallParent('IsResurrect')) {
+    } elseif (true !== $this->CallParent('IsResurrect')) {
       return false;
     }
 

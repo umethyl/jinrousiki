@@ -28,7 +28,7 @@ if (VoteTestRoom::DATE == 1) {
   ];
 } else {
   RQ::GetTest()->vote->night = [
-    ['user_no' => 2,	RequestDataVote::TARGET => 30,	'type' => VoteAction::WOLF],
+    ['user_no' => 2,	RequestDataVote::TARGET => 34,	'type' => VoteAction::WOLF],
     //['user_no' => 3,	RequestDataVote::TARGET => 22,	'type' => VoteAction::WOLF],
     ['user_no' => 4, 	RequestDataVote::TARGET => 34,	'type' => VoteAction::MAGE],
     //['user_no' => 4, 	RequestDataVote::TARGET => '9 14 19 18 3',	'type' => VoteAction::STEP_MAGE],
