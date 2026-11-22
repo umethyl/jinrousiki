@@ -254,7 +254,7 @@ abstract class Role extends stdClass {
   //データ取得
   final protected function GetStack($name = null, $fill = false) {
     $stack = RoleManager::Stack()->Get((null === $name) ? $this->role : $name);
-    return isset($stack) ? $stack : ArrayFilter::Fill($fill);
+    return $stack ?? ArrayFilter::Fill($fill);
   }
 
   //データ取得 (key ベース)
@@ -403,6 +403,7 @@ abstract class Role extends stdClass {
 
   //役職画像表示対象取得
   protected function GetImage() {
+    //NULL合体演算子使用不可
     return isset($this->display_role) ? $this->display_role : $this->role;
   }
 

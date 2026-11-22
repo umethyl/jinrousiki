@@ -276,7 +276,7 @@ abstract class Option {
 
     $enable  = sprintf('%s_enable',  $this->name);
     $default = sprintf('default_%s', $this->name);
-    $this->enable = isset(GameOptionConfig::$$enable) ? GameOptionConfig::$$enable : true;
+    $this->enable = GameOptionConfig::$$enable ?? true;
     if (false === isset($this->form_name)) {
       $this->form_name  = $this->name;
     }
@@ -759,7 +759,7 @@ abstract class OptionSelector extends Option {
   //有効判定
   private function IsEnable($name) {
     $enable = sprintf('%s_enable', $name);
-    return isset(GameOptionConfig::$$enable) ? GameOptionConfig::$$enable : true;
+    return GameOptionConfig::$$enable ?? true;
   }
 }
 

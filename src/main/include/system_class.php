@@ -15,7 +15,7 @@ class Stack extends stdClass {
   //取得
   public function Get($name) {
     //Text::p($name, '◆Stack/Get[Get]');
-    return isset($this->$name) ? $this->$name : null;
+    return $this->$name ?? null;
   }
 
   //取得 (数値)

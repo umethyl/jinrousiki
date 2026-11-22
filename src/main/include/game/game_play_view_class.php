@@ -6,14 +6,14 @@ abstract class GamePlayView extends stdClass {
 
   //リンク情報取得 (差分型)
   protected function GetURL(array $except, $header = null) {
-    $url    = isset($header) ? $header : GamePlayHTML::GetURLHeader();
+    $url    = $header ?? GamePlayHTML::GetURLHeader();
     $params = RQ::Fetch()->GenerateUrl($except, null);
     return $url . URL::HEAD . $params;
   }
 
   //リンク情報取得 (抽出型)
   protected function SelectURL(array $list, $header = null) {
-    $url    = isset($header) ? $header : '';
+    $url    = $header ?? '';
     $params = RQ::Fetch()->GenerateUrl(null, array_merge($list, [RequestDataGame::ID]));
     return $url . URL::HEAD . $params;
   }

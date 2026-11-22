@@ -298,7 +298,7 @@ final class TalkBuilder {
 
     //実ユーザを取得
     if (RQ::Fetch()->add_role && $actor->id > 0) { //役職表示モード対応
-      $real_actor = isset($real) ? $real : $actor;
+      $real_actor = $real ?? $actor;
       $name .= $real_actor->GenerateShortRoleName($talk->scene == RoomScene::HEAVEN);
     } else {
       $real_actor = DB::$USER->ByRealUname($talk->uname);
@@ -413,7 +413,7 @@ final class TalkBuilder {
     $sentence = $this->QuoteTalk($sentence);
 
     foreach (TalkElement::$list as $key) {
-      $stack[$key] = isset($$key) ? $$key : '';
+      $stack[$key] = $$key ?? '';
     }
     $this->cache .= TalkHTML::Generate($stack);
     return true;
@@ -512,12 +512,12 @@ final class TalkBuilder {
 
   //symbol 取得
   private function GetSymbol(TalkParser $talk, User $user) {
-    return TalkHTML::GenerateSymbol(isset($talk->color) ? $talk->color : $user->color);
+    return TalkHTML::GenerateSymbol($talk->color ?? $user->color);
   }
 
   //handle_name 取得
   private function GetHandleName(TalkParser $talk, User $user) {
-    return isset($talk->handle_name) ? $talk->handle_name : $user->handle_name;
+    return $talk->handle_name ?? $user->handle_name;
   }
 
   //発言透過判定

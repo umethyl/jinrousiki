@@ -198,7 +198,7 @@ final class DevUser {
   public static function Initialize($count, $role_list = []) {
     RQ::GetTest()->test_users = [];
     for ($id = 1; $id <= $count; $id++) {
-      RQ::GetTest()->test_users[$id] = new User(isset($role_list[$id]) ? $role_list[$id] : null);
+      RQ::GetTest()->test_users[$id] = new User($role_list[$id] ?? null);
     }
 
     foreach (self::$user_list as $id => $list) {

@@ -18,6 +18,6 @@ class Role_passion extends Role {
   //発言置換リスト取得
   protected function GetConvertSayList() {
     $list = $this->role . '_replace_list';
-    return isset(GameConfig::$$list) ? GameConfig::$$list : $this->convert_say_list;
+    return GameConfig::$$list ?? $this->convert_say_list;
   }
 }

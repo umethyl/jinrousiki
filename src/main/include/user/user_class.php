@@ -97,7 +97,7 @@ final class User extends StackManager {
 
   //再パースユーザ取得
   public function GetReparse() {
-    return isset($this->reparse) ? $this->reparse : $this;
+    return $this->reparse ?? $this;
   }
 
   //ユーザ ID 取得
@@ -112,7 +112,7 @@ final class User extends StackManager {
 
   //役職取得
   public function GetRole() {
-    return isset($this->updated['role']) ? $this->updated['role'] : $this->role;
+    return $this->updated['role'] ?? $this->role;
   }
 
   //メイン役職取得

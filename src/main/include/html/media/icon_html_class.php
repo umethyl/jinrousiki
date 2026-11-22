@@ -183,7 +183,7 @@ final class IconHTML {
     }
     $end_page = min($page_count, $current + $CONFIG->page - 1);
 
-    $url_stack = [Text::QuoteBracket(isset($CONFIG->title) ? $CONFIG->title : 'Page')];
+    $url_stack = [Text::QuoteBracket($CONFIG->title ?? 'Page')];
     //表示ページ数調整 (先頭側)
     if ($CONFIG->current > 1 && $page_count > $CONFIG->page) {
       $url_stack[] = self::GeneratePageLink($CONFIG, 1, Text::QuoteBracket(1) . '...');
@@ -211,7 +211,7 @@ final class IconHTML {
       return Text::QuoteBracket($page);
     }
 
-    $option = (isset($CONFIG->page_type) ? $CONFIG->page_type : 'page') . '=' . $page;
+    $option = ($CONFIG->page_type ?? 'page') . '=' . $page;
     $list   = $CONFIG->option;
     array_unshift($list, $option);
     $url = $CONFIG->url . URL::GetExt() . URL::Concat($list);
