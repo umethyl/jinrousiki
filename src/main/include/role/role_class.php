@@ -403,7 +403,8 @@ abstract class Role extends stdClass {
 
   //役職画像表示対象取得
   protected function GetImage() {
-    return $this->display_role ?? $this->role;
+    //NULL合体演算子使用不可
+    return isset($this->display_role) ? $this->display_role : $this->role;
   }
 
   //仲間情報表示
