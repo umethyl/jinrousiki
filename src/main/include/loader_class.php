@@ -172,7 +172,7 @@ final class Loader extends LoadManager {
 
   //ファイル取得
   protected static function GetFile($name) {
-    return isset(LoaderData::$file[$name]) ? LoaderData::$file[$name] : null;
+    return LoaderData::$file[$name] ?? null;
   }
 
   //ファイルパス取得
