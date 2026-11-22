@@ -601,7 +601,8 @@ final class TalkBuilder {
 	 $user->IsRole('leader_common', 'mind_read', 'mind_open'))) {
       $name .= TalkHTML::GenerateSelfTalk();
     } elseif ($talk->uname == GM::DUMMY_BOY &&
-	      null !== $talk->location && TalkLocation::SECRET != $talk->location) {
+	      null !== $talk->location &&
+	      TalkLocation::COMMON != $talk->location && TalkLocation::SECRET != $talk->location) {
       //個別発言判定
       list($parse_location, $location_id) = Text::Parse($talk->location, ':');
       if ($parse_location == TalkLocation::INDIVIDUAL) {
