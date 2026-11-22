@@ -42,7 +42,7 @@ final class UserLoader extends stdClass {
     }
 
     $stack = $id > 0 ? $this->rows : $this->kick;
-    return isset($stack[$id]) ? $stack[$id] : new User();
+    return $stack[$id] ?? new User();
   }
 
   //ユーザ情報取得 (ユーザ名経由)
