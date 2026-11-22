@@ -34,7 +34,7 @@ final class AutoPlayTalk extends StackStaticManager {
   public static function GetTalkID(TalkParser $talk) {
     $key  = self::Stack()->Get(self::DATE);
     $id   = self::Stack()->Get(self::ID);
-    $time = isset($talk->time_stamp) ? $talk->time_stamp : $talk->time;
+    $time = $talk->time_stamp ?? $talk->time;
     self::Stack()->Set(self::ID, ++$id);
     self::Stack()->Set(self::TIME, $time);
     $stack = self::Stack()->Get($key);
