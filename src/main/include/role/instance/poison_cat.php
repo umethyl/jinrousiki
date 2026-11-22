@@ -96,7 +96,7 @@ class Role_poison_cat extends Role {
     } else {
       $event = DB::$ROOM->IsEvent('no_revive') ? 0 : null;
     }
-    $revive = isset($event) ? $event : $this->CallParent('GetReviveRate'); //蘇生率
+    $revive = $event ?? $this->CallParent('GetReviveRate'); //蘇生率
     if ($this->IsBoostRevive()) {
       $revive = min(100, ceil($revive * 1.3));
     }
