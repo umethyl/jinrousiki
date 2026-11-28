@@ -55,6 +55,11 @@ final class Text {
     return str_replace($from, $to, $str);
   }
 
+  //置換 (strtr() ラッパー)
+  public static function Tr(string $str, array $replace_list) {
+    return strtr($str, $replace_list);
+  }
+
   //改行追加
   public static function LineFeed($str) {
     return $str . self::LF;
@@ -261,7 +266,7 @@ final class Text {
       '"'  => '&quot;',
       "'"  => '&#039;'
     ];
-    $str = strtr($str ?? '', $replace_list);
+    $str = self::Tr($str ?? '', $replace_list);
     if (true === $trim) {
       $str = trim($str);
     } else {

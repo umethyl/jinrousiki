@@ -967,7 +967,7 @@ final class RoleTalk {
     }
 
     if (GameConfig::REPLACE_TALK) { //発言置換モード
-      $say = strtr($say, GameConfig::$replace_talk_list);
+      $say = Text::Tr($say, GameConfig::$replace_talk_list);
     }
 
     //死者・ゲームプレイ中以外なら以降はスキップ

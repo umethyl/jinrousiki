@@ -12,7 +12,7 @@ class Role_passion extends Role {
       return;
     }
 
-    $this->SetStack(strtr($this->GetStack('say'), $stack), 'say');
+    $this->SetStack(Text::Tr($this->GetStack('say'), $stack), 'say');
   }
 
   //発言置換リスト取得

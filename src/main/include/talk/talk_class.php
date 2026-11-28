@@ -229,7 +229,7 @@ final class TalkParser extends stdClass {
       break;
 
     default:
-      $this->class = Text::ToLower(strtr($action, '_', '-'));
+      $this->class = Text::ToLower(Text::Tr($action, ['_' => '-']));
       break;
     }
     $this->sentence = sprintf(VoteTalkMessage::FORMAT, $this->sentence . VoteTalkMessage::$$action);

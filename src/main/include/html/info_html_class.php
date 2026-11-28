@@ -250,7 +250,7 @@ final class InfoHTML {
     }
 
     $replace_list = ['href="' => 'href="' . $url, 'src="'  => 'src="' . $url];
-    $data = strtr($data, $replace_list);
+    $data = Text::Tr($data, $replace_list);
     ExternalLinkBuilder::Output($title, $data);
   }
 
