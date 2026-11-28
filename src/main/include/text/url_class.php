@@ -33,8 +33,7 @@ final class URL {
   /* リンク生成 */
   //取得 (部屋共通)
   public static function GetRoom($url, $id = null) {
-    $value = (null === $id) ? DB::$ROOM->id : $id;
-    return self::GenerateInt($url, RequestDataGame::ID, $value);
+    return self::GenerateInt($url, RequestDataGame::ID, $id ?? DB::$ROOM->id);
   }
 
   //取得 (ヘッダー/db_no)

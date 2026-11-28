@@ -667,8 +667,7 @@ abstract class Role extends stdClass {
     }
 
     if (true === $live || $this->FixLiveVoteNightIconPath()) {
-      $path = $this->GetPartnerVoteNightIconPath($user);
-      return (null === $path) ? Icon::GetFile($user->icon_filename) : $path;
+      return $this->GetPartnerVoteNightIconPath($user) ?? Icon::GetFile($user->icon_filename);
     } else {
       return Icon::GetDead();
     }
