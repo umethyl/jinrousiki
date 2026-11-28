@@ -541,7 +541,7 @@ abstract class OptionTextCheckbox extends OptionCheckbox {
   abstract public function GetTextSize();
 
   protected function GetRoomCaptionFooter() {
-    return $this->GetRoomCaptionConfig('Type:%s', strtoupper($this->GetRoomType()));
+    return $this->GetRoomCaptionConfig('Type:%s', Text::ToUpper($this->GetRoomType()));
   }
 }
 
@@ -789,7 +789,7 @@ trait OptionChaosRole {
 
   //村用画像追加メッセージ取得
   protected function GetRoomImageFooter() {
-    return Text::QuoteBracket(strtoupper($this->GetRoomType()));
+    return Text::QuoteBracket(Text::ToUpper($this->GetRoomType()));
   }
 }
 

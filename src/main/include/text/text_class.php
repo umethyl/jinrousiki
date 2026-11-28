@@ -40,6 +40,11 @@ final class Text {
     return self::LineFeed(vsprintf($format, $stack));
   }
 
+  //大文字変換
+  public static function ToUpper(string $str) {
+    return strtoupper($str);
+  }
+
   //改行追加
   public static function LineFeed($str) {
     return $str . self::LF;

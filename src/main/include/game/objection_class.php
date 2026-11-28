@@ -17,7 +17,7 @@ final class Objection {
 
   //会話メッセージ取得
   public static function GetTalk($sex) {
-    $str = Text::AddFooter(TalkAction::OBJECTION, strtoupper($sex));
+    $str = Text::AddFooter(TalkAction::OBJECTION, Text::ToUpper($sex));
     return VoteTalkMessage::$$str;
   }
 
