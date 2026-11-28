@@ -30,7 +30,7 @@ final class Text {
 
   //RGB 文字列
   public static function IsRGB($str) {
-    return self::Length($str) == 7 && substr($str, 0, 1) == '#' && ctype_xdigit(substr($str, 1, 7));
+    return self::Length($str) == 7 && self::Sub($str, 0, 1) == '#' && ctype_xdigit(self::Sub($str, 1, 7));
   }
 
   /* 変換 */
@@ -128,6 +128,11 @@ final class Text {
     return $stack;
   }
 
+  //切り出し (substr() ラッパー)
+  public static function Sub(string $str, int $offset, $length = null) {
+    return substr($str, $offset, $length);
+  }
+
   //切り詰め
   public static function Shrink($str, $limit) {
     return mb_substr($str, 0, $limit);
@@ -181,7 +186,7 @@ final class Text {
 
   //トリップ変換処理
   private static function ConvertTrip($key) {
-    $salt = substr($key . 'H.', 1, 2);
+    $salt = self::Sub($key . 'H.', 1, 2);
 
     //$salt =~ s/[^\.-z]/\./go; にあたる箇所
     $pattern = '/[\x00-\x20\x7B-\xFF]/';
@@ -192,20 +197,20 @@ final class Text {
     $to_list   = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'a', 'b',  'c', 'd', 'e', 'f'];
     $salt      = self::Replace($salt, $from_list, $to_list);
 
-    return substr(crypt($key, $salt), -10);
+    return self::Sub(crypt($key, $salt), -10);
   }
 
   //トリップ変換処理 (2ch 仕様)
   private static function ConvertTrip2ch($key) {
-    $trip_mark = substr($key, 0, 1);
+    $trip_mark = self::Sub($key, 0, 1);
     if ($trip_mark == '#' || $trip_mark == '$') {
       if (preg_match('|^#([[:xdigit:]]{16})([./0-9A-Za-z]{0,2})$|', $key, $stack)) {
-	$trip = substr(crypt(pack('H*', $stack[1]), "{$stack[2]}.."), -12);
+	$trip = self::Sub(crypt(pack('H*', $stack[1]), "{$stack[2]}.."), -12);
       } else {
 	$trip = '???';
       }
     } else {
-      $trip = self::Replace(substr(base64_encode(sha1($key, true)), 0, 12), '+', '.');
+      $trip = self::Replace(self::Sub(base64_encode(sha1($key, true)), 0, 12), '+', '.');
     }
     return $trip;
   }
