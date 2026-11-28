@@ -157,7 +157,7 @@ class MessageImageGenerator {
     //スタック用配列。一番下にどのデリミタともマッチしない文字列をセットしておく
     $d_stack = ['default'];
 
-    //$plain_msg_len = strlen($plain_msg);
+    //$plain_msg_len = Text::Length($plain_msg);
     //echo "plain_r: $plain_msg_len ";
     $regex_str = $this->GenerateDelimiterRegEx();
     $plain_msg = $this->GetMessage($msg, $regex_str);

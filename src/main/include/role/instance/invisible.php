@@ -17,7 +17,7 @@ class Role_invisible extends Role {
       if (preg_match($regex, $str)) {
 	$result .= $str;
       } elseif (in_array($key, $target_stack)) {
-	$result .= (strlen($str) == 2 ? Message::SPACER : ' ');
+	$result .= (Text::Length($str) == 2 ? Message::SPACER : ' ');
       } else {
 	$result .= $str;
       }
