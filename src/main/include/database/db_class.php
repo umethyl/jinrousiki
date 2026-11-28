@@ -239,7 +239,7 @@ final class DB {
 
   //最適化 (暗黙のコミットが入る想定)
   public static function Optimize($name = null) {
-    $table = (null === $name) ? ArrayFilter::ToCSV(self::GetTableList()) : $name;
+    $table = $name ?? ArrayFilter::ToCSV(self::GetTableList());
     $query = Query::Init()->Optimize()->Table($table);
     self::Prepare($query->Build());
     //暗黙のコミットが入るようなので、ここでトランザクションはOFFにしておく
@@ -644,12 +644,7 @@ final class Query {
 
     $stack = [];
     foreach ($this->into as $value) {
-      $data = ArrayFilter::Get($this->into_data, $value);
-      if (null === $data) {
-	$stack[] = '?';
-      } else {
-	$stack[] = $data;
-      }
+      $stack[] = ArrayFilter::Get($this->into_data, $value) ?? '?';
     }
 
     $list = ['VALUES', Text::Quote(ArrayFilter::ToCSV($stack))];
@@ -680,12 +675,7 @@ final class Query {
 
     $stack = [];
     foreach ($this->set as $value) {
-      $data = ArrayFilter::Get($this->set_data, $value);
-      if (null === $data) {
-	$stack[] = $value . ' = ?';
-      } else {
-	$stack[] = $value . ' = ' . $data;
-      }
+      $stack[] = $value . ' = ' . (ArrayFilter::Get($this->set_data, $value) ?? '?');
     }
 
     $list = [];
