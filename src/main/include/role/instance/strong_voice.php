@@ -9,7 +9,7 @@ class Role_strong_voice extends Role {
 
   //声量変換
   public function FilterVoice(&$voice, &$str) {
-    $voice = Text::CutPick($this->role);
+    $voice = Text::ParsePick($this->role);
   }
 
   //声量シフト

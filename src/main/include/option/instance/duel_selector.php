@@ -39,7 +39,7 @@ class Option_duel_selector extends OptionSelector {
 
   public function GenerateImage() {
     $str  = $this->GetRoomImageFooter();
-    $name = Text::CutPick($this->name);
+    $name = Text::ParsePick($this->name);
     return ImageManager::Room()->Generate($name, $this->GetRoomCaption()) . $str;
   }
 

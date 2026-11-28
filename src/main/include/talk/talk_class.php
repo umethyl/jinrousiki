@@ -206,7 +206,7 @@ final class TalkParser extends stdClass {
     case VoteAction::VOODOO_MAD:
     case VoteAction::VOODOO_FOX:
     case VoteAction::TRAP:
-      $action      = Text::CutPick($action) . '_DO';
+      $action      = Text::ParsePick($action) . '_DO';
       $this->class = VoteCSS::WOLF;
       break;
 

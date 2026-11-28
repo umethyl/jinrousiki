@@ -108,6 +108,16 @@ final class Text {
     return self::Exists($limit) ? explode($delimiter, $str, $limit) : explode($delimiter, $str);
   }
 
+  //分離して先頭を取り出す
+  public static function ParsePick($str, $delimiter = '_', $limit = null) {
+    return ArrayFilter::Pick(self::Parse($str, $delimiter, $limit));
+  }
+
+  //分離して末尾を取り出す
+  public static function CutPop($str, $delimiter = '_', $limit = null) {
+    return ArrayFilter::Pop(self::Parse($str, $delimiter, $limit));
+  }
+
   //分割
   public static function Split($str) {
     $stack = [];
@@ -116,16 +126,6 @@ final class Text {
       $stack[$i] = mb_substr($str, $i, 1);
     }
     return $stack;
-  }
-
-  //キーワードで分離して先頭を取り出す
-  public static function CutPick($str, $delimiter = '_', $limit = null) {
-    return ArrayFilter::Pick(self::Parse($str, $delimiter, $limit));
-  }
-
-  //キーワードで分離して末尾を取り出す
-  public static function CutPop($str, $delimiter = '_', $limit = null) {
-    return ArrayFilter::Pop(self::Parse($str, $delimiter, $limit));
   }
 
   //切り詰め
