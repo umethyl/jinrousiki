@@ -63,6 +63,6 @@ class Option_duel_selector extends OptionSelector {
 
   //村用画像追加メッセージ取得
   protected function GetRoomImageFooter() {
-    return Text::QuoteBracket(strtoupper($this->GetRoomType()));
+    return Text::QuoteBracket(Text::ToUpper($this->GetRoomType()));
   }
 }

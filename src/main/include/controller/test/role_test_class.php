@@ -70,7 +70,7 @@ final class RoleTestController extends JinrouController {
       RQ::Fetch()->ParsePostData($option);
       if (RQ::Get($option)) {
 	RQ::Fetch()->ParsePostStr($option . '_input');
-	$value = strtolower(RQ::Get($option . '_input'));
+	$value = Text::ToLower(RQ::Get($option . '_input'));
       } else {
 	$value = '';
       }
@@ -167,7 +167,7 @@ final class RoleTestController extends JinrouController {
       if (empty(RQ::Get($input))) {
 	continue;
       }
-      RQ::Set($input, strtolower(RQ::Get($input)));
+      RQ::Set($input, Text::ToLower(RQ::Get($input)));
       if (array_key_exists(RQ::Get($input), Cast::GetChaosCustomConfig($option))) {
 	$stack->option_role[] = $option . ':' . RQ::Get($input);
       }

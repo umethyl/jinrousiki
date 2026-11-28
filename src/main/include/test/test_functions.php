@@ -91,10 +91,10 @@ final class DevRoom {
 
     $user_count = RQ::Fetch()->user_count;
     $try_count  = RQ::Fetch()->try_count;
-    $format     = '%0' . strlen($try_count) . 'd回目: ';
+    $format     = '%0' . Text::Length($try_count) . 'd回目: ';
     for ($i = 1; $i <= $try_count; $i++) {
       if (RQ::Fetch()->increment) {
-	printf($format . '%0' . strlen($try_count) . 'd人: ', $i, $user_count);
+	printf($format . '%0' . Text::Length($try_count) . 'd人: ', $i, $user_count);
       } else {
 	printf($format, $i);
       }

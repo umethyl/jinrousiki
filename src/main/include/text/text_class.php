@@ -25,12 +25,12 @@ final class Text {
 
   //文字数上限
   public static function Over($str, $limit) {
-    return strlen($str ?? '') > $limit;
+    return self::Length($str ?? '') > $limit;
   }
 
   //RGB 文字列
   public static function IsRGB($str) {
-    return strlen($str) == 7 && substr($str, 0, 1) == '#' && ctype_xdigit(substr($str, 1, 7));
+    return self::Length($str) == 7 && substr($str, 0, 1) == '#' && ctype_xdigit(substr($str, 1, 7));
   }
 
   /* 変換 */
@@ -38,6 +38,16 @@ final class Text {
   public static function Format(...$stack) {
     $format = array_shift($stack);
     return self::LineFeed(vsprintf($format, $stack));
+  }
+
+  //大文字変換
+  public static function ToUpper(string $str) {
+    return strtoupper($str);
+  }
+
+  //小文字変換
+  public static function ToLower(string $str) {
+    return strtolower($str);
   }
 
   //改行追加
@@ -188,6 +198,11 @@ final class Text {
       $trip = str_replace('+', '.', substr(base64_encode(sha1($key, true)), 0, 12));
     }
     return $trip;
+  }
+
+  //文字列長カウント
+  public static function Length($str) {
+    return strlen($str);
   }
 
   //文字数カウント

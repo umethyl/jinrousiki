@@ -641,7 +641,7 @@ final class GameHTML {
     $base   = true;
     $class  = null;
     $reason = null;
-    $action = strtolower($type);
+    $action = Text::ToLower($type);
     $open_reason = DB::$ROOM->IsOpenData();
     $show_reason = (true === $open_reason) || self::FilterShowReason();
 
@@ -701,7 +701,7 @@ final class GameHTML {
       $base  = false;
       $class = 'sudden-death';
       if (true === $show_reason) {
-	$reason = strtolower($result);
+	$reason = Text::ToLower($result);
       }
       break;
 
@@ -710,7 +710,7 @@ final class GameHTML {
     case DeadReason::PIERROT:
       $base   = false;
       $class  = 'fairy';
-      $action = strtolower($type . '_' . $result);
+      $action = Text::ToLower($type . '_' . $result);
       break;
 
     case DeadReason::JOKER_MOVED:
@@ -739,7 +739,7 @@ final class GameHTML {
 
       $base   = false;
       $class  = 'wolf';
-      $action = strtolower($type . '_' . $result);
+      $action = Text::ToLower($type . '_' . $result);
       break;
 
     case DeadReason::BELL:

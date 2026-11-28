@@ -46,7 +46,7 @@ final class Encoder {
 
   //UTF-8判定
   private static function UTF(string $str) {
-    $len = strlen($str);
+    $len = Text::Length($str);
     for ($i = 0; $i < $len; $i++) {
       $c = ord($str[$i]);
       if ($c > 128) {

@@ -63,6 +63,6 @@ class UserIcon {
       );
       HTML::OutputResult($title, $error);
     }
-    return strtoupper($str);
+    return Text::ToUpper($str);
   }
 }

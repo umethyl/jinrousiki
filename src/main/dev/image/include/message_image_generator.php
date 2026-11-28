@@ -157,7 +157,7 @@ class MessageImageGenerator {
     //スタック用配列。一番下にどのデリミタともマッチしない文字列をセットしておく
     $d_stack = ['default'];
 
-    //$plain_msg_len = strlen($plain_msg);
+    //$plain_msg_len = Text::Length($plain_msg);
     //echo "plain_r: $plain_msg_len ";
     $regex_str = $this->GenerateDelimiterRegEx();
     $plain_msg = $this->GetMessage($msg, $regex_str);
@@ -182,7 +182,7 @@ class MessageImageGenerator {
       //この行でどれだけ消費するか計算
       //echo $line.'<br>';
       $r = imagettfbbox($this->size, 0, $this->font, $this->GetMessage($line, $regex_str));
-      //echo "line_r: " . mb_strlen($line); print_r($r); echo "<br>";
+      //echo "line_r: " . Text::Count($line); print_r($r); echo "<br>";
 
       // 強調部分の色を変えつつ表示
       if ($regex_str == '') {
@@ -196,7 +196,7 @@ class MessageImageGenerator {
       $r_str_old = ''; //位置補正用
       $count     = count($array_msg);
       for ($i = 0; $i < $count; $i++) {
-	$str_len = mb_strlen($array_msg[$i][0]);
+	$str_len = Text::Count($array_msg[$i][0]);
 	//echo 'str_r: ' . $str_len . ' -> "' . $array_msg[$i][0] . '"<br>';
 	$str = Encoder::Convert($array_msg[$i][0], Encoder::Detect($array_msg[$i][0]));
 	//echo $str.'<br>';

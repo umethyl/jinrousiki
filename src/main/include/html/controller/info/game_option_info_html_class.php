@@ -22,7 +22,7 @@ final class GameOptionInfoHTML {
   //お祭り村の配役リスト出力
   public static function OutputFestival() {
     $stack  = CastConfig::$festival_role_list;
-    $format = '%' . strlen(ArrayFilter::GetMax($stack)) . 's%s%s';
+    $format = '%' . Text::Length(ArrayFilter::GetMax($stack)) . 's%s%s';
     $str    = '';
     ksort($stack); //人数順に並び替え
     foreach ($stack as $count => $list) {
