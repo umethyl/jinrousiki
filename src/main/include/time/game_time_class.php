@@ -55,7 +55,7 @@ final class GameTime {
     if (DB::$ROOM->IsRealTime()) { //リアルタイム制は無効にする
       return 0;
     } else {
-      return min(4, max(1, floor(strlen($str) / 100))); //範囲は 1 - 4
+      return min(4, max(1, floor(Text::Length($str) / 100))); //範囲は 1 - 4
     }
   }
 
