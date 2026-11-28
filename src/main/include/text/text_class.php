@@ -114,7 +114,7 @@ final class Text {
   }
 
   //分離して末尾を取り出す
-  public static function CutPop($str, $delimiter = '_', $limit = null) {
+  public static function ParsePop($str, $delimiter = '_', $limit = null) {
     return ArrayFilter::Pop(self::Parse($str, $delimiter, $limit));
   }
 

@@ -41,7 +41,7 @@ final class OptionFormHTML {
     $size = sprintf('%s_input', $filter->name);
     $str  = $filter->GetExplain();
     if (RoomOptionManager::IsChange()) {
-      $name        = Text::CutPop($filter->name);
+      $name        = Text::ParsePop($filter->name);
       $placeholder = '';
       $value       = DB::$ROOM->$name;
     } else {

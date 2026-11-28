@@ -96,7 +96,7 @@ abstract class Role extends stdClass {
 
   //-- システム関数 --//
   public function __construct() {
-    $this->role = Text::CutPop(get_class($this), RoleLoader::CLASS_PREFIX);
+    $this->role = Text::ParsePop(get_class($this), RoleLoader::CLASS_PREFIX);
     //Text::p(get_class_vars(get_class($this)), "◆{$this->role}");
   }
 

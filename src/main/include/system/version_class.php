@@ -30,7 +30,7 @@ final class JinrouVersion {
     if (is_int($revision)) {
       return ['type' => 1, 'revision' => $revision];
     } else {
-      return ['type' => 2, 'revision' => Text::CutPop($revision, '#')];
+      return ['type' => 2, 'revision' => Text::ParsePop($revision, '#')];
     }
   }
 }
