@@ -248,12 +248,12 @@ abstract class Role extends stdClass {
 
   //ユーザ名取得
   final protected function GetUname($uname = null) {
-    return (null === $uname) ? $this->GetActor()->uname : $uname;
+    return $uname ?? $this->GetActor()->uname;
   }
 
   //データ取得
   final protected function GetStack($name = null, $fill = false) {
-    $stack = RoleManager::Stack()->Get((null === $name) ? $this->role : $name);
+    $stack = RoleManager::Stack()->Get($name ?? $this->role);
     return $stack ?? ArrayFilter::Fill($fill);
   }
 
@@ -264,12 +264,12 @@ abstract class Role extends stdClass {
 
   //データセット
   final protected function SetStack($data, $role = null) {
-    RoleManager::Stack()->Set((null === $role) ? $this->role : $role, $data);
+    RoleManager::Stack()->Set($role ?? $this->role, $data);
   }
 
   //データ初期化 (未登録時のみ)
   final protected function InitStack($name = null) {
-    $data  = (null === $name) ? $this->role : $name;
+    $data  = $name ?? $this->role;
     $stack = RoleManager::Stack()->Get($data);
     if (false === isset($stack)) {
       RoleManager::Stack()->Init($data);
@@ -278,18 +278,15 @@ abstract class Role extends stdClass {
 
   //データ追加
   final protected function AddStack($data, $role = null, $id = null) {
-    if (null === $id) {
-      $id = $this->GetID();
-    }
-    $name  = (null === $role) ? $this->role : $role;
+    $name  = $role ?? $this->role;
     $stack = RoleManager::Stack()->Get($name);
-    $stack[$id] = $data;
+    $stack[$id ?? $this->GetID()] = $data;
     RoleManager::Stack()->Set($name, $stack);
   }
 
   //データ追加 (Uname 用)
   final protected function AddStackName($data, $role = null, $uname = null) {
-    $name  = (null === $role) ? $this->role : $role;
+    $name  = $role ?? $this->role;
     $stack = RoleManager::Stack()->Get($name);
     $stack[$this->GetUname($uname)] = $data;
     RoleManager::Stack()->Set($name, $stack);
@@ -302,7 +299,7 @@ abstract class Role extends stdClass {
 
   //データ消去
   final protected function ClearStack($name = null) {
-    $data  = (null === $name) ? $this->role : $name;
+    $data  = $name ?? $this->role;
     $stack = RoleManager::Stack()->Get($data);
     if (true === isset($stack)) {
       RoleManager::Stack()->Clear($data);
@@ -896,7 +893,7 @@ abstract class Role extends stdClass {
   //-- 投票集計処理 (夜) --//
   //成功データ追加
   final protected function AddSuccess($target, $data = null, $set_null = false) {
-    $name  = (null === $data) ? $this->role : $data;
+    $name  = $data ?? $this->role;
     $stack = RoleManager::Stack()->Get($name);
     $stack[$target] = (true === $set_null) ? null : true;
     RoleManager::Stack()->Set($name, $stack);

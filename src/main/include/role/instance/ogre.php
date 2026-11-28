@@ -26,8 +26,7 @@ class Role_ogre extends Role {
   }
 
   final public function ResistWolfEat() {
-    $event = $this->GetOgreEvent();
-    $rate  = (null === $event) ? $this->GetOgreResistWolfEatRate() : $event;
+    $rate = $this->GetOgreEvent() ?? $this->GetOgreResistWolfEatRate();
     //Text::p($rate, '◆Resist Rate [ogre]');
     return Lottery::Percent($rate);
   }
