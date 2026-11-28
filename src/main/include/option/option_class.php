@@ -525,7 +525,7 @@ abstract class OptionTextCheckbox extends OptionCheckbox {
     if (true === empty($post)) {
       $flag = false;
     } else {
-      $post = strtolower($post); //小文字で正規化する
+      $post = Text::ToLower($post); //小文字で正規化する
       $list = Cast::GetChaosCustomConfig($this->name);
       $flag = isset($list[$post]);
     }

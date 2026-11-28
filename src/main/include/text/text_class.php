@@ -45,6 +45,11 @@ final class Text {
     return strtoupper($str);
   }
 
+  //小文字変換
+  public static function ToLower(string $str) {
+    return strtolower($str);
+  }
+
   //改行追加
   public static function LineFeed($str) {
     return $str . self::LF;
