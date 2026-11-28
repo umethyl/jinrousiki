@@ -29,8 +29,9 @@ final class Text {
   }
 
   //RGB 文字列
-  public static function IsRGB($str) {
-    return self::Length($str) == 7 && self::Sub($str, 0, 1) == '#' && ctype_xdigit(self::Sub($str, 1, 7));
+  public static function IsRGB(string $str) {
+    $rgb = self::Sub($str, 1, 6);
+    return self::Length($str) == 7 && str_starts_with($str, '#') && ctype_xdigit($rgb);
   }
 
   /* 変換 */
