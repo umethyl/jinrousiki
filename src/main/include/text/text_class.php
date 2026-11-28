@@ -40,14 +40,19 @@ final class Text {
     return self::LineFeed(vsprintf($format, $stack));
   }
 
-  //大文字変換
+  //大文字変換 (strtoupper() ラッパー)
   public static function ToUpper(string $str) {
     return strtoupper($str);
   }
 
-  //小文字変換
+  //小文字変換 (strtolower() ラッパー)
   public static function ToLower(string $str) {
     return strtolower($str);
+  }
+
+  //置換 (str_replace() ラッパー)
+  public static function Replace($str, $from, $to) {
+    return str_replace($from, $to, $str);
   }
 
   //改行追加
@@ -62,7 +67,7 @@ final class Text {
 
   //改行コードを <br> に変換する (PHP5.3 以下の nl2br() だと <br /> 固定なので HTML 4.01 だと不向き)
   public static function ConvertLine($str) {
-    return str_replace(self::LF, self::BR, $str);
+    return self::Replace($str, self::LF, self::BR);
   }
 
   //折り返し
@@ -144,7 +149,7 @@ final class Text {
     if (GameConfig::TRIP) {
       //トリップ関連のキーワードを置換
       $trip_list = [Message::TRIP, Message::TRIP_KEY];
-      $str = str_replace($trip_list, [Message::TRIP_CONVERT, '#'], $str ?? '');
+      $str = self::Replace($str ?? '', $trip_list, [Message::TRIP_CONVERT, '#']);
 
       $trip_start = mb_strpos($str, '#');
       if (false !== $trip_start) { //トリップキーの位置を検索
@@ -180,7 +185,7 @@ final class Text {
     //特殊文字の置換
     $from_list = [':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`'];
     $to_list   = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'a', 'b',  'c', 'd', 'e', 'f'];
-    $salt      = str_replace($from_list, $to_list, $salt);
+    $salt      = self::Replace($salt, $from_list, $to_list);
 
     return substr(crypt($key, $salt), -10);
   }
@@ -195,17 +200,17 @@ final class Text {
 	$trip = '???';
       }
     } else {
-      $trip = str_replace('+', '.', substr(base64_encode(sha1($key, true)), 0, 12));
+      $trip = self::Replace(substr(base64_encode(sha1($key, true)), 0, 12), '+', '.');
     }
     return $trip;
   }
 
-  //文字列長カウント
+  //文字列長カウント (strlen() ラッパー)
   public static function Length($str) {
     return strlen($str);
   }
 
-  //文字数カウント
+  //文字数カウント (mb_strlen() ラッパー)
   public static function Count($str) {
     return mb_strlen($str);
   }
@@ -260,7 +265,7 @@ final class Text {
     if (true === $trim) {
       $str = trim($str);
     } else {
-      $str = str_replace([self::CRLF, self::CR, self::LF], self::LF, $str);
+      $str = self::Replace($str, [self::CRLF, self::CR, self::LF], self::LF);
     }
     return $str;
   }

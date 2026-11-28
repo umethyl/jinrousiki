@@ -22,7 +22,7 @@ final class Security {
    */
   public static function IsInvalidValue($data, $found = false) {
     $num = '22250738585072011';
-    if (true === $found || Text::Search(str_replace('.', '', serialize($data)), $num)) {
+    if (true === $found || Text::Search(Text::Replace(serialize($data), '.', ''), $num)) {
       //文字列の中に問題の数字が埋め込まれているケースを排除する
       if (is_array($data)) {
 	foreach ($data as $item) {
