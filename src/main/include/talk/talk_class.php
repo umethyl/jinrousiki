@@ -206,7 +206,7 @@ final class TalkParser extends stdClass {
     case VoteAction::VOODOO_MAD:
     case VoteAction::VOODOO_FOX:
     case VoteAction::TRAP:
-      $action      = Text::CutPick($action) . '_DO';
+      $action      = Text::ParsePick($action) . '_DO';
       $this->class = VoteCSS::WOLF;
       break;
 
@@ -229,7 +229,7 @@ final class TalkParser extends stdClass {
       break;
 
     default:
-      $this->class = Text::ToLower(strtr($action, '_', '-'));
+      $this->class = Text::ToLower(Text::Tr($action, ['_' => '-']));
       break;
     }
     $this->sentence = sprintf(VoteTalkMessage::FORMAT, $this->sentence . VoteTalkMessage::$$action);

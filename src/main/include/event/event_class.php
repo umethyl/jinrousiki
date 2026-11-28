@@ -118,6 +118,6 @@ final class EventManager {
 //-- イベント基底クラス --//
 abstract class Event extends stdClass {
   public function __construct() {
-    $this->name = Text::CutPop(get_class($this), EventLoader::CLASS_PREFIX);
+    $this->name = Text::ParsePop(get_class($this), EventLoader::CLASS_PREFIX);
   }
 }

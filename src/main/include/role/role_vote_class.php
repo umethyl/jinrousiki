@@ -293,7 +293,7 @@ class RoleVote {
 	break;
 
       case 'step':
-	$target = DB::$USER->ByID(Text::CutPop($target_id, ' '));
+	$target = DB::$USER->ByID(Text::ParsePop($target_id, ' '));
 	break;
 
       default:

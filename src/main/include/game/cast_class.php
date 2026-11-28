@@ -480,17 +480,17 @@ final class Cast extends StackStaticManager {
       foreach ($option_list as $option) {
 	if (isset(CastConfig::$replace_role_list[$option])) { //サーバ設定
 	  $target = CastConfig::$replace_role_list[$option];
-	  $role   = Text::CutPop($option);
+	  $role   = Text::ParsePop($option);
 	} elseif (isset(CastConfig::$shuffle_role_list[$option])) { //振替
 	  $target = CastConfig::$shuffle_role_list[$option];
-	  $role   = Text::CutPop($option);
+	  $role   = Text::ParsePop($option);
 	} elseif ($order == 0) { //村人置換
-	  $target = Text::CutPop($option, '_', 2);
+	  $target = Text::ParsePop($option, '_', 2);
 	  $role   = 'human';
 	} else { //共有者・狂人・キューピッド置換
-	  $target = Text::CutPop($option, '_', 2);
+	  $target = Text::ParsePop($option, '_', 2);
 	  $group  = RoleDataManager::GetGroup($target);
-	  $role   = ($group == 'angel') ? 'cupid' : Text::CutPop($target);
+	  $role   = ($group == 'angel') ? 'cupid' : Text::ParsePop($target);
 	}
 
 	$count = ArrayFilter::GetInt($list, $role);

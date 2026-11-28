@@ -29,8 +29,9 @@ final class Text {
   }
 
   //RGB 文字列
-  public static function IsRGB($str) {
-    return self::Length($str) == 7 && substr($str, 0, 1) == '#' && ctype_xdigit(substr($str, 1, 7));
+  public static function IsRGB(string $str) {
+    $rgb = self::Sub($str, 1, 6);
+    return self::Length($str) == 7 && str_starts_with($str, '#') && ctype_xdigit($rgb);
   }
 
   /* 変換 */
@@ -40,14 +41,24 @@ final class Text {
     return self::LineFeed(vsprintf($format, $stack));
   }
 
-  //大文字変換
+  //大文字変換 (strtoupper() ラッパー)
   public static function ToUpper(string $str) {
     return strtoupper($str);
   }
 
-  //小文字変換
+  //小文字変換 (strtolower() ラッパー)
   public static function ToLower(string $str) {
     return strtolower($str);
+  }
+
+  //置換 (str_replace() ラッパー)
+  public static function Replace($str, $from, $to) {
+    return str_replace($from, $to, $str);
+  }
+
+  //置換 (strtr() ラッパー)
+  public static function Tr(string $str, array $replace_list) {
+    return strtr($str, $replace_list);
   }
 
   //改行追加
@@ -62,7 +73,7 @@ final class Text {
 
   //改行コードを <br> に変換する (PHP5.3 以下の nl2br() だと <br /> 固定なので HTML 4.01 だと不向き)
   public static function ConvertLine($str) {
-    return str_replace(self::LF, self::BR, $str);
+    return self::Replace($str, self::LF, self::BR);
   }
 
   //折り返し
@@ -98,6 +109,16 @@ final class Text {
     return self::Exists($limit) ? explode($delimiter, $str, $limit) : explode($delimiter, $str);
   }
 
+  //分離して先頭を取り出す
+  public static function ParsePick($str, $delimiter = '_', $limit = null) {
+    return ArrayFilter::Pick(self::Parse($str, $delimiter, $limit));
+  }
+
+  //分離して末尾を取り出す
+  public static function ParsePop($str, $delimiter = '_', $limit = null) {
+    return ArrayFilter::Pop(self::Parse($str, $delimiter, $limit));
+  }
+
   //分割
   public static function Split($str) {
     $stack = [];
@@ -108,14 +129,9 @@ final class Text {
     return $stack;
   }
 
-  //キーワードで分離して先頭を取り出す
-  public static function CutPick($str, $delimiter = '_', $limit = null) {
-    return ArrayFilter::Pick(self::Parse($str, $delimiter, $limit));
-  }
-
-  //キーワードで分離して末尾を取り出す
-  public static function CutPop($str, $delimiter = '_', $limit = null) {
-    return ArrayFilter::Pop(self::Parse($str, $delimiter, $limit));
+  //切り出し (substr() ラッパー)
+  public static function Sub(string $str, int $offset, $length = null) {
+    return substr($str, $offset, $length);
   }
 
   //切り詰め
@@ -144,7 +160,7 @@ final class Text {
     if (GameConfig::TRIP) {
       //トリップ関連のキーワードを置換
       $trip_list = [Message::TRIP, Message::TRIP_KEY];
-      $str = str_replace($trip_list, [Message::TRIP_CONVERT, '#'], $str ?? '');
+      $str = self::Replace($str ?? '', $trip_list, [Message::TRIP_CONVERT, '#']);
 
       $trip_start = mb_strpos($str, '#');
       if (false !== $trip_start) { //トリップキーの位置を検索
@@ -171,7 +187,7 @@ final class Text {
 
   //トリップ変換処理
   private static function ConvertTrip($key) {
-    $salt = substr($key . 'H.', 1, 2);
+    $salt = self::Sub($key . 'H.', 1, 2);
 
     //$salt =~ s/[^\.-z]/\./go; にあたる箇所
     $pattern = '/[\x00-\x20\x7B-\xFF]/';
@@ -180,32 +196,32 @@ final class Text {
     //特殊文字の置換
     $from_list = [':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`'];
     $to_list   = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'a', 'b',  'c', 'd', 'e', 'f'];
-    $salt      = str_replace($from_list, $to_list, $salt);
+    $salt      = self::Replace($salt, $from_list, $to_list);
 
-    return substr(crypt($key, $salt), -10);
+    return self::Sub(crypt($key, $salt), -10);
   }
 
   //トリップ変換処理 (2ch 仕様)
   private static function ConvertTrip2ch($key) {
-    $trip_mark = substr($key, 0, 1);
+    $trip_mark = self::Sub($key, 0, 1);
     if ($trip_mark == '#' || $trip_mark == '$') {
       if (preg_match('|^#([[:xdigit:]]{16})([./0-9A-Za-z]{0,2})$|', $key, $stack)) {
-	$trip = substr(crypt(pack('H*', $stack[1]), "{$stack[2]}.."), -12);
+	$trip = self::Sub(crypt(pack('H*', $stack[1]), "{$stack[2]}.."), -12);
       } else {
 	$trip = '???';
       }
     } else {
-      $trip = str_replace('+', '.', substr(base64_encode(sha1($key, true)), 0, 12));
+      $trip = self::Replace(self::Sub(base64_encode(sha1($key, true)), 0, 12), '+', '.');
     }
     return $trip;
   }
 
-  //文字列長カウント
+  //文字列長カウント (strlen() ラッパー)
   public static function Length($str) {
     return strlen($str);
   }
 
-  //文字数カウント
+  //文字数カウント (mb_strlen() ラッパー)
   public static function Count($str) {
     return mb_strlen($str);
   }
@@ -256,11 +272,11 @@ final class Text {
       '"'  => '&quot;',
       "'"  => '&#039;'
     ];
-    $str = strtr($str ?? '', $replace_list);
+    $str = self::Tr($str ?? '', $replace_list);
     if (true === $trim) {
       $str = trim($str);
     } else {
-      $str = str_replace([self::CRLF, self::CR, self::LF], self::LF, $str);
+      $str = self::Replace($str, [self::CRLF, self::CR, self::LF], self::LF);
     }
     return $str;
   }

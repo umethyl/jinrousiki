@@ -608,7 +608,7 @@ final class GameHTML {
     }
 
     $header = Text::BR . Message::SPACER;
-    $uname  = str_replace($stack->trip_from, $stack->trip_to, $user->uname); //トリップ対応
+    $uname  = Text::Replace($user->uname, $stack->trip_from, $stack->trip_to); //トリップ対応
     if (! $real->IsSame($user) && $real->IsLive()) { //憑依状態なら憑依者を追加
       $uname .= $header . Text::QuoteBracket($real->uname);
     }
@@ -849,7 +849,7 @@ final class GameHTML {
 
   //アイコン用改行変換
   private static function ConvertImageLine($str) {
-    return str_replace(Text::LF, '&#13;&#10;', $str);
+    return Text::Replace($str, Text::LF, '&#13;&#10;');
   }
 
   //ヘッダリンクタグ

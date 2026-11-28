@@ -96,7 +96,7 @@ abstract class Role extends stdClass {
 
   //-- システム関数 --//
   public function __construct() {
-    $this->role = Text::CutPop(get_class($this), RoleLoader::CLASS_PREFIX);
+    $this->role = Text::ParsePop(get_class($this), RoleLoader::CLASS_PREFIX);
     //Text::p(get_class_vars(get_class($this)), "◆{$this->role}");
   }
 
@@ -967,7 +967,7 @@ final class RoleTalk {
     }
 
     if (GameConfig::REPLACE_TALK) { //発言置換モード
-      $say = strtr($say, GameConfig::$replace_talk_list);
+      $say = Text::Tr($say, GameConfig::$replace_talk_list);
     }
 
     //死者・ゲームプレイ中以外なら以降はスキップ

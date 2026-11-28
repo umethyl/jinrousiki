@@ -628,8 +628,8 @@ final class User extends StackManager {
   }
 
   //役職置換処理
-  public function ReplaceRole($target, $replace) {
-    $this->ChangeRole(str_replace($target, $replace, $this->GetRole()));
+  public function ReplaceRole($from, $to) {
+    $this->ChangeRole(Text::Replace($this->GetRole(), $from, $to));
   }
 
   //役職追加処理

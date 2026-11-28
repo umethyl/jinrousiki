@@ -13,7 +13,7 @@ final class Encoder {
   //BOM 消去
   public static function BOM(string $str) {
     if (ord($str[0]) == '0xef' && ord($str[1]) == '0xbb' && ord($str[2]) == '0xbf') {
-      $str = substr($str, 3);
+      $str = Text::Sub($str, 3);
     }
     return $str;
   }

@@ -272,7 +272,7 @@ abstract class Option {
       return false;
     }
 
-    $this->name = Text::CutPop(get_class($this), OptionLoader::CLASS_PREFIX);
+    $this->name = Text::ParsePop(get_class($this), OptionLoader::CLASS_PREFIX);
 
     $enable  = sprintf('%s_enable',  $this->name);
     $default = sprintf('default_%s', $this->name);

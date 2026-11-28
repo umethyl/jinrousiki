@@ -97,6 +97,6 @@ class Role_step_wolf extends Role_wolf {
   }
 
   protected function GetWolfTargetID($id) {
-    return Text::CutPop($id, ' '); //響狼は最終投票者
+    return Text::ParsePop($id, ' '); //響狼は最終投票者
   }
 }
